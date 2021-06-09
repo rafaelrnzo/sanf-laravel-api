@@ -1,0 +1,77 @@
+<?php
+
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class CreateAuthTables extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        $tableNames = config('auth.table_names');
+
+        if (empty($tableNames)) {
+            throw new \Exception('Error: config/auth.php not loaded. Run [php artisan config:clear] and try again.');
+        }
+
+        Schema::create($tableNames['user_auth'], function (Blueprint $table) use ($tableNames) {
+            $table->bigIncrements('id');
+            $table->smallInteger('entity_type_id')->unsigned()->index();
+            $table->string('username')->unique();
+            $table->string('password');
+            $table->rememberToken();
+            $table->string('full_name')->nullable();
+            $table->string('landline_number', 20)->nullable();
+            $table->string('phone_number', 20);
+            $table->tinyInteger('status_id');
+            $table->timestamp('activated_at')->nullable();
+            $table->timestamp('last_login_at')->nullable();
+            $table->timestamp('password_updated_at');
+            $table->timestamps();
+
+            $table->foreign('entity_type_id')->references('id')->on($tableNames['entity_type'])->onDelete('RESTRICT');
+            $table->unique(['username', 'entity_type_id']);
+        });
+
+        Schema::create($tableNames['password_reset'], function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('email')->index();
+            $table->string('token');
+            $table->timestamp('created_at')->nullable();
+        });
+
+        Schema::create($tableNames['status'], function (Blueprint $table) {
+            $table->smallIncrements('id');
+            $table->string('name');
+            $table->timestamp('updated_at')->nullable();
+        });
+
+        \DB::table($tableNames['status'])->insert([
+            ['id' => '10', 'name' => 'active', 'updated_at' => date('Y-m-d H:i:s')],
+            ['id' => '20', 'name' => 'suspended', 'updated_at' => date('Y-m-d H:i:s')]
+        ]);
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        $tableNames = config('auth.table_names');
+
+        if (empty($tableNames)) {
+            throw new \Exception('Error: config/auth.php not found and defaults could not be merged. Please publish the package configuration before proceeding, or drop the tables manually.');
+        }
+
+        Schema::drop($tableNames['user_auth']);
+        Schema::drop($tableNames['password_reset']);
+        Schema::drop($tableNames['status']);
+    }
+}

@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+
+echo "  > Build Docker image app/builder..."
+docker build -t app/builder deployments/builder
+
+echo "  > Build Docker image app/core..."
+docker build -t app/core deployments/core
+
+echo "  > Done"

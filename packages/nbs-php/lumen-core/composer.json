@@ -1,0 +1,51 @@
+{
+    "name": "nbs-php/lumen-core",
+    "description": "NBS PHP Lumen Core",
+    "version": "6.0.0",
+    "require": {
+        "php": ">=7.1.3",
+        "guzzlehttp/guzzle": "^6.5",
+        "illuminate/mail": "^6.18",
+        "firebase/php-jwt": "^4.0",
+        "doctrine/dbal": "^2.10",
+        "fideloper/proxy": "^4.4",
+        "godruoyi/php-snowflake": "^1.0",
+        "hidehalo/nanoid-php": "^1.1",
+        "league/flysystem-aws-s3-v3": "1.0.28",
+        "spatie/laravel-fractal": "^5.8",
+        "spatie/data-transfer-object": "^1.13",
+        "myclabs/php-enum": "^1.7",
+        "ramsey/uuid": "^4.1",
+        "ext-json": "*",
+        "yajra/laravel-datatables-oracle": "~9.0",
+        "illuminate/redis": "^6.0",
+        "predis/predis": "^1.1",
+        "laravel/helpers": "^1.1",
+        "pragmarx/health": "^1.0",
+        "illuminate/notifications": "^6.18"
+    },
+    "autoload": {
+        "psr-4": {
+            "NbsPhp\\Core\\": "src"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "authors": [
+        {
+            "name": "dev nbs",
+            "email": "dev@nbs.co.id"
+        }
+    ],
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

@@ -1,0 +1,62 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateAuthProviderTable extends Migration
+{
+    public function up()
+    {
+        $tableNames = config('auth.table_names');
+
+        if (empty($tableNames)) {
+            throw new \Exception('Error: config/auth.php not loaded. Run [php artisan config:clear] and try again.');
+        }
+
+        Schema::create($tableNames['auth_provider'], function (Blueprint $table) use ($tableNames) {
+            $table->smallIncrements('id');
+            $table->string('name', 64);
+            $table->timestamp('updated_at');
+        });
+
+        DB::table($tableNames['auth_provider'])->insertOrIgnore([
+            [
+                'id' => '10',
+                'name' => 'App',
+                'updated_at' => '2020-01-01 00:00:00',
+            ],
+            [
+                'id' => '20',
+                'name' => 'Google',
+                'updated_at' => '2020-01-01 00:00:00',
+            ],
+            [
+                'id' => '30',
+                'name' => 'Facebook',
+                'updated_at' => '2020-01-01 00:00:00',
+            ],
+            [
+                'id' => '40',
+                'name' => 'Apple',
+                'updated_at' => '2020-01-01 00:00:00',
+            ],
+        ]);
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        $tableNames = config('auth.table_names');
+
+        if (empty($tableNames)) {
+            throw new \Exception('Error: config/auth.php not loaded. Run [php artisan config:clear] and try again.');
+        }
+
+        Schema::dropIfExists($tableNames['auth_provider']);
+    }
+}

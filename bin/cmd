@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+
+docker run --rm -v "$(pwd)":/var/app -u "$(id -u)" \
+  -e "COMPOSER_CACHE_DIR=/var/app/.cache/composer" \
+  app/builder "${@}"
