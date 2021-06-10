@@ -8,6 +8,10 @@ return [
 
     'login_transformer' => \Sanf\Api\Modules\User\LoginTransformer::class,
 
+    'logout_transformer' => \NbsPhp\Core\Transformers\LogoutTransformer::class,
+
+    'profile_transformer' => \Sanf\Api\Modules\User\ProfileTransformer::class,
+
     'table_names' => [
         'user_auth' => 'user_auth',
         'password_reset' => 'password_reset',
@@ -169,81 +173,63 @@ return [
                 'uri' => "{$routePrefix}/refresh-session",
                 'name' => 'token.refresh',
                 'action' => "{$namespace}AuthController@refresh",
-                'middleware' => [
-                    /*'client-secret'*/
-                ],
+                'middleware' => [],
             ],
             [
                 'method' => 'post',
                 'uri' => "{$routePrefix}",
                 'name' => 'user.register',
                 'action' => "{$namespace}AuthController@register",
-                'middleware' => [
-                    /*'client-secret'*/
-                ],
+                'middleware' => [],
             ],
             [
                 'method' => 'post',
                 'uri' => "{$routePrefix}/log-in",
                 'name' => 'login.post',
                 'action' => "{$namespace}AuthController@login",
-                'middleware' => [
-                    /*'client-secret'*/
-                ],
+                'middleware' => [],
             ],
             [
                 'method' => 'post',
                 'uri' => "{$routePrefix}/request-forgot-password",
                 'name' => 'password.email',
                 'action' => "{$namespace}ForgotPasswordController@sendResetLinkEmail",
-                'middleware' => [
-                    /*'client-secret'*/
-                ],
+                'middleware' => [],
             ],
             [
                 'method' => 'put',
                 'uri' => "{$routePrefix}/reset-password",
                 'name' => 'password.update',
                 'action' => "{$namespace}ResetPasswordController@reset",
-                'middleware' => [
-                    /*'client-secret'*/
-                ],
+                'middleware' => [],
             ],
             [
                 'method' => 'get',
                 'uri' => "{$routePrefix}/password/new",
                 'name' => 'password.request',
                 'action' => "{$namespace}ForgotPasswordController@showLinkRequestForm",
-                'middleware' => [
-                    /*'client-secret'*/
-                ],
+                'middleware' => [],
             ],
             [
                 'method' => 'get',
                 'uri' => "{$routePrefix}/reset-password",
                 'name' => 'password.reset',
                 'action' => "{$namespace}ResetPasswordController@showResetForm",
-                'middleware' => [
-                    /*'client-secret'*/
-                ],
+                'middleware' => [],
             ],
             [
                 'method' => 'put',
                 'uri' => "{$routePrefix}/change-password",
                 'name' => 'password.change',
                 'action' => "{$namespace}AuthController@changePassword",
-                'middleware' => [
-                    'auth'
-                ],
+                'middleware' => ['auth'],
             ],
             [
-                'method' => 'post',
+                'method' => 'delete',
                 'uri' => "{$routePrefix}/log-out",
                 'name' => 'logout',
                 'action' => "{$namespace}AuthController@logout",
-                'middleware' => [
-                    'auth'
-                ],
+                'middleware' => ['auth'],
             ],
             [
                 'method' => 'get',
@@ -258,6 +244,20 @@ return [
                 'name' => 'user.has-registered',
                 'action' => "{$namespace}AuthController@emailHasRegistered",
                 'middleware' => [],
+            ],
+            [
+                'method' => 'get',
+                'uri' => "{$routePrefix}/me",
+                'name' => 'user.profile',
+                'action' => "{$namespace}UserController@getProfile",
+                'middleware' => ['auth'],
+            ],
+            [
+                'method' => 'patch',
+                'uri' => "{$routePrefix}/me",
+                'name' => 'user.profile-update',
+                'action' => "{$namespace}UserController@updateProfile",
+                'middleware' => ['auth'],
             ],
         ],
     ],

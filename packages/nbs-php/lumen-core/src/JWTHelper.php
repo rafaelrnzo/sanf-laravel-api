@@ -8,6 +8,7 @@ use Hidehalo\Nanoid\Client;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use NbsPhp\Core\Exceptions\ExpiredAccessTokenException;
 use NbsPhp\Core\Exceptions\InvalidTokenException;
+use NbsPhp\Core\Models\UserSessionModel;
 
 
 class JWTHelper
@@ -404,7 +405,8 @@ class JWTHelper
 
     public function invalidateToken()
     {
-        // TODO INVALIDATE TOKEN
+        //TODO USE REPOSITORY
+        UserSessionModel::where('signature', $this->decoded->jti)->delete();
     }
 
     public static function verifyGoogleToken(string $token)

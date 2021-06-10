@@ -7,8 +7,8 @@ namespace NbsPhp\Core\Services;
 interface ApplicationServiceInterface
 {
     /**
-     * @param $input
+     * @param $dto
      * @return mixed
      */
-    public function execute($input);
+    public function execute($dto);
 }

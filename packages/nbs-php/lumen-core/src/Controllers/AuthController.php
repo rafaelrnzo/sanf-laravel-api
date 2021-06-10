@@ -4,12 +4,14 @@
 namespace NbsPhp\Core\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use NbsPhp\Core\Dto\LoginDeviceRequestDto;
 use NbsPhp\Core\Enum\DevicePlatform;
+use NbsPhp\Core\JWTHelper;
 use NbsPhp\Core\Services\AppLoginService;
 use NbsPhp\Core\Services\LoginWithEmailAndPasswordService;
+use NbsPhp\Core\Services\LogoutService;
 use NbsPhp\Core\Services\RegisterService;
-use NbsPhp\Core\Transformers\LoginTransformer;
 
 class AuthController extends RestController
 {
@@ -19,6 +21,18 @@ class AuthController extends RestController
             'submitResetPassword',
         ],
     ];
+
+    protected $jwt;
+
+    /**
+     * AuthController constructor.
+     * @param $jwt
+     */
+    public function __construct(JWTHelper $jwt)
+    {
+        parent::__construct();
+        $this->jwt = $jwt;
+    }
 
     public function loginApp(Request $request, AppLoginService $service)
     {
@@ -129,7 +143,7 @@ class AuthController extends RestController
 
         return $this->responseOk(
             'Success',
-            fractal($user, config('auth.login_transformer'))->toArray()
+            fractal($user, config('auth.login_transformer'))
         )->withHeaders([
             'X-Access-Token' => $user->accessToken,
             'X-Access-Expired-At' => $user->accessExpiredAt,
@@ -138,4 +152,9 @@ class AuthController extends RestController
         ]);
     }
 
+    public function logout(Request $request, LogoutService $service)
+    {
+        $result = $service->execute(null);
+        return fractal($result, config('auth.logout_transformer'));
+    }
 }

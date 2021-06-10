@@ -27,53 +27,6 @@ class AuthService extends AbstractGeneralService
         $this->user = $user;
         $this->jwt = $jwt;
     }
-
-    public function loginWithEmailAndPassword(array $input): object
-    {
-        if (!$token = Auth::attempt([
-            'username' => $input['email'],
-            'password' => $input['password'],
-        ])) {
-            throw new InvalidCredentialException;
-        }
-
-        // TODO: check status user
-
-        return DB::transaction(function () use ($input, $token) {
-            /** @var AuthModel $user */
-            $user = Auth::user();
-
-            $jwtToken = $this->jwt->setToken($token);
-            $accessTokenExpiredAt = $jwtToken->getDecoded()->exp;
-
-            $device = $input['device'];
-            $metadata = $device['metadata'] ?? [];
-
-            $userSession = $this->insertUserSession([
-                'user_id' => $user->id,
-                'device_id' => $device['device_id'],
-                'device_platform_id' => $device['device_platform_id'],
-                'notification_channel_id' => $device['notification_channel'] ?? null,
-                'notification_token' => $device['notification_token'] ?? null,
-                'device_manufacturer' => $metadata['manufacturer'] ?? null,
-                'device_model' => $metadata['model'] ?? null,
-                'device_user_agent' => $metadata['user_agent'] ?? null,
-                'signature' => $jwtToken->jti,
-                'expired_at' => $accessTokenExpiredAt,
-            ]);
-
-            $refreshToken = $jwtToken->getRefreshToken($userSession->id);
-            $refreshTokenExpiredAt = $jwtToken->getDecodedRefreshToken()->exp;
-
-            return $this->sendAsObject(array_merge($user->toArray(), [
-                'access_token' => $token,
-                'access_expired_at' => $accessTokenExpiredAt,
-                'refresh_token' => $refreshToken,
-                'refresh_expired_at' => $refreshTokenExpiredAt,
-            ]));
-        });
-    }
-
     public function loginWithGoogle(array $input): object
     {
         JWTHelper::verifyGoogleToken($input['auth_token']);
@@ -350,17 +303,6 @@ class AuthService extends AbstractGeneralService
                 'refresh_expired_at' => $refreshTokenExpiredAt,
             ]));
         });
-    }
-
-    public function logout(): bool
-    {
-        try {
-            Auth::logout();
-        } catch (\Exception $e) {
-            report($e);
-        }
-
-        return true;
     }
 
     public function forgotPassword(array $input)

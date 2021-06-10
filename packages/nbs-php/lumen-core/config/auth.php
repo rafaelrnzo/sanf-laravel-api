@@ -8,6 +8,8 @@ return [
 
     'login_transformer' => \NbsPhp\Core\Transformers\LoginTransformer::class,
 
+    'logout_transformer' => \NbsPhp\Core\Transformers\LogoutTransformer::class,
+
     'table_names' => [
         'user_auth' => 'user_auth',
         'password_reset' => 'password_reset',
