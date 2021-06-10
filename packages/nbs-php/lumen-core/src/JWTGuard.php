@@ -201,6 +201,7 @@ class JWTGuard implements Guard
      */
     public function login(AuthenticatableContract $user)
     {
+        //TODO SET USER SESSION IN HERE
         $this->setUser($user);
 
         return $this->generateTokenFromUser();

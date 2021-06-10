@@ -5,13 +5,16 @@ namespace NbsPhp\Core\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use NbsPhp\Core\Dto\LoginDeviceRequestDto;
+use NbsPhp\Core\Dto\DeviceInfoRequestDto;
+use NbsPhp\Core\Dto\UpdateSessionRequestDto;
 use NbsPhp\Core\Enum\DevicePlatform;
+use NbsPhp\Core\Exceptions\UnauthorizedException;
 use NbsPhp\Core\JWTHelper;
 use NbsPhp\Core\Services\AppLoginService;
 use NbsPhp\Core\Services\LoginWithEmailAndPasswordService;
 use NbsPhp\Core\Services\LogoutService;
 use NbsPhp\Core\Services\RegisterService;
+use NbsPhp\Core\Services\UpdateSessionService;
 
 class AuthController extends RestController
 {
@@ -49,32 +52,31 @@ class AuthController extends RestController
             ]);
     }
 
-    protected function validateDeviceInformation(Request $request): array
+    protected function validateDeviceInformation(Request $request, $prefix = null): array
     {
         $validated = $this->validate($request, [
-            'device' => ['required',],
-            'device.device_id' => ['required', 'string',],
-            'device.device_platform_id' => ['required', 'integer',],
-            'device.notification_token' => ['nullable', 'string',],
-            'device.notification_channel_id' => ['nullable', 'integer',],
-            'device.metadata' => ['nullable',],
-            'device.metadata.manufacturer' => ['nullable', 'string',],
-            'device.metadata.model' => ['nullable', 'string',],
-            'device.metadata.user_agent' => ['nullable', 'string',],
+            $prefix . "device_id" => ['required', 'string',],
+            $prefix . "device_platform_id" => ['required', 'integer',],
+            $prefix . "notification_token" => ['nullable', 'string',],
+            $prefix . "notification_channel_id" => ['nullable', 'integer',],
+            $prefix . "metadata" => ['nullable',],
+            $prefix . "metadata.manufacturer" => ['nullable', 'string',],
+            $prefix . "metadata.model" => ['nullable', 'string',],
+            $prefix . "metadata.user_agent" => ['nullable', 'string',],
         ]);
 
         if (in_array((int)$request->input('device.device_platform_id'), [DevicePlatform::ANDROID, DevicePlatform::IOS])) {
             $validated += $this->validate($request, [
-                'device.notification_token' => ['required', 'string',],
-                'device.notification_channel_id' => ['required', 'integer',],
-                'device.metadata' => ['required',],
-                'device.metadata.manufacturer' => ['required', 'string',],
-                'device.metadata.model' => ['required', 'string',],
+                $prefix . 'notification_token' => ['required', 'string',],
+                $prefix . 'notification_channel_id' => ['required', 'integer',],
+                $prefix . 'metadata' => ['required',],
+                $prefix . 'metadata.manufacturer' => ['required', 'string',],
+                $prefix . 'metadata.model' => ['required', 'string',],
             ]);
         } else if ((int)$request->input('device.device_platform_id') === DevicePlatform::WEB) {
             $validated += $this->validate($request, [
-                'device.metadata' => ['required',],
-                'device.metadata.user_agent' => ['required', 'string',],
+                $prefix . 'metadata' => ['required',],
+                $prefix . 'metadata.user_agent' => ['required', 'string',],
             ]);
         }
 
@@ -91,7 +93,7 @@ class AuthController extends RestController
             'phone_number' => ['required', 'min:10',],
         ]);
 
-        $validated += $this->validateDeviceInformation($request);
+        $validated += $this->validateDeviceInformation($request, 'device.');
 
         return $validated;
     }
@@ -120,7 +122,7 @@ class AuthController extends RestController
             'password' => ['required']
         ]);
 
-        $validated += $this->validateDeviceInformation($request);
+        $validated += $this->validateDeviceInformation($request, 'device.');
 
         return $validated;
     }
@@ -131,7 +133,7 @@ class AuthController extends RestController
         $dto = (object)[
             'username' => $input['username'],
             'password' => $input['password'],
-            'device' => new LoginDeviceRequestDto([
+            'device' => new DeviceInfoRequestDto([
                 'deviceId' => $input['device']['device_id'],
                 'devicePlatformId' => $input['device']['device_platform_id'],
                 'notificationToken' => $input['device']['notification_token'],
@@ -156,5 +158,55 @@ class AuthController extends RestController
     {
         $result = $service->execute(null);
         return fractal($result, config('auth.logout_transformer'));
+    }
+
+    protected function validateBearerToken(Request $request)
+    {
+        if (!$request->headers->has('Authorization')) {
+            throw new UnauthorizedException();
+        }
+
+        [$refreshToken] = sscanf($request->headers->get('Authorization'), 'Bearer %s');
+
+        if (is_null($refreshToken)) {
+            throw new UnauthorizedException();
+        }
+
+        return $refreshToken;
+    }
+
+    /**
+     * @param Request $request
+     * @param UpdateSessionService $service
+     * @return \Illuminate\Http\JsonResponse
+     * @throws UnauthorizedException
+     */
+    public function refreshToken(Request $request, UpdateSessionService $service)
+    {
+        $refreshToken = $this->validateBearerToken($request);
+
+        $input = $this->validateDeviceInformation($request);
+
+        $dto = new UpdateSessionRequestDto([
+            'refreshToken' => $refreshToken,
+            'device' => [
+                'deviceId' => $input['device_id'],
+                'devicePlatformId' => $input['device_platform_id'] ?? null,
+                'notificationToken' => $input['notification_token'] ?? null,
+                'notificationChannelId' => $input['notification_channel_id'],
+                'metadata' => $input['metadata']
+            ]]);
+
+        $user = $service->execute($dto);
+
+        return $this->responseOk(
+            'Success',
+            fractal($user, config('auth.login_transformer'))
+        )->withHeaders([
+            'X-Access-Token' => $user->accessToken,
+            'X-Access-Expired-At' => $user->accessExpiredAt,
+            'X-Refresh-Token' => $user->refreshToken,
+            'X-Refresh-Expired-At' => $user->refreshExpiredAt,
+        ]);
     }
 }

@@ -169,10 +169,10 @@ return [
                 'middleware' => [],
             ],
             [
-                'method' => 'put',
+                'method' => 'post',
                 'uri' => "{$routePrefix}/refresh-session",
                 'name' => 'token.refresh',
-                'action' => "{$namespace}AuthController@refresh",
+                'action' => "{$namespace}AuthController@refreshToken",
                 'middleware' => [],
             ],
             [

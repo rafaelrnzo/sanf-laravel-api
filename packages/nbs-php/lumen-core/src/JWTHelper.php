@@ -280,7 +280,7 @@ class JWTHelper
         $this->decoded = null;
 
         $issuer = $this->issuer;
-        $tokenId = (new Client)->formattedId('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', 8);
+        $tokenId = (new Client)->formattedId('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', 20);
         $issuedAt = time();
         $notBefore = $issuedAt;
         $expire = $notBefore + $this->expire_after;

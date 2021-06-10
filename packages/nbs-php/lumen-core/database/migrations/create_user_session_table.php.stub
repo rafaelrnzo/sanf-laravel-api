@@ -22,7 +22,7 @@ class CreateUserSessionTable extends Migration
             $table->string('device_id', 64)->nullable();
             $table->json('device_metadata')->nullable();
             $table->text('device_user_agent')->nullable();
-            $table->string('signature')->nullable();
+            $table->string('signature')->unique();
             $table->timestamp('expired_at');
             $table->timestamps();
 
