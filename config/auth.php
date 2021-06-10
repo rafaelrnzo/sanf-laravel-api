@@ -6,7 +6,7 @@ return [
 
     'profile_repository' => \NbsPhp\Core\Repositories\MockProfileRepository::class,
 
-    'login_transformer' => \NbsPhp\Core\Transformers\LoginTransformer::class,
+    'login_transformer' => \Sanf\Api\Modules\User\LoginTransformer::class,
 
     'table_names' => [
         'user_auth' => 'user_auth',

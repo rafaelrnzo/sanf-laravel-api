@@ -4,9 +4,12 @@
 namespace NbsPhp\Core\Controllers;
 
 use Illuminate\Http\Request;
+use NbsPhp\Core\Dto\LoginDeviceRequestDto;
 use NbsPhp\Core\Enum\DevicePlatform;
 use NbsPhp\Core\Services\AppLoginService;
+use NbsPhp\Core\Services\LoginWithEmailAndPasswordService;
 use NbsPhp\Core\Services\RegisterService;
+use NbsPhp\Core\Transformers\LoginTransformer;
 
 class AuthController extends RestController
 {
@@ -32,28 +35,24 @@ class AuthController extends RestController
             ]);
     }
 
-    private function validateRegister(Request $request)
+    protected function validateDeviceInformation(Request $request): array
     {
         $validated = $this->validate($request, [
-            'full_name' => ['required', 'string',],
-            'email' => ['required', 'email',],
-            'password' => ['required', 'min:8',],
-            'landline_number' => ['string', 'nullable', 'min:10',],
-            'phone_number' => ['required', 'min:10',],
             'device' => ['required',],
             'device.device_id' => ['required', 'string',],
             'device.device_platform_id' => ['required', 'integer',],
             'device.notification_token' => ['nullable', 'string',],
-            'device.notification_channel' => ['nullable', 'integer',],
+            'device.notification_channel_id' => ['nullable', 'integer',],
             'device.metadata' => ['nullable',],
             'device.metadata.manufacturer' => ['nullable', 'string',],
             'device.metadata.model' => ['nullable', 'string',],
             'device.metadata.user_agent' => ['nullable', 'string',],
         ]);
+
         if (in_array((int)$request->input('device.device_platform_id'), [DevicePlatform::ANDROID, DevicePlatform::IOS])) {
             $validated += $this->validate($request, [
                 'device.notification_token' => ['required', 'string',],
-                'device.notification_channel' => ['required', 'integer',],
+                'device.notification_channel_id' => ['required', 'integer',],
                 'device.metadata' => ['required',],
                 'device.metadata.manufacturer' => ['required', 'string',],
                 'device.metadata.model' => ['required', 'string',],
@@ -64,6 +63,21 @@ class AuthController extends RestController
                 'device.metadata.user_agent' => ['required', 'string',],
             ]);
         }
+
+        return $validated;
+    }
+
+    protected function validateRegister(Request $request): array
+    {
+        $validated = $this->validate($request, [
+            'full_name' => ['required', 'string',],
+            'email' => ['required', 'email',],
+            'password' => ['required', 'min:8',],
+            'landline_number' => ['string', 'nullable', 'min:10',],
+            'phone_number' => ['required', 'min:10',],
+        ]);
+
+        $validated += $this->validateDeviceInformation($request);
 
         return $validated;
     }
@@ -83,6 +97,45 @@ class AuthController extends RestController
         $service->execute($dto);
 
         return $this->responseOk();
+    }
+
+    protected function validateLogin(Request $request): array
+    {
+        $validated = $this->validate($request, [
+            'username' => ['required', 'email',],
+            'password' => ['required']
+        ]);
+
+        $validated += $this->validateDeviceInformation($request);
+
+        return $validated;
+    }
+
+    public function login(Request $request, LoginWithEmailAndPasswordService $service)
+    {
+        $input = $this->validateLogin($request);
+        $dto = (object)[
+            'username' => $input['username'],
+            'password' => $input['password'],
+            'device' => new LoginDeviceRequestDto([
+                'deviceId' => $input['device']['device_id'],
+                'devicePlatformId' => $input['device']['device_platform_id'],
+                'notificationToken' => $input['device']['notification_token'],
+                'notificationChannelId' => $input['device']['notification_channel_id'],
+                'metadata' => $input['device']['metadata']
+            ])
+        ];
+        $user = $service->execute($dto);
+
+        return $this->responseOk(
+            'Success',
+            fractal($user, config('auth.login_transformer'))->toArray()
+        )->withHeaders([
+            'X-Access-Token' => $user->accessToken,
+            'X-Access-Expired-At' => $user->accessExpiredAt,
+            'X-Refresh-Token' => $user->refreshToken,
+            'X-Refresh-Expired-At' => $user->refreshExpiredAt,
+        ]);
     }
 
 }

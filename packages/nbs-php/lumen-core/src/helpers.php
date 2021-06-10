@@ -66,6 +66,23 @@ if (!function_exists('file_get_url')) {
     }
 }
 
+if (!function_exists('file_get_temp_url')) {
+    /**
+     * @param string $fileId
+     * @param null $path
+     * @param bool $expiry
+     * @return string
+     */
+    function file_get_temp_url(string $fileId, $path = null)
+    {
+        if (is_null($fileId)) {
+            return '';
+        }
+
+        return Storage::temporaryUrl($path . $fileId, Carbon::now()->addDay());
+    }
+}
+
 if (!function_exists('asset')) {
     function asset($path, $secure = null)
     {

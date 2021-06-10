@@ -1,10 +1,11 @@
 <?php
 
 
-namespace NbsPhp\Core\Transformers;
+namespace Sanf\Api\Modules\User;
 
 
 use League\Fractal\TransformerAbstract;
+use Sanf\Core\Modules\User\EntityType;
 
 class LoginTransformer extends TransformerAbstract
 {
@@ -15,7 +16,8 @@ class LoginTransformer extends TransformerAbstract
                 'id' => $item->id,
                 'full_name' => $item->full_name,
                 'email' => $item->username,
-                'avatar_url' => file_get_url($item->avatar_image),
+                'type' => 'General Account', //TODO REFACTOR
+                'type_id' => EntityType::GENERAL, //TODO REFACTOR
             ]
         ];
     }

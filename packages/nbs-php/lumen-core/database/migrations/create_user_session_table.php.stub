@@ -20,8 +20,7 @@ class CreateUserSessionTable extends Migration
             $table->smallInteger('auth_provider_id')->unsigned()->index();
             $table->smallInteger('device_platform_id')->unsigned()->index();
             $table->string('device_id', 64)->nullable();
-            $table->string('device_manufacturer', 128)->nullable();
-            $table->string('device_model', 128)->nullable();
+            $table->json('device_metadata')->nullable();
             $table->text('device_user_agent')->nullable();
             $table->string('signature')->nullable();
             $table->timestamp('expired_at');

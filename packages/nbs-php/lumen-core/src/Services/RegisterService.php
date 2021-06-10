@@ -5,8 +5,6 @@ namespace NbsPhp\Core\Services;
 
 
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use NbsPhp\Core\Enum\EntityType;
 use NbsPhp\Core\Enum\UserStatus;
 use NbsPhp\Core\Exceptions\EmailAlreadyExistException;

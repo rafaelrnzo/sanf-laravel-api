@@ -6,7 +6,7 @@ use Illuminate\Auth\EloquentUserProvider;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Str;
-use NbsPhp\Core\Enum\EntityType;
+use Sanf\Core\Modules\User\EntityType;
 
 class MobileUserProvider extends EloquentUserProvider implements UserProvider
 {
@@ -42,7 +42,6 @@ class MobileUserProvider extends EloquentUserProvider implements UserProvider
             }
         }
 
-        return $query->whereIn('entity_type_id', [EntityType::MOBILE])
-            ->first();
+        return $query->whereIn('entity_type_id', [EntityType::GENERAL])->first();
     }
 }
