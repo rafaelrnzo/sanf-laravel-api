@@ -1,9 +1,6 @@
 <?php
 
 return [
-
-    'token_on_body' => true,
-
     'profile_repository' => \NbsPhp\Core\Repositories\MockProfileRepository::class,
 
     'login_transformer' => \Sanf\Api\Modules\User\LoginTransformer::class,
@@ -34,9 +31,8 @@ return [
     ],
 
     'email_verify_url' => env('AUTH_EMAIL_VERIFY_URL'),
-
+    'email_verify_ios_url' => env('AUTH_EMAIL_VERIFY_IOS_URL', env('AUTH_EMAIL_VERIFY_URL')),
     'reset_password_url' => env('AUTH_RESET_PASS_URL'),
-
     'reset_password_ios_url' => env('AUTH_RESET_PASS_IOS_URL', env('AUTH_RESET_PASS_URL')),
 
     'input_validations' => [
@@ -51,7 +47,7 @@ return [
         'reset_password' => [
             'rules' => [
                 'token' => 'required',
-                'password' => ['required', 'min:10', 'regex:/^(?=.*\d)(?=.*[a-zA-Z])/']
+                'password' => ['required', 'min:8', 'regex:/^(?=.*\d)(?=.*[a-zA-Z])/']
             ],
             'messages' => [
                 'password.regex' => 'Password must be alphanumeric'
@@ -197,7 +193,7 @@ return [
                 'middleware' => [],
             ],
             [
-                'method' => 'put',
+                'method' => 'post',
                 'uri' => "{$routePrefix}/reset-password",
                 'name' => 'password.update',
                 'action' => "{$namespace}ResetPasswordController@reset",

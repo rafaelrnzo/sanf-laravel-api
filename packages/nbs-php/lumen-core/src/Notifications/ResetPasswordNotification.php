@@ -5,6 +5,7 @@ namespace NbsPhp\Core\Notifications;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\URL;
+use Jenssegers\Agent\Agent;
 use NbsPhp\Core\Mail\BaseMail;
 
 class ResetPasswordNotification extends Notification
@@ -38,14 +39,15 @@ class ResetPasswordNotification extends Notification
             ->to($notifiable->getEmailForPasswordReset(), $notifiable->getNameForPasswordReset());
     }
 
+
     protected function resetUrl($notifiable)
     {
-        $resetPasswordUrl = config('auth.reset_password_url');
-
+        $agent = new Agent();
+        $jwtToken = (new \NbsPhp\Core\JWTHelper())->newResetPasswordToken($notifiable->getEmailForPasswordReset(), $this->token);
+        $resetPasswordUrl = ($agent->isiPhone() || $agent->isiOS() || $agent->isiPad()) ? config('auth.reset_password_ios_url') : config('auth.reset_password_url') ;
         if ($resetPasswordUrl != '' || $resetPasswordUrl != null) {
-            return URL::to($resetPasswordUrl, [$this->token]);
+            return "{$resetPasswordUrl}?token={$jwtToken}";
         }
-
-        return route('password.reset', ['token' => $this->token]);
+        return route('password.reset', ['token' => $jwtToken]);
     }
 }
