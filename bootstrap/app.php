@@ -1,6 +1,8 @@
 <?php
 
-require_once __DIR__.'/../vendor/autoload.php';
+use NbsPhp\Core\Exceptions\Handler;
+
+require_once __DIR__ . '/../vendor/autoload.php';
 
 (new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
     dirname(__DIR__)
@@ -38,7 +40,7 @@ $app->withEloquent();
 
 $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
-    \NbsPhp\Core\Exceptions\Handler::class
+    Handler::class
 );
 
 $app->singleton(
@@ -102,6 +104,7 @@ $app->register(Illuminate\Redis\RedisServiceProvider::class);
 $app->register(Illuminate\Mail\MailServiceProvider::class);
 $app->register(NbsPhp\Core\Providers\CoreServiceProvider::class);
 $app->register(Sanf\Core\Providers\CoreServiceProvider::class);
+$app->register(Sanf\Api\Providers\ApiServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
