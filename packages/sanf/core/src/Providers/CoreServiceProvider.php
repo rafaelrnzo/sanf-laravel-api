@@ -57,7 +57,7 @@ class CoreServiceProvider extends ServiceProvider
      */
     protected function registerConfigs()
     {
-
+        $this->mergeConfigFrom(__DIR__ . '/../../config/image-path.php', 'image-path');
     }
 
     /**
