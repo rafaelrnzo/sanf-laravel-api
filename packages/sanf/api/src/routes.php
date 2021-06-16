@@ -15,6 +15,17 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'v1'], function () {
 
+    Route::group([
+        'as' => 'products',
+        'prefix' => 'products'],
+        function () {
+            Route::get('/', [
+                'as' => 'list',
+                'uses' => 'Product\ListProductController@process'
+            ]);
+        });
+
+
     Route::post('/asset', [
         'as' => 'upload',
         'uses' => 'Common\UploadFileController@process'

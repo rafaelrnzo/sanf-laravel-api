@@ -4,6 +4,8 @@ namespace Sanf\Core\Providers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
+use Sanf\Core\Modules\Product\EloquentProductRepository;
+use Sanf\Core\Modules\Product\ProductRepositoryInterface;
 use Sanf\Core\Modules\ContactUs\AskUsRepositoryInterface;
 use Sanf\Core\Modules\ContactUs\AskUsTopicRepositoryInterface;
 use Sanf\Core\Modules\ContactUs\EloquentAskUs;
@@ -49,6 +51,7 @@ class CoreServiceProvider extends ServiceProvider
 //        $this->app->bind(FooRepositoryInterface::class, EloquentFooRepository::class);
         $this->app->bind(AskUsTopicRepositoryInterface::class, EloquentAskUsTopic::class);
         $this->app->bind(AskUsRepositoryInterface::class, EloquentAskUs::class);
+        $this->app->bind(ProductRepositoryInterface::class, EloquentProductRepository::class);
    }
 
     protected function registerViews()
