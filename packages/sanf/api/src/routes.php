@@ -19,4 +19,15 @@ Route::group(['prefix' => 'v1'], function () {
         'as' => 'upload',
         'uses' => 'Common\UploadFileController@process'
     ]);
+
+    Route::group([
+        'as' => 'contact-us',
+        'prefix' => 'contact-us'],
+        function () {
+
+            Route::get('/topics', [
+                'as' => 'topic',
+                'uses' => 'ContactUs\ListAskUsTopicController@process'
+            ]);
+        });
 });
