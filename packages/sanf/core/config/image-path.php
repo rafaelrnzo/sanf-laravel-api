@@ -2,5 +2,6 @@
 
 
 return [
-    'temp' => 'temp/'
+    'temp' => 'temp/',
+    'ask-us' => 'ask-us/'
 ];

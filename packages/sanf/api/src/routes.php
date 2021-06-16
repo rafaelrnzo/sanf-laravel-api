@@ -29,5 +29,10 @@ Route::group(['prefix' => 'v1'], function () {
                 'as' => 'topic',
                 'uses' => 'ContactUs\ListAskUsTopicController@process'
             ]);
+
+            Route::post('/ask-us', [
+                'as' => 'ask-us',
+                'uses' => 'ContactUs\AskUsSubmitController@process'
+            ]);
         });
 });
