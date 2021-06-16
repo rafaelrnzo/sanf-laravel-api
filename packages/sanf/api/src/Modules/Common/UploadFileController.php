@@ -6,14 +6,14 @@ namespace Sanf\Api\Modules\Common;
 
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestController;
-use Sanf\Core\Modules\Common\UploadImageService;
+use Sanf\Core\Modules\Common\UploadFileService;
 
-class UploadImageController extends RestController
+class UploadFileController extends RestController
 {
 
     protected $service;
 
-    public function __construct(UploadImageService $service)
+    public function __construct(UploadFileService $service)
     {
         parent::__construct();
 
@@ -40,16 +40,17 @@ class UploadImageController extends RestController
 
     private function validating(Request $request)
     {
-        $keys = array_keys([
-            1 => 'temp'
-        ]);
+        $types = [
+            '1' => 'image/png,image/jpeg,image/jpg,image/svg'
+        ];
+        $keys = array_keys($types);
         $string = implode(',', $keys);
 
         $rules = [
             'file' => [
                 'required',
                 'image',
-                'mimetypes:image/png,image/jpeg,image/jpg,image/svg',
+                "mimetypes:{$types[$request->get('type')]}",
                 'max:5000'
             ],
             'type' => [

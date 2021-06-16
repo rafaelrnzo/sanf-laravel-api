@@ -15,15 +15,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'v1'], function () {
 
-    Route::group([
-        'as' => 'users',
-        'prefix' => 'users'],
-        function () {
-
-            Route::post('/image', [
-                'as' => 'upload.image',
-                'uses' => 'Common\UploadImageController@process'
-            ]);
-
-        });
+    Route::post('/asset', [
+        'as' => 'upload',
+        'uses' => 'Common\UploadFileController@process'
+    ]);
 });

@@ -9,15 +9,15 @@ use League\Flysystem\FileNotFoundException;
 use Sanf\Api\Modules\Common\UploadFileResultDto;
 use Sanf\Core\Modules\ServiceInterface;
 
-class UploadImageService implements ServiceInterface
+class UploadFileService implements ServiceInterface
 {
 
     public function run($dto)
     {
-        $array = [
-            1 => 'temp',
+        $configs = [
+            1 => 'image-path',
         ];
-        $path = config("image-path.{$array[$dto->type]}");
+        $path = config("{$configs[$dto->type]}.temp");
 
         // upload file;
         $filename = file_upload($dto->file, $path, 'public');
