@@ -32,7 +32,7 @@ class AskUsSubmitService implements ServiceInterface
             throw_if(!$exist, new FileNotFoundException("{$tempPath}{$image}"));
 
             $newPath = config('image-path.ask-us');
-            Storage::copy("{$tempPath}{$image}", "{$newPath}{$image}");
+            Storage::move("{$tempPath}{$image}", "{$newPath}{$image}");
 
             $images[] = [
                 'file_name' => $image,
