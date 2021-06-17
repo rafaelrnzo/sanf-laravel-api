@@ -32,6 +32,18 @@ Route::group(['prefix' => 'v1'], function () {
     ]);
 
     Route::group([
+        'as' => 'web-view',
+        'prefix' => 'web-view'],
+        function () {
+
+            Route::get('/about-us', [
+                'as' => 'about-us',
+                'uses' => 'Common\WebViewAboutUsController@process'
+            ]);
+
+        });
+
+    Route::group([
         'as' => 'contact-us',
         'prefix' => 'contact-us'],
         function () {
