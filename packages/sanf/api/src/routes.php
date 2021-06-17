@@ -15,6 +15,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'v1'], function () {
 
+    Route::post('/asset', [
+        'as' => 'upload',
+        'uses' => 'Common\UploadFileController@process'
+    ]);
+
     Route::group([
         'as' => 'products',
         'prefix' => 'products'],
@@ -23,24 +28,6 @@ Route::group(['prefix' => 'v1'], function () {
                 'as' => 'list',
                 'uses' => 'Product\ListProductController@process'
             ]);
-        });
-
-
-    Route::post('/asset', [
-        'as' => 'upload',
-        'uses' => 'Common\UploadFileController@process'
-    ]);
-
-    Route::group([
-        'as' => 'web-view',
-        'prefix' => 'web-view'],
-        function () {
-
-            Route::get('/about-us', [
-                'as' => 'about-us',
-                'uses' => 'Common\WebViewAboutUsController@process'
-            ]);
-
         });
 
     Route::group([
@@ -59,3 +46,15 @@ Route::group(['prefix' => 'v1'], function () {
             ]);
         });
 });
+
+Route::group([
+    'as' => 'web-view',
+    'prefix' => 'web-view'],
+    function () {
+
+        Route::get('/about-us', [
+            'as' => 'about-us',
+            'uses' => 'Common\WebViewAboutUsController@process'
+        ]);
+
+    });
