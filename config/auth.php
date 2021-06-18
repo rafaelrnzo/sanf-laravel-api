@@ -152,7 +152,7 @@ return [
     ],
 
     'routes' => [
-        'prefix' => $routePrefix = '/users',
+        'prefix' => $routePrefix = 'v1/users',
 
         'namespace' => $namespace = "NbsPhp\\Core\\Controllers\\",
 
