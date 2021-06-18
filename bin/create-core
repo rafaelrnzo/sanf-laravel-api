@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
 echo "  > Build Docker container..."
-docker run -d --name app-core -v "$(pwd)":/var/app -p 8080:80 app/core
+docker run -d --name sanf-core -v "$(pwd)":/var/app -p 4006:80 sanf/core
 
 echo "  > Done"
