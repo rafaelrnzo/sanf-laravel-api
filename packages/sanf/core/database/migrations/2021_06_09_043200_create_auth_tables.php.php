@@ -31,7 +31,7 @@ class CreateAuthTables extends Migration
             $table->tinyInteger('status_id');
             $table->timestamp('activated_at')->nullable();
             $table->timestamp('last_login_at')->nullable();
-            $table->timestamp('password_updated_at');
+            $table->timestamp('password_updated_at')->nullable();
             $table->timestamps();
 
             $table->foreign('entity_type_id')->references('id')->on($tableNames['entity_type'])->onDelete('RESTRICT');

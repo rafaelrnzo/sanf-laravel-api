@@ -4,6 +4,8 @@ namespace Sanf\Core\Providers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
+use Sanf\Core\Modules\Branch\BranchRepositoryInterface;
+use Sanf\Core\Modules\Branch\EloquentBranchRepository;
 use Sanf\Core\Modules\Product\EloquentProductRepository;
 use Sanf\Core\Modules\Product\ProductRepositoryInterface;
 use Sanf\Core\Modules\ContactUs\AskUsRepositoryInterface;
@@ -21,6 +23,7 @@ class CoreServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
+        $this->loadFactoriesFrom(__DIR__ . '/../../database/factories');
 
         Auth::provider('mobile-user', function ($app, array $config) {
             return new MobileUserProvider($app['hash'], $config['model']);
@@ -52,7 +55,8 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(AskUsTopicRepositoryInterface::class, EloquentAskUsTopic::class);
         $this->app->bind(AskUsRepositoryInterface::class, EloquentAskUs::class);
         $this->app->bind(ProductRepositoryInterface::class, EloquentProductRepository::class);
-   }
+        $this->app->bind(BranchRepositoryInterface::class, EloquentBranchRepository::class);
+    }
 
     protected function registerViews()
     {

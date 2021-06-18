@@ -45,6 +45,16 @@ Route::group(['prefix' => 'v1'], function () {
                 'uses' => 'ContactUs\AskUsSubmitController@process'
             ]);
         });
+
+    Route::group([
+        'as' => 'branch',
+        'prefix' => 'branch'],
+        function () {
+            Route::get('/', [
+                'as' => 'list',
+                'uses' => 'Branch\ListBranchController@process'
+            ]);
+        });
 });
 
 Route::group([
