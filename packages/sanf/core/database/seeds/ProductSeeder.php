@@ -13,7 +13,7 @@ class ProductSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('product')->insert([
+        DB::table('product')->insertOrIgnore([
             [
                 'id' => '1',
                 'title' => 'Sewa Guna Usaha',
