@@ -5,8 +5,8 @@ namespace NbsPhp\Core\Controllers;
 
 use Illuminate\Http\Request;
 use NbsPhp\Core\Dto\DeviceInfoRequestDto;
-use NbsPhp\Core\Dto\SocialLoginDto;
-use NbsPhp\Core\Dto\SocialRegisterDto;
+use NbsPhp\Core\Dto\SocialLoginRequestDto;
+use NbsPhp\Core\Dto\SocialRegisterRequestDto;
 use NbsPhp\Core\Enum\DevicePlatform;
 use NbsPhp\Core\Exceptions\OAuthEmailRequiredException;
 use NbsPhp\Core\JWTHelper;
@@ -87,7 +87,7 @@ class OAuthController extends RestController
 
     protected function newSocialLoginDto($input)
     {
-        return new SocialLoginDto([
+        return new SocialLoginRequestDto([
             'fullName' => $input['full_name'],
             'email' => $input['email'],
             'phone' => $input['phone'] ?? null,
@@ -162,7 +162,7 @@ class OAuthController extends RestController
 
     protected function newSocialRegisterDto($input)
     {
-        return new SocialRegisterDto([
+        return new SocialRegisterRequestDto([
             'providerToken' => $input['auth_token'],
             'providerId' => $input['user_ref_id'],
             'fullName' => $input['full_name'],

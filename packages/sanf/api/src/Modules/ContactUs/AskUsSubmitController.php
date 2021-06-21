@@ -30,10 +30,9 @@ class AskUsSubmitController extends RestController
         // set up dto;
         $dto = new AskUsSubmitRequestDto($property);
 
-        // handle transaction;
-        DB::transaction(function () use ($dto){
-            // run service;
-            $this->service->run($dto);
+        //TODO USE DECORATOR
+        DB::transaction(function () use ($dto) {
+            $this->service->execute($dto);
         });
 
         // sent response;
@@ -44,39 +43,17 @@ class AskUsSubmitController extends RestController
     private function validating(Request $request)
     {
         $rules = [
-            'topic_id' => [
-                'required'
-            ],
-            'title' => [
-                'required', 'string',
-                'min:3', 'max:255'
-            ],
-            'message' => [
-                'required', 'string',
-                'min:3', 'max:65000'
-            ],
-            'name' => [
-                'required', 'string',
-                'min:3', 'max:128'
-            ],
-            'msisdn' => [
-                'required', 'string',
-                'min:12', 'max:16'
-            ],
-            'contract_no' => [
-                'required', 'string',
-                'min:3', 'max:64'
-            ],
-            'contact_media' => [
-                'required', 'string',
-                'min:3', 'max:8'
-            ],
-            'contact_time' => [
-                'required', 'string',
-                'min:3', 'max:255'
-            ],
-            'images' => 'nullable',
-            'images.*' => ['string', 'max:64']
+            'topic_id' => ['required',],
+            'title' => ['required', 'string', 'max:100',],
+            'message' => ['required', 'string', 'max:500',],
+            'name' => ['required', 'string', 'max:128',],
+            'email' => ['required', 'email', 'max:255',],
+            'phone_number' => ['required', 'string', 'min:11', 'max:20',],
+            'contract_no' => ['nullable', 'string', 'max:50'],
+            'contact_media' => ['required', 'string', 'max:20'],
+            'contact_time' => ['required', 'string', 'max:20'],
+            'images' => ['nullable',],
+            'images.*' => ['string', 'max:64',]
         ];
 
         return $this->validate($request, $rules);

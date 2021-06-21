@@ -15,56 +15,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'v1'], function () {
 
-    Route::post('/asset', [
-        'as' => 'upload',
-        'uses' => 'Common\UploadFileController@process'
-    ]);
+    Route::post('assets', ['as' => 'assets.upload', 'uses' => 'Common\UploadFileController@process']);
 
-    Route::group([
-        'as' => 'products',
-        'prefix' => 'products'],
-        function () {
-            Route::get('/', [
-                'as' => 'list',
-                'uses' => 'Product\ListProductController@process'
-            ]);
-        });
+    Route::get('products', ['as' => 'products.list', 'uses' => 'Product\ListProductController@process']);
 
-    Route::group([
-        'as' => 'contact-us',
-        'prefix' => 'contact-us'],
-        function () {
+    Route::get('contact-us/topics', ['as' => 'contact-us.topic', 'uses' => 'ContactUs\ListAskUsTopicController@process']);
+    Route::post('contact-us/ask-us', ['as' => 'contact-us.ask-us', 'uses' => 'ContactUs\AskUsSubmitController@process']);
 
-            Route::get('/topics', [
-                'as' => 'topic',
-                'uses' => 'ContactUs\ListAskUsTopicController@process'
-            ]);
-
-            Route::post('/ask-us', [
-                'as' => 'ask-us',
-                'uses' => 'ContactUs\AskUsSubmitController@process'
-            ]);
-        });
-
-    Route::group([
-        'as' => 'branch',
-        'prefix' => 'branch'],
-        function () {
-            Route::get('/', [
-                'as' => 'list',
-                'uses' => 'Branch\ListBranchController@process'
-            ]);
-        });
+    Route::get('branch', ['as' => 'branch.list', 'uses' => 'Branch\ListBranchController@process']);
 });
-
-Route::group([
-    'as' => 'web-view',
-    'prefix' => 'web-view'],
-    function () {
-
-        Route::get('/about-us', [
-            'as' => 'about-us',
-            'uses' => 'Common\WebViewAboutUsController@process'
-        ]);
-
-    });

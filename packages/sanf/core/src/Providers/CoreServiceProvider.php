@@ -10,7 +10,7 @@ use Sanf\Core\Modules\Product\EloquentProductRepository;
 use Sanf\Core\Modules\Product\ProductRepositoryInterface;
 use Sanf\Core\Modules\ContactUs\AskUsRepositoryInterface;
 use Sanf\Core\Modules\ContactUs\AskUsTopicRepositoryInterface;
-use Sanf\Core\Modules\ContactUs\EloquentAskUs;
+use Sanf\Core\Modules\ContactUs\EloquentAskUsRepository;
 use Sanf\Core\Modules\ContactUs\EloquentAskUsTopic;
 
 class CoreServiceProvider extends ServiceProvider
@@ -53,7 +53,7 @@ class CoreServiceProvider extends ServiceProvider
     {
 //        $this->app->bind(FooRepositoryInterface::class, EloquentFooRepository::class);
         $this->app->bind(AskUsTopicRepositoryInterface::class, EloquentAskUsTopic::class);
-        $this->app->bind(AskUsRepositoryInterface::class, EloquentAskUs::class);
+        $this->app->bind(AskUsRepositoryInterface::class, EloquentAskUsRepository::class);
         $this->app->bind(ProductRepositoryInterface::class, EloquentProductRepository::class);
         $this->app->bind(BranchRepositoryInterface::class, EloquentBranchRepository::class);
     }

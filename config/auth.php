@@ -159,7 +159,7 @@ return [
         'list' => [
             [
                 'method' => 'post',
-                'uri' => "auth/user-app",
+                'uri' => "v1/auth/user-app",
                 'name' => 'auth.user-app',
                 'action' => "{$namespace}AuthController@loginApp",
                 'middleware' => [],

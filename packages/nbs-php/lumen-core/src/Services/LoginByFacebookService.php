@@ -6,7 +6,7 @@ namespace NbsPhp\Core\Services;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use NbsPhp\Core\Dto\SocialLoginDto;
+use NbsPhp\Core\Dto\SocialLoginRequestDto;
 use NbsPhp\Core\Enum\AuthProvider;
 use NbsPhp\Core\Enum\OAuthProvider;
 use NbsPhp\Core\Exceptions\InvalidCredentialException;
@@ -33,7 +33,7 @@ class LoginByFacebookService implements ApplicationServiceInterface
     }
 
     /**
-     * @param SocialLoginDto $dto
+     * @param SocialLoginRequestDto $dto
      * @return mixed
      */
     public function execute($dto)

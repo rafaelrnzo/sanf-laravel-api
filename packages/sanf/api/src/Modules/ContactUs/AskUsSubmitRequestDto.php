@@ -16,7 +16,9 @@ class AskUsSubmitRequestDto extends DataTransferObject
 
     public string $name;
 
-    public string $msisdn;
+    public string $phone_number;
+
+    public string $email;
 
     public string $contract_no;
 

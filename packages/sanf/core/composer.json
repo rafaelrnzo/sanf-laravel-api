@@ -1,5 +1,5 @@
 {
-    "name": "acme/core",
+    "name": "sanf/core",
     "description": "Sanf Core",
     "version": "0.0.1",
     "require": {

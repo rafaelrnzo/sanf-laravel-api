@@ -1,11 +1,10 @@
 <?php
 
-namespace Sanf\Console\Providers;
+namespace Sanf\Web\Providers;
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 
-class ConsoleServiceProvider extends ServiceProvider
+class WebServiceProvider extends ServiceProvider
 {
     /**
      * Boot the application events.
@@ -14,7 +13,6 @@ class ConsoleServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
     }
 
     /**
@@ -33,7 +31,7 @@ class ConsoleServiceProvider extends ServiceProvider
 
     public function registerProviders()
     {
-//        $this->app->register(RouteServiceProvider::class);
+        $this->app->register(RouteServiceProvider::class);
     }
 
     public function registerBindings()
@@ -43,7 +41,7 @@ class ConsoleServiceProvider extends ServiceProvider
 
     protected function registerViews()
     {
-//        $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'console');
+        $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'web');
     }
 
     /**
@@ -53,6 +51,7 @@ class ConsoleServiceProvider extends ServiceProvider
      */
     protected function registerConfigs()
     {
+
     }
 
     /**
@@ -62,12 +61,12 @@ class ConsoleServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/vendor/console');
+        $langPath = resource_path('lang/vendor/web');
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, 'console');
+            $this->loadTranslationsFrom($langPath, 'web');
         } else {
-            $this->loadTranslationsFrom(__DIR__ . '/../../resources/lang', 'console');
+            $this->loadTranslationsFrom(__DIR__ . '/../../resources/lang', 'web');
         }
     }
 }

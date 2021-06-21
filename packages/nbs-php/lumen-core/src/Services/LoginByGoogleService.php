@@ -6,7 +6,7 @@ namespace NbsPhp\Core\Services;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use NbsPhp\Core\Dto\SocialLoginDto;
+use NbsPhp\Core\Dto\SocialLoginRequestDto;
 use NbsPhp\Core\Enum\AuthProvider;
 use NbsPhp\Core\Enum\OAuthProvider;
 use NbsPhp\Core\Exceptions\OAuthUserNotBoundException;
@@ -32,7 +32,7 @@ class LoginByGoogleService implements ApplicationServiceInterface
     }
 
     /**
-     * @param SocialLoginDto $dto
+     * @param SocialLoginRequestDto $dto
      * @return mixed
      * @throws \NbsPhp\Core\Exceptions\InvalidTokenException
      */

@@ -4,8 +4,10 @@
 namespace NbsPhp\Core\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use NbsPhp\Core\Dto\AppLoginRequestDto;
 use NbsPhp\Core\Dto\DeviceInfoRequestDto;
+use NbsPhp\Core\Dto\LoginRequestDto;
+use NbsPhp\Core\Dto\RegisterRequestDto;
 use NbsPhp\Core\Dto\UpdateSessionRequestDto;
 use NbsPhp\Core\Enum\DevicePlatform;
 use NbsPhp\Core\Exceptions\UnauthorizedException;
@@ -39,10 +41,10 @@ class AuthController extends RestController
 
     public function loginApp(Request $request, AppLoginService $service)
     {
-        $dto = (object)[
+        $dto = new AppLoginRequestDto([
             'clientId' => $request->getUser(),
             'clientSecret' => $request->getPassword()
-        ];
+        ]);
         $app = $service->execute($dto);
 
         return $this->responseOk()
@@ -65,7 +67,8 @@ class AuthController extends RestController
             $prefix . "metadata.user_agent" => ['nullable', 'string',],
         ]);
 
-        if (in_array((int)$request->input('device.device_platform_id'), [DevicePlatform::ANDROID, DevicePlatform::IOS])) {
+        $devicePlatformId = (int)$request->input('device.device_platform_id');
+        if (in_array($devicePlatformId, [DevicePlatform::ANDROID, DevicePlatform::IOS])) {
             $validated += $this->validate($request, [
                 $prefix . 'notification_token' => ['required', 'string',],
                 $prefix . 'notification_channel_id' => ['required', 'integer',],
@@ -73,7 +76,7 @@ class AuthController extends RestController
                 $prefix . 'metadata.manufacturer' => ['required', 'string',],
                 $prefix . 'metadata.model' => ['required', 'string',],
             ]);
-        } else if ((int)$request->input('device.device_platform_id') === DevicePlatform::WEB) {
+        } else if ($devicePlatformId === DevicePlatform::WEB) {
             $validated += $this->validate($request, [
                 $prefix . 'metadata' => ['required',],
                 $prefix . 'metadata.user_agent' => ['required', 'string',],
@@ -101,14 +104,14 @@ class AuthController extends RestController
     public function register(Request $request, RegisterService $service)
     {
         $input = $this->validateRegister($request);
-        //TODO DTO
-        $dto = (object)[
+
+        $dto = new RegisterRequestDto([
             'fullName' => $input['full_name'],
             'email' => $input['email'],
             'landlineNumber' => $input['landline_number'] ?? null,
             'phoneNumber' => $input['phone_number'],
             'password' => $input['password'],
-        ];
+        ]);
 
         $service->execute($dto);
 
@@ -130,7 +133,7 @@ class AuthController extends RestController
     public function login(Request $request, LoginWithEmailAndPasswordService $service)
     {
         $input = $this->validateLogin($request);
-        $dto = (object)[
+        $dto = new LoginRequestDto([
             'username' => $input['username'],
             'password' => $input['password'],
             'device' => new DeviceInfoRequestDto([
@@ -140,7 +143,7 @@ class AuthController extends RestController
                 'notificationChannelId' => $input['device']['notification_channel_id'],
                 'metadata' => $input['device']['metadata']
             ])
-        ];
+        ]);
         $user = $service->execute($dto);
 
         return $this->responseOk(

@@ -11,7 +11,7 @@ class CreateMAskUsTopicTable extends Migration
     {
         Schema::create('m_ask_us_topic', function (Blueprint $table) {
             $table->smallInteger('id')->primary()->unsigned();
-            $table->string('name', 32);
+            $table->string('name', 50);
             $table->timestamp('updated_at')->default((DB::raw('CURRENT_TIMESTAMP')));
         });
 

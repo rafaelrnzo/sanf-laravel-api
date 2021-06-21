@@ -45,7 +45,8 @@
             "NbsPhp\\Core\\": "packages/nbs-php/lumen-core/src",
             "Sanf\\Core\\": "packages/sanf/core/src",
             "Sanf\\Console\\": "packages/sanf/console/src",
-            "Sanf\\Api\\": "packages/sanf/api/src"
+            "Sanf\\Api\\": "packages/sanf/api/src",
+            "Sanf\\Web\\": "packages/sanf/web/src"
         },
         "files": [
             "packages/nbs-php/lumen-core/src/helpers.php"

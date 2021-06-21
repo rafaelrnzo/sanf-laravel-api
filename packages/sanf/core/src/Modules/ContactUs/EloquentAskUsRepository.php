@@ -4,7 +4,7 @@
 namespace Sanf\Core\Modules\ContactUs;
 
 
-class EloquentAskUs implements AskUsRepositoryInterface
+class EloquentAskUsRepository implements AskUsRepositoryInterface
 {
 
     /** @var AskUsModel $model */
@@ -19,6 +19,6 @@ class EloquentAskUs implements AskUsRepositoryInterface
     {
         return $this->model
             ->newQuery()
-            ->create($data);
+            ->forceCreate($data);
     }
 }

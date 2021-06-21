@@ -1,5 +1,5 @@
 {
-    "name": "acme/console",
+    "name": "sanf/console",
     "description": "Sanf Console",
     "version": "0.0.1",
     "require": {

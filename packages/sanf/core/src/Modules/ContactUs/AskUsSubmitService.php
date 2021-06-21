@@ -6,10 +6,11 @@ namespace Sanf\Core\Modules\ContactUs;
 
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\FileNotFoundException;
+use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\ServiceInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class AskUsSubmitService implements ServiceInterface
+class AskUsSubmitService implements ApplicationServiceInterface
 {
 
     protected $repository;
@@ -19,36 +20,36 @@ class AskUsSubmitService implements ServiceInterface
         $this->repository = $repository;
     }
 
-    public function run($dto)
+    public function execute($dto)
     {
         $images = [];
 
         // move asset;
         foreach ($dto->images as $image) {
+            $newPath = config('image-path.ask-us');
             $tempPath = config('image-path.temp');
 
-            // prevent image doesn't exist;
-            $exist = Storage::exists("{$tempPath}{$image}");
-            throw_if(!$exist, new FileNotFoundException("{$tempPath}{$image}"));
-
-            $newPath = config('image-path.ask-us');
-            Storage::move("{$tempPath}{$image}", "{$newPath}{$image}");
+            $exist = Storage::exists("{$newPath}{$image}");
+            if(!$exist){
+                Storage::move("{$tempPath}{$image}", "{$newPath}{$image}");
+            }
 
             $images[] = [
                 'file_name' => $image,
                 'directory' => $newPath,
                 'path' => "{$newPath}{$image}",
-                'mime_type' => Storage::getMimeType("{$tempPath}{$image}")
+                'mime_type' => Storage::getMimeType("{$newPath}{$image}")
             ];
         }
 
         // prepare data;
         $data = $dto->toArray();
         $data['images'] = json_encode($images);
-        $data['modified_by'] = json_encode([]); // TODO filled this;
 
         // store data;
-        $query = $this->repository->save($data);
+        //TODO USE REPOSITORY
+        $data['topic'] = optional(AskUsTopicModel::find($data['topic_id']))->name;
+        $this->repository->save($data);
 
         return true;
     }
