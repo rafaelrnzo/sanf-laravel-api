@@ -181,7 +181,7 @@ return [
             [
                 'method' => 'post',
                 'uri' => "{$routePrefix}/log-in",
-                'name' => 'login.post',
+                'name' => 'login.email',
                 'action' => "{$namespace}AuthController@login",
                 'middleware' => [],
             ],
@@ -254,6 +254,21 @@ return [
                 'name' => 'user.profile-update',
                 'action' => "{$namespace}UserController@updateProfile",
                 'middleware' => ['auth'],
+            ],
+            //TODO MOVE TO OAUTH PACKAGE
+            [
+                'method' => 'post',
+                'uri' => "{$routePrefix}/log-in/google",
+                'name' => 'login.google',
+                'action' => "{$namespace}OAuthController@loginGoogle",
+                'middleware' => [],
+            ],
+            [
+                'method' => 'post',
+                'uri' => "{$routePrefix}/log-in/apple",
+                'name' => 'login.apple',
+                'action' => "{$namespace}OAuthController@loginApple",
+                'middleware' => [],
             ],
         ],
     ],

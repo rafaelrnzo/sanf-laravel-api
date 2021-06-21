@@ -11,7 +11,7 @@ use NbsPhp\Core\JWTHelper;
 use NbsPhp\Core\Models\AuthModel;
 use NbsPhp\Core\Models\UserSessionModel;
 
-class LoginWithEmailAndPasswordService
+class LoginWithEmailAndPasswordService implements ApplicationServiceInterface
 {
     protected $jwt;
 

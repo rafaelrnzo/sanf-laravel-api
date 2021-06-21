@@ -118,8 +118,8 @@ class AuthController extends RestController
     protected function validateLogin(Request $request): array
     {
         $validated = $this->validate($request, [
-            'username' => ['required', 'email',],
-            'password' => ['required']
+            'username' => ['required', 'email', 'max:255'],
+            'password' => ['required', 'string']
         ]);
 
         $validated += $this->validateDeviceInformation($request, 'device.');
