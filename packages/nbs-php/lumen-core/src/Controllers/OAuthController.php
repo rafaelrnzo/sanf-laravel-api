@@ -6,10 +6,17 @@ namespace NbsPhp\Core\Controllers;
 use Illuminate\Http\Request;
 use NbsPhp\Core\Dto\DeviceInfoRequestDto;
 use NbsPhp\Core\Dto\SocialLoginDto;
+use NbsPhp\Core\Dto\SocialRegisterDto;
 use NbsPhp\Core\Enum\DevicePlatform;
+use NbsPhp\Core\Exceptions\OAuthEmailRequiredException;
 use NbsPhp\Core\JWTHelper;
+use NbsPhp\Core\Services\ApplicationServiceInterface;
 use NbsPhp\Core\Services\LoginByAppleService;
 use NbsPhp\Core\Services\LoginByGoogleService;
+use NbsPhp\Core\Services\RegisterByAppleService;
+use NbsPhp\Core\Services\RegisterByGoogleService;
+use NbsPhp\Core\Services\RegisterService;
+use Spatie\DataTransferObject\DataTransferObject;
 
 class OAuthController extends RestController
 {
@@ -99,9 +106,7 @@ class OAuthController extends RestController
     public function loginGoogle(Request $request, LoginByGoogleService $service)
     {
         $input = $this->validateLogin($request);
-
         $dto = $this->newSocialLoginDto($input);
-
         $user = $service->execute($dto);
 
         return $this->responseOk(
@@ -117,11 +122,89 @@ class OAuthController extends RestController
 
     public function loginApple(Request $request, LoginByAppleService $service)
     {
+        $appleJWTToken = JWTHelper::verifyAppleIdToken($request->input('auth_token'));
+        $request->merge(['user_ref_id' => $appleJWTToken['sub']]);
+        if ($appleJWTToken['is_private_email'] === 'true') {
+            throw new OAuthEmailRequiredException();
+        }
         $input = $this->validateLogin($request);
-
         $dto = $this->newSocialLoginDto($input);
-
         $user = $service->execute($dto);
+
+        return $this->responseOk(
+            'Success',
+            fractal($user, config('auth.login_transformer'))
+        )->withHeaders([
+            'X-Access-Token' => $user->accessToken,
+            'X-Access-Expired-At' => $user->accessExpiredAt,
+            'X-Refresh-Token' => $user->refreshToken,
+            'X-Refresh-Expired-At' => $user->refreshExpiredAt,
+        ]);
+    }
+
+    protected function validateRegister(Request $request): array
+    {
+        $validated = $this->validate($request, [
+            'auth_token' => ['required', 'string',],
+            'user_ref_id' => ['required', 'string',],
+            'full_name' => ['required', 'string',],
+            'email' => ['required', 'email',],
+            'password' => ['required', 'min:8',],
+            'landline_number' => ['string', 'nullable', 'min:10',],
+            'phone_number' => ['required', 'min:10',],
+        ]);
+
+        $validated += $this->validateDeviceInformation($request, 'device.');
+
+        return $validated;
+    }
+
+
+    protected function newSocialRegisterDto($input)
+    {
+        return new SocialRegisterDto([
+            'providerToken' => $input['auth_token'],
+            'providerId' => $input['user_ref_id'],
+            'fullName' => $input['full_name'],
+            'email' => $input['email'],
+            'landlineNumber' => $input['landline_number'] ?? null,
+            'phoneNumber' => $input['phone_number'],
+            'password' => $input['password'],
+            'device' => new DeviceInfoRequestDto([
+                'deviceId' => $input['device']['device_id'],
+                'devicePlatformId' => $input['device']['device_platform_id'],
+                'notificationToken' => $input['device']['notification_token'],
+                'notificationChannelId' => $input['device']['notification_channel_id'],
+                'metadata' => $input['device']['metadata']
+            ])
+        ]);
+    }
+
+    public function registerGoogle(Request $request, RegisterByGoogleService $service)
+    {
+        $this->registerSocialPlatform($request, $service);
+    }
+
+    public function registerApple(Request $request, RegisterByAppleService $service)
+    {
+        $appleJWTToken = JWTHelper::verifyAppleIdToken($request->input('auth_token'));
+        $request->merge(['user_ref_id' => $appleJWTToken['sub']]);
+        if ($appleJWTToken['is_private_email'] === 'true') {
+            throw new OAuthEmailRequiredException();
+        }
+
+        return $this->registerSocialPlatform($request, $service);
+    }
+
+    protected function registerSocialPlatform($request, ApplicationServiceInterface $service)
+    {
+        $input = $this->validateRegister($request);
+        $dto = $this->newSocialLoginDto($input);
+        $user = $service->execute($dto);
+
+        if (is_null($user)) {
+            return $this->responseOk();
+        }
 
         return $this->responseOk(
             'Success',

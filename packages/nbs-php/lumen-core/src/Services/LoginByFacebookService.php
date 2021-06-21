@@ -6,10 +6,11 @@ namespace NbsPhp\Core\Services;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use NbsPhp\Core\Dto\SocialLoginDto;
 use NbsPhp\Core\Enum\AuthProvider;
 use NbsPhp\Core\Enum\OAuthProvider;
 use NbsPhp\Core\Exceptions\InvalidCredentialException;
-use NbsPhp\Core\Exceptions\UserNotRegisteredException;
+use NbsPhp\Core\Exceptions\OAuthUserNotBoundException;
 use NbsPhp\Core\JWTHelper;
 use NbsPhp\Core\Models\AuthModel;
 use NbsPhp\Core\Models\UserOAuthModel;
@@ -31,6 +32,10 @@ class LoginByFacebookService implements ApplicationServiceInterface
         $this->repository = $repository;
     }
 
+    /**
+     * @param SocialLoginDto $dto
+     * @return mixed
+     */
     public function execute($dto)
     {
         //TODO USING REPO
@@ -43,12 +48,13 @@ class LoginByFacebookService implements ApplicationServiceInterface
                 ->first();
 
             if (!$userOAuth) {
-                throw new InvalidCredentialException();
+                throw new OAuthUserNotBoundException();
             }
 
             $user = $userOAuth->user;
 
             $userOAuth->update([
+                'name' => $dto->fullName,
                 'provider_token' => $dto->providerToken,
             ]);
 

@@ -29,7 +29,7 @@ class CreateAuthTables extends Migration
             $table->string('landline_number', 20)->nullable();
             $table->string('phone_number', 20);
             $table->tinyInteger('status_id');
-            $table->timestamp('activated_at')->nullable();
+            $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('last_login_at')->nullable();
             $table->timestamp('password_updated_at')->nullable();
             $table->timestamps();

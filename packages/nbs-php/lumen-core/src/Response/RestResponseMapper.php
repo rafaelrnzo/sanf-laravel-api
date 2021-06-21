@@ -120,7 +120,6 @@ class RestResponseMapper implements ResponseMapperInterface
 
             //handle response for validation exception
             if (optional($exception)->status === Response::HTTP_UNPROCESSABLE_ENTITY) {
-                $error['code'] = Response::HTTP_UNPROCESSABLE_ENTITY;
                 $error['data']['_trace']['validations'] = $exception->getResponse()->original;
             }
         }

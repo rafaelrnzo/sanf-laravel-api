@@ -17,7 +17,7 @@ use NbsPhp\Core\Traits\MustVerifyEmail;
  * @property int                $id
  * @property string             $name
  * @property string             $username
- * @property Carbon|string|null $activated_at
+ * @property Carbon|string|null $email_verified_at
  * @property string             $password
  * @property int                $status_id
  * @property string             $remember_token
@@ -48,8 +48,9 @@ class AuthModel extends AbstractModel implements
     ];
 
     protected $casts = [
-        'activated_at' => 'datetime',
+        'email_verified_at' => 'datetime',
         'last_login_at' => 'datetime',
+        'password_updated_at' => 'datetime',
     ];
 
     public function __construct(array $attributes = [])

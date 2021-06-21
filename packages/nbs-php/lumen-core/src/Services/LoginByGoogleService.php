@@ -6,9 +6,10 @@ namespace NbsPhp\Core\Services;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use NbsPhp\Core\Dto\SocialLoginDto;
 use NbsPhp\Core\Enum\AuthProvider;
 use NbsPhp\Core\Enum\OAuthProvider;
-use NbsPhp\Core\Exceptions\UserNotRegisteredException;
+use NbsPhp\Core\Exceptions\OAuthUserNotBoundException;
 use NbsPhp\Core\JWTHelper;
 use NbsPhp\Core\Models\AuthModel;
 use NbsPhp\Core\Models\UserOAuthModel;
@@ -30,6 +31,11 @@ class LoginByGoogleService implements ApplicationServiceInterface
         $this->repository = $repository;
     }
 
+    /**
+     * @param SocialLoginDto $dto
+     * @return mixed
+     * @throws \NbsPhp\Core\Exceptions\InvalidTokenException
+     */
     public function execute($dto)
     {
         $this->jwt::verifyGoogleToken($dto->providerToken);
@@ -44,12 +50,13 @@ class LoginByGoogleService implements ApplicationServiceInterface
                 ->first();
 
             if (!$userOAuth) {
-                throw new UserNotRegisteredException();
+                throw new OAuthUserNotBoundException();
             }
 
             $user = $userOAuth->user;
 
             $userOAuth->update([
+                'name' => $dto->fullName,
                 'provider_token' => $dto->providerToken,
             ]);
 
