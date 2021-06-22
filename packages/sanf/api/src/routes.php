@@ -13,7 +13,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::group(['prefix' => 'v1'], function () {
+Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
 
     Route::post('assets', ['as' => 'assets.upload', 'uses' => 'Common\UploadFileController@process']);
 
