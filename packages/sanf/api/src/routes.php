@@ -22,5 +22,5 @@ Route::group(['prefix' => 'v1'], function () {
     Route::get('contact-us/topics', ['as' => 'contact-us.topic', 'uses' => 'ContactUs\ListAskUsTopicController@process']);
     Route::post('contact-us/ask-us', ['as' => 'contact-us.ask-us', 'uses' => 'ContactUs\AskUsSubmitController@process']);
 
-    Route::get('branch', ['as' => 'branch.list', 'uses' => 'Branch\ListBranchController@process']);
+    Route::get('branch-offices', ['as' => 'branch.list', 'uses' => 'Branch\ListBranchController@process']);
 });
