@@ -32,7 +32,7 @@ class UploadFileController extends RestController
         ]);
 
         // run service;
-        $result = $this->service->run($dto);
+        $result = $this->service->execute($dto);
 
         // sent response;
         return fractal($result, UploadFileTransformer::class);

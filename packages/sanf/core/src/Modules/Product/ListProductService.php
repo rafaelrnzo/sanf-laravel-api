@@ -4,13 +4,10 @@
 namespace Sanf\Core\Modules\Product;
 
 
-use Illuminate\Support\Facades\Storage;
-use League\Flysystem\FileNotFoundException;
-use Sanf\Api\Modules\Common\UploadFileResultDto;
+use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Api\Modules\Product\ListProductResultDto;
-use Sanf\Core\Modules\ServiceInterface;
 
-class ListProductService implements ServiceInterface
+class ListProductService implements ApplicationServiceInterface
 {
 
     protected $repository;
@@ -20,7 +17,7 @@ class ListProductService implements ServiceInterface
         $this->repository = $repository;
     }
 
-    public function run($dto)
+    public function execute($dto)
     {
         // prepare filter;
         $filter = [];

@@ -6,13 +6,13 @@ namespace Sanf\Core\Modules\Common;
 
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\FileNotFoundException;
+use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Api\Modules\Common\UploadFileResultDto;
-use Sanf\Core\Modules\ServiceInterface;
 
-class UploadFileService implements ServiceInterface
+class UploadFileService implements ApplicationServiceInterface
 {
 
-    public function run($dto)
+    public function execute($dto)
     {
         $configs = [
             1 => 'image-path',
