@@ -9,6 +9,11 @@ return [
 
     'profile_transformer' => \Sanf\Api\Modules\User\ProfileTransformer::class,
 
+    'notifications' => [
+        'reset-password' => \Sanf\Core\Modules\User\Notifications\ResetPasswordNotification::class,
+        'verify-email' => \Sanf\Core\Modules\User\Notifications\VerifyEmailNotification::class,
+    ],
+
     'table_names' => [
         'user_auth' => 'user_auth',
         'password_reset' => 'password_reset',

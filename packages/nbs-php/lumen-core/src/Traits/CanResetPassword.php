@@ -4,6 +4,7 @@ namespace NbsPhp\Core\Traits;
 
 
 use NbsPhp\Core\Notifications\ResetPasswordNotification;
+use NbsPhp\Core\Notifications\VerifyEmailNotification;
 
 trait CanResetPassword
 {
@@ -15,7 +16,8 @@ trait CanResetPassword
      */
     public function sendPasswordResetNotification($token)
     {
-        $this->notify(new ResetPasswordNotification($token));
+        $notificationClass = config('auth.notifications.reset-password', ResetPasswordNotification::class);
+        $this->notify(new $notificationClass($token));
     }
 
     /**
@@ -35,6 +37,6 @@ trait CanResetPassword
      */
     public function getNameForPasswordReset()
     {
-        return $this->name;
+        return $this->full_name;
     }
 }

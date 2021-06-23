@@ -36,7 +36,8 @@ trait MustVerifyEmail
      */
     public function sendEmailVerificationNotification()
     {
-        $this->notify(new VerifyEmailNotification());
+        $notificationClass = config('auth.notifications.verify-email', VerifyEmailNotification::class);
+        $this->notify(new $notificationClass);
     }
 
     /**
