@@ -33,7 +33,7 @@ class ListAskUsTopicController extends RestController
         $dto = new ListAskUsTopicRequestDto($property);
 
         // run service;
-        $result = $this->service->run($dto);
+        $result = $this->service->execute($dto);
 
         // sent response;
         return fractal($result->list, ListAskUsTopicTransformer::class);

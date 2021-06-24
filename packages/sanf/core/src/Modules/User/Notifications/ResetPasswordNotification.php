@@ -31,9 +31,10 @@ class ResetPasswordNotification extends Notification
         return (new BaseMail)
             ->subject('Reset Password')
             ->logo(asset('assets/svg/sanf-logo.svg'))
-            ->greeting(__('Halo :name,', ['name' => $notifiable->getNameForPasswordReset()]))
-            ->line(__('Anda menerima email ini karena kami menerima permintaan pengaturan ulang password untuk akun Anda. Jika Anda tidak meminta pengaturan ulang password, tidak ada tindakan lebih lanjut yang diperlukan.'))
+            ->greeting(__('Reset Password Akun SANF'))
+            ->line(__('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sollicitudin arcu felis, a suscipit arcu fringilla at. Nunc ante dolor, gravida quis ante vel, eleifend porta nunc.'))
             ->action(__('Reset Password'), $resetUrl)
+            ->line(__('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sollicitudin arcu felis, a suscipit arcu fringilla at. Nunc ante dolor, gravida quis ante vel, eleifend porta nunc.'))
 //            ->line(__('Jika Anda mengalami kesulitan mengklik tombol "Reset Password". Salin dan tempel URL di bawah ini ke web browser Anda:'))
 //            ->line("<a href=\"{$resetUrl}\">{$resetUrl}</a>")
             ->to($notifiable->getEmailForPasswordReset(), $notifiable->getNameForPasswordReset());

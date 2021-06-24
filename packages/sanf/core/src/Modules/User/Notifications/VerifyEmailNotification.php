@@ -25,8 +25,10 @@ class VerifyEmailNotification extends Notification
         return (new BaseMail())
             ->subject('Email Verification')
             ->logo(asset('assets/svg/sanf-logo.svg'))
-            ->greeting(__('Terima Kasih Telah Bergabung Dengan Kami,'))
-            ->action(__('Verifikasi'), $verificationUrl)
+            ->greeting(__('Aktivasi Akun SANF'))
+            ->line(__('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sollicitudin arcu felis, a suscipit arcu fringilla at. Nunc ante dolor, gravida quis ante vel, eleifend porta nunc.'))
+            ->action(__('Aktivasi Akun'), $verificationUrl)
+            ->line(__('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sollicitudin arcu felis, a suscipit arcu fringilla at. Nunc ante dolor, gravida quis ante vel, eleifend porta nunc.'))
             //->line(__('Jika Anda mengalami kesulitan mengklik tombol "Verifikasi". Salin dan tempel URL di bawah ini ke web browser Anda:'))
             //->line("<a href=\"{$verificationUrl}\">{$verificationUrl}</a>")
             ->to($notifiable->getEmailForVerification(), $fullName);

@@ -13,7 +13,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::group(['prefix' => 'v1'], function () {
+Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
 
     Route::post('assets', ['as' => 'assets.upload', 'uses' => 'Common\UploadFileController@process']);
 
@@ -22,5 +22,5 @@ Route::group(['prefix' => 'v1'], function () {
     Route::get('contact-us/topics', ['as' => 'contact-us.topic', 'uses' => 'ContactUs\ListAskUsTopicController@process']);
     Route::post('contact-us/ask-us', ['as' => 'contact-us.ask-us', 'uses' => 'ContactUs\AskUsSubmitController@process']);
 
-    Route::get('branch', ['as' => 'branch.list', 'uses' => 'Branch\ListBranchController@process']);
+    Route::get('branch-offices', ['as' => 'branch.list', 'uses' => 'Branch\ListBranchController@process']);
 });

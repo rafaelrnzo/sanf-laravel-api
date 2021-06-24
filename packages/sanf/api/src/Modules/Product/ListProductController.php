@@ -36,7 +36,7 @@ class ListProductController extends RestController
         $dto = new ListProductRequestDto($property);
 
         // run service;
-        $result = $this->service->run($dto);
+        $result = $this->service->execute($dto);
 
         // sent response;
         return fractal($result->list, ListProductTransformer::class);

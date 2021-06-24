@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Sanf\Api\Modules\Branch;
+namespace Sanf\Core\Modules\Branch;
 
 
 use Spatie\DataTransferObject\DataTransferObject;

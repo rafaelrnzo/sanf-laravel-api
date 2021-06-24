@@ -1,12 +1,12 @@
 /* -------------------------------------
     GLOBAL RESETS
 ------------------------------------- */
-
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;700&display=swap");
 /*All the styling goes here*/
 
 body {
     background-color: #e6e6e6;
-    font-family: sans-serif;
+    font-family: "Roboto", sans-serif;
     -webkit-font-smoothing: antialiased;
     font-size: 14px;
     line-height: 1.4;
@@ -25,7 +25,7 @@ table {
 }
 
 table td {
-    font-family: sans-serif;
+    font-family: "Roboto", sans-serif;
     font-size: 14px;
     vertical-align: top;
 }
@@ -61,7 +61,7 @@ img {
 .content {
     box-sizing: border-box;
     display: block;
-    Margin: 0 auto;
+    margin: 0 auto;
     max-width: 600px;
 }
 
@@ -75,12 +75,12 @@ img {
 
 .header {
     padding: 20px;
-    background: #032b94;
+    background: #03257e;
 }
 
 .wrapper {
     box-sizing: border-box;
-    padding: 20px;
+    padding: 25px;
 }
 
 .content-block {
@@ -91,7 +91,7 @@ img {
 .footer {
     clear: both;
     width: 100%;
-    margin: 30px 0;
+    margin: 10px 0 30px 0;
     text-align: center;
 }
 
@@ -108,8 +108,11 @@ img {
 }
 
 .footer .copyright {
-    text-align: right;
-    vertical-align: middle;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* text-align: right;
+    vertical-align: middle; */
 }
 
 /* -------------------------------------
@@ -120,7 +123,7 @@ h2,
 h3,
 h4 {
     color: #06090f;
-    font-family: sans-serif;
+    font-family: "Roboto", sans-serif;
     font-weight: 400;
     line-height: 1.4;
     margin: 0 0 30px;
@@ -136,10 +139,10 @@ h1 {
 p,
 ul,
 ol {
-    font-family: sans-serif;
+    font-family: "Roboto", sans-serif;
     font-size: 14px;
     font-weight: normal;
-    margin: 0 0 15px;
+    margin: 10px 0 5px;
 }
 
 p li,
@@ -182,7 +185,7 @@ a {
     border: solid 1px #052c3c;
     border-radius: 4px;
     box-sizing: border-box;
-    color: #C6FFC2;
+    color: #c6ffc2;
     cursor: pointer;
     display: inline-block;
     font-size: 14px;
@@ -242,8 +245,8 @@ a {
 }
 
 .greeting {
-    color: #052c3c;
-    font-size: 25px;
+    color: #212121;
+    font-size: 18px;
     font-weight: bolder;
 }
 
@@ -266,7 +269,7 @@ a {
 }
 
 .bg-primary {
-    background-color: #D8F1FF;
+    background-color: #d8f1ff;
 }
 
 .text-xl5 {
@@ -312,56 +315,56 @@ a {
 hr {
     border: 0;
     border-bottom: 1px solid #f6f6f6;
-    Margin: 20px 0;
+    margin: 20px 0;
 }
 
 /* -------------------------------------
     RESPONSIVE AND MOBILE FRIENDLY STYLES
 ------------------------------------- */
 @media only screen and (max-width: 620px) {
-    table[class=body] h1 {
+    table[class="body"] h1 {
         font-size: 28px !important;
         margin-bottom: 10px !important;
     }
 
-    table[class=body] p,
-    table[class=body] ul,
-    table[class=body] ol,
-    table[class=body] td,
-    table[class=body] span,
-    table[class=body] a {
+    table[class="body"] p,
+    table[class="body"] ul,
+    table[class="body"] ol,
+    table[class="body"] td,
+    table[class="body"] span,
+    table[class="body"] a {
         font-size: 16px !important;
     }
 
-    table[class=body] .wrapper,
-    table[class=body] .article {
+    table[class="body"] .wrapper,
+    table[class="body"] .article {
         padding: 10px !important;
     }
 
-    table[class=body] .content {
+    table[class="body"] .content {
         padding: 0 !important;
     }
 
-    table[class=body] .container {
+    table[class="body"] .container {
         padding: 0 !important;
         width: 100% !important;
     }
 
-    table[class=body] .main {
+    table[class="body"] .main {
         border-left-width: 0 !important;
         border-radius: 0 !important;
         border-right-width: 0 !important;
     }
 
-    table[class=body] .btn table {
+    table[class="body"] .btn table {
         width: 100% !important;
     }
 
-    table[class=body] .btn a {
+    table[class="body"] .btn a {
         width: 100% !important;
     }
 
-    table[class=body] .img-responsive {
+    table[class="body"] .img-responsive {
         height: auto !important;
         max-width: 100% !important;
         width: auto !important;
@@ -384,7 +387,7 @@ hr {
 }
 
 .tb-middle {
-    vertical-align: middle
+    vertical-align: middle;
 }
 
 .tb-title {
@@ -408,27 +411,34 @@ hr {
 }
 
 .tb-amber {
-    color: #F98B00;
+    color: #f98b00;
 }
-
 
 /* -------------------------------------
     Action
 ------------------------------------- */
 .action-button {
-    background-color: #052c3c;
+    background-color: #03257e;
     border-radius: 4px;
     box-sizing: border-box;
-    color: #C6FFC2;
+    color: #fff;
     cursor: pointer;
     display: inline-block;
-    font-size: 14px;
+    font-size: 18px;
     font-weight: bold;
     margin: 0;
     min-width: 250px;
     padding: 12px 25px;
     text-decoration: none;
     text-transform: capitalize;
+}
+
+.action-button:hover {
+    background-color: #032b94 !important;
+}
+
+.action-button:focus:active {
+    background-color: #03257e !important;
 }
 
 .action-help-top {
@@ -447,7 +457,6 @@ hr {
     line-height: 150%;
 }
 
-
 /* -------------------------------------
     Card
 ------------------------------------- */
@@ -460,7 +469,29 @@ hr {
 }
 
 .card-primary {
-    background-color: #C6FFC2;
-    color: #052C3C;
+    background-color: #c6ffc2;
+    color: #052c3c;
     font-weight: bolder;
+}
+
+/* -------------------------------------
+    Message
+------------------------------------- */
+.intro-message {
+    font-family: "Roboto", sans-serif;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 16px;
+    line-height: 27px;
+    color: #616161;
+    margin: 10px 0 0 0;
+}
+
+.outro-message {
+    font-family: "Roboto", sans-serif;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 13px;
+    color: #616161;
+    margin: 0 0 20px 0;
 }

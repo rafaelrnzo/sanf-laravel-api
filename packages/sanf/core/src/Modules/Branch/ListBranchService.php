@@ -4,10 +4,9 @@
 namespace Sanf\Core\Modules\Branch;
 
 
-use Sanf\Api\Modules\Branch\ListBranchResultDto;
-use Sanf\Core\Modules\ServiceInterface;
+use NbsPhp\Core\Services\ApplicationServiceInterface;
 
-class ListBranchService implements ServiceInterface
+class ListBranchService implements ApplicationServiceInterface
 {
     protected BranchRepositoryInterface $repository;
 
@@ -16,11 +15,9 @@ class ListBranchService implements ServiceInterface
         $this->repository = $repository;
     }
 
-    public function run($dto)
+    public function execute($dto)
     {
         // sent list data
-        return new ListBranchResultDto([
-            'list' => $this->repository->list($dto->limit, $dto->offset)
-        ]);
+        return $this->repository->list($dto->limit, $dto->offset);
     }
 }

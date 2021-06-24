@@ -4,10 +4,10 @@
 namespace Sanf\Core\Modules\ContactUs;
 
 
+use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Api\Modules\ContactUs\ListAskUsTopicResultDto;
-use Sanf\Core\Modules\ServiceInterface;
 
-class ListAskUsTopicService implements ServiceInterface
+class ListAskUsTopicService implements ApplicationServiceInterface
 {
 
     protected $repository;
@@ -17,7 +17,7 @@ class ListAskUsTopicService implements ServiceInterface
         $this->repository = $repository;
     }
 
-    public function run($dto)
+    public function execute($dto)
     {
         return new ListAskUsTopicResultDto([
             'list' => $this->repository->list($dto->limit, $dto->offset)

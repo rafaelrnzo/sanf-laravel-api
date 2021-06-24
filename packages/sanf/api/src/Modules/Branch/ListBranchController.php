@@ -6,6 +6,7 @@ namespace Sanf\Api\Modules\Branch;
 
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestController;
+use Sanf\Core\Modules\Branch\ListBranchRequestDto;
 use Sanf\Core\Modules\Branch\ListBranchService;
 
 class ListBranchController extends RestController
@@ -33,24 +34,18 @@ class ListBranchController extends RestController
         $dto = new ListBranchRequestDto($property);
 
         // run service;
-        $result = $this->service->run($dto);
+        $result = $this->service->execute($dto);
 
         // sent response;
-        return fractal($result, new ListBranchTransformer());
+        return fractal($result, new DetailBranchTransformer());
     }
 
 
     private function validating(Request $request)
     {
         $rules = [
-            'limit' => [
-                'nullable',
-                'integer',
-            ],
-            'offset' => [
-                'nullable',
-                'integer',
-            ],
+            'limit' => ['nullable','integer',],
+            'offset' => ['nullable','integer',],
         ];
 
         return $this->validate($request, $rules);
