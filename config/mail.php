@@ -113,7 +113,7 @@ return [
     */
 
     'markdown' => [
-        'theme' => 'custom',
+        'theme' => 'sanf', // resources/views/vendor/mail/html/themes/sanf.css
 
         'paths' => [
             resource_path('views/vendor/mail'),
