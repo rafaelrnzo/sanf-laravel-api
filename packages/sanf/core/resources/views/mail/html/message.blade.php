@@ -32,7 +32,7 @@
                 {{--START INTRO MESSAGE--}}
                 @isset($introLines)
                     @component('mail::words')
-                        @foreach ($introLines as $line)<p>{!! $line !!}</p>@endforeach
+                        @foreach ($introLines as $line)<p class="intro-message">{!! $line !!}</p>@endforeach
                     @endcomponent
                 @endisset
                 {{--END INTRO MESSAGE--}}
@@ -52,7 +52,7 @@
                 {{--START OUTRO MESSAGE--}}
                 @isset($outroLines)
                     @component('mail::words')
-                        @foreach ($outroLines as $line)<p>{!! $line !!}</p>@endforeach
+                        @foreach ($outroLines as $line)<p class="outro-message">{!! $line !!}</p>@endforeach
                     @endcomponent
                 @endisset
                 {{--END OUTRO MESSAGE--}}

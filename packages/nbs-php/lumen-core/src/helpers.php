@@ -128,3 +128,16 @@ if (! function_exists('bcrypt')) {
         return app('hash')->driver('bcrypt')->make($value, $options);
     }
 }
+
+if (!function_exists('unix_timestamp')) {
+    /**
+     * Get the configuration path.
+     *
+     * @param string $path
+     * @return string
+     */
+    function unix_timestamp($date)
+    {
+        return optional(Carbon::make($date))->timestamp;
+    }
+}

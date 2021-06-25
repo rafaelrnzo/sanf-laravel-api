@@ -6,7 +6,7 @@
                     <a href="{{ $account['link'] }}"><img src="{{ $account['icon'] }}" width="30"
                                                           alt="{{ $account['name'] }}"/></a>
             @endforeach
-            <td class="copyright">{{ strtoupper(config('app.name')) }} . copyright {{ date('Y') }}</td>
+            <td class="copyright">&copy; {{ date('Y') }} Surya Artha Nusantara Finance</td>
         </tr>
     </table>
 </div>

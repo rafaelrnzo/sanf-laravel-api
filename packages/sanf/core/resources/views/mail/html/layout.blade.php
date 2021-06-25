@@ -71,15 +71,15 @@
         }
 
         .btn-primary table td:hover {
-            background-color: #052c3ccc !important;;
+            background-color: #052c3ccc !important;
         }
 
         .btn-primary a:hover {
-            background-color: #052c3ccc !important;;
+            background-color: #052c3ccc !important;
         }
 
         .action-button:hover {
-            background-color: #052c3ccc !important;
+            background-color: #052c3ccc;
         }
 
         .footer .social-account a:hover {
