@@ -28,7 +28,7 @@ class UploadFileController extends RestController
         // set upload file dto;
         $dto = new UploadFileRequestDto([
             'file' => $inputs['file'],
-            'type' => (int)$inputs['type']
+            'type' => (int)$inputs['asset_type']
         ]);
 
         // run service;
@@ -50,10 +50,10 @@ class UploadFileController extends RestController
             'file' => [
                 'required',
                 'image',
-                "mimetypes:{$types[$request->get('type')]}",
+                "mimetypes:{$types[$request->get('asset_type')]}",
                 'max:5000'
             ],
-            'type' => [
+            'asset_type' => [
                 'required',
                 "in:{$string}",
                 'max:16'
