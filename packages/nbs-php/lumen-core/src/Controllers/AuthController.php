@@ -15,7 +15,7 @@ use NbsPhp\Core\JWTHelper;
 use NbsPhp\Core\Services\AppLoginService;
 use NbsPhp\Core\Services\LoginWithEmailAndPasswordService;
 use NbsPhp\Core\Services\LogoutService;
-use NbsPhp\Core\Services\RegisterService;
+use NbsPhp\Core\Services\RegisterByEmailService;
 use NbsPhp\Core\Services\UpdateSessionService;
 use NbsPhp\Core\Services\VerifyEmailService;
 
@@ -92,17 +92,17 @@ class AuthController extends RestController
         $validated = $this->validate($request, [
             'full_name' => ['required', 'string',],
             'email' => ['required', 'email',],
-            'password' => ['required', 'min:8',],
+            'password' => config('auth.input_validations.password.rule', ['required']),
             'landline_number' => ['string', 'nullable', 'min:10',],
             'phone_number' => ['required', 'min:10',],
-        ]);
+        ], config('auth.input_validations.password.messages'));
 
         $validated += $this->validateDeviceInformation($request, 'device.');
 
         return $validated;
     }
 
-    public function register(Request $request, RegisterService $service)
+    public function register(Request $request, RegisterByEmailService $service)
     {
         $input = $this->validateRegister($request);
 

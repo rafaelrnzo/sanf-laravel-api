@@ -15,8 +15,6 @@ use NbsPhp\Core\Services\LoginByAppleService;
 use NbsPhp\Core\Services\LoginByGoogleService;
 use NbsPhp\Core\Services\RegisterByAppleService;
 use NbsPhp\Core\Services\RegisterByGoogleService;
-use NbsPhp\Core\Services\RegisterService;
-use Spatie\DataTransferObject\DataTransferObject;
 
 class OAuthController extends RestController
 {
@@ -149,10 +147,10 @@ class OAuthController extends RestController
             'user_ref_id' => ['required', 'string',],
             'full_name' => ['required', 'string',],
             'email' => ['required', 'email',],
-            'password' => ['required', 'min:8',],
+            'password' => config('auth.input_validations.password.rule', ['required']),
             'landline_number' => ['string', 'nullable', 'min:10',],
             'phone_number' => ['required', 'min:10',],
-        ]);
+        ], config('auth.input_validations.password.messages'));
 
         $validated += $this->validateDeviceInformation($request, 'device.');
 

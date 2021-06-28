@@ -19,10 +19,6 @@ class LoginWithEmailAndPasswordService implements ApplicationServiceInterface
 
     protected $repository;
 
-    /**
-     * RegisterService constructor.
-     * @param $jwt
-     */
     public function __construct(JWTHelper $jwt, AuthModel $repository) //TODO USE REPOSITORY
     {
         $this->jwt = $jwt;

@@ -45,6 +45,13 @@ return [
     ],
 
     'input_validations' => [
+        'password' => [
+            'rule' => $passwordValidationRule = ['required', 'min:8', 'regex:/^(?=.*\d)(?=.*[a-zA-Z])/'],
+            'messages' => $passwordValidationMessage = [
+                'regex' => 'Password must be alphanumeric'
+            ],
+        ],
+
         'login' => [
             'rules' => [
                 'username' => 'required',
@@ -54,19 +61,19 @@ return [
         ],
         'change_password' => [
             'rules' => [
-                'password' => ['required', 'min:8', 'regex:/^(?=.*\d)(?=.*[a-zA-Z])/']
+                'password' => $passwordValidationRule
             ],
             'messages' => [
-                'password.regex' => 'Password must be alphanumeric'
+                'password.regex' => $passwordValidationMessage
             ]
         ],
         'reset_password' => [
             'rules' => [
                 'token' => 'required',
-                'password' => ['required', 'min:8', 'regex:/^(?=.*\d)(?=.*[a-zA-Z])/']
+                'password' => $passwordValidationRule
             ],
             'messages' => [
-                'password.regex' => 'Password must be alphanumeric'
+                'password.regex' => $passwordValidationMessage
             ]
         ]
     ],
