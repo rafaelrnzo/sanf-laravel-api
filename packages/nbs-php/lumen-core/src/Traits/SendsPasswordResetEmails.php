@@ -83,7 +83,10 @@ trait SendsPasswordResetEmails
      */
     protected function sendResetLinkFailedResponse(Request $request, $response)
     {
-        throw new ResetPasswordFailedException(trans($response));
+        if (config('auth.features.strict-reset-password')) {
+            throw new ResetPasswordFailedException(trans($response));
+        }
+        return $this->responseOk();
     }
 
     /**

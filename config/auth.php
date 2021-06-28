@@ -23,6 +23,10 @@ return [
         'verify-email' => 'core::layouts.message',
     ],
 
+    'features' => [
+        'strict-reset-password' => false
+    ],
+
     'table_names' => [
         'user_auth' => 'user_auth',
         'password_reset' => 'password_reset',
@@ -33,13 +37,6 @@ return [
         'entity_type' => 'user_entity_type',
     ],
 
-    'rules' => [
-        'login' => [
-            'username' => 'required',
-            'password' => 'required'
-        ]
-    ],
-
     'urls' => [
         'email_verify' => env('AUTH_EMAIL_VERIFY_URL'),
         'email_verify_ios' => env('AUTH_EMAIL_VERIFY_IOS_URL', env('AUTH_EMAIL_VERIFY_URL')),
@@ -48,6 +45,13 @@ return [
     ],
 
     'input_validations' => [
+        'login' => [
+            'rules' => [
+                'username' => 'required',
+                'password' => 'required'
+            ],
+            'messages' => []
+        ],
         'change_password' => [
             'rules' => [
                 'password' => ['required', 'min:8', 'regex:/^(?=.*\d)(?=.*[a-zA-Z])/']
