@@ -31,7 +31,7 @@ class EloquentProductRepository implements ProductRepositoryInterface
             })
             ->limit($limit)
             ->offset($offset)
-            ->orderBy('updated_at', 'desc')
+            ->orderBy('id', 'asc')
             ->get();
     }
 }
