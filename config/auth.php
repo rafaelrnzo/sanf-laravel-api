@@ -1,17 +1,26 @@
 <?php
 
 return [
-    'profile_repository' => \NbsPhp\Core\Repositories\MockProfileRepository::class,
 
-    'login_transformer' => \Sanf\Api\Modules\User\LoginTransformer::class,
+    'repositories' => [
+        'profile' => \NbsPhp\Core\Repositories\MockProfileRepository::class,
+    ],
 
-    'logout_transformer' => \NbsPhp\Core\Transformers\LogoutTransformer::class,
-
-    'profile_transformer' => \Sanf\Api\Modules\User\ProfileTransformer::class,
+    'transformers' => [
+        'login' => \Sanf\Api\Modules\User\LoginTransformer::class,
+        'logout' => \NbsPhp\Core\Transformers\LogoutTransformer::class,
+        'profile' => \Sanf\Api\Modules\User\ProfileTransformer::class,
+    ],
 
     'notifications' => [
         'reset-password' => \Sanf\Core\Modules\User\Notifications\ResetPasswordNotification::class,
         'verify-email' => \Sanf\Core\Modules\User\Notifications\VerifyEmailNotification::class,
+    ],
+
+    'views' => [
+//        'reset-password' => 'core::auth.reset-password',
+        'reset-password' => 'core::pages.install-mobile-app',
+        'verify-email' => 'core::layouts.message',
     ],
 
     'table_names' => [
@@ -31,14 +40,12 @@ return [
         ]
     ],
 
-    'services' => [
-        'login' => []
+    'urls' => [
+        'email_verify' => env('AUTH_EMAIL_VERIFY_URL'),
+        'email_verify_ios' => env('AUTH_EMAIL_VERIFY_IOS_URL', env('AUTH_EMAIL_VERIFY_URL')),
+        'reset_password' => env('AUTH_RESET_PASS_URL'),
+        'reset_password_ios' => env('AUTH_RESET_PASS_IOS_URL', env('AUTH_RESET_PASS_URL')),
     ],
-
-    'email_verify_url' => env('AUTH_EMAIL_VERIFY_URL'),
-    'email_verify_ios_url' => env('AUTH_EMAIL_VERIFY_IOS_URL', env('AUTH_EMAIL_VERIFY_URL')),
-    'reset_password_url' => env('AUTH_RESET_PASS_URL'),
-    'reset_password_ios_url' => env('AUTH_RESET_PASS_IOS_URL', env('AUTH_RESET_PASS_URL')),
 
     'input_validations' => [
         'change_password' => [
@@ -206,10 +213,10 @@ return [
             ],
             [
                 'method' => 'get',
-                'uri' => "{$routePrefix}/password/new",
+                'uri' => "pages/reset-password",
                 'name' => 'password.request',
                 'action' => "{$namespace}ForgotPasswordController@showLinkRequestForm",
-                'middleware' => ['auth'],
+                'middleware' => [],
             ],
             [
                 'method' => 'get',
@@ -237,7 +244,7 @@ return [
                 'uri' => "pages/verify-email/{id}/{token}",
                 'name' => 'email.verify',
                 'action' => "{$namespace}AuthController@verifyEmail",
-                'middleware' => ['auth'],
+                'middleware' => [],
             ],
             [
                 'method' => 'get',

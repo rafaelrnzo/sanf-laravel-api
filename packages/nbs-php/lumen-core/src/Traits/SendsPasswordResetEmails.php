@@ -5,6 +5,7 @@ namespace NbsPhp\Core\Traits;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use NbsPhp\Core\Exceptions\ResetPasswordFailedException;
+use NbsPhp\Core\JWTHelper;
 
 trait SendsPasswordResetEmails
 {
@@ -13,9 +14,9 @@ trait SendsPasswordResetEmails
      *
      * @return \Illuminate\Http\Response
      */
-    public function showLinkRequestForm()
+    public function showLinkRequestForm(Request $request)
     {
-        return view('auth.passwords.email');
+        return view(config('auth.views.reset-password'));
     }
 
     /**

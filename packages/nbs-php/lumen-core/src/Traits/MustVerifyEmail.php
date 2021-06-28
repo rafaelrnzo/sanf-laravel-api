@@ -24,7 +24,7 @@ trait MustVerifyEmail
      */
     public function markEmailAsVerified()
     {
-        return $this->profile->forceFill([
+        return $this->forceFill([
             'email_verified_at' => Carbon::now(),
         ])->save();
     }

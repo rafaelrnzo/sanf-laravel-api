@@ -48,6 +48,8 @@ class CoreServiceProvider extends ServiceProvider
         $this->registerBindings();
         $this->registerMiddleware();
         $this->registerCommands();
+        $this->registerViews();
+        $this->registerTranslations();
     }
 
     protected function registerCommands()
@@ -58,6 +60,32 @@ class CoreServiceProvider extends ServiceProvider
                 VendorPublishCommand::class,
                 ReloadUserPermissionCommand::class,
             ]);
+        }
+    }
+
+    /**
+     * Register views.
+     *
+     * @return void
+     */
+    public function registerViews()
+    {
+        $this->loadViewsFrom(__DIR__ . '../../resources/views', 'core');
+    }
+
+    /**
+     * Register translations.
+     *
+     * @return void
+     */
+    public function registerTranslations()
+    {
+        $langPath = $this->app->resourcePath('lang/vendor/core');
+
+        if (is_dir($langPath)) {
+            $this->loadTranslationsFrom($langPath, 'core');
+        } else {
+            $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'core');
         }
     }
 
@@ -77,7 +105,7 @@ class CoreServiceProvider extends ServiceProvider
     protected function registerBindings()
     {
         $this->app->bind(ResponseMapperInterface::class, RestResponseMapper::class);
-        $this->app->bind(ProfileRepositoryInterface::class, config('auth.profile_repository'));
+        $this->app->bind(ProfileRepositoryInterface::class, config('auth.repositories.profile'));
     }
 
     protected function registerProviders()
@@ -123,6 +151,10 @@ class CoreServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../resources/views/mail' => resource_path('views/vendor/mail'),
         ], 'auth-email');
+
+        $this->publishes([
+            __DIR__.'/../resources/views/mail' => resource_path('views/vendor/core'),
+        ], 'core');
 
         //TODO PUBLISH VIEW
 

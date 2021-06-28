@@ -17,6 +17,7 @@ use NbsPhp\Core\Services\LoginWithEmailAndPasswordService;
 use NbsPhp\Core\Services\LogoutService;
 use NbsPhp\Core\Services\RegisterService;
 use NbsPhp\Core\Services\UpdateSessionService;
+use NbsPhp\Core\Services\VerifyEmailService;
 
 class AuthController extends RestController
 {
@@ -148,7 +149,7 @@ class AuthController extends RestController
 
         return $this->responseOk(
             'Success',
-            fractal($user, config('auth.login_transformer'))
+            fractal($user, config('auth.transformers.login'))
         )->withHeaders([
             'X-Access-Token' => $user->accessToken,
             'X-Access-Expired-At' => $user->accessExpiredAt,
@@ -160,7 +161,7 @@ class AuthController extends RestController
     public function logout(Request $request, LogoutService $service)
     {
         $result = $service->execute(null);
-        return fractal($result, config('auth.logout_transformer'));
+        return fractal($result, config('auth.transformers.logout'));
     }
 
     protected function validateBearerToken(Request $request)
@@ -211,5 +212,21 @@ class AuthController extends RestController
             'X-Refresh-Token' => $user->refreshToken,
             'X-Refresh-Expired-At' => $user->refreshExpiredAt,
         ]);
+    }
+
+    public function verifyEmail(VerifyEmailService $service, $id, $token)
+    {
+        try {
+            $dto = (object)[
+                'userId' => $id,
+                'token' => $token
+            ];
+            $service->execute($dto);
+            $message = __('Email berhasil diaktivasi');
+        } catch (\Exception $e) {
+            $message = $e->getMessage();
+        }
+
+        return view(config('auth.views.verify-email'), ['message' => $message]);
     }
 }

@@ -18,7 +18,7 @@ class UserController extends RestController
 
         $data = $service->execute($dto);
 
-        return $this->responseOk('Success', fractal($data, config('auth.profile_transformer')));
+        return $this->responseOk('Success', fractal($data, config('auth.transformers.profile')));
     }
 
     public function updateProfile(Request $request, Guard $auth, UpdateProfileService $service)

@@ -1,0 +1,41 @@
+<?php
+
+
+namespace NbsPhp\Core\Services;
+
+
+use NbsPhp\Core\Exceptions\UnauthorizedException;
+use NbsPhp\Core\Models\AuthModel;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+class VerifyEmailService implements ApplicationServiceInterface
+{
+    protected $repository;
+
+    /**
+     * VerifyEmailService constructor.
+     * @param $repository
+     */
+    public function __construct(AuthModel $repository) //TODO USE REPOSITORY
+    {
+        $this->repository = $repository;
+    }
+
+
+    public function execute($dto)
+    {
+        /** @var AuthModel $user */
+        $user = $this->repository->newQuery()->findOrFail($dto->userId);
+        if (!$user) {
+            throw new NotFoundHttpException();
+        }
+
+        if (!hash_equals((string)$dto->token, sha1($user->getEmailForVerification()))) {
+            throw new UnauthorizedException();
+        }
+        if (is_null($user->email_verified_at)) {
+            return $user->markEmailAsVerified();
+        }
+        return false;
+    }
+}
