@@ -15,7 +15,7 @@ class ProfileTransformer extends TransformerAbstract
             'email' => $item->username,
             'full_name' => $item->full_name,
             'type_id' => 10, //TODO REFACTOR
-            'type' => 'General Account', //TODO REFACTOR
+            'type' => 'Pengguna Umum', //TODO REFACTOR
         ];
     }
 }

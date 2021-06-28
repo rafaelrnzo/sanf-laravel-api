@@ -16,7 +16,7 @@ class LoginTransformer extends TransformerAbstract
                 'id' => $item->id,
                 'full_name' => $item->full_name,
                 'email' => $item->username,
-                'type' => 'General Account', //TODO REFACTOR
+                'type' => 'Pengguna Umum', //TODO REFACTOR
                 'type_id' => EntityType::GENERAL, //TODO REFACTOR
             ]
         ];
