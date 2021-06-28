@@ -53,6 +53,11 @@ return [
         'code' => 'E_AUTH_6',
         'message' => __('Password Reset Fail'),
     ],
+    \NbsPhp\Core\Exceptions\EmailUnverifiedException::class => [
+        'status' => Response::HTTP_BAD_REQUEST,
+        'code' => 'E_AUTH_7',
+        'message' => __('Email Unverified'),
+    ],
     \NbsPhp\Core\Exceptions\EmailAlreadyExistException::class => [
         'status' => Response::HTTP_BAD_REQUEST,
         'code' => 'E_USR_1',

@@ -4,8 +4,10 @@
 namespace NbsPhp\Core\Services;
 
 
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Facades\Auth;
 use NbsPhp\Core\Enum\AuthProvider;
+use NbsPhp\Core\Exceptions\EmailUnverifiedException;
 use NbsPhp\Core\Exceptions\InvalidCredentialException;
 use NbsPhp\Core\JWTHelper;
 use NbsPhp\Core\Models\AuthModel;
@@ -36,10 +38,12 @@ class LoginWithEmailAndPasswordService implements ApplicationServiceInterface
             throw new InvalidCredentialException();
         }
 
-        // TODO: check status user
-
         /** @var AuthModel $user */
         $user = Auth::user();
+
+        if ($user instanceof MustVerifyEmail && !$user->hasVerifiedEmail()) {
+            throw new EmailUnverifiedException();
+        }
 
         $jwtToken = $this->jwt->setToken($token);
         $accessTokenExpiredAt = $jwtToken->getDecoded()->exp;
@@ -50,7 +54,7 @@ class LoginWithEmailAndPasswordService implements ApplicationServiceInterface
         //TODO REPOSITORY
         /** @var UserSessionModel $userSession */
         //TODO SESSION REPOSITORY
-        $userSession =  UserSessionModel::forceCreate([
+        $userSession = UserSessionModel::forceCreate([
             'auth_provider_id' => AuthProvider::APP,
             'user_id' => $user->id,
             'device_id' => $device->deviceId,
