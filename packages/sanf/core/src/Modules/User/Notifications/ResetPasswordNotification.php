@@ -30,7 +30,7 @@ class ResetPasswordNotification extends Notification
 
         return (new BaseMail)
             ->subject('Reset Password')
-            ->logo(asset('assets/svg/sanf-logo.svg'))
+            ->logo(asset('assets/png/sanf-logo.png'))
             ->greeting(__('Reset Password Akun SANF'))
             ->line(__('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sollicitudin arcu felis, a suscipit arcu fringilla at. Nunc ante dolor, gravida quis ante vel, eleifend porta nunc.'))
             ->action(__('Reset Password'), $resetUrl)

@@ -24,7 +24,7 @@ class VerifyEmailNotification extends Notification
 
         return (new BaseMail())
             ->subject('Email Verification')
-            ->logo(asset('assets/svg/sanf-logo.svg'))
+            ->logo(asset('assets/png/sanf-logo.png'))
             ->greeting(__('Aktivasi Akun SANF'))
             ->line(__('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sollicitudin arcu felis, a suscipit arcu fringilla at. Nunc ante dolor, gravida quis ante vel, eleifend porta nunc.'))
             ->action(__('Aktivasi Akun'), $verificationUrl)
