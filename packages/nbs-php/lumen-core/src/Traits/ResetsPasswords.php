@@ -195,7 +195,7 @@ trait ResetsPasswords
     public function getRequest(Request $request)
     {
         $decodedToken = $this->extractToken($request);
-        $request['email'] = $decodedToken->email;
+        $request['username'] = $decodedToken->email;
         $request['token'] = $decodedToken->token;
         return $request;
     }
