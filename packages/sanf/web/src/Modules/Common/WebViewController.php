@@ -17,4 +17,9 @@ class WebViewController extends RestController
     {
         return view('web::web-view.terms-and-condition');
     }
+
+    public function privacyPolicy()
+    {
+        return view('web::web-view.privacy-policy');
+    }
 }
