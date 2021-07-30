@@ -12,4 +12,9 @@ class WebViewController extends RestController
     {
         return view('web::web-view.about-us');
     }
+
+    public function termsCondition()
+    {
+        return view('web::web-view.terms-and-condition');
+    }
 }
