@@ -22,6 +22,10 @@ class BaseMail extends Mailable
      */
     public $logo;
 
+    public $leftLogo;
+
+    public $rightLogo;
+
     /**
      * The banner image.
      *
@@ -63,6 +67,8 @@ class BaseMail extends Mailable
      * @var string
      */
     public $actionUrl;
+
+    public $inTextActionUrl;
 
     /**
      * The action Help.
@@ -121,6 +127,20 @@ class BaseMail extends Mailable
     public function logo($logo)
     {
         $this->logo = $logo;
+
+        return $this;
+    }
+
+    public function leftLogo($logo)
+    {
+        $this->leftLogo = $logo;
+
+        return $this;
+    }
+
+    public function rightLogo($logo)
+    {
+        $this->rightLogo = $logo;
 
         return $this;
     }
@@ -191,6 +211,24 @@ class BaseMail extends Mailable
     }
 
     /**
+     * Configure the call to line with url.
+     *
+     * @param string $text
+     * @param string $url
+     *
+     * @return $this
+     */
+
+    public function lineWithUrl($text, $textWithUrl = [])
+    {
+        $this->withLine($text);
+        $this->withLine($textWithUrl[0]);
+        $this->inTextActionUrl = $textWithUrl[1];
+        
+        return $this;
+    }
+
+    /**
      * Get an array representation of the message.
      *
      * @return array
@@ -200,6 +238,8 @@ class BaseMail extends Mailable
         return [
             'subject' => $this->subject,
             'logo' => $this->logo,
+            'leftLogo' => $this->leftLogo,
+            'rightLogo' => $this->rightLogo,
             'banner' => $this->banner,
             'greeting' => $this->greeting,
             'introLines' => $this->introLines,
@@ -207,6 +247,7 @@ class BaseMail extends Mailable
             'actionText' => $this->actionText,
             'actionUrl' => $this->actionUrl,
             'actionHelp' => $this->actionHelp,
+            'inTextActionUrl' => $this->inTextActionUrl,
             'displayableActionUrl' => str_replace(['mailto:', 'tel:'], '', $this->actionUrl),
         ];
     }
