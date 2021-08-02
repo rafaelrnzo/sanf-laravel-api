@@ -1,11 +1,8 @@
-<table role="presentation" class="main bg-primary">
+<table role="presentation" class="main">
     <tr>
         <td height="15"></td>
     </tr>
     <tr>
-        <td align="center"><img src="{{ $slot }}" height="120" alt=""/></td>
-    </tr>
-    <tr>
-        <td height="15"></td>
+        <td align="center"><img src="{{ $slot }}" alt=""/></td>
     </tr>
 </table>

@@ -1,8 +1,10 @@
 @component('mail::layout')
     {{--START HEADER--}}
     @slot('header')
-        @component('mail::header', ['url' => config('mail.url')])
-            {{ $logo }}
+        @component('mail::header-v2', [
+            'url' => config('mail.url'),
+            'logo' => [$leftLogo, $rightLogo]
+        ])
         @endcomponent
     @endslot
     {{--END HEADER--}}
@@ -51,8 +53,7 @@
 
                 {{--START OUTRO MESSAGE--}}
                 @isset($outroLines)
-                    @component('mail::words')
-                        @foreach ($outroLines as $line)<p class="outro-message">{!! $line !!}</p>@endforeach
+                    @component('mail::words-v2', ['textWithUrl' => $outroLines, 'reportLink' => $inTextActionUrl])
                     @endcomponent
                 @endisset
                 {{--END OUTRO MESSAGE--}}
