@@ -246,9 +246,10 @@ a {
 }
 
 .greeting {
-    color: #212121;
-    font-size: 18px;
-    font-weight: bolder;
+    color: #616161;
+    font-size: 16px;
+    font-weight: normal;
+    font-style: normal;
 }
 
 .preheader {
@@ -487,7 +488,8 @@ hr {
     font-size: 16px;
     line-height: 27px;
     color: #616161;
-    padding: 0 55px;
+    padding: 0 35px;
+    margin: 0;
 }
 
 .outro-message {
