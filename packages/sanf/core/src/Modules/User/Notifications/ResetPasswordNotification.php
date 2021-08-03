@@ -34,7 +34,13 @@ class ResetPasswordNotification extends Notification
             ->leftLogo(asset('assets/svg/sanf-logo-blue.svg'))
             ->rightLogo(asset('assets/svg/sanf-tagline.svg'))
             ->banner(asset('assets/svg/change-password.svg'))
-            ->line(__('Seseorang telah mencoba mereset password akun Anda. Jika benar, mohon verifikasi email Anda dengan mengklik tombol di bawah ini.'))
+            ->line(__(
+                'Seseorang telah mencoba mereset password akun Anda.
+                <br />
+                <blockquote style="margin: 0 3em;font-size: 16px; line-height: 150%;">
+                    Jika benar, mohon verifikasi email Anda dengan mengklik tombol di bawah ini.
+                </blockquote>
+            '))
             ->action(__('Reset Password'), $resetUrl)
             ->lineWithUrl(
                 __('Jika Anda merasa tidak membuat request tersebut mohon abaikan email ini atau Anda dapat'),
