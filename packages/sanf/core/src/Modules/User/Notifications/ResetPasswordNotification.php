@@ -27,16 +27,25 @@ class ResetPasswordNotification extends Notification
     public function toMail($notifiable)
     {
         $resetUrl = $this->resetUrl($notifiable);
+        $reportUrl = 'https://www.google.com';
 
         return (new BaseMail)
             ->subject('Reset Password')
-            ->logo(asset('assets/png/sanf-logo.png'))
-            ->greeting(__('Reset Password Akun SANF'))
-            ->line(__('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sollicitudin arcu felis, a suscipit arcu fringilla at. Nunc ante dolor, gravida quis ante vel, eleifend porta nunc.'))
+            ->leftLogo(asset('assets/svg/sanf-logo-blue.svg'))
+            ->rightLogo(asset('assets/svg/sanf-tagline.svg'))
+            ->banner(asset('assets/svg/change-password.svg'))
+            ->line(__(
+                'Seseorang telah mencoba mereset password akun Anda.
+                <br />
+                <blockquote style="margin: 0 3em;font-size: 16px; line-height: 150%;">
+                    Jika benar, mohon verifikasi email Anda dengan mengklik tombol di bawah ini.
+                </blockquote>
+            '))
             ->action(__('Reset Password'), $resetUrl)
-            ->line(__('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sollicitudin arcu felis, a suscipit arcu fringilla at. Nunc ante dolor, gravida quis ante vel, eleifend porta nunc.'))
-//            ->line(__('Jika Anda mengalami kesulitan mengklik tombol "Reset Password". Salin dan tempel URL di bawah ini ke web browser Anda:'))
-//            ->line("<a href=\"{$resetUrl}\">{$resetUrl}</a>")
+            ->lineWithUrl(
+                __('Jika Anda merasa tidak membuat request tersebut mohon abaikan email ini atau Anda dapat'),
+                [__('laporkan email ini'), $reportUrl]
+            )
             ->to($notifiable->getEmailForPasswordReset(), $notifiable->getNameForPasswordReset());
     }
 
