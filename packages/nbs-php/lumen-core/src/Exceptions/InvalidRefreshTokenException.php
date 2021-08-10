@@ -2,7 +2,7 @@
 
 namespace NbsPhp\Core\Exceptions;
 
-class InvalidRefreshTokenException extends AppException
+class InvalidRefreshTokenException extends ApiException
 {
     protected $code = 'E_AUTH_3';
 

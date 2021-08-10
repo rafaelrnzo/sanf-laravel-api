@@ -2,7 +2,7 @@
 
 namespace NbsPhp\Core\Exceptions;
 
-class UnauthorizedException extends AppException
+class UnauthorizedException extends ApiException
 {
     protected $code = 'E_AUTH_5';
 

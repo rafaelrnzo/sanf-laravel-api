@@ -5,7 +5,7 @@ namespace NbsPhp\Core\Exceptions;
 use Exception;
 use Symfony\Component\HttpFoundation\Response;
 
-class AppException extends Exception
+class ApiException extends Exception
 {
     protected $data;
 

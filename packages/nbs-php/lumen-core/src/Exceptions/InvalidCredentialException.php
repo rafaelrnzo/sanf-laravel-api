@@ -2,7 +2,7 @@
 
 namespace NbsPhp\Core\Exceptions;
 
-class InvalidCredentialException extends AppException
+class InvalidCredentialException extends ApiException
 {
     protected $code = 'E_AUTH_1';
 

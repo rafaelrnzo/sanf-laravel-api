@@ -2,7 +2,7 @@
 
 namespace NbsPhp\Core\Exceptions;
 
-class InvalidTokenException extends AppException
+class InvalidTokenException extends ApiException
 {
     protected $code = 'E_AUTH_4';
 

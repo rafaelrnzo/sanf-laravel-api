@@ -2,7 +2,7 @@
 
 namespace NbsPhp\Core\Exceptions;
 
-class EmailUnverifiedException extends AppException
+class EmailUnverifiedException extends ApiException
 {
     protected $code = 'E_AUTH_7';
 

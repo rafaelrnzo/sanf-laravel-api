@@ -411,6 +411,7 @@ class JWTHelper
 
     public static function verifyGoogleToken(string $token)
     {
+        //TODO EXPLODE GOOGLE CLIENT ID, because possibility of multiple client id generated
         if (is_null($clientId = env('GOOGLE_CLIENT_ID'))) {
             throw new \RuntimeException("Please set 'GOOGLE_CLIENT_ID' in env file.");
         }
@@ -440,6 +441,7 @@ class JWTHelper
 
     public static function verifyAppleIdToken(string $token)
     {
+        //TODO EXPLODE APPLE CLIENT ID, because possibility of multiple client id generated
         if (is_null($clientId = env('APPLE_CLIENT_ID'))) {
             throw new \RuntimeException("Please set 'APPLE_CLIENT_ID' in env file.");
         }

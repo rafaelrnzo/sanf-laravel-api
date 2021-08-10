@@ -4,7 +4,7 @@
 namespace NbsPhp\Core\Exceptions;
 
 
-class OAuthEmailRequiredException extends AppException
+class OAuthEmailRequiredException extends ApiException
 {
     protected $code = 'E_OAUTH_1';
 

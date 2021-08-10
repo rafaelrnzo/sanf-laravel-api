@@ -187,6 +187,7 @@ class OAuthController extends RestController
     {
         $appleJWTToken = JWTHelper::verifyAppleIdToken($request->input('auth_token'));
         $request->merge(['user_ref_id' => $appleJWTToken['sub']]);
+
         if ($appleJWTToken['is_private_email'] === 'true') {
             throw new OAuthEmailRequiredException();
         }

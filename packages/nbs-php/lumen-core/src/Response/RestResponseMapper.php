@@ -6,7 +6,7 @@ namespace NbsPhp\Core\Response;
 
 use Exception;
 use Illuminate\Http\JsonResponse;
-use NbsPhp\Core\Exceptions\AppException;
+use NbsPhp\Core\Exceptions\ApiException;
 use Symfony\Component\HttpFoundation\Response;
 
 class RestResponseMapper implements ResponseMapperInterface
@@ -79,7 +79,7 @@ class RestResponseMapper implements ResponseMapperInterface
         if (isset($errorMapping['status'])) {
             $response->setStatusCode($errorMapping['status']);
         }
-        if ($exception instanceof AppException) {
+        if ($exception instanceof ApiException) {
             $response->setStatusCode($errorMapping['status'] ?? $exception->getStatus());
         }
 
@@ -104,7 +104,7 @@ class RestResponseMapper implements ResponseMapperInterface
         $error['code'] = $errorMapping['code'] ?? (string)Response::HTTP_INTERNAL_SERVER_ERROR;
         $error['message'] = $errorMapping['message'] ?? 'Internal Server Error';
 
-        if ($exception instanceof AppException) {
+        if ($exception instanceof ApiException) {
             if($exception->getData() != null){
                 $error['data'] = $exception->getData();
             }
@@ -125,7 +125,7 @@ class RestResponseMapper implements ResponseMapperInterface
         }
 
         $httpStatus = $errorMapping['status'] ?? 500;
-        if ($exception instanceof AppException) {
+        if ($exception instanceof ApiException) {
             $httpStatus = $errorMapping['status'] ?? $exception->getStatus();
         }
         return [$error, $httpStatus];

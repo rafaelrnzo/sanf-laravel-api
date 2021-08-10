@@ -193,13 +193,14 @@ class AuthController extends RestController
 
         $dto = new UpdateSessionRequestDto([
             'refreshToken' => $refreshToken,
-            'device' => [
+            'device' => new DeviceInfoRequestDto([
                 'deviceId' => $input['device_id'],
                 'devicePlatformId' => $input['device_platform_id'] ?? null,
                 'notificationToken' => $input['notification_token'] ?? null,
                 'notificationChannelId' => $input['notification_channel_id'],
                 'metadata' => $input['metadata']
-            ]]);
+            ])
+        ]);
 
         $user = $service->execute($dto);
 

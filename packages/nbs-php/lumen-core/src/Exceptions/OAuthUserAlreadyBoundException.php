@@ -4,7 +4,7 @@
 namespace NbsPhp\Core\Exceptions;
 
 
-class OAuthUserAlreadyBoundException extends AppException
+class OAuthUserAlreadyBoundException extends ApiException
 {
     protected $code = 'E_OAUTH_3';
 

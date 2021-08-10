@@ -2,7 +2,7 @@
 
 namespace NbsPhp\Core\Exceptions;
 
-class ExpiredAccessTokenException extends AppException
+class ExpiredAccessTokenException extends ApiException
 {
     protected $code = 'E_AUTH_2';
 
