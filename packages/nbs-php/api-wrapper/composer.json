@@ -1,0 +1,40 @@
+{
+    "name": "nbs-php/api-wrapper",
+    "description": "A system for quickly developing PHP wrapper clients around remote APIs",
+    "keywords": ["php", "remote", "api", "REST", "wrapper", "client"],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Nick Rupert",
+            "email": "nick@heliumservices.com"
+        },
+        {
+            "name": "Dev NBS",
+            "email": "dev@nbs.co.id"
+        }
+    ],
+    "require": {
+        "php": "^7.3|^8.0",
+        "ext-json": "*",
+        "nesbot/carbon": "^2.42",
+        "petrknap/php-singleton": "^1.0",
+        "guzzlehttp/guzzle": "^7.2",
+        "illuminate/collections": "^6.2",
+        "symfony/string": "^5.2"
+    },
+    "require-dev": {
+        "helium/coding-standards": "^1.2",
+        "phpunit/phpunit": "^9.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "NbsPhp\\ApiWrapper\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    }
+}
