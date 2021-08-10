@@ -26,6 +26,10 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
 });
 
 Route::get('v1/test', function (){
-    $response = (new \Sanf\Integration\InternalService())->findCustomerByEmail('rossannalie@.com');
-    dd($response);
+//    $response = (new \Sanf\Integration\InternalApiClient())->findCustomerByEmail('rossannalie@gmail.com');
+//    dd($response);
+//    $response = \NbsPhp\ApiWrapper\Api\Request::route('customer.find-by-id')
+//        ->pathParams(['id' => 1])
+//        ->send();
+//    return $response->json();
 });
