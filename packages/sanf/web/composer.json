@@ -1,6 +1,6 @@
 {
     "name": "sanf/web",
-    "description": "Sanf Web",
+    "description": "Sanf Mobile Web",
     "version": "0.0.1",
     "require": {
         "php": ">=7.1.3"

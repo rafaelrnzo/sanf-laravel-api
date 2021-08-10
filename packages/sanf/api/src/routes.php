@@ -24,3 +24,8 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
 
     Route::get('branch-offices', ['as' => 'branch.list', 'uses' => 'Branch\ListBranchController@process']);
 });
+
+Route::get('v1/test', function (){
+    $response = (new \Sanf\Integration\InternalService())->findCustomerByEmail('rossannalie@.com');
+    dd($response);
+});
