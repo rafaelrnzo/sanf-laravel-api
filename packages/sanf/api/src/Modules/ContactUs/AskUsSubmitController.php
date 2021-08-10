@@ -24,19 +24,19 @@ class AskUsSubmitController extends RestController
     {
         // validate request;
         $property = $this->validating($request);
-        if (isset($inputs['images']))
-            $property += ['images' => $inputs['images']];
+        if (isset($request['images']))
+            $property += ['images' => $request['images']];
 
         // set up dto;
         $dto = new AskUsSubmitRequestDto($property);
 
         //TODO USE DECORATOR
-        DB::transaction(function () use ($dto) {
-            $this->service->execute($dto);
+        $result = DB::transaction(function () use ($dto) {
+            return $this->service->execute($dto);
         });
 
         // sent response;
-        return $this->responseOk();
+        return $result;
     }
 
 
