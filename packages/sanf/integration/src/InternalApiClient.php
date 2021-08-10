@@ -21,4 +21,43 @@ class InternalApiClient
             ->send();
         return $response->json();
     }
+
+    public function getProvinces()
+    {
+        $response = \NbsPhp\ApiWrapper\Api\Request::route('location.provinces')->send();
+
+        return $response->json();
+    }
+
+    public function getCities($province_id)
+    {
+        $response = \NbsPhp\ApiWrapper\Api\Request::route('location.cities')
+            ->pathParams(['province_id' => $province_id])
+            ->send();
+
+        return $response->json();
+    }
+
+    public function getDistrict($province_id, $city_id)
+    {
+        $response = \NbsPhp\ApiWrapper\Api\Request::route('location.districts')
+            ->pathParams([
+                'province_id' => $province_id,
+                'city_id' => $city_id,
+            ])->send();
+
+        return $response->json();
+    }
+
+    public function getSubDistrict($province_id, $city_id, $district_name)
+    {
+        $response = \NbsPhp\ApiWrapper\Api\Request::route('location.sub-districts')
+            ->pathParams([
+                'province_id' => $province_id,
+                'city_id' => $city_id,
+                'district_id' => $district_name,
+            ])->send();
+
+        return $response->json();
+    }
 }

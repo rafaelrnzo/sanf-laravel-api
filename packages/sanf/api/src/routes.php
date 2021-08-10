@@ -23,6 +23,11 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::post('contact-us/ask-us', ['as' => 'contact-us.ask-us', 'uses' => 'ContactUs\AskUsSubmitController@process']);
 
     Route::get('branch-offices', ['as' => 'branch.list', 'uses' => 'Branch\ListBranchController@process']);
+
+    Route::get('provinces', ['as' => 'provinces.list', 'uses' => 'Location\LocationController@provinces']);
+    Route::get('provinces/{province_id}/cities', ['as' => 'cities.list', 'uses' => 'Location\LocationController@cities']);
+    Route::get('provinces/{province_id}/cities/{city_id}/districts', ['as' => 'districts.list', 'uses' => 'Location\LocationController@districts']);
+    Route::get('provinces/{province_id}/cities/{city_id}/districts/{district_name}', ['as' => 'sub-districts.list', 'uses' => 'Location\LocationController@subDistricts']);
 });
 
 Route::get('v1/test', function (){
