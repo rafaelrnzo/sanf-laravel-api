@@ -251,10 +251,38 @@ return [
                 'middleware' => ['auth'],
             ],
             [
+                'method' => 'post',
+                'uri' => "{$routePrefix}/request-email-verification",
+                'name' => 'password.email',
+                'action' => "{$namespace}AuthController@requestEmailVerification",
+                'middleware' => ['auth'],
+            ],
+            [
+                'method' => 'post',
+                'uri' => "{$routePrefix}/email-verification",
+                'name' => 'email.verify-from-app',
+                'action' => "{$namespace}AuthController@verifyEmailByApp",
+                'middleware' => [],
+            ],
+            [
                 'method' => 'get',
                 'uri' => "pages/verify-email/{id}/{token}",
                 'name' => 'email.verify',
                 'action' => "{$namespace}AuthController@verifyEmail",
+                'middleware' => [],
+            ],
+            [
+                'method' => 'post',
+                'uri' => "{$routePrefix}/request-activation",
+                'name' => 'user.request-activation',
+                'action' => "{$namespace}AuthController@requestActivation",
+                'middleware' => ['auth'],
+            ],
+            [
+                'method' => 'post',
+                'uri' => "{$routePrefix}/activation",
+                'name' => 'user.activate',
+                'action' => "{$namespace}AuthController@userActivation",
                 'middleware' => [],
             ],
             [

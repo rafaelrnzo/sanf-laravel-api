@@ -230,4 +230,27 @@ class AuthController extends RestController
 
         return view(config('auth.views.verify-email'), ['message' => $message]);
     }
+
+    public function verifyEmailByApp()
+    {
+        return $this->responseOk();
+    }
+
+    public function requestEmailVerification()
+    {
+        //TODO
+        return $this->responseOk();
+    }
+
+    public function requestActivation()
+    {
+        //TODO
+        return $this->responseOk();
+    }
+
+    public function userActivation()
+    {
+        //TODO
+        return $this->responseOk();
+    }
 }
