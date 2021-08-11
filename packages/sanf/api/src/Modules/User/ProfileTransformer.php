@@ -15,7 +15,9 @@ class ProfileTransformer extends TransformerAbstract
             'email' => $item->username,
             'full_name' => $item->full_name,
             'type_id' => 10, //TODO REFACTOR
-            'type' => 'Pengguna Umum', //TODO REFACTOR
+            'type_name' => 'Pengguna Umum', //TODO REFACTOR
+            'is_pic' => true,
+            'company_name' => 'PT ANGIN RIBUT'
         ];
     }
 }

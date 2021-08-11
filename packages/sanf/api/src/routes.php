@@ -28,13 +28,12 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::get('provinces/{province_id}/cities', ['as' => 'cities.list', 'uses' => 'Location\LocationController@cities']);
     Route::get('provinces/{province_id}/cities/{city_id}/districts', ['as' => 'districts.list', 'uses' => 'Location\LocationController@districts']);
     Route::get('provinces/{province_id}/cities/{city_id}/districts/{district_name}', ['as' => 'sub-districts.list', 'uses' => 'Location\LocationController@subDistricts']);
-});
 
-Route::get('v1/test', function (){
-//    $response = (new \Sanf\Integration\InternalApiClient())->findCustomerByEmail('rossannalie@gmail.com');
-//    dd($response);
-//    $response = \NbsPhp\ApiWrapper\Api\Request::route('customer.find-by-id')
-//        ->pathParams(['id' => 1])
-//        ->send();
-//    return $response->json();
+    Route::post('users/register-with-contract', ['as' => 'users.register-with-contract', 'uses' => 'User\ProfileController@postRegisterWithContract']);
+    Route::get('users/profiles', ['as' => 'users.profiles.list', 'uses' => 'User\ProfileController@getList']);
+    Route::get('users/profiles/{xid}', ['as' => 'users.profiles.detail', 'uses' => 'User\ProfileController@getDetail']);
+    Route::put('users/profiles/{xid}', ['as' => 'users.profiles.update', 'uses' => 'User\ProfileController@putUpdatePersonalProfile']);
+    Route::post('users/profiles/{xid}/company', ['as' => 'users.profiles.company.create', 'uses' => 'User\ProfileController@postCreateCompanyProfile']);
+    Route::put('users/profiles/{xid}/company', ['as' => 'users.profiles.company.update', 'uses' => 'User\ProfileController@putUpdateCompanyProfile']);
+    Route::post('users/profiles/{xid}/switch', ['as' => 'users.profiles.switch', 'uses' => 'User\ProfileController@postSwitch']);
 });
