@@ -5,13 +5,13 @@ namespace NbsPhp\Core\Services;
 
 
 use Carbon\Carbon;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use NbsPhp\Core\Enum\AuthProvider;
 use NbsPhp\Core\Enum\EntityType;
 use NbsPhp\Core\Enum\OAuthProvider;
 use NbsPhp\Core\Enum\UserStatus;
-use NbsPhp\Core\Exceptions\EmailAlreadyExistException;
 use NbsPhp\Core\Exceptions\OAuthUserAlreadyBoundException;
 use NbsPhp\Core\JWTHelper;
 use NbsPhp\Core\Models\AuthModel;
@@ -73,7 +73,7 @@ class RegisterByGoogleService implements ApplicationServiceInterface
             return $user;
         });
 
-        if (!$user->hasVerifiedEmail()) {
+        if ($user instanceof MustVerifyEmail && !$user->hasVerifiedEmail()) {
             $user->sendEmailVerificationNotification();
             return null;
         }

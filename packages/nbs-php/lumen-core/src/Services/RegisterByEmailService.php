@@ -5,6 +5,7 @@ namespace NbsPhp\Core\Services;
 
 
 use Carbon\Carbon;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use NbsPhp\Core\Enum\EntityType;
 use NbsPhp\Core\Enum\UserStatus;
 use NbsPhp\Core\Exceptions\EmailAlreadyExistException;
@@ -45,7 +46,9 @@ class RegisterByEmailService implements ApplicationServiceInterface
             'entity_type_id' => EntityType::ADMIN, //TODO CONFIGURABLE
         ]);
 
-        $user->sendEmailVerificationNotification();
+        if ($user instanceof MustVerifyEmail) {
+            $user->sendEmailVerificationNotification();
+        }
 
         //TODO DTO
         return json_decode(json_encode($user));

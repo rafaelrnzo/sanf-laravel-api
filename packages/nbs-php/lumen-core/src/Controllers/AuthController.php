@@ -222,12 +222,13 @@ class AuthController extends RestController
         ]);
     }
 
-    public function verifyEmail(VerifyEmailService $service, $id, $token)
+    public function verifyEmailPage(Request $request, VerifyEmailService $service)
     {
         try {
+            $jwt = $this->extractVerifyEmailToken($request);
             $dto = (object)[
-                'userId' => $id,
-                'token' => $token
+                'userId' => $jwt->sub,
+                'token' => $jwt->token
             ];
             $service->execute($dto);
             $message = __('Email berhasil diaktivasi');
@@ -238,27 +239,89 @@ class AuthController extends RestController
         return view(config('auth.views.verify-email'), ['message' => $message]);
     }
 
-    public function verifyEmailByApp()
+    public function verifyEmailByApp(Request $request, VerifyEmailService $service)
     {
+        $jwt = $this->extractVerifyEmailToken($request);
+        $dto = (object)[
+            'userId' => $jwt->sub,
+            'token' => $jwt->token
+        ];
+        $service->execute($dto);
         return $this->responseOk();
     }
 
-    public function requestEmailVerification()
+    protected function extractVerifyEmailToken(Request $request)
     {
-        //TODO
+        //TODO COONFIGURABLE HEADER SOURCE NAME
+        $jwtToken = $request->token ?? str_replace('Bearer ', '', $request->header('X-Email-Verification-Token'));
+        $decodedToken = (new JWTHelper())->setToken($jwtToken)->getDecoded();
+        if (is_null($decodedToken)) {
+            throw new VerifyEmailFailedException('Verify Token Invalid');
+        }
+        return $decodedToken;
+    }
+
+    public function requestEmailVerification(Request $request, SendEmailVerificationService $service)
+    {
+        $this->validate($request, [
+            'email' => ['required', 'email']
+        ]);
+        $dto = (object)[
+            'email' => $request->input('email'),
+        ];
+        try {
+            $service->execute($dto);
+        } catch (VerifyEmailFailedException $exception) {
+            // ignore error if email not found
+        }
         return $this->responseOk();
     }
 
-    public function requestActivation()
+    public function requestActivation(Request $request, SendEmailActivationService $service)
     {
-        //TODO
+        $this->validate($request, [
+            'email' => ['required', 'email']
+        ]);
+        $dto = (object)[
+            'email' => $request->input('email'),
+        ];
+        try {
+            $service->execute($dto);
+        } catch (UserActivationFailedException $exception) {
+            // ignore error if email not found
+        }
         return $this->responseOk();
     }
 
-    public function userActivation()
+    public function userActivationPage()
     {
-        //TODO
+        return view(config('auth.views.user-activation'));
+    }
+
+    public function userActivationByApp(Request $request, ActivateUserService $service)
+    {
+        $input = $this->validate($request, [
+            'password' => config('auth.input_validations.password.rule', ['required'])
+        ], config('auth.input_validations.password.messages'));
+        $jwt = $this->extractActivationToken($request);
+        $dto = (object)[
+            'userId' => $jwt->sub,
+            'token' => $jwt->token,
+            'password' => $input['password']
+        ];
+        $service->execute($dto);
         return $this->responseOk();
+    }
+
+    protected function extractActivationToken(Request $request)
+    {
+        //TODO COONFIGURABLE HEADER SOURCE NAME
+        $jwtToken = $request->token ?? str_replace('Bearer ', '', $request->header('X-Activation-Token'));
+        $decodedToken = (new JWTHelper())->setToken($jwtToken)->getDecoded();
+        if (is_null($decodedToken)) {
+            throw new UserActivationFailedException('Activation Token Invalid');
+        }
+        return $decodedToken;
     }
 
     public function changePassword(Request $request, Guard $auth, ChangePasswordService $service)

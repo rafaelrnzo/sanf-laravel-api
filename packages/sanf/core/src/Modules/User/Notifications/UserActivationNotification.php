@@ -7,7 +7,7 @@ use Illuminate\Notifications\Notification;
 use Jenssegers\Agent\Agent;
 use NbsPhp\Core\Mail\BaseMail;
 
-class VerifyEmailNotification extends Notification
+class UserActivationNotification extends Notification
 {
     use Queueable;
 
@@ -19,37 +19,40 @@ class VerifyEmailNotification extends Notification
     public function toMail($notifiable)
     {
         $fullName = $notifiable->getNameForVerification();
-        $verificationUrl = $this->verificationUrl($notifiable);
+        $verificationUrl = $this->activationUrl($notifiable);
         // TODO: Report Url
         $reportUrl = '';
 
-        return (new BaseMail())
-            ->subject('Registrasi berhasil! Silakan aktivasi akun Anda')
+        return (new BaseMail)
+            ->subject('Aktivasi akun SANF Anda!')
             ->leftLogo(asset('assets/svg/sanf-logo-blue.svg'))
             ->rightLogo(asset('assets/svg/sanf-tagline.svg'))
             ->banner(asset('assets/svg/email-verification.svg'))
+            ->greeting(__('Halo :name!', ['name' => $fullName]))
             ->line(__('Mohon verifikasi email Anda dengan mengklik tombol di bawah ini'))
             ->action(__('Verifikasi Email'), $verificationUrl)
             ->lineWithUrl(
                 __('Kami menerima permintaan pembuatan akun SANFXtra yang memakai email Anda. Jika Anda merasa tidak membuat request tersebut mohon abaikan email ini atau anda dapat'),
                 [__('laporkan email ini'), $reportUrl]
             )
-            ->to($notifiable->getEmailForVerification(), $fullName);
+            ->to($notifiable->getEmailForPasswordReset(), $fullName);
     }
 
-    protected function verificationUrl($notifiable)
+    protected function activationUrl($notifiable)
     {
         $agent = new Agent();
-        $emailVerifyUrl = ($agent->isiPhone() || $agent->isiOS() || $agent->isiPad()) ? config('auth.urls.email_verify_ios') : config('auth.urls.email_verify') ;
+        $userActivationUrl = ($agent->isiPhone() || $agent->isiOS() || $agent->isiPad()) ? config('auth.urls.user_activation_ios') : config('auth.urls.user_activation');
+        $email = $notifiable->getEmailForVerification();
         //TODO CONFIGURABLE TOKEN DURATION
         $tokenDuration = 60 * 60; //1 hours
-        $token = sha1($notifiable->getEmailForVerification());
+        $token = sha1($email);
         $jwtToken = (new \NbsPhp\Core\JWTHelper())->newVerifyEmailToken($notifiable->getKey(), $token, $tokenDuration);
-        if ($emailVerifyUrl !== '' || $emailVerifyUrl !== null) {
-            return "{$emailVerifyUrl}?token={$jwtToken}";
+        if ($userActivationUrl !== '' || $userActivationUrl !== null) {
+            return "{$userActivationUrl}?email={$email}&token={$jwtToken}";
         }
 
-        return route('email.verify', [
+        return route('user.activate', [
+            'email' => $email,
             'token' => $jwtToken,
         ]);
     }

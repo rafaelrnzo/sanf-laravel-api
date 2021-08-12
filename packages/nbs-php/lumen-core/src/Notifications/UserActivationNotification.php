@@ -7,7 +7,7 @@ use Illuminate\Notifications\Notification;
 use Jenssegers\Agent\Agent;
 use NbsPhp\Core\Mail\BaseMail;
 
-class VerifyEmailNotification extends Notification
+class UserActivationNotification extends Notification
 {
     use Queueable;
 
@@ -19,7 +19,7 @@ class VerifyEmailNotification extends Notification
     public function toMail($notifiable)
     {
         $fullName = $notifiable->getNameForVerification();
-        $verificationUrl = $this->verificationUrl($notifiable);
+        $verificationUrl = $this->activationUrl($notifiable);
 
         return (new BaseMail())
             ->subject('Email Verification')
@@ -31,15 +31,15 @@ class VerifyEmailNotification extends Notification
             ->to($notifiable->getEmailForVerification(), $fullName);
     }
 
-    protected function verificationUrl($notifiable)
+    protected function activationUrl($notifiable)
     {
         $agent = new Agent();
-        $emailVerifyUrl = ($agent->isiPhone() || $agent->isiOS() || $agent->isiPad()) ? config('auth.urls.email_verify_ios') : config('auth.urls.email_verify') ;
+        $userActivationUrl = ($agent->isiPhone() || $agent->isiOS() || $agent->isiPad()) ? config('auth.urls.user_activation_ios') : config('auth.urls.user_activation') ;
 
         $id = $notifiable->getKey();
         $token = sha1($notifiable->getEmailForVerification());
-        if ($emailVerifyUrl !== '' || $emailVerifyUrl !== null) {
-            return "{$emailVerifyUrl}?id={$id}&token={$token}";
+        if ($userActivationUrl !== '' || $userActivationUrl !== null) {
+            return "{$userActivationUrl}?id={$id}&token={$token}";
         }
 
         return route('email.verify', [
