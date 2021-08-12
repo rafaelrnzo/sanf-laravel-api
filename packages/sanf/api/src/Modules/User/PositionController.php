@@ -1,30 +1,16 @@
 <?php
 
-
 namespace Sanf\Api\Modules\User;
 
-
 use NbsPhp\Core\Controllers\RestController;
+use Sanf\Core\Modules\User\GetListPositionService;
 
 class PositionController extends RestController
 {
-    public function getList()
+    public function getList(GetListPositionService $service)
     {
-        $response = [
-            [
-                "name" => "ANGGOTA DPRD",
-                "id" => "033"
-            ],
-            [
-                "name" => "BENDAHARA",
-                "id" => "051"
-            ],
-            [
-                "name" => "BENDAHARA I/II",
-                "id" => "052"
-            ]
-        ];
+        $response = $service->execute();
 
-        return fractal(json_decode(json_encode($response)), new PositionTransformer());
+        return fractal($response, PositionTransformer::class);
     }
 }

@@ -60,4 +60,11 @@ class InternalApiClient
 
         return $response->json();
     }
+
+    public function getPosition()
+    {
+        $response = \NbsPhp\ApiWrapper\Api\Request::route('customer.positions')->send();
+
+        return $response->json();
+    }
 }
