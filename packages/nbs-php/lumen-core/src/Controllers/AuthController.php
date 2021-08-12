@@ -3,6 +3,7 @@
 
 namespace NbsPhp\Core\Controllers;
 
+use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use NbsPhp\Core\Dto\AppLoginRequestDto;
 use NbsPhp\Core\Dto\DeviceInfoRequestDto;
@@ -11,11 +12,17 @@ use NbsPhp\Core\Dto\RegisterRequestDto;
 use NbsPhp\Core\Dto\UpdateSessionRequestDto;
 use NbsPhp\Core\Enum\DevicePlatform;
 use NbsPhp\Core\Exceptions\UnauthorizedException;
+use NbsPhp\Core\Exceptions\UserActivationFailedException;
+use NbsPhp\Core\Exceptions\VerifyEmailFailedException;
 use NbsPhp\Core\JWTHelper;
+use NbsPhp\Core\Services\ActivateUserService;
 use NbsPhp\Core\Services\AppLoginService;
+use NbsPhp\Core\Services\ChangePasswordService;
 use NbsPhp\Core\Services\LoginWithEmailAndPasswordService;
 use NbsPhp\Core\Services\LogoutService;
 use NbsPhp\Core\Services\RegisterByEmailService;
+use NbsPhp\Core\Services\SendEmailActivationService;
+use NbsPhp\Core\Services\SendEmailVerificationService;
 use NbsPhp\Core\Services\UpdateSessionService;
 use NbsPhp\Core\Services\VerifyEmailService;
 
@@ -251,6 +258,22 @@ class AuthController extends RestController
     public function userActivation()
     {
         //TODO
+        return $this->responseOk();
+    }
+
+    public function changePassword(Request $request, Guard $auth, ChangePasswordService $service)
+    {
+        $input = $this->validate($request, [
+            'current_password' => ['required', 'string'],
+            'new_password' => config('auth.input_validations.password.rule', ['required']),
+        ]);
+
+        $dto = (object)[
+            'userId' => $auth->id(),
+            'currentPassword' => $input['current_password'],
+            'newPassword' => $input['new_password'],
+        ];
+        $service->execute($dto);
         return $this->responseOk();
     }
 }
