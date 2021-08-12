@@ -22,6 +22,15 @@ class InternalApiClient
         return $response->json();
     }
 
+    public function getShareholders($id)
+    {
+        $response = \NbsPhp\ApiWrapper\Api\Request::route('customer.shareholder.list')
+            ->pathParams(['id' => $id])
+            ->send();
+
+        return $response->json();
+    }
+
     public function getProvinces()
     {
         $response = \NbsPhp\ApiWrapper\Api\Request::route('location.provinces')->send();

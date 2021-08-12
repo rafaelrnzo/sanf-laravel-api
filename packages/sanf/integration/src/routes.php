@@ -7,6 +7,8 @@ Route::group(config('sanf-internal.url'), [InternalApiProcessor::class], functio
     Route::get('customer.find-by-email', 'Login/{email}');
     Route::get('customer.find-by-id', '/Login/customer/{id}');
 
+    Route::get('customer.shareholder.list', 'customer/pemegangsaham/{id}');
+
     Route::get('location.provinces', 'Address/provinsi');
     Route::get('location.cities', 'Address/kota/{province_id}');
     Route::get('location.districts', 'Address/kecamatan/{province_id}/{city_id}');

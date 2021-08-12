@@ -6,6 +6,8 @@ namespace Sanf\Api\Modules\Shareholder;
 
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestController;
+use Sanf\Core\Modules\User\GetListShareholderService;
+use Spatie\DataTransferObject\DataTransferObject;
 
 class ShareholderController extends RestController
 {
@@ -21,27 +23,13 @@ class ShareholderController extends RestController
         return $this->responseOk();
     }
 
-    public function getList(Request $request)
+    public function getList(GetListShareholderService $service, string $xid)
     {
-        $result = [
-            [
-                "no" => "10",
-                "title" => "MR.",
-                "name" => "SANTOS IBRAHIM NOOR",
-                "share_percentage" => "0",
-                "position" => "DIREKTUR",
-                'type' => "P"
-            ],
-            [
-                "no" => "11",
-                "title" => "PT",
-                "name" => "TELADAN PRIMA AGRO",
-                "share_percentage" => "99",
-                "position" => "PEMEGANG SAHAM",
-                "type" => "C"
-            ]
-        ];
-        $result = json_decode(json_encode($result));
+        $dto = new GetListShareholderDto([
+            'xid' => $xid
+        ]);
+        $result = $service->execute($dto);
+
         return fractal($result, ShareholderTransformer::class);
     }
 
