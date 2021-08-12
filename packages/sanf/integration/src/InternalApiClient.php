@@ -60,4 +60,14 @@ class InternalApiClient
 
         return $response->json();
     }
+
+    public function getTitle($type)
+    {
+        $response = \NbsPhp\ApiWrapper\Api\Request::route('customer.titles')
+            ->pathParams([
+                'type' => $type,
+            ])->send();
+
+        return $response->json();
+    }
 }
