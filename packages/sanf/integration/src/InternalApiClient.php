@@ -31,6 +31,22 @@ class InternalApiClient
         return $response->json();
     }
 
+    public function createShareholder($request)
+    {
+        $response = \NbsPhp\ApiWrapper\Api\Request::route('customer.shareholder.create')
+            ->formParams([
+                "cust_id" => $request->id,
+                "cust_title" => $request->title,
+                "cust_name" => $request->name,
+                "job_desc" => $request->job,
+                "percshare" => $request->percentage,
+                "type" => $request->type
+            ])
+            ->send();
+
+        return $response->json();
+    }
+
     public function getProvinces()
     {
         $response = \NbsPhp\ApiWrapper\Api\Request::route('location.provinces')->send();
