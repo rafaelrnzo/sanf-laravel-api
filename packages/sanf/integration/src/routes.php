@@ -7,6 +7,11 @@ Route::group(config('sanf-internal.url'), [InternalApiProcessor::class], functio
     Route::get('customer.find-by-email', 'Login/{email}');
     Route::get('customer.find-by-id', '/Login/customer/{id}');
 
+    Route::post('customer.shareholder.update', 'customer/pemegangsahamupdate');
+    Route::post('customer.shareholder.delete', 'customer/pemegangsahamdelete');
+    Route::post('customer.shareholder.create', 'customer/pemegangsaham/{id}');
+    Route::get('customer.shareholder.list', 'customer/pemegangsaham/{id}');
+
     Route::get('location.provinces', 'Address/provinsi');
     Route::get('location.cities', 'Address/kota/{province_id}');
     Route::get('location.districts', 'Address/kecamatan/{province_id}/{city_id}');

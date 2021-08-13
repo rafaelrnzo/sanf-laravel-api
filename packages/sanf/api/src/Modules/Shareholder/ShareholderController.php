@@ -6,10 +6,14 @@ namespace Sanf\Api\Modules\Shareholder;
 
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestController;
+use Sanf\Core\Modules\User\CreateShareholderService;
+use Sanf\Core\Modules\User\DeleteShareholderService;
+use Sanf\Core\Modules\User\GetListShareholderService;
+use Sanf\Core\Modules\User\UpdateShareholderService;
 
 class ShareholderController extends RestController
 {
-    public function postCreate(Request $request)
+    public function postCreate(Request $request, CreateShareholderService $service, string $xid)
     {
         $this->validate($request, [
             "title" => ["required", "string"],
@@ -18,30 +22,28 @@ class ShareholderController extends RestController
             "position" => ["nullable", "string"],
             "type" => ["required", "string", "in:C,P"],
         ]);
+
+        $dto = new CreateShareholderDto([
+            "id" => $xid,
+            "title" => $request->input('title'),
+            "name" => $request->input('name'),
+            "job" => $request->input('position'),
+            "percentage" => $request->input('share_percentage'),
+            "type" => $request->input('type'),
+        ]);
+
+        $result = $service->execute($dto);
+
         return $this->responseOk();
     }
 
-    public function getList(Request $request)
+    public function getList(GetListShareholderService $service, string $xid)
     {
-        $result = [
-            [
-                "no" => "10",
-                "title" => "MR.",
-                "name" => "SANTOS IBRAHIM NOOR",
-                "share_percentage" => "0",
-                "position" => "DIREKTUR",
-                'type' => "P"
-            ],
-            [
-                "no" => "11",
-                "title" => "PT",
-                "name" => "TELADAN PRIMA AGRO",
-                "share_percentage" => "99",
-                "position" => "PEMEGANG SAHAM",
-                "type" => "C"
-            ]
-        ];
-        $result = json_decode(json_encode($result));
+        $dto = new GetListShareholderDto([
+            'xid' => $xid
+        ]);
+        $result = $service->execute($dto);
+
         return fractal($result, ShareholderTransformer::class);
     }
 
@@ -59,7 +61,10 @@ class ShareholderController extends RestController
         return fractal($result, ShareholderTransformer::class);
     }
 
-    public function putUpdate(Request $request)
+    public function putUpdate(Request $request,
+                              UpdateShareholderService $service,
+                              string $xid,
+                              string $no)
     {
         $this->validate($request, [
             "title" => ["required", "string"],
@@ -68,11 +73,31 @@ class ShareholderController extends RestController
             "position" => ["nullable", "string"],
             "type" => ["required", "string", "in:C,P"],
         ]);
+
+        $dto = new UpdateShareholderDto([
+            "id" => $xid,
+            "no" => $no,
+            "title" => $request->input('title'),
+            "name" => $request->input('name'),
+            "job" => $request->input('position'),
+            "percentage" => $request->input('share_percentage'),
+            "type" => $request->input('type'),
+        ]);
+
+        $result = $service->execute($dto);
+
         return $this->responseOk();
     }
 
-    public function delete($xid, $no)
+    public function delete(DeleteShareholderService $service, string $xid, string $no)
     {
+        $dto = new DeleteShareholderDto([
+            "id" => $xid,
+            "no" => $no,
+        ]);
+
+        $result = $service->execute($dto);
+
         return $this->responseOk();
     }
 }

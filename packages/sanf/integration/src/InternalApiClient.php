@@ -22,6 +22,61 @@ class InternalApiClient
         return $response->json();
     }
 
+    public function getShareholders($id)
+    {
+        $response = \NbsPhp\ApiWrapper\Api\Request::route('customer.shareholder.list')
+            ->pathParams(['id' => $id])
+            ->send();
+
+        return $response->json();
+    }
+
+    public function createShareholder($request)
+    {
+        $response = \NbsPhp\ApiWrapper\Api\Request::route('customer.shareholder.create')
+            ->formParams([
+                "cust_id" => $request->id,
+                "cust_title" => $request->title,
+                "cust_name" => $request->name,
+                "job_desc" => $request->job,
+                "percshare" => $request->percentage,
+                "type" => $request->type
+            ])
+            ->send();
+
+        return $response->json();
+    }
+
+    public function updateShareholder($request)
+    {
+        $response = \NbsPhp\ApiWrapper\Api\Request::route('customer.shareholder.update')
+            ->formParams([
+                "cust_id" => $request->id,
+                "sr_no" => $request->no,
+                "cust_title" => $request->title,
+                "cust_name" => $request->name,
+                "job_desc" => $request->job,
+                "percshare" => $request->percentage,
+                "type" => $request->type,
+
+            ])
+            ->send();
+
+        return $response->json();
+    }
+
+    public function deleteShareholder($id, $no)
+    {
+        $response = \NbsPhp\ApiWrapper\Api\Request::route('customer.shareholder.delete')
+            ->formParams([
+                "cust_id" => $id,
+                "sr_no" => $no,
+            ])
+            ->send();
+
+        return $response->json();
+    }
+
     public function getProvinces()
     {
         $response = \NbsPhp\ApiWrapper\Api\Request::route('location.provinces')->send();
