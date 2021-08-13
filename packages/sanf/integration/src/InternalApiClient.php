@@ -61,6 +61,13 @@ class InternalApiClient
         return $response->json();
     }
 
+    public function getPosition()
+    {
+        $response = \NbsPhp\ApiWrapper\Api\Request::route('customer.positions')->send();
+
+        return $response->json();
+    }
+
     public function getTitle($type)
     {
         $response = \NbsPhp\ApiWrapper\Api\Request::route('customer.titles')
@@ -69,5 +76,6 @@ class InternalApiClient
             ])->send();
 
         return $response->json();
+
     }
 }

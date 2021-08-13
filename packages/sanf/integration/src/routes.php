@@ -12,5 +12,6 @@ Route::group(config('sanf-internal.url'), [InternalApiProcessor::class], functio
     Route::get('location.districts', 'Address/kecamatan/{province_id}/{city_id}');
     Route::get('location.sub-districts', 'Address/Kelurahan/{province_id}/{city_id}/{district_id}');
 
+    Route::get('customer.positions', 'customer/jabatan');
     Route::get('customer.titles', 'Customer/title/{type}');
 });
