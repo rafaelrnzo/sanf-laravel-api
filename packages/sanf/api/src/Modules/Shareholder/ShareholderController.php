@@ -7,6 +7,7 @@ namespace Sanf\Api\Modules\Shareholder;
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestController;
 use Sanf\Core\Modules\User\CreateShareholderService;
+use Sanf\Core\Modules\User\DeleteShareholderService;
 use Sanf\Core\Modules\User\GetListShareholderService;
 use Sanf\Core\Modules\User\UpdateShareholderService;
 
@@ -88,8 +89,15 @@ class ShareholderController extends RestController
         return $this->responseOk();
     }
 
-    public function delete($xid, $no)
+    public function delete(DeleteShareholderService $service, string $xid, string $no)
     {
+        $dto = new DeleteShareholderDto([
+            "id" => $xid,
+            "no" => $no,
+        ]);
+
+        $result = $service->execute($dto);
+
         return $this->responseOk();
     }
 }

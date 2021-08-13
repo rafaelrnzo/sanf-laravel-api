@@ -65,6 +65,18 @@ class InternalApiClient
         return $response->json();
     }
 
+    public function deleteShareholder($id, $no)
+    {
+        $response = \NbsPhp\ApiWrapper\Api\Request::route('customer.shareholder.delete')
+            ->formParams([
+                "cust_id" => $id,
+                "sr_no" => $no,
+            ])
+            ->send();
+
+        return $response->json();
+    }
+
     public function getProvinces()
     {
         $response = \NbsPhp\ApiWrapper\Api\Request::route('location.provinces')->send();
