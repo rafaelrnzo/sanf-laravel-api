@@ -7,6 +7,7 @@ Route::group(config('sanf-internal.url'), [InternalApiProcessor::class], functio
     Route::get('customer.find-by-email', 'Login/{email}');
     Route::get('customer.find-by-id', '/Login/customer/{id}');
 
+    Route::post('customer.shareholder.update', 'customer/pemegangsahamupdate');
     Route::post('customer.shareholder.create', 'customer/pemegangsaham/{id}');
     Route::get('customer.shareholder.list', 'customer/pemegangsaham/{id}');
 
