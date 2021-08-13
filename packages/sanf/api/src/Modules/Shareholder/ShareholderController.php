@@ -18,7 +18,7 @@ class ShareholderController extends RestController
         $this->validate($request, [
             "title" => ["required", "string"],
             "name" => ["required", "string"],
-            "percentage" => ["required", "string"],
+            "share_percentage" => ["required", "string"],
             "position" => ["nullable", "string"],
             "type" => ["required", "string", "in:C,P"],
         ]);
@@ -28,7 +28,7 @@ class ShareholderController extends RestController
             "title" => $request->input('title'),
             "name" => $request->input('name'),
             "job" => $request->input('position'),
-            "percentage" => $request->input('percentage'),
+            "percentage" => $request->input('share_percentage'),
             "type" => $request->input('type'),
         ]);
 
@@ -69,7 +69,7 @@ class ShareholderController extends RestController
         $this->validate($request, [
             "title" => ["required", "string"],
             "name" => ["required", "string"],
-            "percentage" => ["required", "string"],
+            "share_percentage" => ["required", "string"],
             "position" => ["nullable", "string"],
             "type" => ["required", "string", "in:C,P"],
         ]);
@@ -80,7 +80,7 @@ class ShareholderController extends RestController
             "title" => $request->input('title'),
             "name" => $request->input('name'),
             "job" => $request->input('position'),
-            "percentage" => $request->input('percentage'),
+            "percentage" => $request->input('share_percentage'),
             "type" => $request->input('type'),
         ]);
 
