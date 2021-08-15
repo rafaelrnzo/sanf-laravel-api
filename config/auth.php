@@ -307,7 +307,7 @@ return [
                 'method' => 'get',
                 'uri' => "{$routePrefix}/me",
                 'name' => 'user.profile',
-                'action' => "{$namespace}UserController@getProfile",
+                'action' => "Sanf\\Api\\Modules\\User\\ProfileController@getMyProfile",
                 'middleware' => ['auth'],
             ],
             [

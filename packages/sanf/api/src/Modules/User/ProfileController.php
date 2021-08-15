@@ -4,6 +4,7 @@
 namespace Sanf\Api\Modules\User;
 
 
+use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestController;
 use Sanf\Core\Modules\User\RegisterAsContractOwnerService;
@@ -152,5 +153,14 @@ class ProfileController extends RestController
     public function postSwitch($xid)
     {
         $this->responseOk();
+    }
+
+    public function getMyProfile(Guard $auth, GetMyProfileService $service)
+    {
+        $dto = (object)['userId' => $auth->id()];
+
+        $data = $service->execute($dto);
+
+        return $this->responseOk('Success', fractal($data, config('auth.transformers.profile')));
     }
 }

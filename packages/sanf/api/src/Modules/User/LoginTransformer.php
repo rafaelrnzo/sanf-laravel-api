@@ -14,10 +14,11 @@ class LoginTransformer extends TransformerAbstract
         return [
             'profile' => [
                 'id' => $item->id,
+                'xid' => $item->xid,
                 'full_name' => $item->full_name,
                 'email' => $item->username,
-                'type' => 'Pengguna Umum', //TODO REFACTOR
-                'type_id' => EntityType::PERSONAL, //TODO REFACTOR
+                'type_name' => (new EntityType($item->entity_type_id))->getTranslation(),
+                'type_id' => $item->entity_type_id
             ]
         ];
     }

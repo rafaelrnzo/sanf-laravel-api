@@ -5,19 +5,20 @@ namespace Sanf\Api\Modules\User;
 
 
 use League\Fractal\TransformerAbstract;
+use Sanf\Core\Modules\User\EntityType;
 
 class ProfileTransformer extends TransformerAbstract
 {
     public function transform($item)
     {
         return [
-            'id' => $item->id,
+            'xid' => $item->xid,
             'email' => $item->username,
             'full_name' => $item->full_name,
-            'type_id' => 10, //TODO REFACTOR
-            'type_name' => 'Pengguna Umum', //TODO REFACTOR
-            'is_pic' => true,
-            'company_name' => 'PT ANGIN RIBUT'
+            'type_id' => $item->entity_type_id,
+            'type_name' => (new EntityType($item->entity_type_id))->getTranslation(),
+            'is_pic' => optional($item->profile)->isPic,
+            'company_name' => optional($item->profile)->companyName
         ];
     }
 }
