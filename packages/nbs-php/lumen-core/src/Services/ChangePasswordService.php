@@ -4,6 +4,7 @@
 namespace NbsPhp\Core\Services;
 
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use NbsPhp\Core\Exceptions\InvalidCredentialException;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
@@ -21,6 +22,7 @@ class ChangePasswordService implements ApplicationServiceInterface
             throw new InvalidCredentialException();
         }
         $user->password = bcrypt($dto->newPassword);
+        $user->password_updated_at = Carbon::now();
         return $user->save();
     }
 }

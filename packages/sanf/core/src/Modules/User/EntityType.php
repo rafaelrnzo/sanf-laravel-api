@@ -12,5 +12,6 @@ use MyCLabs\Enum\Enum;
  */
 class EntityType extends Enum
 {
-    const GENERAL = 10;
+    const PERSONAL = 10;
+    const COMPANY = 20;
 }

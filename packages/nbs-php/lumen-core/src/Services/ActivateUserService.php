@@ -4,6 +4,7 @@
 namespace NbsPhp\Core\Services;
 
 
+use Carbon\Carbon;
 use NbsPhp\Core\Exceptions\UserActivationFailedException;
 use NbsPhp\Core\Models\AuthModel;
 
@@ -39,6 +40,7 @@ class ActivateUserService implements ApplicationServiceInterface
 
         //TODO REPOSITORY
         $user->password = bcrypt($dto->password);
+        $user->password_updated_at = Carbon::now();
         $user->save();
 
         return $user->markUserActivated();

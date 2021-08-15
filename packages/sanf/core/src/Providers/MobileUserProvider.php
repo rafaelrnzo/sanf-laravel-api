@@ -42,6 +42,6 @@ class MobileUserProvider extends EloquentUserProvider implements UserProvider
             }
         }
 
-        return $query->whereIn('entity_type_id', [EntityType::GENERAL])->first();
+        return $query->whereIn('entity_type_id', [EntityType::PERSONAL])->first();
     }
 }

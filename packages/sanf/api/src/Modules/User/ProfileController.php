@@ -6,6 +6,7 @@ namespace Sanf\Api\Modules\User;
 
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestController;
+use Sanf\Core\Modules\User\RegisterAsContractOwnerService;
 
 class ProfileController extends RestController
 {
@@ -136,11 +137,15 @@ class ProfileController extends RestController
         return $this->responseOk();
     }
 
-    public function postRegisterWithContract(Request $request)
+    public function postRegisterWithContract(Request $request, RegisterAsContractOwnerService $service)
     {
-        $this->validate($request, [
+        $validated = $this->validate($request, [
             "email" => ["required", "string"],
         ]);
+        $dto = (object)[
+            'email' => $validated['email']
+        ];
+        $service->execute($dto);
         return $this->responseOk();
     }
 

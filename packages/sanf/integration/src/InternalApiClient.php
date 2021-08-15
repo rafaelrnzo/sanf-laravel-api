@@ -4,11 +4,13 @@
 namespace Sanf\Integration;
 
 
+use NbsPhp\ApiWrapper\Api\Request;
+
 class InternalApiClient
 {
     public function findCustomerByEmail($email)
     {
-        $response = \NbsPhp\ApiWrapper\Api\Request::route('customer.find-by-email')
+        $response = Request::route('customer.find-by-email')
             ->pathParams(['email' => $email])
             ->send();
         return $response->json();
@@ -16,8 +18,19 @@ class InternalApiClient
 
     public function findCustomerById($id)
     {
-        $response = \NbsPhp\ApiWrapper\Api\Request::route('customer.find-by-id')
-            ->pathParams(['id' => 1])
+        $response = Request::route('customer.find-by-id')
+            ->pathParams(['id' => $id])
+            ->send();
+        return $response->json();
+    }
+
+    public function findByEmailAndNpwp($email, $npwp)
+    {
+        $response = Request::route('customer.find-by-email-and-npwp')
+            ->pathParams([
+                'email' => $email,
+                'npwp' => $npwp
+            ])
             ->send();
         return $response->json();
     }
@@ -79,14 +92,14 @@ class InternalApiClient
 
     public function getProvinces()
     {
-        $response = \NbsPhp\ApiWrapper\Api\Request::route('location.provinces')->send();
+        $response = Request::route('location.provinces')->send();
 
         return $response->json();
     }
 
     public function getCities($province_id)
     {
-        $response = \NbsPhp\ApiWrapper\Api\Request::route('location.cities')
+        $response = Request::route('location.cities')
             ->pathParams(['province_id' => $province_id])
             ->send();
 
@@ -95,7 +108,7 @@ class InternalApiClient
 
     public function getDistrict($province_id, $city_id)
     {
-        $response = \NbsPhp\ApiWrapper\Api\Request::route('location.districts')
+        $response = Request::route('location.districts')
             ->pathParams([
                 'province_id' => $province_id,
                 'city_id' => $city_id,
@@ -106,7 +119,7 @@ class InternalApiClient
 
     public function getSubDistrict($province_id, $city_id, $district_name)
     {
-        $response = \NbsPhp\ApiWrapper\Api\Request::route('location.sub-districts')
+        $response = Request::route('location.sub-districts')
             ->pathParams([
                 'province_id' => $province_id,
                 'city_id' => $city_id,
