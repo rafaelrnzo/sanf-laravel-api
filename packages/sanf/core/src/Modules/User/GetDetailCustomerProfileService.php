@@ -23,36 +23,36 @@ class GetDetailCustomerProfileService implements ApplicationServiceInterface
 
     public function execute($dto)
     {
-        $response = $this->internalApiClient->findCustomerByEmail($dto->email);
+        $response = $this->internalApiClient->findCustomerById($dto->customerId);
 
         return collect($response['data'])
             ->map(function ($item){
                 return (object)[
                     "xid" => $item['CUST_ID_SANF'],
-                    "type_id" => $item['ID_IDENTITY'],
-                    "type_name" => $item['DESC_IDENTITY'],
+                    "typeId" => $item['ID_IDENTITY'],
+                    "typeName" => $item['DESC_IDENTITY'],
                     "title" => $item['COMPANY_TYPE'],
-                    "full_name" => $item['IDENTITY_NAME'],
-                    "pic_name" => $item['PIC_NAME'],
-                    "identity_number" => $item['KTP'],
+                    "fullName" => $item['IDENTITY_NAME'],
+                    "picName" => $item['PIC_NAME'],
+                    "identityNumber" => $item['KTP'],
                     "npwp" => $item['NPWP'],
                     "email" => $item['EMAIL_ADDR'],
-                    "landline_number" => $item['NO_TELP'],
-                    "phone_number" => $item['NO_HP'],
+                    "landlineNumber" => $item['NO_TELP'],
+                    "phoneNumber" => $item['NO_HP'],
                     "gender" => $item['GENDER'],
-                    "birthdate" => Carbon::createFromFormat('Y/m/d', $item['TGL_LAHIR'])->format('Y-m-d'),
-                    "country_id" => $item['ID_NEGARA'],
-                    "country_name" => $item['NEGARA'],
-                    "province_id" => $item['ID_PROVINSI'],
-                    "province_name" => $item['PROVINSI'],
-                    "city_id" => $item['ID_KOTA'],
-                    "city_name" => $item['KOTA'],
-                    "district_name" => $item['KECAMATAN'],
-                    "subdistrict_name" => $item['KELURAHAN'],
+                    "birthdate" => Carbon::make($item['TGL_LAHIR']),
+                    "countryId" => $item['ID_NEGARA'],
+                    "countryName" => $item['NEGARA'],
+                    "provinceId" => $item['ID_PROVINSI'],
+                    "provinceName" => $item['PROVINSI'],
+                    "cityId" => $item['ID_KOTA'],
+                    "cityName" => $item['KOTA'],
+                    "districtName" => $item['KECAMATAN'],
+                    "subdistrictName" => $item['KELURAHAN'],
                     "postcode" => $item['KODEPOS'],
                     "address" => $item['ALAMAT'],
-                    "business_since" => $item['LAMA_USAHA'],
-                    "is_pic" => $item['PIC']
+                    "businessSince" => $item['LAMA_USAHA'],
+                    "isPic" => $item['PIC']
                 ];
             });
     }

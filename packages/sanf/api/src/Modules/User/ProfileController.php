@@ -7,6 +7,7 @@ namespace Sanf\Api\Modules\User;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestController;
+use Sanf\Core\Modules\User\GetDetailCustomerProfileService;
 use Sanf\Core\Modules\User\GetListCustomerProfileService;
 use Sanf\Core\Modules\User\GetMyProfileService;
 use Sanf\Core\Modules\User\RegisterAsContractOwnerService;
@@ -23,37 +24,12 @@ class ProfileController extends RestController
         return fractal($result, CustomerProfileSimpleTransformer::class);
     }
 
-    public function getDetail($xid)
+    public function getDetail($xid, GetDetailCustomerProfileService $service)
     {
-        $result = [
-            "xid" => "4010000127",
-            "type_id" => "P",
-            "type_name" => "PERSONAL",
-            "title" => "MR.",
-            "full_name" => "ARNES",
-            "pic_name" => "arnes gosal",
-            "identity_number" => "7306080805820001",
-            "npwp" => "143159416804000",
-            "email" => "arnes.gosal@yahoo.co.id",
-            "landline_number" => "08152511191",
-            "phone_number" => "081355878052",
-            "gender" => "M",
-            "birthdate" => "1993-12-01",
-            "country_id" => "001",
-            "country_name" => "INDONESIA",
-            "province_id" => "00103",
-            "province_name" => "JAKARTA",
-            "city_id" => "0010394",
-            "city_name" => "JAKARTA SELATAN",
-            "district_name" => "PASAR MINGGU",
-            "subdistrict_name" => "RAGUNAN",
-            "postcode" => "12550",
-            "address" => "JL. DG. TATA LR.3 NO.11E RT 001 RW 007",
-            "business_since" => "2008",
-            "is_active" => true,
-            "is_pic" => true,
+        $dto = (object)[
+            'customerId' => $xid
         ];
-        $result = json_decode(json_encode($result));
+        $result = $service->execute($dto);
         return fractal($result, CustomerProfileTransformer::class);
     }
 
