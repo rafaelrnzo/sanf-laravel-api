@@ -25,9 +25,10 @@ class ProfileController extends RestController
         return fractal($result, CustomerProfileSimpleTransformer::class);
     }
 
-    public function getDetail($xid, GetDetailCustomerProfileService $service)
+    public function getDetail(Guard $auth, $xid, GetDetailCustomerProfileService $service)
     {
         $dto = (object)[
+            'userId' => $auth->id(),
             'customerId' => $xid
         ];
         $result = $service->execute($dto);

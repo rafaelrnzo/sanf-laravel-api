@@ -2,7 +2,8 @@
 
 namespace NbsPhp\Core\Exceptions;
 
-class ForbiddenException extends \Exception
+class ForbiddenException extends ApiException
 {
-    protected $code = 'AUTH004';
+    protected $code = '403';
+    protected $status = 403;
 }

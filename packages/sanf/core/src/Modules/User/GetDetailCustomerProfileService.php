@@ -5,27 +5,30 @@ namespace Sanf\Core\Modules\User;
 
 
 use Carbon\Carbon;
+use NbsPhp\Core\Exceptions\ForbiddenException;
+use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Integration\InternalApiClient;
 
 class GetDetailCustomerProfileService implements ApplicationServiceInterface
 {
+    protected $repository;
     protected $internalApiClient;
 
-    /**
-     * GetProfileService constructor.
-     * @param $repository
-     */
-    public function __construct(InternalApiClient $internalApiClient) //TODO REPOSITORY
+    public function __construct(AuthModel $repository, InternalApiClient $internalApiClient) //TODO REPOSITORY
     {
+        $this->repository = $repository;
         $this->internalApiClient = $internalApiClient;
     }
 
     public function execute($dto)
     {
+        $user = $this->repository->newQuery()->find( $dto->userId);
+        if (!$user) {
+            throw new UserNotFoundException();
+        }
         $response = $this->internalApiClient->findCustomerById($dto->customerId);
-
-        return collect($response['data'])
+        $profile = collect($response['data'])
             ->map(function ($item){
                 return (object)[
                     "xid" => $item['CUST_ID_SANF'],
@@ -55,5 +58,11 @@ class GetDetailCustomerProfileService implements ApplicationServiceInterface
                     "isPic" => (bool)$item['PIC']
                 ];
             })->first();
+
+        if($profile->email != $user->email){
+            throw new ForbiddenException('illegal access profile owner detected');
+        }
+
+        return $profile;
     }
 }

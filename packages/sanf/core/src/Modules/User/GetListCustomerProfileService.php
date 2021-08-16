@@ -4,20 +4,18 @@
 namespace Sanf\Core\Modules\User;
 
 
+use Illuminate\Support\Facades\Log;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Models\AuthModel;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Integration\InternalApiClient;
+use Sanf\Integration\SanfInternalApiException;
 
 class GetListCustomerProfileService implements ApplicationServiceInterface
 {
     protected $repository;
     protected $internalApiClient;
 
-    /**
-     * GetProfileService constructor.
-     * @param $repository
-     */
     public function __construct(AuthModel $repository, InternalApiClient $internalApiClient) //TODO REPOSITORY
     {
         $this->repository = $repository;
@@ -30,7 +28,12 @@ class GetListCustomerProfileService implements ApplicationServiceInterface
         if (!$user) {
             throw new UserNotFoundException();
         }
-        $response = $this->internalApiClient->findCustomerByEmail($dto->email);
+        try {
+            $response = $this->internalApiClient->findCustomerByEmail($dto->email);
+        } catch (SanfInternalApiException $exception) {
+            Log::info('profile: sanf data notfound for email ' . $dto->email);
+            return [];
+        }
 
         return collect($response['data'])
             ->map(function ($item) use ($user) {
