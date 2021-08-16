@@ -4,7 +4,7 @@
 namespace Sanf\Integration;
 
 
-use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
 use NbsPhp\ApiWrapper\Api\Processor;
 use NbsPhp\ApiWrapper\Api\Request;
 use NbsPhp\ApiWrapper\Api\Response;
@@ -21,7 +21,7 @@ class InternalApiProcessor extends Processor
                 throw new SanfInternalApiException($result['message']);
             }
 
-        } catch (ClientException $exception) {
+        } catch (ServerException $exception) {
             //TODO HANDLE EXCEPTION
             throw $exception;
         }

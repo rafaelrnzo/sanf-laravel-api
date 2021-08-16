@@ -9,6 +9,7 @@ Route::group(config('sanf-internal.url'), [InternalApiProcessor::class], functio
     Route::get('customer.find-by-email-and-npwp', '/customer/profil/{email}/{npwp}');
     Route::post('customer.register', '/Customer/registernewuser');
     Route::post('customer.update', '/customer/userupdate');
+    Route::post('customer.create-company', '/customer/tambahperusahaan');
 
     Route::post('customer.shareholder.update', 'customer/pemegangsahamupdate');
     Route::post('customer.shareholder.delete', 'customer/pemegangsahamdelete');

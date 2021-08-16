@@ -11,6 +11,7 @@ use Sanf\Core\Modules\User\GetDetailCustomerProfileService;
 use Sanf\Core\Modules\User\GetListCustomerProfileService;
 use Sanf\Core\Modules\User\GetMyProfileService;
 use Sanf\Core\Modules\User\RegisterAsContractOwnerService;
+use Sanf\Core\Modules\User\Services\CreateCompanyProfileService;
 use Sanf\Core\Modules\User\SwitchActiveCustomerProfileService;
 
 class ProfileController extends RestController
@@ -35,9 +36,9 @@ class ProfileController extends RestController
         return fractal($result, CustomerProfileTransformer::class);
     }
 
-    public function postCreateCompanyProfile(Request $request)
+    public function postCreateCompanyProfile(Guard $auth, $xid, Request $request, CreateCompanyProfileService $service)
     {
-        $this->validate($request, [
+        $input = $this->validate($request, [
             "title" => ["required", "string"],
             "full_name" => ["required", "string"],
             "npwp" => ["required", "string"],
@@ -46,6 +47,18 @@ class ProfileController extends RestController
             "phone_number" => ["required", "string"],
             "email" => ["required", "string"]
         ]);
+        $dto = (object)[
+            "userId" => $auth->id(),
+            "customerId" => $xid,
+            "title" => $input['title'],
+            "fullName" => $input['full_name'],
+            "npwp" => $input['npwp'],
+            "landlineNumber" => $input['landline_number'],
+            "picName" => $input['pic_name'],
+            "phoneNumber" => $input['phone_number'],
+            "email" => $input['email']
+        ];
+        $service->execute($dto);
         return $this->responseOk();
     }
 
