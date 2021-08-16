@@ -9,7 +9,7 @@ return [
     'transformers' => [
         'login' => \Sanf\Api\Modules\User\LoginTransformer::class,
         'logout' => \NbsPhp\Core\Transformers\LogoutTransformer::class,
-        'profile' => \Sanf\Api\Modules\User\ProfileTransformer::class,
+        'profile' => \Sanf\Api\Modules\User\ProfileSimpleTransformer::class,
     ],
 
     'notifications' => [

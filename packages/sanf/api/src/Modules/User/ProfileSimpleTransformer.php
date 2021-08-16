@@ -7,12 +7,12 @@ namespace Sanf\Api\Modules\User;
 use League\Fractal\TransformerAbstract;
 use Sanf\Core\Modules\User\EntityType;
 
-class ProfileTransformer extends TransformerAbstract
+class ProfileSimpleTransformer extends TransformerAbstract
 {
     public function transform($item)
     {
         return [
-            'xid' => $item->xid,
+            'xid' => (string)$item->xid,
             'email' => $item->username,
             'full_name' => $item->full_name,
             'type_id' => $item->entity_type_id,

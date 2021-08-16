@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Sanf\Api\Modules\User;
+namespace Sanf\Core\Modules\User;
 
 
 use NbsPhp\Core\Models\AuthModel;
