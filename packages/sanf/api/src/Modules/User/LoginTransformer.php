@@ -14,11 +14,11 @@ class LoginTransformer extends TransformerAbstract
         return [
             'profile' => [
                 'id' => $item->id,
-                'xid' => $item->xid,
+                'xid' => (string)$item->xid,
                 'full_name' => $item->full_name,
                 'email' => $item->username,
-                'type_name' => (new ProfileType($item->profile_type))->getTranslation(),
-                'type_id' => $item->profile_type
+                'type_name' => (new ProfileType($item->profile_type ?? ProfileType::PERSONAL))->getTranslation(),
+                'type_id' => $item->profile_type ?? ProfileType::PERSONAL
             ]
         ];
     }
