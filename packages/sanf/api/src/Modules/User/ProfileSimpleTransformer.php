@@ -5,7 +5,7 @@ namespace Sanf\Api\Modules\User;
 
 
 use League\Fractal\TransformerAbstract;
-use Sanf\Core\Modules\User\EntityType;
+use Sanf\Core\Modules\User\ProfileType;
 
 class ProfileSimpleTransformer extends TransformerAbstract
 {
@@ -15,8 +15,8 @@ class ProfileSimpleTransformer extends TransformerAbstract
             'xid' => (string)$item->xid,
             'email' => $item->username,
             'full_name' => $item->full_name,
-            'type_id' => $item->entity_type_id,
-            'type_name' => (new EntityType($item->entity_type_id))->getTranslation(),
+            'type_name' => (new ProfileType($item->profile_type))->getTranslation(),
+            'type_id' => $item->profile_type,
             'is_pic' => optional($item->profile)->isPic,
             'company_name' => optional($item->profile)->companyName
         ];

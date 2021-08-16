@@ -47,7 +47,8 @@ class RegisterAsContractOwnerService implements ApplicationServiceInterface
             'landline_number' => $personalData['NO_TELP'],
             'phone_number' => $personalData['NO_HP'],
             'status_id' => UserStatus::NEED_ACTIVATION,
-            'xid' => $personalData['CUST_ID_SANF']
+            'xid' => $personalData['CUST_ID_SANF'],
+            'profile_type' => $personalData['ID_IDENTITY'],
         ]);
 
         if ($user instanceof NeedSetupPasswordInterface && $user->needActivation()) {

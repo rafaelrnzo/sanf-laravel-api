@@ -15,6 +15,7 @@ class AlterUserAuthTable extends Migration
     {
         Schema::table('user_auth', function (Blueprint $table) {
             $table->string('xid')->index()->unique()->nullable();
+            $table->string('profile_type',1)->nullable();
         });
     }
 
@@ -27,6 +28,7 @@ class AlterUserAuthTable extends Migration
     {
         Schema::table('user_auth', function (Blueprint $table) {
             $table->dropColumn('xid');
+            $table->dropColumn('profile_type');
         });
     }
 }

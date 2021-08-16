@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'entity_type' => [
+    'profile-type' => [
         'PERSONAL' => 'Personal',
         'COMPANY' => 'Perusahaan',
     ]

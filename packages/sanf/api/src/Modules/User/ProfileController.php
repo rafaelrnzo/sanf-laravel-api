@@ -11,6 +11,7 @@ use Sanf\Core\Modules\User\GetDetailCustomerProfileService;
 use Sanf\Core\Modules\User\GetListCustomerProfileService;
 use Sanf\Core\Modules\User\GetMyProfileService;
 use Sanf\Core\Modules\User\RegisterAsContractOwnerService;
+use Sanf\Core\Modules\User\SwitchActiveCustomerProfileService;
 
 class ProfileController extends RestController
 {
@@ -75,8 +76,13 @@ class ProfileController extends RestController
         return $this->responseOk();
     }
 
-    public function postSwitch($xid)
+    public function postSwitch(Guard $guard, $xid, SwitchActiveCustomerProfileService $service)
     {
+        $dto = (object)[
+            'userId' => $guard->id(),
+            'customerId' => $xid
+        ];
+        $service->execute($dto);
         $this->responseOk();
     }
 

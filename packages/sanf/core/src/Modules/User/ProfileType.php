@@ -17,6 +17,6 @@ class ProfileType extends Enum
 
     public function getTranslation()
     {
-        return __('core::constant.entity_type.'.$this->getKey());
+        return __('core::constant.profile-type.'.$this->getKey());
     }
 }
