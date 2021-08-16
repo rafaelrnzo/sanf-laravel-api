@@ -1,0 +1,53 @@
+<?php
+
+namespace Sanf\Api\Modules\ContactUs;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Mail;
+
+use Sanf\Core\Mail\BaseMailV2;
+
+class SendAskUsJob implements ShouldQueue
+{
+    use InteractsWithQueue, Queueable, SerializesModels;
+
+    protected $email;
+    protected $emailRecipients;
+
+    /**
+     * Create a new job instance.
+     *
+     * @return void
+     */
+
+    public function __construct($email, $emailRecipients)
+    {
+        $this->email = $email;
+        $this->emailRecipients = $emailRecipients;
+    }
+
+    public function handle()
+    {
+
+        $askUsEmail = (new BaseMailV2)
+            ->subject('Kritik dan saran dari pengguna SANFXtra!')
+            ->leftLogo(asset('assets/svg/sanf-logo-blue.svg'))
+            ->rightLogo(asset('assets/svg/sanf-tagline.svg'))
+            ->banner(asset('assets/svg/email-verification.svg'))
+            ->writeInto($this->email);
+
+        if (is_array($this->email['images'])) {
+
+            foreach ($this->email['images'] as $val) {
+                $askUsEmail->attach(public_path($val['path']));
+            }
+        }
+
+        $askUsEmail->from($this->email['email'], $this->email['name']);
+
+        Mail::to($this->emailRecipients)->send($askUsEmail);
+    }
+}

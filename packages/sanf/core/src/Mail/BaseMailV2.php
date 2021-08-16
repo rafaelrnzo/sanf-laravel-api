@@ -1,6 +1,7 @@
 <?php
 
-namespace NbsPhp\Core\Mail;
+namespace Sanf\Core\Mail;
+
 use NbsPhp\Core\Mail\BaseMail;
 
 class BaseMailV2 extends BaseMail
@@ -12,6 +13,12 @@ class BaseMailV2 extends BaseMail
     **/
 
     public $markdown = 'mail::ask-us';
+
+    /**
+     * Content template for the message (if applicable).
+     *
+     * @var string
+    **/
 
     public $topic;
     
