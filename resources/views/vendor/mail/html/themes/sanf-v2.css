@@ -509,3 +509,37 @@ hr {
     color: #399ac2;
     text-decoration: none;
 }
+
+.another-email-content {
+    font-family: "Roboto", sans-serif;
+}
+
+.another-email-content td {
+    padding: 5px 0;
+}
+
+.another-email-content td.title {
+    color: #000000;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: bold;
+    line-height: 27px;
+    padding-bottom: 16px;
+}
+
+.another-email-content td.data-title {
+    color: #232227;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 27px;
+    padding-bottom: 16px;
+}
+
+.another-email-content td.data-value {
+    font-family: "Roboto", sans-serif;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 16px;
+    color: #616161;
+}

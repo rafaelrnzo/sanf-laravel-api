@@ -22,21 +22,24 @@ class AskUsSubmitService implements ApplicationServiceInterface
         $images = [];
 
         // move asset;
-        foreach ($dto->images as $image) {
-            $newPath = config('image-path.ask-us');
-            $tempPath = config('image-path.temp');
-
-            $exist = Storage::exists("{$newPath}{$image}");
-            if(!$exist){
-                Storage::move("{$tempPath}{$image}", "{$newPath}{$image}");
+        if($dto->images){
+            
+            foreach ($dto->images as $image) {
+                $newPath = config('image-path.ask-us');
+                $tempPath = config('image-path.temp');
+    
+                $exist = Storage::exists("{$newPath}{$image}");
+                if(!$exist){
+                    Storage::move("{$tempPath}{$image}", "{$newPath}{$image}");
+                }
+    
+                $images[] = [
+                    'file_name' => $image,
+                    'directory' => $newPath,
+                    'path' => "{$newPath}{$image}",
+                    'mime_type' => Storage::getMimeType("{$newPath}{$image}")
+                ];
             }
-
-            $images[] = [
-                'file_name' => $image,
-                'directory' => $newPath,
-                'path' => "{$newPath}{$image}",
-                'mime_type' => Storage::getMimeType("{$newPath}{$image}")
-            ];
         }
 
         // prepare data;
@@ -48,6 +51,6 @@ class AskUsSubmitService implements ApplicationServiceInterface
         $data['topic'] = optional(AskUsTopicModel::find($data['topic_id']))->name;
         $this->repository->save($data);
 
-        return true;
+        return $data;
     }
 }
