@@ -7,7 +7,9 @@ namespace Sanf\Api\Modules\ContactUs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use NbsPhp\Core\Controllers\RestController;
+use NbsPhp\Core\Response\RestResponseMapper;
 use Sanf\Core\Modules\ContactUs\AskUsSubmitService;
+
 
 class AskUsSubmitController extends RestController
 {
@@ -20,10 +22,12 @@ class AskUsSubmitController extends RestController
         $this->service = $service;
     }
 
-    public function process(Request $request)
+    public function process(Request $request, RestResponseMapper $response)
     {
+        
         // validate request;
         $property = $this->validating($request);
+        
         if (isset($request['images']))
             $property += ['images' => $request['images']];
 
@@ -35,8 +39,15 @@ class AskUsSubmitController extends RestController
             return $this->service->execute($dto);
         });
 
+        if($result){
+            $recipients = explode(',', env('MAIL_TO_ADMIN'));
+            dispatch(new SendAskUsJob($result, $recipients));
+
+            return $response->successResponse(response()->json());
+        }
+
         // sent response;
-        return $result;
+        return $response->errorResponse(response()->json(config('response-codes')));
     }
 
 

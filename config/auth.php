@@ -346,13 +346,6 @@ return [
                 'action' => "{$namespace}OAuthController@registerApple",
                 'middleware' => ['auth'],
             ],
-            [
-                'method' => 'post',
-                'uri' => "{$routePrefix}/submit/ask-us",
-                'name' => 'ask-us.email',
-                'action' => "{$namespace}AskUsController@postQuestion",
-                'middleware' => ['auth'],
-            ]
         ],
     ],
 ];
