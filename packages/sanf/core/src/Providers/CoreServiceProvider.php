@@ -6,12 +6,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use Sanf\Core\Modules\Branch\BranchRepositoryInterface;
 use Sanf\Core\Modules\Branch\EloquentBranchRepository;
-use Sanf\Core\Modules\Product\EloquentProductRepository;
-use Sanf\Core\Modules\Product\ProductRepositoryInterface;
 use Sanf\Core\Modules\ContactUs\AskUsRepositoryInterface;
 use Sanf\Core\Modules\ContactUs\AskUsTopicRepositoryInterface;
 use Sanf\Core\Modules\ContactUs\EloquentAskUsRepository;
 use Sanf\Core\Modules\ContactUs\EloquentAskUsTopic;
+use Sanf\Core\Modules\Product\EloquentProductRepository;
+use Sanf\Core\Modules\Product\ProductRepositoryInterface;
 
 class CoreServiceProvider extends ServiceProvider
 {
@@ -71,6 +71,7 @@ class CoreServiceProvider extends ServiceProvider
     protected function registerConfigs()
     {
         $this->mergeConfigFrom(__DIR__ . '/../../config/image-path.php', 'image-path');
+        $this->mergeConfigFrom(__DIR__ . '/../../config/sanf-mobile.php', 'sanf-mobile');
     }
 
     /**

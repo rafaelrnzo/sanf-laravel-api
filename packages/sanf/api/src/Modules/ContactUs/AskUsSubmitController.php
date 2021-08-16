@@ -24,10 +24,10 @@ class AskUsSubmitController extends RestController
 
     public function process(Request $request, RestResponseMapper $response)
     {
-        
+
         // validate request;
         $property = $this->validating($request);
-        
+
         if (isset($request['images']))
             $property += ['images' => $request['images']];
 
@@ -40,14 +40,11 @@ class AskUsSubmitController extends RestController
         });
 
         if($result){
-            $recipients = explode(',', env('MAIL_TO_ADMIN'));
+            $recipients = explode(',', config('sanf-mobile.mail_to_admin'));
             dispatch(new SendAskUsJob($result, $recipients));
-
-            return $response->successResponse(response()->json());
         }
 
-        // sent response;
-        return $response->errorResponse(response()->json(config('response-codes')));
+        return $response->successResponse(response()->json());
     }
 
 
