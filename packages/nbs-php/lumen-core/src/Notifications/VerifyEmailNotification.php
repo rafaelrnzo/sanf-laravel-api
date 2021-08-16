@@ -4,7 +4,6 @@ namespace NbsPhp\Core\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Facades\URL;
 use Jenssegers\Agent\Agent;
 use NbsPhp\Core\Mail\BaseMail;
 
@@ -37,16 +36,15 @@ class VerifyEmailNotification extends Notification
         $agent = new Agent();
         $emailVerifyUrl = ($agent->isiPhone() || $agent->isiOS() || $agent->isiPad()) ? config('auth.urls.email_verify_ios') : config('auth.urls.email_verify') ;
 
-        if ($emailVerifyUrl != '' || $emailVerifyUrl != null) {
-            return URL::to($emailVerifyUrl, [
-                'id' => $notifiable->getKey(),
-                'token' => sha1($notifiable->getEmailForVerification()),
-            ]);
+        $id = $notifiable->getKey();
+        $token = sha1($notifiable->getEmailForVerification());
+        if ($emailVerifyUrl !== '' || $emailVerifyUrl !== null) {
+            return "{$emailVerifyUrl}?id={$id}&token={$token}";
         }
 
         return route('email.verify', [
-            'id' => $notifiable->getKey(),
-            'token' => sha1($notifiable->getEmailForVerification()),
+            'id' => $id,
+            'token' => $token,
         ]);
     }
 }

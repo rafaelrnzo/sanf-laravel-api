@@ -25,7 +25,7 @@ class VerifyEmailService implements ApplicationServiceInterface
     public function execute($dto)
     {
         /** @var AuthModel $user */
-        $user = $this->repository->newQuery()->findOrFail($dto->userId);
+        $user = $this->repository->newQuery()->find($dto->userId);
         if (!$user) {
             throw new NotFoundHttpException();
         }

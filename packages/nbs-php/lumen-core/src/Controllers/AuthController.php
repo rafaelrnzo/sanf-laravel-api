@@ -3,6 +3,7 @@
 
 namespace NbsPhp\Core\Controllers;
 
+use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use NbsPhp\Core\Dto\AppLoginRequestDto;
 use NbsPhp\Core\Dto\DeviceInfoRequestDto;
@@ -11,11 +12,17 @@ use NbsPhp\Core\Dto\RegisterRequestDto;
 use NbsPhp\Core\Dto\UpdateSessionRequestDto;
 use NbsPhp\Core\Enum\DevicePlatform;
 use NbsPhp\Core\Exceptions\UnauthorizedException;
+use NbsPhp\Core\Exceptions\UserActivationFailedException;
+use NbsPhp\Core\Exceptions\VerifyEmailFailedException;
 use NbsPhp\Core\JWTHelper;
+use NbsPhp\Core\Services\ActivateUserService;
 use NbsPhp\Core\Services\AppLoginService;
+use NbsPhp\Core\Services\ChangePasswordService;
 use NbsPhp\Core\Services\LoginWithEmailAndPasswordService;
 use NbsPhp\Core\Services\LogoutService;
 use NbsPhp\Core\Services\RegisterByEmailService;
+use NbsPhp\Core\Services\SendEmailActivationService;
+use NbsPhp\Core\Services\SendEmailVerificationService;
 use NbsPhp\Core\Services\UpdateSessionService;
 use NbsPhp\Core\Services\VerifyEmailService;
 
@@ -215,12 +222,13 @@ class AuthController extends RestController
         ]);
     }
 
-    public function verifyEmail(VerifyEmailService $service, $id, $token)
+    public function verifyEmailPage(Request $request, VerifyEmailService $service)
     {
         try {
+            $jwt = $this->extractVerifyEmailToken($request);
             $dto = (object)[
-                'userId' => $id,
-                'token' => $token
+                'userId' => $jwt->sub,
+                'token' => $jwt->token
             ];
             $service->execute($dto);
             $message = __('Email berhasil diaktivasi');
@@ -229,5 +237,106 @@ class AuthController extends RestController
         }
 
         return view(config('auth.views.verify-email'), ['message' => $message]);
+    }
+
+    public function verifyEmailByApp(Request $request, VerifyEmailService $service)
+    {
+        $jwt = $this->extractVerifyEmailToken($request);
+        $dto = (object)[
+            'userId' => $jwt->sub,
+            'token' => $jwt->token
+        ];
+        $service->execute($dto);
+        return $this->responseOk();
+    }
+
+    protected function extractVerifyEmailToken(Request $request)
+    {
+        //TODO COONFIGURABLE HEADER SOURCE NAME
+        $jwtToken = $request->token ?? str_replace('Bearer ', '', $request->header('X-Email-Verification-Token'));
+        $decodedToken = (new JWTHelper())->setToken($jwtToken)->getDecoded();
+        if (is_null($decodedToken)) {
+            throw new VerifyEmailFailedException('Verify Token Invalid');
+        }
+        return $decodedToken;
+    }
+
+    public function requestEmailVerification(Request $request, SendEmailVerificationService $service)
+    {
+        $this->validate($request, [
+            'email' => ['required', 'email']
+        ]);
+        $dto = (object)[
+            'email' => $request->input('email'),
+        ];
+        try {
+            $service->execute($dto);
+        } catch (VerifyEmailFailedException $exception) {
+            // ignore error if email not found
+        }
+        return $this->responseOk();
+    }
+
+    public function requestActivation(Request $request, SendEmailActivationService $service)
+    {
+        $this->validate($request, [
+            'email' => ['required', 'email']
+        ]);
+        $dto = (object)[
+            'email' => $request->input('email'),
+        ];
+        try {
+            $service->execute($dto);
+        } catch (UserActivationFailedException $exception) {
+            // ignore error if email not found
+        }
+        return $this->responseOk();
+    }
+
+    public function userActivationPage()
+    {
+        return view(config('auth.views.user-activation'));
+    }
+
+    public function userActivationByApp(Request $request, ActivateUserService $service)
+    {
+        $input = $this->validate($request, [
+            'password' => config('auth.input_validations.password.rule', ['required'])
+        ], config('auth.input_validations.password.messages'));
+        $jwt = $this->extractActivationToken($request);
+        $dto = (object)[
+            'userId' => $jwt->sub,
+            'token' => $jwt->token,
+            'password' => $input['password']
+        ];
+        $service->execute($dto);
+        return $this->responseOk();
+    }
+
+    protected function extractActivationToken(Request $request)
+    {
+        //TODO COONFIGURABLE HEADER SOURCE NAME
+        $jwtToken = $request->token ?? str_replace('Bearer ', '', $request->header('X-Activation-Token'));
+        $decodedToken = (new JWTHelper())->setToken($jwtToken)->getDecoded();
+        if (is_null($decodedToken)) {
+            throw new UserActivationFailedException('Activation Token Invalid');
+        }
+        return $decodedToken;
+    }
+
+    public function changePassword(Request $request, Guard $auth, ChangePasswordService $service)
+    {
+        $input = $this->validate($request, [
+            'current_password' => ['required', 'string'],
+            'new_password' => config('auth.input_validations.password.rule', ['required']),
+        ]);
+
+        $dto = (object)[
+            'userId' => $auth->id(),
+            'currentPassword' => $input['current_password'],
+            'newPassword' => $input['new_password'],
+        ];
+        $service->execute($dto);
+        return $this->responseOk();
     }
 }

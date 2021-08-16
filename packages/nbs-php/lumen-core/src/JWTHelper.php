@@ -314,14 +314,14 @@ class JWTHelper
      *
      * @return string JWT token string.
      */
-    public function newResetPasswordToken(string $email, string $token)
+    public function newResetPasswordToken(string $email, string $token, $expireInSeconds = null)
     {
         $this->decoded = null;
 
         $tokenId = md5(uniqid());
         $issuedAt = time();
         $notBefore = $issuedAt;
-        $expire = $notBefore + $this->expire_after;
+        $expire = $notBefore + ($expireInSeconds ?? $this->expire_after);
         $jwt_key = $this->key;
         $issuer = $this->issuer;
 
@@ -332,6 +332,30 @@ class JWTHelper
             "nbf" => $notBefore,
             "exp" => $expire,
             "email" => $email,
+            "token" => $token,
+        ];
+
+        return $this->token = JWT::encode($jwt_payload, $jwt_key, 'HS512');
+    }
+
+    public function newVerifyEmailToken(string $id, string $token, $expireInSeconds = null)
+    {
+        $this->decoded = null;
+
+        $tokenId = md5(uniqid());
+        $issuedAt = time();
+        $notBefore = $issuedAt;
+        $expire = $notBefore + ($expireInSeconds ?? $this->expire_after);
+        $jwt_key = $this->key;
+        $issuer = $this->issuer;
+
+        $jwt_payload = [
+            "iss" => $issuer,
+            "jti" => $tokenId,
+            "iat" => $issuedAt,
+            "nbf" => $notBefore,
+            "exp" => $expire,
+            "sub" => $id,
             "token" => $token,
         ];
 

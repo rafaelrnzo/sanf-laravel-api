@@ -9,18 +9,20 @@ return [
     'transformers' => [
         'login' => \Sanf\Api\Modules\User\LoginTransformer::class,
         'logout' => \NbsPhp\Core\Transformers\LogoutTransformer::class,
-        'profile' => \Sanf\Api\Modules\User\ProfileTransformer::class,
+        'profile' => \Sanf\Api\Modules\User\ProfileSimpleTransformer::class,
     ],
 
     'notifications' => [
         'reset-password' => \Sanf\Core\Modules\User\Notifications\ResetPasswordNotification::class,
         'verify-email' => \Sanf\Core\Modules\User\Notifications\VerifyEmailNotification::class,
+        'user-activation' => \Sanf\Core\Modules\User\Notifications\UserActivationNotification::class,
     ],
 
     'views' => [
 //        'reset-password' => 'core::auth.reset-password',
         'reset-password' => 'core::pages.install-mobile-app',
         'verify-email' => 'core::layouts.message',
+        'user-activation' => 'core::pages.install-mobile-app',
     ],
 
     'features' => [
@@ -42,6 +44,8 @@ return [
         'email_verify_ios' => env('AUTH_EMAIL_VERIFY_IOS_URL', env('AUTH_EMAIL_VERIFY_URL')),
         'reset_password' => env('AUTH_RESET_PASS_URL'),
         'reset_password_ios' => env('AUTH_RESET_PASS_IOS_URL', env('AUTH_RESET_PASS_URL')),
+        'user_activation' => env('AUTH_ACTIVATION_URL'),
+        'user_activation_ios' => env('AUTH_ACTIVATION_IOS_URL', env('AUTH_ACTIVATION_URL')),
     ],
 
     'input_validations' => [
@@ -251,10 +255,45 @@ return [
                 'middleware' => ['auth'],
             ],
             [
+                'method' => 'post',
+                'uri' => "{$routePrefix}/request-email-verification",
+                'name' => 'password.email',
+                'action' => "{$namespace}AuthController@requestEmailVerification",
+                'middleware' => ['auth'],
+            ],
+            [
+                'method' => 'post',
+                'uri' => "{$routePrefix}/email-verification",
+                'name' => 'email.verify-from-app',
+                'action' => "{$namespace}AuthController@verifyEmailByApp",
+                'middleware' => [],
+            ],
+            [
                 'method' => 'get',
-                'uri' => "pages/verify-email/{id}/{token}",
+                'uri' => "pages/verify-email",
                 'name' => 'email.verify',
-                'action' => "{$namespace}AuthController@verifyEmail",
+                'action' => "{$namespace}AuthController@verifyEmailPage",
+                'middleware' => [],
+            ],
+            [
+                'method' => 'post',
+                'uri' => "{$routePrefix}/request-activation",
+                'name' => 'user.request-activation',
+                'action' => "{$namespace}AuthController@requestActivation",
+                'middleware' => ['auth'],
+            ],
+            [
+                'method' => 'post',
+                'uri' => "{$routePrefix}/activation",
+                'name' => 'user.activate-from-app',
+                'action' => "{$namespace}AuthController@userActivationByApp",
+                'middleware' => [],
+            ],
+            [
+                'method' => 'get',
+                'uri' => "pages/activation",
+                'name' => 'user.activate',
+                'action' => "{$namespace}AuthController@userActivationPage",
                 'middleware' => [],
             ],
             [
@@ -268,7 +307,7 @@ return [
                 'method' => 'get',
                 'uri' => "{$routePrefix}/me",
                 'name' => 'user.profile',
-                'action' => "{$namespace}UserController@getProfile",
+                'action' => "Sanf\\Api\\Modules\\User\\ProfileController@getMyProfile",
                 'middleware' => ['auth'],
             ],
             [
@@ -307,6 +346,13 @@ return [
                 'action' => "{$namespace}OAuthController@registerApple",
                 'middleware' => ['auth'],
             ],
+            [
+                'method' => 'post',
+                'uri' => "{$routePrefix}/submit/ask-us",
+                'name' => 'ask-us.email',
+                'action' => "{$namespace}AskUsController@postQuestion",
+                'middleware' => ['auth'],
+            ]
         ],
     ],
 ];

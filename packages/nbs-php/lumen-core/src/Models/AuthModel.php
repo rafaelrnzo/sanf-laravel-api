@@ -10,8 +10,10 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Lumen\Auth\Authorizable;
+use NbsPhp\Core\Models\NeedSetupPasswordInterface as NeedSetupPasswordContract;
 use NbsPhp\Core\Traits\CanResetPassword;
 use NbsPhp\Core\Traits\MustVerifyEmail;
+use NbsPhp\Core\Traits\NeedSetupPassword;
 
 /**
  * @property int                $id
@@ -28,9 +30,10 @@ class AuthModel extends AbstractModel implements
     AuthenticatableContract,
     AuthorizableContract,
     MustVerifyEmailContract,
-    CanResetPasswordContract
+    CanResetPasswordContract,
+    NeedSetupPasswordContract
 {
-    use Authenticatable, Authorizable, MustVerifyEmail, CanResetPassword, Notifiable;
+    use Authenticatable, Authorizable, MustVerifyEmail, NeedSetupPassword, CanResetPassword, Notifiable;
 
     protected $table = 'user_auth'; //overridden in constructor from config auth
 
