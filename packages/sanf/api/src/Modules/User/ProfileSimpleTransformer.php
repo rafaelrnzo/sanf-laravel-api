@@ -18,7 +18,8 @@ class ProfileSimpleTransformer extends TransformerAbstract
             'type_name' => (new ProfileType($item->profile_type))->getTranslation(),
             'type_id' => $item->profile_type,
             'is_pic' => optional($item->profile)->isPic,
-            'company_name' => optional($item->profile)->companyName
+            'company_name' => optional($item->profile)->companyName,
+            'phone_number' => optional($item->profile)->phoneNumber
         ];
     }
 }

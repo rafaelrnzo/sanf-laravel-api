@@ -30,7 +30,8 @@ class GetMyProfileService implements ApplicationServiceInterface
         //TODO TIDY UP ENTITY
         $user->profile = (object)[
             'isPic' => (bool)$profile['data'][0]['PIC'],
-            'companyName' => $profile['data'][0]['IDENTITY_NAME']
+            'companyName' => $profile['data'][0]['IDENTITY_NAME'],
+            'phoneNumber' => $profile['data'][0]['NO_HP']
         ];
         //TODO DTO
         return json_decode(json_encode($user));
