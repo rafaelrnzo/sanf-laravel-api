@@ -178,8 +178,8 @@ class JWTHelper
      */
     public function getRefreshToken($sessionId)
     {
-        $decoded = (array) $this->getDecoded();
-        $decoded['data'] = (array) $decoded['data'];
+        $decoded = (array)$this->getDecoded();
+        $decoded['data'] = (array)$decoded['data'];
         $issuedAt = time();
         $notBefore = $issuedAt;
         $expire = $notBefore + $this->refresh_before;
@@ -199,7 +199,7 @@ class JWTHelper
      */
     public function getAppToken()
     {
-        $decoded = (array) $this->getDecodedAppToken();
+        $decoded = (array)$this->getDecodedAppToken();
         $issuedAt = time();
         $expire = $issuedAt + 131400; // 3 Month
 
@@ -402,7 +402,7 @@ class JWTHelper
     public function refresh()
     {
         try {
-            $decoded = (array) JWT::decode($this->token, $this->key, ['HS512']);
+            $decoded = (array)JWT::decode($this->token, $this->key, ['HS512']);
         } catch (\Exception $e) {
             if ($e->getMessage() == 'Expired token') {
                 [$header, $payload, $signature] = explode(".", $this->token);
@@ -413,7 +413,7 @@ class JWTHelper
             }
         }
 
-        $decoded['data'] = (array) $decoded['data'];
+        $decoded['data'] = (array)$decoded['data'];
 
         $this->decoded = null;
         $issuedAt = time();
@@ -435,9 +435,9 @@ class JWTHelper
 
     public static function verifyGoogleToken(string $token)
     {
-        //TODO EXPLODE GOOGLE CLIENT ID, because possibility of multiple client id generated
-        if (is_null($clientId = env('GOOGLE_CLIENT_ID'))) {
-            throw new \RuntimeException("Please set 'GOOGLE_CLIENT_ID' in env file.");
+        $audiences = explode(',', config('jwt.google_audience', ''));
+        if (empty($audiences)) {
+            throw new \RuntimeException("Please set 'JWT_GOOGLE_AUDIENCE' in env file.");
         }
 
         try {
@@ -451,13 +451,13 @@ class JWTHelper
         }
 
         try {
-            $payload = (array) JWT::decode($token, JWK::parseKeySet($jwks), ['RS256']);
+            $payload = (array)JWT::decode($token, JWK::parseKeySet($jwks), ['RS256']);
         } catch (\Exception $e) {
-            throw new InvalidTokenException();
+            throw new InvalidTokenException('invalid signature');
         }
 
-        if ($payload['aud'] !== $clientId) {
-            throw new InvalidTokenException();
+        if (!in_array($payload['aud'], $audiences)) {
+            throw new InvalidTokenException('audience not match');
         }
 
         return $payload;
@@ -465,9 +465,9 @@ class JWTHelper
 
     public static function verifyAppleIdToken(string $token)
     {
-        //TODO EXPLODE APPLE CLIENT ID, because possibility of multiple client id generated
-        if (is_null($clientId = env('APPLE_CLIENT_ID'))) {
-            throw new \RuntimeException("Please set 'APPLE_CLIENT_ID' in env file.");
+        $audiences = explode(',', config('jwt.apple_audience', ''));
+        if (empty($audiences)) {
+            throw new \RuntimeException("Please set 'JWT_APPLE_AUDIENCE' in env file.");
         }
 
         try {
@@ -481,13 +481,13 @@ class JWTHelper
         }
 
         try {
-            $payload = (array) JWT::decode($token, JWK::parseKeySet($jwks), ['RS256']);
+            $payload = (array)JWT::decode($token, JWK::parseKeySet($jwks), ['RS256']);
         } catch (\Exception $e) {
-            throw new InvalidTokenException();
+            throw new InvalidTokenException('invalid signature');
         }
 
-        if ($payload['aud'] !== $clientId) {
-            throw new InvalidTokenException();
+        if (!in_array($payload['aud'], $audiences)) {
+            throw new InvalidTokenException('audience not match');
         }
 
         return $payload;
