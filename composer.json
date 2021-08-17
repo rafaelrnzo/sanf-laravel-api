@@ -20,6 +20,7 @@
         "jenssegers/agent": "^2.6",
         "laravel/helpers": "^1.1",
         "laravel/lumen-framework": "^6.0",
+        "laravel/tinker": "^2.6",
         "league/flysystem-aws-s3-v3": "1.0.28",
         "myclabs/php-enum": "^1.7",
         "pragmarx/health": "^1.0",

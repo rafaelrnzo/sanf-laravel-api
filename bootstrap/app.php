@@ -71,6 +71,7 @@ $app->configure('response-codes');
 $app->alias('mailer', Illuminate\Mail\Mailer::class);
 $app->alias('mailer', Illuminate\Contracts\Mail\Mailer::class);
 $app->alias('mailer', Illuminate\Contracts\Mail\MailQueue::class);
+$app->configure('tinker');
 /*
 |--------------------------------------------------------------------------
 | Register Middleware
@@ -108,6 +109,7 @@ $app->register(Sanf\Core\Providers\CoreServiceProvider::class);
 $app->register(Sanf\Console\Providers\ConsoleServiceProvider::class);
 $app->register(Sanf\Api\Providers\ApiServiceProvider::class);
 $app->register(Sanf\Web\Providers\WebServiceProvider::class);
+$app->register(\Laravel\Tinker\TinkerServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
