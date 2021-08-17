@@ -37,19 +37,31 @@ class LoginByAppleService implements ApplicationServiceInterface
 
         //TODO USING REPO
         return DB::transaction(function () use ($dto) {
+            if (!filter_var($dto->email, FILTER_VALIDATE_EMAIL)) {
+                throw new OAuthUserNotBoundException('invalid email format');
+            }
+            //MATCH USER WITH SAME EMAIL
+            $user = $this->repository->newQuery()->where('username', $dto->email)->first();
             $userOAuth = UserOAuthModel::with('user')
                 ->where([
                     'provider' => OAuthProvider::APPLE,
                     'provider_id' => $dto->providerId,
                 ])
                 ->first();
-
-            if (!$userOAuth) {
+            if (!$user && !$userOAuth) {
                 throw new OAuthUserNotBoundException();
+            }
+            if ($user && !$userOAuth) {
+                $userOAuth = UserOAuthModel::forceCreate([
+                    'user_id' => $user->id,
+                    'name' => $dto->fullName,
+                    'provider' => OAuthProvider::APPLE,
+                    'provider_id' => $dto->providerId,
+                    'provider_token' => $dto->providerToken,
+                ]);
             }
 
             $user = $userOAuth->user;
-
             $userOAuth->update([
                 'name' => $dto->fullName,
                 'provider_token' => $dto->providerToken,
@@ -67,8 +79,8 @@ class LoginByAppleService implements ApplicationServiceInterface
             //TODO REPOSITORY
             /** @var UserSessionModel $userSession */
             //TODO SESSION REPOSITORY
-            $userSession =  UserSessionModel::forceCreate([
-                'auth_provider_id' => AuthProvider::APP,
+            $userSession = UserSessionModel::forceCreate([
+                'auth_provider_id' => AuthProvider::APPLE,
                 'user_id' => $user->id,
                 'device_id' => $device->deviceId,
                 'device_platform_id' => $device->devicePlatformId,

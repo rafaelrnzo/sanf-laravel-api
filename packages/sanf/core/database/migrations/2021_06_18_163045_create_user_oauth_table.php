@@ -16,11 +16,12 @@ class CreateUserOauthTable extends Migration
         Schema::create('user_oauth', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->nullable();
-            $table->integer('user_id');
-            $table->string('provider_id');
-            $table->string('provider');
+            $table->integer('user_id')->index();
+            $table->string('provider_id')->index();
+            $table->string('provider')->index();
             $table->string('provider_token');
             $table->string('avatar')->nullable();
+            $table->unique(['provider_id', 'provider']);
             $table->timestamps();
         });
     }

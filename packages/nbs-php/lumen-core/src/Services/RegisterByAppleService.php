@@ -63,7 +63,7 @@ class RegisterByAppleService implements ApplicationServiceInterface
             UserOAuthModel::forceCreate([
                 'user_id' => $user->id,
                 'name' => $dto->fullName,
-                'provider' => OAuthProvider::GOOGLE,
+                'provider' => OAuthProvider::APPLE,
                 'provider_id' => $dto->providerId,
                 'provider_token' => $dto->providerToken,
             ]);
