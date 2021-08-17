@@ -34,7 +34,7 @@ class LoginByGoogleService implements ApplicationServiceInterface
      */
     public function execute($dto)
     {
-        $this->jwt::verifyGoogleToken($dto->providerToken);
+        $jwtPayload = $this->jwt::verifyGoogleToken($dto->providerToken);
 
         //TODO USING REPO
         return DB::transaction(function () use ($dto) {

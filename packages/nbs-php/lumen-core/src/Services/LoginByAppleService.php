@@ -33,7 +33,7 @@ class LoginByAppleService implements ApplicationServiceInterface
      */
     public function execute($dto)
     {
-        $this->jwt::verifyAppleIdToken($dto->providerToken);
+        $jwtPayload = $this->jwt::verifyAppleIdToken($dto->providerToken);
 
         //TODO USING REPO
         return DB::transaction(function () use ($dto) {
