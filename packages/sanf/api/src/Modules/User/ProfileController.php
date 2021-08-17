@@ -7,12 +7,12 @@ namespace Sanf\Api\Modules\User;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestController;
-use Sanf\Core\Modules\User\GetDetailCustomerProfileService;
 use Sanf\Core\Modules\User\GetListCustomerProfileService;
 use Sanf\Core\Modules\User\GetMyProfileService;
 use Sanf\Core\Modules\User\RegisterAsContractOwnerService;
 use Sanf\Core\Modules\User\Services\CreateCompanyProfileService;
 use Sanf\Core\Modules\User\Services\UpdateCompanyProfileService;
+use Sanf\Core\Modules\User\Services\UpdatePersonalProfileService;
 use Sanf\Core\Modules\User\SwitchActiveCustomerProfileService;
 
 class ProfileController extends RestController
@@ -27,7 +27,7 @@ class ProfileController extends RestController
         return fractal($result, CustomerProfileSimpleTransformer::class);
     }
 
-    public function getDetail(Guard $auth, $xid, GetDetailCustomerProfileService $service)
+    public function getDetail(Guard $auth, $xid, \Sanf\Core\Modules\User\Services\GetDetailCustomerProfileService $service)
     {
         $dto = (object)[
             'userId' => $auth->id(),
@@ -76,12 +76,12 @@ class ProfileController extends RestController
             "subdistrict_name" => ["required", "string"],
             "postcode" => ["required", "string"],
             "address" => ["required", "string"],
-            "business_since" => ["required", "string"],
+            "business_since" => ["nullable", "string"],
         ]);
         $dto = (object)[
             "userId" => $auth->id(),
             "customerId" => $xid,
-            "landlineNumber" => $input['landline_number'],
+            "landlineNumber" => $input['landline_number'] ?? null,
             "phoneNumber" => $input['phone_number'],
             "provinceId" => $input['province_id'],
             "provinceName" => $input['province_name'],
@@ -91,17 +91,47 @@ class ProfileController extends RestController
             "subdistrictName" => $input['subdistrict_name'],
             "postcode" => $input['postcode'],
             "address" => $input['address'],
-            "businessSince" => $input['business_since'],
+            "businessSince" => $input['business_since'] ?? null,
         ];
         $service->execute($dto);
         return $this->responseOk();
     }
 
-    public function putUpdatePersonalProfile(Request $request)
+    public function putUpdatePersonalProfile(Guard $auth, Request $request, $xid, UpdatePersonalProfileService $service)
     {
-        $this->validate($request, [
-            "email" => ["required", "string"],
+        $input = $this->validate($request, [
+            "landline_number" => ["nullable", "string"],
+            "phone_number" => ["required", "string"],
+            "gender" => ["required", "in:F,M"], //TODO ENUM
+            "birthdate" => ["required", "date_format:Y-m-d"],
+            "province_id" => ["required", "string"],
+            "province_name" => ["required", "string"],
+            "city_id" => ["required", "string"],
+            "city_name" => ["required", "string"],
+            "district_name" => ["required", "string"],
+            "subdistrict_name" => ["required", "string"],
+            "postcode" => ["required", "string"],
+            "address" => ["required", "string"],
+            "business_since" => ["nullable", "string"],
         ]);
+        $dto = (object)[
+            "userId" => $auth->id(),
+            "customerId" => $xid,
+            "landlineNumber" => $input['landline_number'] ?? null,
+            "phoneNumber" => $input['phone_number'],
+            "birthdate" => $input['birthdate'],
+            "gender" => $input['gender'],
+            "provinceId" => $input['province_id'],
+            "provinceName" => $input['province_name'],
+            "cityId" => $input['city_id'],
+            "cityName" => $input['city_name'],
+            "districtName" => $input['district_name'],
+            "subdistrictName" => $input['subdistrict_name'],
+            "postcode" => $input['postcode'],
+            "address" => $input['address'],
+            "businessSince" => $input['business_since'] ?? null,
+        ];
+        $service->execute($dto);
         return $this->responseOk();
     }
 

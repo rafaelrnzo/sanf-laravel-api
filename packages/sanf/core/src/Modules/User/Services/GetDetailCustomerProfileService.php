@@ -1,13 +1,14 @@
 <?php
 
 
-namespace Sanf\Core\Modules\User;
+namespace Sanf\Core\Modules\User\Services;
 
 
 use Carbon\Carbon;
 use NbsPhp\Core\Exceptions\ForbiddenException;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
+use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Integration\InternalApiClient;
 
 class GetDetailCustomerProfileService implements ApplicationServiceInterface

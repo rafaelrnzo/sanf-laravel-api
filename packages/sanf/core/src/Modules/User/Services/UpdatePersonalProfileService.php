@@ -4,13 +4,14 @@
 namespace Sanf\Core\Modules\User\Services;
 
 
+use Carbon\Carbon;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Models\AuthModel;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\User\ProfileType;
 use Sanf\Integration\InternalApiClient;
 
-class UpdateCompanyProfileService implements ApplicationServiceInterface
+class UpdatePersonalProfileService implements ApplicationServiceInterface
 {
     protected $repository;
     protected $internalApiClient;
@@ -32,14 +33,16 @@ class UpdateCompanyProfileService implements ApplicationServiceInterface
             throw new UserNotFoundException();
         }
         $profile = $this->internalApiClient->findCustomerById($dto->customerId);
-        if($profile['data'][0]['ID_IDENTITY'] !== ProfileType::COMPANY){
+        if($profile['data'][0]['ID_IDENTITY'] !== ProfileType::PERSONAL){
             throw new UserNotFoundException();
         }
         $this->internalApiClient->updateCustomer([
             "cust_id" => $dto->customerId,
-            "cust_type" => ProfileType::COMPANY,
+            "cust_type" => ProfileType::PERSONAL,
             "notelp" => $dto->landlineNumber,
             "nohp" => $dto->phoneNumber,
+            "gender" => $dto->gender,
+            "tgl_lahir" => Carbon::make($dto->birthdate)->format('Y/m/d'),
             "idprov" => $dto->provinceId,
             "prov" => $dto->provinceName,
             "idkota" => $dto->cityId,
