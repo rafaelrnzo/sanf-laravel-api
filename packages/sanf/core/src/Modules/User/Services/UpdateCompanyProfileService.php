@@ -7,9 +7,10 @@ namespace Sanf\Core\Modules\User\Services;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Models\AuthModel;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
+use Sanf\Core\Modules\User\ProfileType;
 use Sanf\Integration\InternalApiClient;
 
-class UpdateCustomerProfileService implements ApplicationServiceInterface
+class UpdateCompanyProfileService implements ApplicationServiceInterface
 {
     protected $repository;
     protected $internalApiClient;
@@ -31,25 +32,19 @@ class UpdateCustomerProfileService implements ApplicationServiceInterface
             throw new UserNotFoundException();
         }
         $this->internalApiClient->updateCustomer([
-            "cust_id" => "",
-            "cust_type" => "",
-            "cust_title" => "",
-            "nama" => "",
-            "picname" => "",
-            "ktp" => "",
-            "npwp" => "",
-            "email" => "",
-            "notelp" => "",
-            "nohp" => "",
-            "gender" => "",
-            "tgl_lahir" => "",
-            "idprov" => "",
-            "prov" => "",
-            "idkota" => "",
-            "kota" => "",
-            "kecamatan" => "",
-            "kelurahan" => "",
-            "kodepos" => ""
+            "cust_id" => $dto->customerId,
+            "cust_type" => ProfileType::COMPANY,
+            "notelp" => $dto->landlineNumber,
+            "nohp" => $dto->phoneNumber,
+            "idprov" => $dto->provinceId,
+            "prov" => $dto->provinceName,
+            "idkota" => $dto->cityId,
+            "kota" => $dto->cityName,
+            "kecamatan" => $dto->districtName,
+            "kelurahan" => $dto->subdistrictName,
+            "kodepos" => $dto->postcode,
+            "alamat" => $dto->address,
+            "lama_usaha" => $dto->businessSince,
         ]);
     }
 }

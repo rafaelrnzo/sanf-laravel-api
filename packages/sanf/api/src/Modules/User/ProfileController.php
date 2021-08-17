@@ -12,6 +12,7 @@ use Sanf\Core\Modules\User\GetListCustomerProfileService;
 use Sanf\Core\Modules\User\GetMyProfileService;
 use Sanf\Core\Modules\User\RegisterAsContractOwnerService;
 use Sanf\Core\Modules\User\Services\CreateCompanyProfileService;
+use Sanf\Core\Modules\User\Services\UpdateCompanyProfileService;
 use Sanf\Core\Modules\User\SwitchActiveCustomerProfileService;
 
 class ProfileController extends RestController
@@ -62,11 +63,35 @@ class ProfileController extends RestController
         return $this->responseOk();
     }
 
-    public function putUpdateCompanyProfile(Request $request)
+    public function putUpdateCompanyProfile(Guard $auth, Request $request, $xid, UpdateCompanyProfileService $service)
     {
-        $this->validate($request, [
-            "email" => ["required", "string"],
+        $input = $this->validate($request, [
+            "landline_number" => ["nullable", "string"],
+            "phone_number" => ["required", "string"],
+            "province_id" => ["required", "string"],
+            "city_id" => ["required", "string"],
+            "city_name" => ["required", "string"],
+            "district_name" => ["required", "string"],
+            "subdistrict_name" => ["required", "string"],
+            "postcode" => ["required", "string"],
+            "address" => ["required", "string"],
+            "business_since" => ["required", "string"],
         ]);
+        $dto = (object)[
+            "userId" => $auth->id(),
+            "customerId" => $xid,
+            "landlineNumber" => $input['landline_number'],
+            "phoneNumber" => $input['phone_number'],
+            "provinceId" => $input['province_id'],
+            "cityId" => $input['city_id'],
+            "cityName" => $input['city_name'],
+            "districtName" => $input['district_name'],
+            "subdistrictName" => $input['subdistrict_name'],
+            "postcode" => $input['postcode'],
+            "address" => $input['address'],
+            "businessSince" => $input['business_since'],
+        ];
+        $service->execute($dto);
         return $this->responseOk();
     }
 
