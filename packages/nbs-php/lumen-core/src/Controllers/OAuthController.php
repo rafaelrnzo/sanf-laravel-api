@@ -43,7 +43,7 @@ class OAuthController extends RestController
             'full_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255'],
             'phone' => ['nullable', 'string', 'min:10', 'max:255'],
-            'auth_token' => ['required', 'string', 'max:255'],
+            'auth_token' => ['required', 'string'],
             'user_ref_id' => ['required', 'string', 'max:255'],
         ]);
 
