@@ -109,7 +109,7 @@ class OAuthController extends RestController
 
         return $this->responseOk(
             'Success',
-            fractal($user, config('auth.login_transformer'))
+            fractal($user, config('auth.transformers.login'))
         )->withHeaders([
             'X-Access-Token' => $user->accessToken,
             'X-Access-Expired-At' => $user->accessExpiredAt,
@@ -131,7 +131,7 @@ class OAuthController extends RestController
 
         return $this->responseOk(
             'Success',
-            fractal($user, config('auth.login_transformer'))
+            fractal($user, config('auth.transformers.login'))
         )->withHeaders([
             'X-Access-Token' => $user->accessToken,
             'X-Access-Expired-At' => $user->accessExpiredAt,
@@ -207,7 +207,7 @@ class OAuthController extends RestController
 
         return $this->responseOk(
             'Success',
-            fractal($user, config('auth.login_transformer'))
+            fractal($user, config('auth.transformers.login'))
         )->withHeaders([
             'X-Access-Token' => $user->accessToken,
             'X-Access-Expired-At' => $user->accessExpiredAt,
