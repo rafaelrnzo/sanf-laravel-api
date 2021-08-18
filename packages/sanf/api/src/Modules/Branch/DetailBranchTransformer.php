@@ -18,6 +18,8 @@ class DetailBranchTransformer extends TransformerAbstract
             'msisdn' => (string)$dto->msisdn,
             'msisdn_alternative' => (string)$dto->msisdn_alternative,
             'email' => (string)$dto->email,
+            'latitude' => (double)$dto->latitude,
+            'longitude' => (double)$dto->longitude,
         ];
     }
 }

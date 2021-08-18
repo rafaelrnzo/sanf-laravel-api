@@ -23,7 +23,9 @@ class EloquentBranchRepository implements BranchRepositoryInterface
                 'address',
                 'msisdn',
                 'msisdn_alternative',
-                'email'
+                'email',
+                'latitude',
+                'longitude',
             ])
             ->limit($limit)
             ->offset($offset)

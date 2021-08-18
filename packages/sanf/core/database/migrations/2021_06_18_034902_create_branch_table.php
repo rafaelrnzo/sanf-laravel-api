@@ -20,6 +20,8 @@ class CreateBranchTable extends Migration
             $table->string('msisdn', 128)->nullable();
             $table->string('msisdn_alternative', 128)->nullable();
             $table->string('email', 64)->nullable();
+            $table->double('latitude', 10, 8)->nullable();
+            $table->double('longitude', 11, 8)->nullable();
             $table->timestamps();
             $table->json('modified_by');
         });

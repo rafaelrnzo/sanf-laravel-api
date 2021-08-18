@@ -16,6 +16,8 @@ class BranchModel extends AbstractModel
         'msisdn',
         'msisdn_alternative',
         'email',
+        'latitude',
+        'longitude',
         'created_at',
         'updated_at',
         'modified_by',
