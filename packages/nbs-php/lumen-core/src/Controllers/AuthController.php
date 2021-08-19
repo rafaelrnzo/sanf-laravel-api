@@ -20,7 +20,7 @@ use NbsPhp\Core\Services\AppLoginService;
 use NbsPhp\Core\Services\ChangePasswordService;
 use NbsPhp\Core\Services\LoginWithEmailAndPasswordService;
 use NbsPhp\Core\Services\LogoutService;
-use NbsPhp\Core\Services\RegisterByEmailService;
+use NbsPhp\Core\Services\RegisterByEmailServiceInterface;
 use NbsPhp\Core\Services\SendEmailActivationService;
 use NbsPhp\Core\Services\SendEmailVerificationService;
 use NbsPhp\Core\Services\UpdateSessionService;
@@ -34,18 +34,6 @@ class AuthController extends RestController
             'submitResetPassword',
         ],
     ];
-
-    protected $jwt;
-
-    /**
-     * AuthController constructor.
-     * @param $jwt
-     */
-    public function __construct(JWTHelper $jwt)
-    {
-        parent::__construct();
-        $this->jwt = $jwt;
-    }
 
     public function loginApp(Request $request, AppLoginService $service)
     {
@@ -109,7 +97,7 @@ class AuthController extends RestController
         return $validated;
     }
 
-    public function register(Request $request, RegisterByEmailService $service)
+    public function register(Request $request, RegisterByEmailServiceInterface $service)
     {
         $input = $this->validateRegister($request);
 

@@ -21,6 +21,22 @@ class AuthModel extends \NbsPhp\Core\Models\AuthModel
      * @property Carbon|string|null $password_updated_at
      * @property Carbon|string|null $created_at
      * @property Carbon|string|null $updated_at
-     * @property string xid
+     * @property string             xid
+     * @property string             profile_type
      */
+
+    protected $fillable = [
+        'name',
+        'username',
+        'password',
+        'full_name',
+        'landline_number',
+        'phone_number',
+        'status_id',
+        'password_updated_at',
+        'last_login_at',
+        'entity_type_id',
+        'xid',
+        'profile_type',
+    ];
 }

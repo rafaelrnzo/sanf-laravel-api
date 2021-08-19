@@ -12,7 +12,7 @@ use NbsPhp\Core\Exceptions\EmailAlreadyExistException;
 use NbsPhp\Core\JWTHelper;
 use NbsPhp\Core\Models\AuthModel;
 
-class RegisterByEmailService implements ApplicationServiceInterface
+class RegisterByEmailService implements RegisterByEmailServiceInterface
 {
     protected $jwt;
 

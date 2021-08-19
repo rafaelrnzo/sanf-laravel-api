@@ -12,13 +12,14 @@ use NbsPhp\Core\Enum\AuthProvider;
 use NbsPhp\Core\Enum\EntityType;
 use NbsPhp\Core\Enum\OAuthProvider;
 use NbsPhp\Core\Enum\UserStatus;
+use NbsPhp\Core\Exceptions\OAuthEmailRequiredException;
 use NbsPhp\Core\Exceptions\OAuthUserAlreadyBoundException;
 use NbsPhp\Core\JWTHelper;
 use NbsPhp\Core\Models\AuthModel;
 use NbsPhp\Core\Models\UserOAuthModel;
 use NbsPhp\Core\Models\UserSessionModel;
 
-class RegisterByAppleService implements ApplicationServiceInterface
+class RegisterByAppleService implements RegisterByAppleServiceInterface
 {
     protected $jwt;
 
@@ -32,12 +33,20 @@ class RegisterByAppleService implements ApplicationServiceInterface
 
     public function execute($dto)
     {
+        $jwtPayload = $this->jwt::verifyAppleIdToken($dto->providerToken);
+        $providerId = $jwtPayload['sub'];
+        $isEmailVerified = $jwtPayload['email_verified'] ?? false;
+        $isPrivateEmail = $jwtPayload['is_private_email'] ?? true;
+        $email = $isPrivateEmail ? $dto->email : $jwtPayload['email'];
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new OAuthEmailRequiredException('invalid email format');
+        }
         //TODO REPOSITORY
-        $user = DB::transaction(function () use ($dto) {
+        $user = DB::transaction(function () use ($dto, $email, $providerId, $isEmailVerified, $isPrivateEmail) {
             $userOAuth = UserOAuthModel::with('user')
                 ->where([
                     'provider' => OAuthProvider::APPLE,
-                    'provider_id' => $dto->providerId,
+                    'provider_id' => $providerId,
                 ])
                 ->first();
 
@@ -46,16 +55,17 @@ class RegisterByAppleService implements ApplicationServiceInterface
             }
 
             /** @var AuthModel $user */
-            $user = $this->repository->newQuery()->where('username', $dto->email)->first();
+            $user = $this->repository->newQuery()->where('username', $email)->first();
             if (is_null($user)) {
                 $user = $this->repository->newQuery()->forceCreate([
                     'full_name' => $dto->fullName,
-                    'username' => $dto->email,
+                    'username' => $email,
                     'landline_number' => $dto->landlineNumber,
                     'phone_number' => $dto->phoneNumber,
                     'password' => bcrypt($dto->password),
                     'password_updated_at' => Carbon::now(),
-                    'status_id' => UserStatus::INACTIVE,
+                    'status_id' => $isPrivateEmail ? UserStatus::INACTIVE : ($isEmailVerified ? UserStatus::ACTIVE : UserStatus::INACTIVE),
+                    'email_verified_at' => $isPrivateEmail ? null : ($isEmailVerified ? Carbon::now() : null),
                     'entity_type_id' => EntityType::ADMIN, //TODO CONFIGURABLE
                 ]);
             }
@@ -64,7 +74,7 @@ class RegisterByAppleService implements ApplicationServiceInterface
                 'user_id' => $user->id,
                 'name' => $dto->fullName,
                 'provider' => OAuthProvider::APPLE,
-                'provider_id' => $dto->providerId,
+                'provider_id' => $providerId,
                 'provider_token' => $dto->providerToken,
             ]);
 

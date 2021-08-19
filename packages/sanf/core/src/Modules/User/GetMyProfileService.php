@@ -26,12 +26,25 @@ class GetMyProfileService implements ApplicationServiceInterface
     public function execute($dto)
     {
         $user = AuthModel::findOrFail($dto->userId);
-        $profile = $this->internalApiClient->findCustomerById($user->xid);
+        if(empty($user->xid)){
+            $profiles = $this->internalApiClient->findCustomerByEmail($user->username);
+            $profile = (collect($profiles['data'])->where('ID_IDENTITY', ProfileType::PERSONAL)->first());
+            $user->xid = $profile['CUST_ID_SANF'];
+            $user->profile_type = $profile['ID_IDENTITY'];
+            $user->save();
+        } else{
+            try{
+                $profiles = $this->internalApiClient->findCustomerById($user->xid);
+                $profile = collect($profiles['data'])->first();
+            } catch (\Exception $exception) {
+                report($exception);
+            }
+        }
         //TODO TIDY UP ENTITY
         $user->profile = (object)[
-            'isPic' => (bool)$profile['data'][0]['PIC'],
-            'companyName' => $profile['data'][0]['IDENTITY_NAME'],
-            'phoneNumber' => $profile['data'][0]['NO_HP']
+            'isPic' => (bool)$profile['PIC'],
+            'companyName' => $profile['IDENTITY_NAME'],
+            'phoneNumber' => $profile['NO_HP']
         ];
         //TODO DTO
         return json_decode(json_encode($user));

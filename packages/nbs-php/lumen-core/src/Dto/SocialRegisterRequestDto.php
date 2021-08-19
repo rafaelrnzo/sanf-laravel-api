@@ -18,8 +18,6 @@ class SocialRegisterRequestDto extends DataTransferObject
 
     public string $password;
 
-    public string $providerId;
-
     public string $providerToken;
 
     public DeviceInfoRequestDto $device;

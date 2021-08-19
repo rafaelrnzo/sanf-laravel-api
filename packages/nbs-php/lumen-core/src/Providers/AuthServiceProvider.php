@@ -5,6 +5,10 @@ namespace NbsPhp\Core\Providers;
 
 
 use Illuminate\Support\ServiceProvider;
+use NbsPhp\Core\Repositories\ProfileRepositoryInterface;
+use NbsPhp\Core\Services\RegisterByAppleServiceInterface;
+use NbsPhp\Core\Services\RegisterByEmailServiceInterface;
+use NbsPhp\Core\Services\RegisterByGoogleServiceInterface;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -16,6 +20,7 @@ class AuthServiceProvider extends ServiceProvider
     public function register()
     {
         $this->registerRoutes();
+        $this->registerBindings();
     }
     /**
      * Register routes.
@@ -55,6 +60,14 @@ class AuthServiceProvider extends ServiceProvider
                 'uses' => $action,
             ]);
         });
+    }
+
+    protected function registerBindings()
+    {
+        $this->app->bind(ProfileRepositoryInterface::class, config('auth.repositories.profile'));
+        $this->app->bind(RegisterByEmailServiceInterface::class, config('auth.services.register-by-email'));
+        $this->app->bind(RegisterByGoogleServiceInterface::class, config('auth.services.register-by-google'));
+        $this->app->bind(RegisterByAppleServiceInterface::class, config('auth.services.register-by-apple'));
     }
 
     /**

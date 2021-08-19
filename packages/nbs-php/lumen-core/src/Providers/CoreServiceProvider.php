@@ -11,10 +11,9 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Notifications\NotificationServiceProvider;
 use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
-use NbsPhp\Core\Commands\ReloadUserPermissionCommand;
 use NbsPhp\Core\Commands\KeyGenerateCommand;
+use NbsPhp\Core\Commands\ReloadUserPermissionCommand;
 use NbsPhp\Core\Commands\VendorPublishCommand;
-use NbsPhp\Core\Repositories\ProfileRepositoryInterface;
 use NbsPhp\Core\Response\ResponseMapperInterface;
 use NbsPhp\Core\Response\RestResponseMapper;
 use Spatie\Fractal\FractalServiceProvider;
@@ -105,7 +104,6 @@ class CoreServiceProvider extends ServiceProvider
     protected function registerBindings()
     {
         $this->app->bind(ResponseMapperInterface::class, RestResponseMapper::class);
-        $this->app->bind(ProfileRepositoryInterface::class, config('auth.repositories.profile'));
     }
 
     protected function registerProviders()

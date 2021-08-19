@@ -33,7 +33,7 @@ class UpdateCompanyProfileService implements ApplicationServiceInterface
         }
         $profile = $this->internalApiClient->findCustomerById($dto->customerId);
         if($profile['data'][0]['ID_IDENTITY'] !== ProfileType::COMPANY){
-            throw new UserNotFoundException();
+            throw new UserNotFoundException('Missmatch Type');
         }
         $this->internalApiClient->updateCustomer([
             "cust_id" => $dto->customerId,

@@ -12,13 +12,14 @@ use NbsPhp\Core\Enum\AuthProvider;
 use NbsPhp\Core\Enum\EntityType;
 use NbsPhp\Core\Enum\OAuthProvider;
 use NbsPhp\Core\Enum\UserStatus;
+use NbsPhp\Core\Exceptions\OAuthEmailRequiredException;
 use NbsPhp\Core\Exceptions\OAuthUserAlreadyBoundException;
 use NbsPhp\Core\JWTHelper;
 use NbsPhp\Core\Models\AuthModel;
 use NbsPhp\Core\Models\UserOAuthModel;
 use NbsPhp\Core\Models\UserSessionModel;
 
-class RegisterByGoogleService implements ApplicationServiceInterface
+class RegisterByGoogleService implements RegisterByGoogleServiceInterface
 {
     protected $jwt;
 
@@ -32,14 +33,19 @@ class RegisterByGoogleService implements ApplicationServiceInterface
 
     public function execute($dto)
     {
-        $this->jwt::verifyGoogleToken($dto->providerToken);
-
+        $jwtPayload = $this->jwt::verifyGoogleToken($dto->providerToken);
+        $email = $jwtPayload['email'];
+        $providerId = $jwtPayload['sub'];
+        $isEmailVerified = $jwtPayload['email_verified'] ?? false;
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new OAuthEmailRequiredException('invalid email format');
+        }
         //TODO REPOSITORY
-        $user = DB::transaction(function () use ($dto) {
+        $user = DB::transaction(function () use ($dto, $email, $providerId, $isEmailVerified) {
             $userOAuth = UserOAuthModel::with('user')
                 ->where([
                     'provider' => OAuthProvider::GOOGLE,
-                    'provider_id' => $dto->providerId,
+                    'provider_id' => $providerId,
                 ])
                 ->first();
 
@@ -48,16 +54,17 @@ class RegisterByGoogleService implements ApplicationServiceInterface
             }
 
             /** @var AuthModel $user */
-            $user = $this->repository->newQuery()->where('username', $dto->email)->first();
+            $user = $this->repository->newQuery()->where('username', $email)->first();
             if (is_null($user)) {
                 $user = $this->repository->newQuery()->forceCreate([
                     'full_name' => $dto->fullName,
-                    'username' => $dto->email,
+                    'username' => $email,
                     'landline_number' => $dto->landlineNumber,
                     'phone_number' => $dto->phoneNumber,
                     'password' => bcrypt($dto->password),
                     'password_updated_at' => Carbon::now(),
-                    'status_id' => UserStatus::INACTIVE,
+                    'status_id' => $isEmailVerified ? UserStatus::ACTIVE : UserStatus::INACTIVE,
+                    'email_verified_at' => $isEmailVerified ? Carbon::now() : null,
                     'entity_type_id' => EntityType::ADMIN, //TODO CONFIGURABLE
                 ]);
             }
@@ -66,7 +73,7 @@ class RegisterByGoogleService implements ApplicationServiceInterface
                 'user_id' => $user->id,
                 'name' => $dto->fullName,
                 'provider' => OAuthProvider::GOOGLE,
-                'provider_id' => $dto->providerId,
+                'provider_id' => $providerId,
                 'provider_token' => $dto->providerToken,
             ]);
 

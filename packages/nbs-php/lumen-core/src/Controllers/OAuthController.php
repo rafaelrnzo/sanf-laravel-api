@@ -8,13 +8,11 @@ use NbsPhp\Core\Dto\DeviceInfoRequestDto;
 use NbsPhp\Core\Dto\SocialLoginRequestDto;
 use NbsPhp\Core\Dto\SocialRegisterRequestDto;
 use NbsPhp\Core\Enum\DevicePlatform;
-use NbsPhp\Core\Exceptions\OAuthEmailRequiredException;
-use NbsPhp\Core\JWTHelper;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use NbsPhp\Core\Services\LoginByAppleService;
 use NbsPhp\Core\Services\LoginByGoogleService;
-use NbsPhp\Core\Services\RegisterByAppleService;
-use NbsPhp\Core\Services\RegisterByGoogleService;
+use NbsPhp\Core\Services\RegisterByAppleServiceInterface;
+use NbsPhp\Core\Services\RegisterByGoogleServiceInterface;
 
 class OAuthController extends RestController
 {
@@ -24,18 +22,6 @@ class OAuthController extends RestController
             'submitResetPassword',
         ],
     ];
-
-    protected $jwt;
-
-    /**
-     * AuthController constructor.
-     * @param $jwt
-     */
-    public function __construct(JWTHelper $jwt)
-    {
-        parent::__construct();
-        $this->jwt = $jwt;
-    }
 
     protected function validateLogin(Request $request): array
     {
@@ -163,18 +149,13 @@ class OAuthController extends RestController
         ]);
     }
 
-    public function registerGoogle(Request $request, RegisterByGoogleService $service)
+    public function registerGoogle(Request $request, RegisterByGoogleServiceInterface $service)
     {
         $this->registerSocialPlatform($request, $service);
     }
 
-    public function registerApple(Request $request, RegisterByAppleService $service)
+    public function registerApple(Request $request, RegisterByAppleServiceInterface $service)
     {
-        $appleJWTToken = JWTHelper::verifyAppleIdToken($request->input('auth_token'));
-        if ($appleJWTToken['is_private_email'] === 'true') {
-            throw new OAuthEmailRequiredException();
-        }
-
         return $this->registerSocialPlatform($request, $service);
     }
 

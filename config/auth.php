@@ -6,6 +6,12 @@ return [
         'profile' => \NbsPhp\Core\Repositories\MockProfileRepository::class,
     ],
 
+    'services' => [
+        'register-by-email' => \NbsPhp\Core\Services\RegisterByEmailService::class,
+        'register-by-google' => \NbsPhp\Core\Services\RegisterByGoogleService::class,
+        'register-by-apple' => \NbsPhp\Core\Services\RegisterByAppleService::class
+    ],
+
     'transformers' => [
         'login' => \Sanf\Api\Modules\User\LoginTransformer::class,
         'logout' => \NbsPhp\Core\Transformers\LogoutTransformer::class,
@@ -202,7 +208,7 @@ return [
                 'method' => 'post',
                 'uri' => "{$routePrefix}",
                 'name' => 'register.email',
-                'action' => "{$namespace}AuthController@register",
+                'action' => "Sanf\Api\Modules\User\AuthController@register",
                 'middleware' => ['auth'],
             ],
             [
@@ -307,14 +313,7 @@ return [
                 'method' => 'get',
                 'uri' => "{$routePrefix}/me",
                 'name' => 'user.profile',
-                'action' => "Sanf\\Api\\Modules\\User\\ProfileController@getMyProfile",
-                'middleware' => ['auth'],
-            ],
-            [
-                'method' => 'patch',
-                'uri' => "{$routePrefix}/me",
-                'name' => 'user.profile-update',
-                'action' => "{$namespace}UserController@updateProfile",
+                'action' => "Sanf\Api\Modules\User\ProfileController@getMyProfile",
                 'middleware' => ['auth'],
             ],
             //TODO MOVE TO OAUTH PACKAGE
@@ -336,14 +335,14 @@ return [
                 'method' => 'post',
                 'uri' => "{$routePrefix}/register/google",
                 'name' => 'register.google',
-                'action' => "{$namespace}OAuthController@registerGoogle",
+                'action' => "Sanf\Api\Modules\User\OAuthController@registerGoogle",
                 'middleware' => ['auth'],
             ],
             [
                 'method' => 'post',
                 'uri' => "{$routePrefix}/register/apple",
                 'name' => 'register.apple',
-                'action' => "{$namespace}OAuthController@registerApple",
+                'action' => "Sanf\Api\Modules\User\OAuthController@registerApple",
                 'middleware' => ['auth'],
             ],
         ],
