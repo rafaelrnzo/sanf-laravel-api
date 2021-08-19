@@ -14,6 +14,7 @@ class CustomerProfileTransformer extends TransformerAbstract
         return [
             "xid" => $dto->xid,
             "type_id" => $dto->typeId,
+            "title" => $dto->title,
             "type_name" => $dto->typeName,
             "full_name" => $dto->fullName,
             "pic_name" => $dto->picName,
