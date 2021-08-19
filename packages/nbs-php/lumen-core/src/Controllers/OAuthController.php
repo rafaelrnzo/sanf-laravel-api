@@ -162,10 +162,10 @@ class OAuthController extends RestController
     protected function registerSocialPlatform($request, ApplicationServiceInterface $service)
     {
         $input = $this->validateRegister($request);
-        $dto = $this->newSocialLoginDto($input);
+        $dto = $this->newSocialRegisterDto($input);
         $user = $service->execute($dto);
 
-        if (is_null($user)) {
+        if (is_null(optional($user)->token)) {
             return $this->responseOk();
         }
 

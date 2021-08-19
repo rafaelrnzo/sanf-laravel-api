@@ -82,7 +82,7 @@ class RegisterByGoogleService implements RegisterByGoogleServiceInterface
 
         if ($user instanceof MustVerifyEmail && !$user->hasVerifiedEmail()) {
             $user->sendEmailVerificationNotification();
-            return null;
+            return json_decode(json_encode($user));
         }
 
         /** @noinspection PhpVoidFunctionResultUsedInspection */
@@ -115,10 +115,12 @@ class RegisterByGoogleService implements RegisterByGoogleServiceInterface
 
         //TODO DTO
         return json_decode(json_encode(array_merge($user->toArray(), [
-            'accessToken' => $token,
-            'accessExpiredAt' => $accessTokenExpiredAt,
-            'refreshToken' => $refreshToken,
-            'refreshExpiredAt' => $refreshTokenExpiredAt,
-        ])));
+                'token' => [
+                    'accessToken' => $token,
+                    'accessExpiredAt' => $accessTokenExpiredAt,
+                    'refreshToken' => $refreshToken,
+                    'refreshExpiredAt' => $refreshTokenExpiredAt,
+                ]]
+        )));
     }
 }

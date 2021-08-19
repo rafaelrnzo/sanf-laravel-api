@@ -36,7 +36,7 @@ class RegisterByAppleService implements RegisterByAppleServiceInterface
         $jwtPayload = $this->jwt::verifyAppleIdToken($dto->providerToken);
         $providerId = $jwtPayload['sub'];
         $isEmailVerified = $jwtPayload['email_verified'] ?? false;
-        $isPrivateEmail = $jwtPayload['is_private_email'] ?? true;
+        $isPrivateEmail = $jwtPayload['is_private_email'] ?? false;
         $email = $isPrivateEmail ? $dto->email : $jwtPayload['email'];
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             throw new OAuthEmailRequiredException('invalid email format');
@@ -83,7 +83,7 @@ class RegisterByAppleService implements RegisterByAppleServiceInterface
 
         if ($user instanceof MustVerifyEmail && !$user->hasVerifiedEmail()) {
             $user->sendEmailVerificationNotification();
-            return null;
+            return json_decode(json_encode($user));
         }
 
         /** @noinspection PhpVoidFunctionResultUsedInspection */
@@ -116,10 +116,12 @@ class RegisterByAppleService implements RegisterByAppleServiceInterface
 
         //TODO DTO
         return json_decode(json_encode(array_merge($user->toArray(), [
-            'accessToken' => $token,
-            'accessExpiredAt' => $accessTokenExpiredAt,
-            'refreshToken' => $refreshToken,
-            'refreshExpiredAt' => $refreshTokenExpiredAt,
-        ])));
+                'token' => [
+                    'accessToken' => $token,
+                    'accessExpiredAt' => $accessTokenExpiredAt,
+                    'refreshToken' => $refreshToken,
+                    'refreshExpiredAt' => $refreshTokenExpiredAt,
+                ]]
+        )));
     }
 }

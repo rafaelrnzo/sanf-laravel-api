@@ -501,6 +501,21 @@ class JWTHelper
               "nonce_supported": true,
               "real_user_status": 2
             }
+         * example public email token
+         * {
+              "iss": "https://appleid.apple.com",
+              "aud": "com.sanf.mobile.dev",
+              "exp": 1629456970,
+              "iat": 1629370570,
+              "sub": "00**51.995fdc60ab8a42f7aa25fe0aa4*******.1**5",
+              "nonce": "9e1c6e80be35349380*****9d2c7bc9274e1e89fad2*****69b4e8a38be45011",
+              "c_hash": "XH5fL*****Wv-n5qdn*****,
+              "email": "nb**es*****@gmail.com",
+              "email_verified": "true",
+              "auth_time": 1629370570,
+              "nonce_supported": true,
+              "real_user_status": 2
+            }
          */
         $audiences = explode(',', config('jwt.apple_audience', ''));
         if (empty($audiences)) {
