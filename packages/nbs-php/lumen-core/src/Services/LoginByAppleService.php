@@ -35,7 +35,6 @@ class LoginByAppleService implements ApplicationServiceInterface
     {
         $jwtPayload = $this->jwt::verifyAppleIdToken($dto->providerToken);
         $email = $jwtPayload['email'];
-        $name = $jwtPayload['name'];
         $providerId = $jwtPayload['sub'];
         $isEmailVerified = $jwtPayload['email_verified'] ?? false;
         $isPrivateEmail = $jwtPayload['is_private_email'] ?? true;
@@ -43,7 +42,7 @@ class LoginByAppleService implements ApplicationServiceInterface
             throw new OAuthUserNotBoundException('invalid email format');
         }
         //TODO USING REPO
-        return DB::transaction(function () use ($dto, $email, $name, $isPrivateEmail, $isEmailVerified, $providerId) {
+        return DB::transaction(function () use ($dto, $email, $isPrivateEmail, $isEmailVerified, $providerId) {
             //MATCH WITH EXISTING USER BY SAME EMAIL
             //SKIP IF EMAIL PRIVATE BECAUSE EMAIL NOT REAL FROM RELAY DOMAIN i.e: n7*****jh5@privaterelay.appleid.com
             //ALSO SKIP IF EMAIL STILL NOT VERIFIED
@@ -63,7 +62,6 @@ class LoginByAppleService implements ApplicationServiceInterface
             if ($user && !$userOAuth) {
                 $userOAuth = UserOAuthModel::forceCreate([
                     'user_id' => $user->id,
-                    'name' => $name,
                     'provider' => OAuthProvider::APPLE,
                     'provider_id' => $providerId,
                     'provider_token' => $dto->providerToken,
@@ -72,7 +70,6 @@ class LoginByAppleService implements ApplicationServiceInterface
 
             $user = $userOAuth->user;
             $userOAuth->update([
-                'name' => $name,
                 'provider_token' => $dto->providerToken,
             ]);
 
