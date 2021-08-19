@@ -435,6 +435,26 @@ class JWTHelper
 
     public static function verifyGoogleToken(string $token)
     {
+        /* example google token
+         {
+          "iss": "https://accounts.google.com",
+          "azp": "99078***7823-ui7rr5llde3nd*******651q59pgfjj6.apps.googleusercontent.com",
+          "aud": "99078***7823-ui7rr5llde3nd*******651q59pgfjj6.apps.googleusercontent.com",
+          "sub": "11211641*******383017",
+          "hd": "nusant*******studio.com",
+          "email": "****@nu*******io.com",
+          "email_verified": true,
+          "at_hash": "WUf_c*******IUoX6bt3jw",
+          "nonce": "uxl-GbJbp1mstoqpsdRT_PBulhSsM90iKPi5jL2b3DI",
+          "name": "Eric Johnson",
+          "picture": "https://lh3.googleusercontent.com/a/AATXAJys3_8DlFKlQQuM*******yjpXC-ksjrVR0jCWz=s96-c",
+          "given_name": "E****",
+          "family_name": "J****on",
+          "locale": "en",
+          "iat": 1629198929,
+          "exp": 1629202529
+        }
+         */
         $audiences = explode(',', config('jwt.google_audience', ''));
         if (empty($audiences)) {
             throw new \RuntimeException("Please set 'JWT_GOOGLE_AUDIENCE' in env file.");
@@ -453,7 +473,7 @@ class JWTHelper
         try {
             $payload = (array)JWT::decode($token, JWK::parseKeySet($jwks), ['RS256']);
         } catch (\Exception $e) {
-            throw new InvalidTokenException('invalid signature');
+            throw new InvalidTokenException($e->getMessage());
         }
 
         if (!in_array($payload['aud'], $audiences)) {
@@ -465,6 +485,23 @@ class JWTHelper
 
     public static function verifyAppleIdToken(string $token)
     {
+        /* example private email token
+         * {
+              "iss": "https://appleid.apple.com",
+              "aud": "com.****.mobile.dev",
+              "exp": 1629294954,
+              "iat": 1629208554,
+              "sub": "001551.995fdc60ab8a42f7aa25fe0aa4*******.1525",
+              "nonce": "ff6f1e6039294a2ebf3229624304c906c7b20e984da4880590db73282*******",
+              "c_hash": "7t0J6TqCSv8-j_S*******",
+              "email": "n7*****jh5@privaterelay.appleid.com",
+              "email_verified": "true",
+              "is_private_email": "true",
+              "auth_time": 1629208554,
+              "nonce_supported": true,
+              "real_user_status": 2
+            }
+         */
         $audiences = explode(',', config('jwt.apple_audience', ''));
         if (empty($audiences)) {
             throw new \RuntimeException("Please set 'JWT_APPLE_AUDIENCE' in env file.");
@@ -483,7 +520,7 @@ class JWTHelper
         try {
             $payload = (array)JWT::decode($token, JWK::parseKeySet($jwks), ['RS256']);
         } catch (\Exception $e) {
-            throw new InvalidTokenException('invalid signature');
+            throw new InvalidTokenException($e->getMessage());
         }
 
         if (!in_array($payload['aud'], $audiences)) {

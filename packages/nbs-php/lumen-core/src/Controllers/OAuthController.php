@@ -40,11 +40,7 @@ class OAuthController extends RestController
     protected function validateLogin(Request $request): array
     {
         $validated = $this->validate($request, [
-            'full_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255'],
-            'phone' => ['nullable', 'string', 'min:10', 'max:255'],
-            'auth_token' => ['required', 'string'],
-            'user_ref_id' => ['required', 'string', 'max:255'],
+            'auth_token' => ['required', 'string']
         ]);
 
         $validated += $this->validateDeviceInformation($request, 'device.');
@@ -86,10 +82,6 @@ class OAuthController extends RestController
     protected function newSocialLoginDto($input)
     {
         return new SocialLoginRequestDto([
-            'fullName' => $input['full_name'],
-            'email' => $input['email'],
-            'phone' => $input['phone'] ?? null,
-            'providerId' => $input['user_ref_id'],
             'providerToken' => $input['auth_token'],
             'device' => new DeviceInfoRequestDto([
                 'deviceId' => $input['device']['device_id'],
@@ -120,8 +112,6 @@ class OAuthController extends RestController
 
     public function loginApple(Request $request, LoginByAppleService $service)
     {
-        $appleJWTToken = JWTHelper::verifyAppleIdToken($request->input('auth_token'));
-        $request->merge(['user_ref_id' => $appleJWTToken['sub']]);
         $input = $this->validateLogin($request);
         $dto = $this->newSocialLoginDto($input);
         $user = $service->execute($dto);
@@ -141,7 +131,6 @@ class OAuthController extends RestController
     {
         $validated = $this->validate($request, [
             'auth_token' => ['required', 'string',],
-            'user_ref_id' => ['required', 'string',],
             'full_name' => ['required', 'string',],
             'email' => ['required', 'email',],
             'password' => config('auth.input_validations.password.rule', ['required']),
@@ -159,7 +148,6 @@ class OAuthController extends RestController
     {
         return new SocialRegisterRequestDto([
             'providerToken' => $input['auth_token'],
-            'providerId' => $input['user_ref_id'],
             'fullName' => $input['full_name'],
             'email' => $input['email'],
             'landlineNumber' => $input['landline_number'] ?? null,
@@ -183,8 +171,6 @@ class OAuthController extends RestController
     public function registerApple(Request $request, RegisterByAppleService $service)
     {
         $appleJWTToken = JWTHelper::verifyAppleIdToken($request->input('auth_token'));
-        $request->merge(['user_ref_id' => $appleJWTToken['sub']]);
-
         if ($appleJWTToken['is_private_email'] === 'true') {
             throw new OAuthEmailRequiredException();
         }

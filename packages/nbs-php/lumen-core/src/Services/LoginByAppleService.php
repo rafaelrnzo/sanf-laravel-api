@@ -34,18 +34,27 @@ class LoginByAppleService implements ApplicationServiceInterface
     public function execute($dto)
     {
         $jwtPayload = $this->jwt::verifyAppleIdToken($dto->providerToken);
-
+        $email = $jwtPayload['email'];
+        $name = $jwtPayload['name'];
+        $providerId = $jwtPayload['sub'];
+        $isEmailVerified = $jwtPayload['email_verified'] ?? false;
+        $isPrivateEmail = $jwtPayload['is_private_email'] ?? true;
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new OAuthUserNotBoundException('invalid email format');
+        }
         //TODO USING REPO
-        return DB::transaction(function () use ($dto) {
-            if (!filter_var($dto->email, FILTER_VALIDATE_EMAIL)) {
-                throw new OAuthUserNotBoundException('invalid email format');
+        return DB::transaction(function () use ($dto, $email, $name, $isPrivateEmail, $isEmailVerified, $providerId) {
+            //MATCH WITH EXISTING USER BY SAME EMAIL
+            //SKIP IF EMAIL PRIVATE BECAUSE EMAIL NOT REAL FROM RELAY DOMAIN i.e: n7*****jh5@privaterelay.appleid.com
+            //ALSO SKIP IF EMAIL STILL NOT VERIFIED
+            $user = null;
+            if(!$isPrivateEmail || !$isEmailVerified){
+                $user = $this->repository->newQuery()->where('username', $email)->first();
             }
-            //MATCH USER WITH SAME EMAIL
-            $user = $this->repository->newQuery()->where('username', $dto->email)->first();
             $userOAuth = UserOAuthModel::with('user')
                 ->where([
                     'provider' => OAuthProvider::APPLE,
-                    'provider_id' => $dto->providerId,
+                    'provider_id' => $providerId,
                 ])
                 ->first();
             if (!$user && !$userOAuth) {
@@ -54,16 +63,16 @@ class LoginByAppleService implements ApplicationServiceInterface
             if ($user && !$userOAuth) {
                 $userOAuth = UserOAuthModel::forceCreate([
                     'user_id' => $user->id,
-                    'name' => $dto->fullName,
+                    'name' => $name,
                     'provider' => OAuthProvider::APPLE,
-                    'provider_id' => $dto->providerId,
+                    'provider_id' => $providerId,
                     'provider_token' => $dto->providerToken,
                 ]);
             }
 
             $user = $userOAuth->user;
             $userOAuth->update([
-                'name' => $dto->fullName,
+                'name' => $name,
                 'provider_token' => $dto->providerToken,
             ]);
 

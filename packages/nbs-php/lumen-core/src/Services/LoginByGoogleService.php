@@ -35,18 +35,25 @@ class LoginByGoogleService implements ApplicationServiceInterface
     public function execute($dto)
     {
         $jwtPayload = $this->jwt::verifyGoogleToken($dto->providerToken);
-
+        $email = $jwtPayload['email'];
+        $name = $jwtPayload['name'];
+        $providerId = $jwtPayload['sub'];
+        $isEmailVerified = $jwtPayload['email_verified'] ?? false;
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new OAuthUserNotBoundException('invalid email format');
+        }
         //TODO USING REPO
-        return DB::transaction(function () use ($dto) {
-            if (!filter_var($dto->email, FILTER_VALIDATE_EMAIL)) {
-                throw new OAuthUserNotBoundException('invalid email format');
+        return DB::transaction(function () use ($dto, $email, $name, $isEmailVerified, $providerId) {
+            //MATCH WITH EXISTING USER BY SAME EMAIL
+            //SKIP IF EMAIL STILL NOT VERIFIED
+            $user = null;
+            if (!$isEmailVerified) {
+                $user = $this->repository->newQuery()->where('username', $email)->first();
             }
-            //MATCH USER WITH SAME EMAIL
-            $user = $this->repository->newQuery()->where('username', $dto->email)->first();
             $userOAuth = UserOAuthModel::with('user')
                 ->where([
                     'provider' => OAuthProvider::GOOGLE,
-                    'provider_id' => $dto->providerId,
+                    'provider_id' => $providerId,
                 ])
                 ->first();
             if (!$user && !$userOAuth) {
@@ -55,16 +62,16 @@ class LoginByGoogleService implements ApplicationServiceInterface
             if ($user && !$userOAuth) {
                 $userOAuth = UserOAuthModel::forceCreate([
                     'user_id' => $user->id,
-                    'name' => $dto->fullName,
+                    'name' => $name,
                     'provider' => OAuthProvider::GOOGLE,
-                    'provider_id' => $dto->providerId,
+                    'provider_id' => $providerId,
                     'provider_token' => $dto->providerToken,
                 ]);
             }
 
             $user = $userOAuth->user;
             $userOAuth->update([
-                'name' => $dto->fullName,
+                'name' => $name,
                 'provider_token' => $dto->providerToken,
             ]);
 
@@ -80,7 +87,7 @@ class LoginByGoogleService implements ApplicationServiceInterface
             //TODO REPOSITORY
             /** @var UserSessionModel $userSession */
             //TODO SESSION REPOSITORY
-            $userSession =  UserSessionModel::forceCreate([
+            $userSession = UserSessionModel::forceCreate([
                 'auth_provider_id' => AuthProvider::GOOGLE,
                 'user_id' => $user->id,
                 'device_id' => $device->deviceId,
