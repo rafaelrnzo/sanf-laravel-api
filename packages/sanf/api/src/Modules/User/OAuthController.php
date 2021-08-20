@@ -26,7 +26,7 @@ class OAuthController extends \NbsPhp\Core\Controllers\OAuthController
 
     public function registerGoogle(Request $request, RegisterByGoogleServiceInterface $service)
     {
-        parent::registerGoogle($request, new RegisterInternalByGoogleService($service, $this->userRepository, $this->internalApiClient));
+        return parent::registerGoogle($request, new RegisterInternalByGoogleService($service, $this->userRepository, $this->internalApiClient));
     }
 
     public function registerApple(Request $request, RegisterByAppleServiceInterface $service)
