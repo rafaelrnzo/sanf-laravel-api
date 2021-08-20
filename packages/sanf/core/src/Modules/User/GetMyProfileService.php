@@ -33,12 +33,8 @@ class GetMyProfileService implements ApplicationServiceInterface
             $user->profile_type = $profile['ID_IDENTITY'];
             $user->save();
         } else{
-            try{
-                $profiles = $this->internalApiClient->findCustomerById($user->xid);
-                $profile = collect($profiles['data'])->first();
-            } catch (\Exception $exception) {
-                report($exception);
-            }
+            $profiles = $this->internalApiClient->findCustomerById($user->xid);
+            $profile = collect($profiles['data'])->first();
         }
         //TODO TIDY UP ENTITY
         $user->profile = (object)[
