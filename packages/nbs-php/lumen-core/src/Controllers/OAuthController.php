@@ -166,17 +166,20 @@ class OAuthController extends RestController
         $user = $service->execute($dto);
 
         if (is_null(optional($user)->token)) {
-            return $this->responseOk();
+            return $this->responseOk(
+                'Success',
+                fractal($user, config('auth.transformers.login'))
+            );
         }
 
         return $this->responseOk(
             'Success',
             fractal($user, config('auth.transformers.login'))
         )->withHeaders([
-            'X-Access-Token' => $user->accessToken,
-            'X-Access-Expired-At' => $user->accessExpiredAt,
-            'X-Refresh-Token' => $user->refreshToken,
-            'X-Refresh-Expired-At' => $user->refreshExpiredAt,
+            'X-Access-Token' => $user->token->accessToken,
+            'X-Access-Expired-At' => $user->token->accessExpiredAt,
+            'X-Refresh-Token' => $user->token->refreshToken,
+            'X-Refresh-Expired-At' => $user->token->refreshExpiredAt,
         ]);
     }
 }

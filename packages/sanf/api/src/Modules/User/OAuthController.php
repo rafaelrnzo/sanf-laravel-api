@@ -6,11 +6,9 @@ namespace Sanf\Api\Modules\User;
 
 use Illuminate\Http\Request;
 use NbsPhp\Core\Services\RegisterByAppleServiceInterface;
-use NbsPhp\Core\Services\RegisterByEmailServiceInterface;
 use NbsPhp\Core\Services\RegisterByGoogleServiceInterface;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Core\Modules\User\Services\RegisterInternalByAppleService;
-use Sanf\Core\Modules\User\Services\RegisterInternalByEmailService;
 use Sanf\Core\Modules\User\Services\RegisterInternalByGoogleService;
 use Sanf\Integration\InternalApiClient;
 
@@ -26,11 +24,6 @@ class OAuthController extends \NbsPhp\Core\Controllers\OAuthController
         parent::__construct();
     }
 
-    public function register(Request $request, RegisterByEmailServiceInterface $service)
-    {
-        return parent::register($request, new RegisterInternalByEmailService($service, $this->userRepository, $this->internalApiClient));
-    }
-
     public function registerGoogle(Request $request, RegisterByGoogleServiceInterface $service)
     {
         parent::registerGoogle($request, new RegisterInternalByGoogleService($service, $this->userRepository, $this->internalApiClient));
@@ -40,6 +33,4 @@ class OAuthController extends \NbsPhp\Core\Controllers\OAuthController
     {
         return parent::registerApple($request, new RegisterInternalByAppleService($service, $this->userRepository, $this->internalApiClient));
     }
-
-
 }

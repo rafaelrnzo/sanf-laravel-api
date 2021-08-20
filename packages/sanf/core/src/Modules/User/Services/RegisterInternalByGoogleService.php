@@ -33,6 +33,7 @@ class RegisterInternalByGoogleService implements RegisterByGoogleServiceInterfac
     public function execute($dto)
     {
         $user = $this->service->execute($dto);
+        $token = optional($user)->token;
         $customerId = null;
         try {
             $this->internalApiClient->registerPersonal(
@@ -59,6 +60,7 @@ class RegisterInternalByGoogleService implements RegisterByGoogleServiceInterfac
             'profile_type' => ProfileType::PERSONAL,
             'xid' => $customerId
         ]);
+        $user->token = $token;
 
         //TODO DTO
         return json_decode(json_encode($user));

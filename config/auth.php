@@ -9,7 +9,7 @@ return [
     'services' => [
         'register-by-email' => \NbsPhp\Core\Services\RegisterByEmailService::class,
         'register-by-google' => \NbsPhp\Core\Services\RegisterByGoogleService::class,
-        'register-by-apple' => \NbsPhp\Core\Services\RegisterByAppleService::class
+        'register-by-apple' => \NbsPhp\Core\Services\RegisterByAppleService::class,
     ],
 
     'transformers' => [
