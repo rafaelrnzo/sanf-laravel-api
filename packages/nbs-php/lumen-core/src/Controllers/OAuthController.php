@@ -151,7 +151,7 @@ class OAuthController extends RestController
 
     public function registerGoogle(Request $request, RegisterByGoogleServiceInterface $service)
     {
-        $this->registerSocialPlatform($request, $service);
+        return $this->registerSocialPlatform($request, $service);
     }
 
     public function registerApple(Request $request, RegisterByAppleServiceInterface $service)
