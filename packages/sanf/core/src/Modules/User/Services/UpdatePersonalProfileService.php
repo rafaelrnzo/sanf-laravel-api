@@ -38,6 +38,7 @@ class UpdatePersonalProfileService implements ApplicationServiceInterface
         }
         $this->internalApiClient->updateCustomer([
             "cust_id" => $dto->customerId,
+            "ktp" => $dto->identityNumber,
             "cust_type" => ProfileType::PERSONAL,
             "notelp" => $dto->landlineNumber,
             "nohp" => $dto->phoneNumber,

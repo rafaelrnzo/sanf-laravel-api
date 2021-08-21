@@ -100,6 +100,7 @@ class ProfileController extends RestController
     public function putUpdatePersonalProfile(Guard $auth, Request $request, $xid, UpdatePersonalProfileService $service)
     {
         $input = $this->validate($request, [
+            "identity_number" => ["required", "string"],
             "landline_number" => ["nullable", "string"],
             "phone_number" => ["required", "string"],
             "gender" => ["required", "in:F,M"], //TODO ENUM
@@ -117,6 +118,7 @@ class ProfileController extends RestController
         $dto = (object)[
             "userId" => $auth->id(),
             "customerId" => $xid,
+            "identityNumber" => $input['identity_number'],
             "landlineNumber" => $input['landline_number'] ?? null,
             "phoneNumber" => $input['phone_number'],
             "birthdate" => $input['birthdate'],
