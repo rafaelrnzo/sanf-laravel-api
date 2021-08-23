@@ -7,6 +7,8 @@ namespace Sanf\Api\Modules\User;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestController;
+use Sanf\Api\Modules\User\Transformers\CustomerProfileSimpleTransformer;
+use Sanf\Api\Modules\User\Transformers\CustomerProfileTransformer;
 use Sanf\Core\Modules\User\GetListCustomerProfileService;
 use Sanf\Core\Modules\User\GetMyProfileService;
 use Sanf\Core\Modules\User\RegisterAsContractOwnerService;

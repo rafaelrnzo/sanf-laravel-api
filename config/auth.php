@@ -10,12 +10,14 @@ return [
         'register-by-email' => \NbsPhp\Core\Services\RegisterByEmailService::class,
         'register-by-google' => \NbsPhp\Core\Services\RegisterByGoogleService::class,
         'register-by-apple' => \NbsPhp\Core\Services\RegisterByAppleService::class,
+        'activate-user' => \NbsPhp\Core\Services\ActivateUserService::class,
+        'verify-email' => \NbsPhp\Core\Services\VerifyEmailService::class,
     ],
 
     'transformers' => [
-        'login' => \Sanf\Api\Modules\User\LoginTransformer::class,
+        'login' => \Sanf\Api\Modules\User\Transformers\LoginTransformer::class,
         'logout' => \NbsPhp\Core\Transformers\LogoutTransformer::class,
-        'profile' => \Sanf\Api\Modules\User\ProfileSimpleTransformer::class,
+        'profile' => \Sanf\Api\Modules\User\Transformers\ProfileSimpleTransformer::class,
     ],
 
     'notifications' => [
@@ -271,14 +273,14 @@ return [
                 'method' => 'post',
                 'uri' => "{$routePrefix}/email-verification",
                 'name' => 'email.verify-from-app',
-                'action' => "{$namespace}AuthController@verifyEmailByApp",
+                'action' => "Sanf\Api\Modules\User\AuthController@verifyEmailByApp",
                 'middleware' => [],
             ],
             [
                 'method' => 'get',
                 'uri' => "pages/verify-email",
                 'name' => 'email.verify',
-                'action' => "{$namespace}AuthController@verifyEmailPage",
+                'action' => "Sanf\Api\Modules\User\AuthController@verifyEmailPage",
                 'middleware' => [],
             ],
             [
@@ -292,7 +294,7 @@ return [
                 'method' => 'post',
                 'uri' => "{$routePrefix}/activation",
                 'name' => 'user.activate-from-app',
-                'action' => "{$namespace}AuthController@userActivationByApp",
+                'action' => "Sanf\Api\Modules\User\AuthController@userActivationByApp",
                 'middleware' => [],
             ],
             [

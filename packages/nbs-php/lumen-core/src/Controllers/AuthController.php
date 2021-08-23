@@ -15,7 +15,7 @@ use NbsPhp\Core\Exceptions\UnauthorizedException;
 use NbsPhp\Core\Exceptions\UserActivationFailedException;
 use NbsPhp\Core\Exceptions\VerifyEmailFailedException;
 use NbsPhp\Core\JWTHelper;
-use NbsPhp\Core\Services\ActivateUserService;
+use NbsPhp\Core\Services\ActivateUserServiceInterface;
 use NbsPhp\Core\Services\AppLoginService;
 use NbsPhp\Core\Services\ChangePasswordService;
 use NbsPhp\Core\Services\LoginWithEmailAndPasswordService;
@@ -24,7 +24,7 @@ use NbsPhp\Core\Services\RegisterByEmailServiceInterface;
 use NbsPhp\Core\Services\SendEmailActivationService;
 use NbsPhp\Core\Services\SendEmailVerificationService;
 use NbsPhp\Core\Services\UpdateSessionService;
-use NbsPhp\Core\Services\VerifyEmailService;
+use NbsPhp\Core\Services\VerifyEmailServiceInterface;
 
 class AuthController extends RestController
 {
@@ -210,7 +210,7 @@ class AuthController extends RestController
         ]);
     }
 
-    public function verifyEmailPage(Request $request, VerifyEmailService $service)
+    public function verifyEmailPage(Request $request, VerifyEmailServiceInterface $service)
     {
         try {
             $jwt = $this->extractVerifyEmailToken($request);
@@ -227,7 +227,7 @@ class AuthController extends RestController
         return view(config('auth.views.verify-email'), ['message' => $message]);
     }
 
-    public function verifyEmailByApp(Request $request, VerifyEmailService $service)
+    public function verifyEmailByApp(Request $request, VerifyEmailServiceInterface $service)
     {
         $jwt = $this->extractVerifyEmailToken($request);
         $dto = (object)[
@@ -286,7 +286,7 @@ class AuthController extends RestController
         return view(config('auth.views.user-activation'));
     }
 
-    public function userActivationByApp(Request $request, ActivateUserService $service)
+    public function userActivationByApp(Request $request, ActivateUserServiceInterface $service)
     {
         $input = $this->validate($request, [
             'password' => config('auth.input_validations.password.rule', ['required'])

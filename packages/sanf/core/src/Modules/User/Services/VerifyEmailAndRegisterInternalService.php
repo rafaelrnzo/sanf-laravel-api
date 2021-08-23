@@ -4,12 +4,12 @@
 namespace Sanf\Core\Modules\User\Services;
 
 
-use NbsPhp\Core\Services\RegisterByEmailServiceInterface;
+use NbsPhp\Core\Services\VerifyEmailServiceInterface;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Core\Modules\User\ProfileType;
 use Sanf\Integration\InternalApiClient;
 
-class RegisterInternalByEmailService implements RegisterByEmailServiceInterface
+class VerifyEmailAndRegisterInternalService implements VerifyEmailServiceInterface
 {
     protected $service;
 
@@ -22,7 +22,7 @@ class RegisterInternalByEmailService implements RegisterByEmailServiceInterface
      * @param $jwt
      */
     //TODO USE REPOSITORY
-    public function __construct(RegisterByEmailServiceInterface $service, AuthModel $repository, InternalApiClient $internalApiClient)
+    public function __construct(VerifyEmailServiceInterface $service, AuthModel $repository, InternalApiClient $internalApiClient)
     {
         $this->service = $service;
         $this->repository = $repository;
@@ -33,7 +33,6 @@ class RegisterInternalByEmailService implements RegisterByEmailServiceInterface
     public function execute($dto)
     {
         $user = $this->service->execute($dto);
-        $customerId = null;
         try {
             $this->internalApiClient->registerPersonal(
                 $dto->fullName,
@@ -45,19 +44,16 @@ class RegisterInternalByEmailService implements RegisterByEmailServiceInterface
             report($exception);
         }
 
-        try {
-            $profiles = $this->internalApiClient->findCustomerByEmail($dto->email);
-            $profile = (collect($profiles['data'])->where('ID_IDENTITY', ProfileType::PERSONAL)->first());
-            $customerId = $profile['CUST_ID_SANF'];
-        } catch (\Exception $exception) {
-            report($exception);
-        }
+        $profiles = $this->internalApiClient->findCustomerByEmail($dto->email);
+        $profile = (collect($profiles['data'])->where('ID_IDENTITY', ProfileType::PERSONAL)->first());
+        $customerId = $profile['CUST_ID_SANF'];
 
         /** @var AuthModel $user */
         $user = $this->repository->newQuery()->find($user->id);
         $user->update([
             'profile_type' => ProfileType::PERSONAL,
-            'xid' => $customerId
+            'xid' => $customerId,
+            'personal_xid' => $customerId,
         ]);
 
         //TODO DTO

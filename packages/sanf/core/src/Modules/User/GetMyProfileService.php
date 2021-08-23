@@ -11,6 +11,7 @@ use Sanf\Integration\InternalApiClient;
 class GetMyProfileService implements ApplicationServiceInterface
 {
     protected $repository;
+
     protected $internalApiClient;
 
     /**
@@ -26,13 +27,14 @@ class GetMyProfileService implements ApplicationServiceInterface
     public function execute($dto)
     {
         $user = AuthModel::findOrFail($dto->userId);
-        if(empty($user->xid)){
+        if (empty($user->xid) || empty($user->personal_xid)) {
             $profiles = $this->internalApiClient->findCustomerByEmail($user->username);
             $profile = (collect($profiles['data'])->where('ID_IDENTITY', ProfileType::PERSONAL)->first());
             $user->xid = $profile['CUST_ID_SANF'];
+            $user->personal_xid = $profile['CUST_ID_SANF'];
             $user->profile_type = $profile['ID_IDENTITY'];
             $user->save();
-        } else{
+        } else {
             $profiles = $this->internalApiClient->findCustomerById($user->xid);
             $profile = collect($profiles['data'])->first();
         }
@@ -42,6 +44,7 @@ class GetMyProfileService implements ApplicationServiceInterface
             'companyName' => $profile['IDENTITY_NAME'],
             'phoneNumber' => $profile['NO_HP']
         ];
+
         //TODO DTO
         return json_decode(json_encode($user));
     }

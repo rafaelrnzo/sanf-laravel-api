@@ -4,6 +4,7 @@
 namespace Sanf\Core\Modules\User\Services;
 
 
+use NbsPhp\Core\Enum\UserStatus;
 use NbsPhp\Core\Services\RegisterByGoogleServiceInterface;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Core\Modules\User\ProfileType;
@@ -33,8 +34,11 @@ class RegisterInternalByGoogleService implements RegisterByGoogleServiceInterfac
     public function execute($dto)
     {
         $user = $this->service->execute($dto);
+        if ($user->status_id !== UserStatus::ACTIVE) {
+            return json_decode(json_encode($user));
+        }
+
         $token = optional($user)->token;
-        $customerId = null;
         try {
             $this->internalApiClient->registerPersonal(
                 $dto->fullName,
@@ -46,19 +50,16 @@ class RegisterInternalByGoogleService implements RegisterByGoogleServiceInterfac
             report($exception);
         }
 
-        try {
-            $profiles = $this->internalApiClient->findCustomerByEmail($dto->email);
-            $profile = (collect($profiles['data'])->where('ID_IDENTITY', ProfileType::PERSONAL)->first());
-            $customerId = $profile['CUST_ID_SANF'];
-        } catch (\Exception $exception) {
-            report($exception);
-        }
+        $profiles = $this->internalApiClient->findCustomerByEmail($dto->email);
+        $profile = (collect($profiles['data'])->where('ID_IDENTITY', ProfileType::PERSONAL)->first());
+        $customerId = $profile['CUST_ID_SANF'];
 
         /** @var AuthModel $user */
         $user = $this->repository->newQuery()->find($user->id);
         $user->update([
             'profile_type' => ProfileType::PERSONAL,
-            'xid' => $customerId
+            'xid' => $customerId,
+            'personal_xid' => $customerId,
         ]);
         $user->token = $token;
 

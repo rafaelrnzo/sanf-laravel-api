@@ -6,9 +6,10 @@ namespace NbsPhp\Core\Services;
 
 use NbsPhp\Core\Exceptions\UnauthorizedException;
 use NbsPhp\Core\Models\AuthModel;
+use NbsPhp\Core\Models\NeedSetupPasswordInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class VerifyEmailService implements ApplicationServiceInterface
+class VerifyEmailService implements VerifyEmailServiceInterface
 {
     protected $repository;
 
@@ -21,12 +22,15 @@ class VerifyEmailService implements ApplicationServiceInterface
         $this->repository = $repository;
     }
 
-
     public function execute($dto)
     {
         /** @var AuthModel $user */
         $user = $this->repository->newQuery()->find($dto->userId);
         if (!$user) {
+            throw new NotFoundHttpException();
+        }
+
+        if ($user instanceof NeedSetupPasswordInterface && $user->needActivation()) {
             throw new NotFoundHttpException();
         }
 

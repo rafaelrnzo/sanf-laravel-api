@@ -4,13 +4,12 @@
 namespace Sanf\Core\Modules\User\Services;
 
 
-use NbsPhp\Core\Enum\UserStatus;
-use NbsPhp\Core\Services\RegisterByAppleServiceInterface;
+use NbsPhp\Core\Services\ActivateUserServiceInterface;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Core\Modules\User\ProfileType;
 use Sanf\Integration\InternalApiClient;
 
-class RegisterInternalByAppleService implements RegisterByAppleServiceInterface
+class ActivateUserAndRegisterInternalService implements ActivateUserServiceInterface
 {
     protected $service;
 
@@ -23,7 +22,7 @@ class RegisterInternalByAppleService implements RegisterByAppleServiceInterface
      * @param $jwt
      */
     //TODO USE REPOSITORY
-    public function __construct(RegisterByAppleServiceInterface $service, AuthModel $repository, InternalApiClient $internalApiClient)
+    public function __construct(ActivateUserServiceInterface $service, AuthModel $repository, InternalApiClient $internalApiClient)
     {
         $this->service = $service;
         $this->repository = $repository;
@@ -34,11 +33,6 @@ class RegisterInternalByAppleService implements RegisterByAppleServiceInterface
     public function execute($dto)
     {
         $user = $this->service->execute($dto);
-        if ($user->status_id !== UserStatus::ACTIVE) {
-            return json_decode(json_encode($user));
-        }
-
-        $token = optional($user)->token;
         try {
             $this->internalApiClient->registerPersonal(
                 $dto->fullName,
@@ -59,9 +53,8 @@ class RegisterInternalByAppleService implements RegisterByAppleServiceInterface
         $user->update([
             'profile_type' => ProfileType::PERSONAL,
             'xid' => $customerId,
-            'personal_xid' => $customerId
+            'personal_xid' => $customerId,
         ]);
-        $user->token = $token;
 
         //TODO DTO
         return json_decode(json_encode($user));

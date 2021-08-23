@@ -30,11 +30,20 @@ class SwitchActiveCustomerProfileService implements ApplicationServiceInterface
         if (!$user) {
             throw new UserNotFoundException();
         }
-        $response = $this->internalApiClient->findCustomerById($dto->customerId);
+        $profiles = $this->internalApiClient->findCustomerById($dto->customerId);
+        $profile = collect($profiles['data'])->first();
 
         //TODO REPO
-        $user->xid = $response['data'][0]['CUST_ID_SANF'];
-        $user->profile_type = $response['data'][0]['ID_IDENTITY'];
+        $user->xid = $profile['CUST_ID_SANF'];
+        $user->profile_type = $profile['ID_IDENTITY'];
+        if ($profile['ID_IDENTITY'] === ProfileType::PERSONAL) {
+            $user->full_name = $profile['IDENTITY_NAME'];
+        } elseif ($profile['ID_IDENTITY'] === ProfileType::COMPANY) {
+            $user->company_name = $profile['IDENTITY_NAME'];
+        } else {
+            throw new \Exception("invalid profile type {$profile['ID_IDENTITY']}");
+        }
+
         $user->save();
     }
 }

@@ -1,11 +1,12 @@
 <?php
 
 
-namespace Sanf\Api\Modules\User;
+namespace Sanf\Api\Modules\User\Transformers;
 
 
 use League\Fractal\TransformerAbstract;
 use Sanf\Core\Modules\User\ProfileType;
+use function optional;
 
 class ProfileSimpleTransformer extends TransformerAbstract
 {

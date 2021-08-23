@@ -1,10 +1,11 @@
 <?php
 
 
-namespace Sanf\Api\Modules\User;
+namespace Sanf\Api\Modules\User\Transformers;
 
 
 use League\Fractal\TransformerAbstract;
+use function optional;
 
 class CustomerProfileTransformer extends TransformerAbstract
 {

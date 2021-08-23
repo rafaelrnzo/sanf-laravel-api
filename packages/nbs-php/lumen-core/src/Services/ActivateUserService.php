@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use NbsPhp\Core\Exceptions\UserActivationFailedException;
 use NbsPhp\Core\Models\AuthModel;
 
-class ActivateUserService implements ApplicationServiceInterface
+class ActivateUserService implements ActivateUserServiceInterface
 {
     protected $repository;
 

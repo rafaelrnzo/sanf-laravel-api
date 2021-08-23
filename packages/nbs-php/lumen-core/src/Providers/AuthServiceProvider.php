@@ -6,9 +6,11 @@ namespace NbsPhp\Core\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use NbsPhp\Core\Repositories\ProfileRepositoryInterface;
+use NbsPhp\Core\Services\ActivateUserServiceInterface;
 use NbsPhp\Core\Services\RegisterByAppleServiceInterface;
 use NbsPhp\Core\Services\RegisterByEmailServiceInterface;
 use NbsPhp\Core\Services\RegisterByGoogleServiceInterface;
+use NbsPhp\Core\Services\VerifyEmailServiceInterface;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -68,6 +70,8 @@ class AuthServiceProvider extends ServiceProvider
         $this->app->bind(RegisterByEmailServiceInterface::class, config('auth.services.register-by-email'));
         $this->app->bind(RegisterByGoogleServiceInterface::class, config('auth.services.register-by-google'));
         $this->app->bind(RegisterByAppleServiceInterface::class, config('auth.services.register-by-apple'));
+        $this->app->bind(ActivateUserServiceInterface::class, config('auth.services.activate-user'));
+        $this->app->bind(VerifyEmailServiceInterface::class, config('auth.services.verify-email'));
     }
 
     /**
