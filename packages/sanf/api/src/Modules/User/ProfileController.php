@@ -45,7 +45,7 @@ class ProfileController extends RestController
             "npwp" => ["required", "string"],
             "landline_number" => ["nullable", "string"],
             "pic_name" => ["required", "string"],
-            "phone_number" => ["required", "string"],
+            "phone_number" => ["nullable", "string"],
             "email" => ["required", "string"]
         ]);
         $dto = (object)[
@@ -54,9 +54,9 @@ class ProfileController extends RestController
             "title" => $input['title'],
             "fullName" => $input['full_name'],
             "npwp" => $input['npwp'],
-            "landlineNumber" => $input['landline_number'],
+            "landlineNumber" => $input['landline_number'] ?? null,
             "picName" => $input['pic_name'],
-            "phoneNumber" => $input['phone_number'],
+            "phoneNumber" => $input['phone_number'] ?? null,
             "email" => $input['email']
         ];
         $service->execute($dto);
