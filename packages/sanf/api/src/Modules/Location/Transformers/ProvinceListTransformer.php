@@ -13,7 +13,7 @@ class ProvinceListTransformer extends TransformerAbstract
         return [
             "country_id" => (string)$dto->country_id,
             "province_id" => (string)$dto->province_id,
-            "name" => (string)$dto->name,
+            "province_name" => (string)$dto->name,
         ];
     }
 }
