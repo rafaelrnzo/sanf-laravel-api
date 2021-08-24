@@ -17,7 +17,7 @@ class UpdateShareholderDto extends DataTransferObject
 
     public string $name;
 
-    public string $job;
+    public ?string $job;
 
     public string $percentage;
 
