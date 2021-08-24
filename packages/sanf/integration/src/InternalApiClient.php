@@ -112,7 +112,7 @@ class InternalApiClient
     public function createShareholder($request) //TODO USE DTO
     {
         $response = Request::route('customer.shareholder.create')
-            ->formParams([
+            ->json([
                 "cust_id" => $request->id,
                 "cust_title" => $request->title,
                 "cust_name" => $request->name,
@@ -128,7 +128,7 @@ class InternalApiClient
     public function updateShareholder($request)
     {
         $response = Request::route('customer.shareholder.update')
-            ->formParams([
+            ->json([
                 "cust_id" => $request->id,
                 "sr_no" => $request->no,
                 "cust_title" => $request->title,
@@ -146,7 +146,7 @@ class InternalApiClient
     public function deleteShareholder($id, $no)
     {
         $response = Request::route('customer.shareholder.delete')
-            ->formParams([
+            ->json([
                 "cust_id" => $id,
                 "sr_no" => $no,
             ])

@@ -17,6 +17,9 @@ class InternalApiProcessor extends Processor
         try {
             $response = $next($request);
             $result = $response->json();
+            if (is_null($result)) {
+                throw new \Exception('API CORE ERROR');
+            }
             if ($result['status'] === false) {
                 throw new SanfInternalApiException($result['message']);
             }
