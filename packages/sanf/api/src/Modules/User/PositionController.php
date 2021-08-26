@@ -12,6 +12,7 @@ class PositionController extends RestController
     {
         $response = $service->execute();
 
-        return fractal($response, PositionTransformer::class);
+        $data = fractal($response, PositionTransformer::class);
+        return collect($data)->flatten()->all();
     }
 }
