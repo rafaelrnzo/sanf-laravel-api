@@ -47,7 +47,7 @@ class LoginByGoogleService implements ApplicationServiceInterface
             //MATCH WITH EXISTING USER BY SAME EMAIL
             //SKIP IF EMAIL STILL NOT VERIFIED
             $user = null;
-            if (!$isEmailVerified) {
+            if ($isEmailVerified) {
                 $user = $this->repository->newQuery()->where('username', $email)->first();
             }
             $userOAuth = UserOAuthModel::with('user')

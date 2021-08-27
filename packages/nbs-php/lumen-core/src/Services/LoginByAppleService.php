@@ -47,7 +47,7 @@ class LoginByAppleService implements ApplicationServiceInterface
             //SKIP IF EMAIL PRIVATE BECAUSE EMAIL NOT REAL FROM RELAY DOMAIN i.e: n7*****jh5@privaterelay.appleid.com
             //ALSO SKIP IF EMAIL STILL NOT VERIFIED
             $user = null;
-            if(!$isPrivateEmail || !$isEmailVerified){
+            if(!$isPrivateEmail || $isEmailVerified){
                 $user = $this->repository->newQuery()->where('username', $email)->first();
             }
             $userOAuth = UserOAuthModel::with('user')
