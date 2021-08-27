@@ -38,8 +38,9 @@ class VerifyEmailService implements VerifyEmailServiceInterface
             throw new UnauthorizedException();
         }
         if (is_null($user->email_verified_at)) {
-            return $user->markEmailAsVerified();
+            $user->markEmailAsVerified();
+            return $user;
         }
-        return false;
+        return $user;
     }
 }

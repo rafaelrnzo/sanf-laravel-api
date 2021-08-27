@@ -43,6 +43,7 @@ class ActivateUserService implements ActivateUserServiceInterface
         $user->password_updated_at = Carbon::now();
         $user->save();
 
-        return $user->markUserActivated();
+        $user->markUserActivated();
+        return $user;
     }
 }

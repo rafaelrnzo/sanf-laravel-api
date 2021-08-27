@@ -9,7 +9,6 @@ use NbsPhp\Core\Services\ActivateUserServiceInterface;
 use NbsPhp\Core\Services\VerifyEmailServiceInterface;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Core\Modules\User\Services\ActivateUserAndRegisterInternalService;
-use Sanf\Core\Modules\User\Services\RegisterInternalByEmailService;
 use Sanf\Core\Modules\User\Services\VerifyEmailAndRegisterInternalService;
 use Sanf\Integration\InternalApiClient;
 

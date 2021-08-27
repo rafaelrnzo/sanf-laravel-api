@@ -35,16 +35,16 @@ class VerifyEmailAndRegisterInternalService implements VerifyEmailServiceInterfa
         $user = $this->service->execute($dto);
         try {
             $this->internalApiClient->registerPersonal(
-                $dto->fullName,
-                $dto->email,
-                $dto->landlineNumber,
-                $dto->phoneNumber,
+                $user->full_name,
+                $user->username,
+                $user->landline_number,
+                $user->phone_number,
             );
         } catch (\Exception $exception) {
             report($exception);
         }
 
-        $profiles = $this->internalApiClient->findCustomerByEmail($dto->email);
+        $profiles = $this->internalApiClient->findCustomerByEmail($dto->username);
         $profile = (collect($profiles['data'])->where('ID_IDENTITY', ProfileType::PERSONAL)->first());
         $customerId = $profile['CUST_ID_SANF'];
 
