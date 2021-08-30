@@ -36,7 +36,7 @@ class LoginByGoogleService implements ApplicationServiceInterface
     {
         $jwtPayload = $this->jwt::verifyGoogleToken($dto->providerToken);
         $email = $jwtPayload['email'];
-        $name = $jwtPayload['name'];
+        $name = $jwtPayload['name'] ?? null;
         $providerId = $jwtPayload['sub'];
         $isEmailVerified = $jwtPayload['email_verified'] ?? false;
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
