@@ -3,6 +3,7 @@
 
 namespace NbsPhp\Core\Controllers;
 
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use NbsPhp\Core\Dto\AppLoginRequestDto;
@@ -221,7 +222,11 @@ class AuthController extends RestController
             $service->execute($dto);
             $message = __('Email berhasil diaktivasi');
         } catch (\Exception $e) {
+            report($e);
             $message = $e->getMessage();
+            if ($e instanceof ClientException) {
+                $message = __('Terjadi Kesalahan, Harap Hubungi Administrator');
+            }
         }
 
         return view(config('auth.views.verify-email'), ['message' => $message]);
