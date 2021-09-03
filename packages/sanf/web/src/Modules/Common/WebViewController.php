@@ -3,7 +3,7 @@
 
 namespace Sanf\Web\Modules\Common;
 
-
+use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestController;
 
 class WebViewController extends RestController
@@ -21,5 +21,21 @@ class WebViewController extends RestController
     public function privacyPolicy()
     {
         return view('web::web-view.privacy-policy');
+    }
+
+    public function approvalCommodity($status)
+    {
+        switch($status){
+            case 'approve':
+                $message = 'Permintaan telah disetujui';
+                break;
+            case 'reject':
+                $message = 'Permintaan tidak disetujui';
+                break;
+            default:
+                break;
+        }
+
+        return view('core::layouts.message', ['message' => $message]);
     }
 }
