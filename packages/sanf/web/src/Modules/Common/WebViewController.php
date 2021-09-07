@@ -37,4 +37,20 @@ class WebViewController extends RestApiController
 
         return view('core::layouts.message', ['message' => $message]);
     }
+
+    public function approvalProject($status)
+    {
+        switch($status){
+            case 'approve':
+                $message = 'Permintaan telah disetujui';
+                break;
+            case 'reject':
+                $message = 'Permintaan tidak disetujui';
+                break;
+            default:
+                break;
+        }
+
+        return view('core::layouts.message', ['message' => $message]);
+    }
 }

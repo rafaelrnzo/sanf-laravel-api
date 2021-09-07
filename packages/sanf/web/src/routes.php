@@ -22,3 +22,4 @@ Route::get('pages/terms-and-condition', ['as' => 'web-view.terms-and-condition',
 Route::get('pages/privacy-policy', ['as' => 'web-view.privacy-policy', 'uses' => 'Common\WebViewController@privacyPolicy']);
 
 Route::get('pages/approval-commodity/{status}', ['as' => 'web-view.approval-commodity', 'uses' => 'Common\WebViewController@approvalCommodity']);
+Route::get('pages/approval-project/{status}', ['as' => 'web-view.approval-project', 'uses' => 'Common\WebViewController@approvalProject']);
