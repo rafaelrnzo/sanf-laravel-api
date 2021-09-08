@@ -4,12 +4,18 @@ namespace Sanf\Core\Providers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
+use Sanf\Core\Modules\Astra\EloquentProductAstraRepository;
+use Sanf\Core\Modules\Astra\ProductAstraRepositoryInterface;
 use Sanf\Core\Modules\Branch\BranchRepositoryInterface;
 use Sanf\Core\Modules\Branch\EloquentBranchRepository;
 use Sanf\Core\Modules\ContactUs\AskUsRepositoryInterface;
 use Sanf\Core\Modules\ContactUs\AskUsTopicRepositoryInterface;
 use Sanf\Core\Modules\ContactUs\EloquentAskUsRepository;
-use Sanf\Core\Modules\ContactUs\EloquentAskUsTopic;
+use Sanf\Core\Modules\ContactUs\EloquentAskUsTopicRepository;
+use Sanf\Core\Modules\News\EloquentNewsRepository;
+use Sanf\Core\Modules\Promo\EloquentPromoRepository;
+use Sanf\Core\Modules\News\NewsRepositoryInterface;
+use Sanf\Core\Modules\Promo\PromoRepositoryInterface;
 use Sanf\Core\Modules\Product\EloquentProductRepository;
 use Sanf\Core\Modules\Product\ProductRepositoryInterface;
 
@@ -52,10 +58,13 @@ class CoreServiceProvider extends ServiceProvider
     public function registerBindings()
     {
 //        $this->app->bind(FooRepositoryInterface::class, EloquentFooRepository::class);
-        $this->app->bind(AskUsTopicRepositoryInterface::class, EloquentAskUsTopic::class);
+        $this->app->bind(AskUsTopicRepositoryInterface::class, EloquentAskUsTopicRepository::class);
         $this->app->bind(AskUsRepositoryInterface::class, EloquentAskUsRepository::class);
         $this->app->bind(ProductRepositoryInterface::class, EloquentProductRepository::class);
         $this->app->bind(BranchRepositoryInterface::class, EloquentBranchRepository::class);
+        $this->app->bind(NewsRepositoryInterface::class, EloquentNewsRepository::class);
+        $this->app->bind(PromoRepositoryInterface::class, EloquentPromoRepository::class);
+        $this->app->bind(ProductAstraRepositoryInterface::class, EloquentProductAstraRepository::class);
     }
 
     protected function registerViews()

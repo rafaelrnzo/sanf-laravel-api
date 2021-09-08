@@ -51,4 +51,10 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::post('users/profiles/{xid}/staffs/{no}/deactivate', ['as' => 'users.staffs.deactivate', 'uses' => 'Staff\StaffController@postDeactivate']);
 
     Route::get('customer-titles', ['as' => 'customer.titles', 'uses' => 'User\TitleController@getList']);
+
+    Route::get('news', ['as' => 'news.list', 'uses' => 'News\NewsController@getList']);
+
+    Route::get('promo', ['as' => 'promo.list', 'uses' => 'Promo\PromoController@getList']);
+
+    Route::get('astra/products', ['as' => 'astra.product.list', 'uses' => 'Astra\ProductAstraListController@getList']);
 });

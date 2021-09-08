@@ -4,7 +4,7 @@
 namespace Sanf\Core\Modules\ContactUs;
 
 
-class EloquentAskUsTopic implements AskUsTopicRepositoryInterface
+class EloquentAskUsTopicRepository implements AskUsTopicRepositoryInterface
 {
 
     /** @var AskUsTopicModel $model */
