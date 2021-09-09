@@ -6,7 +6,7 @@ namespace Sanf\Api\Modules\User;
 
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
-use NbsPhp\Core\Controllers\RestController;
+use NbsPhp\Core\Controllers\RestApiController;
 use Sanf\Api\Modules\User\Transformers\CustomerProfileSimpleTransformer;
 use Sanf\Api\Modules\User\Transformers\CustomerProfileTransformer;
 use Sanf\Core\Modules\User\GetListCustomerProfileService;
@@ -17,7 +17,7 @@ use Sanf\Core\Modules\User\Services\UpdateCompanyProfileService;
 use Sanf\Core\Modules\User\Services\UpdatePersonalProfileService;
 use Sanf\Core\Modules\User\SwitchActiveCustomerProfileService;
 
-class ProfileController extends RestController
+class ProfileController extends RestApiController
 {
     public function getList(Guard $auth, GetListCustomerProfileService $service)
     {

@@ -4,9 +4,10 @@
 namespace Sanf\Core\Modules\User;
 
 
+use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Integration\InternalApiClient;
 
-class CreateShareholderService
+class CreateShareholderService implements ApplicationServiceInterface
 {
 
     protected InternalApiClient $client;

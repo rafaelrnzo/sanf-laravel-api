@@ -5,10 +5,10 @@ namespace Sanf\Api\Modules\Product;
 
 
 use Illuminate\Http\Request;
-use NbsPhp\Core\Controllers\RestController;
+use NbsPhp\Core\Controllers\RestApiController;
 use Sanf\Core\Modules\Product\ListProductService;
 
-class ListProductController extends RestController
+class ListProductController extends RestApiController
 {
 
     protected $service;

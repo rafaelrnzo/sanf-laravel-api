@@ -5,13 +5,13 @@ namespace Sanf\Api\Modules\Shareholder;
 
 
 use Illuminate\Http\Request;
-use NbsPhp\Core\Controllers\RestController;
+use NbsPhp\Core\Controllers\RestApiController;
 use Sanf\Core\Modules\User\CreateShareholderService;
 use Sanf\Core\Modules\User\DeleteShareholderService;
 use Sanf\Core\Modules\User\GetListShareholderService;
 use Sanf\Core\Modules\User\UpdateShareholderService;
 
-class ShareholderController extends RestController
+class ShareholderController extends RestApiController
 {
     public function postCreate(Request $request, CreateShareholderService $service, string $xid)
     {

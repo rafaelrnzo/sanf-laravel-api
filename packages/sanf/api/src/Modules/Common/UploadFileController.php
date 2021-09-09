@@ -5,10 +5,10 @@ namespace Sanf\Api\Modules\Common;
 
 
 use Illuminate\Http\Request;
-use NbsPhp\Core\Controllers\RestController;
+use NbsPhp\Core\Controllers\RestApiController;
 use Sanf\Core\Modules\Common\UploadFileService;
 
-class UploadFileController extends RestController
+class UploadFileController extends RestApiController
 {
 
     protected $service;

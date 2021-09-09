@@ -4,7 +4,7 @@ namespace NbsPhp\Core\Controllers;
 
 use NbsPhp\Core\Traits\SendsPasswordResetEmails;
 
-class ForgotPasswordController extends RestController
+class ForgotPasswordController extends RestApiController
 {
     /*
     |--------------------------------------------------------------------------

@@ -8,9 +8,8 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use NbsPhp\Core\Services\GetProfileService;
 use NbsPhp\Core\Services\UpdateProfileService;
-use NbsPhp\Core\Transformers\ProfileTransformer;
 
-class UserController extends RestController
+class UserController extends RestApiController
 {
     public function getProfile(Guard $auth, GetProfileService $service)
     {

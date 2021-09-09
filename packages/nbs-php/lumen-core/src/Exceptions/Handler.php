@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Validation\ValidationException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use NbsPhp\Core\Response\ResponseMapperInterface;
@@ -94,9 +93,6 @@ class Handler extends ExceptionHandler
     protected function prepareJsonResponse($request, Exception $e)
     {
         list($mappedException, $httpStatus) = $this->mapper->parseException($e);
-        if ($mappedException['code'] == '500') {
-            $mappedException = $this->convertExceptionToArray($e);
-        }
 
         return new JsonResponse(
             $mappedException,
@@ -104,36 +100,6 @@ class Handler extends ExceptionHandler
             $this->isHttpException($e) ? $e->getHeaders() : [],
             JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
         );
-    }
-
-    /**
-     * Convert the given exception to an array.
-     *
-     * @param \Exception $e
-     * @return array
-     */
-    protected function convertExceptionToArray(Exception $e)
-    {
-        //TODO USER ERROR MAPPER
-        return config('app.debug', false) ? [
-            'success' => false,
-            'code' => '500',
-            'message' => $e->getMessage(),
-            'data' => [
-                '_trace' => [
-                    'exception' => get_class($e),
-                    'stack' => $e->getFile() . ' - ' . $e->getLine(),
-                    'trace' => collect($e->getTrace())->map(function ($trace) {
-                        return Arr::except($trace, ['args']);
-                    })->all()
-                ]
-            ],
-        ] : [
-            'success' => false,
-            'code' => '500',
-            'message' => $this->isHttpException($e) ? $e->getMessage() : 'Internal Server Error',
-            'timestamp' => date('Y-m-d H:i:s'),
-        ];
     }
 
     protected function headers(Request $request)

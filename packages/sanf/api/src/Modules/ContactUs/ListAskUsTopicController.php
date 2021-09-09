@@ -5,10 +5,10 @@ namespace Sanf\Api\Modules\ContactUs;
 
 
 use Illuminate\Http\Request;
-use NbsPhp\Core\Controllers\RestController;
+use NbsPhp\Core\Controllers\RestApiController;
 use Sanf\Core\Modules\ContactUs\ListAskUsTopicService;
 
-class ListAskUsTopicController extends RestController
+class ListAskUsTopicController extends RestApiController
 {
     protected $service;
 

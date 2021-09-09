@@ -4,12 +4,12 @@
 namespace Sanf\Api\Modules\User;
 
 use Illuminate\Http\Request;
-use NbsPhp\Core\Controllers\RestController;
+use NbsPhp\Core\Controllers\RestApiController;
 use Sanf\Api\Modules\User\Dto\GetListTitleDto;
 use Sanf\Api\Modules\User\Transformers\TitleTransformer;
 use Sanf\Core\Modules\User\GetListTitleService;
 
-class TitleController extends RestController
+class TitleController extends RestApiController
 {
 
     public function getList(GetListTitleService $service, Request $request)

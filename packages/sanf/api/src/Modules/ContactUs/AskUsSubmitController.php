@@ -6,12 +6,12 @@ namespace Sanf\Api\Modules\ContactUs;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use NbsPhp\Core\Controllers\RestController;
+use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Response\RestResponseMapper;
 use Sanf\Core\Modules\ContactUs\AskUsSubmitService;
 
 
-class AskUsSubmitController extends RestController
+class AskUsSubmitController extends RestApiController
 {
     protected $service;
 

@@ -4,7 +4,7 @@ namespace NbsPhp\Core\Controllers;
 
 use NbsPhp\Core\Traits\ResetsPasswords;
 
-class ResetPasswordController extends RestController
+class ResetPasswordController extends RestApiController
 {
     /*
     |--------------------------------------------------------------------------

@@ -3,10 +3,9 @@
 
 namespace Sanf\Web\Modules\Common;
 
-use Illuminate\Http\Request;
-use NbsPhp\Core\Controllers\RestController;
+use NbsPhp\Core\Controllers\RestApiController;
 
-class WebViewController extends RestController
+class WebViewController extends RestApiController
 {
     public function aboutUs()
     {

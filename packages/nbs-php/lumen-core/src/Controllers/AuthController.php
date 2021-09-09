@@ -27,7 +27,7 @@ use NbsPhp\Core\Services\SendEmailVerificationService;
 use NbsPhp\Core\Services\UpdateSessionService;
 use NbsPhp\Core\Services\VerifyEmailServiceInterface;
 
-class AuthController extends RestController
+class AuthController extends RestApiController
 {
     protected $middlewareOptions = [
         'except' => [
@@ -200,10 +200,7 @@ class AuthController extends RestController
 
         $user = $service->execute($dto);
 
-        return $this->responseOk(
-            'Success',
-            fractal($user, config('auth.login_transformer'))
-        )->withHeaders([
+        return fractal($user, config('auth.transformers.login'))->respond(200, [
             'X-Access-Token' => $user->accessToken,
             'X-Access-Expired-At' => $user->accessExpiredAt,
             'X-Refresh-Token' => $user->refreshToken,

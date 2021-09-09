@@ -14,7 +14,7 @@ use NbsPhp\Core\Services\LoginByGoogleService;
 use NbsPhp\Core\Services\RegisterByAppleServiceInterface;
 use NbsPhp\Core\Services\RegisterByGoogleServiceInterface;
 
-class OAuthController extends RestController
+class OAuthController extends RestApiController
 {
     protected $middlewareOptions = [
         'except' => [

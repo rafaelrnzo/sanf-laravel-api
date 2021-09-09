@@ -6,6 +6,7 @@ namespace NbsPhp\Core\Response;
 
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Arr;
 use NbsPhp\Core\Exceptions\ApiException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -102,7 +103,7 @@ class RestResponseMapper implements ResponseMapperInterface
         $exceptionCode = $exception->getCode();
         $errorMapping = config("response-codes." . get_class($exception)) ?? config("response-codes." . $exceptionCode);
         $error['code'] = $errorMapping['code'] ?? (string)Response::HTTP_INTERNAL_SERVER_ERROR;
-        $error['message'] = $errorMapping['message'] ?? 'Internal Server Error';
+        $error['message'] = $errorMapping['message'] ?? __('Internal Server Error');
 
         if ($exception instanceof ApiException) {
             if($exception->getData() != null){
@@ -113,10 +114,16 @@ class RestResponseMapper implements ResponseMapperInterface
         }
 
         //prevent debug leak on production env
-        if (app()->environment() !== 'production' && config('app.debug') == 'true') {
-            $error['data']['_trace']['exception'] = get_class($exception);
-            $error['data']['_trace']['stack'] = $exception->getFile() . ' - ' . $exception->getLine();
-            $error['data']['_trace']['message'] = $exception->getMessage() ?: $error['message'];
+        if (app()->environment() !== 'production' && config('app.debug') === true) {
+            $error['data']['_trace'] =
+                [
+                    'message' => $exception->getMessage() ?: $error['message'],
+                    'exception' => get_class($exception),
+                    'stack' => $exception->getFile() . ' - ' . $exception->getLine(),
+                    'trace' => collect($exception->getTrace())->map(function ($trace) {
+                        return Arr::except($trace, ['args']);
+                    })->all()
+                ];
 
             //handle response for validation exception
             if (optional($exception)->status === Response::HTTP_UNPROCESSABLE_ENTITY) {

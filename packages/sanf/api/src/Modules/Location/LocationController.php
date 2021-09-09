@@ -3,7 +3,7 @@
 
 namespace Sanf\Api\Modules\Location;
 
-use NbsPhp\Core\Controllers\RestController;
+use NbsPhp\Core\Controllers\RestApiController;
 use Sanf\Api\Modules\Location\Dto\GetListCityDto;
 use Sanf\Api\Modules\Location\Dto\GetListDistrictDto;
 use Sanf\Api\Modules\Location\Dto\GetListSubDistrictDto;
@@ -15,9 +15,8 @@ use Sanf\Core\Modules\Location\GetListCityService;
 use Sanf\Core\Modules\Location\GetListDistrictService;
 use Sanf\Core\Modules\Location\GetListProvinceService;
 use Sanf\Core\Modules\Location\GetListSubDistrictService;
-use Sanf\Integration\InternalApiClient;
 
-class LocationController extends RestController
+class LocationController extends RestApiController
 {
 
     public function provinces(GetListProvinceService $service)

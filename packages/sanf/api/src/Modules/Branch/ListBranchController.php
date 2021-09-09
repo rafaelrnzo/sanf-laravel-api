@@ -5,11 +5,11 @@ namespace Sanf\Api\Modules\Branch;
 
 
 use Illuminate\Http\Request;
-use NbsPhp\Core\Controllers\RestController;
+use NbsPhp\Core\Controllers\RestApiController;
 use Sanf\Core\Modules\Branch\ListBranchRequestDto;
 use Sanf\Core\Modules\Branch\ListBranchService;
 
-class ListBranchController extends RestController
+class ListBranchController extends RestApiController
 {
     protected ListBranchService $service;
 
