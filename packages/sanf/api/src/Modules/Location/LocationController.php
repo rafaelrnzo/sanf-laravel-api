@@ -15,6 +15,7 @@ use Sanf\Core\Modules\Location\GetListCityService;
 use Sanf\Core\Modules\Location\GetListDistrictService;
 use Sanf\Core\Modules\Location\GetListProvinceService;
 use Sanf\Core\Modules\Location\GetListSubDistrictService;
+use Spatie\Fractalistic\ArraySerializer;
 
 class LocationController extends RestApiController
 {
@@ -23,7 +24,7 @@ class LocationController extends RestApiController
     {
         $result = $service->execute();
 
-        return fractal($result, ProvinceListTransformer::class);
+        return fractal($result, ProvinceListTransformer::class)->serializeWith(new ArraySerializer());
     }
 
     public function cities(GetListCityService $service,
@@ -34,7 +35,7 @@ class LocationController extends RestApiController
         ]);
         $result = $service->execute($dto);
 
-        return fractal($result, CityListTransformer::class);
+        return fractal($result, CityListTransformer::class)->serializeWith(new ArraySerializer());
     }
 
     public function districts(GetListDistrictService $service,
@@ -47,7 +48,7 @@ class LocationController extends RestApiController
         ]);
         $result = $service->execute($dto);
 
-        return fractal($result, DistrictListTransformer::class);
+        return fractal($result, DistrictListTransformer::class)->serializeWith(new ArraySerializer());
     }
 
     public function subDistricts(GetListSubDistrictService $service,
@@ -62,6 +63,6 @@ class LocationController extends RestApiController
         ]);
         $result = $service->execute($dto);
 
-        return fractal($result, SubDistrictListTransformer::class);
+        return fractal($result, SubDistrictListTransformer::class)->serializeWith(new ArraySerializer());
     }
 }

@@ -6,12 +6,13 @@ namespace Sanf\Api\Modules\Staff;
 
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
+use NbsPhp\Core\Transformers\MockLazyPaginatorAdapter;
 
 class StaffController extends RestApiController
 {
     public function getList(Request $request)
     {
-        $result = json_decode(json_encode([
+        $data = json_decode(json_encode([
             [
                 "no" => "1",
                 "name" => "staff 1",
@@ -27,12 +28,13 @@ class StaffController extends RestApiController
                 "statusName" => "Belum Aktivasi"
             ]
         ]));
-        return fractal($result, new StaffTransformer());
+
+        return fractal($data, new StaffTransformer())->paginateWith(new MockLazyPaginatorAdapter($data));
     }
 
     public function getInvitedList(Request $request)
     {
-        $result = json_decode(json_encode([
+        $data = json_decode(json_encode([
             [
                 "no" => "1",
                 "name" => "staff 1",
@@ -48,7 +50,7 @@ class StaffController extends RestApiController
                 "statusName" => "Belum Aktivasi"
             ]
         ]));
-        return fractal($result, new StaffTransformer());
+        return fractal($data, new StaffTransformer())->paginateWith(new MockLazyPaginatorAdapter($data));
     }
 
     public function postActivate(Request $request)

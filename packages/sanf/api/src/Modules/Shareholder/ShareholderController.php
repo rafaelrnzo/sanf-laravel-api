@@ -10,6 +10,7 @@ use Sanf\Core\Modules\User\CreateShareholderService;
 use Sanf\Core\Modules\User\DeleteShareholderService;
 use Sanf\Core\Modules\User\GetListShareholderService;
 use Sanf\Core\Modules\User\UpdateShareholderService;
+use Spatie\Fractalistic\ArraySerializer;
 
 class ShareholderController extends RestApiController
 {
@@ -44,7 +45,7 @@ class ShareholderController extends RestApiController
         ]);
         $result = $service->execute($dto);
 
-        return fractal($result, ShareholderTransformer::class);
+        return fractal($result, ShareholderTransformer::class)->serializeWith(new ArraySerializer());
     }
 
     public function getDetail(Request $request)

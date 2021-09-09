@@ -6,13 +6,13 @@ return [
      * may be left empty to use Fractal's default one. This can either be a
      * string or a League\Fractal\Serializer\SerializerAbstract subclass.
      */
-    'default_serializer' => \Spatie\Fractalistic\ArraySerializer::class,
+    'default_serializer' => \NbsPhp\Core\Transformers\LazySerializer::class,
 
     /* The default paginator to be used when performing a transformation. It
      * may be left empty to use Fractal's default one. This can either be a
      * string or a League\Fractal\Paginator\PaginatorInterface subclass.
      */
-    'default_paginator' => '',
+    'default_paginator' => \NbsPhp\Core\Transformers\LazyPaginatorAdapter::class,
 
     /*
      * League\Fractal\Serializer\JsonApiSerializer will use this value

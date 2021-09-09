@@ -8,6 +8,7 @@ use NbsPhp\Core\Controllers\RestApiController;
 use Sanf\Api\Modules\User\Dto\GetListTitleDto;
 use Sanf\Api\Modules\User\Transformers\TitleTransformer;
 use Sanf\Core\Modules\User\GetListTitleService;
+use Spatie\Fractalistic\ArraySerializer;
 
 class TitleController extends RestApiController
 {
@@ -20,6 +21,6 @@ class TitleController extends RestApiController
 
         $response = $service->execute($dto);
 
-        return fractal(json_decode(json_encode($response)), TitleTransformer::class);
+        return fractal(json_decode(json_encode($response)), TitleTransformer::class)->serializeWith(new ArraySerializer());
     }
 }

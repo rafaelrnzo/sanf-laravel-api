@@ -7,6 +7,7 @@ namespace Sanf\Api\Modules\Product;
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
 use Sanf\Core\Modules\Product\ListProductService;
+use Spatie\Fractalistic\ArraySerializer;
 
 class ListProductController extends RestApiController
 {
@@ -39,7 +40,7 @@ class ListProductController extends RestApiController
         $result = $this->service->execute($dto);
 
         // sent response;
-        return fractal($result->list, ListProductTransformer::class);
+        return fractal($result->list, ListProductTransformer::class)->serializeWith(new ArraySerializer());
 
     }
 

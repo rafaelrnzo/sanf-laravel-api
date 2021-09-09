@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
 use Sanf\Core\Modules\Branch\ListBranchRequestDto;
 use Sanf\Core\Modules\Branch\ListBranchService;
+use Spatie\Fractalistic\ArraySerializer;
 
 class ListBranchController extends RestApiController
 {
@@ -37,7 +38,7 @@ class ListBranchController extends RestApiController
         $result = $this->service->execute($dto);
 
         // sent response;
-        return fractal($result, new DetailBranchTransformer());
+        return fractal($result, new DetailBranchTransformer())->serializeWith(new ArraySerializer());
     }
 
 
