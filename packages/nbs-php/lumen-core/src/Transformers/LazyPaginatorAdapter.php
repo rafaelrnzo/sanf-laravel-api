@@ -3,42 +3,45 @@
 namespace NbsPhp\Core\Transformers;
 
 
-use League\Fractal\Pagination\IlluminatePaginatorAdapter;
+use League\Fractal\Pagination\PaginatorInterface;
 
-class LazyPaginatorAdapter extends IlluminatePaginatorAdapter implements LazyPaginatorInterface
+class LazyPaginatorAdapter implements PaginatorInterface
 {
+    protected $paginator;
+
+    public function __construct($paginator) //TODO PAGINATOR INTERFACE
+    {
+        $this->paginator = $paginator;
+    }
+
     public function getCurrentPage()
     {
-        // TODO: Implement getCurrentPage() method.
+        return max((int) ceil($this->paginator->skip / $this->paginator->limit), 1);
     }
 
     public function getLastPage()
     {
-        // TODO: Implement getLastPage() method.
+        return max((int) ceil($this->paginator->total / $this->paginator->limit), 1);
     }
 
     public function getTotal()
     {
-        // TODO: Implement getTotal() method.
+        return $this->paginator->total;
     }
 
     public function getCount()
     {
-        // TODO: Implement getCount() method.
+        return $this->paginator->count;
     }
 
     public function getPerPage()
     {
-        // TODO: Implement getPerPage() method.
+        return $this->paginator->limit;
     }
 
     public function getUrl($page)
     {
-        // TODO: Implement getUrl() method.
-    }
-
-    public function getSort()
-    {
-        // TODO: Implement getSort() method.
+        //TODO CORRECT IMPLEMENTATION
+        return url()->current();
     }
 }

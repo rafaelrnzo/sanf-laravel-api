@@ -2,7 +2,9 @@
 
 namespace NbsPhp\Core\Transformers;
 
-class MockLazyPaginatorAdapter implements LazyPaginatorInterface
+use League\Fractal\Pagination\PaginatorInterface;
+
+class MockLazyPaginatorAdapter implements PaginatorInterface
 {
     protected $data;
 
@@ -39,10 +41,5 @@ class MockLazyPaginatorAdapter implements LazyPaginatorInterface
     public function getUrl($page)
     {
         return url()->current();
-    }
-
-    public function getSort()
-    {
-        return 'earliest';
     }
 }
