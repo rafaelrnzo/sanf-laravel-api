@@ -4,6 +4,7 @@
 namespace Sanf\Core\Modules\Staff;
 
 
+use NbsPhp\Core\Enum\UserStatus;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Integration\InternalApiClient;
@@ -35,11 +36,15 @@ class GetListCompanyStaffService extends StaffService implements ApplicationServ
                     ->with('status')
                     ->where('personal_xid', $item['CUST_ID'])
                     ->first();
+                $status = optional($user)->status;
+                if (optional($status)->id == UserStatus::SUSPENDED) {
+                    $status = null;
+                }
                 return (object)[
                     "no" => $item['SR_NO'] ?? '',
                     "name" => ucwords(strtolower($item['CUST_NAME'] ?? '')),
                     "email" => ucwords(strtolower($item['EMAIL'] ?? '')),
-                    "status" => optional($user)->status,
+                    "status" => $status,
                 ];
             });
 

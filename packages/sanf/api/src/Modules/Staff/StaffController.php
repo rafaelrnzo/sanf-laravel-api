@@ -32,6 +32,7 @@ class StaffController extends RestApiController
 
     public function getInvitedList(Guard $auth, Request $request, $xid, GetListInvitedCompanyStaffService $service)
     {
+        //TODO DTO
         $input = $this->validate($request, [
             'skip' => ['nullable', 'integer'],
             'limit' => ['nullable', 'integer'],
@@ -45,13 +46,27 @@ class StaffController extends RestApiController
             ->paginateWith(new LazyPaginatorAdapter($result->paginate));
     }
 
-    public function postActivate(Request $request, ActivateCompanyStaffService $service)
+    public function postActivate(Guard $auth, $xid, $no, ActivateCompanyStaffService $service)
     {
+        //TODO DTO
+        $dto = (object)[
+            'userId' => $auth->id(),
+            'xid' => $xid,
+            'no' => $no
+        ];
+        $service->execute($dto);
         return $this->responseOk();
     }
 
-    public function postDeactivate(Request $request, DeactivateCompanyStaffService $service)
+    public function postDeactivate(Guard $auth, $xid, $no, DeactivateCompanyStaffService $service)
     {
+        //TODO DTO
+        $dto = (object)[
+            'userId' => $auth->id(),
+            'xid' => $xid,
+            'no' => $no
+        ];
+        $service->execute($dto);
         return $this->responseOk();
     }
 }

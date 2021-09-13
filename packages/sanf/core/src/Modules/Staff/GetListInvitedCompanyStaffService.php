@@ -4,6 +4,7 @@
 namespace Sanf\Core\Modules\Staff;
 
 
+use NbsPhp\Core\Enum\UserStatus;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Integration\InternalApiClient;
@@ -42,7 +43,7 @@ class GetListInvitedCompanyStaffService extends StaffService implements Applicat
                     "status" => optional($user)->status,
                 ];
             })->filter(function ($item){
-                return !is_null($item->status);
+                return !is_null($item->status) && $item->status->id != UserStatus::SUSPENDED;
             });
 
         return (object)[

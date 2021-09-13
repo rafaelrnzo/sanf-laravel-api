@@ -13,7 +13,7 @@ class StaffTransformer extends TransformerAbstract
         return [
             "no" => $item->no,
             "name" => $item->name,
-            "email" => $item->email,
+            "email" => empty(trim($item->email)) ? null : $item->email,
             "status_id" => optional(optional($item)->status)->id,
             'status_name' => optional(optional($item)->status)->name,
         ];
