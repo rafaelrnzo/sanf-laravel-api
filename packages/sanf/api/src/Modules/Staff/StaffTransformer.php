@@ -14,8 +14,8 @@ class StaffTransformer extends TransformerAbstract
             "no" => $item->no,
             "name" => $item->name,
             "email" => $item->email,
-            "status_id" => $item->statusId,
-            "status_name" => $item->statusName,
+            "status_id" => optional(optional($item)->status)->id,
+            'status_name' => optional(optional($item)->status)->name,
         ];
     }
 }

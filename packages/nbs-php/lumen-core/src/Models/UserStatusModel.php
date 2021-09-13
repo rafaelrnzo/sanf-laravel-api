@@ -10,7 +10,7 @@ use Carbon\Carbon;
  * @property-read string        $name_alt
  * @property Carbon|string|null $updated_at
  */
-class UserStatusAbstractModel extends AbstractModel
+class UserStatusModel extends AbstractModel
 {
     const STATUS_ACTIVE = 1;
     const STATUS_INACTIVE = 2;

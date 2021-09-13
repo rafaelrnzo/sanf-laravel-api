@@ -16,6 +16,8 @@ Route::group(config('sanf-internal.url'), [InternalApiProcessor::class], functio
     Route::post('customer.shareholder.create', 'customer/pemegangsaham/{id}');
     Route::get('customer.shareholder.list', 'customer/pemegangsaham/{id}');
 
+    Route::get('customer.staff.list', 'Customer/pengurus/{id}');
+
     Route::get('location.provinces', 'Address/provinsi');
     Route::get('location.cities', 'Address/kota/{province_id}');
     Route::get('location.districts', 'Address/kecamatan/{province_id}/{city_id}');

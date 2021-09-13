@@ -4,61 +4,53 @@
 namespace Sanf\Api\Modules\Staff;
 
 
+use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
-use NbsPhp\Core\Transformers\MockLazyPaginatorAdapter;
+use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
+use Sanf\Core\Modules\Staff\ActivateCompanyStaffService;
+use Sanf\Core\Modules\Staff\DeactivateCompanyStaffService;
+use Sanf\Core\Modules\Staff\GetListCompanyStaffService;
+use Sanf\Core\Modules\Staff\GetListInvitedCompanyStaffService;
 
 class StaffController extends RestApiController
 {
-    public function getList(Request $request)
+    public function getList(Guard $auth, Request $request, $xid, GetListCompanyStaffService $service)
     {
-        $data = json_decode(json_encode([
-            [
-                "no" => "1",
-                "name" => "staff 1",
-                "email" => "staff1@sanf.co.id",
-                "statusId" => 10,
-                "statusName" => "Aktif"
-            ],
-            [
-                "no" => "2",
-                "name" => "staff 1",
-                "email" => "staff1@sanf.co.id",
-                "statusId" => 30,
-                "statusName" => "Belum Aktivasi"
-            ]
-        ]));
+        $input = $this->validate($request, [
+            'skip' => ['nullable', 'integer'],
+            'limit' => ['nullable', 'integer'],
+            'sort_by' => ['nullable', 'string'],
+            'keyword' => ['nullable', 'string'],
+        ]);
+        $dto = (object)($input + ['userId' => $auth->id(), 'xid' => $xid]);
+        $result = $service->execute($dto);
 
-        return fractal($data, new StaffTransformer())->paginateWith(new MockLazyPaginatorAdapter($data));
+        return fractal($result->data, new StaffTransformer())
+            ->paginateWith(new LazyPaginatorAdapter($result->paginate));
     }
 
-    public function getInvitedList(Request $request)
+    public function getInvitedList(Guard $auth, Request $request, $xid, GetListInvitedCompanyStaffService $service)
     {
-        $data = json_decode(json_encode([
-            [
-                "no" => "1",
-                "name" => "staff 1",
-                "email" => "staff1@sanf.co.id",
-                "statusId" => 10,
-                "statusName" => "Aktif"
-            ],
-            [
-                "no" => "2",
-                "name" => "staff 1",
-                "email" => "staff1@sanf.co.id",
-                "statusId" => 30,
-                "statusName" => "Belum Aktivasi"
-            ]
-        ]));
-        return fractal($data, new StaffTransformer())->paginateWith(new MockLazyPaginatorAdapter($data));
+        $input = $this->validate($request, [
+            'skip' => ['nullable', 'integer'],
+            'limit' => ['nullable', 'integer'],
+            'sort_by' => ['nullable', 'string'],
+            'keyword' => ['nullable', 'string'],
+        ]);
+        $dto = (object)($input + ['userId' => $auth->id(), 'xid' => $xid]);
+        $result = $service->execute($dto);
+
+        return fractal($result->data, new StaffTransformer())
+            ->paginateWith(new LazyPaginatorAdapter($result->paginate));
     }
 
-    public function postActivate(Request $request)
+    public function postActivate(Request $request, ActivateCompanyStaffService $service)
     {
         return $this->responseOk();
     }
 
-    public function postDeactivate(Request $request)
+    public function postDeactivate(Request $request, DeactivateCompanyStaffService $service)
     {
         return $this->responseOk();
     }

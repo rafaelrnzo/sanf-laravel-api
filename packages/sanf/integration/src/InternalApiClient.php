@@ -211,4 +211,24 @@ class InternalApiClient
         return $response->json();
 
     }
-}
+
+    public function getStaffs($id)
+    {
+        /**
+        {
+        "CUST_ID": "2010000334",
+        "SR_NO": "1",
+        "CUST_TITLE": "MRS",
+        "CUST_NAME": "LUCYNDA TANJUNG",
+        "PERC_SHARE": "0",
+        "JABATAN": "DIREKTUR",
+        "F_PC": "P",
+        "EMAIL": "LUCYNDA_TANJUNG@GMAIL.COM"
+        }
+         */
+        $response = Request::route('customer.staff.list')
+            ->pathParams(['id' => $id])
+            ->send();
+
+        return $response->json();
+    }}
