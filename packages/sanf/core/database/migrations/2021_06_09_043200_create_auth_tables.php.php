@@ -27,7 +27,7 @@ class CreateAuthTables extends Migration
             $table->rememberToken();
             $table->string('full_name')->nullable();
             $table->string('landline_number', 20)->nullable();
-            $table->string('phone_number', 20);
+            $table->string('phone_number', 20)->nullable();
             $table->tinyInteger('status_id');
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('last_login_at')->nullable();

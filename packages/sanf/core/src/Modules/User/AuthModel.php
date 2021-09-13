@@ -4,6 +4,8 @@
 namespace Sanf\Core\Modules\User;
 
 
+use NbsPhp\Core\Models\UserStatusModel;
+
 class AuthModel extends \NbsPhp\Core\Models\AuthModel
 {
     /**
@@ -39,4 +41,9 @@ class AuthModel extends \NbsPhp\Core\Models\AuthModel
         'xid',
         'profile_type',
     ];
+
+    public function status()
+    {
+        return $this->belongsTo(UserStatusModel::class, 'status_id');
+    }
 }

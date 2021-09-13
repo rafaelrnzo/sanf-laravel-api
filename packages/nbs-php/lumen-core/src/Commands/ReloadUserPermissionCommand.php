@@ -4,7 +4,7 @@ namespace NbsPhp\Core\Commands;
 
 use Illuminate\Console\Command;
 use NbsPhp\Core\Models\AuthRbacModel;
-use NbsPhp\Core\Models\UserStatusAbstractModel;
+use NbsPhp\Core\Models\UserStatusModel;
 
 class ReloadUserPermissionCommand extends Command
 {
@@ -39,7 +39,7 @@ class ReloadUserPermissionCommand extends Command
      */
     public function handle()
     {
-        $users = AuthRbacModel::where('status_id', UserStatusAbstractModel::STATUS_ACTIVE)->with('roles')->has('roles')->get();
+        $users = AuthRbacModel::where('status_id', UserStatusModel::STATUS_ACTIVE)->with('roles')->has('roles')->get();
         foreach ($users as $user) {
             $permissons = collect();
             foreach ($user->roles as $role) {
