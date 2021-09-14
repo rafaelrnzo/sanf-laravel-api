@@ -59,4 +59,14 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::get('astra-products', ['as' => 'astra.product.list', 'uses' => 'Astra\ProductAstraListController@getList']);
 
     Route::get('locations', ['as' => 'locations.list', 'uses' => 'Location\LocationController@getList']);
+
+    Route::get('projects', ['as' => 'projects.list', 'uses' => 'Project\ProjectController@getList']);
+    Route::get('projects/{xid}', ['as' => 'projects.detail', 'uses' => 'Project\ProjectController@getDetail']);
+    Route::get('users/projects', ['as' => 'users.projects.list', 'uses' => 'Project\ProjectController@getListByUser']);
+    Route::post('users/projects', ['as' => 'users.projects.list', 'uses' => 'Project\ProjectController@postCreateByUser']);
+    Route::get('users/projects/{xid}', ['as' => 'users.projects.detail', 'uses' => 'Project\ProjectController@getDetailByUser']);
+    Route::put('users/projects/{xid}', ['as' => 'users.projects.update', 'uses' => 'Project\ProjectController@putUpdateByUser']);
+    Route::delete('users/projects/{xid}', ['as' => 'users.projects.delete', 'uses' => 'Project\ProjectController@deleteByUser']);
+    Route::post('users/projects/{xid}/publish', ['as' => 'users.projects.publish', 'uses' => 'Project\ProjectController@postPublishByUser']);
+    Route::post('users/projects/{xid}/unpublish', ['as' => 'users.projects.unpublish', 'uses' => 'Project\ProjectController@postUnpublishByUser']);
 });

@@ -19,7 +19,7 @@ class UpdateProfileService implements ApplicationServiceInterface
         $this->repository = $repository;
     }
 
-    public function execute($dto)
+    public function execute($dto = null)
     {
         $user = $this->repository->findOrFail($dto->userId)
             ->forceFill([

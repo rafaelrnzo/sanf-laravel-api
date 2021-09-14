@@ -25,7 +25,7 @@ class RegisterAsContractOwnerService implements ApplicationServiceInterface
         $this->internalApiClient = $internalApiClient;
     }
 
-    public function execute($dto)
+    public function execute($dto = null)
     {
         $customer = $this->internalApiClient->findCustomerByEmail($dto->email);
         $data = collect($customer['data']);

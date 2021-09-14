@@ -22,7 +22,7 @@ class SendEmailActivationService implements ApplicationServiceInterface
     }
 
 
-    public function execute($dto)
+    public function execute($dto = null)
     {
         /** @var AuthModel $user */
         $user = $this->repository->newQuery()->where('username', $dto->email)->first();

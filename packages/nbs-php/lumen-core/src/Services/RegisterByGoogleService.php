@@ -31,7 +31,7 @@ class RegisterByGoogleService implements RegisterByGoogleServiceInterface
         $this->repository = $repository;
     }
 
-    public function execute($dto)
+    public function execute($dto = null)
     {
         $jwtPayload = $this->jwt::verifyGoogleToken($dto->providerToken);
         $email = $jwtPayload['email'];

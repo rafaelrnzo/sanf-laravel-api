@@ -12,7 +12,7 @@ use NbsPhp\Core\Models\AuthModel;
 
 class ChangePasswordService implements ApplicationServiceInterface
 {
-    public function execute($dto): bool
+    public function execute($dto = null): bool
     {
         $user = AuthModel::find($dto->userId);
         if(!$user){

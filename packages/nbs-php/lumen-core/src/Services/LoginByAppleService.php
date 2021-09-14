@@ -6,7 +6,6 @@ namespace NbsPhp\Core\Services;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use NbsPhp\Core\Dto\SocialLoginRequestDto;
 use NbsPhp\Core\Enum\AuthProvider;
 use NbsPhp\Core\Enum\OAuthProvider;
 use NbsPhp\Core\Exceptions\OAuthUserNotBoundException;
@@ -28,10 +27,10 @@ class LoginByAppleService implements ApplicationServiceInterface
     }
 
     /**
-     * @param SocialLoginRequestDto $dto
+     * @param null $dto
      * @return mixed
      */
-    public function execute($dto)
+    public function execute($dto = null)
     {
         $jwtPayload = $this->jwt::verifyAppleIdToken($dto->providerToken);
         $email = $jwtPayload['email'];

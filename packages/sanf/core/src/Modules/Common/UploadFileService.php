@@ -12,7 +12,7 @@ use Sanf\Api\Modules\Common\UploadFileResultDto;
 class UploadFileService implements ApplicationServiceInterface
 {
 
-    public function execute($dto)
+    public function execute($dto = null)
     {
         $configs = [
             1 => 'image-path',

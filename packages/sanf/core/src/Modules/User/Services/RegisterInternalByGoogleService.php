@@ -31,7 +31,7 @@ class RegisterInternalByGoogleService implements RegisterByGoogleServiceInterfac
     }
 
 
-    public function execute($dto)
+    public function execute($dto = null)
     {
         $user = $this->service->execute($dto);
         if ($user->status_id !== UserStatus::ACTIVE) {

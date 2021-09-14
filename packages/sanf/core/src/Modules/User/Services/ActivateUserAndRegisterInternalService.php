@@ -37,7 +37,7 @@ class ActivateUserAndRegisterInternalService implements ActivateUserServiceInter
         $this->transactionalSession = $transactionalSession;
     }
 
-    public function execute($dto)
+    public function execute($dto = null)
     {
         $operation = function () use ($dto) {
             $user = $this->service->execute($dto);

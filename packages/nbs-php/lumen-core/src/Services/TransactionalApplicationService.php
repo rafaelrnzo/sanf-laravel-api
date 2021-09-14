@@ -19,10 +19,10 @@ class TransactionalApplicationService implements ApplicationServiceInterface
         $this->service = $service;
     }
 
-    public function execute($request)
+    public function execute($dto = null)
     {
-        $operation = function() use($request) {
-            return $this->service->execute($request);
+        $operation = function() use($dto) {
+            return $this->service->execute($dto);
         };
 
         return $this->session->executeAtomically(

@@ -38,7 +38,7 @@ class VerifyEmailAndRegisterInternalService implements VerifyEmailServiceInterfa
     }
 
 
-    public function execute($dto)
+    public function execute($dto = null)
     {
         $operation = function () use ($dto) {
             $user = $this->service->execute($dto);

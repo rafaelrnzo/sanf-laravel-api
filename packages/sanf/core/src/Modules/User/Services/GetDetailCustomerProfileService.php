@@ -22,7 +22,7 @@ class GetDetailCustomerProfileService implements ApplicationServiceInterface
         $this->internalApiClient = $internalApiClient;
     }
 
-    public function execute($dto)
+    public function execute($dto = null)
     {
         $user = $this->repository->newQuery()->find( $dto->userId);
         if (!$user) {

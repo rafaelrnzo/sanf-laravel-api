@@ -20,7 +20,7 @@ class AppLoginService implements ApplicationServiceInterface
         $this->jwt = $jwt;
     }
 
-    public function execute($dto)
+    public function execute($dto = null)
     {
         if ($dto->clientId !== config('auth.providers.app-auth.client_id')
             || $dto->clientSecret !== config('auth.providers.app-auth.client_secret')) {

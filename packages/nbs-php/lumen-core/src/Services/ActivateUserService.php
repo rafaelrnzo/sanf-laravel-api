@@ -21,7 +21,7 @@ class ActivateUserService implements ActivateUserServiceInterface
         $this->repository = $repository;
     }
 
-    public function execute($dto)
+    public function execute($dto = null)
     {
         /** @var AuthModel $user */
         $user = $this->repository->newQuery()->find($dto->userId);

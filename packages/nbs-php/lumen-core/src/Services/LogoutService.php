@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class LogoutService implements ApplicationServiceInterface
 {
-    public function execute($dto): bool
+    public function execute($dto = null): bool
     {
         try {
             Auth::logout();

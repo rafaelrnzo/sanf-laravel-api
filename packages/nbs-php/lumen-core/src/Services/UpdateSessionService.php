@@ -5,7 +5,6 @@ namespace NbsPhp\Core\Services;
 
 
 use Illuminate\Support\Facades\Auth;
-use NbsPhp\Core\Dto\UpdateSessionRequestDto;
 use NbsPhp\Core\Enum\AuthProvider;
 use NbsPhp\Core\Exceptions\InvalidRefreshTokenException;
 use NbsPhp\Core\JWTHelper;
@@ -29,10 +28,10 @@ class UpdateSessionService implements ApplicationServiceInterface
     }
 
     /**
-     * @param UpdateSessionRequestDto $dto
+     * @param null $dto
      * @return mixed
      */
-    public function execute($dto)
+    public function execute($dto = null)
     {
         $jwtRefreshToken = $this->jwt->setToken($dto->refreshToken);
 

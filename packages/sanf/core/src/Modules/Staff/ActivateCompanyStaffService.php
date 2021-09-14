@@ -26,7 +26,7 @@ class ActivateCompanyStaffService extends StaffService implements ApplicationSer
         $this->internalApiClient = $internalApiClient;
     }
 
-    public function execute($dto)
+    public function execute($dto = null)
     {
         $response = $this->internalApiClient->getStaffs($dto->xid);
         $staff = collect($response['data'])->firstWhere('SR_NO', $dto->no);

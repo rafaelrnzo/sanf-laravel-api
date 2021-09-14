@@ -24,7 +24,7 @@ class GetMyProfileService implements ApplicationServiceInterface
         $this->internalApiClient = $internalApiClient;
     }
 
-    public function execute($dto)
+    public function execute($dto = null)
     {
         $user = AuthModel::findOrFail($dto->userId);
         if (empty($user->xid) || empty($user->personal_xid)) {

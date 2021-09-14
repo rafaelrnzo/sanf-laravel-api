@@ -26,7 +26,7 @@ class GetListCompanyStaffService extends StaffService implements ApplicationServ
         $this->userRepository = $userRepository;
     }
 
-    public function execute($dto)
+    public function execute($dto = null)
     {
         $response = $this->internalApiClient->getStaffs($dto->xid);
 

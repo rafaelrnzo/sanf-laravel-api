@@ -31,7 +31,7 @@ class RegisterByAppleService implements RegisterByAppleServiceInterface
         $this->repository = $repository;
     }
 
-    public function execute($dto)
+    public function execute($dto = null)
     {
         $jwtPayload = $this->jwt::verifyAppleIdToken($dto->providerToken);
         $providerId = $jwtPayload['sub'];

@@ -18,7 +18,7 @@ class CreateShareholderService implements ApplicationServiceInterface
         $this->client = $client;
     }
 
-    public function execute($dto)
+    public function execute($dto = null)
     {
         $response = $this->client->createShareholder($dto);
 

@@ -20,6 +20,10 @@ use Sanf\Core\Modules\Location\EloquentLocationRepository;
 use Sanf\Core\Modules\Location\LocationRepositoryInterface;
 use Sanf\Core\Modules\Product\EloquentProductRepository;
 use Sanf\Core\Modules\Product\ProductRepositoryInterface;
+use Sanf\Core\Modules\Project\Repositories\EloquentProjectRepository;
+use Sanf\Core\Modules\Project\Repositories\ProjectRepositoryInterface;
+use Sanf\Core\Modules\Project\Specifications\EloquentProjectSpecificationFactory;
+use Sanf\Core\Modules\Project\Specifications\ProjectSpecificationFactoryInterface;
 
 class CoreServiceProvider extends ServiceProvider
 {
@@ -59,7 +63,7 @@ class CoreServiceProvider extends ServiceProvider
 
     public function registerBindings()
     {
-//        $this->app->bind(FooRepositoryInterface::class, EloquentFooRepository::class);
+        //REPOSITORY
         $this->app->bind(AskUsTopicRepositoryInterface::class, EloquentAskUsTopicRepository::class);
         $this->app->bind(AskUsRepositoryInterface::class, EloquentAskUsRepository::class);
         $this->app->bind(ProductRepositoryInterface::class, EloquentProductRepository::class);
@@ -68,6 +72,10 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(PromoRepositoryInterface::class, EloquentPromoRepository::class);
         $this->app->bind(ProductAstraRepositoryInterface::class, EloquentProductAstraRepository::class);
         $this->app->bind(LocationRepositoryInterface::class, EloquentLocationRepository::class);
+        $this->app->bind(ProjectRepositoryInterface::class, EloquentProjectRepository::class);
+
+        //SPECIFICATION FACTORY
+        $this->app->bind(ProjectSpecificationFactoryInterface::class, EloquentProjectSpecificationFactory::class);
     }
 
     protected function registerViews()

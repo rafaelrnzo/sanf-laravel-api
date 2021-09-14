@@ -19,7 +19,7 @@ class GetProfileService implements ApplicationServiceInterface
         $this->repository = $repository;
     }
 
-    public function execute($dto)
+    public function execute($dto = null)
     {
         return json_decode(json_encode(AuthModel::findOrFail($dto->userId)));
     }

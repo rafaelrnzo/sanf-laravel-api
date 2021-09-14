@@ -28,7 +28,7 @@ class RegisterByEmailService implements RegisterByEmailServiceInterface
         $this->repository = $repository;
     }
 
-    public function execute($dto)
+    public function execute($dto = null)
     {
         if ($this->repository->newQuery()->select('id')->where('username', $dto->email)->first()) {
             throw new EmailAlreadyExistException();

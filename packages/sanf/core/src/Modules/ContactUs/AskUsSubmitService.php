@@ -17,22 +17,22 @@ class AskUsSubmitService implements ApplicationServiceInterface
         $this->repository = $repository;
     }
 
-    public function execute($dto)
+    public function execute($dto = null)
     {
         $images = [];
 
         // move asset;
         if($dto->images){
-            
+
             foreach ($dto->images as $image) {
                 $newPath = config('image-path.ask-us');
                 $tempPath = config('image-path.temp');
-    
+
                 $exist = Storage::exists("{$newPath}{$image}");
                 if(!$exist){
                     Storage::move("{$tempPath}{$image}", "{$newPath}{$image}");
                 }
-    
+
                 $images[] = [
                     'file_name' => $image,
                     'directory' => $newPath,

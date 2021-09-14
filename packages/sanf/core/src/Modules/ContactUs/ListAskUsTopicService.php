@@ -17,7 +17,7 @@ class ListAskUsTopicService implements ApplicationServiceInterface
         $this->repository = $repository;
     }
 
-    public function execute($dto)
+    public function execute($dto = null)
     {
         return new ListAskUsTopicResultDto([
             'list' => $this->repository->list($dto->limit, $dto->offset)
