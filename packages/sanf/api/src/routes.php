@@ -56,5 +56,5 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
 
     Route::get('promo', ['as' => 'promo.list', 'uses' => 'Promo\PromoController@getList']);
 
-    Route::get('astra/products', ['as' => 'astra.product.list', 'uses' => 'Astra\ProductAstraListController@getList']);
+    Route::get('astra-products', ['as' => 'astra.product.list', 'uses' => 'Astra\ProductAstraListController@getList']);
 });

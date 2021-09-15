@@ -13,9 +13,11 @@ use Sanf\Core\Modules\ContactUs\AskUsTopicRepositoryInterface;
 use Sanf\Core\Modules\ContactUs\EloquentAskUsRepository;
 use Sanf\Core\Modules\ContactUs\EloquentAskUsTopicRepository;
 use Sanf\Core\Modules\News\EloquentNewsRepository;
-use Sanf\Core\Modules\Promo\EloquentPromoRepository;
 use Sanf\Core\Modules\News\NewsRepositoryInterface;
+use Sanf\Core\Modules\Promo\EloquentPromoRepository;
 use Sanf\Core\Modules\Promo\PromoRepositoryInterface;
+use Sanf\Core\Modules\Location\EloquentLocationRepository;
+use Sanf\Core\Modules\Location\LocationRepositoryInterface;
 use Sanf\Core\Modules\Product\EloquentProductRepository;
 use Sanf\Core\Modules\Product\ProductRepositoryInterface;
 
@@ -65,6 +67,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(NewsRepositoryInterface::class, EloquentNewsRepository::class);
         $this->app->bind(PromoRepositoryInterface::class, EloquentPromoRepository::class);
         $this->app->bind(ProductAstraRepositoryInterface::class, EloquentProductAstraRepository::class);
+        $this->app->bind(LocationRepositoryInterface::class, EloquentLocationRepository::class);
     }
 
     protected function registerViews()
