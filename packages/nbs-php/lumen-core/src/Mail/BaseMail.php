@@ -78,6 +78,13 @@ class BaseMail extends Mailable
     public $actionHelp;
 
     /**
+     * The action Help.
+     *
+     * @var array
+     */
+    public $approval;
+
+    /**
      * Add a line of text to the notification.
      *
      * @param mixed $line
@@ -211,6 +218,22 @@ class BaseMail extends Mailable
     }
 
     /**
+     * Configure the "call to action" button.
+     *
+     * @param string $text
+     * @param string $url
+     * @param array $help
+     *
+     * @return $this
+     */
+    public function actionApproval($approval = [])
+    {
+        $this->approval = $approval;
+
+        return $this;
+    }
+
+    /**
      * Configure the call to line with url.
      *
      * @param string $text
@@ -248,6 +271,7 @@ class BaseMail extends Mailable
             'actionUrl' => $this->actionUrl,
             'actionHelp' => $this->actionHelp,
             'inTextActionUrl' => $this->inTextActionUrl,
+            'approval' => $this->approval,
             'displayableActionUrl' => str_replace(['mailto:', 'tel:'], '', $this->actionUrl),
         ];
     }

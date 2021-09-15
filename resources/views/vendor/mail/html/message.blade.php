@@ -51,6 +51,15 @@
                 @endisset
                 {{--END ACTION--}}
 
+                {{--START APPROVAL--}}
+                @isset($approval)
+                    @if(count($approval) !== null)
+                        @component('mail::button-approval', ['approvalContent' => $approval])
+                        @endcomponent
+                    @endif
+                @endisset
+                {{--END APPROVAL--}}
+
                 {{--START OUTRO MESSAGE--}}
                 @isset($outroLines)
                     @component('mail::words-v2', ['textWithUrl' => $outroLines, 'reportLink' => $inTextActionUrl])
