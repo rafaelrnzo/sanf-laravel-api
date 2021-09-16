@@ -1,6 +1,6 @@
 <?php
 
-namespace Sanf\Core\Modules\Location\Internal;
+namespace Sanf\Core\Modules\Location;
 
 
 class GetListLocationService

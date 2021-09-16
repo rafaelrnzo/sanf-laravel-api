@@ -3,66 +3,46 @@
 
 namespace Sanf\Api\Modules\Location;
 
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use NbsPhp\Core\Controllers\RestApiController;
-use Sanf\Api\Modules\Location\Dto\GetListCityDto;
-use Sanf\Api\Modules\Location\Dto\GetListDistrictDto;
-use Sanf\Api\Modules\Location\Dto\GetListSubDistrictDto;
-use Sanf\Api\Modules\Location\Transformers\CityListTransformer;
-use Sanf\Api\Modules\Location\Transformers\DistrictListTransformer;
-use Sanf\Api\Modules\Location\Transformers\ProvinceListTransformer;
-use Sanf\Api\Modules\Location\Transformers\SubDistrictListTransformer;
-use Sanf\Core\Modules\Location\GetListCityService;
-use Sanf\Core\Modules\Location\GetListDistrictService;
-use Sanf\Core\Modules\Location\GetListProvinceService;
-use Sanf\Core\Modules\Location\GetListSubDistrictService;
-use Spatie\Fractalistic\ArraySerializer;
+use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
+use Sanf\Api\Modules\Location\Transformers\LocationListTransformer;
+use Sanf\Core\Modules\Location\GetListLocationDto;
+use Sanf\Core\Modules\Location\GetListLocationService;
+use Sanf\Core\Modules\Location\LocationEnum;
 
 class LocationController extends RestApiController
 {
 
-    public function provinces(GetListProvinceService $service)
+    public function getList(Request $request, GetListLocationService $service)
     {
-        $result = $service->execute();
-
-        return fractal($result, ProvinceListTransformer::class)->serializeWith(new ArraySerializer());
-    }
-
-    public function cities(GetListCityService $service,
-                           $province_id)
-    {
-        $dto = new GetListCityDto([
-           'province_id' => $province_id,
+        $this->validate($request, [
+            'level' => ['required', 'integer', Rule::in([
+                LocationEnum::PROVINCE_LV,
+                LocationEnum::CITY_LV,
+                LocationEnum::DISTRICT_LV,
+                LocationEnum::SUBDISTRICT_LV,
+            ])],
+            'xid' => 'nullable|string',
+            'keyword' => 'nullable|string',
+            'skip' => 'nullable|integer',
+            'limit' => 'nullable|integer',
+            'sort_by' => ['nullable', Rule::in(['earliest', 'latest', 'name_desc', 'name_asc'])],
         ]);
+
+        $dto = new GetListLocationDto([
+            'level' => $request->input('level'),
+            'xid' => $request->input('xid'),
+            'keyword' => $request->input('keyword'),
+            'skip' => $request->input('skip'),
+            'limit' => $request->input('limit'),
+            'sort_by' => $request->input('sort_by') ?? 'earliest',
+        ]);
+
         $result = $service->execute($dto);
 
-        return fractal($result, CityListTransformer::class)->serializeWith(new ArraySerializer());
-    }
-
-    public function districts(GetListDistrictService $service,
-                              $province_id,
-                              $city_id)
-    {
-        $dto = new GetListDistrictDto([
-            'province_id' => $province_id,
-            'city_id' => $city_id,
-        ]);
-        $result = $service->execute($dto);
-
-        return fractal($result, DistrictListTransformer::class)->serializeWith(new ArraySerializer());
-    }
-
-    public function subDistricts(GetListSubDistrictService $service,
-                                 $province_id,
-                                 $city_id,
-                                 $district_name)
-    {
-        $dto = new GetListSubDistrictDto([
-            'province_id' => $province_id,
-            'city_id' => $city_id,
-            'district_name' => $district_name,
-        ]);
-        $result = $service->execute($dto);
-
-        return fractal($result, SubDistrictListTransformer::class)->serializeWith(new ArraySerializer());
+        return fractal($result->data, LocationListTransformer::class)
+            ->paginateWith(new LazyPaginatorAdapter($result->paginate));
     }
 }

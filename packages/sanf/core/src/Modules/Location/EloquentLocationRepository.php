@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Sanf\Core\Modules\Location\Internal;
+namespace Sanf\Core\Modules\Location;
 
 
 class EloquentLocationRepository implements LocationRepositoryInterface
@@ -26,7 +26,7 @@ class EloquentLocationRepository implements LocationRepositoryInterface
                 $orderBy = 'm_location.name';
                 $orderDir = 'DESC';
                 break;
-            case 'oldest':
+            case 'earliest':
                 $orderBy = 'm_location.id';
                 $orderDir = 'ASC';
                 break;
@@ -36,15 +36,12 @@ class EloquentLocationRepository implements LocationRepositoryInterface
                 $orderDir = 'DESC';
         }
         $query = $this->model->newQuery()
-            ->where('m_location.administrative_area_id', '=', $dto->adm_area_id)
+            ->where('m_location.level', '=', $dto->level)
             ->when($dto->keyword, function ($query) use ($dto) {
                 return $query->where('m_location.name', 'ilike', "%{$dto->keyword}%");
             })
-            ->when($dto->parent_xid, function ($query) use ($dto) {
-                return $query->where('m_location.location_code', 'like', "{$dto->parent_xid}-%");
-            })
             ->when($dto->xid, function ($query) use ($dto) {
-                return $query->where('m_location.location_code', '=', $dto->xid);
+                return $query->where('m_location.location_code', 'ilike', "{$dto->xid}%");
             });
 
         $total = $query->count();
