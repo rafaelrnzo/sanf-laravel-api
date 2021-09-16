@@ -5,7 +5,7 @@ namespace Sanf\Api\Modules\Project\Transformers;
 
 
 use League\Fractal\TransformerAbstract;
-use Sanf\Api\Modules\Asset\AssetSimpleTransformer;
+use Sanf\Api\Modules\Asset\AssetFileSimpleTransformer;
 
 class MyProjectTransformer extends TransformerAbstract
 {
@@ -16,7 +16,7 @@ class MyProjectTransformer extends TransformerAbstract
             "title" => $item->title,
             "submission_limit_at" => (int)$item->submission_limit_at,
             "description" => $item->description,
-            "image_file" => fractal($item->image_file, new AssetSimpleTransformer()),
+            "image_file" => fractal($item->image_file, new AssetFileSimpleTransformer()),
             "location_metadata" => fractal($item->location_metadata, new ProjectLocationTransformer()),
             "phone_number" => $item->phone_number,
             "whatsapp_number" => $item->whatsapp_number,

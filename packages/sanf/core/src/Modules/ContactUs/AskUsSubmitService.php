@@ -24,6 +24,7 @@ class AskUsSubmitService implements ApplicationServiceInterface
         // move asset;
         if($dto->images){
 
+            //TODO REFACTOR
             foreach ($dto->images as $image) {
                 $newPath = config('image-path.ask-us');
                 $tempPath = config('image-path.temp');

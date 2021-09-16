@@ -1,13 +1,15 @@
 <?php
 
 
-namespace Sanf\Api\Modules\Common;
+namespace Sanf\Core\Modules\Asset;
 
 
 use Spatie\DataTransferObject\DataTransferObject;
 
-class UploadFileResultDto extends DataTransferObject
+class AssetUploadResultDto extends DataTransferObject
 {
+    public string $path;
+
     public string $origin_name;
 
     public string $file_name;

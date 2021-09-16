@@ -1,15 +1,14 @@
 <?php
 
 
-namespace Sanf\Core\Modules\Common;
+namespace Sanf\Core\Modules\Asset;
 
 
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\FileNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Api\Modules\Common\UploadFileResultDto;
 
-class UploadFileService implements ApplicationServiceInterface
+class UploadAssetService implements ApplicationServiceInterface
 {
 
     public function execute($dto = null)
@@ -30,8 +29,9 @@ class UploadFileService implements ApplicationServiceInterface
         $url = file_get_url($filename, $path);
 
         // return result;
-        return new UploadFileResultDto([
+        return new AssetUploadResultDto([
             'origin_name' => $dto->file->getClientOriginalName(),
+            'path' => "/{$path}/{$filename}",
             'file_name' => $filename,
             'url' => $url
         ]);

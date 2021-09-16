@@ -52,14 +52,19 @@ if (!function_exists('file_get_url')) {
      * @param bool $expiry
      * @return string
      */
-    function file_get_url(string $fileId, $path = null, $expiry = true)
+    function file_get_url(?string $fileId, $path = null, $expiry = true)
     {
         if (is_null($fileId)) {
             return '';
         }
 
         if ($expiry) {
-            return Storage::temporaryUrl($path . $fileId, Carbon::now()->addDay());
+            try{
+                return Storage::temporaryUrl($path . $fileId, Carbon::now()->addDay());
+            }catch (RuntimeException $exception){
+                return Storage::url($path . $fileId);
+                //TODO BETTER HANDLING unsupported adapter method temporaryUrl
+            }
         }
 
         return Storage::url($path . $fileId);

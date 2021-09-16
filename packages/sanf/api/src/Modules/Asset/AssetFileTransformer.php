@@ -12,7 +12,7 @@ class AssetFileTransformer extends TransformerAbstract
     {
         return [
             'url' => $item->url,
-            'origin_name' => $item->origin_name,
+            'origin_name' => $item->origin_name ?? $item->file_name,
             'file_name' => $item->file_name,
             'file_size' => $item->file_size,
             'file_type' => $item->file_type,

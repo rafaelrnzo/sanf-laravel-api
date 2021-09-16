@@ -12,7 +12,7 @@ class CreateProjectDto extends CamelCaseDataTransferObject
     public string $title;
     public string $description;
     public int $submissionLimitAt;
-    public ?array $imageFile;
+    public ?string $imageFile;
     public string $locationId;
     public ?array $locationMetadata;
     public string $phoneNumber;

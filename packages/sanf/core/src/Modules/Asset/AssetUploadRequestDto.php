@@ -1,13 +1,13 @@
 <?php
 
 
-namespace Sanf\Api\Modules\Common;
+namespace Sanf\Core\Modules\Asset;
 
 
 use Spatie\DataTransferObject\DataTransferObject;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class UploadFileRequestDto extends DataTransferObject
+class AssetUploadRequestDto extends DataTransferObject
 {
     public UploadedFile $file;
 

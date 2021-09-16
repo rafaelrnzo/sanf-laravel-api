@@ -1,41 +1,32 @@
 <?php
 
 
-namespace Sanf\Api\Modules\Common;
+namespace Sanf\Api\Modules\Asset;
 
 
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
-use Sanf\Core\Modules\Common\UploadFileService;
+use Sanf\Core\Modules\Asset\AssetUploadRequestDto;
+use Sanf\Core\Modules\Asset\UploadAssetService;
 
-class UploadFileController extends RestApiController
+class AssetFileController extends RestApiController
 {
-
-    protected $service;
-
-    public function __construct(UploadFileService $service)
-    {
-        parent::__construct();
-
-        $this->service = $service;
-    }
-
-    public function process(Request $request)
+    public function upload(Request $request, UploadAssetService $service)
     {
         // validate request;
         $inputs = $this->validating($request);
 
         // set upload file dto;
-        $dto = new UploadFileRequestDto([
+        $dto = new AssetUploadRequestDto([
             'file' => $inputs['file'],
             'type' => (int)$inputs['asset_type']
         ]);
 
         // run service;
-        $result = $this->service->execute($dto);
+        $result = $service->execute($dto);
 
         // sent response;
-        return fractal($result, UploadFileTransformer::class);
+        return fractal($result, AssetFileSimpleTransformer::class);
     }
 
     private function validating(Request $request)
