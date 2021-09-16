@@ -17,8 +17,8 @@ class CreateNewsTable extends Migration
             $table->bigIncrements('id');
             $table->string('xid', 32)->index();
             $table->string('title', 128);
-            $table->string('image_url')->nullable();
-            $table->string('link_url')->nullable();
+            $table->text('image_url')->nullable();
+            $table->text('link_url')->nullable();
             $table->timestamps();
             $table->string('created_by')->nullable();
             $table->string('updated_by')->nullable();

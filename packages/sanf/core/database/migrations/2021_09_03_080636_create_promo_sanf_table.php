@@ -16,8 +16,8 @@ class CreatePromoSanfTable extends Migration
         Schema::create('promo_sanf', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('xid', 32)->index();
-            $table->string('image_url')->nullable();
-            $table->string('link_url')->nullable();
+            $table->text('image_url')->nullable();
+            $table->text('link_url')->nullable();
             $table->timestamps();
             $table->string('created_by')->nullable();
             $table->string('updated_by')->nullable();
