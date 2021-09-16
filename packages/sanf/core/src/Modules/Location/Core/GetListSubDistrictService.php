@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Sanf\Core\Modules\Location;
+namespace Sanf\Core\Modules\Location\Core;
 
 
 use Sanf\Integration\InternalApiClient;

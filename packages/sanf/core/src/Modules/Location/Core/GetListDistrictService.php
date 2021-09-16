@@ -1,12 +1,12 @@
 <?php
 
 
-namespace Sanf\Core\Modules\Location;
+namespace Sanf\Core\Modules\Location\Core;
 
 
 use Sanf\Integration\InternalApiClient;
 
-class GetListProvinceService
+class GetListDistrictService
 {
 
     protected InternalApiClient $client;
@@ -16,16 +16,17 @@ class GetListProvinceService
         $this->client = $client;
     }
 
-    public function execute()
+    public function execute($dto)
     {
-        $response = $this->client->getProvinces();
+        $response = $this->client->getDistrict($dto->province_id, $dto->city_id);
 
         return collect($response['data'])
             ->map(function ($item) {
                 return (object)[
                     "country_id" => $item['COUNTRY_ID'] ?? '',
-                    "province_id" => $item['PROVINSI'] ?? '',
-                    "name" => ucwords(strtolower($item['DESCRIPTION'] ?? '')),
+                    "province_id" => $item['PROVINSI_ID'] ?? '',
+                    "city_id" => $item['CITY_ID'] ?? '',
+                    "district_name" => ucwords(strtolower($item['DESCRIPTION'] ?? '')),
                 ];
             });
     }

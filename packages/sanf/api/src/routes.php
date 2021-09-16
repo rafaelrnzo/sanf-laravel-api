@@ -26,10 +26,10 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
 
     Route::get('customer-positions', ['as' => 'customer.positions', 'uses' => 'User\PositionController@getList']);
 
-    Route::get('provinces', ['as' => 'provinces.list', 'uses' => 'Location\LocationController@provinces']);
-    Route::get('provinces/{province_id}/cities', ['as' => 'cities.list', 'uses' => 'Location\LocationController@cities']);
-    Route::get('provinces/{province_id}/cities/{city_id}/districts', ['as' => 'districts.list', 'uses' => 'Location\LocationController@districts']);
-    Route::get('provinces/{province_id}/cities/{city_id}/districts/{district_name}', ['as' => 'sub-districts.list', 'uses' => 'Location\LocationController@subDistricts']);
+    Route::get('provinces', ['as' => 'provinces.list', 'uses' => 'Location\CoreLocationController@provinces']);
+    Route::get('provinces/{province_id}/cities', ['as' => 'cities.list', 'uses' => 'Location\CoreLocationController@cities']);
+    Route::get('provinces/{province_id}/cities/{city_id}/districts', ['as' => 'districts.list', 'uses' => 'Location\CoreLocationController@districts']);
+    Route::get('provinces/{province_id}/cities/{city_id}/districts/{district_name}', ['as' => 'sub-districts.list', 'uses' => 'Location\CoreLocationController@subDistricts']);
 
     Route::post('users/register-with-contract', ['as' => 'users.register-with-contract', 'uses' => 'User\ProfileController@postRegisterWithContract']);
     Route::get('users/profiles', ['as' => 'users.profiles.list', 'uses' => 'User\ProfileController@getList']);
