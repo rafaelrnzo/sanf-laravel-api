@@ -69,4 +69,14 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::delete('users/projects/{xid}', ['as' => 'users.projects.delete', 'uses' => 'Project\ProjectController@deleteByUser']);
     Route::post('users/projects/{xid}/publish', ['as' => 'users.projects.publish', 'uses' => 'Project\ProjectController@postPublishByUser']);
     Route::post('users/projects/{xid}/unpublish', ['as' => 'users.projects.unpublish', 'uses' => 'Project\ProjectController@postUnpublishByUser']);
+
+    Route::get('commodities', ['as' => 'commodities.list', 'uses' => 'Commodity\CommodityController@getList']);
+    Route::get('commodities/{xid}', ['as' => 'commodities.detail', 'uses' => 'Commodity\CommodityController@getDetail']);
+    Route::get('users/commodities', ['as' => 'users.commodities.list', 'uses' => 'Commodity\CommodityController@getListByUser']);
+    Route::post('users/commodities', ['as' => 'users.commodities.list', 'uses' => 'Commodity\CommodityController@postCreateByUser']);
+    Route::get('users/commodities/{xid}', ['as' => 'users.commodities.detail', 'uses' => 'Commodity\CommodityController@getDetailByUser']);
+    Route::put('users/commodities/{xid}', ['as' => 'users.commodities.update', 'uses' => 'Commodity\CommodityController@putUpdateByUser']);
+    Route::delete('users/commodities/{xid}', ['as' => 'users.commodities.delete', 'uses' => 'Commodity\CommodityController@deleteByUser']);
+    Route::post('users/commodities/{xid}/publish', ['as' => 'users.commodities.publish', 'uses' => 'Commodity\CommodityController@postPublishByUser']);
+    Route::post('users/commodities/{xid}/unpublish', ['as' => 'users.commodities.unpublish', 'uses' => 'Commodity\CommodityController@postUnpublishByUser']);
 });

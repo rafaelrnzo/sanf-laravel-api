@@ -8,22 +8,26 @@ use Sanf\Core\Modules\Astra\EloquentProductAstraRepository;
 use Sanf\Core\Modules\Astra\ProductAstraRepositoryInterface;
 use Sanf\Core\Modules\Branch\BranchRepositoryInterface;
 use Sanf\Core\Modules\Branch\EloquentBranchRepository;
+use Sanf\Core\Modules\Commodity\Repositories\CommodityRepositoryInterface;
+use Sanf\Core\Modules\Commodity\Repositories\EloquentCommodityRepository;
+use Sanf\Core\Modules\Commodity\Specifications\CommoditySpecificationFactoryInterface;
+use Sanf\Core\Modules\Commodity\Specifications\EloquentCommoditySpecificationFactory;
 use Sanf\Core\Modules\ContactUs\AskUsRepositoryInterface;
 use Sanf\Core\Modules\ContactUs\AskUsTopicRepositoryInterface;
 use Sanf\Core\Modules\ContactUs\EloquentAskUsRepository;
 use Sanf\Core\Modules\ContactUs\EloquentAskUsTopicRepository;
-use Sanf\Core\Modules\News\EloquentNewsRepository;
-use Sanf\Core\Modules\News\NewsRepositoryInterface;
-use Sanf\Core\Modules\Promo\EloquentPromoRepository;
-use Sanf\Core\Modules\Promo\PromoRepositoryInterface;
 use Sanf\Core\Modules\Location\EloquentLocationRepository;
 use Sanf\Core\Modules\Location\LocationRepositoryInterface;
+use Sanf\Core\Modules\News\EloquentNewsRepository;
+use Sanf\Core\Modules\News\NewsRepositoryInterface;
 use Sanf\Core\Modules\Product\EloquentProductRepository;
 use Sanf\Core\Modules\Product\ProductRepositoryInterface;
 use Sanf\Core\Modules\Project\Repositories\EloquentProjectRepository;
 use Sanf\Core\Modules\Project\Repositories\ProjectRepositoryInterface;
 use Sanf\Core\Modules\Project\Specifications\EloquentProjectSpecificationFactory;
 use Sanf\Core\Modules\Project\Specifications\ProjectSpecificationFactoryInterface;
+use Sanf\Core\Modules\Promo\EloquentPromoRepository;
+use Sanf\Core\Modules\Promo\PromoRepositoryInterface;
 
 class CoreServiceProvider extends ServiceProvider
 {
@@ -73,9 +77,11 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(ProductAstraRepositoryInterface::class, EloquentProductAstraRepository::class);
         $this->app->bind(LocationRepositoryInterface::class, EloquentLocationRepository::class);
         $this->app->bind(ProjectRepositoryInterface::class, EloquentProjectRepository::class);
+        $this->app->bind(CommodityRepositoryInterface::class, EloquentCommodityRepository::class);
 
         //SPECIFICATION FACTORY
         $this->app->bind(ProjectSpecificationFactoryInterface::class, EloquentProjectSpecificationFactory::class);
+        $this->app->bind(CommoditySpecificationFactoryInterface::class, EloquentCommoditySpecificationFactory::class);
     }
 
     protected function registerViews()
