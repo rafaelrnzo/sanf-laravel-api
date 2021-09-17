@@ -16,4 +16,14 @@ class EloquentProjectSpecificationFactory implements ProjectSpecificationFactory
     {
         return new EloquentPaginateUserProjectSpecification($userId, $skip, $limit, $sortBy, $keyword);
     }
+
+    public function getAllOwned($userId)
+    {
+        return new EloquentAllOwnedProjectSpecification($userId);
+    }
+
+    public function getAllOwnedByStatus($userId, array $statuses)
+    {
+        return new EloquentAllOwnedProjectByStatusSpecification($userId, $statuses);
+    }
 }

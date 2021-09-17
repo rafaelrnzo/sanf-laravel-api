@@ -60,6 +60,8 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
 
     Route::get('locations', ['as' => 'locations.list', 'uses' => 'Location\LocationController@getList']);
 
+    Route::get('users/metadata-info', ['as' => 'users.metadata-info', 'uses' => 'User\UserController@getProjectMetadataInfo']);
+
     Route::get('projects', ['as' => 'projects.list', 'uses' => 'Project\ProjectController@getList']);
     Route::get('projects/{xid}', ['as' => 'projects.detail', 'uses' => 'Project\ProjectController@getDetail']);
     Route::get('users/projects', ['as' => 'users.projects.list', 'uses' => 'Project\ProjectController@getListByUser']);

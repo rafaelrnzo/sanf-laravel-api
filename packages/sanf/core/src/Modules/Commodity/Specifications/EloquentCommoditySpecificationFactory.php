@@ -16,4 +16,16 @@ class EloquentCommoditySpecificationFactory implements CommoditySpecificationFac
     {
         return new EloquentPaginateUserCommoditySpecification($userId, $skip, $limit, $sortBy, $keyword);
     }
+
+    public function getAllOwned($userId)
+    {
+        return new EloquentAllOwnedCommoditySpecification($userId);
+    }
+
+    public function getAllOwnedByStatus($userId, array $statuses)
+    {
+        return new EloquentAllOwnedCommodityByStatusSpecification($userId, $statuses);
+    }
+
+
 }
