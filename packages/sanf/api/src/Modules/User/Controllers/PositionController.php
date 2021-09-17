@@ -1,6 +1,6 @@
 <?php
 
-namespace Sanf\Api\Modules\User;
+namespace Sanf\Api\Modules\User\Controllers;
 
 use NbsPhp\Core\Controllers\RestApiController;
 use Sanf\Api\Modules\User\Transformers\PositionTransformer;

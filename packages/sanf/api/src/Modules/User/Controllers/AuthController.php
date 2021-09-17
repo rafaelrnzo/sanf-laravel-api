@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Sanf\Api\Modules\User;
+namespace Sanf\Api\Modules\User\Controllers;
 
 
 use Illuminate\Http\Request;
