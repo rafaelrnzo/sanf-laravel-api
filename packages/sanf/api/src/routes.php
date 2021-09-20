@@ -24,20 +24,20 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
 
     Route::get('branch-offices', ['as' => 'branch.list', 'uses' => 'Branch\ListBranchController@process']);
 
-    Route::get('customer-positions', ['as' => 'customer.positions', 'uses' => 'User\ControllersPositionController@getList']);
+    Route::get('customer-positions', ['as' => 'customer.positions', 'uses' => 'User\Controllers\PositionController@getList']);
 
     Route::get('provinces', ['as' => 'provinces.list', 'uses' => 'Location\CoreLocationController@provinces']);
     Route::get('provinces/{province_id}/cities', ['as' => 'cities.list', 'uses' => 'Location\CoreLocationController@cities']);
     Route::get('provinces/{province_id}/cities/{city_id}/districts', ['as' => 'districts.list', 'uses' => 'Location\CoreLocationController@districts']);
     Route::get('provinces/{province_id}/cities/{city_id}/districts/{district_name}', ['as' => 'sub-districts.list', 'uses' => 'Location\CoreLocationController@subDistricts']);
 
-    Route::post('users/register-with-contract', ['as' => 'users.register-with-contract', 'uses' => 'User\ControllersProfileController@postRegisterWithContract']);
-    Route::get('users/profiles', ['as' => 'users.profiles.list', 'uses' => 'User\ControllersProfileController@getList']);
-    Route::get('users/profiles/{xid}', ['as' => 'users.profiles.detail', 'uses' => 'User\ControllersProfileController@getDetail']);
-    Route::put('users/profiles/{xid}', ['as' => 'users.profiles.update', 'uses' => 'User\ControllersProfileController@putUpdatePersonalProfile']);
-    Route::post('users/profiles/{xid}/company', ['as' => 'users.profiles.company.create', 'uses' => 'User\ControllersProfileController@postCreateCompanyProfile']);
-    Route::put('users/profiles/{xid}/company', ['as' => 'users.profiles.company.update', 'uses' => 'User\ControllersProfileController@putUpdateCompanyProfile']);
-    Route::post('users/profiles/{xid}/switch', ['as' => 'users.profiles.switch', 'uses' => 'User\ControllersProfileController@postSwitch']);
+    Route::post('users/register-with-contract', ['as' => 'users.register-with-contract', 'uses' => 'User\Controllers\ProfileController@postRegisterWithContract']);
+    Route::get('users/profiles', ['as' => 'users.profiles.list', 'uses' => 'User\Controllers\ProfileController@getList']);
+    Route::get('users/profiles/{xid}', ['as' => 'users.profiles.detail', 'uses' => 'User\Controllers\ProfileController@getDetail']);
+    Route::put('users/profiles/{xid}', ['as' => 'users.profiles.update', 'uses' => 'User\Controllers\ProfileController@putUpdatePersonalProfile']);
+    Route::post('users/profiles/{xid}/company', ['as' => 'users.profiles.company.create', 'uses' => 'User\Controllers\ProfileController@postCreateCompanyProfile']);
+    Route::put('users/profiles/{xid}/company', ['as' => 'users.profiles.company.update', 'uses' => 'User\Controllers\ProfileController@putUpdateCompanyProfile']);
+    Route::post('users/profiles/{xid}/switch', ['as' => 'users.profiles.switch', 'uses' => 'User\Controllers\ProfileController@postSwitch']);
 
     Route::post('users/profiles/{xid}/shareholders', ['as' => 'users.shareholders.create', 'uses' => 'Shareholder\ShareholderController@postCreate']);
     Route::get('users/profiles/{xid}/shareholders', ['as' => 'users.shareholders.list', 'uses' => 'Shareholder\ShareholderController@getList']);
@@ -50,7 +50,7 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::post('users/profiles/{xid}/staffs/{no}/activate', ['as' => 'users.staffs.activate', 'uses' => 'Staff\StaffController@postActivate']);
     Route::post('users/profiles/{xid}/staffs/{no}/deactivate', ['as' => 'users.staffs.deactivate', 'uses' => 'Staff\StaffController@postDeactivate']);
 
-    Route::get('customer-titles', ['as' => 'customer.titles', 'uses' => 'User\ControllersTitleController@getList']);
+    Route::get('customer-titles', ['as' => 'customer.titles', 'uses' => 'User\Controllers\TitleController@getList']);
 
     Route::get('news', ['as' => 'news.list', 'uses' => 'News\NewsController@getList']);
 
@@ -60,7 +60,7 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
 
     Route::get('locations', ['as' => 'locations.list', 'uses' => 'Location\LocationController@getList']);
 
-    Route::get('users/metadata-info', ['as' => 'users.metadata-info', 'uses' => 'User\ControllersUserController@getProjectMetadataInfo']);
+    Route::get('users/metadata-info', ['as' => 'users.metadata-info', 'uses' => 'User\Controllers\UserController@getProjectMetadataInfo']);
 
     Route::get('projects', ['as' => 'projects.list', 'uses' => 'Project\ProjectController@getList']);
     Route::get('projects/{xid}', ['as' => 'projects.detail', 'uses' => 'Project\ProjectController@getDetail']);
