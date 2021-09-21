@@ -5,9 +5,10 @@ namespace Sanf\Core\Modules\Project\Services;
 
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
+use Sanf\Core\Modules\Project\Events\ProjectDeletedEvent;
 use Sanf\Core\Modules\Project\GeneralProjectException;
 
-class DeleteUserProjectService extends ProjectService implements ApplicationServiceInterface
+class DeleteUserProjectService extends UserProjectService implements ApplicationServiceInterface
 {
     public function execute($dto = null)
     {
@@ -16,8 +17,10 @@ class DeleteUserProjectService extends ProjectService implements ApplicationServ
         if (is_null($project) || $project->user_id != $user->id) {
             throw new GeneralProjectException('Project Not Found');
         }
-        return $this->projectRepository->removeById($project->id);
+        $result = $this->projectRepository->removeById($project->id);
 
-        //TODO USER LOGGING USING EVENT
+        event(new ProjectDeletedEvent($project));
+
+        return $result;
     }
 }

@@ -8,9 +8,10 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\FileNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
+use Sanf\Core\Modules\Project\Events\ProjectUpdatedEvent;
 use Sanf\Core\Modules\Project\GeneralProjectException;
 
-class UpdateUserProjectService extends ProjectService implements ApplicationServiceInterface
+class UpdateUserProjectService extends UserProjectService implements ApplicationServiceInterface
 {
     public function execute($dto = null)
     {
@@ -47,7 +48,7 @@ class UpdateUserProjectService extends ProjectService implements ApplicationServ
             }
         }
 
-        return $this->projectRepository->update([
+        $updatedProject = $this->projectRepository->update([
             'id' => $project->id,
             'title' => $dto->title,
             'description' => $dto->description,
@@ -61,6 +62,8 @@ class UpdateUserProjectService extends ProjectService implements ApplicationServ
 //            'modified_by' => //TODO USER SNAPSHOT
         ]);
 
-        //TODO USER LOGGING USING EVENT
+        event(new ProjectUpdatedEvent($project, $updatedProject));
+
+        return $updatedProject;
     }
 }

@@ -8,9 +8,10 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\FileNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
+use Sanf\Core\Modules\Project\Events\ProjectCreatedEvent;
 use Sanf\Core\Modules\Project\ProjectStatus;
 
-class CreateUserProjectService extends ProjectService implements ApplicationServiceInterface
+class CreateUserProjectService extends UserProjectService implements ApplicationServiceInterface
 {
     public function execute($dto = null)
     {
@@ -43,7 +44,7 @@ class CreateUserProjectService extends ProjectService implements ApplicationServ
             }
         }
 
-        return $this->projectRepository->add([
+        $project = $this->projectRepository->add([
             'xid' => nano_id(),
             'user_id' => $user->id,
             'title' => $dto->title,
@@ -59,6 +60,8 @@ class CreateUserProjectService extends ProjectService implements ApplicationServ
 //            'modified_by' => //TODO USER SNAPSHOT
         ]);
 
-        //TODO USER LOGGING USING EVENT
+        event(new ProjectCreatedEvent($project));
+
+        return $project;
     }
 }

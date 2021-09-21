@@ -17,7 +17,7 @@ class GetDetailProjectService extends ProjectService implements ApplicationServi
             throw new GeneralProjectException('Project Not Found');
         }
         $project->is_owner = ($project->user_id == $dto->userId);
+
         return $project;
-        //TODO USER LOGGING USING EVENT
     }
 }

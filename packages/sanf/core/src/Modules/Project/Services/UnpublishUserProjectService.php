@@ -5,10 +5,11 @@ namespace Sanf\Core\Modules\Project\Services;
 
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
+use Sanf\Core\Modules\Project\Events\ProjectUnpublishedEvent;
 use Sanf\Core\Modules\Project\GeneralProjectException;
 use Sanf\Core\Modules\Project\ProjectStatus;
 
-class UnpublishUserProjectService extends ProjectService implements ApplicationServiceInterface
+class UnpublishUserProjectService extends UserProjectService implements ApplicationServiceInterface
 {
     public function execute($dto = null)
     {
@@ -17,12 +18,14 @@ class UnpublishUserProjectService extends ProjectService implements ApplicationS
         if (is_null($project) || $project->user_id != $user->id) {
             throw new GeneralProjectException('Project Not Found');
         }
-        return $this->projectRepository->update([
+        $updatedProject = $this->projectRepository->update([
             'id' => $project->id,
             'status_id' => ProjectStatus::UNPUBLISHED,
 //            'modified_by' => //TODO USER SNAPSHOT
         ]);
 
-        //TODO USER LOGGING USING EVENT
+        event(new ProjectUnpublishedEvent($project, $updatedProject));
+
+        return $updatedProject;
     }
 }

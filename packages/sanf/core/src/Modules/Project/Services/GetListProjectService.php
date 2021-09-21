@@ -10,7 +10,7 @@ use Sanf\Core\Modules\Project\Repositories\ProjectRepositoryInterface;
 use Sanf\Core\Modules\Project\Specifications\ProjectSpecificationFactoryInterface;
 use Sanf\Core\Modules\User\AuthModel;
 
-class GetListProjectService extends ProjectService implements ApplicationServiceInterface
+class GetListProjectService extends UserProjectService implements ApplicationServiceInterface
 {
     protected ProjectSpecificationFactoryInterface $specificationFactory;
 

@@ -7,7 +7,7 @@ namespace Sanf\Core\Modules\Project\Services;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Project\GeneralProjectException;
 
-class GetDetailUserProjectService extends ProjectService implements ApplicationServiceInterface
+class GetDetailUserProjectService extends UserProjectService implements ApplicationServiceInterface
 {
     public function execute($dto = null)
     {

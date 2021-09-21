@@ -5,10 +5,11 @@ namespace Sanf\Core\Modules\Project\Services;
 
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
+use Sanf\Core\Modules\Project\Events\ProjectPublishedEvent;
 use Sanf\Core\Modules\Project\GeneralProjectException;
 use Sanf\Core\Modules\Project\ProjectStatus;
 
-class PublishUserProjectService extends ProjectService implements ApplicationServiceInterface
+class PublishUserProjectService extends UserProjectService implements ApplicationServiceInterface
 {
     public function execute($dto = null)
     {
@@ -20,11 +21,14 @@ class PublishUserProjectService extends ProjectService implements ApplicationSer
         if ($project->status_id !== ProjectStatus::UNPUBLISHED) {
             throw new GeneralProjectException('Invalid State');
         }
-        return $this->projectRepository->update([
+        $updatedProject = $this->projectRepository->update([
             'id' => $project->id,
             'status_id' => ProjectStatus::PUBLISHED,
 //            'modified_by' => //TODO USER SNAPSHOT
         ]);
-        //TODO USER LOGGING USING EVENT
+
+        event(new ProjectPublishedEvent($project, $updatedProject));
+
+        return $updatedProject;
     }
 }

@@ -62,7 +62,7 @@ class CoreServiceProvider extends ServiceProvider
 
     public function registerProviders()
     {
-
+        $this->app->register(EventServiceProvider::class);
     }
 
     public function registerBindings()
