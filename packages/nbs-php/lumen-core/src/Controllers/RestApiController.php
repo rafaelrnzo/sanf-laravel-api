@@ -2,10 +2,9 @@
 
 namespace NbsPhp\Core\Controllers;
 
-use Laravel\Lumen\Routing\Controller as BaseController;
 use NbsPhp\Core\Middleware\ResponseMiddleware;
 
-class RestApiController extends BaseController
+class RestApiController extends AbstractController
 {
     protected $middlewareOptions = [];
 
