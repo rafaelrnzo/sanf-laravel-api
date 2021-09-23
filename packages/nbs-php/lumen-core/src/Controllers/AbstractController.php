@@ -19,7 +19,7 @@ abstract class AbstractController extends BaseController
             if(!isset($rules[$key])){
                 return $value;
             }
-            if (!is_string($rules[$key]) || !is_array($rules[$key])) {
+            if (!is_string($rules[$key]) && !is_array($rules[$key])) {
                 return $value;
             }
             $inputRules = is_string($rules[$key]) ? explode('|', $rules[$key]) : $rules[$key];
