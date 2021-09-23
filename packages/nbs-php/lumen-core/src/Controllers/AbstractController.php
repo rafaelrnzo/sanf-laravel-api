@@ -16,6 +16,12 @@ abstract class AbstractController extends BaseController
     protected function castValidatedInput(array $input, array $rules)
     {
         return collect($input)->map(function ($value, $key) use ($rules) {
+            if(!isset($rules[$key])){
+                return $value;
+            }
+            if (!is_string($rules[$key]) || !is_array($rules[$key])) {
+                return $value;
+            }
             $inputRules = is_string($rules[$key]) ? explode('|', $rules[$key]) : $rules[$key];
             if (in_array('integer', $inputRules, true)) {
                 return (int)$value;
