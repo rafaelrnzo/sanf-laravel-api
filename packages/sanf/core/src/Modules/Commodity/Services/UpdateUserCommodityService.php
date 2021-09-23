@@ -7,6 +7,7 @@ namespace Sanf\Core\Modules\Commodity\Services;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\FileNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
+use Sanf\Core\Modules\Commodity\Events\CommodityUpdatedEvent;
 use Sanf\Core\Modules\Commodity\GeneralCommodityException;
 
 class UpdateUserCommodityService extends CommodityService implements ApplicationServiceInterface
@@ -46,7 +47,7 @@ class UpdateUserCommodityService extends CommodityService implements Application
             }
         }
 
-        return $this->commodityRepository->update([
+        $updatedCommodity = $this->commodityRepository->update([
             'id' => $commodity->id,
             'title' => $dto->title,
             'description' => $dto->description,
@@ -59,6 +60,8 @@ class UpdateUserCommodityService extends CommodityService implements Application
 //            'modified_by' => //TODO USER SNAPSHOT
         ]);
 
-        //TODO USER LOGGING USING EVENT
+        event(new CommodityUpdatedEvent($commodity, $updatedCommodity));
+
+        return $updatedCommodity;
     }
 }

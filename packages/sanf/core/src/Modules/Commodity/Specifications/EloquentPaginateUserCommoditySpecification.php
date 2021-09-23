@@ -26,10 +26,13 @@ class EloquentPaginateUserCommoditySpecification
     public function buildQuery(CommodityModel $model)
     {
         switch ($this->sortBy) {
+            case 'earliest':
             case 'oldest':
                 $orderBy = 'commodity.created_at';
                 $orderDirection = 'ASC';
                 break;
+            case 'latest':
+            case 'newest':
             default:
                 $orderBy = 'commodity.created_at';
                 $orderDirection = 'DESC';

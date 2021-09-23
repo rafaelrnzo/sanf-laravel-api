@@ -5,6 +5,7 @@ namespace Sanf\Core\Modules\Commodity\Services;
 
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
+use Sanf\Core\Modules\Commodity\Events\CommodityDeletedEvent;
 use Sanf\Core\Modules\Commodity\GeneralCommodityException;
 
 class DeleteUserCommodityService extends CommodityService implements ApplicationServiceInterface
@@ -16,8 +17,10 @@ class DeleteUserCommodityService extends CommodityService implements Application
         if (is_null($commodity) || $commodity->user_id != $user->id) {
             throw new GeneralCommodityException('Commodity Not Found');
         }
-        return $this->commodityRepository->removeById($commodity->id);
+        $result = $this->commodityRepository->removeById($commodity->id);
 
-        //TODO USER LOGGING USING EVENT
+        event(new CommodityDeletedEvent($commodity));
+
+        return $result;
     }
 }

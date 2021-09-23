@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use League\Flysystem\FileNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Commodity\CommodityStatus;
+use Sanf\Core\Modules\Commodity\Events\CommodityCreatedEvent;
 
 class CreateUserCommodityService extends CommodityService implements ApplicationServiceInterface
 {
@@ -42,7 +43,7 @@ class CreateUserCommodityService extends CommodityService implements Application
             }
         }
 
-        return $this->commodityRepository->add([
+        $commodity = $this->commodityRepository->add([
             'xid' => nano_id(),
             'user_id' => $user->id,
             'title' => $dto->title,
@@ -57,6 +58,8 @@ class CreateUserCommodityService extends CommodityService implements Application
 //            'modified_by' => //TODO USER SNAPSHOT
         ]);
 
-        //TODO USER LOGGING USING EVENT
+        event(new CommodityCreatedEvent($commodity));
+
+        return $commodity;
     }
 }

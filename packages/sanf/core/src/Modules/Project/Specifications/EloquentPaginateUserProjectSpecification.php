@@ -26,10 +26,13 @@ class EloquentPaginateUserProjectSpecification
     public function buildQuery(ProjectModel $model)
     {
         switch ($this->sortBy) {
+            case 'earliest':
             case 'oldest':
                 $orderBy = 'project.created_at';
                 $orderDirection = 'ASC';
                 break;
+            case 'latest':
+            case 'newest':
             default:
                 $orderBy = 'project.created_at';
                 $orderDirection = 'DESC';

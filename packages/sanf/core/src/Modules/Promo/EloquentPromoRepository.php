@@ -16,11 +16,13 @@ class EloquentPromoRepository implements PromoRepositoryInterface
     public function list($dto)
     {
         switch ($dto->sort_by) {
+            case 'earliest':
             case 'oldest':
                 $orderBy = 'promo_sanf.created_at';
                 $orderDir = 'ASC';
                 break;
             case 'latest':
+            case 'newest':
             default:
                 $orderBy = 'promo_sanf.created_at';
                 $orderDir = 'DESC';
