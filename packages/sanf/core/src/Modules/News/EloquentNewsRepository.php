@@ -29,6 +29,7 @@ class EloquentNewsRepository implements NewsRepositoryInterface
                 $orderDir = 'ASC';
                 break;
             case 'latest':
+            case 'earliest':
             default:
                 $orderBy = 'news.created_at';
                 $orderDir = 'DESC';

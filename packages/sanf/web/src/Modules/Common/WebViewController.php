@@ -32,7 +32,7 @@ class WebViewController extends RestApiController
                 $message = 'Permintaan tidak disetujui';
                 break;
             default:
-                break;
+                abort(404);
         }
 
         return view('core::layouts.message', ['message' => $message]);
@@ -48,7 +48,7 @@ class WebViewController extends RestApiController
                 $message = 'Permintaan tidak disetujui';
                 break;
             default:
-                break;
+                abort(404);
         }
 
         return view('core::layouts.message', ['message' => $message]);

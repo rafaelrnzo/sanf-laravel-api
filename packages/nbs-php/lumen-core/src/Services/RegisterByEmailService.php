@@ -42,7 +42,7 @@ class RegisterByEmailService implements RegisterByEmailServiceInterface
             'phone_number' => $dto->phoneNumber,
             'password' => bcrypt($dto->password),
             'password_updated_at' => Carbon::now(),
-            'status_id' => UserStatus::INACTIVE,
+            'status_id' => UserStatus::ACTIVE,
             'entity_type_id' => EntityType::ADMIN, //TODO CONFIGURABLE
         ]);
 

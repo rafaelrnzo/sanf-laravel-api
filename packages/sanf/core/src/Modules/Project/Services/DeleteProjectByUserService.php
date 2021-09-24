@@ -6,9 +6,9 @@ namespace Sanf\Core\Modules\Project\Services;
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Project\Events\ProjectDeletedEvent;
-use Sanf\Core\Modules\Project\GeneralProjectException;
+use Sanf\Core\Modules\Project\Exceptions\GeneralProjectException;
 
-class DeleteUserProjectService extends UserProjectService implements ApplicationServiceInterface
+class DeleteProjectByUserService extends ProjectByUserService implements ApplicationServiceInterface
 {
     public function execute($dto = null)
     {

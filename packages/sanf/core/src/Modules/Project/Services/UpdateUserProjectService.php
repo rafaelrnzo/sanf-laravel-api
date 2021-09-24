@@ -9,9 +9,9 @@ use Illuminate\Support\Facades\Storage;
 use League\Flysystem\FileNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Project\Events\ProjectUpdatedEvent;
-use Sanf\Core\Modules\Project\GeneralProjectException;
+use Sanf\Core\Modules\Project\Exceptions\GeneralProjectException;
 
-class UpdateUserProjectService extends UserProjectService implements ApplicationServiceInterface
+class UpdateUserProjectService extends ProjectByUserService implements ApplicationServiceInterface
 {
     public function execute($dto = null)
     {

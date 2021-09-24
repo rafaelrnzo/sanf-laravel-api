@@ -3,31 +3,20 @@
 
 namespace Sanf\Core\Modules\Project\Listeners;
 
-
-
-use Illuminate\Support\Facades\Log;
+use Sanf\Core\Modules\Project\Events\AbstractProjectEvent;
+use Sanf\Core\Modules\Project\SendEmailProjectApprovalJob;
 
 class SendEmailRequestApprovalProjectListener
 {
-
-    /**
-     * Create the event listener.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-    }
-
     /**
      * Handle the event.
      *
      * @param object $event
      * @return void
      */
-    public function handle($event)
+    public function handle(AbstractProjectEvent $event)
     {
-        Log::info('JOB SEND EMAIL APPROVAL DISPATCHED');
-        //TODO DISPATCH JOB HERE
+        $recipients = explode(',', config('sanf-mobile.mail_to_admin'));
+        dispatch(new SendEmailProjectApprovalJob($event->project, $recipients));
     }
 }

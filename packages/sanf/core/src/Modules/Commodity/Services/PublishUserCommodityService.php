@@ -19,7 +19,7 @@ class PublishUserCommodityService extends CommodityService implements Applicatio
             throw new GeneralCommodityException('Commodity Not Found');
         }
         if ($commodity->status_id !== CommodityStatus::UNPUBLISHED) {
-            throw new GeneralCommodityException('Invalid State');
+            throw new InvalidStateCommodityException('Invalid State');
         }
         $updatedCommodity = $this->commodityRepository->update([
             'id' => $commodity->id,

@@ -5,7 +5,7 @@ namespace Sanf\Core\Modules\Project\Services;
 
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\Project\GeneralProjectException;
+use Sanf\Core\Modules\Project\Exceptions\GeneralProjectException;
 use Sanf\Core\Modules\Project\ProjectStatus;
 
 class GetDetailProjectService extends ProjectService implements ApplicationServiceInterface

@@ -10,7 +10,7 @@ use Illuminate\Support\Arr;
 use NbsPhp\Core\Exceptions\ApiException;
 use Symfony\Component\HttpFoundation\Response;
 
-class RestResponseMapper implements ResponseMapperInterface
+class JsonResponseMapper implements ResponseMapperInterface
 {
     /**
      * Formatting Success Response

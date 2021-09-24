@@ -16,14 +16,16 @@ use Sanf\Core\Modules\Project\Dto\CreateProjectDto;
 use Sanf\Core\Modules\Project\Dto\PaginateProjectDto;
 use Sanf\Core\Modules\Project\Dto\PaginateUserProjectDto;
 use Sanf\Core\Modules\Project\Dto\UpdateProjectDto;
-use Sanf\Core\Modules\Project\Services\CreateUserProjectService;
-use Sanf\Core\Modules\Project\Services\DeleteUserProjectService;
+use Sanf\Core\Modules\Project\Services\ApproveProjectByExternalService;
+use Sanf\Core\Modules\Project\Services\CreateProjectByUserService;
+use Sanf\Core\Modules\Project\Services\DeleteProjectByUserService;
+use Sanf\Core\Modules\Project\Services\GetDetailProjectByUserService;
 use Sanf\Core\Modules\Project\Services\GetDetailProjectService;
-use Sanf\Core\Modules\Project\Services\GetDetailUserProjectService;
+use Sanf\Core\Modules\Project\Services\GetListProjectByUserService;
 use Sanf\Core\Modules\Project\Services\GetListProjectService;
-use Sanf\Core\Modules\Project\Services\GetListUserProjectService;
-use Sanf\Core\Modules\Project\Services\PublishUserProjectService;
-use Sanf\Core\Modules\Project\Services\UnpublishUserProjectService;
+use Sanf\Core\Modules\Project\Services\PublishProjectByUserService;
+use Sanf\Core\Modules\Project\Services\RejectProjectByExternalService;
+use Sanf\Core\Modules\Project\Services\UnpublishProjectByUserService;
 use Sanf\Core\Modules\Project\Services\UpdateUserProjectService;
 
 class ProjectController extends RestApiController
@@ -53,7 +55,7 @@ class ProjectController extends RestApiController
         return fractal($result, new ProjectTransformer());
     }
 
-    public function getListByUser(Guard $auth, Request $request, GetListUserProjectService $service)
+    public function getListByUser(Guard $auth, Request $request, GetListProjectByUserService $service)
     {
         $input = $this->validate($request, [
             'skip' => ['nullable', 'integer'],
@@ -69,7 +71,7 @@ class ProjectController extends RestApiController
             ->paginateWith(new LazyPaginatorAdapter($result->paginate));
     }
 
-    public function getDetailByUser(Guard $auth, $xid, GetDetailUserProjectService $service)
+    public function getDetailByUser(Guard $auth, $xid, GetDetailProjectByUserService $service)
     {
         $dto = (object)[
             'xid' => $xid,
@@ -79,7 +81,7 @@ class ProjectController extends RestApiController
         return fractal($result, new MyProjectTransformer());
     }
 
-    public function postCreateByUser(Guard $auth, Request $request, CreateUserProjectService $service)
+    public function postCreateByUser(Guard $auth, Request $request, CreateProjectByUserService $service)
     {
         $input = $this->validate($request, [
             'title' => ['required', 'string'],
@@ -118,7 +120,7 @@ class ProjectController extends RestApiController
         return $this->responseOk();
     }
 
-    public function deleteByUser(Guard $auth, $xid, DeleteUserProjectService $service)
+    public function deleteByUser(Guard $auth, $xid, DeleteProjectByUserService $service)
     {
         $dto = (object)[
             'userId' => $auth->id(),
@@ -128,7 +130,7 @@ class ProjectController extends RestApiController
         return $this->responseOk();
     }
 
-    public function postPublishByUser(Guard $auth, $xid, PublishUserProjectService $service)
+    public function postPublishByUser(Guard $auth, $xid, PublishProjectByUserService $service)
     {
         $dto = (object)[
             'userId' => $auth->id(),
@@ -138,7 +140,7 @@ class ProjectController extends RestApiController
         return $this->responseOk();
     }
 
-    public function postUnpublishByUser(Guard $auth, $xid, UnpublishUserProjectService $service)
+    public function postUnpublishByUser(Guard $auth, $xid, UnpublishProjectByUserService $service)
     {
         $dto = (object)[
             'userId' => $auth->id(),
@@ -146,5 +148,21 @@ class ProjectController extends RestApiController
         ];
         $service->execute($dto);
         return $this->responseOk();
+    }
+
+    public function postApproveByExternal($xid, ApproveProjectByExternalService $service)
+    {
+        $service->execute((object)[
+            'xid' => $xid
+        ]);
+        return redirect()->route('web-view.approval-commodity', ['status' => 'approve']);
+    }
+
+    public function postRejectByExternal($xid, RejectProjectByExternalService $service)
+    {
+        $service->execute((object)[
+            'xid' => $xid
+        ]);
+        return redirect()->route('web-view.approval-commodity', ['status' => 'reject']);
     }
 }

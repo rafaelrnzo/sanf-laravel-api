@@ -8,18 +8,16 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Project\Dto\PaginateUserProjectDto;
 use Sanf\Core\Modules\Project\Repositories\ProjectRepositoryInterface;
 use Sanf\Core\Modules\Project\Specifications\ProjectSpecificationFactoryInterface;
-use Sanf\Core\Modules\User\AuthModel;
 
-class GetListProjectService extends UserProjectService implements ApplicationServiceInterface
+class GetListProjectService extends ProjectService implements ApplicationServiceInterface
 {
     protected ProjectSpecificationFactoryInterface $specificationFactory;
 
     public function __construct(
         ProjectRepositoryInterface $projectRepository,
-        AuthModel $userRepository,
         ProjectSpecificationFactoryInterface $specificationFactory
     ) {
-        parent::__construct($projectRepository, $userRepository);
+        parent::__construct($projectRepository);
         $this->specificationFactory = $specificationFactory;
     }
 

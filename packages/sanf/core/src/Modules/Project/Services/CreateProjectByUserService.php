@@ -11,7 +11,7 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Project\Events\ProjectCreatedEvent;
 use Sanf\Core\Modules\Project\ProjectStatus;
 
-class CreateUserProjectService extends UserProjectService implements ApplicationServiceInterface
+class CreateProjectByUserService extends ProjectByUserService implements ApplicationServiceInterface
 {
     public function execute($dto = null)
     {

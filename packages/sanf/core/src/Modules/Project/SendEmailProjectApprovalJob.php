@@ -1,6 +1,6 @@
 <?php
 
-namespace Sanf\Api\Modules\Project;
+namespace Sanf\Core\Modules\Project;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -9,11 +9,11 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 use NbsPhp\Core\Mail\BaseMail;
 
-class SendProjectJob implements ShouldQueue
+class SendEmailProjectApprovalJob implements ShouldQueue
 {
     use InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $emailSender;
+    protected $project;
 
     protected $emailRecipients;
 
@@ -23,15 +23,14 @@ class SendProjectJob implements ShouldQueue
      * @return void
      */
 
-    public function __construct($emailSender, $emailRecipients)
+    public function __construct($project, $emailRecipients)
     {
-        $this->emailSender = $emailSender;
+        $this->project = $project;
         $this->emailRecipients = $emailRecipients;
     }
 
     public function handle()
     {
-
         $projectApprovalMail = (new BaseMail())
             ->subject('Pengajuan project baru dari pengguna SANFXtra!')
             ->leftLogo(asset('assets/svg/sanf-logo-blue.svg'))
@@ -42,11 +41,9 @@ class SendProjectJob implements ShouldQueue
                 Magnam explicabo dicta repellendus cupiditate unde?
             '))
             ->actionApproval([
-                [__('Approve Project'), '#'], //TODO: implement url to approve
-                [__('Reject Project'), '#'] //TODO: implement url to reject
+                [__('Approve Project'), route('projects.approve', ['xid' => $this->project->xid])],
+                [__('Reject Project'), route('projects.reject', ['xid' => $this->project->xid])]
             ]);
-
-        $projectApprovalMail->from($this->emailSender[0], $this->emailSender[1]);
 
         return Mail::to($this->emailRecipients)->send($projectApprovalMail);
     }

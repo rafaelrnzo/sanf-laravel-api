@@ -5,7 +5,7 @@
     <tr>
         @isset($approvalContent)
             @foreach($approvalContent as $ac)
-                <td align="center"><a class="action-button" href="{{!! $ac[1]  !!}}" target="_blank">{!! $ac[0] !!}</a></td>
+                <td align="center"><a class="action-button" href="{{ $ac[1] }}" target="_blank">{!! $ac[0] !!}</a></td>
             @endforeach
         @endisset
     </tr>

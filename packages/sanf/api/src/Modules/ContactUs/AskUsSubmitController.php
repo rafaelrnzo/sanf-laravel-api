@@ -7,7 +7,7 @@ namespace Sanf\Api\Modules\ContactUs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use NbsPhp\Core\Controllers\RestApiController;
-use NbsPhp\Core\Response\RestResponseMapper;
+use NbsPhp\Core\Response\JsonResponseMapper;
 use Sanf\Core\Modules\ContactUs\AskUsSubmitService;
 
 
@@ -22,7 +22,7 @@ class AskUsSubmitController extends RestApiController
         $this->service = $service;
     }
 
-    public function process(Request $request, RestResponseMapper $response)
+    public function process(Request $request, JsonResponseMapper $response)
     {
 
         // validate request;

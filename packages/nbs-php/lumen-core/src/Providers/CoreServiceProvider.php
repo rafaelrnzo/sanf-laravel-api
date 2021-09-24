@@ -14,8 +14,8 @@ use Illuminate\Support\ServiceProvider;
 use NbsPhp\Core\Commands\KeyGenerateCommand;
 use NbsPhp\Core\Commands\ReloadUserPermissionCommand;
 use NbsPhp\Core\Commands\VendorPublishCommand;
+use NbsPhp\Core\Response\JsonResponseMapper;
 use NbsPhp\Core\Response\ResponseMapperInterface;
-use NbsPhp\Core\Response\RestResponseMapper;
 use Spatie\Fractal\FractalServiceProvider;
 
 class CoreServiceProvider extends ServiceProvider
@@ -103,7 +103,7 @@ class CoreServiceProvider extends ServiceProvider
 
     protected function registerBindings()
     {
-        $this->app->bind(ResponseMapperInterface::class, RestResponseMapper::class);
+        $this->app->bind(ResponseMapperInterface::class, JsonResponseMapper::class);
     }
 
     protected function registerProviders()

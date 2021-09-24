@@ -8,7 +8,7 @@ use NbsPhp\Core\Exceptions\UserNotFoundException;
 use Sanf\Core\Modules\Project\Repositories\ProjectRepositoryInterface;
 use Sanf\Core\Modules\User\AuthModel;
 
-class UserProjectService extends ProjectService
+class ProjectByUserService extends ProjectService
 {
     protected AuthModel $userRepository;
 
