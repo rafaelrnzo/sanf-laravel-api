@@ -17,7 +17,7 @@ class MyCommoditySimpleTransformer extends TransformerAbstract
             "image_file" => fractal($item->image_file, new AssetFileSimpleTransformer()),
             "location_metadata" => fractal($item->location_metadata, new CommodityLocationTransformer()),
             "status" => fractal($item->status, new CommodityStatusTransformer()),
-            "published_at" => (int)$item->published_at
+            "published_at" => (int)unix_timestamp($item->published_at)
         ];
     }
 }

@@ -14,7 +14,7 @@ class MyProjectTransformer extends TransformerAbstract
         return [
             "xid" => $item->xid,
             "title" => $item->title,
-            "submission_limit_at" => (int)$item->submission_limit_at,
+            "submission_limit_at" => unix_timestamp($item->submission_limit_at),
             "description" => $item->description,
             "image_file" => fractal($item->image_file, new AssetFileSimpleTransformer()),
             "location_metadata" => fractal($item->location_metadata, new ProjectLocationTransformer()),
@@ -22,7 +22,7 @@ class MyProjectTransformer extends TransformerAbstract
             "whatsapp_number" => $item->whatsapp_number,
             "business_email" => $item->business_email,
             "status" => fractal($item->status, new ProjectStatusTransformer()),
-            "published_at" => (int)$item->published_at,
+            "published_at" => (int)unix_timestamp($item->published_at),
             "created_by" => $item->user->full_name,
         ];
     }

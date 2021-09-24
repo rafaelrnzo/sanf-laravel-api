@@ -21,7 +21,7 @@ class MyCommodityTransformer extends TransformerAbstract
             "whatsapp_number" => $item->whatsapp_number,
             "business_email" => $item->business_email,
             "status" => fractal($item->status, new CommodityStatusTransformer()),
-            "published_at" => (int)$item->published_at,
+            "published_at" => (int)unix_timestamp($item->published_at),
             "created_by" => $item->user->full_name,
         ];
     }

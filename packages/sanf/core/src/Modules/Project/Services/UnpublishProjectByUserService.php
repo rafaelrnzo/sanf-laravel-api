@@ -21,6 +21,7 @@ class UnpublishProjectByUserService extends ProjectByUserService implements Appl
         $updatedProject = $this->projectRepository->update([
             'id' => $project->id,
             'status_id' => ProjectStatus::UNPUBLISHED,
+            'published_at' => null,
 //            'modified_by' => //TODO USER SNAPSHOT
         ]);
 

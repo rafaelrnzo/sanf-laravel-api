@@ -21,6 +21,7 @@ class UnpublishCommodityByUserService extends CommodityByUserService implements 
         $updatedCommodity = $this->commodityRepository->update([
             'id' => $commodity->id,
             'status_id' => CommodityStatus::UNPUBLISHED,
+            'published_at' => null,
 //            'modified_by' => //TODO USER SNAPSHOT
         ]);
 

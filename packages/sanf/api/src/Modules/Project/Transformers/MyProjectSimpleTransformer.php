@@ -17,7 +17,7 @@ class MyProjectSimpleTransformer extends TransformerAbstract
             "image_file" => fractal($item->image_file, new AssetFileSimpleTransformer()),
             "location_metadata" => fractal($item->location_metadata, new ProjectLocationTransformer()),
             "status" => fractal($item->status, new ProjectStatusTransformer()),
-            "published_at" => (int)$item->published_at
+            "published_at" => (int)unix_timestamp($item->published_at)
         ];
     }
 }

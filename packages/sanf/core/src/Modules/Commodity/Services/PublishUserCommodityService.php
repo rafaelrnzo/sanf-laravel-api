@@ -4,6 +4,7 @@
 namespace Sanf\Core\Modules\Commodity\Services;
 
 
+use Carbon\Carbon;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Commodity\CommodityStatus;
 use Sanf\Core\Modules\Commodity\Events\CommodityPublishedEvent;
@@ -25,6 +26,7 @@ class PublishUserCommodityService extends CommodityByUserService implements Appl
         $updatedCommodity = $this->commodityRepository->update([
             'id' => $commodity->id,
             'status_id' => CommodityStatus::PUBLISHED,
+            'published_at' => Carbon::now(),
 //            'modified_by' => //TODO USER SNAPSHOT
         ]);
 
