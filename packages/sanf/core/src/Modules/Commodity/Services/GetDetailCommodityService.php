@@ -6,7 +6,7 @@ namespace Sanf\Core\Modules\Commodity\Services;
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Commodity\CommodityStatus;
-use Sanf\Core\Modules\Commodity\GeneralCommodityException;
+use Sanf\Core\Modules\Commodity\Exceptions\GeneralCommodityException;
 
 class GetDetailCommodityService extends CommodityService implements ApplicationServiceInterface
 {
@@ -17,7 +17,7 @@ class GetDetailCommodityService extends CommodityService implements ApplicationS
             throw new GeneralCommodityException('Commodity Not Found');
         }
         $commodity->is_owner = ($commodity->user_id == $dto->userId);
+
         return $commodity;
-        //TODO USER LOGGING USING EVENT
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Sanf\Core\Modules\Commodity;
+namespace Sanf\Core\Modules\Commodity\Exceptions;
 
 
 use NbsPhp\Core\Exceptions\ApiException;

@@ -16,15 +16,15 @@ use Sanf\Core\Modules\Commodity\Dto\CreateCommodityDto;
 use Sanf\Core\Modules\Commodity\Dto\PaginateCommodityDto;
 use Sanf\Core\Modules\Commodity\Dto\PaginateUserCommodityDto;
 use Sanf\Core\Modules\Commodity\Dto\UpdateCommodityDto;
-use Sanf\Core\Modules\Commodity\Services\CreateUserCommodityService;
-use Sanf\Core\Modules\Commodity\Services\DeleteUserCommodityService;
+use Sanf\Core\Modules\Commodity\Services\CreateCommodityByUserService;
+use Sanf\Core\Modules\Commodity\Services\DeleteCommodityByService;
+use Sanf\Core\Modules\Commodity\Services\GetDetailCommodityByUserService;
 use Sanf\Core\Modules\Commodity\Services\GetDetailCommodityService;
-use Sanf\Core\Modules\Commodity\Services\GetDetailUserCommodityService;
+use Sanf\Core\Modules\Commodity\Services\GetListCommodityByUserService;
 use Sanf\Core\Modules\Commodity\Services\GetListCommodityService;
-use Sanf\Core\Modules\Commodity\Services\GetListUserCommodityService;
 use Sanf\Core\Modules\Commodity\Services\PublishUserCommodityService;
-use Sanf\Core\Modules\Commodity\Services\UnpublishUserCommodityService;
-use Sanf\Core\Modules\Commodity\Services\UpdateUserCommodityService;
+use Sanf\Core\Modules\Commodity\Services\UnpublishCommodityByUserService;
+use Sanf\Core\Modules\Commodity\Services\UpdateCommodityByUserService;
 
 class CommodityController extends RestApiController
 {
@@ -53,7 +53,7 @@ class CommodityController extends RestApiController
         return fractal($result, new CommodityTransformer());
     }
 
-    public function getListByUser(Guard $auth, Request $request, GetListUserCommodityService $service)
+    public function getListByUser(Guard $auth, Request $request, GetListCommodityByUserService $service)
     {
         $input = $this->validate($request, [
             'skip' => ['nullable', 'integer'],
@@ -69,7 +69,7 @@ class CommodityController extends RestApiController
             ->paginateWith(new LazyPaginatorAdapter($result->paginate));
     }
 
-    public function getDetailByUser(Guard $auth, $xid, GetDetailUserCommodityService $service)
+    public function getDetailByUser(Guard $auth, $xid, GetDetailCommodityByUserService $service)
     {
         $dto = (object)[
             'xid' => $xid,
@@ -79,7 +79,7 @@ class CommodityController extends RestApiController
         return fractal($result, new MyCommodityTransformer());
     }
 
-    public function postCreateByUser(Guard $auth, Request $request, CreateUserCommodityService $service)
+    public function postCreateByUser(Guard $auth, Request $request, CreateCommodityByUserService $service)
     {
         $input = $this->validate($request, [
             'title' => ['required', 'string'],
@@ -96,7 +96,7 @@ class CommodityController extends RestApiController
         return $this->responseOk();
     }
 
-    public function putUpdateByUser(Guard $auth, Request $request, $xid, UpdateUserCommodityService $service)
+    public function putUpdateByUser(Guard $auth, Request $request, $xid, UpdateCommodityByUserService $service)
     {
         $input = $this->validate($request, [
             'title' => ['required', 'string'],
@@ -116,7 +116,7 @@ class CommodityController extends RestApiController
         return $this->responseOk();
     }
 
-    public function deleteByUser(Guard $auth, $xid, DeleteUserCommodityService $service)
+    public function deleteByUser(Guard $auth, $xid, DeleteCommodityByService $service)
     {
         $dto = (object)[
             'userId' => $auth->id(),
@@ -136,7 +136,7 @@ class CommodityController extends RestApiController
         return $this->responseOk();
     }
 
-    public function postUnpublishByUser(Guard $auth, $xid, UnpublishUserCommodityService $service)
+    public function postUnpublishByUser(Guard $auth, $xid, UnpublishCommodityByUserService $service)
     {
         $dto = (object)[
             'userId' => $auth->id(),

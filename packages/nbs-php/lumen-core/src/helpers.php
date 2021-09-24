@@ -52,10 +52,10 @@ if (!function_exists('file_get_url')) {
      * @param bool $expiry
      * @return string
      */
-    function file_get_url(?string $fileId, $path = null, $expiry = true)
+    function file_get_url(?string $fileId, $path = null, $expiry = false)
     {
         if (is_null($fileId)) {
-            return '';
+            return null;
         }
 
         if ($expiry) {

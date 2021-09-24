@@ -6,11 +6,10 @@ namespace Sanf\Core\Modules\Commodity\Services;
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Commodity\CommodityStatus;
-use Sanf\Core\Modules\Commodity\Events\CommodityPublishedEvent;
+use Sanf\Core\Modules\Commodity\Events\CommodityUnpublishedEvent;
 use Sanf\Core\Modules\Commodity\Exceptions\GeneralCommodityException;
-use Sanf\Core\Modules\Commodity\Exceptions\InvalidStateCommodityException;
 
-class PublishUserCommodityService extends CommodityByUserService implements ApplicationServiceInterface
+class UnpublishCommodityByUserService extends CommodityByUserService implements ApplicationServiceInterface
 {
     public function execute($dto = null)
     {
@@ -19,16 +18,13 @@ class PublishUserCommodityService extends CommodityByUserService implements Appl
         if (is_null($commodity) || $commodity->user_id != $user->id) {
             throw new GeneralCommodityException('Commodity Not Found');
         }
-        if ($commodity->status_id !== CommodityStatus::UNPUBLISHED) {
-            throw new InvalidStateCommodityException('Invalid State');
-        }
         $updatedCommodity = $this->commodityRepository->update([
             'id' => $commodity->id,
-            'status_id' => CommodityStatus::PUBLISHED,
+            'status_id' => CommodityStatus::UNPUBLISHED,
 //            'modified_by' => //TODO USER SNAPSHOT
         ]);
 
-        event(new CommodityPublishedEvent($commodity, $updatedCommodity));
+        event(new CommodityUnpublishedEvent($commodity, $updatedCommodity));
 
         return $updatedCommodity;
     }

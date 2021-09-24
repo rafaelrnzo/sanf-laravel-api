@@ -7,6 +7,7 @@ namespace Sanf\Core\Modules\Project\Services;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Project\Events\ProjectPublishedEvent;
 use Sanf\Core\Modules\Project\Exceptions\GeneralProjectException;
+use Sanf\Core\Modules\Project\Exceptions\InvalidStateProjectException;
 use Sanf\Core\Modules\Project\ProjectStatus;
 
 class PublishProjectByUserService extends ProjectByUserService implements ApplicationServiceInterface
@@ -19,7 +20,7 @@ class PublishProjectByUserService extends ProjectByUserService implements Applic
             throw new GeneralProjectException('Project Not Found');
         }
         if ($project->status_id !== ProjectStatus::UNPUBLISHED) {
-            throw new GeneralProjectException('Invalid State');
+            throw new InvalidStateProjectException('Invalid State');
         }
         $updatedProject = $this->projectRepository->update([
             'id' => $project->id,

@@ -35,11 +35,9 @@ class SendEmailProjectApprovalJob implements ShouldQueue
             ->subject('Pengajuan project baru dari pengguna SANFXtra!')
             ->leftLogo(asset('assets/svg/sanf-logo-blue.svg'))
             ->rightLogo(asset('assets/svg/sanf-tagline.svg'))
-            ->banner(asset('assets/svg/email-verification.svg'))
-            ->line(__('Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt obcaecati dolores quod,
-                perferendis debitis ad dolor architecto repellat nulla, sunt, error nobis laborum ratione.
-                Magnam explicabo dicta repellendus cupiditate unde?
-            '))
+            ->banner(file_get_url(optional($this->project->image_file)->path) ?? asset('assets/svg/email-verification.svg'))
+            ->line($this->project->title)
+            ->line($this->project->description)
             ->actionApproval([
                 [__('Approve Project'), route('projects.approve', ['xid' => $this->project->xid])],
                 [__('Reject Project'), route('projects.reject', ['xid' => $this->project->xid])]

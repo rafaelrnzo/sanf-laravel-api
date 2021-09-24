@@ -4,20 +4,10 @@
 namespace Sanf\Core\Modules\Commodity\Listeners;
 
 
-
-use Illuminate\Support\Facades\Log;
+use Sanf\Core\Modules\Commodity\SendEmailCommodityApprovalJob;
 
 class SendEmailRequestApprovalCommodityListener
 {
-
-    /**
-     * Create the event listener.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-    }
 
     /**
      * Handle the event.
@@ -27,7 +17,7 @@ class SendEmailRequestApprovalCommodityListener
      */
     public function handle($event)
     {
-        Log::info('JOB SEND EMAIL APPROVAL DISPATCHED');
-        //TODO DISPATCH JOB HERE
+        $recipients = explode(',', config('sanf-mobile.mail_to_admin'));
+        dispatch(new SendEmailCommodityApprovalJob($event->commodity, $recipients));
     }
 }

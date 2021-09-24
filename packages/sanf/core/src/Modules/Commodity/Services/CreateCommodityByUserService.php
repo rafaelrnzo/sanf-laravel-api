@@ -10,7 +10,7 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Commodity\CommodityStatus;
 use Sanf\Core\Modules\Commodity\Events\CommodityCreatedEvent;
 
-class CreateUserCommodityService extends CommodityService implements ApplicationServiceInterface
+class CreateCommodityByUserService extends CommodityByUserService implements ApplicationServiceInterface
 {
     public function execute($dto = null)
     {

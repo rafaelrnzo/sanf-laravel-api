@@ -10,7 +10,7 @@ use Sanf\Core\Modules\Commodity\Repositories\CommodityRepositoryInterface;
 use Sanf\Core\Modules\Commodity\Specifications\CommoditySpecificationFactoryInterface;
 use Sanf\Core\Modules\User\AuthModel;
 
-class GetUserCommodityMetadataService extends CommodityService implements ApplicationServiceInterface
+class GetCommodityMetadataByUserService extends CommodityService implements ApplicationServiceInterface
 {
     protected CommoditySpecificationFactoryInterface $specificationFactory;
 

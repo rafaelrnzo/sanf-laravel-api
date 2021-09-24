@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\Storage;
 use League\Flysystem\FileNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Commodity\Events\CommodityUpdatedEvent;
-use Sanf\Core\Modules\Commodity\GeneralCommodityException;
+use Sanf\Core\Modules\Commodity\Exceptions\GeneralCommodityException;
 
-class UpdateUserCommodityService extends CommodityService implements ApplicationServiceInterface
+class UpdateCommodityByUserService extends CommodityByUserService implements ApplicationServiceInterface
 {
     public function execute($dto = null)
     {

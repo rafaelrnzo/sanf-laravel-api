@@ -6,25 +6,24 @@ namespace Sanf\Core\Modules\Commodity\Services;
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Commodity\CommodityStatus;
-use Sanf\Core\Modules\Commodity\Events\CommodityUnpublishedEvent;
-use Sanf\Core\Modules\Commodity\GeneralCommodityException;
+use Sanf\Core\Modules\Commodity\Events\CommodityUpdatedEvent;
+use Sanf\Core\Modules\Commodity\Exceptions\GeneralCommodityException;
 
-class UnpublishUserCommodityService extends CommodityService implements ApplicationServiceInterface
+class RejectCommodityByExternalService extends CommodityService implements ApplicationServiceInterface
 {
     public function execute($dto = null)
     {
-        $user = $this->findUserOrFail($dto->userId);
         $commodity = $this->commodityRepository->findByXid($dto->xid);
-        if (is_null($commodity) || $commodity->user_id != $user->id) {
+        if (is_null($commodity)) {
             throw new GeneralCommodityException('Commodity Not Found');
         }
         $updatedCommodity = $this->commodityRepository->update([
             'id' => $commodity->id,
-            'status_id' => CommodityStatus::UNPUBLISHED,
+            'status_id' => CommodityStatus::REJECTED,
 //            'modified_by' => //TODO USER SNAPSHOT
         ]);
 
-        event(new CommodityUnpublishedEvent($commodity, $updatedCommodity));
+        event(new CommodityUpdatedEvent($commodity, $updatedCommodity));
 
         return $updatedCommodity;
     }
