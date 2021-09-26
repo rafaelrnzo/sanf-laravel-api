@@ -51,9 +51,9 @@ class GetListInvitedCompanyStaffService extends StaffService implements Applicat
             'paginate' => (object)[
                 'total' => (int)$data->count(),
                 'count' => (int)$data->count(),
-                'skip' => (int)$dto->skip,
-                'limit' => (int)$dto->limit,
-                'sort_by' => $dto->sort_by,
+                'skip' => (int)($dto->skip ?? null),
+                'limit' => (int)($dto->limit ?? null),
+                'sort_by' => $dto->sort_by ?? null,
             ],
         ];
     }
