@@ -10,27 +10,29 @@ use Sanf\Core\Modules\Commodity\Repositories\CommodityRepositoryInterface;
 use Sanf\Core\Modules\Commodity\Specifications\CommoditySpecificationFactoryInterface;
 use Sanf\Core\Modules\User\AuthModel;
 
-class GetCommodityMetadataByUserService extends CommodityService implements ApplicationServiceInterface
+class GetCommodityMetadataByUserService extends CommodityByUserService implements ApplicationServiceInterface
 {
     protected CommoditySpecificationFactoryInterface $specificationFactory;
 
     public function __construct(
-        CommodityRepositoryInterface $commodityRepository,
-        AuthModel $userRepository,
+        CommodityRepositoryInterface           $commodityRepository,
+        AuthModel                              $userRepository,
         CommoditySpecificationFactoryInterface $specificationFactory
-    ) {
+    )
+    {
         parent::__construct($commodityRepository, $userRepository);
         $this->specificationFactory = $specificationFactory;
     }
 
     public function execute($dto = null)
     {
-        $this->findUserOrFail($dto->userId);
+        $user = $this->findUserOrFail($dto->userId);
+
         $publishedCount = $this->commodityRepository->size(
-            $this->specificationFactory->getAllOwnedByStatus($dto->userId, [CommodityStatus::PUBLISHED])
+            $this->specificationFactory->getAllOwnedByStatus($user->id, [CommodityStatus::PUBLISHED])
         );
         $totalCount = $this->commodityRepository->size(
-            $this->specificationFactory->getAllOwned($dto->userId)
+            $this->specificationFactory->getAllOwned($user->id)
         );
 
         return (object)[
