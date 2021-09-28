@@ -212,6 +212,13 @@ class InternalApiClient
 
     }
 
+    /**
+     * @param $id
+     * @return array|\stdClass|null
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException
+     * @throws \Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException
+     */
     public function getStaffs($id)
     {
         /**

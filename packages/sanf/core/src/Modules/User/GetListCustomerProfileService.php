@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Log;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Models\AuthModel;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
+use Sanf\Integration\Exceptions\SanfInternalApiException;
 use Sanf\Integration\InternalApiClient;
-use Sanf\Integration\SanfInternalApiException;
 
 class GetListCustomerProfileService implements ApplicationServiceInterface
 {

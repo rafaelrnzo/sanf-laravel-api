@@ -8,6 +8,8 @@ use GuzzleHttp\Exception\ServerException;
 use NbsPhp\ApiWrapper\Api\Processor;
 use NbsPhp\ApiWrapper\Api\Request;
 use NbsPhp\ApiWrapper\Api\Response;
+use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
+use Sanf\Integration\Exceptions\SanfInternalApiException;
 
 class InternalApiProcessor extends Processor
 {
@@ -21,6 +23,9 @@ class InternalApiProcessor extends Processor
                 throw new \Exception('API CORE ERROR');
             }
             if ($result['status'] === false) {
+                if ($result['code'] === 'E_EmptyData') {
+                    throw new SanfInternalApiDataNotFoundException($result['message']);
+                }
                 throw new SanfInternalApiException($result['message']);
             }
 

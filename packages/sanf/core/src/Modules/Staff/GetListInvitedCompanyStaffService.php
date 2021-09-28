@@ -7,6 +7,7 @@ namespace Sanf\Core\Modules\Staff;
 use NbsPhp\Core\Enum\UserStatus;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\User\AuthModel;
+use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 use Sanf\Integration\InternalApiClient;
 
 class GetListInvitedCompanyStaffService extends StaffService implements ApplicationServiceInterface
@@ -28,9 +29,14 @@ class GetListInvitedCompanyStaffService extends StaffService implements Applicat
 
     public function execute($dto = null)
     {
-        $response = $this->internalApiClient->getStaffs($dto->xid);
+        try{
+            $response = $this->internalApiClient->getStaffs($dto->xid);
+            $staffs = $response['data'];
+        } catch (SanfInternalApiDataNotFoundException $exception){
+            $staffs = [];
+        }
 
-        $data = collect($response['data'])
+        $data = collect($staffs)
             ->map(function ($item) {
                 $user = $this->userRepository->whereNotNull('personal_xid')
                     ->with('status')
