@@ -33,9 +33,9 @@ class SendEmailCommodityApprovalJob implements ShouldQueue
     {
         $commodityApprovalMail = (new BaseMail())
             ->subject('Pengajuan commodity baru dari pengguna SANFXtra!')
-            ->leftLogo(asset('assets/svg/sanf-logo-blue.svg'))
-            ->rightLogo(asset('assets/svg/sanf-tagline.svg'))
-            ->banner(file_get_url(optional($this->commodity->image_file)->path) ?? asset('assets/svg/email-verification.svg'))
+            ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
+            ->rightLogo(asset('assets/png/sanf-tagline.png'))
+            ->banner(file_get_url(optional($this->commodity->image_file)->path) ?? asset('assets/png/email-verification.png'))
             ->line($this->commodity->title)
             ->line($this->commodity->description)
             ->actionApproval([

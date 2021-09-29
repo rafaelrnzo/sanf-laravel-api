@@ -30,9 +30,9 @@ class ResetPasswordNotification extends Notification
 
         return (new BaseMail)
             ->subject('Reset Password')
-            ->leftLogo(asset('assets/svg/sanf-logo-blue.svg'))
-            ->rightLogo(asset('assets/svg/sanf-tagline.svg'))
-            ->banner(asset('assets/svg/change-password.svg'))
+            ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
+            ->rightLogo(asset('assets/png/sanf-tagline.png'))
+            ->banner(asset('assets/png/change-password.png'))
             ->line(__(
                 'Seseorang telah mencoba mereset password akun Anda.
                 <br />

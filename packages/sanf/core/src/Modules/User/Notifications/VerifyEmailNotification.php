@@ -25,9 +25,9 @@ class VerifyEmailNotification extends Notification
 
         return (new BaseMail())
             ->subject('Registrasi berhasil! Silakan aktivasi akun Anda')
-            ->leftLogo(asset('assets/svg/sanf-logo-blue.svg'))
-            ->rightLogo(asset('assets/svg/sanf-tagline.svg'))
-            ->banner(asset('assets/svg/email-verification.svg'))
+            ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
+            ->rightLogo(asset('assets/png/sanf-tagline.png'))
+            ->banner(asset('assets/png/email-verification.png'))
             ->line(__('Mohon verifikasi email Anda dengan mengklik tombol di bawah ini'))
             ->action(__('Verifikasi Email'), $verificationUrl)
             ->lineWithUrl(

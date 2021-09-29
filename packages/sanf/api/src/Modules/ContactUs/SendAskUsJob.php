@@ -34,9 +34,9 @@ class SendAskUsJob implements ShouldQueue
 
         $askUsEmail = (new BaseMailV2)
             ->subject('Kritik dan saran dari pengguna SANFXtra!')
-            ->leftLogo(asset('assets/svg/sanf-logo-blue.svg'))
-            ->rightLogo(asset('assets/svg/sanf-tagline.svg'))
-            ->banner(asset('assets/svg/email-verification.svg'))
+            ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
+            ->rightLogo(asset('assets/png/sanf-tagline.png'))
+            ->banner(asset('assets/png/email-verification.png'))
             ->writeInto($this->email);
 
         if (is_array($this->email['images'])) {

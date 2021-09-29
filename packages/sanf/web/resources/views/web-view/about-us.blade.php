@@ -185,7 +185,7 @@
     <div class="sf-container">
       <div class="sf-content">
         <div class="sf-logo-header">
-          <img src="{{ asset('assets/svg/sanf-logo-blue.svg') }}" alt="SANF" />
+          <img src="{{ asset('assets/png/sanf-logo-blue.png') }}" alt="SANF" />
         </div>
         <p class="sf-text mt-4">
           PT Surya Artha Nusantara Finance (SANF) menyediakan layanan dan produk keuangan yang
