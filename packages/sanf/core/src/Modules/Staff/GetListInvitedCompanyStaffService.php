@@ -29,10 +29,10 @@ class GetListInvitedCompanyStaffService extends StaffService implements Applicat
 
     public function execute($dto = null)
     {
-        try{
+        try {
             $response = $this->internalApiClient->getStaffs($dto->xid);
             $staffs = $response['data'];
-        } catch (SanfInternalApiDataNotFoundException $exception){
+        } catch (SanfInternalApiDataNotFoundException $exception) {
             $staffs = [];
         }
 
@@ -40,15 +40,17 @@ class GetListInvitedCompanyStaffService extends StaffService implements Applicat
             ->map(function ($item) {
                 $user = $this->userRepository->whereNotNull('personal_xid')
                     ->with('status')
-                    ->where('personal_xid', $item['CUST_ID'])
-                    ->first();
+                    ->where(function ($query) use ($item) {
+                        $query->where('personal_xid', $item['CUST_ID'])
+                            ->orWhere('username', 'ILIKE', $item['EMAIL']);
+                    })->first();
                 return (object)[
                     "no" => $item['SR_NO'] ?? '',
                     "name" => ucwords(strtolower($item['CUST_NAME'] ?? '')),
                     "email" => ucwords(strtolower($item['EMAIL'] ?? '')),
                     "status" => optional($user)->status,
                 ];
-            })->filter(function ($item){
+            })->filter(function ($item) {
                 return !is_null($item->status) && $item->status->id != UserStatus::SUSPENDED;
             });
 

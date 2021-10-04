@@ -40,7 +40,10 @@ class GetListCompanyStaffService extends StaffService implements ApplicationServ
             ->map(function ($item) {
                 $user = $this->userRepository->whereNotNull('personal_xid')
                     ->with('status')
-                    ->where('personal_xid', $item['CUST_ID'])
+                    ->where(function ($query) use ($item) {
+                        $query->where('personal_xid', $item['CUST_ID'])
+                            ->orWhere('username', 'ILIKE', $item['EMAIL']);
+                    })
                     ->first();
                 $status = optional($user)->status;
                 if (optional($status)->id == UserStatus::SUSPENDED) {
