@@ -4,6 +4,8 @@
 namespace Sanf\Core\Modules\Commodity\Listeners;
 
 
+use Sanf\Core\Modules\Commodity\CommodityStatus;
+use Sanf\Core\Modules\Commodity\Events\CommodityUpdatedEvent;
 use Sanf\Core\Modules\Commodity\SendEmailCommodityApprovalJob;
 
 class SendEmailRequestApprovalCommodityListener
@@ -18,6 +20,10 @@ class SendEmailRequestApprovalCommodityListener
     public function handle($event)
     {
         $recipients = explode(',', config('sanf-mobile.mail_to_admin'));
-        dispatch(new SendEmailCommodityApprovalJob($event->commodity, $recipients));
+        $commodity = $event->commodity;
+        if ($event instanceof CommodityUpdatedEvent && $commodity->status_id !== CommodityStatus::WAITING_APPROVAL) {
+            return;
+        }
+        dispatch(new SendEmailCommodityApprovalJob($commodity, $recipients));
     }
 }

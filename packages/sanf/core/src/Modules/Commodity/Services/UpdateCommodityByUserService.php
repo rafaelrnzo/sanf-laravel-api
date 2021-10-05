@@ -48,7 +48,7 @@ class UpdateCommodityByUserService extends CommodityByUserService implements App
             }
         }
 
-        $isSendEmail = in_array($commodity->status_id, [CommodityStatus::REJECTED, CommodityStatus::UNPUBLISHED], true);
+        $needApproval = in_array($commodity->status_id, [CommodityStatus::REJECTED, CommodityStatus::UNPUBLISHED], true);
 
         $updatedCommodity = $this->commodityRepository->update([
             'id' => $commodity->id,
@@ -60,13 +60,11 @@ class UpdateCommodityByUserService extends CommodityByUserService implements App
             'phone_number' => $dto->phoneNumber,
             'whatsapp_number' => $dto->whatsappNumber,
             'business_email' => $dto->businessEmail,
-            'status_id' => ($isSendEmail) ? CommodityStatus::WAITING_APPROVAL : $commodity->status_id,
+            'status_id' => ($needApproval) ? CommodityStatus::WAITING_APPROVAL : $commodity->status_id,
 //            'modified_by' => //TODO USER SNAPSHOT
         ]);
 
-        if ($isSendEmail) {
-            event(new CommodityUpdatedEvent($commodity, $updatedCommodity));
-        }
+        event(new CommodityUpdatedEvent($commodity, $updatedCommodity));
 
         return $updatedCommodity;
     }
