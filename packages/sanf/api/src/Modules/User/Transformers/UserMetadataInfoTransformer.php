@@ -16,8 +16,8 @@ class UserMetadataInfoTransformer extends TransformerAbstract
                 'total_count' => $item->projectMetadata->totalCount,
             ],
             'my_commodity' => [
-                'published_count' => (int)$item->commodityMetadata->publishedCount,
-                'total_count' => (int)$item->commodityMetadata->publishedCount,
+                'published_count' => $item->commodityMetadata->publishedCount,
+                'total_count' => $item->commodityMetadata->totalCount,
             ],
         ];
     }
