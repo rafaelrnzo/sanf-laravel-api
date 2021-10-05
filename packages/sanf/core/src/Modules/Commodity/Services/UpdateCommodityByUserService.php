@@ -7,6 +7,7 @@ namespace Sanf\Core\Modules\Commodity\Services;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\FileNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
+use Sanf\Core\Modules\Commodity\CommodityStatus;
 use Sanf\Core\Modules\Commodity\Events\CommodityUpdatedEvent;
 use Sanf\Core\Modules\Commodity\Exceptions\GeneralCommodityException;
 
@@ -47,6 +48,8 @@ class UpdateCommodityByUserService extends CommodityByUserService implements App
             }
         }
 
+        $isSendEmail = in_array($commodity->status_id, [CommodityStatus::REJECTED, CommodityStatus::UNPUBLISHED], true);
+
         $updatedCommodity = $this->commodityRepository->update([
             'id' => $commodity->id,
             'title' => $dto->title,
@@ -57,10 +60,13 @@ class UpdateCommodityByUserService extends CommodityByUserService implements App
             'phone_number' => $dto->phoneNumber,
             'whatsapp_number' => $dto->whatsappNumber,
             'business_email' => $dto->businessEmail,
+            'status_id' => ($isSendEmail) ? CommodityStatus::WAITING_APPROVAL : $commodity->status_id,
 //            'modified_by' => //TODO USER SNAPSHOT
         ]);
 
-        event(new CommodityUpdatedEvent($commodity, $updatedCommodity));
+        if ($isSendEmail) {
+            event(new CommodityUpdatedEvent($commodity, $updatedCommodity));
+        }
 
         return $updatedCommodity;
     }

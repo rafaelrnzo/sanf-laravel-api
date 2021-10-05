@@ -10,6 +10,7 @@ use League\Flysystem\FileNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Project\Events\ProjectUpdatedEvent;
 use Sanf\Core\Modules\Project\Exceptions\GeneralProjectException;
+use Sanf\Core\Modules\Project\ProjectStatus;
 
 class UpdateUserProjectService extends ProjectByUserService implements ApplicationServiceInterface
 {
@@ -48,6 +49,8 @@ class UpdateUserProjectService extends ProjectByUserService implements Applicati
             }
         }
 
+        $isSendEmail = in_array($project->status_id, [ProjectStatus::REJECTED, ProjectStatus::UNPUBLISHED], true);
+
         $updatedProject = $this->projectRepository->update([
             'id' => $project->id,
             'title' => $dto->title,
@@ -59,10 +62,13 @@ class UpdateUserProjectService extends ProjectByUserService implements Applicati
             'whatsapp_number' => $dto->whatsappNumber,
             'business_email' => $dto->businessEmail,
             'submission_limit_at' => Carbon::createFromTimestamp($dto->submissionLimitAt),
+            'status_id' => ($isSendEmail) ? ProjectStatus::WAITING_APPROVAL : $project->status_id,
 //            'modified_by' => //TODO USER SNAPSHOT
         ]);
 
-        event(new ProjectUpdatedEvent($project, $updatedProject));
+        if ($isSendEmail) {
+            event(new ProjectUpdatedEvent($project, $updatedProject));
+        }
 
         return $updatedProject;
     }
