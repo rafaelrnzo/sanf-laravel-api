@@ -43,7 +43,7 @@ class ListAskUsTopicController extends RestApiController
         }
 
         // sent response;
-        return fractal($result->list, ListAskUsTopicTransformer::class);
+        return fractal($collection, ListAskUsTopicTransformer::class);
     }
 
 
