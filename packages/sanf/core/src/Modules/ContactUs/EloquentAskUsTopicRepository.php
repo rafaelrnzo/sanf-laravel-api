@@ -4,7 +4,9 @@
 namespace Sanf\Core\Modules\ContactUs;
 
 
-class EloquentAskUsTopicRepository implements AskUsTopicRepositoryInterface
+use NbsPhp\Core\Repositories\AbstractEloquentRepository;
+
+class EloquentAskUsTopicRepository extends AbstractEloquentRepository implements AskUsTopicRepositoryInterface
 {
 
     /** @var AskUsTopicModel $model */
@@ -17,7 +19,7 @@ class EloquentAskUsTopicRepository implements AskUsTopicRepositoryInterface
 
     public function list($limit, $offset)
     {
-        return $this->model
+        $result = $this->model
             ->newQuery()
             ->select([
                 'id',
@@ -26,5 +28,7 @@ class EloquentAskUsTopicRepository implements AskUsTopicRepositoryInterface
             ->limit($limit)
             ->offset($offset)
             ->get();
+
+        return $this->stripEloquentModel($result);
     }
 }

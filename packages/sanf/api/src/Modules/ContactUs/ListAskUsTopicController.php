@@ -35,6 +35,13 @@ class ListAskUsTopicController extends RestApiController
         // run service;
         $result = $this->service->execute($dto);
 
+        $collection = collect($result->list);
+        foreach ($collection as $key => $item) {
+            if ($item->id == 4) { //TODO CONST
+                $collection->prepend($collection->pull($key));
+            }
+        }
+
         // sent response;
         return fractal($result->list, ListAskUsTopicTransformer::class);
     }

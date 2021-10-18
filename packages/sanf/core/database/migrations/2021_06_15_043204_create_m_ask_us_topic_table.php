@@ -19,7 +19,8 @@ class CreateMAskUsTopicTable extends Migration
         DB::table('m_ask_us_topic')->insert([
             ['id' => '1', 'name' => 'Saran', 'updated_at' => date('Y-m-d H:i:s')],
             ['id' => '2', 'name' => 'Kritik', 'updated_at' => date('Y-m-d H:i:s')],
-            ['id' => '3', 'name' => 'Keluhan', 'updated_at' => date('Y-m-d H:i:s')]
+            ['id' => '3', 'name' => 'Keluhan', 'updated_at' => date('Y-m-d H:i:s')],
+            ['id' => '4', 'name' => 'Pertanyaan', 'updated_at' => date('Y-m-d H:i:s')]
         ]);
     }
 
