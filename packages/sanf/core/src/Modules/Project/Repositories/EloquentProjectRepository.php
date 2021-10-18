@@ -4,10 +4,10 @@
 namespace Sanf\Core\Modules\Project\Repositories;
 
 
-use NbsPhp\Core\Repositories\BaseEloquentRepository;
+use NbsPhp\Core\Repositories\AbstractEloquentRepository;
 use Sanf\Core\Modules\Project\Models\ProjectModel;
 
-class EloquentProjectRepository extends BaseEloquentRepository implements ProjectRepositoryInterface
+class EloquentProjectRepository extends AbstractEloquentRepository implements ProjectRepositoryInterface
 {
     protected $model;
 
@@ -56,6 +56,7 @@ class EloquentProjectRepository extends BaseEloquentRepository implements Projec
         if (!is_null($specification)) {
             return $specification->buildQuery($this->model)->delete();
         }
+
         return $this->model->newQuery()->where('id', $fields['id'])->delete();
     }
 

@@ -53,9 +53,8 @@ class CreateAuthTables extends Migration
 
         \DB::table($tableNames['status'])->insert([
             ['id' => '10', 'name' => 'active', 'updated_at' => date('Y-m-d H:i:s')],
-            ['id' => '20', 'name' => 'inactive', 'updated_at' => date('Y-m-d H:i:s')],
+            ['id' => '20', 'name' => 'suspended', 'updated_at' => date('Y-m-d H:i:s')],
             ['id' => '30', 'name' => 'need activation', 'updated_at' => date('Y-m-d H:i:s')],
-            ['id' => '40', 'name' => 'suspended', 'updated_at' => date('Y-m-d H:i:s')],
         ]);
     }
 

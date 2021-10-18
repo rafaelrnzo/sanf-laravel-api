@@ -4,6 +4,8 @@
 namespace Sanf\Core\Modules\User;
 
 
+use Illuminate\Support\Facades\Log;
+use Sanf\Integration\Exceptions\SanfInternalApiException;
 use Sanf\Integration\InternalApiClient;
 
 class GetListShareholderService
@@ -19,7 +21,12 @@ class GetListShareholderService
 
     public function execute($dto)
     {
-        $response = $this->client->getShareholders($dto->xid);
+        try {
+            $response = $this->client->getShareholders($dto->xid);
+        } catch (SanfInternalApiException $exception) {
+            Log::info('shareholder: shareholder data notfound for xid ' . $dto->xid);
+            return [];
+        }
 
         return collect($response['data'])
             ->map(function ($item) {

@@ -7,11 +7,13 @@ namespace Sanf\Api\Modules\Staff;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
+use NbsPhp\Core\Database\TransactionalSessionInterface;
+use NbsPhp\Core\Services\TransactionalApplicationService;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
-use Sanf\Core\Modules\Staff\ActivateCompanyStaffService;
 use Sanf\Core\Modules\Staff\DeactivateCompanyStaffService;
 use Sanf\Core\Modules\Staff\GetListCompanyStaffService;
 use Sanf\Core\Modules\Staff\GetListInvitedCompanyStaffService;
+use Sanf\Core\Modules\Staff\InviteCompanyStaffAsUserService;
 
 class StaffController extends RestApiController
 {
@@ -46,15 +48,21 @@ class StaffController extends RestApiController
             ->paginateWith(new LazyPaginatorAdapter($result->paginate));
     }
 
-    public function postActivate(Guard $auth, $xid, $no, ActivateCompanyStaffService $service)
-    {
+    public function postActivate(
+        Guard $auth,
+        $xid,
+        $no,
+        InviteCompanyStaffAsUserService $service,
+        TransactionalSessionInterface $transactionalSession
+    ) {
         //TODO DTO
         $dto = (object)[
             'userId' => $auth->id(),
             'xid' => $xid,
             'no' => $no
         ];
-        $service->execute($dto);
+        $transactionalService = new TransactionalApplicationService($service, $transactionalSession);
+        $transactionalService->execute($dto);
         return $this->responseOk();
     }
 

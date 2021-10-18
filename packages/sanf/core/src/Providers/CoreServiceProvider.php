@@ -4,6 +4,8 @@ namespace Sanf\Core\Providers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
+use NbsPhp\Core\Database\IlluminateSession;
+use NbsPhp\Core\Database\TransactionalSessionInterface;
 use Sanf\Core\Modules\Astra\EloquentProductAstraRepository;
 use Sanf\Core\Modules\Astra\ProductAstraRepositoryInterface;
 use Sanf\Core\Modules\Branch\BranchRepositoryInterface;
@@ -28,6 +30,8 @@ use Sanf\Core\Modules\Project\Specifications\EloquentProjectSpecificationFactory
 use Sanf\Core\Modules\Project\Specifications\ProjectSpecificationFactoryInterface;
 use Sanf\Core\Modules\Promo\EloquentPromoRepository;
 use Sanf\Core\Modules\Promo\PromoRepositoryInterface;
+use Sanf\Core\Modules\Staff\EloquentStaffRepository;
+use Sanf\Core\Modules\Staff\StaffRepositoryInterface;
 
 class CoreServiceProvider extends ServiceProvider
 {
@@ -67,6 +71,8 @@ class CoreServiceProvider extends ServiceProvider
 
     public function registerBindings()
     {
+        $this->app->bind(TransactionalSessionInterface::class, IlluminateSession::class);
+
         //REPOSITORY
         $this->app->bind(AskUsTopicRepositoryInterface::class, EloquentAskUsTopicRepository::class);
         $this->app->bind(AskUsRepositoryInterface::class, EloquentAskUsRepository::class);
@@ -78,6 +84,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(LocationRepositoryInterface::class, EloquentLocationRepository::class);
         $this->app->bind(ProjectRepositoryInterface::class, EloquentProjectRepository::class);
         $this->app->bind(CommodityRepositoryInterface::class, EloquentCommodityRepository::class);
+        $this->app->bind(StaffRepositoryInterface::class, EloquentStaffRepository::class);
 
         //SPECIFICATION FACTORY
         $this->app->bind(ProjectSpecificationFactoryInterface::class, EloquentProjectSpecificationFactory::class);

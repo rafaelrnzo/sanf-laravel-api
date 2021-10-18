@@ -4,7 +4,7 @@
 namespace NbsPhp\Core\Repositories;
 
 
-abstract class BaseEloquentRepository
+abstract class AbstractEloquentRepository
 {
     protected function stripEloquentModel($data)
     {

@@ -4,10 +4,10 @@
 namespace Sanf\Core\Modules\Commodity\Repositories;
 
 
-use NbsPhp\Core\Repositories\BaseEloquentRepository;
+use NbsPhp\Core\Repositories\AbstractEloquentRepository;
 use Sanf\Core\Modules\Commodity\Models\CommodityModel;
 
-class EloquentCommodityRepository extends BaseEloquentRepository implements CommodityRepositoryInterface
+class EloquentCommodityRepository extends AbstractEloquentRepository implements CommodityRepositoryInterface
 {
     protected $model;
 

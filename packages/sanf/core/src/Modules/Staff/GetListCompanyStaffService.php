@@ -4,55 +4,33 @@
 namespace Sanf\Core\Modules\Staff;
 
 
-use NbsPhp\Core\Enum\UserStatus;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
-use Sanf\Integration\InternalApiClient;
 
 class GetListCompanyStaffService extends StaffService implements ApplicationServiceInterface
 {
-    protected InternalApiClient $internalApiClient;
-
-    protected AuthModel $userRepository;
-
-    /**
-     * GetListCompanyStaffService constructor.
-     * @param InternalApiClient $internalApiClient
-     * @param AuthModel $userRepository
-     */
-    public function __construct(InternalApiClient $internalApiClient, AuthModel $userRepository)
-    {
-        $this->internalApiClient = $internalApiClient;
-        $this->userRepository = $userRepository;
-    }
-
     public function execute($dto = null)
     {
-        try{
+        try {
             $response = $this->internalApiClient->getStaffs($dto->xid);
             $staffs = $response['data'];
-        } catch (SanfInternalApiDataNotFoundException $exception){
+        } catch (SanfInternalApiDataNotFoundException $exception) {
             $staffs = [];
         }
 
+        $activeStaffs = $this->staffRepository->getByCompanyXid($dto->xid);
+        $activeStaffCollections = collect($activeStaffs);
         $data = collect($staffs)
-            ->map(function ($item) {
-                $user = $this->userRepository->whereNotNull('personal_xid')
-                    ->with('status')
-                    ->where(function ($query) use ($item) {
-                        $query->where('personal_xid', $item['CUST_ID'])
-                            ->orWhere('username', 'ILIKE', $item['EMAIL']);
-                    })
-                    ->first();
-                $status = optional($user)->status;
-                if (optional($status)->id == UserStatus::SUSPENDED) {
-                    $status = null;
-                }
+            ->map(function ($item) use ($activeStaffCollections) {
+                $email = strtolower($item['EMAIL'] ?? '');
+                $activeStaff = $activeStaffCollections->filter(function ($activeStaff) use ($email) {
+                    return optional($activeStaff->user)->username === $email;
+                })->first();
+                $status = optional(optional($activeStaff)->user)->status;
                 return (object)[
                     "no" => $item['SR_NO'] ?? '',
                     "name" => ucwords(strtolower($item['CUST_NAME'] ?? '')),
-                    "email" => ucwords(strtolower($item['EMAIL'] ?? '')),
+                    "email" => $email,
                     "status" => $status,
                 ];
             });

@@ -4,32 +4,16 @@
 namespace Sanf\Core\Modules\Staff;
 
 
-use NbsPhp\Core\Enum\UserStatus;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\User\AuthModel;
-use Sanf\Integration\InternalApiClient;
 
 class DeactivateCompanyStaffService extends StaffService implements ApplicationServiceInterface
 {
-    protected AuthModel $userRepository;
-    protected InternalApiClient $internalApiClient;
-
-    /**
-     * ActivateCompanyStaffService constructor.
-     * @param AuthModel $userRepository
-     */
-    public function __construct(AuthModel $userRepository, InternalApiClient $internalApiClient)
-    {
-        $this->userRepository = $userRepository;
-        $this->internalApiClient = $internalApiClient;
-    }
-
     public function execute($dto = null)
     {
         $response = $this->internalApiClient->getStaffs($dto->xid);
         $staff = collect($response['data'])->firstWhere('SR_NO', $dto->no);
-        if(is_null($staff)){
+        if (is_null($staff)) {
             throw new GeneralStaffException('Staff Not Found');
         }
         if (!filter_var($staff['EMAIL'], FILTER_VALIDATE_EMAIL)) {
@@ -37,11 +21,15 @@ class DeactivateCompanyStaffService extends StaffService implements ApplicationS
         }
 
         $user = $this->userRepository->newQuery()->where('username', $staff['EMAIL'])->first();
-        if (is_null($user)){
+        if (is_null($user)) {
             throw new UserNotFoundException();
         }
 
-        $user->status_id = UserStatus::SUSPENDED;
-        $user->save();
+        $invitedStaff = $this->staffRepository->findByCompanyXidAndUserId($dto->xid, $dto->userId);
+        if (!$invitedStaff) {
+            throw new GeneralStaffException('User Not Found');
+        }
+
+        return $this->staffRepository->removeById($invitedStaff->id);
     }
 }

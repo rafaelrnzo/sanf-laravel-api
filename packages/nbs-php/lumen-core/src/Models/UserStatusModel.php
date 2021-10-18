@@ -12,8 +12,8 @@ use Carbon\Carbon;
  */
 class UserStatusModel extends AbstractModel
 {
-    const STATUS_ACTIVE = 1;
-    const STATUS_INACTIVE = 2;
+    const STATUS_ACTIVE = 10;
+    const STATUS_SUSPENDED = 20;
 
     protected $table = 'user_status';
 
