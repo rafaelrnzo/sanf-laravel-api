@@ -6,7 +6,6 @@ namespace Sanf\Core\Modules\User\Services;
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Staff\ValidateEligibleProfileByStaffService;
-use Sanf\Core\Modules\User\GetListCustomerProfileService;
 
 class GetListEligibleCustomerProfileService implements ApplicationServiceInterface
 {

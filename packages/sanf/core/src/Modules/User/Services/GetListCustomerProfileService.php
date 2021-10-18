@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Sanf\Core\Modules\User;
+namespace Sanf\Core\Modules\User\Services;
 
 
 use Illuminate\Support\Facades\Log;
@@ -10,6 +10,7 @@ use NbsPhp\Core\Models\AuthModel;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Integration\Exceptions\SanfInternalApiException;
 use Sanf\Integration\InternalApiClient;
+use function collect;
 
 class GetListCustomerProfileService implements ApplicationServiceInterface
 {

@@ -24,13 +24,13 @@ class GetDetailCustomerProfileService implements ApplicationServiceInterface
 
     public function execute($dto = null)
     {
-        $user = $this->repository->newQuery()->find( $dto->userId);
+        $user = $this->repository->newQuery()->find($dto->userId);
         if (!$user) {
             throw new UserNotFoundException();
         }
         $response = $this->internalApiClient->findCustomerById($dto->customerId);
         $profile = collect($response['data'])
-            ->map(function ($item){
+            ->map(function ($item) {
                 return (object)[
                     "xid" => $item['CUST_ID_SANF'],
                     "typeId" => $item['ID_IDENTITY'],
@@ -60,7 +60,7 @@ class GetDetailCustomerProfileService implements ApplicationServiceInterface
                 ];
             })->first();
 
-        if($profile->email != $user->username){
+        if ($profile->email != $user->username) {
             throw new ForbiddenException('illegal access profile owner detected');
         }
 
