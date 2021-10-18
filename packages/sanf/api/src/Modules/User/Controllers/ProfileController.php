@@ -9,24 +9,25 @@ use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
 use Sanf\Api\Modules\User\Transformers\CustomerProfileSimpleTransformer;
 use Sanf\Api\Modules\User\Transformers\CustomerProfileTransformer;
-use Sanf\Core\Modules\User\GetListCustomerProfileService;
 use Sanf\Core\Modules\User\GetMyProfileService;
 use Sanf\Core\Modules\User\RegisterAsContractOwnerService;
 use Sanf\Core\Modules\User\Services\CreateCompanyProfileService;
+use Sanf\Core\Modules\User\Services\GetListEligibleCustomerProfileService;
 use Sanf\Core\Modules\User\Services\UpdateCompanyProfileService;
 use Sanf\Core\Modules\User\Services\UpdatePersonalProfileService;
 use Sanf\Core\Modules\User\SwitchActiveCustomerProfileService;
+use Spatie\Fractalistic\ArraySerializer;
 
 class ProfileController extends RestApiController
 {
-    public function getList(Guard $auth, GetListCustomerProfileService $service)
+    public function getList(Guard $auth, GetListEligibleCustomerProfileService $service)
     {
         $dto = (object)[
             'userId' => $auth->id(),
             'email' => $auth->user()->username
         ];
         $result = $service->execute($dto);
-        return fractal($result, CustomerProfileSimpleTransformer::class);
+        return fractal($result, CustomerProfileSimpleTransformer::class)->serializeWith(new ArraySerializer());
     }
 
     public function getDetail(Guard $auth, $xid, \Sanf\Core\Modules\User\Services\GetDetailCustomerProfileService $service)

@@ -22,7 +22,7 @@ class GetListCustomerProfileService implements ApplicationServiceInterface
         $this->internalApiClient = $internalApiClient;
     }
 
-    public function execute($dto = null)
+    public function execute($dto = null)// email, userId
     {
         $user = $this->repository->newQuery()->where('username', $dto->email)->first();
         if (!$user) {
