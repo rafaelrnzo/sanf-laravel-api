@@ -1,6 +1,6 @@
 <?php
 
-namespace Sanf\Api\Modules\Astra;
+namespace Sanf\Core\Modules\Astra;
 
 use NbsPhp\Core\Exceptions\ApiException;
 

@@ -15,7 +15,9 @@ class PromoAstraSeeder extends Seeder
         $data[] = [
             'xid' => nano_id(),
             'image_url' => 'http://apps.sanfinance.com/img/testing/pic1.jpg',
-            'link_url' => 'https://www.astralife.co.id/',
+            'web_url' => 'https://www.astralife.co.id/',
+            'android_url' => null,
+            'ios_url' => null,
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),
         ];
@@ -24,7 +26,9 @@ class PromoAstraSeeder extends Seeder
             $data[] = [
                 'xid' => nano_id(),
                 'image_url' => file_get_url('product-astra.png'),
-                'link_url' => 'https://www.astralife.co.id/',
+                'web_url' => 'https://astrapay.com/',
+                'android_url' => 'com.ada.astrapay',
+                'ios_url' => '1487585085',
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ];

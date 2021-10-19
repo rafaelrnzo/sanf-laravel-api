@@ -32,7 +32,9 @@ class EloquentProductAstraRepository implements ProductAstraRepositoryInterface
         $lists = $query->select([
             'promo_astra.xid',
             'promo_astra.image_url',
-            'promo_astra.link_url',
+            'promo_astra.web_url',
+            'promo_astra.android_url',
+            'promo_astra.ios_url',
             'promo_astra.created_at',
         ])
             ->orderBy($orderBy, $orderDir)

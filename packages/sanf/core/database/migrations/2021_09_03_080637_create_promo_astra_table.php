@@ -17,7 +17,9 @@ class CreatePromoAstraTable extends Migration
             $table->bigIncrements('id');
             $table->string('xid', 32)->index();
             $table->text('image_url')->nullable();
-            $table->text('link_url')->nullable();
+            $table->text('web_url')->nullable();
+            $table->text('android_url')->nullable();
+            $table->text('ios_url')->nullable();
             $table->timestamps();
             $table->string('created_by')->nullable();
             $table->string('updated_by')->nullable();
