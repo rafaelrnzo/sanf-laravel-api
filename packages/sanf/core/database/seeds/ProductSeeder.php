@@ -1,6 +1,5 @@
 <?php
 
-use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -35,14 +34,11 @@ class ProductSeeder extends Seeder
             ], [
                 'title' => 'Fasilitas Modal Usaha',
                 'description' => '<p>Butuh modal usaha? Tak perlu khawatir, SANF akan selalu mendukung Anda dalam hal pembiaayan.</p><p>Anda dapat mengajukan fasilitas pembiayaan modal Kerja untuk melancarkan arus keuangan dengan persyaratan mudah dan tenor panjang. Tunggu apalagi? Yuk segara hubungi SANF.</p>'
-            ], [
-                'title' => 'Fasilitas Modal Usaha',
-                'description' => '<p>Butuh modal usaha? Tak perlu khawatir, SANF akan selalu mendukung Anda dalam hal pembiaayan.</p><p>Anda dapat mengajukan fasilitas pembiayaan modal Kerja untuk melancarkan arus keuangan dengan persyaratan mudah dan tenor panjang. Tunggu apalagi? Yuk segara hubungi SANF.</p>'
             ],
         ];
 
-        for ($index = 1; $index <= 7; $index++) {
-            $file = new File(public_path("/assets/{$index}.png"), "{$index}.png");
+        for ($index = 1; $index <= 6; $index++) {
+            $file = new File(public_path("/assets/products/{$index}.jpg"), "{$index}.jpg");
             $uploadFile = file_upload(UploadedFile::createFromBase($file), '/product');
             $type = Storage::getMimeType("{$uploadFile}");
 
