@@ -91,4 +91,5 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
 
     Route::get('users/personal-assistants', ['as' => 'users.metadata-info', 'uses' => 'User\Controllers\UserController@getPersonalAssistant']);
 
+    Route::get('financing-methods', ['as' => 'financing-method.list', 'uses' => 'Financing\FinancingController@getList']);
 });

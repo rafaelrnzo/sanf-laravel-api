@@ -108,7 +108,7 @@ php artisan migrate
 composer dump-autoload
 
 # run sample data seeder for development purpose
-php artisan db:seed ---class=SampleSeeder
+php artisan db:seed --class=SampleSeeder
 ```
 
 # Run Application
