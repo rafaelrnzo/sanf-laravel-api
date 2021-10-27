@@ -10,5 +10,7 @@ interface FinancingRepositoryInterface
 
     public function query($specification);
 
+    public function get($specification);
+
     public function size($specifiaction = null);
 }

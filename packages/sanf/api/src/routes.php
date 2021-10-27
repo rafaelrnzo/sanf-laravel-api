@@ -95,4 +95,5 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::get('financing-object-brands/{brand_id}/types', ['as' => 'finance.personal.facility.type', 'uses' => 'Finance\Controllers\FinancingObjectController@getTypes']);
     Route::get('financing-object-brands/{brand_id}/types/{type_id}/models', ['as' => 'finance.personal.facility.models', 'uses' => 'Finance\Controllers\FinancingObjectController@getModels']);
     Route::get('financing-methods', ['as' => 'financing-method.list', 'uses' => 'Financing\FinancingController@getList']);
+    Route::post('financing-simulations', ['as' => 'financing-simulations.calc', 'uses' => 'Financing\FinancingController@calcSimulation']);
 });
