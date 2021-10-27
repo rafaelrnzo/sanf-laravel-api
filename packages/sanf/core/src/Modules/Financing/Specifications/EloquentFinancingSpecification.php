@@ -1,0 +1,24 @@
+<?php
+
+
+namespace Sanf\Core\Modules\Financing\Specifications;
+
+class EloquentFinancingSpecification implements FinancingSpecificationFactoryInterface
+{
+
+//    public function size(?int $skip, ?int $limit, ?string $sort_by)
+//    {
+//        return new EloquentPaginateFinancingMethodSpecification($skip, $limit, $sortBy);
+//    }
+
+    /**
+     * @param int|null $skip
+     * @param int|null $limit
+     * @param string|null $sort_by
+     * @return EloquentPaginateFinancingMethodSpecification
+     */
+    public function paginate(?int $skip, ?int $limit, ?string $sort_by)
+    {
+        return new EloquentPaginateFinancingMethodSpecification($skip,$limit,$sort_by);
+    }
+}
