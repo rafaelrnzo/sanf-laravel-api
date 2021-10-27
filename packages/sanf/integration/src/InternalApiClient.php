@@ -4,7 +4,11 @@
 namespace Sanf\Integration;
 
 
+use GuzzleHttp\Exception\GuzzleException;
+use NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException;
 use NbsPhp\ApiWrapper\Api\Request;
+use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
+use stdClass;
 
 class InternalApiClient
 {
@@ -209,15 +213,14 @@ class InternalApiClient
             ])->send();
 
         return $response->json();
-
     }
 
     /**
      * @param $id
-     * @return array|\stdClass|null
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException
-     * @throws \Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException
+     * @return array|stdClass|null
+     * @throws GuzzleException
+     * @throws EndpointNotDefinedException
+     * @throws SanfInternalApiDataNotFoundException
      */
     public function getStaffs($id)
     {
@@ -238,4 +241,32 @@ class InternalApiClient
             ->send();
 
         return $response->json();
-    }}
+    }
+
+    public function getBrands()
+    {
+        $response = Request::route('personal-application.facility.brand')->send();
+
+        return $response->json();
+    }
+
+    public function getTypes($brandId)
+    {
+        $response = Request::route('personal-application.facility.type')
+            ->pathParams(['brand_id' => $brandId])
+            ->send();
+
+        return $response->json();
+    }
+
+    public function getModels($brandId, $typeId)
+    {
+        $response = Request::route('personal-application.facility.model')
+            ->pathParams([
+                'brand_id' => $brandId,
+                'type_id' => $typeId,
+            ])->send();
+
+        return $response->json();
+    }
+}

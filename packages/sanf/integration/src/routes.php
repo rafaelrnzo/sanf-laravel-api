@@ -25,4 +25,8 @@ Route::group(config('sanf-internal.url'), [InternalApiProcessor::class], functio
 
     Route::get('customer.positions', 'customer/jabatan');
     Route::get('customer.titles', 'Customer/title/{type}');
+
+    Route::get('personal-application.facility.brand', 'Upload/brand');
+    Route::get('personal-application.facility.type', 'Upload/type/{brand_id}');
+    Route::get('personal-application.facility.model', 'Upload/model/{brand_id}/{type_id}');
 });
