@@ -31,7 +31,14 @@ class EloquentFinancingRepository extends AbstractEloquentRepository implements 
         return $this->stripEloquentModel($models);
     }
 
-    public function query($specification){
+    public function get($specification)
+    {
+        $models = $specification->buildQuery($this->model)->first();
+        return $this->stripEloquentModel($models);
+    }
+
+    public function query($specification)
+    {
         $models = $specification->buildQuery($this->model)->get();
         return $this->stripEloquentModel($models);
     }
