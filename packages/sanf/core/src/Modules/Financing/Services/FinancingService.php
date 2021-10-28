@@ -4,9 +4,8 @@
 namespace Sanf\Core\Modules\Financing\Services;
 
 use Sanf\Core\Modules\Financing\Repositories\FinancingRepositoryInterface;
-use Spatie\DataTransferObject\DataTransferObject;
 
-class FinancingService extends DataTransferObject
+class FinancingService
 {
     protected $repository;
 
