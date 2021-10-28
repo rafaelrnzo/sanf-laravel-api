@@ -6,6 +6,7 @@ namespace Sanf\Core\Modules\Financing\Services;
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Financing\Dto\SimulationCalculationResultDto;
+use Sanf\Core\Modules\Financing\Exceptions\FinancingGeneralException;
 use Sanf\Core\Modules\Financing\Repositories\FinancingRepositoryInterface;
 use Sanf\Core\Modules\Financing\Specifications\FinancingSpecificationFactoryInterface;
 
@@ -29,12 +30,16 @@ class SimulationCalculationService extends FinancingService implements Applicati
             $this->specificationFactory->findById($dto->financing_method_id)
         );
 
+        if(is_null($financing_method)){
+            throw new FinancingGeneralException('Financing Method Not Found');
+        }
+
         // Logic installment_per_month
-        $R = $financing_method->interest_rate / 12 * 100;
+        $R = $financing_method->interest_rate / 12 * 100 ;
 
         $R1 = pow(($R + 1), $dto->tenor_in_month);
 
-        $installment_per_month = ($R + ($R / $R1 - 1)) + ($dto->financing_amount - $dto->down_payment_amount);
+        $installment_per_month = ($R + ($R / ($R1 - 1))) + ($dto->financing_amount - $dto->down_payment_amount);
 
         // Preparing result
         $result = [
