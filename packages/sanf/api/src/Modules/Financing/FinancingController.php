@@ -3,14 +3,17 @@
 
 namespace Sanf\Api\Modules\Financing;
 
+use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
 use Sanf\Api\Modules\Financing\Transformers\FinancingListTransformer;
 use Sanf\Api\Modules\Financing\Transformers\FinancingSimulationTransformer;
 use Sanf\Core\Modules\Financing\Dto\ListFinancingMethodRequestDto;
+use Sanf\Core\Modules\Financing\Dto\SendEmailFinancingDto;
 use Sanf\Core\Modules\Financing\Dto\SimulationCalculationRequestDto;
 use Sanf\Core\Modules\Financing\Services\ListFinancingMethodService;
+use Sanf\Core\Modules\Financing\Services\SendEmailFinancingSimulationService;
 use Sanf\Core\Modules\Financing\Services\SimulationCalculationService;
 
 class FinancingController extends RestApiController
@@ -32,7 +35,7 @@ class FinancingController extends RestApiController
             ->paginateWith(new LazyPaginatorAdapter($result->paginate));
     }
 
-    public function calcSimulation(Request $request,SimulationCalculationService $calcService)
+    public function calcSimulation(Guard $auth, Request $request, SimulationCalculationService $calcService, SendEmailFinancingSimulationService $sendEmailService)
     {
         $input = $this->validate($request, [
             'financing_method_id' => ['required', 'integer'],
@@ -48,15 +51,22 @@ class FinancingController extends RestApiController
 
         $result = $calcService->execute($dto);
 
-        if($dto->is_send_email){
-            // TODO: Create Service Send Email
+        if ($dto->is_send_email) {
+
+            $dtoSendEmail = new SendEmailFinancingDto([
+                'result' => $result,
+                'userId' => $auth->id()
+            ]);
+
+            $sendEmailService->execute($dtoSendEmail);
         }
 
-        if($dto->is_download_pdf){
+        if ($dto->is_download_pdf) {
             //TODO: Create Service Download PDF
+            return $this->responseOk();
         }
 
-        return fractal($result,new FinancingSimulationTransformer());
+        return fractal($result, new FinancingSimulationTransformer());
 
     }
 
