@@ -245,14 +245,14 @@ class InternalApiClient
 
     public function getBrands()
     {
-        $response = Request::route('personal-application.facility.brand')->send();
+        $response = Request::route('financing-object.brand')->send();
 
         return $response->json();
     }
 
     public function getTypes($brandId)
     {
-        $response = Request::route('personal-application.facility.type')
+        $response = Request::route('financing-object.type')
             ->pathParams(['brand_id' => $brandId])
             ->send();
 
@@ -261,7 +261,7 @@ class InternalApiClient
 
     public function getModels($brandId, $typeId)
     {
-        $response = Request::route('personal-application.facility.model')
+        $response = Request::route('financing-object.model')
             ->pathParams([
                 'brand_id' => $brandId,
                 'type_id' => $typeId,
