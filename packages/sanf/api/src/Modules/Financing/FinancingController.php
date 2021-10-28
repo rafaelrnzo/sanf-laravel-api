@@ -78,10 +78,8 @@ class FinancingController extends RestApiController
             ]);
 
             // Execute download service
-            // TODO: Download file streamDownload
-            $downloadFinancingService->execute($dtoDownload);
-            return $this->streamDownload(function () {
-                echo "sampleDownload";
+            return $this->streamDownload(function() use ($downloadFinancingService, $dtoDownload) {
+                return $downloadFinancingService->execute($dtoDownload);
             }
                 , 'financingSimulation.pdf'
             );
