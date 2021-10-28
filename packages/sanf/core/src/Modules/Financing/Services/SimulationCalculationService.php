@@ -35,11 +35,15 @@ class SimulationCalculationService extends FinancingService implements Applicati
         }
 
         // Logic installment_per_month
-        $R = $financing_method->interest_rate / 12 * 100 ;
+        $R = ($financing_method->interest_rate * 100) / (12 * 100) ;
 
         $R1 = pow(($R + 1), $dto->tenor_in_month);
 
-        $installment_per_month = ($R + ($R / ($R1 - 1))) + ($dto->financing_amount - $dto->down_payment_amount);
+        // Calculation
+        $calc = ($R + ($R / ($R1 - 1))) * ($dto->financing_amount - $dto->down_payment_amount);
+
+        // Formatting calculation
+        $installment_per_month = number_format($calc, 2, '.', '');
 
         // Preparing result
         $result = [
