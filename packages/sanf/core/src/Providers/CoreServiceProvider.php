@@ -18,8 +18,10 @@ use Sanf\Core\Modules\ContactUs\AskUsRepositoryInterface;
 use Sanf\Core\Modules\ContactUs\AskUsTopicRepositoryInterface;
 use Sanf\Core\Modules\ContactUs\EloquentAskUsRepository;
 use Sanf\Core\Modules\ContactUs\EloquentAskUsTopicRepository;
-use Sanf\Core\Modules\Financing\Repositories\EloquentFinancingRepository;
-use Sanf\Core\Modules\Financing\Repositories\FinancingRepositoryInterface;
+use Sanf\Core\Modules\Financing\Repositories\FinancingMethod\EloquentFinancingRepository;
+use Sanf\Core\Modules\Financing\Repositories\FinancingMethod\FinancingRepositoryInterface;
+use Sanf\Core\Modules\Financing\Repositories\FinancingPrerequisite\EloquentFinancingPrerequisiteRepository;
+use Sanf\Core\Modules\Financing\Repositories\FinancingPrerequisite\FinancingPrerequisiteRepositoryInterface;
 use Sanf\Core\Modules\Financing\Specifications\EloquentFinancingSpecification;
 use Sanf\Core\Modules\Financing\Specifications\FinancingSpecificationFactoryInterface;
 use Sanf\Core\Modules\Location\EloquentLocationRepository;
@@ -90,6 +92,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(CommodityRepositoryInterface::class, EloquentCommodityRepository::class);
         $this->app->bind(StaffRepositoryInterface::class, EloquentStaffRepository::class);
         $this->app->bind(FinancingRepositoryInterface::class,EloquentFinancingRepository::class);
+        $this->app->bind(FinancingPrerequisiteRepositoryInterface::class,EloquentFinancingPrerequisiteRepository::class);
 
         //SPECIFICATION FACTORY
         $this->app->bind(ProjectSpecificationFactoryInterface::class, EloquentProjectSpecificationFactory::class);

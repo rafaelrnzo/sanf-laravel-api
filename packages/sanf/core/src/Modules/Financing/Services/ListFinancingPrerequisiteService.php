@@ -5,17 +5,16 @@ namespace Sanf\Core\Modules\Financing\Services;
 
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\Financing\Dto\ListFinancingMethodResultDto;
-use Sanf\Core\Modules\Financing\Repositories\FinancingMethod\FinancingRepositoryInterface;
+use Sanf\Core\Modules\Financing\Dto\ListFinancingPrerequisiteResultDto;
+use Sanf\Core\Modules\Financing\Repositories\FinancingPrerequisite\FinancingPrerequisiteRepositoryInterface;
 use Sanf\Core\Modules\Financing\Specifications\FinancingSpecificationFactoryInterface;
 
-
-class ListFinancingMethodService extends FinancingService implements ApplicationServiceInterface
+class ListFinancingPrerequisiteService extends FinancingService implements ApplicationServiceInterface
 {
     protected FinancingSpecificationFactoryInterface $specificationFactory;
 
     public function __construct(
-        FinancingRepositoryInterface $financingRepository,
+        FinancingPrerequisiteRepositoryInterface $financingRepository,
         FinancingSpecificationFactoryInterface $specificationFactory
     ) {
         parent::__construct($financingRepository);
@@ -35,15 +34,16 @@ class ListFinancingMethodService extends FinancingService implements Application
                 $dto->sort_by = 'ASC';
         }
 
-        // Get data from specification factory
+        // Get data from specification factory financing prerequisite
         $data = $this->repository->query(
-            $this->specificationFactory->paginate($dto->skip, $dto->limit , $dto->sort_by)
+            $this->specificationFactory->paginateFinancingPrerequisite($dto->skip, $dto->limit , $dto->sort_by)
         );
 
         $total = $this->repository->size(
-            $this->specificationFactory->paginate($dto->skip, $dto->limit , $dto->sort_by)
+            $this->specificationFactory->paginateFinancingPrerequisite($dto->skip, $dto->limit , $dto->sort_by)
         );
 
+        // Assert paginate to object
         $paginate = (object)[
             'total' => (int)$total,
             'count' => count($data),
@@ -53,7 +53,7 @@ class ListFinancingMethodService extends FinancingService implements Application
         ];
 
         // sent list data;
-        return new ListFinancingMethodResultDto([
+        return new ListFinancingPrerequisiteResultDto([
             'data' => $data,
             'paginate'=> $paginate
         ]);

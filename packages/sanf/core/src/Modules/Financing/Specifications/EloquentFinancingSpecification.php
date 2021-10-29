@@ -22,6 +22,11 @@ class EloquentFinancingSpecification implements FinancingSpecificationFactoryInt
         return new EloquentPaginateFinancingMethodSpecification($skip,$limit,$sort_by);
     }
 
+    public function paginateFinancingPrerequisite(?int $skip, ?int $limit, ?string $sort_by)
+    {
+        return new EloquentPaginateFinancingPrerequisiteSpecification($skip,$limit,$sort_by);
+    }
+
     public function findById(?int $id)
     {
         return new EloquentFindByIdFinancingMethodSpecification($id);

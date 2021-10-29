@@ -95,6 +95,7 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::get('financing-object-brands/{brand_id}/types', ['as' => 'financing.personal.facility.type', 'uses' => 'Financing\Controllers\FinancingObjectController@getTypes']);
     Route::get('financing-object-brands/{brand_id}/types/{type_id}/models', ['as' => 'financing.personal.facility.models', 'uses' => 'Financing\Controllers\FinancingObjectController@getModels']);
     Route::get('financing-methods', ['as' => 'financing-method.list', 'uses' => 'Financing\FinancingController@getList']);
+    Route::get('financing-prerequisites', ['as' => 'financing-prerequisites.list', 'uses' => 'Financing\FinancingController@getPrerequisiteList']);
     Route::post('financing-simulations', ['as' => 'financing-simulations.calc', 'uses' => 'Financing\FinancingController@calcSimulation']);
 
     Route::get('users/financing-applications/personal/{user_id}/ktp-validation', ['as' => 'financing.personal.validate.ktp', 'uses' => 'Financing\Controllers\FinancingCompletionController@validateKtp']);
