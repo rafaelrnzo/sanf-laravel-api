@@ -269,4 +269,24 @@ class InternalApiClient
 
         return $response->json();
     }
+
+    public function validateKtp($userId)
+    {
+        $response = Request::route('financing-completion.ktp')
+            ->pathParams([
+                'user_id' => $userId,
+            ])->send();
+
+        return $response->json();
+    }
+
+    public function validateNpwp($userId)
+    {
+        $response = Request::route('financing-completion.npwp')
+            ->pathParams([
+                'user_id' => $userId,
+            ])->send();
+
+        return $response->json();
+    }
 }
