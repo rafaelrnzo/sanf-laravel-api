@@ -9,13 +9,16 @@ use Illuminate\Support\Str;
 use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
 use Sanf\Api\Modules\Financing\Transformers\FinancingListTransformer;
+use Sanf\Api\Modules\Financing\Transformers\FinancingPrerequisiteTransformer;
 use Sanf\Api\Modules\Financing\Transformers\FinancingSimulationTransformer;
 use Sanf\Core\Modules\Financing\Dto\DownloadFinancingDto;
 use Sanf\Core\Modules\Financing\Dto\ListFinancingMethodRequestDto;
+use Sanf\Core\Modules\Financing\Dto\ListFinancingPrerequisiteRequestDto;
 use Sanf\Core\Modules\Financing\Dto\SendEmailFinancingDto;
 use Sanf\Core\Modules\Financing\Dto\SimulationCalculationRequestDto;
 use Sanf\Core\Modules\Financing\Services\DownloadFinancingSimulationService;
 use Sanf\Core\Modules\Financing\Services\ListFinancingMethodService;
+use Sanf\Core\Modules\Financing\Services\ListFinancingPrerequisiteService;
 use Sanf\Core\Modules\Financing\Services\SendEmailFinancingSimulationService;
 use Sanf\Core\Modules\Financing\Services\SimulationCalculationService;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -28,7 +31,6 @@ class FinancingController extends RestApiController
             'skip' => ['nullable', 'integer'],
             'limit' => ['nullable', 'integer'],
             'sort_by' => ['nullable', 'string'],
-            'keyword' => ['nullable', 'string'],
         ]);
 
         $dto = new ListFinancingMethodRequestDto($input);
@@ -36,6 +38,22 @@ class FinancingController extends RestApiController
         $result = $service->execute($dto);
 
         return fractal($result->data, new FinancingListTransformer())
+            ->paginateWith(new LazyPaginatorAdapter($result->paginate));
+    }
+
+    public function getPrerequisiteList(Request $request,ListFinancingPrerequisiteService $service)
+    {
+        $input = $this->validate($request, [
+            'skip' => ['nullable', 'integer'],
+            'limit' => ['nullable', 'integer'],
+            'sort_by' => ['nullable', 'string'],
+        ]);
+
+        $dto = new ListFinancingPrerequisiteRequestDto($input);
+
+        $result = $service->execute($dto);
+
+        return fractal($result->data, new FinancingPrerequisiteTransformer())
             ->paginateWith(new LazyPaginatorAdapter($result->paginate));
     }
 
@@ -78,7 +96,7 @@ class FinancingController extends RestApiController
             ]);
 
             // Execute download service
-            return $this->streamDownload(function() use ($downloadFinancingService, $dtoDownload) {
+            return $this->streamDownload(function () use ($downloadFinancingService, $dtoDownload) {
                 return $downloadFinancingService->execute($dtoDownload);
             }
                 , 'financingSimulation.pdf'
