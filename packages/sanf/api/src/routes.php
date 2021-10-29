@@ -91,9 +91,9 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
 
     Route::get('users/personal-assistants', ['as' => 'users.metadata-info', 'uses' => 'User\Controllers\UserController@getPersonalAssistant']);
 
-    Route::get('financing-object-brands', ['as' => 'finance.personal.facility.brand', 'uses' => 'Finance\Controllers\FinancingObjectController@getBrands']);
-    Route::get('financing-object-brands/{brand_id}/types', ['as' => 'finance.personal.facility.type', 'uses' => 'Finance\Controllers\FinancingObjectController@getTypes']);
-    Route::get('financing-object-brands/{brand_id}/types/{type_id}/models', ['as' => 'finance.personal.facility.models', 'uses' => 'Finance\Controllers\FinancingObjectController@getModels']);
+    Route::get('financing-object-brands', ['as' => 'financing.personal.facility.brand', 'uses' => 'Financing\Controllers\FinancingObjectController@getBrands']);
+    Route::get('financing-object-brands/{brand_id}/types', ['as' => 'financing.personal.facility.type', 'uses' => 'Financing\Controllers\FinancingObjectController@getTypes']);
+    Route::get('financing-object-brands/{brand_id}/types/{type_id}/models', ['as' => 'financing.personal.facility.models', 'uses' => 'Financing\Controllers\FinancingObjectController@getModels']);
     Route::get('financing-methods', ['as' => 'financing-method.list', 'uses' => 'Financing\FinancingController@getList']);
     Route::post('financing-simulations', ['as' => 'financing-simulations.calc', 'uses' => 'Financing\FinancingController@calcSimulation']);
 });

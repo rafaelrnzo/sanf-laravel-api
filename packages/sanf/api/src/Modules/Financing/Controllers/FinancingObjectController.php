@@ -1,15 +1,15 @@
 <?php
 
-namespace Sanf\Api\Modules\Finance\Controllers;
+namespace Sanf\Api\Modules\Financing\Controllers;
 
 use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
-use Sanf\Api\Modules\Finance\Transformers\BrandListTransformer;
-use Sanf\Api\Modules\Finance\Transformers\ModelListTransformer;
-use Sanf\Api\Modules\Finance\Transformers\TypeListTransformer;
-use Sanf\Core\Modules\Finance\Services\GetBrandListService;
-use Sanf\Core\Modules\Finance\Services\GetModelListService;
-use Sanf\Core\Modules\Finance\Services\GetTypeListService;
+use Sanf\Api\Modules\Financing\Transformers\BrandListTransformer;
+use Sanf\Api\Modules\Financing\Transformers\ModelListTransformer;
+use Sanf\Api\Modules\Financing\Transformers\TypeListTransformer;
+use Sanf\Core\Modules\Financing\Services\GetBrandListService;
+use Sanf\Core\Modules\Financing\Services\GetModelListService;
+use Sanf\Core\Modules\Financing\Services\GetTypeListService;
 
 class FinancingObjectController extends RestApiController
 {

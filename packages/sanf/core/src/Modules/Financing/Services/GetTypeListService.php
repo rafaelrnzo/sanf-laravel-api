@@ -1,6 +1,6 @@
 <?php
 
-namespace Sanf\Core\Modules\Finance\Services;
+namespace Sanf\Core\Modules\Financing\Services;
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Integration\InternalApiClient;

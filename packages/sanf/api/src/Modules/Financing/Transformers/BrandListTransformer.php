@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Sanf\Api\Modules\Finance\Transformers;
+namespace Sanf\Api\Modules\Financing\Transformers;
 
 
 use League\Fractal\TransformerAbstract;
