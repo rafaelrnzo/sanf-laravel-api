@@ -8,7 +8,7 @@ use NbsPhp\Core\Models\AbstractModel;
 
 class FinancingPrerequisiteModel extends AbstractModel
 {
-    protected $table = 'financing_prerequisites';
+    protected $table = 'financing_prerequisite';
 
     public function childs()
     {

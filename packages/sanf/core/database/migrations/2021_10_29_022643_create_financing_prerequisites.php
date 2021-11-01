@@ -14,7 +14,7 @@ class CreateFinancingPrerequisites extends Migration
      */
     public function up()
     {
-        Schema::create('financing_prerequisites', function (Blueprint $table) {
+        Schema::create('financing_prerequisite', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('parent_id')->nullable();
             $table->string('title');
@@ -26,7 +26,7 @@ class CreateFinancingPrerequisites extends Migration
             $table->bigInteger('version')->default(1);
         });
 
-        DB::table('financing_prerequisites')->insert([
+        DB::table('financing_prerequisite')->insert([
             [
                 'id' => 1,
                 'parent_id' => null,
