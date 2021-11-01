@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Sanf\Core\Modules\Financing\Repositories\FinancingPrerequisite;
+namespace Sanf\Core\Modules\Financing\Repositories;
 
 interface FinancingPrerequisiteRepositoryInterface
 {

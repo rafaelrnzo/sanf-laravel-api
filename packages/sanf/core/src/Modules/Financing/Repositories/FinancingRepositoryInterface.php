@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Sanf\Core\Modules\Financing\Repositories\FinancingMethod;
+namespace Sanf\Core\Modules\Financing\Repositories;
 
 
 interface FinancingRepositoryInterface

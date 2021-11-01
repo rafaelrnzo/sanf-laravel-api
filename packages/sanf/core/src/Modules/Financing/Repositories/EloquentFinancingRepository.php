@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Sanf\Core\Modules\Financing\Repositories\FinancingMethod;
+namespace Sanf\Core\Modules\Financing\Repositories;
 
 use NbsPhp\Core\Repositories\AbstractEloquentRepository;
 use Sanf\Core\Modules\Financing\Models\FinancingMethodModel;

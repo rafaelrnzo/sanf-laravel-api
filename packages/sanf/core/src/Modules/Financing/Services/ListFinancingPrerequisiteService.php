@@ -6,7 +6,7 @@ namespace Sanf\Core\Modules\Financing\Services;
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Financing\Dto\ListFinancingPrerequisiteResultDto;
-use Sanf\Core\Modules\Financing\Repositories\FinancingPrerequisite\FinancingPrerequisiteRepositoryInterface;
+use Sanf\Core\Modules\Financing\Repositories\FinancingPrerequisiteRepositoryInterface;
 use Sanf\Core\Modules\Financing\Specifications\FinancingSpecificationFactoryInterface;
 
 class ListFinancingPrerequisiteService extends FinancingService implements ApplicationServiceInterface
