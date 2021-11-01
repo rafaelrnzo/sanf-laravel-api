@@ -8,10 +8,10 @@ use Sanf\Core\Modules\Financing\Services\ValidateNpwpService;
 
 class FinancingCompletionController extends RestApiController
 {
-    public function validateKtp($user_id, ValidateKtpService $service)
+    public function validateKtp($xid, ValidateKtpService $service)
     {
         $dto = (object)[
-            'user_id' => $user_id,
+            'user_id' => $xid,
         ];
 
         $isValid = $service->execute($dto);
@@ -21,10 +21,10 @@ class FinancingCompletionController extends RestApiController
         ]);
     }
 
-    public function validateNpwp($user_id, ValidateNpwpService $service)
+    public function validateNpwp($xid, ValidateNpwpService $service)
     {
         $dto = (object)[
-            'user_id' => $user_id,
+            'user_id' => $xid,
         ];
 
         $isValid = $service->execute($dto);

@@ -98,6 +98,6 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::get('financing-prerequisites', ['as' => 'financing-prerequisites.list', 'uses' => 'Financing\FinancingController@getPrerequisiteList']);
     Route::post('financing-simulations', ['as' => 'financing-simulations.calc', 'uses' => 'Financing\FinancingController@calcSimulation']);
 
-    Route::get('users/financing-applications/personal/{user_id}/ktp-validation', ['as' => 'financing.personal.validate.ktp', 'uses' => 'Financing\Controllers\FinancingCompletionController@validateKtp']);
-    Route::get('users/financing-applications/company/{user_id}/npwp-validation', ['as' => 'financing.company.validate.ktp', 'uses' => 'Financing\Controllers\FinancingCompletionController@validateNpwp']);
+    Route::get('users/profile/{xid}/has-valid-ktp', ['as' => 'financing.personal.validate.ktp', 'uses' => 'Financing\Controllers\FinancingCompletionController@validateKtp']);
+    Route::get('users/profile/{xid}/has-valid-npwp', ['as' => 'financing.company.validate.ktp', 'uses' => 'Financing\Controllers\FinancingCompletionController@validateNpwp']);
 });
