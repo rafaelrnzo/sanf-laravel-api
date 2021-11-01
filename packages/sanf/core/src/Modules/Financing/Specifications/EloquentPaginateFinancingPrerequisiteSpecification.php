@@ -33,9 +33,7 @@ class EloquentPaginateFinancingPrerequisiteSpecification
                 'title',
                 'description'
             ])
-            ->with(['items'=>function($query){
-                return $query->select('id', 'title', 'description','parent_id')->with(['items']);
-            }])
+            ->with('items')
             ->whereNull('parent_id')
             ->limit($this->limit)
             ->offset($this->skip)
