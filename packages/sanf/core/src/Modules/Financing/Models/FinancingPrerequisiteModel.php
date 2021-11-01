@@ -10,8 +10,14 @@ class FinancingPrerequisiteModel extends AbstractModel
 {
     protected $table = 'financing_prerequisites';
 
-    public function items(){
+    public function childs()
+    {
         return $this->hasMany(FinancingPrerequisiteModel::class, 'parent_id', 'id');
+    }
+
+    public function items()
+    {
+        return $this->childs()->with('items');
     }
 }
 
