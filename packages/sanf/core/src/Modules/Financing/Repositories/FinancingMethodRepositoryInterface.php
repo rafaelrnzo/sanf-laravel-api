@@ -4,7 +4,7 @@
 namespace Sanf\Core\Modules\Financing\Repositories;
 
 
-interface FinancingRepositoryInterface
+interface FinancingMethodRepositoryInterface
 {
     public function find($limit, $offset, $sort_by);
 

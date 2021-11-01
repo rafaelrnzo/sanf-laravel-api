@@ -7,7 +7,8 @@ namespace Sanf\Core\Modules\Financing\Services;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Financing\Dto\SimulationCalculationResultDto;
 use Sanf\Core\Modules\Financing\Exceptions\FinancingGeneralException;
-use Sanf\Core\Modules\Financing\Repositories\FinancingRepositoryInterface;
+use Sanf\Core\Modules\Financing\Repositories\FinancingMethodRepositoryInterface;
+use Sanf\Core\Modules\Financing\Repositories\FinancingPrerequisiteRepositoryInterface;
 use Sanf\Core\Modules\Financing\Specifications\FinancingSpecificationFactoryInterface;
 
 class SimulationCalculationService extends FinancingService implements ApplicationServiceInterface
@@ -15,18 +16,19 @@ class SimulationCalculationService extends FinancingService implements Applicati
     protected FinancingSpecificationFactoryInterface $specificationFactory;
 
     public function __construct(
-        FinancingRepositoryInterface $financingRepository,
+        FinancingMethodRepositoryInterface $financingMethodRepository,
+        FinancingPrerequisiteRepositoryInterface $financingPrerequisiteRepository,
         FinancingSpecificationFactoryInterface $specificationFactory
     )
     {
-        parent::__construct($financingRepository);
+        parent::__construct($financingMethodRepository,$financingPrerequisiteRepository);
         $this->specificationFactory = $specificationFactory;
     }
 
     public function execute($dto = null)
     {
         // Get data financing method from repository
-        $financing_method = $this->repository->get(
+        $financing_method = $this->financingMethodRepository->get(
             $this->specificationFactory->findById($dto->financing_method_id)
         );
 

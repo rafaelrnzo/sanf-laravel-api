@@ -6,7 +6,7 @@ namespace Sanf\Core\Modules\Financing\Repositories;
 use NbsPhp\Core\Repositories\AbstractEloquentRepository;
 use Sanf\Core\Modules\Financing\Models\FinancingMethodModel;
 
-class EloquentFinancingRepository extends AbstractEloquentRepository implements FinancingRepositoryInterface
+class EloquentFinancingMethodRepository extends AbstractEloquentRepository implements FinancingMethodRepositoryInterface
 {
     protected FinancingMethodModel $model;
 

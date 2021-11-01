@@ -6,6 +6,7 @@ namespace Sanf\Core\Modules\Financing\Services;
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Financing\Dto\ListFinancingPrerequisiteResultDto;
+use Sanf\Core\Modules\Financing\Repositories\FinancingMethodRepositoryInterface;
 use Sanf\Core\Modules\Financing\Repositories\FinancingPrerequisiteRepositoryInterface;
 use Sanf\Core\Modules\Financing\Specifications\FinancingSpecificationFactoryInterface;
 
@@ -14,10 +15,11 @@ class ListFinancingPrerequisiteService extends FinancingService implements Appli
     protected FinancingSpecificationFactoryInterface $specificationFactory;
 
     public function __construct(
-        FinancingPrerequisiteRepositoryInterface $financingRepository,
+        FinancingMethodRepositoryInterface $financingMethodRepository,
+        FinancingPrerequisiteRepositoryInterface $financingPrerequisiteRepository,
         FinancingSpecificationFactoryInterface $specificationFactory
     ) {
-        parent::__construct($financingRepository);
+        parent::__construct($financingMethodRepository,$financingPrerequisiteRepository);
         $this->specificationFactory = $specificationFactory;
     }
 
@@ -35,11 +37,11 @@ class ListFinancingPrerequisiteService extends FinancingService implements Appli
         }
 
         // Get data from specification factory financing prerequisite
-        $data = $this->repository->query(
+        $data = $this->financingPrerequisiteRepository->query(
             $this->specificationFactory->paginateFinancingPrerequisite($dto->skip, $dto->limit , $dto->sort_by)
         );
 
-        $total = $this->repository->size(
+        $total = $this->financingPrerequisiteRepository->size(
             $this->specificationFactory->paginateFinancingPrerequisite($dto->skip, $dto->limit , $dto->sort_by)
         );
 
