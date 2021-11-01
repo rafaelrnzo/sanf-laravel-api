@@ -31,4 +31,6 @@ Route::group(config('sanf-internal.url'), [InternalApiProcessor::class], functio
     Route::get('financing-object.model', 'Upload/model/{brand_id}/{type_id}');
     Route::get('financing-completion.ktp', 'Upload/CheckKTP/{user_id}');
     Route::get('financing-completion.npwp', 'Upload/CheckNPWP/{user_id}');
+
+    Route::post('financing.upload', 'upload');
 });

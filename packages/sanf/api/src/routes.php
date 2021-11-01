@@ -100,4 +100,6 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
 
     Route::get('users/profile/{xid}/has-valid-ktp', ['as' => 'financing.personal.validate.ktp', 'uses' => 'Financing\Controllers\FinancingCompletionController@validateKtp']);
     Route::get('users/profile/{xid}/has-valid-npwp', ['as' => 'financing.company.validate.ktp', 'uses' => 'Financing\Controllers\FinancingCompletionController@validateNpwp']);
+
+    Route::post('users/profile/{xid}/assets', ['as' => 'financing.assets', 'uses' => 'Financing\Controllers\FinancingDocumentController@upload']);
 });

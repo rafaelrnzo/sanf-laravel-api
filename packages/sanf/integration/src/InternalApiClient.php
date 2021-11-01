@@ -289,4 +289,19 @@ class InternalApiClient
 
         return $response->json();
     }
+
+
+    public function uploadFinancingAsset($request)
+    {
+        $response = Request::route('financing.upload')
+            ->json([
+                'image' => $request->file,
+                'author' => $request->author,
+                'JenisDoc' => $request->asset_type,
+                'CustomerId' => $request->xid,
+            ])
+            ->send();
+
+        return $response->json();
+    }
 }
