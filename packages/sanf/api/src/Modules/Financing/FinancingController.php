@@ -5,7 +5,6 @@ namespace Sanf\Api\Modules\Financing;
 
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
 use Sanf\Api\Modules\Financing\Transformers\FinancingListTransformer;
@@ -21,11 +20,29 @@ use Sanf\Core\Modules\Financing\Services\ListFinancingMethodService;
 use Sanf\Core\Modules\Financing\Services\ListFinancingPrerequisiteService;
 use Sanf\Core\Modules\Financing\Services\SendEmailFinancingSimulationService;
 use Sanf\Core\Modules\Financing\Services\SimulationCalculationService;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class FinancingController extends RestApiController
 {
-    public function getList(Request $request, ListFinancingMethodService $service)
+    //TODO LOGIC
+    public function getListFacilities(Request $request, ListFinancingMethodService $service)
+    {
+        $input = $this->validate($request, [
+            'skip' => ['nullable', 'integer'],
+            'limit' => ['nullable', 'integer'],
+            'sort_by' => ['nullable', 'string'],
+            'keyword' => ['nullable', 'string'],
+        ]);
+
+        $dto = new ListFinancingMethodRequestDto($input);
+
+        $result = $service->execute($dto);
+
+        return fractal($result->data, new FinancingListTransformer())
+            ->paginateWith(new LazyPaginatorAdapter($result->paginate));
+    }
+
+    //TODO LOGIC
+    public function getListMethodsByFacility(Request $request, $id, ListFinancingMethodService $service)
     {
         $input = $this->validate($request, [
             'skip' => ['nullable', 'integer'],
@@ -57,13 +74,29 @@ class FinancingController extends RestApiController
             ->paginateWith(new LazyPaginatorAdapter($result->paginate));
     }
 
-    public function calcSimulation(
+    public function getListMethods(Request $request, ListFinancingMethodService $service)
+    {
+        $input = $this->validate($request, [
+            'skip' => ['nullable', 'integer'],
+            'limit' => ['nullable', 'integer'],
+            'sort_by' => ['nullable', 'string'],
+            'keyword' => ['nullable', 'string'],
+        ]);
+
+        $dto = new ListFinancingMethodRequestDto($input);
+
+        $result = $service->execute($dto);
+
+        return fractal($result->data, new FinancingListTransformer())
+            ->paginateWith(new LazyPaginatorAdapter($result->paginate));
+    }
+
+    public function postCalculateSimulation(
         Guard $auth, Request $request,
         SimulationCalculationService $calcService,
         SendEmailFinancingSimulationService $sendEmailService,
         DownloadFinancingSimulationService $downloadFinancingService
-    )
-    {
+    ) {
         $input = $this->validate($request, [
             'financing_method_id' => ['required', 'integer'],
             'financing_amount' => ['required', 'numeric'],
@@ -104,28 +137,5 @@ class FinancingController extends RestApiController
         }
 
         return fractal($result, new FinancingSimulationTransformer());
-
     }
-
-    public function streamDownload($callback, $name = null, array $headers = [], $disposition = 'attachment')
-    {
-
-        $response = new StreamedResponse($callback, 200, $headers);
-
-        if (!is_null($name)) {
-            $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
-                $disposition,
-                $name,
-                $this->fallbackName($name)
-            ));
-        }
-
-        return $response;
-    }
-
-    protected function fallbackName($name)
-    {
-        return str_replace('%', '', Str::ascii($name));
-    }
-
 }
