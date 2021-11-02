@@ -11,8 +11,10 @@ class FinancingService
     protected FinancingMethodRepositoryInterface $financingMethodRepository;
     protected FinancingPrerequisiteRepositoryInterface $financingPrerequisiteRepository;
 
-    public function __construct(FinancingMethodRepositoryInterface $financingMethodRepository,FinancingPrerequisiteRepositoryInterface $financingPrerequisiteRepository)
-    {
+    public function __construct(
+        FinancingMethodRepositoryInterface $financingMethodRepository,
+        FinancingPrerequisiteRepositoryInterface $financingPrerequisiteRepository
+    ) {
         $this->financingMethodRepository = $financingMethodRepository;
         $this->financingPrerequisiteRepository = $financingPrerequisiteRepository;
     }

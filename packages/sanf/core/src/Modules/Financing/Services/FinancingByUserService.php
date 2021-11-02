@@ -17,8 +17,7 @@ class FinancingByUserService extends FinancingService
         FinancingMethodRepositoryInterface $financingMethodRepository,
         FinancingPrerequisiteRepositoryInterface $financingPrerequisiteRepository,
         AuthModel $userRepository
-    )
-    {
+    ) {
         parent::__construct($financingMethodRepository, $financingPrerequisiteRepository);
         $this->userRepository = $userRepository;
     }

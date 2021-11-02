@@ -42,6 +42,10 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::get('users/profiles', ['as' => 'users.profiles.list', 'uses' => 'User\Controllers\ProfileController@getList']);
     Route::get('users/profiles/{xid}', ['as' => 'users.profiles.detail', 'uses' => 'User\Controllers\ProfileController@getDetail']);
     Route::put('users/profiles/{xid}', ['as' => 'users.profiles.update', 'uses' => 'User\Controllers\ProfileController@putUpdatePersonalProfile']);
+    Route::post('users/profile/{xid}/assets', ['as' => 'financing.assets', 'uses' => 'Financing\Controllers\FinancingDocumentController@upload']);
+    //TODO REFACTOR
+    Route::get('users/profiles/{xid}/has-valid-ktp', ['as' => 'users.profiles.validate-ktp', 'uses' => 'Financing\Controllers\FinancingCompletionController@validateKtp']);
+    Route::get('users/profiles/{xid}/has-valid-npwp', ['as' => 'users.profiles.validate-npwp', 'uses' => 'Financing\Controllers\FinancingCompletionController@validateNpwp']);
     Route::post('users/profiles/{xid}/company', ['as' => 'users.profiles.company.create', 'uses' => 'User\Controllers\ProfileController@postCreateCompanyProfile']);
     Route::put('users/profiles/{xid}/company', ['as' => 'users.profiles.company.update', 'uses' => 'User\Controllers\ProfileController@putUpdateCompanyProfile']);
     Route::post('users/profiles/{xid}/switch', ['as' => 'users.profiles.switch', 'uses' => 'User\Controllers\ProfileController@postSwitch']);
@@ -68,6 +72,7 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::get('locations', ['as' => 'locations.list', 'uses' => 'Location\LocationController@getList']);
 
     Route::get('users/metadata-info', ['as' => 'users.metadata-info', 'uses' => 'User\Controllers\UserController@getProjectMetadataInfo']);
+    Route::get('users/metadata-financing', ['as' => 'users.metadata-financing', 'uses' => 'User\Controllers\UserController@getFinancingMetadata']);
 
     Route::get('projects', ['as' => 'projects.list', 'uses' => 'Project\ProjectController@getList']);
     Route::get('projects/{xid}', ['as' => 'projects.detail', 'uses' => 'Project\ProjectController@getDetail']);
@@ -94,13 +99,13 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::get('financing-object-brands', ['as' => 'financing.personal.facility.brand', 'uses' => 'Financing\Controllers\FinancingObjectController@getBrands']);
     Route::get('financing-object-brands/{brand_id}/types', ['as' => 'financing.personal.facility.type', 'uses' => 'Financing\Controllers\FinancingObjectController@getTypes']);
     Route::get('financing-object-brands/{brand_id}/types/{type_id}/models', ['as' => 'financing.personal.facility.models', 'uses' => 'Financing\Controllers\FinancingObjectController@getModels']);
-    Route::get('financing-methods', ['as' => 'financing-method.list', 'uses' => 'Financing\FinancingController@getList']);
-    Route::get('financing-facilities', ['as' => 'financing-facilities.list', 'uses' => 'Financing\FinancingController@getListFacilities']);
-    Route::get('financing-facilities/{id}/methods', ['as' => 'financing-facilities.method.list', 'uses' => 'Financing\FinancingController@getListMethodsByFacility']);
-    Route::get('financing-prerequisites', ['as' => 'financing-prerequisites.list', 'uses' => 'Financing\FinancingController@getPrerequisiteList']);
+    Route::get('financing-methods', ['as' => 'financing-method.list', 'uses' => 'Financing\Controllers\FinancingController@getList']);
+    Route::get('financing-facilities', ['as' => 'financing-facilities.list', 'uses' => 'Financing\Controllers\FinancingController@getListFacilities']);
+    Route::get('financing-facilities/{id}/methods', ['as' => 'financing-facilities.method.list', 'uses' => 'Financing\Controllers\FinancingController@getListMethodsByFacility']);
+    Route::get('financing-prerequisites', ['as' => 'financing-prerequisites.list', 'uses' => 'Financing\Controllers\FinancingController@getPrerequisiteList']);
 
-    Route::get('users/profile/{xid}/has-valid-ktp', ['as' => 'financing.personal.validate.ktp', 'uses' => 'Financing\Controllers\FinancingCompletionController@validateKtp']);
-    Route::get('users/profile/{xid}/has-valid-npwp', ['as' => 'financing.company.validate.ktp', 'uses' => 'Financing\Controllers\FinancingCompletionController@validateNpwp']);
-
-    Route::post('users/profile/{xid}/assets', ['as' => 'financing.assets', 'uses' => 'Financing\Controllers\FinancingDocumentController@upload']);
+    Route::get('users/financing-applications', ['as' => 'financing-applications.list', 'uses' => 'Financing\Controllers\FinancingApplicationController@getList']);
+    Route::get('users/financing-applications/{xid}', ['as' => 'financing-applications.detail', 'uses' => 'Financing\Controllers\FinancingApplicationController@getDetail']);
+    Route::post('users/financing-applications/company', ['as' => 'financing-applications.company.create', 'uses' => 'Financing\Controllers\FinancingApplicationController@postCreateByCompanyProfile']);
+    Route::post('users/financing-applications/personal', ['as' => 'financing-applications.personal.create', 'uses' => 'Financing\Controllers\FinancingApplicationController@postCreateByPersonalProfile']);
 });

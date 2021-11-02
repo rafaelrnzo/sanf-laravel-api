@@ -1,6 +1,6 @@
 <?php
 
-namespace Sanf\Api\Modules\User\Dto;
+namespace Sanf\Core\Modules\User\Dto;
 
 use Spatie\DataTransferObject\DataTransferObject;
 

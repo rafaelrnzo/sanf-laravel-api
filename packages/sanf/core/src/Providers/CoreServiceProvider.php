@@ -19,10 +19,10 @@ use Sanf\Core\Modules\ContactUs\AskUsTopicRepositoryInterface;
 use Sanf\Core\Modules\ContactUs\EloquentAskUsRepository;
 use Sanf\Core\Modules\ContactUs\EloquentAskUsTopicRepository;
 use Sanf\Core\Modules\Financing\Repositories\EloquentFinancingMethodRepository;
-use Sanf\Core\Modules\Financing\Repositories\FinancingMethodRepositoryInterface;
 use Sanf\Core\Modules\Financing\Repositories\EloquentFinancingPrerequisiteRepository;
+use Sanf\Core\Modules\Financing\Repositories\FinancingMethodRepositoryInterface;
 use Sanf\Core\Modules\Financing\Repositories\FinancingPrerequisiteRepositoryInterface;
-use Sanf\Core\Modules\Financing\Specifications\EloquentFinancingSpecification;
+use Sanf\Core\Modules\Financing\Specifications\EloquentFinancingSpecificationFactory;
 use Sanf\Core\Modules\Financing\Specifications\FinancingSpecificationFactoryInterface;
 use Sanf\Core\Modules\Location\EloquentLocationRepository;
 use Sanf\Core\Modules\Location\LocationRepositoryInterface;
@@ -97,7 +97,7 @@ class CoreServiceProvider extends ServiceProvider
         //SPECIFICATION FACTORY
         $this->app->bind(ProjectSpecificationFactoryInterface::class, EloquentProjectSpecificationFactory::class);
         $this->app->bind(CommoditySpecificationFactoryInterface::class, EloquentCommoditySpecificationFactory::class);
-        $this->app->bind(FinancingSpecificationFactoryInterface::class, EloquentFinancingSpecification::class);
+        $this->app->bind(FinancingSpecificationFactoryInterface::class, EloquentFinancingSpecificationFactory::class);
     }
 
     protected function registerViews()

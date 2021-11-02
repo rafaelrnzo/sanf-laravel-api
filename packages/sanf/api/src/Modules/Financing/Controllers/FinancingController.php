@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Sanf\Api\Modules\Financing;
+namespace Sanf\Api\Modules\Financing\Controllers;
 
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
@@ -20,6 +20,7 @@ use Sanf\Core\Modules\Financing\Services\ListFinancingMethodService;
 use Sanf\Core\Modules\Financing\Services\ListFinancingPrerequisiteService;
 use Sanf\Core\Modules\Financing\Services\SendEmailFinancingSimulationService;
 use Sanf\Core\Modules\Financing\Services\SimulationCalculationService;
+use function fractal;
 
 class FinancingController extends RestApiController
 {
@@ -30,7 +31,6 @@ class FinancingController extends RestApiController
             'skip' => ['nullable', 'integer'],
             'limit' => ['nullable', 'integer'],
             'sort_by' => ['nullable', 'string'],
-            'keyword' => ['nullable', 'string'],
         ]);
 
         $dto = new ListFinancingMethodRequestDto($input);
@@ -58,7 +58,7 @@ class FinancingController extends RestApiController
             ->paginateWith(new LazyPaginatorAdapter($result->paginate));
     }
 
-    public function getPrerequisiteList(Request $request,ListFinancingPrerequisiteService $service)
+    public function getPrerequisiteList(Request $request, ListFinancingPrerequisiteService $service)
     {
         $input = $this->validate($request, [
             'skip' => ['nullable', 'integer'],
@@ -80,7 +80,6 @@ class FinancingController extends RestApiController
             'skip' => ['nullable', 'integer'],
             'limit' => ['nullable', 'integer'],
             'sort_by' => ['nullable', 'string'],
-            'keyword' => ['nullable', 'string'],
         ]);
 
         $dto = new ListFinancingMethodRequestDto($input);
@@ -132,7 +131,7 @@ class FinancingController extends RestApiController
             return $this->streamDownload(function () use ($downloadFinancingService, $dtoDownload) {
                 return $downloadFinancingService->execute($dtoDownload);
             }
-                , 'financingSimulation.pdf'
+                , 'SANF-Simulasi' . date('Y-m-d-H-i-s') . '.pdf'
             );
         }
 

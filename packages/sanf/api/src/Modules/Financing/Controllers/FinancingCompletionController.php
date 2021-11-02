@@ -8,6 +8,7 @@ use Sanf\Core\Modules\Financing\Services\ValidateNpwpService;
 
 class FinancingCompletionController extends RestApiController
 {
+    //TODO Refactor to USER
     public function validateKtp($xid, ValidateKtpService $service)
     {
         $dto = (object)[
@@ -20,7 +21,7 @@ class FinancingCompletionController extends RestApiController
             'is_valid' => $isValid,
         ]);
     }
-
+    //TODO Refactor to USER
     public function validateNpwp($xid, ValidateNpwpService $service)
     {
         $dto = (object)[

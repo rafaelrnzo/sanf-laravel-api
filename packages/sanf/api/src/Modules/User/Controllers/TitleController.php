@@ -5,8 +5,8 @@ namespace Sanf\Api\Modules\User\Controllers;
 
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
-use Sanf\Api\Modules\User\Dto\GetListTitleDto;
 use Sanf\Api\Modules\User\Transformers\TitleTransformer;
+use Sanf\Core\Modules\User\Dto\GetListTitleDto;
 use Sanf\Core\Modules\User\GetListTitleService;
 use Spatie\Fractalistic\ArraySerializer;
 

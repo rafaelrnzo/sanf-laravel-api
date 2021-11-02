@@ -3,14 +3,8 @@
 
 namespace Sanf\Core\Modules\Financing\Specifications;
 
-class EloquentFinancingSpecification implements FinancingSpecificationFactoryInterface
+class EloquentFinancingSpecificationFactory implements FinancingSpecificationFactoryInterface
 {
-
-//    public function size(?int $skip, ?int $limit, ?string $sort_by)
-//    {
-//        return new EloquentPaginateFinancingMethodSpecification($skip, $limit, $sortBy);
-//    }
-
     /**
      * @param int|null $skip
      * @param int|null $limit
