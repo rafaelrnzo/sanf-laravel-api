@@ -1,10 +1,11 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Financing\Repositories;
 
+use Illuminate\Support\Facades\DB;
 use NbsPhp\Core\Repositories\AbstractEloquentRepository;
 use Sanf\Core\Modules\Financing\Models\FinancingApplicationModel;
+use Sanf\Core\Modules\Financing\Models\FinancingObjectModel;
 
 class EloquentFinancingApplicationRepository extends AbstractEloquentRepository implements FinancingApplicationRepositoryInterface
 {
@@ -15,9 +16,15 @@ class EloquentFinancingApplicationRepository extends AbstractEloquentRepository 
         $this->model = $model;
     }
 
+    public function findById($id)
+    {
+        $model = $this->model->newQuery()->with(['user', 'status'])->find($id);
+        return $this->stripEloquentModel($model);
+    }
+
     public function findByXid($xid)
     {
-        $model = $this->model->newQuery()->where('xid', $xid)->with(['status'])->first();
+        $model = $this->model->newQuery()->where('xid', $xid)->with(['user', 'status'])->first();
         return $this->stripEloquentModel($model);
     }
 
@@ -29,7 +36,16 @@ class EloquentFinancingApplicationRepository extends AbstractEloquentRepository 
 
     public function add($fields)
     {
-        $model = $this->model->newQuery()->forceCreate($fields);
+        $model = DB::transaction(function () use ($fields) {
+            $fieldFinancingObjects = $fields['financing_objects'];
+            $fieldFinancingApplication = collect($fields)->except(['financing_objects'])->toArray();
+            $model = $this->model->newQuery()->forceCreate($fieldFinancingApplication);
+            $financingObjects = array_map(function($item) {
+                return new FinancingObjectModel($item);
+            }, $fieldFinancingObjects);
+            $model->objects()->saveMany($financingObjects);
+            return $model;
+        });
         return $this->stripEloquentModel($model);
     }
 
@@ -44,12 +60,19 @@ class EloquentFinancingApplicationRepository extends AbstractEloquentRepository 
         return $this->stripEloquentModel($model);
     }
 
-    public function remove($fields, $specification = null)
+    public function remove($specification)
     {
-        if (!is_null($specification)) {
-            return $specification->buildQuery($this->model)->delete();
-        }
-        return $this->model->newQuery()->where('id', $fields['id'])->delete();
+        return $specification->buildQuery($this->model)->delete();
+    }
+
+    public function removeById($id)
+    {
+        return $this->model->newQuery()->where('id', $id)->delete();
+    }
+
+    public function removeByXid($xid)
+    {
+        return $this->model->newQuery()->where('xid', $xid)->delete();
     }
 
     public function size($specification = null)
@@ -60,4 +83,3 @@ class EloquentFinancingApplicationRepository extends AbstractEloquentRepository 
         return $this->model->newQuery()->select('id')->count();
     }
 }
-

@@ -10,6 +10,10 @@ class FinancingApplicationModel extends AbstractModel
 {
     protected $table = 'financing_application';
 
+    protected $casts = [
+       'profile_snapshot' => 'object'
+    ];
+
     public function facility(){
         return $this->belongsTo(FinancingMethodModel::class, 'facility_id');
     }

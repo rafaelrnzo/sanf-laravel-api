@@ -18,11 +18,15 @@ use Sanf\Core\Modules\ContactUs\AskUsRepositoryInterface;
 use Sanf\Core\Modules\ContactUs\AskUsTopicRepositoryInterface;
 use Sanf\Core\Modules\ContactUs\EloquentAskUsRepository;
 use Sanf\Core\Modules\ContactUs\EloquentAskUsTopicRepository;
+use Sanf\Core\Modules\Financing\Repositories\EloquentFinancingApplicationRepository;
 use Sanf\Core\Modules\Financing\Repositories\EloquentFinancingMethodRepository;
 use Sanf\Core\Modules\Financing\Repositories\EloquentFinancingPrerequisiteRepository;
+use Sanf\Core\Modules\Financing\Repositories\FinancingApplicationRepositoryInterface;
 use Sanf\Core\Modules\Financing\Repositories\FinancingMethodRepositoryInterface;
 use Sanf\Core\Modules\Financing\Repositories\FinancingPrerequisiteRepositoryInterface;
+use Sanf\Core\Modules\Financing\Specifications\EloquentFinancingApplicationSpecificationFactory;
 use Sanf\Core\Modules\Financing\Specifications\EloquentFinancingSpecificationFactory;
+use Sanf\Core\Modules\Financing\Specifications\FinancingApplicationSpecificationFactoryInterface;
 use Sanf\Core\Modules\Financing\Specifications\FinancingSpecificationFactoryInterface;
 use Sanf\Core\Modules\Location\EloquentLocationRepository;
 use Sanf\Core\Modules\Location\LocationRepositoryInterface;
@@ -93,11 +97,13 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(StaffRepositoryInterface::class, EloquentStaffRepository::class);
         $this->app->bind(FinancingMethodRepositoryInterface::class,EloquentFinancingMethodRepository::class);
         $this->app->bind(FinancingPrerequisiteRepositoryInterface::class,EloquentFinancingPrerequisiteRepository::class);
+        $this->app->bind(FinancingApplicationRepositoryInterface::class,EloquentFinancingApplicationRepository::class);
 
         //SPECIFICATION FACTORY
         $this->app->bind(ProjectSpecificationFactoryInterface::class, EloquentProjectSpecificationFactory::class);
         $this->app->bind(CommoditySpecificationFactoryInterface::class, EloquentCommoditySpecificationFactory::class);
         $this->app->bind(FinancingSpecificationFactoryInterface::class, EloquentFinancingSpecificationFactory::class);
+        $this->app->bind(FinancingApplicationSpecificationFactoryInterface::class, EloquentFinancingApplicationSpecificationFactory::class);
     }
 
     protected function registerViews()

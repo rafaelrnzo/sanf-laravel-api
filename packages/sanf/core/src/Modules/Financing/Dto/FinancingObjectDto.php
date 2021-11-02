@@ -3,11 +3,11 @@
 
 namespace Sanf\Core\Modules\Financing\Dto;
 
-use Spatie\DataTransferObject\DataTransferObject;
+use NbsPhp\Core\Dto\CamelCaseDataTransferObject;
 
-class FinancingObjectDto extends DataTransferObject
+class FinancingObjectDto extends CamelCaseDataTransferObject
 {
-    public string $amount;
+    public int $amount;
     public string $providerName;
     public string $brandId;
     public string $brandName;

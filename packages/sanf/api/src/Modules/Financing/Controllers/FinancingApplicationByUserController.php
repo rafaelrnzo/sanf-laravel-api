@@ -10,6 +10,7 @@ use Sanf\Api\Modules\Financing\Transformers\FinancingApplicationSimpleTransforme
 use Sanf\Api\Modules\Financing\Transformers\FinancingApplicationTransformer;
 use Sanf\Core\Modules\Financing\Dto\AddFinancingApplicationDto;
 use Sanf\Core\Modules\Financing\Dto\BrowseFinancingApplicationDto;
+use Sanf\Core\Modules\Financing\Dto\FinancingObjectDto;
 use Sanf\Core\Modules\Financing\Dto\ReadFinancingApplicationDto;
 use Sanf\Core\Modules\Financing\Services\AddCompanyFinancingApplicationByUserService;
 use Sanf\Core\Modules\Financing\Services\AddPersonalFinancingApplicationByUserService;
@@ -54,14 +55,14 @@ class FinancingApplicationByUserController extends RestApiController
             'financing_facility_id' => ['required', 'integer'],
             'financing_method_id' => ['required', 'integer'],
             'financing_objects' => ['nullable', 'array'],
-            'financing_objects.*.amount' => ['required_if:financing_objects', 'integer'],
-            'financing_objects.*.provider_name' => ['required_if:financing_objects', 'string'],
-            'financing_objects.*.brand_id' => ['required_if:financing_objects', 'string'],
-            'financing_objects.*.brand_name' => ['required_if:financing_objects', 'string'],
-            'financing_objects.*.type_id' => ['required_if:financing_objects', 'string'],
-            'financing_objects.*.type_name' => ['required_if:financing_objects', 'string'],
-            'financing_objects.*.model_id' => ['required_if:financing_objects', 'string'],
-            'financing_objects.*.model_name' => ['required_if:financing_objects', 'string'],
+            'financing_objects.*.amount' => ['required_with:financing_objects', 'integer'],
+            'financing_objects.*.provider_name' => ['required_with:financing_objects', 'string'],
+            'financing_objects.*.brand_id' => ['required_with:financing_objects', 'string'],
+            'financing_objects.*.brand_name' => ['required_with:financing_objects', 'string'],
+            'financing_objects.*.type_id' => ['required_with:financing_objects', 'string'],
+            'financing_objects.*.type_name' => ['required_with:financing_objects', 'string'],
+            'financing_objects.*.model_id' => ['required_with:financing_objects', 'string'],
+            'financing_objects.*.model_name' => ['required_with:financing_objects', 'string'],
             'is_receive_offer' => ['required', 'boolean'],
         ]);
 
@@ -69,9 +70,14 @@ class FinancingApplicationByUserController extends RestApiController
             'userId' => $auth->id(),
             'customerId' => $input['profile_xid']
         ]);
+        $financingObjects = [];
+        foreach ($input['financing_objects'] ?? [] as $financingObject) {
+            $financingObjects[] = new FinancingObjectDto($financingObject);
+        }
         $dto = new AddFinancingApplicationDto($input + [
                 'userId' => $auth->id(),
                 'profile' => $profile,
+                'financingObjects' => $financingObjects
             ]);
         $financingService->execute($dto);
         return $this->responseOk();
@@ -88,14 +94,14 @@ class FinancingApplicationByUserController extends RestApiController
             'financing_facility_id' => ['required', 'integer'],
             'financing_method_id' => ['required', 'integer'],
             'financing_objects' => ['nullable', 'array'],
-            'financing_objects.*.amount' => ['required_if:financing_objects', 'integer'],
-            'financing_objects.*.provider_name' => ['required_if:financing_objects', 'string'],
-            'financing_objects.*.brand_id' => ['required_if:financing_objects', 'string'],
-            'financing_objects.*.brand_name' => ['required_if:financing_objects', 'string'],
-            'financing_objects.*.type_id' => ['required_if:financing_objects', 'string'],
-            'financing_objects.*.type_name' => ['required_if:financing_objects', 'string'],
-            'financing_objects.*.model_id' => ['required_if:financing_objects', 'string'],
-            'financing_objects.*.model_name' => ['required_if:financing_objects', 'string'],
+            'financing_objects.*.amount' => ['required_with:financing_objects', 'integer'],
+            'financing_objects.*.provider_name' => ['required_with:financing_objects', 'string'],
+            'financing_objects.*.brand_id' => ['required_with:financing_objects', 'string'],
+            'financing_objects.*.brand_name' => ['required_with:financing_objects', 'string'],
+            'financing_objects.*.type_id' => ['required_with:financing_objects', 'string'],
+            'financing_objects.*.type_name' => ['required_with:financing_objects', 'string'],
+            'financing_objects.*.model_id' => ['required_with:financing_objects', 'string'],
+            'financing_objects.*.model_name' => ['required_with:financing_objects', 'string'],
             'is_receive_offer' => ['required', 'boolean'],
         ]);
         $profile = $profileService->execute((object)[
