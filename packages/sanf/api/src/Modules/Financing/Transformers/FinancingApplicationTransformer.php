@@ -5,6 +5,7 @@ namespace Sanf\Api\Modules\Financing\Transformers;
 
 
 use League\Fractal\TransformerAbstract;
+use Spatie\Fractalistic\ArraySerializer;
 
 class FinancingApplicationTransformer extends TransformerAbstract
 {
@@ -18,10 +19,11 @@ class FinancingApplicationTransformer extends TransformerAbstract
                 'id' => $item->status->id,
                 'name' => $item->status->name,
             ],
-            'financing_object_count' => $item->financing_object_count,
-            'financing_facility_name' => $item->financing_facility_name,
-            'financing_method_name' => $item->financing_method_name,
-            'financing_objects' => $item->financing_objects,
+            'financing_object_count' => count($item->objects),
+            'financing_facility_name' => $item->facility->name,
+            'financing_method_name' => $item->method->name,
+            'financing_objects' => fractal($item->objects, new FinancingObjectTransformer())
+                ->serializeWith(ArraySerializer::class),
             'created_at' => unix_timestamp($item->created_at),
         ];
     }

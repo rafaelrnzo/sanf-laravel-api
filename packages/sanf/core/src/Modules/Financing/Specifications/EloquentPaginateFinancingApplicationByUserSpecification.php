@@ -4,15 +4,17 @@ namespace Sanf\Core\Modules\Financing\Specifications;
 
 use Sanf\Core\Modules\Financing\Models\FinancingApplicationModel;
 
-class EloquentPaginateFinancingApplicationSpecification
+class EloquentPaginateFinancingApplicationByUserSpecification
 {
+    private int $userId;
     private ?int $skip;
     private ?int $limit;
     private ?string $sortBy;
     private ?string $keyword;
 
-    public function __construct(?int $skip, ?int $limit, ?string $sortBy, ?string $keyword)
+    public function __construct(int $userId, ?int $skip, ?int $limit, ?string $sortBy, ?string $keyword)
     {
+        $this->userId = $userId;
         $this->skip = $skip;
         $this->limit = $limit;
         $this->sortBy = $sortBy;
@@ -33,8 +35,9 @@ class EloquentPaginateFinancingApplicationSpecification
                 $orderBy = 'created_at';
                 $orderDirection = 'DESC';
         }
-
         $query = $model->newQuery()
+            ->with(['status', 'facility', 'method', 'objects'])
+            ->where('user_id', $this->userId)
             ->orderBy($orderBy, $orderDirection)
             ->when($this->keyword, function ($query) {
                 return $query->where('name', "ILIKE", '%' . $this->keyword . '%');

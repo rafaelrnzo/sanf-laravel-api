@@ -17,9 +17,9 @@ class FinancingApplicationSimpleTransformer extends TransformerAbstract
                 'id' => $item->status->id,
                 'name' => $item->status->name,
             ],
-            'financing_object_count' => $item->financing_object_count,
-            'financing_facility_name' => $item->financing_facility_name,
-            'financing_method_name' => $item->financing_method_name,
+            'financing_object_count' => count($item->objects),
+            'financing_facility_name' => $item->facility->name,
+            'financing_method_name' => $item->method->name,
             'created_at' => unix_timestamp($item->created_at),
         ];
     }

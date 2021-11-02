@@ -24,7 +24,8 @@ class EloquentFinancingApplicationRepository extends AbstractEloquentRepository 
 
     public function findByXid($xid)
     {
-        $model = $this->model->newQuery()->where('xid', $xid)->with(['user', 'status'])->first();
+        $model = $this->model->newQuery()->where('xid', $xid)
+            ->with(['status', 'objects', 'facility', 'method'])->first();
         return $this->stripEloquentModel($model);
     }
 

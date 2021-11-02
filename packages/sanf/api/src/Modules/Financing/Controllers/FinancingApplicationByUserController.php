@@ -6,6 +6,7 @@ namespace Sanf\Api\Modules\Financing\Controllers;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
+use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
 use Sanf\Api\Modules\Financing\Transformers\FinancingApplicationSimpleTransformer;
 use Sanf\Api\Modules\Financing\Transformers\FinancingApplicationTransformer;
 use Sanf\Core\Modules\Financing\Dto\AddFinancingApplicationDto;
@@ -31,7 +32,8 @@ class FinancingApplicationByUserController extends RestApiController
         $dto = new BrowseFinancingApplicationDto($input + ['userId' => $auth->id()]);
         $result = $service->execute($dto);
 
-        return fractal($result, new FinancingApplicationSimpleTransformer());
+        return fractal($result->data, new FinancingApplicationSimpleTransformer())
+            ->paginateWith(new LazyPaginatorAdapter($result->paginate));
     }
 
     public function getRead(Guard $auth, $xid, ReadFinancingApplicationByUserService $service)

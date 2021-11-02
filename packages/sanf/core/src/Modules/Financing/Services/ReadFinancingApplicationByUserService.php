@@ -5,11 +5,17 @@ namespace Sanf\Core\Modules\Financing\Services;
 
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
+use Sanf\Core\Modules\Financing\Exceptions\FinancingApplicationInvalidException;
 
 class ReadFinancingApplicationByUserService extends FinancingByUserService implements ApplicationServiceInterface
 {
     public function execute($dto = null)
     {
-        //TODO IMPLEMENTATION
+        $user = $this->findUserOrFail($dto->userId);
+        $financingApplication = $this->financingApplicationRepository->findByXid($dto->xid);
+        if (is_null($financingApplication) || $financingApplication->user_id != $user->id) {
+            throw new FinancingApplicationInvalidException('Financing Application Not Found');
+        }
+        return $financingApplication;
     }
 }
