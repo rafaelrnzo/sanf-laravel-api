@@ -68,7 +68,12 @@ class BaseMail extends Mailable
      */
     public $actionUrl;
 
-    public $inTextActionUrl;
+    /**
+     * The "in text action url" lines of text at footer with link.
+     *
+     * @var array
+     */
+    public $inTextActionUrl = [];
 
     /**
      * The action Help.
@@ -244,10 +249,8 @@ class BaseMail extends Mailable
 
     public function lineWithUrl($text, $textWithUrl = [])
     {
-        $this->withLine($text);
-        $this->withLine($textWithUrl[0]);
-        $this->inTextActionUrl = $textWithUrl[1];
-        
+        $this->inTextActionUrl[] = [$text, $textWithUrl];
+
         return $this;
     }
 

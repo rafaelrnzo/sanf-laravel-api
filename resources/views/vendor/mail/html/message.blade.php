@@ -62,10 +62,19 @@
 
                 {{--START OUTRO MESSAGE--}}
                 @isset($outroLines)
-                    @component('mail::words-v2', ['textWithUrl' => $outroLines, 'reportLink' => $inTextActionUrl])
+                    @component('mail::words')
+                        @foreach ($outroLines as $line)
+                            {!! $line !!}
+                        @endforeach
+                    @endcomponent
+                @endisset
+
+                @isset($inTextActionUrl)
+                    @component('mail::words-v2', ['textWithUrl' => $inTextActionUrl])
                     @endcomponent
                 @endisset
                 {{--END OUTRO MESSAGE--}}
+
             </td>
         </tr>
     </table>

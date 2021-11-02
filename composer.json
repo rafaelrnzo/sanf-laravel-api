@@ -9,6 +9,7 @@
         "php": "^7.4",
         "ext-json": "*",
         "doctrine/dbal": "^2.10",
+        "dompdf/dompdf": "^1.0",
         "fideloper/proxy": "^4.4",
         "firebase/php-jwt": "^5.2",
         "godruoyi/php-snowflake": "^1.0",
