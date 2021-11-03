@@ -22,6 +22,12 @@ class EloquentFinancingFacilityRepository extends AbstractEloquentRepository imp
         return $this->stripEloquentModel($models);
     }
 
+    public function first($specification)
+    {
+        $models = $specification->buildQuery($this->model)->first();
+        return $this->stripEloquentModel($models);
+    }
+
     public function findById($id)
     {
         $model = $this->model->newQuery()->with(['methods'])->find($id);
