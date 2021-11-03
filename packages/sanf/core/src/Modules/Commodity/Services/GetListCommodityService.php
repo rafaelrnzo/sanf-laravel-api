@@ -8,7 +8,6 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Commodity\Dto\PaginateUserCommodityDto;
 use Sanf\Core\Modules\Commodity\Repositories\CommodityRepositoryInterface;
 use Sanf\Core\Modules\Commodity\Specifications\CommoditySpecificationFactoryInterface;
-use Sanf\Core\Modules\User\AuthModel;
 
 class GetListCommodityService extends CommodityService implements ApplicationServiceInterface
 {
@@ -16,10 +15,9 @@ class GetListCommodityService extends CommodityService implements ApplicationSer
 
     public function __construct(
         CommodityRepositoryInterface $commodityRepository,
-        AuthModel $userRepository,
         CommoditySpecificationFactoryInterface $specificationFactory
     ) {
-        parent::__construct($commodityRepository, $userRepository);
+        parent::__construct($commodityRepository);
         $this->specificationFactory = $specificationFactory;
     }
 

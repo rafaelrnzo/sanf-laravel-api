@@ -11,7 +11,7 @@ class PlafondTypeListTransformer extends TransformerAbstract
     {
         return [
             "id" => $item->id,
-            "title" => ucwords($item->title),
+            "name" => $item->title,
         ];
     }
 }
