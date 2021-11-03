@@ -31,6 +31,19 @@ class EloquentFinancingMethodRepository extends AbstractEloquentRepository imple
         return $this->stripEloquentModel($models);
     }
 
+    public function findById($id)
+    {
+        $models = $this->model->newQuery()
+            ->select([
+                'id',
+                'name',
+                'interest_rate',
+            ])
+            ->where('id',$id)
+            ->first();
+        return $this->stripEloquentModel($models);
+    }
+
     public function get($specification)
     {
         $models = $specification->buildQuery($this->model)->first();

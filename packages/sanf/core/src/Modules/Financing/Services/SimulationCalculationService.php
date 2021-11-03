@@ -7,30 +7,30 @@ namespace Sanf\Core\Modules\Financing\Services;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Financing\Dto\SimulationCalculationResultDto;
 use Sanf\Core\Modules\Financing\Exceptions\FinancingGeneralException;
+use Sanf\Core\Modules\Financing\Repositories\FinancingApplicationRepositoryInterface;
 use Sanf\Core\Modules\Financing\Repositories\FinancingMethodRepositoryInterface;
 use Sanf\Core\Modules\Financing\Repositories\FinancingPrerequisiteRepositoryInterface;
-use Sanf\Core\Modules\Financing\Specifications\FinancingSpecificationFactoryInterface;
+use Sanf\Core\Modules\Financing\Specifications\FinancingMethodSpecificationFactoryInterface;
 
 class SimulationCalculationService extends FinancingService implements ApplicationServiceInterface
 {
-    protected FinancingSpecificationFactoryInterface $specificationFactory;
+    protected FinancingMethodSpecificationFactoryInterface $specificationFactory;
 
     public function __construct(
+        FinancingApplicationRepositoryInterface $financingApplicationRepository,
         FinancingMethodRepositoryInterface $financingMethodRepository,
         FinancingPrerequisiteRepositoryInterface $financingPrerequisiteRepository,
-        FinancingSpecificationFactoryInterface $specificationFactory
+        FinancingMethodSpecificationFactoryInterface $specificationFactory
     )
     {
-        parent::__construct($financingMethodRepository,$financingPrerequisiteRepository);
+        parent::__construct($financingApplicationRepository,$financingMethodRepository,$financingPrerequisiteRepository);
         $this->specificationFactory = $specificationFactory;
     }
 
     public function execute($dto = null)
     {
         // Get data financing method from repository
-        $financing_method = $this->financingMethodRepository->get(
-            $this->specificationFactory->findById($dto->financing_method_id)
-        );
+        $financing_method = $this->financingMethodRepository->findById($dto->financing_method_id);
 
         if(is_null($financing_method)){
             throw new FinancingGeneralException('Financing Method Not Found');
