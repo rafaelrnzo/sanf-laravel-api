@@ -48,6 +48,8 @@ use Sanf\Core\Modules\Promo\EloquentPromoRepository;
 use Sanf\Core\Modules\Promo\PromoRepositoryInterface;
 use Sanf\Core\Modules\Staff\EloquentStaffRepository;
 use Sanf\Core\Modules\Staff\StaffRepositoryInterface;
+use Sanf\Core\Modules\Plafond\EloquentPlafondRepository;
+use Sanf\Core\Modules\Plafond\PlafondRepositoryInterface;
 
 class CoreServiceProvider extends ServiceProvider
 {
@@ -105,6 +107,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(FinancingPrerequisiteRepositoryInterface::class,EloquentFinancingPrerequisiteRepository::class);
         $this->app->bind(FinancingFacilityRepositoryInterface::class,EloquentFinancingFacilityRepository::class);
         $this->app->bind(FinancingApplicationRepositoryInterface::class,EloquentFinancingApplicationRepository::class);
+        $this->app->bind(PlafondRepositoryInterface::class,EloquentPlafondRepository::class);
 
         //SPECIFICATION FACTORY
         $this->app->bind(ProjectSpecificationFactoryInterface::class, EloquentProjectSpecificationFactory::class);
