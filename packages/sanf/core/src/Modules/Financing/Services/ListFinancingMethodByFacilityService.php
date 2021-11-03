@@ -11,18 +11,18 @@ use Sanf\Core\Modules\Financing\Repositories\FinancingApplicationRepositoryInter
 use Sanf\Core\Modules\Financing\Repositories\FinancingFacilityRepositoryInterface;
 use Sanf\Core\Modules\Financing\Repositories\FinancingMethodRepositoryInterface;
 use Sanf\Core\Modules\Financing\Repositories\FinancingPrerequisiteRepositoryInterface;
-use Sanf\Core\Modules\Financing\Specifications\FinancingMethodByFacilitySpecificationFactoryInterface;
+use Sanf\Core\Modules\Financing\Specifications\FinancingMethodSpecificationFactoryInterface;
 
 class ListFinancingMethodByFacilityService extends FinancingService implements ApplicationServiceInterface
 {
-    protected FinancingMethodByFacilitySpecificationFactoryInterface $specificationFactory;
+    protected FinancingMethodSpecificationFactoryInterface $specificationFactory;
 
     public function __construct(
         FinancingApplicationRepositoryInterface $financingApplicationRepository,
         FinancingMethodRepositoryInterface $financingMethodRepository,
         FinancingPrerequisiteRepositoryInterface $financingPrerequisiteRepository,
         FinancingFacilityRepositoryInterface $financingFacilityRepository,
-        FinancingMethodByFacilitySpecificationFactoryInterface $specificationFactory
+        FinancingMethodSpecificationFactoryInterface $specificationFactory
     )
     {
         parent::__construct(
@@ -49,19 +49,22 @@ class ListFinancingMethodByFacilityService extends FinancingService implements A
 
         // Get data from specification factory
         $data = $this->financingFacilityRepository->first(
-            $this->specificationFactory->paginate($dto->id, $dto->skip, $dto->limit , $dto->sort_by)
-        )->methods;
+            $this->specificationFactory->paginateByFacility($dto->id, $dto->skip, $dto->limit, $dto->sort_by)
+        );
 
-        if(is_null($data)){
+        if (is_null($data)) {
             throw new FinancingGeneralException('Financing Facility Not Found');
         }
+
+        // Get data financing facility methods
+        $data = $data->methods;
 
         $total = count($data) + $dto->skip;
 
         $paginate = (object)[
             'total' => (int)$total,
             'count' => count($data),
-            'skip' => (int) $dto->skip,
+            'skip' => (int)$dto->skip,
             'limit' => (int)$dto->limit,
             'sort_by' => $dto->sort_by,
         ];
@@ -69,7 +72,7 @@ class ListFinancingMethodByFacilityService extends FinancingService implements A
         // sent list data;
         return new ListFinancingMethodResultDto([
             'data' => $data,
-            'paginate'=> $paginate
+            'paginate' => $paginate
         ]);
     }
 }
