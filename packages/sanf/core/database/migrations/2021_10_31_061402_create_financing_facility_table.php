@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class CreateFinancingFacilityTable extends Migration
@@ -20,6 +21,33 @@ class CreateFinancingFacilityTable extends Migration
             $table->json('modified_by');
             $table->timestamps();
         });
+
+        DB::table('financing_facility')->insert([
+            [
+                'id' => 1,
+                'name' => 'Investasi',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+                'modified_by' => '{"id":"0","role":"SEEDERS"}',
+                'version' => 1
+            ],
+            [
+                'id' => 2,
+                'name' => 'Modal Kerja',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+                'modified_by' => '{"id":"0","role":"SEEDERS"}',
+                'version' => 1
+            ],
+            [
+                'id' => 3,
+                'name' => 'Multiguna',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+                'modified_by' => '{"id":"0","role":"SEEDERS"}',
+                'version' => 1
+            ],
+        ]);
     }
 
     /**
