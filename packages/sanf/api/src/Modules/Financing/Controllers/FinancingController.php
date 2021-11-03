@@ -12,12 +12,14 @@ use Sanf\Api\Modules\Financing\Transformers\FinancingPrerequisiteTransformer;
 use Sanf\Api\Modules\Financing\Transformers\FinancingSimulationTransformer;
 use Sanf\Core\Modules\Financing\Dto\DownloadFinancingDto;
 use Sanf\Core\Modules\Financing\Dto\ListFinancingFacilityRequestDto;
+use Sanf\Core\Modules\Financing\Dto\ListFinancingMethodByFacilityRequestDto;
 use Sanf\Core\Modules\Financing\Dto\ListFinancingMethodRequestDto;
 use Sanf\Core\Modules\Financing\Dto\ListFinancingPrerequisiteRequestDto;
 use Sanf\Core\Modules\Financing\Dto\SendEmailFinancingDto;
 use Sanf\Core\Modules\Financing\Dto\SimulationCalculationRequestDto;
 use Sanf\Core\Modules\Financing\Services\DownloadFinancingSimulationService;
 use Sanf\Core\Modules\Financing\Services\ListFinancingFacilityService;
+use Sanf\Core\Modules\Financing\Services\ListFinancingMethodByFacilityService;
 use Sanf\Core\Modules\Financing\Services\ListFinancingMethodService;
 use Sanf\Core\Modules\Financing\Services\ListFinancingPrerequisiteService;
 use Sanf\Core\Modules\Financing\Services\SendEmailFinancingSimulationService;
@@ -26,7 +28,6 @@ use function fractal;
 
 class FinancingController extends RestApiController
 {
-    //TODO LOGIC
     public function getListFacilities(Request $request, ListFinancingFacilityService $service)
     {
         $input = $this->validate($request, [
@@ -43,16 +44,19 @@ class FinancingController extends RestApiController
             ->paginateWith(new LazyPaginatorAdapter($result->paginate));
     }
 
-    //TODO LOGIC
-    public function getListMethodsByFacility(Request $request, $id, ListFinancingMethodService $service)
+    public function getListMethodsByFacility(Request $request, $id, ListFinancingMethodByFacilityService $service)
     {
+        // Validate request
         $input = $this->validate($request, [
             'skip' => ['nullable', 'integer'],
             'limit' => ['nullable', 'integer'],
             'sort_by' => ['nullable', 'string'],
         ]);
 
-        $dto = new ListFinancingMethodRequestDto($input);
+        // Insert id to array input
+        $input = array_merge($input, ['id' => (int)$id]);
+
+        $dto = new ListFinancingMethodByFacilityRequestDto($input);
 
         $result = $service->execute($dto);
 
@@ -97,7 +101,8 @@ class FinancingController extends RestApiController
         SimulationCalculationService $calcService,
         SendEmailFinancingSimulationService $sendEmailService,
         DownloadFinancingSimulationService $downloadFinancingService
-    ) {
+    )
+    {
         $input = $this->validate($request, [
             'financing_method_id' => ['required', 'integer'],
             'financing_amount' => ['required', 'numeric'],

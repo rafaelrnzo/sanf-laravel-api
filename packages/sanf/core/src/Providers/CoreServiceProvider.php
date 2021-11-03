@@ -28,10 +28,12 @@ use Sanf\Core\Modules\Financing\Repositories\FinancingMethodRepositoryInterface;
 use Sanf\Core\Modules\Financing\Repositories\FinancingPrerequisiteRepositoryInterface;
 use Sanf\Core\Modules\Financing\Specifications\EloquentFinancingApplicationSpecificationFactory;
 use Sanf\Core\Modules\Financing\Specifications\EloquentFinancingFacilitySpecificationFactory;
+use Sanf\Core\Modules\Financing\Specifications\EloquentFinancingMethodByFacilitySpecificationFactory;
 use Sanf\Core\Modules\Financing\Specifications\EloquentFinancingMethodSpecificationFactory;
 use Sanf\Core\Modules\Financing\Specifications\EloquentFinancingPrerequisiteSpecificationFactory;
 use Sanf\Core\Modules\Financing\Specifications\FinancingApplicationSpecificationFactoryInterface;
 use Sanf\Core\Modules\Financing\Specifications\FinancingFacilitySpecificationFactoryInterface;
+use Sanf\Core\Modules\Financing\Specifications\FinancingMethodByFacilitySpecificationFactoryInterface;
 use Sanf\Core\Modules\Financing\Specifications\FinancingMethodSpecificationFactoryInterface;
 use Sanf\Core\Modules\Financing\Specifications\FinancingPrerequisiteSpecificationFactoryInterface;
 use Sanf\Core\Modules\Location\EloquentLocationRepository;
@@ -115,6 +117,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(FinancingMethodSpecificationFactoryInterface::class, EloquentFinancingMethodSpecificationFactory::class);
         $this->app->bind(FinancingPrerequisiteSpecificationFactoryInterface::class,EloquentFinancingPrerequisiteSpecificationFactory::class);
         $this->app->bind(FinancingFacilitySpecificationFactoryInterface::class,EloquentFinancingFacilitySpecificationFactory::class);
+        $this->app->bind(FinancingMethodByFacilitySpecificationFactoryInterface::class,EloquentFinancingMethodByFacilitySpecificationFactory::class);
         $this->app->bind(FinancingApplicationSpecificationFactoryInterface::class, EloquentFinancingApplicationSpecificationFactory::class);
     }
 
