@@ -14,7 +14,7 @@ class FinancingPrerequisiteTransformer extends TransformerAbstract
             "id" => (int)$item->id,
             "title" => (string)$item->title,
             "description" => $item->description,
-            'items' => $item->items
+            "items" => $item->items
         ];
     }
 }

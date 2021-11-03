@@ -5,31 +5,25 @@ namespace Sanf\Core\Modules\Financing\Services;
 
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\Financing\Dto\ListFinancingMethodResultDto;
+use Sanf\Core\Modules\Financing\Dto\ListFinancingFacilityResultDto;
 use Sanf\Core\Modules\Financing\Repositories\FinancingApplicationRepositoryInterface;
 use Sanf\Core\Modules\Financing\Repositories\FinancingFacilityRepositoryInterface;
 use Sanf\Core\Modules\Financing\Repositories\FinancingMethodRepositoryInterface;
 use Sanf\Core\Modules\Financing\Repositories\FinancingPrerequisiteRepositoryInterface;
-use Sanf\Core\Modules\Financing\Specifications\FinancingMethodSpecificationFactoryInterface;
+use Sanf\Core\Modules\Financing\Specifications\FinancingFacilitySpecificationFactoryInterface;
 
-
-class ListFinancingMethodService extends FinancingService implements ApplicationServiceInterface
+class ListFinancingFacilityService extends FinancingService implements ApplicationServiceInterface
 {
-    protected FinancingMethodSpecificationFactoryInterface $specificationFactory;
+    protected FinancingFacilitySpecificationFactoryInterface $specificationFactory;
 
     public function __construct(
         FinancingApplicationRepositoryInterface $financingApplicationRepository,
         FinancingMethodRepositoryInterface $financingMethodRepository,
-        FinancingPrerequisiteRepositoryInterface $financingPrerequisiteRepository,
+        FinancingPrerequisiteRepositoryInterface $financingPrerequisite,
         FinancingFacilityRepositoryInterface $financingFacilityRepository,
-        FinancingMethodSpecificationFactoryInterface $specificationFactory
+        FinancingFacilitySpecificationFactoryInterface $specificationFactory
     ) {
-        parent::__construct(
-            $financingApplicationRepository,
-            $financingMethodRepository,
-            $financingPrerequisiteRepository,
-            $financingFacilityRepository
-        );
+        parent::__construct($financingApplicationRepository,$financingMethodRepository,$financingPrerequisite,$financingFacilityRepository);
         $this->specificationFactory = $specificationFactory;
     }
 
@@ -46,15 +40,16 @@ class ListFinancingMethodService extends FinancingService implements Application
                 $dto->sort_by = 'ASC';
         }
 
-        // Get data from specification factory
-        $data = $this->financingMethodRepository->query(
+        // Get data from specification factory financing prerequisite
+        $data = $this->financingFacilityRepository->query(
             $this->specificationFactory->paginate($dto->skip, $dto->limit , $dto->sort_by)
         );
 
-        $total = $this->financingMethodRepository->size(
+        $total = $this->financingFacilityRepository->size(
             $this->specificationFactory->paginate($dto->skip, $dto->limit , $dto->sort_by)
         );
 
+        // Assert paginate to object
         $paginate = (object)[
             'total' => (int)$total,
             'count' => count($data),
@@ -63,8 +58,8 @@ class ListFinancingMethodService extends FinancingService implements Application
             'sort_by' => $dto->sort_by,
         ];
 
-        // sent list data;
-        return new ListFinancingMethodResultDto([
+        // sent result to controller
+        return new ListFinancingFacilityResultDto([
             'data' => $data,
             'paginate'=> $paginate
         ]);

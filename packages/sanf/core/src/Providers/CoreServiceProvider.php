@@ -19,15 +19,19 @@ use Sanf\Core\Modules\ContactUs\AskUsTopicRepositoryInterface;
 use Sanf\Core\Modules\ContactUs\EloquentAskUsRepository;
 use Sanf\Core\Modules\ContactUs\EloquentAskUsTopicRepository;
 use Sanf\Core\Modules\Financing\Repositories\EloquentFinancingApplicationRepository;
+use Sanf\Core\Modules\Financing\Repositories\EloquentFinancingFacilityRepository;
 use Sanf\Core\Modules\Financing\Repositories\EloquentFinancingMethodRepository;
 use Sanf\Core\Modules\Financing\Repositories\EloquentFinancingPrerequisiteRepository;
 use Sanf\Core\Modules\Financing\Repositories\FinancingApplicationRepositoryInterface;
+use Sanf\Core\Modules\Financing\Repositories\FinancingFacilityRepositoryInterface;
 use Sanf\Core\Modules\Financing\Repositories\FinancingMethodRepositoryInterface;
 use Sanf\Core\Modules\Financing\Repositories\FinancingPrerequisiteRepositoryInterface;
 use Sanf\Core\Modules\Financing\Specifications\EloquentFinancingApplicationSpecificationFactory;
+use Sanf\Core\Modules\Financing\Specifications\EloquentFinancingFacilitySpecificationFactory;
 use Sanf\Core\Modules\Financing\Specifications\EloquentFinancingMethodSpecificationFactory;
 use Sanf\Core\Modules\Financing\Specifications\EloquentFinancingPrerequisiteSpecificationFactory;
 use Sanf\Core\Modules\Financing\Specifications\FinancingApplicationSpecificationFactoryInterface;
+use Sanf\Core\Modules\Financing\Specifications\FinancingFacilitySpecificationFactoryInterface;
 use Sanf\Core\Modules\Financing\Specifications\FinancingMethodSpecificationFactoryInterface;
 use Sanf\Core\Modules\Financing\Specifications\FinancingPrerequisiteSpecificationFactoryInterface;
 use Sanf\Core\Modules\Location\EloquentLocationRepository;
@@ -99,6 +103,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(StaffRepositoryInterface::class, EloquentStaffRepository::class);
         $this->app->bind(FinancingMethodRepositoryInterface::class,EloquentFinancingMethodRepository::class);
         $this->app->bind(FinancingPrerequisiteRepositoryInterface::class,EloquentFinancingPrerequisiteRepository::class);
+        $this->app->bind(FinancingFacilityRepositoryInterface::class,EloquentFinancingFacilityRepository::class);
         $this->app->bind(FinancingApplicationRepositoryInterface::class,EloquentFinancingApplicationRepository::class);
 
         //SPECIFICATION FACTORY
@@ -106,6 +111,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(CommoditySpecificationFactoryInterface::class, EloquentCommoditySpecificationFactory::class);
         $this->app->bind(FinancingMethodSpecificationFactoryInterface::class, EloquentFinancingMethodSpecificationFactory::class);
         $this->app->bind(FinancingPrerequisiteSpecificationFactoryInterface::class,EloquentFinancingPrerequisiteSpecificationFactory::class);
+        $this->app->bind(FinancingFacilitySpecificationFactoryInterface::class,EloquentFinancingFacilitySpecificationFactory::class);
         $this->app->bind(FinancingApplicationSpecificationFactoryInterface::class, EloquentFinancingApplicationSpecificationFactory::class);
     }
 

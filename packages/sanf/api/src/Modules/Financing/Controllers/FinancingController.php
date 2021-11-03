@@ -11,11 +11,13 @@ use Sanf\Api\Modules\Financing\Transformers\FinancingListTransformer;
 use Sanf\Api\Modules\Financing\Transformers\FinancingPrerequisiteTransformer;
 use Sanf\Api\Modules\Financing\Transformers\FinancingSimulationTransformer;
 use Sanf\Core\Modules\Financing\Dto\DownloadFinancingDto;
+use Sanf\Core\Modules\Financing\Dto\ListFinancingFacilityRequestDto;
 use Sanf\Core\Modules\Financing\Dto\ListFinancingMethodRequestDto;
 use Sanf\Core\Modules\Financing\Dto\ListFinancingPrerequisiteRequestDto;
 use Sanf\Core\Modules\Financing\Dto\SendEmailFinancingDto;
 use Sanf\Core\Modules\Financing\Dto\SimulationCalculationRequestDto;
 use Sanf\Core\Modules\Financing\Services\DownloadFinancingSimulationService;
+use Sanf\Core\Modules\Financing\Services\ListFinancingFacilityService;
 use Sanf\Core\Modules\Financing\Services\ListFinancingMethodService;
 use Sanf\Core\Modules\Financing\Services\ListFinancingPrerequisiteService;
 use Sanf\Core\Modules\Financing\Services\SendEmailFinancingSimulationService;
@@ -25,7 +27,7 @@ use function fractal;
 class FinancingController extends RestApiController
 {
     //TODO LOGIC
-    public function getListFacilities(Request $request, ListFinancingMethodService $service)
+    public function getListFacilities(Request $request, ListFinancingFacilityService $service)
     {
         $input = $this->validate($request, [
             'skip' => ['nullable', 'integer'],
@@ -33,7 +35,7 @@ class FinancingController extends RestApiController
             'sort_by' => ['nullable', 'string'],
         ]);
 
-        $dto = new ListFinancingMethodRequestDto($input);
+        $dto = new ListFinancingFacilityRequestDto($input);
 
         $result = $service->execute($dto);
 
