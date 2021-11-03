@@ -8,6 +8,7 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Financing\Dto\SimulationCalculationResultDto;
 use Sanf\Core\Modules\Financing\Exceptions\FinancingGeneralException;
 use Sanf\Core\Modules\Financing\Repositories\FinancingApplicationRepositoryInterface;
+use Sanf\Core\Modules\Financing\Repositories\FinancingFacilityRepositoryInterface;
 use Sanf\Core\Modules\Financing\Repositories\FinancingMethodRepositoryInterface;
 use Sanf\Core\Modules\Financing\Repositories\FinancingPrerequisiteRepositoryInterface;
 use Sanf\Core\Modules\Financing\Specifications\FinancingMethodSpecificationFactoryInterface;
@@ -20,10 +21,16 @@ class SimulationCalculationService extends FinancingService implements Applicati
         FinancingApplicationRepositoryInterface $financingApplicationRepository,
         FinancingMethodRepositoryInterface $financingMethodRepository,
         FinancingPrerequisiteRepositoryInterface $financingPrerequisiteRepository,
+        FinancingFacilityRepositoryInterface $financingFacilityRepository,
         FinancingMethodSpecificationFactoryInterface $specificationFactory
     )
     {
-        parent::__construct($financingApplicationRepository,$financingMethodRepository,$financingPrerequisiteRepository);
+        parent::__construct(
+            $financingApplicationRepository,
+            $financingMethodRepository,
+            $financingPrerequisiteRepository,
+            $financingFacilityRepository
+        );
         $this->specificationFactory = $specificationFactory;
     }
 

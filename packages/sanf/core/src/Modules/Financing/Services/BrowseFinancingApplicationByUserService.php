@@ -7,6 +7,7 @@ namespace Sanf\Core\Modules\Financing\Services;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Financing\Dto\BrowseFinancingApplicationDto;
 use Sanf\Core\Modules\Financing\Repositories\FinancingApplicationRepositoryInterface;
+use Sanf\Core\Modules\Financing\Repositories\FinancingFacilityRepositoryInterface;
 use Sanf\Core\Modules\Financing\Repositories\FinancingMethodRepositoryInterface;
 use Sanf\Core\Modules\Financing\Repositories\FinancingPrerequisiteRepositoryInterface;
 use Sanf\Core\Modules\Financing\Specifications\FinancingApplicationSpecificationFactoryInterface;
@@ -19,11 +20,18 @@ class BrowseFinancingApplicationByUserService extends FinancingByUserService imp
         FinancingApplicationRepositoryInterface $financingApplicationRepository,
         FinancingMethodRepositoryInterface $financingMethodRepository,
         FinancingPrerequisiteRepositoryInterface $financingPrerequisiteRepository,
+        FinancingFacilityRepositoryInterface $financingFacilityRepository,
         AuthModel $userRepository,
         FinancingApplicationSpecificationFactoryInterface $specificationFactory
     ) {
         $this->specificationFactory = $specificationFactory;
-        parent::__construct($financingApplicationRepository, $financingMethodRepository, $financingPrerequisiteRepository, $userRepository);
+        parent::__construct(
+            $financingApplicationRepository,
+            $financingMethodRepository,
+            $financingPrerequisiteRepository,
+            $financingFacilityRepository,
+            $userRepository
+        );
     }
 
     /**
