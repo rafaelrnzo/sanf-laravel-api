@@ -6,20 +6,22 @@ namespace Sanf\Core\Modules\Financing\Services;
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Financing\Dto\ListFinancingPrerequisiteResultDto;
+use Sanf\Core\Modules\Financing\Repositories\FinancingApplicationRepositoryInterface;
 use Sanf\Core\Modules\Financing\Repositories\FinancingMethodRepositoryInterface;
 use Sanf\Core\Modules\Financing\Repositories\FinancingPrerequisiteRepositoryInterface;
-use Sanf\Core\Modules\Financing\Specifications\FinancingSpecificationFactoryInterface;
+use Sanf\Core\Modules\Financing\Specifications\FinancingPrerequisiteSpecificationFactoryInterface;
 
 class ListFinancingPrerequisiteService extends FinancingService implements ApplicationServiceInterface
 {
-    protected FinancingSpecificationFactoryInterface $specificationFactory;
+    protected FinancingPrerequisiteSpecificationFactoryInterface $specificationFactory;
 
     public function __construct(
+        FinancingApplicationRepositoryInterface  $financingApplicationRepository,
         FinancingMethodRepositoryInterface $financingMethodRepository,
         FinancingPrerequisiteRepositoryInterface $financingPrerequisiteRepository,
-        FinancingSpecificationFactoryInterface $specificationFactory
+        FinancingPrerequisiteSpecificationFactoryInterface $specificationFactory
     ) {
-        parent::__construct($financingMethodRepository,$financingPrerequisiteRepository);
+        parent::__construct($financingApplicationRepository,$financingMethodRepository,$financingPrerequisiteRepository);
         $this->specificationFactory = $specificationFactory;
     }
 
@@ -38,11 +40,11 @@ class ListFinancingPrerequisiteService extends FinancingService implements Appli
 
         // Get data from specification factory financing prerequisite
         $data = $this->financingPrerequisiteRepository->query(
-            $this->specificationFactory->paginateFinancingPrerequisite($dto->skip, $dto->limit , $dto->sort_by)
+            $this->specificationFactory->paginate($dto->skip, $dto->limit , $dto->sort_by)
         );
 
         $total = $this->financingPrerequisiteRepository->size(
-            $this->specificationFactory->paginateFinancingPrerequisite($dto->skip, $dto->limit , $dto->sort_by)
+            $this->specificationFactory->paginate($dto->skip, $dto->limit , $dto->sort_by)
         );
 
         // Assert paginate to object

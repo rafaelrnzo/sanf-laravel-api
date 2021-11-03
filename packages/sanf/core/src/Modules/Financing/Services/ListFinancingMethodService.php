@@ -6,19 +6,23 @@ namespace Sanf\Core\Modules\Financing\Services;
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Financing\Dto\ListFinancingMethodResultDto;
-use Sanf\Core\Modules\Financing\Repositories\FinancingMethod\FinancingRepositoryInterface;
-use Sanf\Core\Modules\Financing\Specifications\FinancingSpecificationFactoryInterface;
+use Sanf\Core\Modules\Financing\Repositories\FinancingApplicationRepositoryInterface;
+use Sanf\Core\Modules\Financing\Repositories\FinancingMethodRepositoryInterface;
+use Sanf\Core\Modules\Financing\Repositories\FinancingPrerequisiteRepositoryInterface;
+use Sanf\Core\Modules\Financing\Specifications\FinancingMethodSpecificationFactoryInterface;
 
 
 class ListFinancingMethodService extends FinancingService implements ApplicationServiceInterface
 {
-    protected FinancingSpecificationFactoryInterface $specificationFactory;
+    protected FinancingMethodSpecificationFactoryInterface $specificationFactory;
 
     public function __construct(
-        FinancingRepositoryInterface $financingRepository,
-        FinancingSpecificationFactoryInterface $specificationFactory
+        FinancingApplicationRepositoryInterface $financingApplicationRepository,
+        FinancingMethodRepositoryInterface $financingMethodRepository,
+        FinancingPrerequisiteRepositoryInterface $financingPrerequisite,
+        FinancingMethodSpecificationFactoryInterface $specificationFactory
     ) {
-        parent::__construct($financingRepository);
+        parent::__construct($financingApplicationRepository,$financingMethodRepository,$financingPrerequisite);
         $this->specificationFactory = $specificationFactory;
     }
 
@@ -36,11 +40,11 @@ class ListFinancingMethodService extends FinancingService implements Application
         }
 
         // Get data from specification factory
-        $data = $this->repository->query(
+        $data = $this->financingMethodRepository->query(
             $this->specificationFactory->paginate($dto->skip, $dto->limit , $dto->sort_by)
         );
 
-        $total = $this->repository->size(
+        $total = $this->financingMethodRepository->size(
             $this->specificationFactory->paginate($dto->skip, $dto->limit , $dto->sort_by)
         );
 

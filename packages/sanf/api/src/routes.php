@@ -99,7 +99,7 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::get('financing-object-brands', ['as' => 'financing.personal.facility.brand', 'uses' => 'Financing\Controllers\FinancingObjectController@getBrands']);
     Route::get('financing-object-brands/{brand_id}/types', ['as' => 'financing.personal.facility.type', 'uses' => 'Financing\Controllers\FinancingObjectController@getTypes']);
     Route::get('financing-object-brands/{brand_id}/types/{type_id}/models', ['as' => 'financing.personal.facility.models', 'uses' => 'Financing\Controllers\FinancingObjectController@getModels']);
-    Route::get('financing-methods', ['as' => 'financing-method.list', 'uses' => 'Financing\Controllers\FinancingController@getList']);
+    Route::get('financing-methods', ['as' => 'financing-method.list', 'uses' => 'Financing\Controllers\FinancingController@getListMethods']);
     Route::get('financing-facilities', ['as' => 'financing-facilities.list', 'uses' => 'Financing\Controllers\FinancingController@getListFacilities']);
     Route::get('financing-facilities/{id}/methods', ['as' => 'financing-facilities.method.list', 'uses' => 'Financing\Controllers\FinancingController@getListMethodsByFacility']);
     Route::get('financing-prerequisites', ['as' => 'financing-prerequisites.list', 'uses' => 'Financing\Controllers\FinancingController@getPrerequisiteList']);

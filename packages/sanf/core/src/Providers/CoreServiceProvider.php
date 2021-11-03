@@ -25,9 +25,11 @@ use Sanf\Core\Modules\Financing\Repositories\FinancingApplicationRepositoryInter
 use Sanf\Core\Modules\Financing\Repositories\FinancingMethodRepositoryInterface;
 use Sanf\Core\Modules\Financing\Repositories\FinancingPrerequisiteRepositoryInterface;
 use Sanf\Core\Modules\Financing\Specifications\EloquentFinancingApplicationSpecificationFactory;
-use Sanf\Core\Modules\Financing\Specifications\EloquentFinancingSpecificationFactory;
+use Sanf\Core\Modules\Financing\Specifications\EloquentFinancingMethodSpecificationFactory;
+use Sanf\Core\Modules\Financing\Specifications\EloquentFinancingPrerequisiteSpecificationFactory;
 use Sanf\Core\Modules\Financing\Specifications\FinancingApplicationSpecificationFactoryInterface;
-use Sanf\Core\Modules\Financing\Specifications\FinancingSpecificationFactoryInterface;
+use Sanf\Core\Modules\Financing\Specifications\FinancingMethodSpecificationFactoryInterface;
+use Sanf\Core\Modules\Financing\Specifications\FinancingPrerequisiteSpecificationFactoryInterface;
 use Sanf\Core\Modules\Location\EloquentLocationRepository;
 use Sanf\Core\Modules\Location\LocationRepositoryInterface;
 use Sanf\Core\Modules\News\EloquentNewsRepository;
@@ -102,7 +104,8 @@ class CoreServiceProvider extends ServiceProvider
         //SPECIFICATION FACTORY
         $this->app->bind(ProjectSpecificationFactoryInterface::class, EloquentProjectSpecificationFactory::class);
         $this->app->bind(CommoditySpecificationFactoryInterface::class, EloquentCommoditySpecificationFactory::class);
-        $this->app->bind(FinancingSpecificationFactoryInterface::class, EloquentFinancingSpecificationFactory::class);
+        $this->app->bind(FinancingMethodSpecificationFactoryInterface::class, EloquentFinancingMethodSpecificationFactory::class);
+        $this->app->bind(FinancingPrerequisiteSpecificationFactoryInterface::class,EloquentFinancingPrerequisiteSpecificationFactory::class);
         $this->app->bind(FinancingApplicationSpecificationFactoryInterface::class, EloquentFinancingApplicationSpecificationFactory::class);
     }
 
