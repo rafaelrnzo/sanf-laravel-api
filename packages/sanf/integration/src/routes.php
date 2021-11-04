@@ -29,8 +29,12 @@ Route::group(config('sanf-internal.url'), [InternalApiProcessor::class], functio
     Route::get('financing-object.brand', 'Upload/brand');
     Route::get('financing-object.type', 'Upload/type/{brand_id}');
     Route::get('financing-object.model', 'Upload/model/{brand_id}/{type_id}');
-    Route::get('financing-completion.ktp', 'Upload/CheckKTP/{user_id}');
-    Route::get('financing-completion.npwp', 'Upload/CheckNPWP/{user_id}');
+    Route::get('financing-completion.ktp', 'Upload/CheckKTP/{customer_id}');
+    Route::get('financing-completion.npwp', 'Upload/CheckNPWP/{customer_id}');
 
-    Route::post('financing.upload', 'upload');
+    Route::post('customer.upload', 'upload');
+
+    Route::get('customer.plafond.list', '/Plafond/Header/{customer_id}');
+    Route::get('customer.plafond.list-by-type', '/Plafond/Header/{cust_id}/{p_code}');
+    Route::post('customer.plafond.create', '/Plafond');
 });

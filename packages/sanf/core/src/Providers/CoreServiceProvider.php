@@ -38,8 +38,8 @@ use Sanf\Core\Modules\Location\EloquentLocationRepository;
 use Sanf\Core\Modules\Location\LocationRepositoryInterface;
 use Sanf\Core\Modules\News\EloquentNewsRepository;
 use Sanf\Core\Modules\News\NewsRepositoryInterface;
-use Sanf\Core\Modules\Plafond\EloquentPlafondRepository;
-use Sanf\Core\Modules\Plafond\PlafondRepositoryInterface;
+use Sanf\Core\Modules\Plafond\Repositories\EloquentPlafondTypeTypeRepository;
+use Sanf\Core\Modules\Plafond\Repositories\PlafondTypeRepositoryInterface;
 use Sanf\Core\Modules\Product\EloquentProductRepository;
 use Sanf\Core\Modules\Product\ProductRepositoryInterface;
 use Sanf\Core\Modules\Project\Repositories\EloquentProjectRepository;
@@ -107,7 +107,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(FinancingPrerequisiteRepositoryInterface::class,EloquentFinancingPrerequisiteRepository::class);
         $this->app->bind(FinancingFacilityRepositoryInterface::class,EloquentFinancingFacilityRepository::class);
         $this->app->bind(FinancingApplicationRepositoryInterface::class,EloquentFinancingApplicationRepository::class);
-        $this->app->bind(PlafondRepositoryInterface::class,EloquentPlafondRepository::class);
+        $this->app->bind(PlafondTypeRepositoryInterface::class,EloquentPlafondTypeTypeRepository::class);
 
         //SPECIFICATION FACTORY
         $this->app->bind(ProjectSpecificationFactoryInterface::class, EloquentProjectSpecificationFactory::class);

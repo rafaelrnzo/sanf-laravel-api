@@ -3,14 +3,14 @@
 namespace Sanf\Core\Modules\Plafond\Services;
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\Plafond\PlafondRepositoryInterface;
+use Sanf\Core\Modules\Plafond\Repositories\PlafondTypeRepositoryInterface;
 
-class ListPlafondTypeService implements ApplicationServiceInterface
+final class ListPlafondTypeService implements ApplicationServiceInterface
 {
 
-    private PlafondRepositoryInterface $repository;
+    private PlafondTypeRepositoryInterface $repository;
 
-    public function __construct(PlafondRepositoryInterface $repository)
+    public function __construct(PlafondTypeRepositoryInterface $repository)
     {
         $this->repository = $repository;
     }

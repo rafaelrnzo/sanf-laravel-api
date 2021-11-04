@@ -12,6 +12,12 @@ use stdClass;
 
 class InternalApiClient
 {
+    /**
+     * @param $email
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     */
     public function findCustomerByEmail($email)
     {
         $response = Request::route('customer.find-by-email')
@@ -20,6 +26,12 @@ class InternalApiClient
         return $response->json();
     }
 
+    /**
+     * @param $id
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     */
     public function findCustomerById($id)
     {
         $response = Request::route('customer.find-by-id')
@@ -28,6 +40,13 @@ class InternalApiClient
         return $response->json();
     }
 
+    /**
+     * @param $email
+     * @param $npwp
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     */
     public function findByEmailAndNpwp($email, $npwp)
     {
         $response = Request::route('customer.find-by-email-and-npwp')
@@ -39,6 +58,15 @@ class InternalApiClient
         return $response->json();
     }
 
+    /**
+     * @param $name
+     * @param $email
+     * @param $landlineNumber
+     * @param $phoneNumber
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     */
     public function registerPersonal($name, $email, $landlineNumber, $phoneNumber)
     {
         $response = Request::route('customer.register')
@@ -52,7 +80,12 @@ class InternalApiClient
         return $response->json();
     }
 
-
+    /**
+     * @param $data
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     */
     public function createCompany($data) //TODO DTO
     {
         $response = Request::route('customer.create-company')
@@ -73,6 +106,12 @@ class InternalApiClient
         return $response->json();
     }
 
+    /**
+     * @param $data
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     */
     public function updateCustomer($data)//TODO DTO
     {
         $response = Request::route('customer.update')
@@ -104,6 +143,12 @@ class InternalApiClient
         return $response->json();
     }
 
+    /**
+     * @param $id
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     */
     public function getShareholders($id)
     {
         $response = Request::route('customer.shareholder.list')
@@ -113,6 +158,12 @@ class InternalApiClient
         return $response->json();
     }
 
+    /**
+     * @param $request
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     */
     public function createShareholder($request) //TODO USE DTO
     {
         $response = Request::route('customer.shareholder.create')
@@ -129,6 +180,12 @@ class InternalApiClient
         return $response->json();
     }
 
+    /**
+     * @param $request
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     */
     public function updateShareholder($request)
     {
         $response = Request::route('customer.shareholder.update')
@@ -147,6 +204,13 @@ class InternalApiClient
         return $response->json();
     }
 
+    /**
+     * @param $id
+     * @param $no
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     */
     public function deleteShareholder($id, $no)
     {
         $response = Request::route('customer.shareholder.delete')
@@ -159,6 +223,11 @@ class InternalApiClient
         return $response->json();
     }
 
+    /**
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     */
     public function getProvinces()
     {
         $response = Request::route('location.provinces')->send();
@@ -166,6 +235,12 @@ class InternalApiClient
         return $response->json();
     }
 
+    /**
+     * @param $province_id
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     */
     public function getCities($province_id)
     {
         $response = Request::route('location.cities')
@@ -175,6 +250,13 @@ class InternalApiClient
         return $response->json();
     }
 
+    /**
+     * @param $province_id
+     * @param $city_id
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     */
     public function getDistrict($province_id, $city_id)
     {
         $response = Request::route('location.districts')
@@ -186,6 +268,14 @@ class InternalApiClient
         return $response->json();
     }
 
+    /**
+     * @param $province_id
+     * @param $city_id
+     * @param $district_name
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     */
     public function getSubDistrict($province_id, $city_id, $district_name)
     {
         $response = Request::route('location.sub-districts')
@@ -198,6 +288,11 @@ class InternalApiClient
         return $response->json();
     }
 
+    /**
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     */
     public function getPosition()
     {
         $response = Request::route('customer.positions')->send();
@@ -205,6 +300,12 @@ class InternalApiClient
         return $response->json();
     }
 
+    /**
+     * @param $type
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     */
     public function getTitle($type)
     {
         $response = Request::route('customer.titles')
@@ -243,6 +344,11 @@ class InternalApiClient
         return $response->json();
     }
 
+    /**
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     */
     public function getBrands()
     {
         $response = Request::route('financing-object.brand')->send();
@@ -250,6 +356,12 @@ class InternalApiClient
         return $response->json();
     }
 
+    /**
+     * @param $brandId
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     */
     public function getTypes($brandId)
     {
         $response = Request::route('financing-object.type')
@@ -259,6 +371,13 @@ class InternalApiClient
         return $response->json();
     }
 
+    /**
+     * @param $brandId
+     * @param $typeId
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     */
     public function getModels($brandId, $typeId)
     {
         $response = Request::route('financing-object.model')
@@ -270,6 +389,12 @@ class InternalApiClient
         return $response->json();
     }
 
+    /**
+     * @param $userId
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     */
     public function validateKtp($userId)
     {
         $response = Request::route('financing-completion.ktp')
@@ -280,20 +405,31 @@ class InternalApiClient
         return $response->json();
     }
 
-    public function validateNpwp($userId)
+    /**
+     * @param $customerId
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     */
+    public function validateNpwp($customerId)
     {
         $response = Request::route('financing-completion.npwp')
             ->pathParams([
-                'user_id' => $userId,
+                'customer_id' => $customerId,
             ])->send();
 
         return $response->json();
     }
 
-
+    /**
+     * @param $request
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     */
     public function uploadFinancingAsset($request)
     {
-        $response = Request::route('financing.upload')
+        $response = Request::route('customer.upload')
             ->json([
                 'image' => $request->file,
                 'author' => $request->author,
@@ -302,6 +438,92 @@ class InternalApiClient
             ])
             ->send();
 
+        return $response->json();
+    }
+
+    /**
+     * @param $customerId
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     * @example
+     * {
+     * 'P_CODE': '001',
+     * 'JENIS_PLAFOND': 'UNIT',
+     * 'CUST_ID': '3010000050',
+     * 'P_CURRENT': '0',
+     * 'P_USED': '0',
+     * 'P_SISA': '0',
+     * 'DATE_UPDATE': '03-NOV-21'
+     * }
+     */
+    public function getCustomerPlafonds($customerId){
+        $response = Request::route('financing-completion.npwp')
+            ->pathParams([
+                'customer_id' => $customerId,
+            ])->send();
+        return $response->json();
+    }
+
+    /**
+     * @param $customerId
+     * @param $plafondCode
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     * @example
+     * {
+     * 'header': [
+     * {
+     * 'P_CODE': '001',
+     * 'JENIS_PLAFOND': 'UNIT',
+     * 'CUST_ID': '3010000050',
+     * 'P_CURRENT': '0',
+     * 'P_USED': '0',
+     * 'P_SISA': '0',
+     * 'DATE_UPDATE': '03-NOV-21'
+     * }
+     * ],
+     * 'items': [
+     * {
+     * 'P_CODE': '001',
+     * 'PLAFONDHEADER_ID': 'PH5',
+     * 'CUST_ID': '3010000050',
+     * 'P_SUBMIT': '832000000',
+     * 'P_CURRENT': '0',
+     * 'P_TAMBAHAN': '832000000',
+     * 'P_STATUS': '1',
+     * 'DESCRIPTION': 'IN PROGRESS',
+     * 'DATE_UPDATE': '29-OCT-21 11.33.24.000000 AM'
+     * }
+     * ]
+     * }
+     */
+    public function getCustomerPlafondsByType($customerId, $plafondCode){
+        $response = Request::route('customer.plafond.list-by-type')
+            ->pathParams([
+                'customer_id' => $customerId,
+                'p_code' => $plafondCode,
+            ])->send();
+        return $response->json();
+    }
+
+    /**
+     * @param $customerId
+     * @param $typeId 001,002
+     * @param $amount
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     */
+    public function requestPlafond($customerId, $plafondCode, $amount){
+        $response = Request::route('customer.plafond.create')
+            ->json([
+                'cust_id' => $customerId,
+                'p_code' => $plafondCode,
+                'amount' => $amount,
+            ])
+            ->send();
         return $response->json();
     }
 }

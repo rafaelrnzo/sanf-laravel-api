@@ -1,12 +1,11 @@
 <?php
 
-namespace Sanf\Core\Modules\Plafond;
+namespace Sanf\Core\Modules\Plafond\Repositories;
 
 use Sanf\Core\Modules\Plafond\Models\PlafondTypeModel;
 
-class EloquentPlafondRepository implements PlafondRepositoryInterface
+final class EloquentPlafondTypeTypeRepository implements PlafondTypeRepositoryInterface
 {
-
     private PlafondTypeModel $plafondTypeModel;
 
     public function __construct(PlafondTypeModel $plafondTypeModel)
@@ -16,7 +15,7 @@ class EloquentPlafondRepository implements PlafondRepositoryInterface
 
     public function types($dto)
     {
-        $query =  $this->plafondTypeModel
+        $query = $this->plafondTypeModel
             ->newQuery()
             ->select(['id', 'title']);
 
