@@ -1,5 +1,4 @@
 <?php
-#parse("PHP File Header.php")
 
 namespace ${VENDOR}\Core\Modules\\${MODULE}\Specifications;
 
