@@ -3,7 +3,6 @@
 
 namespace Sanf\Core\Modules\Financing\Services;
 
-use Carbon\Carbon;
 use Sanf\Core\Modules\Financing\Repositories\FinancingApplicationRepositoryInterface;
 use Sanf\Core\Modules\Financing\Repositories\FinancingFacilityRepositoryInterface;
 use Sanf\Core\Modules\Financing\Repositories\FinancingMethodRepositoryInterface;
@@ -26,13 +25,5 @@ class FinancingService
         $this->financingMethodRepository = $financingMethodRepository;
         $this->financingPrerequisiteRepository = $financingPrerequisiteRepository;
         $this->financingFacilityRepository = $financingFacilityRepository;
-    }
-
-    protected function generateApplicationCode()
-    {
-        $now = Carbon::now();
-        $year = $now->year;
-        $month = $now->month;
-        return "{$month}{$year}";
     }
 }

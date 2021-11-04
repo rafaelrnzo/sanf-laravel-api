@@ -23,7 +23,7 @@ class ListFinancingFacilityService extends FinancingService implements Applicati
         FinancingFacilityRepositoryInterface $financingFacilityRepository,
         FinancingFacilitySpecificationFactoryInterface $specificationFactory
     ) {
-        parent::__construct($financingApplicationRepository,$financingMethodRepository,$financingPrerequisite,$financingFacilityRepository);
+        parent::__construct($financingApplicationRepository, $financingMethodRepository, $financingPrerequisite, $financingFacilityRepository);
         $this->specificationFactory = $specificationFactory;
     }
 

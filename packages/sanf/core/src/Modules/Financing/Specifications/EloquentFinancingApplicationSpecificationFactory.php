@@ -8,4 +8,9 @@ class EloquentFinancingApplicationSpecificationFactory implements FinancingAppli
     {
         return new EloquentPaginateFinancingApplicationByUserSpecification($userId, $skip, $limit, $sortBy, $keyword);
     }
+
+    public function findByMonth(\DateTimeImmutable $dateTime)
+    {
+        return new EloquentFinancingApplicationByMonthSpecification($dateTime);
+    }
 }
