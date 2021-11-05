@@ -543,3 +543,21 @@ hr {
     font-size: 16px;
     color: #616161;
 }
+
+.another-email-content td.label-content {
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 14px;
+    color: #232227;
+    line-height: 21px;
+}
+
+.another-email-content td.text-content {
+    font-family: "Roboto", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    font-size: 16px;
+    color: #232227;
+    line-height: 150%;
+}

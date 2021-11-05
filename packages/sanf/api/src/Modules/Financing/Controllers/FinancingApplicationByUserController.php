@@ -19,6 +19,8 @@ use Sanf\Core\Modules\Financing\Services\BrowseFinancingApplicationByUserService
 use Sanf\Core\Modules\Financing\Services\ReadFinancingApplicationByUserService;
 use Sanf\Core\Modules\User\Services\GetDetailCustomerProfileService;
 
+use Sanf\Core\Modules\Financing\SendEmailFinancingApplicationJob;
+
 class FinancingApplicationByUserController extends RestApiController
 {
     public function getBrowse(Guard $auth, Request $request, BrowseFinancingApplicationByUserService $service)
@@ -120,5 +122,26 @@ class FinancingApplicationByUserController extends RestApiController
             'project_location' => ['nullable', 'string'],
             'segment' => ['required', 'string'],
         ]);
+    }
+
+    public function sendEmailFinancingApplication()
+    {
+        setlocale(LC_ALL, "id_ID.UTF-8", "id_ID.UTF-8"); // set locale to use local time Indonesia
+        
+        // Send array data into email for the content. Value should be from DB
+        $data = [
+            'Tanggal Pengajuan'             => strftime("%A, %d %B %Y"),
+            'Nomor Pengajuan'               => 'xxxxx', // DB value
+            'Nama PIC'                      => 'Lorem Ips', // DB value
+            'Nama Perusahaan'               => 'PT. Lorem', // DB value
+            'Email PIC'                     => 'lorem@ipsum.com', // DB value
+            'Jenis Fasilitas Pembiayaan'    => 'Modal Usaha', // DB value
+            'Cara Pembayaran'               => 'Pembelian dengan Pembayaran secara Angsuran' // DB value
+        ];
+
+        $recipients = explode(',', config('sanf-mobile.mail_to_admin'));
+
+        dispatch(new SendEmailFinancingApplicationJob($data, $recipients));
+
     }
 }

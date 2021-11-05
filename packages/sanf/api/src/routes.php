@@ -116,3 +116,10 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::get('users/profiles/{xid}/plafonds/types/{typeId}', ['as' => 'users.plafonds.detail-by-type', 'uses' => 'Plafond\Controllers\PlafondController@getReadByUserProfileAndType']);
     Route::post('users/profiles/{xid}/plafonds', ['as' => 'users.plafonds.create', 'uses' => 'Plafond\Controllers\PlafondController@postAddByUserProfile']);
 });
+
+// TODO: remove this routes, this routes only for test sending email
+Route::group(['prefix' => 'v1/test-emails',], function () {
+    Route::get('financing-application', ['uses' => 'Financing\Controllers\FinancingApplicationByUserController@sendEmailFinancingApplication']);
+    Route::get('plafon', ['uses' => 'Plafond\Controllers\PlafondController@sendEmailPlafon']);
+    Route::get('plafon-new', ['uses' => 'Plafond\Controllers\PlafondController@sendEmailPlafonNewValue']);
+});
