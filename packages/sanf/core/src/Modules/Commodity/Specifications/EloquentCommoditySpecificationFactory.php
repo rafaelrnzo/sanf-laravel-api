@@ -7,14 +7,14 @@ namespace Sanf\Core\Modules\Commodity\Specifications;
 class EloquentCommoditySpecificationFactory implements CommoditySpecificationFactoryInterface
 {
 
-    public function paginate(?int $skip, ?int $limit, ?string $sortBy, ?string $keyword)
+    public function paginate(?int $skip, ?int $limit, ?string $sortBy, ?int $timestamp, ?string $keyword)
     {
-        return new EloquentPaginateCommoditySpecification($skip, $limit, $sortBy, $keyword);
+        return new EloquentPaginateCommoditySpecification($skip, $limit, $sortBy, $timestamp, $keyword);
     }
 
-    public function paginateByUser($userId, ?int $skip, ?int $limit, ?string $sortBy, ?string $keyword)
+    public function paginateByUser($userId, ?int $skip, ?int $limit, ?string $sortBy, ?int $timestamp, ?string $keyword)
     {
-        return new EloquentPaginateUserCommoditySpecification($userId, $skip, $limit, $sortBy, $keyword);
+        return new EloquentPaginateUserCommoditySpecification($userId, $skip, $limit, $sortBy, $timestamp, $keyword);
     }
 
     public function getAllOwned($userId)

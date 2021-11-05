@@ -31,6 +31,7 @@ class CommodityController extends RestApiController
     public function getList(Guard $auth, Request $request, GetListCommodityService $service)
     {
         $input = $this->validate($request, [
+            'timestamp' => ['nullable', 'integer', 'min:0', 'max:99999999999'],
             'skip' => ['nullable', 'integer'],
             'limit' => ['nullable', 'integer'],
             'sort_by' => ['nullable', 'string'],

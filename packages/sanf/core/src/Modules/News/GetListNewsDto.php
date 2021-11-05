@@ -13,4 +13,6 @@ class GetListNewsDto extends DataTransferObject
     public ?string $limit;
 
     public string $sort_by;
+
+    public ?int $timestamp;
 }

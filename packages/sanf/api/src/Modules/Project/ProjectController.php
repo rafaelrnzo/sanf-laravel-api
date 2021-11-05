@@ -33,6 +33,7 @@ class ProjectController extends RestApiController
     public function getList(Guard $auth, Request $request, GetListProjectService $service)
     {
         $input = $this->validate($request, [
+            'timestamp' => ['nullable', 'integer'],
             'skip' => ['nullable', 'integer'],
             'limit' => ['nullable', 'integer'],
             'sort_by' => ['nullable', 'string'],
@@ -58,6 +59,7 @@ class ProjectController extends RestApiController
     public function getListByUser(Guard $auth, Request $request, GetListProjectByUserService $service)
     {
         $input = $this->validate($request, [
+            'timestamp' => ['nullable', 'integer', 'min:0', 'max:99999999999'],
             'skip' => ['nullable', 'integer'],
             'limit' => ['nullable', 'integer'],
             'sort_by' => ['nullable', 'string'],

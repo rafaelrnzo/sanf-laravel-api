@@ -4,6 +4,7 @@
 namespace Sanf\Core\Modules\Commodity\Specifications;
 
 
+use Carbon\Carbon;
 use Sanf\Core\Modules\Commodity\CommodityStatus;
 use Sanf\Core\Modules\Commodity\Models\CommodityModel;
 
@@ -12,13 +13,15 @@ class EloquentPaginateCommoditySpecification
     private ?int $skip;
     private ?int $limit;
     private ?string $sortBy;
+    private ?int $timestamp;
     private ?string $keyword;
 
-    public function __construct(?int $skip, ?int $limit, ?string $sortBy, ?string $keyword)
+    public function __construct(?int $skip, ?int $limit, ?string $sortBy, ?int $timestamp, ?string $keyword)
     {
         $this->skip = $skip;
         $this->limit = $limit;
         $this->sortBy = $sortBy;
+        $this->timestamp = $timestamp;
         $this->keyword = $keyword;
     }
 
@@ -47,6 +50,8 @@ class EloquentPaginateCommoditySpecification
                 return $query->skip($this->skip);
             })->when($this->limit, function ($query) {
                 return $query->limit($this->limit);
+            })->when($this->timestamp, function ($query) {
+                return $query->where('published_at', '>', Carbon::createFromTimestamp($this->timestamp));
             });
 
         return $query;

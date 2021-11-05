@@ -4,6 +4,7 @@
 namespace Sanf\Core\Modules\Project\Specifications;
 
 
+use Carbon\Carbon;
 use Sanf\Core\Modules\Project\Models\ProjectModel;
 use Sanf\Core\Modules\Project\ProjectStatus;
 
@@ -12,13 +13,15 @@ class EloquentPaginateProjectSpecification
     private ?int $skip;
     private ?int $limit;
     private ?string $sortBy;
+    private ?int $timestamp;
     private ?string $keyword;
 
-    public function __construct(?int $skip, ?int $limit, ?string $sortBy, ?string $keyword)
+    public function __construct(?int $skip, ?int $limit, ?string $sortBy, ?int $timestamp, ?string $keyword)
     {
         $this->skip = $skip;
         $this->limit = $limit;
         $this->sortBy = $sortBy;
+        $this->timestamp = $timestamp;
         $this->keyword = $keyword;
     }
 
@@ -27,13 +30,13 @@ class EloquentPaginateProjectSpecification
         switch ($this->sortBy) {
             case 'earliest':
             case 'oldest':
-                $orderBy = 'project.created_at';
+                $orderBy = 'created_at';
                 $orderDirection = 'ASC';
                 break;
             case 'latest':
             case 'newest':
             default:
-                $orderBy = 'project.created_at';
+                $orderBy = 'created_at';
                 $orderDirection = 'DESC';
         }
 
@@ -47,6 +50,8 @@ class EloquentPaginateProjectSpecification
                 return $query->skip($this->skip);
             })->when($this->limit, function ($query) {
                 return $query->limit($this->limit);
+            })->when($this->timestamp, function ($query) {
+                return $query->where('published_at', '>', Carbon::createFromTimestamp($this->timestamp));
             });
 
         return $query;

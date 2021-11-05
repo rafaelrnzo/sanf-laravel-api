@@ -2,6 +2,8 @@
 
 namespace Sanf\Core\Modules\Promo;
 
+use Carbon\Carbon;
+
 class EloquentPromoRepository implements PromoRepositoryInterface
 {
 
@@ -40,6 +42,9 @@ class EloquentPromoRepository implements PromoRepositoryInterface
             ->orderBy($orderBy, $orderDir)
             ->skip($dto->skip)
             ->limit($dto->limit)
+            ->when($dto->timestamp, function ($query) use ($dto) {
+                return $query->where('promo_sanf.created_at', '>', Carbon::createFromTimestamp($dto->timestamp));
+            })
             ->get();
 
         return [

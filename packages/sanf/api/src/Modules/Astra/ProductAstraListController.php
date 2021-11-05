@@ -22,6 +22,7 @@ class ProductAstraListController extends RestApiController
         ]);
 
         $dto = new GetListProductAstraDto([
+            'timestamp' => (int)$request->input('timestamp'),
             'skip' => $request->input('skip'),
             'limit' => $request->input('limit'),
             'sort_by' => $request->input('sort_by') ?? 'latest',

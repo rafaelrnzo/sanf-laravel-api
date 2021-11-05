@@ -2,6 +2,8 @@
 
 namespace Sanf\Core\Modules\Astra;
 
+use Carbon\Carbon;
+
 class EloquentProductAstraRepository implements ProductAstraRepositoryInterface
 {
 
@@ -40,6 +42,9 @@ class EloquentProductAstraRepository implements ProductAstraRepositoryInterface
             ->orderBy($orderBy, $orderDir)
             ->skip($dto->skip)
             ->limit($dto->limit)
+            ->when($dto->timestamp, function ($query) use ($dto) {
+                return $query->where('promo_astra.created_at', '>', Carbon::createFromTimestamp($dto->timestamp));
+            })
             ->get();
 
         return [

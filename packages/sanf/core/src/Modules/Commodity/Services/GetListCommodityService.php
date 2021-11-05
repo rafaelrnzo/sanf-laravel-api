@@ -28,10 +28,10 @@ class GetListCommodityService extends CommodityService implements ApplicationSer
     public function execute($dto = null)
     {
         $data = $this->commodityRepository->query(
-            $this->specificationFactory->paginate($dto->skip, $dto->limit, $dto->sortBy, $dto->keyword)
+            $this->specificationFactory->paginate($dto->skip, $dto->limit, $dto->sortBy, $dto->timestamp, $dto->keyword)
         );
         $total = $this->commodityRepository->size(
-            $this->specificationFactory->paginate($dto->skip, $dto->limit, $dto->sortBy, $dto->keyword)
+            $this->specificationFactory->paginate($dto->skip, $dto->limit, $dto->sortBy, $dto->timestamp, $dto->keyword)
         );
 
         $data = collect($data)->map(function ($item) use ($dto) {

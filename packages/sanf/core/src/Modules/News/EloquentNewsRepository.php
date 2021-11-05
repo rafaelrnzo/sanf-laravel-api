@@ -2,6 +2,8 @@
 
 namespace Sanf\Core\Modules\News;
 
+use Carbon\Carbon;
+
 class EloquentNewsRepository implements NewsRepositoryInterface
 {
 
@@ -51,6 +53,9 @@ class EloquentNewsRepository implements NewsRepositoryInterface
             ->orderBy($orderBy, $orderDir)
             ->skip($dto->skip)
             ->limit($dto->limit)
+            ->when($dto->timestamp, function ($query) use ($dto) {
+                return $query->where('news.created_at', '>', Carbon::createFromTimestamp($dto->timestamp));
+            })
             ->get();
 
         return [

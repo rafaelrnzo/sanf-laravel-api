@@ -16,6 +16,7 @@ class NewsController extends RestApiController
     public function getList(Request $request, GetListNewsService $service)
     {
         $this->validate($request, [
+            'timestamp' => ['nullable', 'integer', 'min:0', 'max:99999999999'],
             'keyword' => 'nullable|string',
             'skip' => 'nullable|integer',
             'limit' => 'nullable|integer',
@@ -23,6 +24,7 @@ class NewsController extends RestApiController
         ]);
 
         $dto = new GetListNewsDto([
+            'timestamp' => (int)$request->input('timestamp'),
             'keyword' => $request->input('keyword'),
             'skip' => $request->input('skip'),
             'limit' => $request->input('limit'),

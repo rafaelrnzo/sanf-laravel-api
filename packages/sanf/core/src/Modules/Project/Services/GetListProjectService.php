@@ -28,10 +28,10 @@ class GetListProjectService extends ProjectService implements ApplicationService
     public function execute($dto = null)
     {
         $data = $this->projectRepository->query(
-            $this->specificationFactory->paginate($dto->skip, $dto->limit, $dto->sortBy, $dto->keyword)
+            $this->specificationFactory->paginate($dto->skip, $dto->limit, $dto->sortBy, $dto->timestamp, $dto->keyword)
         );
         $total = $this->projectRepository->size(
-            $this->specificationFactory->paginate($dto->skip, $dto->limit, $dto->sortBy, $dto->keyword)
+            $this->specificationFactory->paginate($dto->skip, $dto->limit, $dto->sortBy, $dto->timestamp, $dto->keyword)
         );
 
         $data = collect($data)->map(function ($item) use ($dto) {

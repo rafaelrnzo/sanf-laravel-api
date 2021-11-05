@@ -16,12 +16,14 @@ class PromoController extends RestApiController
     public function getList(Request $request, GetListPromoService $service)
     {
         $this->validate($request, [
+            'timestamp' => ['nullable', 'integer', 'min:0', 'max:99999999999'],
             'skip' => 'nullable',
             'limit' => 'nullable',
             'sort_by' => ['nullable', Rule::in(['oldest', 'latest',])],
         ]);
 
         $dto = new GetListPromoDto([
+            'timestamp' => (int)$request->input('timestamp'),
             'skip' => $request->input('skip'),
             'limit' => ($request->input('limit')),
             'sort_by' => $request->input('sort_by') ?? 'latest',
