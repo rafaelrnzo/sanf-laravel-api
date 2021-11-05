@@ -110,5 +110,8 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::post('users/financing-applications/company', ['as' => 'financing-applications.company.create', 'uses' => 'Financing\Controllers\FinancingApplicationByUserController@postAddByCompanyProfile']);
     Route::post('users/financing-applications/personal', ['as' => 'financing-applications.personal.create', 'uses' => 'Financing\Controllers\FinancingApplicationByUserController@postAddByPersonalProfile']);
 
-    Route::get('plafond-types', ['as' => 'plafond.type', 'uses' => 'Plafond\Controllers\PlafondController@getTypes']);
+    Route::get('plafond-types', ['as' => 'plafond-types', 'uses' => 'Plafond\Controllers\PlafondController@getBrowseTypes']);
+    Route::get('users/profiles/{xid}/plafonds', ['as' => 'users.plafonds.list', 'uses' => 'Plafond\Controllers\PlafondController@getBrowseByUserProfile']);
+    Route::get('users/profiles/{xid}/plafonds/types/{typeId}', ['as' => 'users.plafonds.detail-by-type', 'uses' => 'Plafond\Controllers\PlafondController@getReadByUserProfileAndType']);
+    Route::post('users/profiles/{xid}/plafonds', ['as' => 'users.plafonds.create', 'uses' => 'Plafond\Controllers\PlafondController@postAddByUserProfile']);
 });

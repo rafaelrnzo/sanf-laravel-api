@@ -4,7 +4,7 @@ namespace Sanf\Core\Modules\Plafond\Repositories;
 
 use Sanf\Core\Modules\Plafond\Models\PlafondTypeModel;
 
-final class EloquentPlafondTypeTypeRepository implements PlafondTypeRepositoryInterface
+final class EloquentPlafondTypeRepository implements PlafondTypeRepositoryInterface
 {
     private PlafondTypeModel $plafondTypeModel;
 

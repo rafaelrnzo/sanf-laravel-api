@@ -4,8 +4,7 @@
 namespace Sanf\Core\Modules\Plafond\Entities;
 
 
-use Carbon\Carbon;
-use Sanf\Core\Modules\Plafond\Enums\PlafondTypeEnum;
+use Carbon\CarbonImmutable;
 
 final class PlafondEntity
 {
@@ -41,16 +40,19 @@ final class PlafondEntity
         return $this->attributes['P_SISA'];
     }
 
-    public function getType(): PlafondTypeEnum
+    public function getType(): PlafondTypeEntity
     {
-        return new PlafondTypeEnum($this->attributes['P_CODE']);
+        return new PlafondTypeEntity($this->attributes['type']);
     }
 
-    public function getUpdatedAt(): Carbon
+    public function getUpdatedAt(): \DateTimeImmutable
     {
-//        return Carbon::createFromFormat('03-NOV-21');
+        return CarbonImmutable::now();
     }
 
+    /**
+     * @return PlafondHistoryEntity[]
+     */
     public function getHistories(): array
     {
         return array_map(function ($item) {

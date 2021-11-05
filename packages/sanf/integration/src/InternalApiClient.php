@@ -458,7 +458,7 @@ class InternalApiClient
      * }
      */
     public function getCustomerPlafonds($customerId){
-        $response = Request::route('financing-completion.npwp')
+        $response = Request::route('customer.plafond.list')
             ->pathParams([
                 'customer_id' => $customerId,
             ])->send();
