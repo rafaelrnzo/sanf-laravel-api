@@ -41,7 +41,7 @@ class PlafondController extends RestApiController
             'sort_by' => ['nullable', 'string'],
             'keyword' => ['nullable', 'string'],
         ]);
-        $dto = new BrowsePlafondByProfileRequestDto($input + ['profileXid' => $xid,'userId' => $auth->id()]);
+        $dto = new BrowsePlafondByProfileRequestDto($input + ['profileXid' => $xid, 'userId' => $auth->id()]);
         $result = $service->execute($dto);
 
         return fractal($result->data, new PlafondSimpleTransformer())
@@ -59,14 +59,13 @@ class PlafondController extends RestApiController
         return fractal($result, new PlafondTransformer());
     }
 
-    public function postAddByUserProfile(Guard $auth, Request $request, ApplyPlafondByUserService $service)
+    public function postAddByUserProfile(Guard $auth, $xid, Request $request, ApplyPlafondByUserService $service)
     {
         $input = $this->validate($request, [
-            'profile_xid' => ['required', 'string', 'max:255'],
             'plafond_type_id' => ['required', 'string', 'max:255'],
             'amount' => ['required', 'string', 'max:255'],
         ]);
-        $dto = new AddPlafondRequestDto($input + ['userId' => $auth->id()]);
+        $dto = new AddPlafondRequestDto($input + ['profileXid' => $xid, 'userId' => $auth->id()]);
         $service->execute($dto);
         return $this->responseOk();
     }

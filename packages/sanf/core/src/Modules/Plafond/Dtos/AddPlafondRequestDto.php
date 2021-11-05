@@ -2,10 +2,12 @@
 
 namespace Sanf\Core\Modules\Plafond\Dtos;
 
-use Spatie\DataTransferObject\DataTransferObject;
+use NbsPhp\Core\Dto\CamelCaseDataTransferObject;
 
-class AddPlafondRequestDto extends DataTransferObject
+class AddPlafondRequestDto extends CamelCaseDataTransferObject
 {
+    public int $userId;
+    public string $profileXid;
     public string $plafondTypeId;
     public string $amount;
 }
