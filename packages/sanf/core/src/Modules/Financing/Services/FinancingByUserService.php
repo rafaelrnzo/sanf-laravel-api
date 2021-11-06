@@ -16,8 +16,8 @@ use Sanf\Core\Modules\User\AuthModel;
 
 class FinancingByUserService extends FinancingService
 {
-    protected AuthModel $userRepository;
     protected FinancingApplicationSpecificationFactoryInterface $financingSpecificationFactory;
+    protected AuthModel $userRepository;
 
     public function __construct(
         FinancingApplicationRepositoryInterface $financingApplicationRepository,
@@ -33,8 +33,8 @@ class FinancingByUserService extends FinancingService
             $financingPrerequisiteRepository,
             $financingFacilityRepository,
         );
-        $this->userRepository = $userRepository;
         $this->financingSpecificationFactory = $financingSpecificationFactory;
+        $this->userRepository = $userRepository;
     }
 
     protected function findUserOrFail($userId)

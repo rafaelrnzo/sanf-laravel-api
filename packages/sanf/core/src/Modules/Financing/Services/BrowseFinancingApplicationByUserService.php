@@ -6,34 +6,9 @@ namespace Sanf\Core\Modules\Financing\Services;
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Financing\Dto\BrowseFinancingApplicationDto;
-use Sanf\Core\Modules\Financing\Repositories\FinancingApplicationRepositoryInterface;
-use Sanf\Core\Modules\Financing\Repositories\FinancingFacilityRepositoryInterface;
-use Sanf\Core\Modules\Financing\Repositories\FinancingMethodRepositoryInterface;
-use Sanf\Core\Modules\Financing\Repositories\FinancingPrerequisiteRepositoryInterface;
-use Sanf\Core\Modules\Financing\Specifications\FinancingApplicationSpecificationFactoryInterface;
-use Sanf\Core\Modules\User\AuthModel;
 
 class BrowseFinancingApplicationByUserService extends FinancingByUserService implements ApplicationServiceInterface
 {
-    protected FinancingApplicationSpecificationFactoryInterface $specificationFactory;
-    public function __construct(
-        FinancingApplicationRepositoryInterface $financingApplicationRepository,
-        FinancingMethodRepositoryInterface $financingMethodRepository,
-        FinancingPrerequisiteRepositoryInterface $financingPrerequisiteRepository,
-        FinancingFacilityRepositoryInterface $financingFacilityRepository,
-        AuthModel $userRepository,
-        FinancingApplicationSpecificationFactoryInterface $specificationFactory
-    ) {
-        $this->specificationFactory = $specificationFactory;
-        parent::__construct(
-            $financingApplicationRepository,
-            $financingMethodRepository,
-            $financingPrerequisiteRepository,
-            $financingFacilityRepository,
-            $userRepository
-        );
-    }
-
     /**
      * @param BrowseFinancingApplicationDto $dto
      * @return object
@@ -43,10 +18,10 @@ class BrowseFinancingApplicationByUserService extends FinancingByUserService imp
     {
         $this->findUserOrFail($dto->userId);
         $data = $this->financingApplicationRepository->query(
-            $this->specificationFactory->paginateByUser($dto->userId, $dto->skip, $dto->limit, $dto->sortBy, $dto->keyword)
+            $this->financingSpecificationFactory->paginateByUser($dto->userId, $dto->skip, $dto->limit, $dto->sortBy, $dto->keyword)
         );
         $total = $this->financingApplicationRepository->size(
-            $this->specificationFactory->paginateByUser($dto->userId, $dto->skip, $dto->limit, $dto->sortBy, $dto->keyword)
+            $this->financingSpecificationFactory->paginateByUser($dto->userId, $dto->skip, $dto->limit, $dto->sortBy, $dto->keyword)
         );
 
         return (object)[
