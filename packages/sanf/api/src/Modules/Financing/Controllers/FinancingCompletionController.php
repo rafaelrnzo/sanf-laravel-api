@@ -12,7 +12,7 @@ class FinancingCompletionController extends RestApiController
     public function validateKtp($xid, ValidateKtpService $service)
     {
         $dto = (object)[
-            'user_id' => $xid,
+            'xid' => $xid,
         ];
 
         $isValid = $service->execute($dto);

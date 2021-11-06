@@ -3,6 +3,7 @@
 namespace Sanf\Core\Modules\Financing\Services;
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
+use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 use Sanf\Integration\InternalApiClient;
 
 class ValidateNpwpService implements ApplicationServiceInterface
@@ -20,10 +21,12 @@ class ValidateNpwpService implements ApplicationServiceInterface
      */
     public function execute($dto = null)
     {
-        $data = $this->client->validateNpwp($dto->user_id);
-
-        $isValid = $data['data'] ?? null;
-
-        return ($isValid === 'DATA EXIST');
+        try {
+            $data = $this->client->validateNpwp($dto->user_id);
+        } catch (SanfInternalApiDataNotFoundException $exception) {
+            return false;
+        }
+        $code = $data['code'] ?? null;
+        return ($code === 'S_GetData');
     }
 }

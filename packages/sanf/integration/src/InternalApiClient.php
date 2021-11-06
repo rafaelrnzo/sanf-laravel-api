@@ -390,16 +390,16 @@ class InternalApiClient
     }
 
     /**
-     * @param $userId
+     * @param $customerId
      * @return array|stdClass|null
      * @throws EndpointNotDefinedException
      * @throws GuzzleException
      */
-    public function validateKtp($userId)
+    public function validateKtp($customerId)
     {
         $response = Request::route('financing-completion.ktp')
             ->pathParams([
-                'user_id' => $userId,
+                'customer_id' => $customerId,
             ])->send();
 
         return $response->json();
