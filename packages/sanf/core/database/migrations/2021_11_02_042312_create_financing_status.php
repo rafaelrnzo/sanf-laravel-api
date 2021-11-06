@@ -32,6 +32,6 @@ class CreateFinancingStatus extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('financing_application_status');
+        Schema::dropIfExists('financing_status');
     }
 }

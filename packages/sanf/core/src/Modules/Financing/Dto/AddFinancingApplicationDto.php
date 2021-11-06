@@ -11,8 +11,10 @@ class AddFinancingApplicationDto extends CamelCaseDataTransferObject
     public string $profileXid;
     public $profile;
     public int $financingFacilityId;
-    public int $financingMethodId;
-    //array of FinancingObjectDto
+    public ?int $financingMethodId;
+    /** array of FinancingObjectDto **/
     public array $financingObjects;
     public bool $isReceiveOffer;
+    public ?string $projectLocation;
+    public string $segment;
 }

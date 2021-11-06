@@ -20,7 +20,7 @@ class AddCompanyFinancingApplicationByUserService extends FinancingByUserService
     public function execute($dto = null)
     {
         $user = $this->findUserOrFail($dto->userId);
-        /**@var FinancingObjectDto* */
+        /**@var FinancingObjectDto **/
         $financingObjects = [];
         foreach ($dto->financingObjects as $financingObject) {
             $financingObjects[] = [
@@ -72,6 +72,8 @@ class AddCompanyFinancingApplicationByUserService extends FinancingByUserService
             'method_id' => $dto->financingMethodId,
             'financing_objects' => $financingObjects,
             'is_receive_offer' => $dto->isReceiveOffer,
+            'segment' => $dto->segment,
+            'project_location' => $dto->projectLocation,
             'status_id' => FinancingStatusEnum::PROCESSED,
             'type_id' => FinancingApplicationTypeEnum::COMPANY
         ]);

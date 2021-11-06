@@ -46,28 +46,17 @@ class FinancingApplicationByUserController extends RestApiController
         return fractal($result, new FinancingApplicationTransformer());
     }
 
+    /**
+     * @throws \NbsPhp\Core\Exceptions\UserNotFoundException
+     * @throws \NbsPhp\Core\Exceptions\ForbiddenException
+     */
     public function postAddByPersonalProfile(
         Guard $auth,
         Request $request,
         AddPersonalFinancingApplicationByUserService $financingService,
         GetDetailCustomerProfileService $profileService
     ) {
-        $input = $this->validate($request, [
-            'profile_xid' => ['required', 'string'],
-            'financing_facility_id' => ['required', 'integer'],
-            'financing_method_id' => ['required', 'integer'],
-            'financing_objects' => ['nullable', 'array'],
-            'financing_objects.*.amount' => ['required_with:financing_objects', 'integer'],
-            'financing_objects.*.provider_name' => ['required_with:financing_objects', 'string'],
-            'financing_objects.*.brand_id' => ['required_with:financing_objects', 'string'],
-            'financing_objects.*.brand_name' => ['required_with:financing_objects', 'string'],
-            'financing_objects.*.type_id' => ['required_with:financing_objects', 'string'],
-            'financing_objects.*.type_name' => ['required_with:financing_objects', 'string'],
-            'financing_objects.*.model_id' => ['required_with:financing_objects', 'string'],
-            'financing_objects.*.model_name' => ['required_with:financing_objects', 'string'],
-            'is_receive_offer' => ['required', 'boolean'],
-        ]);
-
+        $input = $this->validateApplication($request);
         $profile = $profileService->execute((object)[
             'userId' => $auth->id(),
             'customerId' => $input['profile_xid']
@@ -91,10 +80,33 @@ class FinancingApplicationByUserController extends RestApiController
         AddCompanyFinancingApplicationByUserService $financingService,
         GetDetailCustomerProfileService $profileService
     ) {
-        $input = $this->validate($request, [
+        $input = $this->validateApplication($request);
+        $profile = $profileService->execute((object)[
+            'userId' => $auth->id(),
+            'customerId' => $input['profile_xid']
+        ]);
+        $financingObjects = [];
+        foreach ($input['financing_objects'] ?? [] as $financingObject) {
+            $financingObjects[] = new FinancingObjectDto($financingObject);
+        }
+        $dto = new AddFinancingApplicationDto($input + [
+                'userId' => $auth->id(),
+                'profile' => $profile,
+                'financingObjects' => $financingObjects
+            ]);
+        $financingService->execute($dto);
+        return $this->responseOk();
+    }
+
+    /**
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    protected function validateApplication(Request $request): array
+    {
+        return $this->validate($request, [
             'profile_xid' => ['required', 'string'],
             'financing_facility_id' => ['required', 'integer'],
-            'financing_method_id' => ['required', 'integer'],
+            'financing_method_id' => ['nullable', 'integer'],
             'financing_objects' => ['nullable', 'array'],
             'financing_objects.*.amount' => ['required_with:financing_objects', 'integer'],
             'financing_objects.*.provider_name' => ['required_with:financing_objects', 'string'],
@@ -105,16 +117,8 @@ class FinancingApplicationByUserController extends RestApiController
             'financing_objects.*.model_id' => ['required_with:financing_objects', 'string'],
             'financing_objects.*.model_name' => ['required_with:financing_objects', 'string'],
             'is_receive_offer' => ['required', 'boolean'],
+            'project_location' => ['nullable', 'string'],
+            'segment' => ['required', 'string'],
         ]);
-        $profile = $profileService->execute((object)[
-            'userId' => $auth->id(),
-            'customerId' => $input['profile_xid']
-        ]);
-        $dto = new AddFinancingApplicationDto($input + [
-                'userId' => $auth->id(),
-                'profile' => $profile,
-            ]);
-        $financingService->execute($dto);
-        return $this->responseOk();
     }
 }

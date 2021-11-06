@@ -26,6 +26,8 @@ class CreateFinancingApplicationTable extends Migration
             $table->string('application_code')->unique()->index()->comment('MMYY-XXXXXX (x = counter number)');
             $table->string('registration_code')->unique()->index()->nullable();
             $table->boolean('is_receive_offer');
+            $table->text('project_location')->nullable();
+            $table->string('segment');
             $table->timestamps();
         });
     }

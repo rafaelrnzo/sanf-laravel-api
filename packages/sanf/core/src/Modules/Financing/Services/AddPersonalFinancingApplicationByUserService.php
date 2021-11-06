@@ -72,6 +72,8 @@ class AddPersonalFinancingApplicationByUserService extends FinancingByUserServic
             'method_id' => $dto->financingMethodId,
             'financing_objects' => $financingObjects,
             'is_receive_offer' => $dto->isReceiveOffer,
+            'segment' => $dto->segment,
+            'project_location' => $dto->projectLocation,
             'status_id' => FinancingStatusEnum::PROCESSED,
             'type_id' => FinancingApplicationTypeEnum::PERSONAL
         ]);
