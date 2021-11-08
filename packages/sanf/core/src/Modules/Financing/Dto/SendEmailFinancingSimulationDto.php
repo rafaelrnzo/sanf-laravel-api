@@ -6,8 +6,10 @@ namespace Sanf\Core\Modules\Financing\Dto;
 
 use Spatie\DataTransferObject\DataTransferObject;
 
-class SimulationCalculationResultDto extends DataTransferObject
+class SendEmailFinancingSimulationDto extends DataTransferObject
 {
+    public int $user_id;
+
     public int $financing_method_id;
 
     public string $financing_method_name;
@@ -23,5 +25,4 @@ class SimulationCalculationResultDto extends DataTransferObject
     public float $installment_per_month;
 
     public int $interest_rate_percentage;
-
 }

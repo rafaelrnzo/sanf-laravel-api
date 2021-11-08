@@ -9,14 +9,14 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 use NbsPhp\Core\Mail\BaseMail;
+use Sanf\Core\Modules\Financing\Services\GetPdfFinancingSimulationService;
 
 
 class SendEmailFinancingSimulationJob implements ShouldQueue
 {
     use InteractsWithQueue, Queueable, SerializesModels;
-    protected $financing;
-
-    protected $emailRecipients;
+    protected $data;
+    protected $recipient;
 
     /**
      * Create a new job instance.
@@ -24,19 +24,37 @@ class SendEmailFinancingSimulationJob implements ShouldQueue
      * @return void
      */
 
-    public function __construct($financing, $emailRecipients)
+    public function __construct($data, $recipient)
     {
-        $this->financing = $financing;
-        $this->emailRecipients = $emailRecipients;
+        $this->data = $data;
+        $this->recipient = $recipient;
     }
 
-    public function handle()
+    public function handle(GetPdfFinancingSimulationService $service)
     {
-        $financingCalculationMail = (new BaseMail())
-            ->subject('')
+        $simulationEmail = (new BaseMail())
+            ->subject('Hasil Simulasi Pembiayaan')
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
-            ->rightLogo(asset('assets/png/sanf-tagline.png'));
+            ->rightLogo(asset('assets/png/sanf-tagline.png'))
+            ->banner(asset('assets/png/email-verification.png'))
+            ->line(__(
+                'Halo ' . $this->recipient->name . '!.
+                <br />
+                <blockquote style="margin: 0 3em;font-size: 16px; line-height: 150%;">
+                    Berikut kami lampirkan hasil perhitungan simulasi pengajuan pembiayaan anda
+                </blockquote>
+            '))
+            ->lineWithUrl(
+                __('Email ini dibuat secara otomatis mohon tidak membalas email ini, jika terdapat keluhan silahkan hubungi'),
+                [__('Sanf Customer Service'), '#']
+            )
+            ->lineWithUrl(
+                __('. Jika Anda merasa tidak membuat request tersebut mohon abaikan email ini atau anda dapat'),
+                [__('Laporkan email ini'), '#']
+            );
 
-        return Mail::to($this->emailRecipients)->send($financingCalculationMail);
+        $simulationEmail->attachData($service->execute($this->data), 'SANF-Simulasi' . date('Y-m-d-H-i-s') . '.pdf');
+
+        return Mail::to($this->recipient->email)->send($simulationEmail);
     }
 }

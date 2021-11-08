@@ -20,7 +20,10 @@ class AddPersonalFinancingApplicationByUserService extends FinancingByUserServic
     public function execute($dto = null)
     {
         $user = $this->findUserOrFail($dto->userId);
-        /**@var FinancingObjectDto* */
+
+        //TODO VALIDATE OPTION, facility, method and BTM
+
+        /**@var FinancingObjectDto **/
         $financingObjects = [];
         foreach ($dto->financingObjects as $financingObject) {
             $financingObjects[] = [
