@@ -2,13 +2,13 @@
 
 namespace Sanf\Core\Modules\Plafond\Repositories;
 
-use Sanf\Core\Modules\Plafond\Entities\PlafondEntity;
+use Sanf\Core\Modules\Plafond\Entities\PlafondEntityInterface;
 
 interface PlafondRepositoryInterface
 {
     public function getByProfile($xid): array;
 
-    public function getByProfileAndType($profileXid, $typeId): ?PlafondEntity;
+    public function getByProfileAndType($profileXid, $typeId): ?PlafondEntityInterface;
 
     public function submitApplication($profileXid, $typeId, $amount);
 }

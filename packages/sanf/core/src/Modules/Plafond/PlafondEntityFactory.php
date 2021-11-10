@@ -4,12 +4,12 @@
 namespace Sanf\Core\Modules\Plafond;
 
 
-use Sanf\Core\Modules\Plafond\Entities\PlafondEntity;
+use Sanf\Core\Modules\Plafond\Entities\GuzzlePlafondEntity;
 
 final class PlafondEntityFactory
 {
-    public function make(array $attributes = []): PlafondEntity
+    public function make(array $attributes = []): GuzzlePlafondEntity
     {
-        return new PlafondEntity($attributes);
+        return new GuzzlePlafondEntity($attributes);
     }
 }

@@ -4,7 +4,7 @@ namespace Sanf\Api\Modules\User\Controllers;
 
 use NbsPhp\Core\Controllers\RestApiController;
 use Sanf\Api\Modules\User\Transformers\PositionTransformer;
-use Sanf\Core\Modules\User\GetListPositionService;
+use Sanf\Core\Modules\User\Services\GetListPositionService;
 use Spatie\Fractalistic\ArraySerializer;
 
 class PositionController extends RestApiController

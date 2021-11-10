@@ -12,13 +12,12 @@ use Sanf\Api\Modules\Plafond\Transformers\PlafondTypeListTransformer;
 use Sanf\Core\Modules\Plafond\Dtos\AddPlafondRequestDto;
 use Sanf\Core\Modules\Plafond\Dtos\BrowsePlafondByProfileRequestDto;
 use Sanf\Core\Modules\Plafond\Dtos\ReadPlafondByProfileAndTypeRequestDto;
-use Sanf\Core\Modules\Plafond\Services\ApplyPlafondByUserService;
+use Sanf\Core\Modules\Plafond\Services\ApplyIncreasePlafondByUserService;
+use Sanf\Core\Modules\Plafond\Services\ApplyNewPlafondByUserService;
 use Sanf\Core\Modules\Plafond\Services\BrowsePlafondByUserService;
 use Sanf\Core\Modules\Plafond\Services\ListPlafondTypeService;
 use Sanf\Core\Modules\Plafond\Services\ReadPlafondByUserAndTypeService;
-
-use Sanf\Core\Modules\Plafond\SendEmailPlafondJob;
-use Sanf\Core\Modules\Plafond\SendEmailPlafondNewValueJob;
+use Sanf\Core\Modules\User\Services\GetDetailCustomerProfileByUserService;
 
 class PlafondController extends RestApiController
 {
@@ -62,58 +61,51 @@ class PlafondController extends RestApiController
         return fractal($result, new PlafondTransformer());
     }
 
-    public function postAddByUserProfile(Guard $auth, $xid, Request $request, ApplyPlafondByUserService $service)
-    {
+    public function postAddByUserProfile(
+        Guard $auth,
+        $xid,
+        Request $request,
+        ApplyNewPlafondByUserService $plafondService,
+        GetDetailCustomerProfileByUserService $profileService
+    ) {
         $input = $this->validate($request, [
             'plafond_type_id' => ['required', 'string', 'max:255'],
             'amount' => ['required', 'string', 'max:255'],
         ]);
-        $dto = new AddPlafondRequestDto($input + ['profileXid' => $xid, 'userId' => $auth->id()]);
-        $service->execute($dto);
+        $profile = $profileService->execute((object)[
+            'userId' => $auth->id(),
+            'customerId' => $xid
+        ]);
+        $dto = new AddPlafondRequestDto($input + [
+                'profileXid' => $xid,
+                'profile' => $profile,
+                'userId' => $auth->id()
+            ]);
+        $plafondService->execute($dto);
         return $this->responseOk();
     }
 
-    public function sendEmailPlafon()
-    {
-
-        setlocale(LC_ALL, "id_ID.UTF-8", "id_ID.UTF-8"); // set locale to use local time Indonesia
-        
-        // Send array data into email for the content
-        $data = [
-            'Tanggal Pengajuan'         => strftime("%A, %d %B %Y"),
-            'Nomor Pengajuan'           => 'xxxxx', // DB value
-            'Nama Customer'             => 'Lorem Ips', // DB value
-            'Nama PIC'                  => 'Dolor sit amet', // DB value
-            'Nama Perusahaan'           => 'PT. Lorem', // DB value
-            'Nilai Pengajuan Plafon'    => 'Rp. '.number_format(1500000000, 0, ',', '.'), // DB value
-        ];
-
-        $recipients = explode(',', config('sanf-mobile.mail_to_admin'));
-
-        dispatch(new SendEmailPlafondJob($data, $recipients));
-
-    }
-
-    public function sendEmailPlafonNewValue()
-    {
-        setlocale(LC_ALL, "id_ID.UTF-8", "id_ID.UTF-8"); // set locale to use local time Indonesia
-        
-        // Send array data into email for the content. Value should be from DB
-        $data = [
-            'Tanggal Pengajuan'             => strftime("%A, %d %B %Y"),
-            'Nomor Pengajuan'               => 'xxxxx', // DB value
-            'Nama Customer'                 => 'Lorem Ips', // DB value
-            'Nama PIC'                      => 'Dolor sit amet', // DB value
-            'Nama Perusahaan'               => 'PT. Lorem', // DB value
-            'Nilai Plafon Saat Ini'         => 'Rp. '. number_format(1500000000, 0, ',', '.'), // DB value
-            'Nilai Plafon Tambahan'         => 'Rp. '. number_format(2500000000, 0, ',', '.'), // DB value
-            '<p style="color: #232227;">
-                <b>Total Plafon Anda</b>
-            </p>'                           => '<b>Rp. '. number_format(4000000000, 0, ',', '.') . '</b>', // DB value
-        ];
-
-        $recipients = explode(',', config('sanf-mobile.mail_to_admin'));
-
-        dispatch(new SendEmailPlafondNewValueJob($data, $recipients));
+    public function postIncreaseByUserProfile(
+        Guard $auth,
+        $xid,
+        Request $request,
+        ApplyIncreasePlafondByUserService $plafondService,
+        GetDetailCustomerProfileByUserService $profileService
+    ) {
+        $input = $this->validate($request, [
+            'plafond_type_id' => ['required', 'string', 'max:255'],
+            'amount' => ['required', 'string', 'max:255'],
+        ]);
+        $profile = $profileService->execute((object)[
+            'userId' => $auth->id(),
+            'customerId' => $xid
+        ]);
+        $dto = new AddPlafondRequestDto($input + [
+                'profileXid' => $xid,
+                'profile' => $profile,
+                'userId' => $auth->id()
+            ]);
+        $plafondService->execute($dto);
+        return $this->responseOk();
     }
 }

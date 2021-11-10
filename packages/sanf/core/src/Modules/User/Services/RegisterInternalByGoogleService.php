@@ -7,7 +7,7 @@ namespace Sanf\Core\Modules\User\Services;
 use NbsPhp\Core\Enum\UserStatus;
 use NbsPhp\Core\Services\RegisterByGoogleServiceInterface;
 use Sanf\Core\Modules\User\AuthModel;
-use Sanf\Core\Modules\User\ProfileType;
+use Sanf\Core\Modules\User\Enums\ProfileType;
 use Sanf\Integration\InternalApiClient;
 
 class RegisterInternalByGoogleService implements RegisterByGoogleServiceInterface

@@ -7,6 +7,7 @@ use NbsPhp\Core\Dto\CamelCaseDataTransferObject;
 class AddPlafondRequestDto extends CamelCaseDataTransferObject
 {
     public int $userId;
+    public $profile;
     public string $profileXid;
     public string $plafondTypeId;
     public string $amount;

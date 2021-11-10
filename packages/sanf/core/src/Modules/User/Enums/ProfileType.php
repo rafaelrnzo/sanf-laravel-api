@@ -1,13 +1,14 @@
 <?php
 
 
-namespace Sanf\Core\Modules\User;
+namespace Sanf\Core\Modules\User\Enums;
 
 
 use MyCLabs\Enum\Enum;
+use function __;
 
 /**
- * Class EntityType
+ * Class ProfileType
  * @package Sanf\Core\Modules\User
  */
 class ProfileType extends Enum

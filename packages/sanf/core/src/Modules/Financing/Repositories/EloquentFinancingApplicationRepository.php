@@ -18,7 +18,7 @@ class EloquentFinancingApplicationRepository extends AbstractEloquentRepository 
 
     public function findById($id)
     {
-        $model = $this->model->newQuery()->with(['user', 'status'])->find($id);
+        $model = $this->model->newQuery()->with(['status', 'objects', 'facility', 'method'])->find($id);
         return $this->stripEloquentModel($model);
     }
 

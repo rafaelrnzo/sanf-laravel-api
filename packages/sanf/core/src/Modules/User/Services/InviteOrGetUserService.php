@@ -7,7 +7,7 @@ namespace Sanf\Core\Modules\User\Services;
 use NbsPhp\Core\Enum\UserStatus;
 use NbsPhp\Core\Models\NeedSetupPasswordInterface;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\User\EntityType;
+use Sanf\Core\Modules\User\Enums\EntityType;
 
 class InviteOrGetUserService extends UserService implements ApplicationServiceInterface
 {

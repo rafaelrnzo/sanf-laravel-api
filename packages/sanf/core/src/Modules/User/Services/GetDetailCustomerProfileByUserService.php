@@ -11,7 +11,7 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Integration\InternalApiClient;
 
-class GetDetailCustomerProfileService implements ApplicationServiceInterface
+class GetDetailCustomerProfileByUserService implements ApplicationServiceInterface
 {
     protected $repository;
     protected $internalApiClient;
@@ -22,6 +22,14 @@ class GetDetailCustomerProfileService implements ApplicationServiceInterface
         $this->internalApiClient = $internalApiClient;
     }
 
+    /**
+     * @param object $dto userId, customerId
+     * @return mixed
+     * @throws ForbiddenException
+     * @throws UserNotFoundException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException
+     */
     public function execute($dto = null)
     {
         $user = $this->repository->newQuery()->find($dto->userId);

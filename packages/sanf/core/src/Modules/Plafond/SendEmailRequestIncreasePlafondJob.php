@@ -10,10 +10,10 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 use Sanf\Core\Mail\MailLayout2Columns;
 
-class SendEmailPlafondNewValueJob implements ShouldQueue
+class SendEmailRequestIncreasePlafondJob implements ShouldQueue
 {
     use InteractsWithQueue, Queueable, SerializesModels;
-    protected $plafond;
+    protected $data;
 
     protected $emailRecipients;
 
@@ -23,16 +23,16 @@ class SendEmailPlafondNewValueJob implements ShouldQueue
      * @return void
      */
 
-    public function __construct($plafond, $emailRecipients)
+    public function __construct($data, $emailRecipients)
     {
-        $this->plafond = $plafond;
+        $this->data = $data;
         $this->emailRecipients = $emailRecipients;
     }
 
     public function handle()
     {
 
-        $plafondResult = (new MailLayout2Columns())
+        $mailable = (new MailLayout2Columns())
             ->subject('Naikan Nilai Plafon')
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
             ->rightLogo(asset('assets/png/sanf-tagline.png'))
@@ -43,7 +43,7 @@ class SendEmailPlafondNewValueJob implements ShouldQueue
                     Pengajuan Plafon Sedang dalam proses oleh tim kami, berikut kami lampirkan ringkasan pengajuan Plafon Anda.
                 </blockquote>
             '))
-            ->writeContent($this->plafond)
+            ->writeContent($this->data)
             ->generateSeparator([
                 [ 'joinToIndex' => 1, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08);">' ],
                 [
@@ -62,6 +62,6 @@ class SendEmailPlafondNewValueJob implements ShouldQueue
                 [__('Laporkan email ini'), '#']
             );
 
-        return Mail::to($this->emailRecipients)->send($plafondResult);
+        return Mail::to($this->emailRecipients)->send($mailable);
     }
 }

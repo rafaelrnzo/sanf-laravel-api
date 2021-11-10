@@ -5,7 +5,7 @@ namespace Sanf\Api\Modules\User\Transformers;
 
 
 use League\Fractal\TransformerAbstract;
-use Sanf\Core\Modules\User\ProfileType;
+use Sanf\Core\Modules\User\Enums\ProfileType;
 
 class LoginTransformer extends TransformerAbstract
 {

@@ -6,7 +6,7 @@ namespace Sanf\Core\Modules\Plafond\Entities;
 
 use Carbon\CarbonImmutable;
 
-final class PlafondEntity
+final class GuzzlePlafondEntity implements PlafondEntityInterface
 {
     private array $attributes;
 
@@ -40,9 +40,9 @@ final class PlafondEntity
         return $this->attributes['P_SISA'];
     }
 
-    public function getType(): PlafondTypeEntity
+    public function getType(): PlafondTypeEntityInterface
     {
-        return new PlafondTypeEntity($this->attributes['type']);
+        return new EloquentPlafondTypeEntity($this->attributes['type']);
     }
 
     public function getUpdatedAt(): \DateTimeImmutable
@@ -51,12 +51,12 @@ final class PlafondEntity
     }
 
     /**
-     * @return PlafondHistoryEntity[]
+     * @return GuzzlePlafondHistoryEntity[]
      */
     public function getHistories(): array
     {
         return array_map(function ($item) {
-            return new PlafondHistoryEntity($item);
+            return new GuzzlePlafondHistoryEntity($item);
         }, $this->attributes['items']);
     }
 }

@@ -5,7 +5,8 @@ namespace Sanf\Core\Modules\Plafond\Services;
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Plafond\Dtos\ReadPlafondByProfileAndTypeRequestDto;
-use Sanf\Core\Modules\Plafond\Entities\PlafondHistoryEntity;
+use Sanf\Core\Modules\Plafond\Entities\GuzzlePlafondHistoryEntity;
+use Sanf\Core\Modules\Plafond\Exceptions\PlafondInvalidException;
 
 final class ReadPlafondByUserAndTypeService extends PlafondByUserService implements ApplicationServiceInterface
 {
@@ -16,6 +17,9 @@ final class ReadPlafondByUserAndTypeService extends PlafondByUserService impleme
     public function execute($dto = null)
     {
         $plafond = $this->repository->getByProfileAndType($dto->profileXid, $dto->typeId);
+        if(is_null($plafond)){
+            throw new PlafondInvalidException();
+        }
 
         $type = $plafond->getType();
         $data = (object)[
@@ -28,7 +32,7 @@ final class ReadPlafondByUserAndTypeService extends PlafondByUserService impleme
                 'title' => $type->getTitle(),
                 'name' => $type->getName(),
             ],
-            'histories' => collect($plafond->getHistories())->map(function (PlafondHistoryEntity $item) {
+            'histories' => collect($plafond->getHistories())->map(function (GuzzlePlafondHistoryEntity $item) {
                 return (object)[
                     'status' => $item->getStatus(),
                     'updatedAt' => $item->getUpdatedAt(),

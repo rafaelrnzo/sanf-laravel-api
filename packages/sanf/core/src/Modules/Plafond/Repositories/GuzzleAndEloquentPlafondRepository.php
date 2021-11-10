@@ -3,7 +3,7 @@
 namespace Sanf\Core\Modules\Plafond\Repositories;
 
 
-use Sanf\Core\Modules\Plafond\Entities\PlafondEntity;
+use Sanf\Core\Modules\Plafond\Entities\PlafondEntityInterface;
 use Sanf\Core\Modules\Plafond\Models\PlafondTypeModel;
 use Sanf\Core\Modules\Plafond\PlafondEntityFactory;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
@@ -38,7 +38,7 @@ class GuzzleAndEloquentPlafondRepository implements PlafondRepositoryInterface
         }
     }
 
-    public function getByProfileAndType($profileXid, $typeId): ?PlafondEntity
+    public function getByProfileAndType($profileXid, $typeId): ?PlafondEntityInterface
     {
         try {
             $response = $this->client->getCustomerPlafondsByType($profileXid, $typeId);
@@ -53,6 +53,7 @@ class GuzzleAndEloquentPlafondRepository implements PlafondRepositoryInterface
 
     public function submitApplication($profileXid, $typeId, $amount)
     {
-        // TODO: Implement submitApplication() method.
+        $response = $this->client->requestPlafond($profileXid, $typeId, $amount);
+        return $response['status'];
     }
 }

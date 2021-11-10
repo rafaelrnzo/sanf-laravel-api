@@ -1,12 +1,14 @@
 <?php
 
 
-namespace Sanf\Core\Modules\User;
+namespace Sanf\Core\Modules\User\Services;
 
 
 use NbsPhp\Core\Models\AuthModel;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
+use Sanf\Core\Modules\User\Enums\ProfileType;
 use Sanf\Integration\InternalApiClient;
+use function collect;
 
 class GetMyProfileService implements ApplicationServiceInterface
 {

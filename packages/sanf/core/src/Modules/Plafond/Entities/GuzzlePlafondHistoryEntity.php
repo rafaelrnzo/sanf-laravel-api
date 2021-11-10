@@ -7,7 +7,7 @@ namespace Sanf\Core\Modules\Plafond\Entities;
 use Carbon\CarbonImmutable;
 use Sanf\Core\Modules\Plafond\Enums\PlafondStatusEnum;
 
-final class PlafondHistoryEntity
+final class GuzzlePlafondHistoryEntity implements PlafondHistoryEntityInterface
 {
     private array $attributes;
 

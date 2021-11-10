@@ -4,7 +4,7 @@
 namespace Sanf\Core\Modules\Plafond\Entities;
 
 
-final class PlafondTypeEntity
+final class EloquentPlafondTypeEntity implements PlafondTypeEntityInterface
 {
     private array $attributes;
 

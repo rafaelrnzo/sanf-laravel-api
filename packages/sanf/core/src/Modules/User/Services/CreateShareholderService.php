@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Sanf\Core\Modules\User;
+namespace Sanf\Core\Modules\User\Services;
 
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;

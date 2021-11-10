@@ -1,8 +1,9 @@
 <?php
 
-namespace Sanf\Core\Modules\User;
+namespace Sanf\Core\Modules\User\Services;
 
 use Sanf\Integration\InternalApiClient;
+use function collect;
 
 class GetListTitleService
 {

@@ -7,7 +7,7 @@ namespace Sanf\Core\Modules\User\Services;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Models\AuthModel;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\User\ProfileType;
+use Sanf\Core\Modules\User\Enums\ProfileType;
 use Sanf\Integration\InternalApiClient;
 
 class UpdateCompanyProfileService implements ApplicationServiceInterface

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
 use Sanf\Api\Modules\User\Transformers\TitleTransformer;
 use Sanf\Core\Modules\User\Dto\GetListTitleDto;
-use Sanf\Core\Modules\User\GetListTitleService;
+use Sanf\Core\Modules\User\Services\GetListTitleService;
 use Spatie\Fractalistic\ArraySerializer;
 
 class TitleController extends RestApiController

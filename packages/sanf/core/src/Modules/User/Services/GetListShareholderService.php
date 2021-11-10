@@ -1,12 +1,13 @@
 <?php
 
 
-namespace Sanf\Core\Modules\User;
+namespace Sanf\Core\Modules\User\Services;
 
 
 use Illuminate\Support\Facades\Log;
 use Sanf\Integration\Exceptions\SanfInternalApiException;
 use Sanf\Integration\InternalApiClient;
+use function collect;
 
 class GetListShareholderService
 {

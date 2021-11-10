@@ -15,7 +15,7 @@ class FinancingApplicationModel extends AbstractModel
     ];
 
     public function facility(){
-        return $this->belongsTo(FinancingMethodModel::class, 'facility_id');
+        return $this->belongsTo(FinancingFacilityModel::class, 'facility_id');
     }
 
     public function objects(){

@@ -5,7 +5,7 @@ namespace Sanf\Core\Modules\Plafond\Services;
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Plafond\Dtos\BrowsePlafondByProfileRequestDto;
-use Sanf\Core\Modules\Plafond\Entities\PlafondEntity;
+use Sanf\Core\Modules\Plafond\Entities\GuzzlePlafondEntity;
 
 final class BrowsePlafondByUserService extends PlafondByUserService implements ApplicationServiceInterface
 {
@@ -16,7 +16,7 @@ final class BrowsePlafondByUserService extends PlafondByUserService implements A
     public function execute($dto = null)
     {
         $plafonds = $this->repository->getByProfile($dto->profileXid);
-        $data = collect($plafonds)->map(function (PlafondEntity $item) {
+        $data = collect($plafonds)->map(function (GuzzlePlafondEntity $item) {
             $type = $item->getType();
             return (object)[
                 'id' => $item->getId(),

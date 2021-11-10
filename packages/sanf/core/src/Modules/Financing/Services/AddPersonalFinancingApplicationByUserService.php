@@ -9,6 +9,9 @@ use Sanf\Core\Modules\Financing\Dto\AddFinancingApplicationDto;
 use Sanf\Core\Modules\Financing\Dto\FinancingObjectDto;
 use Sanf\Core\Modules\Financing\Enums\FinancingApplicationTypeEnum;
 use Sanf\Core\Modules\Financing\Enums\FinancingStatusEnum;
+use Sanf\Core\Modules\Financing\Events\FinancingApplicationCreatedEvent;
+use Sanf\Core\Modules\Financing\Exceptions\FinancingApplicationInvalidException;
+use Sanf\Core\Modules\User\Enums\ProfileType;
 
 class AddPersonalFinancingApplicationByUserService extends FinancingByUserService implements ApplicationServiceInterface
 {
@@ -20,10 +23,13 @@ class AddPersonalFinancingApplicationByUserService extends FinancingByUserServic
     public function execute($dto = null)
     {
         $user = $this->findUserOrFail($dto->userId);
+        if ($dto->profile->typeId !== ProfileType::PERSONAL) {
+            throw new FinancingApplicationInvalidException('Invalid Profile Type');
+        }
 
         //TODO VALIDATE OPTION, facility, method and BTM
 
-        /**@var FinancingObjectDto **/
+        /**@var FinancingObjectDto * */
         $financingObjects = [];
         foreach ($dto->financingObjects as $financingObject) {
             $financingObjects[] = [
@@ -65,7 +71,7 @@ class AddPersonalFinancingApplicationByUserService extends FinancingByUserServic
             'is_pic' => $dto->profile->isPic,
             'version' => 1
         ];
-        $financingApplication = $this->financingApplicationRepository->add([
+        $newFinancingApplication = $this->financingApplicationRepository->add([
             'xid' => nano_id(),
             'application_code' => $this->generateApplicationCode(),
             'user_id' => $user->id,
@@ -81,6 +87,9 @@ class AddPersonalFinancingApplicationByUserService extends FinancingByUserServic
             'type_id' => FinancingApplicationTypeEnum::PERSONAL
         ]);
 
+        $financingApplication = $this->financingApplicationRepository->findById($newFinancingApplication->id);
+        $financingApplication->profile = $dto->profile;
+        event(new FinancingApplicationCreatedEvent($financingApplication));
         return $financingApplication;
     }
 }

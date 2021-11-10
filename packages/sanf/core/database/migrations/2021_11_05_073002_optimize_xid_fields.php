@@ -20,7 +20,7 @@ class OptimizeXidFields extends Migration
             $table->string('xid', 21)->index()->unique()->change();
         });
         Schema::table('commodity', function (Blueprint $table) {
-            $table->string('xid', 21)->change();
+            $table->string('xid', 21)->index()->change();
         });
         Schema::table('promo_sanf', function (Blueprint $table) {
             $table->string('xid', 21)->index()->unique()->change();
@@ -43,6 +43,26 @@ class OptimizeXidFields extends Migration
      */
     public function down()
     {
-
+        Schema::table('user_auth', function (Blueprint $table) {
+            $table->string('xid', 21)->change();
+        });
+        Schema::table('news', function (Blueprint $table) {
+            $table->string('xid', 21)->change();
+        });
+        Schema::table('commodity', function (Blueprint $table) {
+            $table->string('xid', 21)->change();
+        });
+        Schema::table('promo_sanf', function (Blueprint $table) {
+            $table->string('xid', 21)->change();
+        });
+        Schema::table('project', function (Blueprint $table) {
+            $table->string('xid', 21)->change();
+        });
+        Schema::table('promo_astra', function (Blueprint $table) {
+            $table->string('xid', 21)->change();
+        });
+        Schema::table('financing_application', function (Blueprint $table) {
+            $table->string('xid', 21)->change();
+        });
     }
 }

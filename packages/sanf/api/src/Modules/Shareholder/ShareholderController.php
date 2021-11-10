@@ -6,10 +6,10 @@ namespace Sanf\Api\Modules\Shareholder;
 
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
-use Sanf\Core\Modules\User\CreateShareholderService;
-use Sanf\Core\Modules\User\DeleteShareholderService;
-use Sanf\Core\Modules\User\GetListShareholderService;
-use Sanf\Core\Modules\User\UpdateShareholderService;
+use Sanf\Core\Modules\User\Services\CreateShareholderService;
+use Sanf\Core\Modules\User\Services\DeleteShareholderService;
+use Sanf\Core\Modules\User\Services\GetListShareholderService;
+use Sanf\Core\Modules\User\Services\UpdateShareholderService;
 use Spatie\Fractalistic\ArraySerializer;
 
 class ShareholderController extends RestApiController

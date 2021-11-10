@@ -6,7 +6,7 @@ use Illuminate\Auth\EloquentUserProvider;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Str;
-use Sanf\Core\Modules\User\EntityType;
+use Sanf\Core\Modules\User\Enums\EntityType;
 
 class MobileUserProvider extends EloquentUserProvider implements UserProvider
 {
