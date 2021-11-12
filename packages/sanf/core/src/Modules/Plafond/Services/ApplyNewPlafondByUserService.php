@@ -16,7 +16,7 @@ final class ApplyNewPlafondByUserService extends PlafondByUserService implements
      */
     public function execute($dto = null)
     {
-        $this->repository->submitApplication($dto->profileXid, $dto->plafondTypeId, $dto->amount);
+        $this->repository->submitApplication($dto->profileXid, $dto->typeId, $dto->amount);
         $plafondRequest = (object)[
             'amount' => $dto->amount,
             'createdAt' => Carbon::now()

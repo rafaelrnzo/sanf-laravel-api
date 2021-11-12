@@ -9,6 +9,6 @@ class AddPlafondRequestDto extends CamelCaseDataTransferObject
     public int $userId;
     public $profile;
     public string $profileXid;
-    public string $plafondTypeId;
+    public string $typeId;
     public string $amount;
 }

@@ -69,7 +69,7 @@ class PlafondController extends RestApiController
         GetDetailCustomerProfileByUserService $profileService
     ) {
         $input = $this->validate($request, [
-            'plafond_type_id' => ['required', 'string', 'max:255'],
+            'type_id' => ['required', 'string', 'max:255'],
             'amount' => ['required', 'string', 'max:255'],
         ]);
         $profile = $profileService->execute((object)[
@@ -93,7 +93,7 @@ class PlafondController extends RestApiController
         GetDetailCustomerProfileByUserService $profileService
     ) {
         $input = $this->validate($request, [
-            'plafond_type_id' => ['required', 'string', 'max:255'],
+            'type_id' => ['required', 'string', 'max:255'],
             'amount' => ['required', 'string', 'max:255'],
         ]);
         $profile = $profileService->execute((object)[
