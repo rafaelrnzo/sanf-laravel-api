@@ -4,6 +4,7 @@
 namespace Sanf\Api\Modules\Plafond\Transformers;
 
 use League\Fractal\TransformerAbstract;
+use Spatie\Fractalistic\ArraySerializer;
 
 final class PlafondTransformer extends TransformerAbstract
 {
@@ -18,7 +19,7 @@ final class PlafondTransformer extends TransformerAbstract
             'updated_at' => unix_timestamp($dto->updatedAt),
             'remaining_balance' => $dto->remainingBalance,
             'used_balance' => $dto->usedBalance,
-            'histories' => fractal($dto->histories, new PlafondHistoryTransformer())
+            'histories' => fractal($dto->histories, new PlafondHistoryTransformer())->serializeWith(ArraySerializer::class)
         ];
     }
 }
