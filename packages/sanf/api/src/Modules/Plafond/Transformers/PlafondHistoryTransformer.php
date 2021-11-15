@@ -10,6 +10,10 @@ final class PlafondHistoryTransformer extends TransformerAbstract
     public function transform($dto)
     {
         return [
+            'type' => [
+                'id' => $dto->type->id,
+                'name' => $dto->type->name,
+            ],
             'status' => [
                 'id' => $dto->status->getValue(),
                 'name' => $dto->status->getTranslation()

@@ -17,7 +17,7 @@ final class ReadPlafondByUserAndTypeService extends PlafondByUserService impleme
     public function execute($dto = null)
     {
         $plafond = $this->repository->getByProfileAndType($dto->profileXid, $dto->typeId);
-        if(is_null($plafond)){
+        if (is_null($plafond)) {
             throw new PlafondInvalidException();
         }
 
@@ -32,13 +32,18 @@ final class ReadPlafondByUserAndTypeService extends PlafondByUserService impleme
                 'title' => $type->getTitle(),
                 'name' => $type->getName(),
             ],
-            'histories' => collect($plafond->getHistories())->map(function (GuzzlePlafondHistoryEntity $item) {
+            'histories' => collect($plafond->getHistories())->map(function (GuzzlePlafondHistoryEntity $item) use ($type) {
                 return (object)[
                     'status' => $item->getStatus(),
                     'updatedAt' => $item->getUpdatedAt(),
                     'currentBalance' => $item->getCurrentBalance(),
                     'addedBalance' => $item->getAddedBalance(),
                     'submittedBalance' => $item->getSubmittedBalance(),
+                    'type' => (object)[
+                        'id' => $type->getId(),
+                        'title' => $type->getTitle(),
+                        'name' => $type->getName(),
+                    ],
                 ];
             }),
         ];

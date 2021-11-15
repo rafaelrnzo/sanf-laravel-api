@@ -34,6 +34,11 @@ class LazyPaginatorAdapter implements PaginatorInterface
         return $this->paginator->count;
     }
 
+    public function getSkip()
+    {
+        return $this->paginator->skip;
+    }
+
     public function getPerPage()
     {
         return $this->paginator->limit;

@@ -21,6 +21,11 @@ final class GuzzlePlafondHistoryEntity implements PlafondHistoryEntityInterface
         return $this->attributes['PLAFONDHEADER_ID'];
     }
 
+    public function getType(): PlafondTypeEntityInterface
+    {
+        return new EloquentPlafondTypeEntity($this->attributes['type']);
+    }
+
     public function getCustomerId(): string
     {
         return $this->attributes['CUST_ID'];

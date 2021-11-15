@@ -12,6 +12,8 @@ interface PlafondHistoryEntityInterface
 
     public function getPlafondId(): string;
 
+    public function getType(): PlafondTypeEntityInterface;
+
     public function getCustomerId(): string;
 
     public function getSubmittedBalance(): string;

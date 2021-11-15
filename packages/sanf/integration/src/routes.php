@@ -37,4 +37,5 @@ Route::group(config('sanf-internal.url'), [InternalApiProcessor::class], functio
     Route::get('customer.plafond.list', '/Plafond/Header/{customer_id}');
     Route::get('customer.plafond.list-by-type', '/Plafond/Detail/{customer_id}/{p_code}');
     Route::post('customer.plafond.create', '/Plafond');
+    Route::get('customer.plafond.history', '/plafond/history');
 });

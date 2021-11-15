@@ -526,4 +526,52 @@ class InternalApiClient
             ->send();
         return $response->json();
     }
+
+    /**
+     * @param $customerId
+     * @param string $plafondCode
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     * @example
+     * {
+     * 'status': true,
+     * 'code': 'S_GetData',
+     * 'message': 'Success',
+     * 'count': 6,
+     * 'data': [
+     * {
+     * 'P_CODE': '001',
+     * 'PLAFONDHEADER_ID': 'PH2',
+     * 'CUST_ID': '2010000138',
+     * 'P_SUBMIT': '744040000',
+     * 'P_CURRENT': '0',
+     * 'P_TAMBAHAN': '744040000',
+     * 'P_STATUS': '4',
+     * 'DESCRIPTION': 'CLOSED',
+     * 'DATE_UPDATE': '17-MAR-07 12.00.00.000000 AM'
+     * },
+     * {
+     * 'P_CODE': '001',
+     * 'PLAFONDHEADER_ID': 'PH2',
+     * 'CUST_ID': '2010000138',
+     * 'P_SUBMIT': '2185128000',
+     * 'P_CURRENT': '0',
+     * 'P_TAMBAHAN': '2185128000',
+     * 'P_STATUS': '4',
+     * 'DESCRIPTION': 'CLOSED',
+     * 'DATE_UPDATE': '26-JUN-07 12.00.00.000000 AM'
+     * }
+     * ]
+     * }
+     */
+    public function getCustomerPlafondHistories($customerId, $plafondCode = 'all'){
+        $response = Request::route('customer.plafond.history')
+            ->queryParams([
+                'uid' => $customerId,
+                'typeplafond' => $plafondCode
+            ])
+            ->send();
+        return $response->json();
+    }
 }

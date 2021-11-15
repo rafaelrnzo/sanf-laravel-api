@@ -1,10 +1,8 @@
 <?php
 
 
-namespace Sanf\Core\Modules\Plafond;
+namespace Sanf\Core\Modules\Plafond\Entities;
 
-
-use Sanf\Core\Modules\Plafond\Entities\GuzzlePlafondEntity;
 
 final class PlafondEntityFactory
 {

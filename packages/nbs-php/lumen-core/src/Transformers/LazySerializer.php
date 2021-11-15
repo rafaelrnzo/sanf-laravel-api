@@ -51,7 +51,9 @@ class LazySerializer extends BaseArraySerializer
     public function paginator(PaginatorInterface $paginator)
     {
         $pagination = [
-            'count' => (int)$paginator->getTotal(),
+            'total' => (int)$paginator->getTotal(),
+            'count' => (int)$paginator->getCount(),
+            'skip' => (int)$paginator->getSkip(),
             'limit' => (int)$paginator->getPerPage(),
             'sort_by' => $this->getSortQueryParam()
         ];

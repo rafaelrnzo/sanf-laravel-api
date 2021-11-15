@@ -3,9 +3,10 @@
 namespace Sanf\Core\Modules\Plafond\Repositories;
 
 
+use Sanf\Core\Modules\Plafond\Entities\PlafondEntityFactory;
+use Sanf\Core\Modules\Plafond\Entities\PlafondEntityHistoryFactory;
 use Sanf\Core\Modules\Plafond\Entities\PlafondEntityInterface;
 use Sanf\Core\Modules\Plafond\Models\PlafondTypeModel;
-use Sanf\Core\Modules\Plafond\PlafondEntityFactory;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 use Sanf\Integration\InternalApiClient;
 
@@ -13,15 +14,18 @@ class GuzzleAndEloquentPlafondRepository implements PlafondRepositoryInterface
 {
     protected InternalApiClient $client;
     protected PlafondEntityFactory $factory;
+    protected PlafondEntityHistoryFactory $historyFactory;
     protected PlafondTypeModel $plafondTypeModel;
 
     public function __construct(
         InternalApiClient $client,
         PlafondEntityFactory $factory,
+        PlafondEntityHistoryFactory $historyFactory,
         PlafondTypeModel $plafondTypeModel
     ) {
         $this->client = $client;
         $this->factory = $factory;
+        $this->historyFactory = $historyFactory;
         $this->plafondTypeModel = $plafondTypeModel;
     }
 
@@ -32,6 +36,19 @@ class GuzzleAndEloquentPlafondRepository implements PlafondRepositoryInterface
             return array_map(function ($item) {
                 $item['type'] = $this->plafondTypeModel->find($item['P_CODE'])->toArray();
                 return $this->factory->make($item);
+            }, $response['data']);
+        } catch (SanfInternalApiDataNotFoundException $exception) {
+            return [];
+        }
+    }
+
+    public function getHistoryByProfile($xid): array
+    {
+        try {
+            $response = $this->client->getCustomerPlafondHistories($xid);
+            return array_map(function ($item) {
+                $item['type'] = $this->plafondTypeModel->find($item['P_CODE'])->toArray();
+                return $this->historyFactory->make($item);
             }, $response['data']);
         } catch (SanfInternalApiDataNotFoundException $exception) {
             return [];
