@@ -26,7 +26,7 @@ class GetPdfFinancingSimulationService extends FinancingByUserService implements
             'name' => $user->full_name,
             'email' => $user->username,
             'data' => [
-                'jenis_pembiayaan' => $dto->financing_method_name,
+                'cara_pembiayaan' => $dto->financing_method_name,
                 'total_pembiayaan' => 'Rp. ' . number_format($dto->financing_amount, 0, ',', '.'),
                 'uang_muka' => 'Rp. ' . number_format($dto->down_payment_amount, 0, ',', '.'),
                 'persen_dp' => $dto->down_payment_percentage . '%',
