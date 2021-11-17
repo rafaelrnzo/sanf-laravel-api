@@ -46,7 +46,7 @@ class ListFinancingFacilityService extends FinancingService implements Applicati
         );
 
         $total = $this->financingFacilityRepository->size(
-            $this->specificationFactory->paginate($dto->skip, $dto->limit , $dto->sort_by)
+            $this->specificationFactory->paginate()
         );
 
         // Assert paginate to object

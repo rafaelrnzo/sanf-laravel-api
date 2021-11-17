@@ -11,7 +11,7 @@ class EloquentFinancingMethodSpecificationFactory implements FinancingMethodSpec
      * @param string|null $sort_by
      * @return EloquentPaginateFinancingMethodSpecification
      */
-    public function paginate(?int $skip, ?int $limit, ?string $sort_by)
+    public function paginate(?int $skip = null, ?int $limit = null, ?string $sort_by = null)
     {
         return new EloquentPaginateFinancingMethodSpecification($skip, $limit, $sort_by);
     }
@@ -23,7 +23,7 @@ class EloquentFinancingMethodSpecificationFactory implements FinancingMethodSpec
      * @param string|null $sort_by
      * @return EloquentPaginateFinancingMethodByFacilitySpecification
      */
-    public function paginateByFacility(int $id, ?int $skip, ?int $limit, ?string $sort_by)
+    public function paginateByFacility(int $id, ?int $skip = null, ?int $limit = null, ?string $sort_by = null)
     {
         return new EloquentPaginateFinancingMethodByFacilitySpecification($id, $skip, $limit, $sort_by);
     }

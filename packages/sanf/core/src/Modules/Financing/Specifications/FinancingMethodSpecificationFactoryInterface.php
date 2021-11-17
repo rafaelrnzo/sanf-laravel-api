@@ -6,8 +6,8 @@ namespace Sanf\Core\Modules\Financing\Specifications;
 
 interface FinancingMethodSpecificationFactoryInterface
 {
-    public function paginate(?int $skip, ?int $limit, ?string $sort_by);
+    public function paginate(?int $skip = null, ?int $limit = null, ?string $sort_by = null);
 
-    public function paginateByFacility(int $facilityId, ?int $skip, ?int $limit, ?string $sort_by);
+    public function paginateByFacility(int $facilityId, ?int $skip = null, ?int $limit = null, ?string $sort_by = null);
 
 }

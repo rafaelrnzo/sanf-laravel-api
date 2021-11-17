@@ -30,10 +30,13 @@ class GetListCommodityByUserService extends CommodityByUserService implements Ap
     public function execute($dto = null)
     {
         $this->findUserOrFail($dto->userId);
-        $spesification = $this->specificationFactory->paginateByUser($dto->userId, $dto->skip, $dto->limit, $dto->sortBy, $dto->timestamp, $dto->keyword);
 
-        $data = $this->commodityRepository->query($spesification);
-        $total = $this->commodityRepository->size($spesification);
+        $data = $this->commodityRepository->query(
+            $this->specificationFactory->paginateByUser($dto->userId, $dto->skip, $dto->limit, $dto->sortBy, $dto->timestamp, $dto->keyword)
+        );
+        $total = $this->commodityRepository->size(
+            $this->specificationFactory->paginateByUser($dto->userId, null, null, null, $dto->timestamp, $dto->keyword)
+        );
 
         return (object)[
             'data' => $data,

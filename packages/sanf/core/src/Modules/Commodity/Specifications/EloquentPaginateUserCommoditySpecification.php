@@ -52,7 +52,7 @@ class EloquentPaginateUserCommoditySpecification
             })->when($this->limit, function ($query) {
                 return $query->limit($this->limit);
             })->when($this->timestamp, function ($query) {
-                return $query->where('published_at', '>', Carbon::createFromTimestamp($this->timestamp));
+                return $query->where('created_at', '>', Carbon::createFromTimestamp($this->timestamp));
             });
 
         return $query;

@@ -48,18 +48,18 @@ class ListFinancingMethodByFacilityService extends FinancingService implements A
         }
 
         // Get data from specification factory
-        $data = $this->financingFacilityRepository->first(
+        $data = $this->financingMethodRepository->query(
             $this->specificationFactory->paginateByFacility($dto->id, $dto->skip, $dto->limit, $dto->sort_by)
         );
+
+        $total = $this->financingMethodRepository->size(
+            $this->specificationFactory->paginateByFacility($dto->id)
+        );
+
 
         if (is_null($data)) {
             throw new FinancingGeneralException('Financing Facility Not Found');
         }
-
-        // Get data financing facility methods
-        $data = $data->methods;
-
-        $total = count($data) + $dto->skip;
 
         $paginate = (object)[
             'total' => (int)$total,

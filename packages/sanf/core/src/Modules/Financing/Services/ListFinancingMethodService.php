@@ -52,7 +52,7 @@ class ListFinancingMethodService extends FinancingService implements Application
         );
 
         $total = $this->financingMethodRepository->size(
-            $this->specificationFactory->paginate($dto->skip, $dto->limit , $dto->sort_by)
+            $this->specificationFactory->paginate()
         );
 
         $paginate = (object)[

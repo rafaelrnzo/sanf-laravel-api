@@ -21,7 +21,7 @@ class BrowseFinancingApplicationByUserService extends FinancingByUserService imp
             $this->financingSpecificationFactory->paginateByUser($dto->userId, $dto->skip, $dto->limit, $dto->sortBy, $dto->keyword)
         );
         $total = $this->financingApplicationRepository->size(
-            $this->financingSpecificationFactory->paginateByUser($dto->userId, $dto->skip, $dto->limit, $dto->sortBy, $dto->keyword)
+            $this->financingSpecificationFactory->paginateByUser($dto->userId, null, null, null, $dto->keyword)
         );
 
         return (object)[

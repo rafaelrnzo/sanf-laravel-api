@@ -31,7 +31,7 @@ class GetListProjectService extends ProjectService implements ApplicationService
             $this->specificationFactory->paginate($dto->skip, $dto->limit, $dto->sortBy, $dto->timestamp, $dto->keyword)
         );
         $total = $this->projectRepository->size(
-            $this->specificationFactory->paginate($dto->skip, $dto->limit, $dto->sortBy, $dto->timestamp, $dto->keyword)
+            $this->specificationFactory->paginate(null, null, null, $dto->timestamp, $dto->keyword)
         );
 
         $data = collect($data)->map(function ($item) use ($dto) {

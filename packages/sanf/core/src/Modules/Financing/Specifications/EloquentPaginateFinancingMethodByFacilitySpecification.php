@@ -5,20 +5,23 @@ namespace Sanf\Core\Modules\Financing\Specifications;
 
 use Sanf\Core\Modules\Financing\Models\FinancingMethodModel;
 
-class EloquentPaginateFinancingMethodSpecification
+class EloquentPaginateFinancingMethodByFacilitySpecification
 {
+    private int $id;
     private ?int $skip;
     private ?int $limit;
     private ?string $sort_by;
 
     /**
-     * EloquentFinancingMetadataSpecification constructor.
+     * EloquentPaginateFinancingMethodByFacilitySpecificationdSpecification constructor.
+     * @param int $id
      * @param ?int $skip
      * @param ?int $limit
      * @param ?string $sort_by
      */
-    public function __construct(?int $skip, ?int $limit, ?string $sort_by)
+    public function __construct(int $id, ?int $skip, ?int $limit, ?string $sort_by)
     {
+        $this->id = $id;
         $this->skip = $skip;
         $this->limit = $limit;
         $this->sort_by = $sort_by;
@@ -28,9 +31,12 @@ class EloquentPaginateFinancingMethodSpecification
     {
         $query = $model->newQuery()
             ->select([
-                'id',
-                'name',
+                'financing_method.id',
+                'financing_method.name',
+                'financing_method.created_at',
             ])
+            ->leftJoin('financing_facility_method', 'financing_facility_method.method_id', '=', 'financing_method.id')
+            ->where('financing_facility_method.facility_id', $this->id)
             ->when($this->skip, function ($query) {
                 return $query->skip($this->skip);
             })->when($this->limit, function ($query) {

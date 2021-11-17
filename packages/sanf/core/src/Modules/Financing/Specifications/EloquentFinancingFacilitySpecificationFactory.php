@@ -12,8 +12,8 @@ class EloquentFinancingFacilitySpecificationFactory implements FinancingFacility
      * @param string|null $sort_by
      * @return EloquentPaginateFinancingFacilitySpecification
      */
-    public function paginate(?int $skip, ?int $limit, ?string $sort_by)
+    public function paginate(?int $skip = null, ?int $limit = null, ?string $sort_by = null)
     {
-        return new EloquentPaginateFinancingFacilitySpecification($skip,$limit,$sort_by);
+        return new EloquentPaginateFinancingFacilitySpecification($skip, $limit, $sort_by);
     }
 }

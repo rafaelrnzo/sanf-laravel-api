@@ -31,10 +31,12 @@ class GetListProjectByUserService extends ProjectByUserService implements Applic
     {
         $this->findUserOrFail($dto->userId);
 
-        $spesification = $this->specificationFactory->paginateByUser($dto->userId, $dto->skip, $dto->limit, $dto->sortBy, $dto->timestamp, $dto->keyword);
-
-        $data = $this->projectRepository->query($spesification);
-        $total = $this->projectRepository->size($spesification);
+        $data = $this->projectRepository->query(
+            $this->specificationFactory->paginateByUser($dto->userId, $dto->skip, $dto->limit, $dto->sortBy, $dto->timestamp, $dto->keyword)
+        );
+        $total = $this->projectRepository->size(
+            $this->specificationFactory->paginateByUser($dto->userId, null, null, null, $dto->timestamp, $dto->keyword)
+        );
 
         return (object)[
             'data' => $data,

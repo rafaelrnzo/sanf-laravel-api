@@ -4,7 +4,7 @@ namespace Sanf\Core\Modules\Financing\Specifications;
 
 class EloquentFinancingApplicationSpecificationFactory implements FinancingApplicationSpecificationFactoryInterface
 {
-    public function paginateByUser(int $userId, ?int $skip, ?int $limit, ?string $sortBy, ?string $keyword)
+    public function paginateByUser(int $userId, ?int $skip = null, ?int $limit = null, ?string $sortBy = null, ?string $keyword = null)
     {
         return new EloquentPaginateFinancingApplicationByUserSpecification($userId, $skip, $limit, $sortBy, $keyword);
     }

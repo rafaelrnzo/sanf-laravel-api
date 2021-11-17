@@ -51,7 +51,7 @@ class ListFinancingPrerequisiteService extends FinancingService implements Appli
         );
 
         $total = $this->financingPrerequisiteRepository->size(
-            $this->specificationFactory->paginate($dto->skip, $dto->limit , $dto->sort_by)
+            $this->specificationFactory->paginate()
         );
 
         // Assert paginate to object
