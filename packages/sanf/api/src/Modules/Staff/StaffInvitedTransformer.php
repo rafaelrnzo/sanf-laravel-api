@@ -6,7 +6,7 @@ namespace Sanf\Api\Modules\Staff;
 
 use League\Fractal\TransformerAbstract;
 
-class StaffTransformer extends TransformerAbstract
+class StaffInvitedTransformer extends TransformerAbstract
 {
     public function transform($item)
     {
@@ -16,7 +16,6 @@ class StaffTransformer extends TransformerAbstract
             "email" => empty(trim($item->email)) ? null : $item->email,
             "status_id" => (int)optional(optional($item)->status)->id,
             'status_name' => (string)optional(optional($item)->status)->name,
-            'is_me' => $item->isMe,
         ];
     }
 }

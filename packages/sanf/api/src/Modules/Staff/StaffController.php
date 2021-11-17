@@ -44,7 +44,7 @@ class StaffController extends RestApiController
         $dto = (object)($input + ['userId' => $auth->id(), 'xid' => $xid]);
         $result = $service->execute($dto);
 
-        return fractal($result->data, new StaffTransformer())
+        return fractal($result->data, new StaffInvitedTransformer())
             ->paginateWith(new LazyPaginatorAdapter($result->paginate));
     }
 

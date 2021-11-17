@@ -4,6 +4,7 @@
 namespace Sanf\Core\Modules\Staff;
 
 
+use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 
@@ -17,11 +18,15 @@ class GetListCompanyStaffService extends StaffService implements ApplicationServ
         } catch (SanfInternalApiDataNotFoundException $exception) {
             $staffs = [];
         }
+        $user = $this->userRepository->newQuery()->find($dto->userId);
+        if (is_null($user)) {
+            throw new UserNotFoundException();
+        }
 
         $activeStaffs = $this->staffRepository->getByCompanyXid($dto->xid);
         $activeStaffCollections = collect($activeStaffs);
         $data = collect($staffs)
-            ->map(function ($item) use ($activeStaffCollections) {
+            ->map(function ($item) use ($activeStaffCollections, $user) {
                 $email = strtolower($item['EMAIL'] ?? '');
                 $activeStaff = $activeStaffCollections->filter(function ($activeStaff) use ($email) {
                     return optional($activeStaff->user)->username === $email;
@@ -32,6 +37,7 @@ class GetListCompanyStaffService extends StaffService implements ApplicationServ
                     "name" => ucwords(strtolower($item['CUST_NAME'] ?? '')),
                     "email" => $email,
                     "status" => $status,
+                    "isMe" => $email == $user->username,
                 ];
             });
 
