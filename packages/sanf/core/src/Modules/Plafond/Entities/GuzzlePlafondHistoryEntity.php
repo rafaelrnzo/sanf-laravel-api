@@ -53,6 +53,6 @@ final class GuzzlePlafondHistoryEntity implements PlafondHistoryEntityInterface
 
     public function getUpdatedAt(): \DateTimeImmutable
     {
-        return CarbonImmutable::now();
+        return CarbonImmutable::parse($this->attributes['DATE_UPDATE']);
     }
 }
