@@ -92,6 +92,28 @@
       cursor: pointer;
     }
 
+    .sf-ojk {
+      width: 108px;
+      height: 54px;
+      padding: 5px;
+    }
+
+    .sf-ojk > img {
+      width: 100%;
+      object-fit: cover;
+    }
+
+    .sf-satu-indonesia {
+      width: 160px;
+      height: 80px;
+      margin: 0 auto;
+    }
+
+    .sf-satu-indonesia > img {
+      width: 100%;
+      object-fit: cover;
+    }
+
     .sf-list-style {
       font-family: 'Gilroy';
       font-weight: 400;
@@ -252,9 +274,20 @@
         <div class="mt-3">
           <p class="sf-title">Social Media Kami</p>
           <div class="sf-social-media mt-2">
-            <a href="#"><img src="{{ asset('assets/svg/web.svg') }}" alt="SANF Web" /></a>
-            <a href="#"><img src="{{ asset('assets/svg/ig.svg') }}" alt="SANF Instagram" /></a>
-            <a href="#"><img src="{{ asset('assets/svg/linkedin.svg') }}" alt="SANF Linkedin" /></a>
+            <a href="#"><img src="{{ asset('assets/svg/web.svg') }}" alt="SANF Web" draggable="false" /></a>
+            <a href="#"><img src="{{ asset('assets/svg/ig.svg') }}" alt="SANF Instagram" draggable="false" /></a>
+            <a href="#"><img src="{{ asset('assets/svg/linkedin.svg') }}" alt="SANF Linkedin" draggable="false" /></a>
+          </div>
+        </div>
+        <div class="mt-3">
+          <p class="sf-title">Terdaftar dan diawasi oleh</p>
+          <div class="sf-ojk mt-2">
+            <img src="{{ asset('assets/png/ojk.png') }}" alt="SANF Web" draggable="false" />
+          </div>
+        </div>
+        <div class="mt-3" style="width: 100%;">
+          <div class="sf-satu-indonesia mt-2">
+            <img src="{{ asset('assets/png/satu-indonesia.png') }}" alt="SANF Web" draggable="false" />
           </div>
         </div>
       </div>
