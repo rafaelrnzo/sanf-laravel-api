@@ -16,5 +16,5 @@ class AddFinancingApplicationDto extends CamelCaseDataTransferObject
     public array $financingObjects;
     public bool $isReceiveOffer;
     public ?string $projectLocation;
-    public string $segment;
+    public array $segment;
 }

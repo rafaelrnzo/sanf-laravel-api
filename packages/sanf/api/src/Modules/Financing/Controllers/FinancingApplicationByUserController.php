@@ -118,7 +118,7 @@ class FinancingApplicationByUserController extends RestApiController
             'financing_objects.*.model_name' => ['required_with:financing_objects', 'string'],
             'is_receive_offer' => ['required', 'boolean'],
             'project_location' => ['nullable', 'string'],
-            'segment' => ['required', 'string'],
+            'segment' => ['required', 'array'],
         ]);
     }
 }
