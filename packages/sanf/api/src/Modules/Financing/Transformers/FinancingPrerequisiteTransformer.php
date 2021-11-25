@@ -5,6 +5,7 @@ namespace Sanf\Api\Modules\Financing\Transformers;
 
 
 use League\Fractal\TransformerAbstract;
+use Spatie\Fractalistic\ArraySerializer;
 
 class FinancingPrerequisiteTransformer extends TransformerAbstract
 {
@@ -14,7 +15,7 @@ class FinancingPrerequisiteTransformer extends TransformerAbstract
             "id" => (int)$item->id,
             "title" => (string)$item->title,
             "description" => $item->description,
-            "items" => $item->items
+            "items" => fractal($item->items, new FinancingPrerequisiteTransformer())->serializeWith(ArraySerializer::class)
         ];
     }
 }
