@@ -29,7 +29,7 @@ return [
     'views' => [
 //        'reset-password' => 'core::auth.reset-password',
         'reset-password' => 'core::pages.install-mobile-app',
-        'verify-email' => 'core::layouts.message',
+        'verify-email' => 'core::layouts.email-verified',
         'user-activation' => 'core::pages.install-mobile-app',
     ],
 
