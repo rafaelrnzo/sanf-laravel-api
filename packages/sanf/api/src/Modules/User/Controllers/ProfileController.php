@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
 use Sanf\Api\Modules\User\Transformers\CustomerProfileSimpleTransformer;
 use Sanf\Api\Modules\User\Transformers\CustomerProfileTransformer;
+use Sanf\Api\Modules\User\Transformers\UserMetadataAccountReceivableTransformer;
+use Sanf\Api\Modules\User\Transformers\UserMetadataContractTransformer;
 use Sanf\Core\Modules\User\Services\CreateCompanyProfileService;
 use Sanf\Core\Modules\User\Services\GetListEligibleCustomerProfileService;
 use Sanf\Core\Modules\User\Services\GetMyProfileService;
@@ -169,5 +171,32 @@ class ProfileController extends RestApiController
         $data = $service->execute($dto);
 
         return $this->responseOk('Success', fractal($data, config('auth.transformers.profile')));
+    }
+
+    public function getMetadataContract(Guard $auth)
+    {
+        // TODO remove this mock
+        $result = (object)[
+            'total_active_contract' => 0,
+            'total_finished_contract' => 0,
+        ];
+
+        return fractal($result, UserMetadataContractTransformer::class);
+    }
+
+    public function getMetadataAccountReceivable(Guard $auth, Request $request)
+    {
+        $dto = (object)[
+            'current_type' => $request->header('Current-Type'),
+        ];
+
+        // TODO remove this mock
+        $result = (object)[
+            'total_outstanding_amount' => 200000,
+            'total_paid_amount' => 100000,
+            'currency_type' => $dto->current_type ?? 'IDR',
+        ];
+
+        return fractal($result, UserMetadataAccountReceivableTransformer::class);
     }
 }
