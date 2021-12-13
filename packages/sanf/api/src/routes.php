@@ -119,20 +119,20 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::post('users/profiles/{xid}/plafonds/increase', ['as' => 'users.plafonds.increase', 'uses' => 'Plafond\Controllers\PlafondController@postIncreaseByUserProfile']);
 
     #CONTRACT
-    Route::get('users/profiles/{xid}/financing-units-invoice-collection', ['as' => 'users.invoice-collection-financing-units.browse', 'uses' => 'InvoiceCollection\Controllers\FinancingUnitByUserController@getBrowse']);
-    Route::get('users/profiles/{xid}/financing-units-insurance-claim', ['as' => 'users.insurance-claim-financing-units.browse', 'uses' => 'InsuranceClaim\Controllers\FinancingUnitByUserController@getBrowse']);
-    Route::get('users/profiles/{xid}/contracts-prepayment', ['as' => 'users.prepayment-contracts.browse', 'uses' => 'Prepayment\Controllers\ContractByUserController@getBrowse']);
 
     # INVOICE COLLECTION
-    Route::get('users/profiles/{xid}/invoice-collections', ['as' => 'users.invoice-collections.browse', 'uses' => 'InvoiceCollection\InvoiceCollectionByUserController@getBrowse']);
-    Route::post('users/profiles/{xid}/invoice-collections', ['as' => 'users.invoice-collections.add', 'uses' => 'InvoiceCollection\InvoiceCollectionByUserController@postAdd']);
+    Route::get('users/profiles/{xid}/financing-units-invoice-collection', ['as' => 'users.invoice-collection-financing-units.browse', 'uses' => 'InvoiceCollection\Controllers\FinancingUnitByUserController@getBrowse']);
+    Route::get('users/profiles/{xid}/invoice-collection-submissions', ['as' => 'users.invoice-collection-submissions.browse', 'uses' => 'InvoiceCollection\Controllers\InvoiceCollectionSubmissionByUserController@getBrowse']);
+    Route::post('users/profiles/{xid}/invoice-collection-submissions', ['as' => 'users.invoice-collection-submissions.add', 'uses' => 'InvoiceCollection\Controllers\InvoiceCollectionSubmissionByUserController@postAdd']);
 
     # INSURANCE CLAIM
+    Route::get('users/profiles/{xid}/financing-units-insurance-claim', ['as' => 'users.insurance-claim-financing-units.browse', 'uses' => 'InsuranceClaim\Controllers\FinancingUnitByUserController@getBrowse']);
     Route::get('users/profiles/{xid}/insurance-claim-submissions', ['as' => 'users.insurance-claim-submissions.browse', 'uses' => 'InsuranceClaim\Controllers\InsuranceClaimSubmissionByUserController@getBrowse']);
     Route::post('users/profiles/{xid}/insurance-claim-submissions', ['as' => 'users.insurance-claim-submissions.add', 'uses' => 'InsuranceClaim\Controllers\InsuranceClaimSubmissionByUserController@postAdd']);
     Route::get('users/profiles/{xid}/insurance-claim-submissions/{submissionXid}', ['as' => 'users.insurance-claim-submissions.read', 'uses' => 'InsuranceClaim\Controllers\InsuranceClaimSubmissionByUserController@getRead']);
 
     # PREPAYMENT
-    Route::post('users/prepayment-simulations', ['as' => 'users.prepayment-simulations.add', 'uses' => 'Prepayment\Controllers\PrepaymentSimulationController@postAdd']);
+    Route::get('users/profiles/{xid}/contracts-prepayment', ['as' => 'users.prepayment-contracts.browse', 'uses' => 'Prepayment\Controllers\ContractByUserController@getBrowse']);
+    Route::post('users/prepayment-simulations', ['as' => 'users.prepayment-simulations.add', 'uses' => 'Prepayment\Controllers\PrepaymentSimulationByUserController@postAdd']);
     Route::post('users/profiles/{xid}/prepayment-submissions', ['as' => 'users.prepayment-submissions.add', 'uses' => 'Prepayment\Controllers\PrepaymentSubmissionByUserController@postAdd']);
 });
