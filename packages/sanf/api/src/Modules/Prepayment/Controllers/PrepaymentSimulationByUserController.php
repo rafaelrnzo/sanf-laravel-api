@@ -16,6 +16,41 @@ final class PrepaymentSimulationByUserController extends RestApiController
 {
     public function postAdd(Guard $auth, Request $request, AddPrepaymentSimulationByUserService $service)
     {
+        return json_decode('{
+    "contract_no": "30712000741",
+    "prepayment_date": "31102008",
+    "total_prepayment": "1475000000",
+    "items": [
+      {
+        "description": "Outstanding Principal",
+        "amount": "1302649294.02"
+      },
+      {
+        "description": "Installment Overdue",
+        "amount": "107974000"
+      },
+      {
+        "description": "Prepayment Penalty",
+        "amount": "32566232"
+      },
+      {
+        "description": "Advance Payment Customer",
+        "amount": "0"
+      },
+      {
+        "description": "Admin Charge Prepay",
+        "amount": "500000"
+      },
+      {
+        "description": "Overdue Penalty",
+        "amount": "15856557.98"
+      },
+      {
+        "description": "Bunga Berjalan Prepay",
+        "amount": "15453916"
+      }
+    ]
+  }',true);
 //        $input = $this->validate($request, [
 //            'email' => ['required', 'email', 'max:255'],
 //            'title' => ['required', 'string', 'max:255'],
@@ -28,6 +63,6 @@ final class PrepaymentSimulationByUserController extends RestApiController
 //        ]);
 //        $dto = new AddPrepaymentSimulationByUserRequestDto($input + ['userId' => $auth->id()]);
 //        $service->execute($dto);
-        return $this->responseOk();
+//        return $this->responseOk();
     }
 }
