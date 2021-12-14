@@ -18,7 +18,7 @@ final class PrepaymentSimulationByUserController extends RestApiController
     {
         return json_decode('{
     "contract_no": "30712000741",
-    "prepayment_date": "31102008",
+    "prepayment_date": "2021-12-14",
     "total_prepayment": "1475000000",
     "items": [
       {
