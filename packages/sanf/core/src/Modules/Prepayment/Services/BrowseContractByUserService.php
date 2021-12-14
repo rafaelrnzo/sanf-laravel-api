@@ -4,20 +4,23 @@ namespace Sanf\Core\Modules\Prepayment\Services;
 
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
+use Sanf\Core\Modules\Prepayment\Dtos\BrowseContractByUserRequestDto;
+use Sanf\Core\Modules\Prepayment\Dtos\BrowseContractByUserResponseDto;
+use Sanf\Integration\InternalApiClient;
 
 final class BrowseContractByUserService implements ApplicationServiceInterface
 {
-    /*For Case Browse
-    protected ContractSpecificationFactoryInterface $specificationFactory;
+    protected InternalApiClient $apiClient;
 
-    public function __construct(
-        ContractRepositoryInterface $repository,
-        ContractSpecificationFactoryInterface $specificationFactory
-    ) {
-        parent::__construct($repository);
-        $this->specificationFactory = $specificationFactory;
+    /**
+     * BrowseContractByUserService constructor.
+     * @param InternalApiClient $apiClient
+     */
+    public function __construct(InternalApiClient $apiClient)
+    {
+        $this->apiClient = $apiClient;
     }
-    /*
+
 
     /**
      * @param BrowseContractByUserRequestDto $dto
@@ -25,13 +28,17 @@ final class BrowseContractByUserService implements ApplicationServiceInterface
      */
     public function execute($dto = null)
     {
-        /* For Case Browse
-        $result = $this->repository->query(
-            $this->specificationFactory->paginate($dto->keyword, $dto->sortBy, $dto->skip, $dto->limit)
+        $result = $this->apiClient->getContractOfPrepayment(
+            $dto->profileXid,
+            $dto->skip,
+            $dto->limit,
+            $dto->sortBy,
+            $dto->timestamp,
+            $dto->keyword
         );
-        $total = $this->repository->size(
-            $this->specificationFactory->paginate($dto->keyword)
-        );
+
+        dd($result);
+
 
         $data = array_map(function ($item) {
             return (object)[
@@ -39,7 +46,7 @@ final class BrowseContractByUserService implements ApplicationServiceInterface
                 'createdAt' => $item->created_at,
                 'updatedAt' => $item->updated_at,
             ];
-        }, $result);
+        }, $result['data']);
 
         return new BrowseContractByUserResponseDto([
             'data' => $data,
@@ -51,16 +58,5 @@ final class BrowseContractByUserService implements ApplicationServiceInterface
                 'sortBy' => $dto->sortBy,
             ]
         ]);
-        */
-
-        /* For Case Read/Add/Update
-        $entity = $this->repository->findByXid($dto->xid);
-        if (is_null($entity)) {
-            throw new ContractNotFoundException();
-        }
-        return new BrowseContractByUserResponseDto([
-            'id' => $entity->getId(),
-        ]);
-        */
     }
 }

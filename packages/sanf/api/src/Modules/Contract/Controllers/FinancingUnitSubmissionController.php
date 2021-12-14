@@ -52,7 +52,7 @@ class FinancingUnitSubmissionController extends RestApiController
             'limit' => ['nullable', 'integer', 'max:99'],
             'sort_by' => ['nullable', 'in:earliest'],
         ]);
-        
+
         $input['contract_no'] = $contract_no;
 
         $dto = new FinancingUnitSubmissionDto($input);
@@ -61,9 +61,7 @@ class FinancingUnitSubmissionController extends RestApiController
             'data' => [
                 (object)[
                     'serial_no' => 'ZX12387SJKSD',
-                    'brand_name' => 'Excavator',
-                    'type_name' => 'Buldozer',
-                    'model_name' => '0912323232',
+                    'brand_type_model' => 'KOMATSU HYDRAULIC EXCAVATOR PC130F-7/P7',
                     'provider_name' => 'Penyedia 1',
                     'year' => '2021',
                     'location_metadata' => (object)[
