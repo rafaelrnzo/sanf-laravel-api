@@ -26,6 +26,8 @@ final class InvoiceCollectionSubmissionByUserController extends RestApiControlle
     "rows": [
       {
         "contract_no": "1209234232",
+        "serial_no": "KXXD220023",
+        "pickup_date": "2021-12-20",
         "brand_type_model": "KOMATSU HYDRAULIC EXCAVATOR PC130F-7/P7",
         "year": "2021",
         "status": {
