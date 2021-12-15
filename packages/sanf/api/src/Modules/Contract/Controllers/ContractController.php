@@ -4,6 +4,7 @@ namespace Sanf\Api\Modules\Contract\Controllers;
 
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
 use Sanf\Api\Modules\Contract\Transformers\DetailContractTransformer;
@@ -13,40 +14,38 @@ use Sanf\Api\Modules\Contract\Transformers\SummaryBillContractTransformer;
 use Sanf\Core\Modules\Contract\Dto\FinancingUnitContractDto;
 use Sanf\Core\Modules\Contract\Dto\ListContractDto;
 use Sanf\Core\Modules\Contract\Dto\SummaryBillContractDto;
+use Sanf\Core\Modules\Contract\Enums\ContractTypeEnum;
+use Sanf\Core\Modules\Contract\Services\ListContractService;
 
 class ContractController extends RestApiController
 {
-    public function getList(Guard $auth, Request $request)
-    {
+    public function getList(
+        Guard $auth,
+        Request $request,
+        ListContractService $service
+    ) {
         $input = $this->validate($request, [
             'contract_type' => ['nullable', 'in:active,settled'],
             'skip' => ['nullable', 'integer', 'max:99'],
             'limit' => ['nullable', 'integer', 'max:99'],
-            'sort_by' => ['nullable', 'in:earliest'],
+            'sort_by' => ['nullable', 'in:earliest,latest'],
         ]);
 
         $dto = new ListContractDto($input);
+        $dto->sort_by = Str::title($dto->sort_by);
+        $dto->user_id = $auth->id();
 
-        $result = (object)[
-            'data' => [
-                (object)[
-                    'contract_at' => '2021-01-28',
-                    'contract_no' => '21KON98010',
-                    'financing_type' => (object)[
-                        'id' => 1,
-                        'name' => 'Modal Pembiayaan',
-                    ],
-                    'total_amount' => 11500999999
-                ]
-            ],
-            'paginate' => (object)[
-                'total' => 1,
-                'count' => 1,
-                'skip' => $dto->skip,
-                'limit' => $dto->limit,
-                'sort_by' => $dto->sort_by,
-            ],
-        ];
+        switch ($input['contract_type']) {
+            case ContractTypeEnum::SETTLED:
+                $dto->contract_type = ContractTypeEnum::SETTLED_LABEL;
+                break;
+            case ContractTypeEnum::ACTIVE_LABEL:
+            default:
+                $dto->contract_type = ContractTypeEnum::ACTIVE_LABEL;
+                break;
+        }
+
+        $result = $service->execute($dto);
 
         return fractal($result->data, ListContractTransformer::class)
             ->paginateWith(new LazyPaginatorAdapter($result->paginate));

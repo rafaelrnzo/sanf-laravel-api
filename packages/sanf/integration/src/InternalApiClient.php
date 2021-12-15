@@ -7,6 +7,8 @@ namespace Sanf\Integration;
 use GuzzleHttp\Exception\GuzzleException;
 use NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException;
 use NbsPhp\ApiWrapper\Api\Request;
+use Sanf\Core\Modules\Contract\Dto\AccountReceivableContractDto;
+use Sanf\Core\Modules\Contract\Dto\ListContractDto;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 use stdClass;
 
@@ -572,6 +574,62 @@ class InternalApiClient
                 'typeplafond' => $plafondCode
             ])
             ->send();
+        return $response->json();
+    }
+
+    /**
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     */
+    public function getMetadataContract($user_id)
+    {
+        $response = Request::route('contract.metadata')
+            ->queryParams(['cust_id' => $user_id])
+            ->send();
+
+        return $response->json();
+    }
+
+    /**
+     * @param AccountReceivableContractDto $dto
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     */
+    public function getAccountReceivable(AccountReceivableContractDto $dto)
+    {
+        $response = Request::route('contract.account-receivable')
+            ->queryParams([
+                'cust_id' => $dto->user_id,
+                'curr' => $dto->currency_type,
+                'skip' => $dto->skip,
+                'limit' => $dto->limit,
+                'order' => $dto->sort_by,
+            ])
+            ->send();
+
+        return $response->json();
+    }
+
+    /**
+     * @param ListContractDto $dto
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     */
+    public function getContractList(ListContractDto $dto)
+    {
+        $response = Request::route('contracts')
+            ->queryParams([
+                'cust_id' => $dto->user_id,
+                'status' => $dto->contract_type,
+                'skip' => $dto->skip,
+                'limit' => $dto->limit,
+                'order' => $dto->sort_by,
+            ])
+            ->send();
+
         return $response->json();
     }
 }

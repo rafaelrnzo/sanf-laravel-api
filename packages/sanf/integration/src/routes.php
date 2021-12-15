@@ -38,4 +38,8 @@ Route::group(config('sanf-internal.url'), [InternalApiProcessor::class], functio
     Route::get('customer.plafond.list-by-type', '/Plafond/Detail/{customer_id}/{p_code}');
     Route::post('customer.plafond.create', '/Plafond');
     Route::get('customer.plafond.history', '/plafond/history');
+
+    Route::get('contract.metadata', '/Kontrak/Dashboard');
+    Route::get('contract.account-receivable', '/Kontrak/DashboardDetail');
+    Route::get('contracts', '/Kontrak');
 });

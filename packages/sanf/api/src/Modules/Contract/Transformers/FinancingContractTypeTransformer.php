@@ -2,6 +2,7 @@
 
 namespace Sanf\Api\Modules\Contract\Transformers;
 
+use Illuminate\Support\Str;
 use League\Fractal\TransformerAbstract;
 
 class FinancingContractTypeTransformer extends TransformerAbstract
@@ -10,7 +11,7 @@ class FinancingContractTypeTransformer extends TransformerAbstract
     {
         return [
             'id' => (string)$item->id,
-            'name' => (string)$item->name,
+            'name' => Str::title($item->name),
         ];
     }
 }

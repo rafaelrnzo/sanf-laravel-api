@@ -6,7 +6,7 @@ use Spatie\DataTransferObject\DataTransferObject;
 
 class ListContractDto extends DataTransferObject
 {
-    public ?string $xid;
+    public ?string $user_id;
 
     public ?string $contract_type = 'active';
 

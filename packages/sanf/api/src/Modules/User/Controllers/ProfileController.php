@@ -18,6 +18,8 @@ use Sanf\Core\Modules\User\Services\RegisterAsContractOwnerService;
 use Sanf\Core\Modules\User\Services\SwitchActiveCustomerProfileService;
 use Sanf\Core\Modules\User\Services\UpdateCompanyProfileService;
 use Sanf\Core\Modules\User\Services\UpdatePersonalProfileService;
+use Sanf\Core\Modules\User\Services\GetUserMetadataAccountReceivableService;
+use Sanf\Core\Modules\User\Services\GetUserMetadataContractService;
 use Spatie\Fractalistic\ArraySerializer;
 
 class ProfileController extends RestApiController
@@ -173,29 +175,28 @@ class ProfileController extends RestApiController
         return $this->responseOk('Success', fractal($data, config('auth.transformers.profile')));
     }
 
-    public function getMetadataContract(Guard $auth)
+    public function getMetadataContract(Guard $auth, GetUserMetadataContractService $service)
     {
-        // TODO remove this mock
-        $result = (object)[
-            'total_active_contract' => 0,
-            'total_finished_contract' => 0,
-        ];
+        $dto = (object)['user_id' => $auth->id()];
+        $result = $service->execute($dto);
 
         return fractal($result, UserMetadataContractTransformer::class);
     }
 
-    public function getMetadataAccountReceivable(Guard $auth, Request $request)
-    {
-        $dto = (object)[
-            'current_type' => $request->header('Current-Type'),
-        ];
+    public function getMetadataAccountReceivable(
+        Guard $auth,
+        Request $request,
+        GetUserMetadataAccountReceivableService $service
+    ) {
+        $input = $this->validate($request, [
+            'currency_type' => ['nullable', 'in:IDR,USD']
+        ]);
 
-        // TODO remove this mock
-        $result = (object)[
-            'total_outstanding_amount' => 200000,
-            'total_paid_amount' => 100000,
-            'currency_type' => $dto->current_type ?? 'IDR',
+        $dto = (object)[
+            'user_id' => $auth->id(),
+            'currency_type' => $input['currency_type'] ?? 'IDR',
         ];
+        $result = $service->execute($dto);
 
         return fractal($result, UserMetadataAccountReceivableTransformer::class);
     }
