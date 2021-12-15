@@ -14,6 +14,7 @@ class DetailFinancingTransformer extends TransformerAbstract
             'interest_percentage' => (string)$item->interest_percentage,
             'facility' => fractal($item->facility, FinancingFacilityTransformer::class),
             'method' => fractal($item->method, FinancingMethodTransformer::class),
+            'total_tenor' => (int)$item->total_tenor,
         ];
     }
 }

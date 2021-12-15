@@ -17,6 +17,7 @@ class DetailContractTransformer extends TransformerAbstract
             'total_installment' => (int)$item->total_installment,
             'total_outstanding_amount' => (string)$item->total_outstanding_amount,
             'total_paid_amount' => (string)$item->total_paid_amount,
+            'total_invoice' => (string)$item->total_invoice,
             'due_at' => (string)$item->due_at,
             'installment_count' => (int)$item->installment_count,
             'financing' => fractal($item->financing, DetailFinancingTransformer::class),

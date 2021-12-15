@@ -51,39 +51,111 @@ class ContractController extends RestApiController
             ->paginateWith(new LazyPaginatorAdapter($result->paginate));
     }
 
-    public function getDetail(Guard $auth, $contract_no)
+    public function getDetail(Guard $auth, $contract_no, Request $request)
     {
-        $result = (object)[
-            'contract_at' => '2021-01-28',
-            'contract_no' => '21KON98010',
-            'currency_type' => 'IDR',
-            'status' => (object)[
-                'id' => 1,
-                'name' => 'Aktif',
-            ],
-            'total_amount' => 11500999999,
-            'total_installment' => 24,
-            'total_outstanding_amount' => 500000000,
-            'total_paid_amount' => 1500000000,
-            'due_at' => '2021-11-05',
-            'installment_count' => 14,
-            'financing' => (object)[
-                'due_at' => '2021-01-25',
-                'finished_at' => '2021-01-11',
-                'interest_percentage' => 12,
-                'facility' => (object)[
+        // TODO remove this;
+        $input = $this->validate($request, [
+            'mock' => ['nullable', 'in:active,arrears,settled,']
+        ]);
+        $mock = $input['mock'] ?? 'active';
+
+        $result = [
+            'active' => (object)[
+                'contract_at' => '2021-01-28',
+                'contract_no' => '21KON98010',
+                'currency_type' => 'IDR',
+                'status' => (object)[
                     'id' => 1,
-                    'name' => 'Investasi',
+                    'name' => 'Aktif',
                 ],
-                'method' => (object)[
-                    'id' => 2,
-                    'name' => 'Pembelian dengan Pembayaran secara Angsuran',
-                ]
+                'total_amount' => 11500999999,
+                'total_installment' => 24,
+                'total_outstanding_amount' => 500000000,
+                'total_paid_amount' => 1500000000,
+                'total_invoice' => 89098989,
+                'due_at' => '2021-12-31',
+                'installment_count' => 14,
+                'financing' => (object)[
+                    'due_at' => '2021-01-25',
+                    'finished_at' => '2025-01-11',
+                    'interest_percentage' => 12,
+                    'facility' => (object)[
+                        'id' => 1,
+                        'name' => 'Investasi',
+                    ],
+                    'method' => (object)[
+                        'id' => 2,
+                        'name' => 'Pembelian dengan Pembayaran secara Angsuran',
+                    ],
+                    'total_tenor' => 60,
+                ],
+                'total_financing_unit' => 3,
             ],
-            'total_financing_unit' => 3,
+            'arrears' => (object)[
+                'contract_at' => '2021-01-28',
+                'contract_no' => '21KON98010',
+                'currency_type' => 'IDR',
+                'status' => (object)[
+                    'id' => 1,
+                    'name' => 'Aktif',
+                ],
+                'total_amount' => 24000000000,
+                'total_installment' => 24,
+                'total_outstanding_amount' => 500000000,
+                'total_paid_amount' => 1500000000,
+                'total_invoice' => 178947978,
+                'due_at' => '2021-01-25',
+                'installment_count' => 14,
+                'financing' => (object)[
+                    'due_at' => '2021-01-25',
+                    'finished_at' => '2025-01-11',
+                    'interest_percentage' => 12,
+                    'facility' => (object)[
+                        'id' => 1,
+                        'name' => 'Investasi',
+                    ],
+                    'method' => (object)[
+                        'id' => 2,
+                        'name' => 'Pembelian dengan Pembayaran secara Angsuran',
+                    ],
+                    'total_tenor' => 60
+                ],
+                'total_financing_unit' => 3,
+            ],
+            'settled' => (object)[
+                'contract_at' => '2021-01-28',
+                'contract_no' => '21KON98010',
+                'currency_type' => 'IDR',
+                'status' => (object)[
+                    'id' => 2,
+                    'name' => 'Selesai',
+                ],
+                'total_amount' => 11500999999,
+                'total_installment' => 24,
+                'total_outstanding_amount' => 0,
+                'total_paid_amount' => 24000000000,
+                'total_invoice' => 0,
+                'due_at' => '2021-01-25',
+                'installment_count' => 24,
+                'financing' => (object)[
+                    'due_at' => '2021-01-25',
+                    'finished_at' => '2025-01-11',
+                    'interest_percentage' => 12,
+                    'facility' => (object)[
+                        'id' => 1,
+                        'name' => 'Investasi',
+                    ],
+                    'method' => (object)[
+                        'id' => 2,
+                        'name' => 'Pembelian dengan Pembayaran secara Angsuran',
+                    ],
+                    'total_tenor' => 60
+                ],
+                'total_financing_unit' => 3,
+            ]
         ];
 
-        return fractal($result, DetailContractTransformer::class);
+        return fractal($result[$mock], DetailContractTransformer::class);
     }
 
     public function getFinancingUnit(Guard $auth, $contract_no, Request $request)
