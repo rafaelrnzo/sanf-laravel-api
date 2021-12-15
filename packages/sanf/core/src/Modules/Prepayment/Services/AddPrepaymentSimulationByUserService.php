@@ -3,21 +3,26 @@
 namespace Sanf\Core\Modules\Prepayment\Services;
 
 
+use Carbon\CarbonImmutable;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
+use Sanf\Core\Modules\Prepayment\Dtos\AddPrepaymentSimulationByUserRequestDto;
+use Sanf\Core\Modules\Prepayment\Dtos\AddPrepaymentSimulationByUserResponseDto;
+use Sanf\Core\Modules\Prepayment\Exceptions\PrepaymentSimulationNotFoundException;
+use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
+use Sanf\Integration\InternalApiClient;
 
 final class AddPrepaymentSimulationByUserService implements ApplicationServiceInterface
 {
-    /*For Case Browse
-    protected PrepaymentSimulationSpecificationFactoryInterface $specificationFactory;
+    protected InternalApiClient $apiClient;
 
-    public function __construct(
-        PrepaymentSimulationRepositoryInterface $repository,
-        PrepaymentSimulationSpecificationFactoryInterface $specificationFactory
-    ) {
-        parent::__construct($repository);
-        $this->specificationFactory = $specificationFactory;
+    /**
+     * BrowseContractByUserService constructor.
+     * @param InternalApiClient $apiClient
+     */
+    public function __construct(InternalApiClient $apiClient)
+    {
+        $this->apiClient = $apiClient;
     }
-    /*
 
     /**
      * @param AddPrepaymentSimulationByUserRequestDto $dto
@@ -25,42 +30,31 @@ final class AddPrepaymentSimulationByUserService implements ApplicationServiceIn
      */
     public function execute($dto = null)
     {
-        /* For Case Browse
-        $result = $this->repository->query(
-            $this->specificationFactory->paginate($dto->keyword, $dto->sortBy, $dto->skip, $dto->limit)
-        );
-        $total = $this->repository->size(
-            $this->specificationFactory->paginate($dto->keyword)
-        );
-
-        $data = array_map(function ($item) {
-            return (object)[
-                'xid' => $item->xid,
-                'createdAt' => $item->created_at,
-                'updatedAt' => $item->updated_at,
+        try {
+            $result = $this->apiClient->getPrepaymentDetail($dto->contractNo, $dto->prepaymentDate);
+            $prepayment = $result->data;
+            $items = array_map(function ($item) {
+                return (object)[
+                    'description' => $item->DESCRIPTION,
+                    'amount' => $item->JUMLAH,
+                ];
+            }, $prepayment->ITEM);
+            $data = (object)[
+                'contractNo' => $prepayment->NO_KONTRAK,
+                'totalPrepayment' => $prepayment->TOTAL_PAYMENT,
+                'prepaymentDate' => CarbonImmutable::createFromFormat('dmY', $prepayment->TGL_PREPAY),
+                'currencyType' => $prepayment->CURR_ID,
+                'items' => $items,
             ];
-        }, $result);
-
-        return new AddPrepaymentSimulationByUserResponseDto([
-            'data' => $data,
-            'paginate' => [
-                'total' => (int)$total,
-                'count' => count($data),
-                'skip' => (int)$dto->skip,
-                'limit' => (int)$dto->limit,
-                'sortBy' => $dto->sortBy,
-            ]
-        ]);
-        */
-
-        /* For Case Read/Add/Update
-        $entity = $this->repository->findByXid($dto->xid);
-        if (is_null($entity)) {
+        } catch (SanfInternalApiDataNotFoundException $exception) {
             throw new PrepaymentSimulationNotFoundException();
         }
         return new AddPrepaymentSimulationByUserResponseDto([
-            'id' => $entity->getId(),
+            'contractNo' => $data->contractNo,
+            'prepaymentDate' => $data->prepaymentDate,
+            'totalPrepayment' => $data->totalPrepayment,
+            'currencyType' => $data->currencyType,
+            'items' => $data->items,
         ]);
-        */
     }
 }

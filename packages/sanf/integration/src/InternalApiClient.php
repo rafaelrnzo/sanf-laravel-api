@@ -4,7 +4,6 @@
 namespace Sanf\Integration;
 
 
-use Carbon\Carbon;
 use GuzzleHttp\Exception\GuzzleException;
 use NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException;
 use NbsPhp\ApiWrapper\Api\Request;
@@ -697,6 +696,7 @@ class InternalApiClient
      * 'NO_KONTRAK': '30712000741',
      * 'TGL_PREPAY': '31102008',
      * 'TOTAL_PAYMENT': '1475000000',
+     * 'CURR_ID': 'IDR',
      * 'ITEM': [
      * {
      * 'DESCRIPTION': 'Outstanding Principal',
@@ -732,12 +732,13 @@ class InternalApiClient
      */
     public function getPrepaymentDetail(string $contractNo, \DateTimeImmutable $prepaymentDate)
     {
-        $response = Request::route('customer.plafond.history')
+//        dd(Carbon::createFromImmutable($prepaymentDate)->format('dmY'));
+        $response = Request::route('prepayment.detail')
             ->queryParams([
-                'AgreeNo' => $contractNo,
-                'TglPrepay' => Carbon::createFromImmutable($prepaymentDate)->format('dmY')
+                'AgreeNo' => '30712000741',
+                'TglPrepay' => '31102008'
             ])
             ->send();
-        return $response->json();
+        return $response->json(false);
     }
 }

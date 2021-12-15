@@ -42,6 +42,8 @@ use Sanf\Core\Modules\Plafond\Repositories\EloquentPlafondTypeRepository;
 use Sanf\Core\Modules\Plafond\Repositories\GuzzleAndEloquentPlafondRepository;
 use Sanf\Core\Modules\Plafond\Repositories\PlafondRepositoryInterface;
 use Sanf\Core\Modules\Plafond\Repositories\PlafondTypeRepositoryInterface;
+use Sanf\Core\Modules\Prepayment\Repositories\EloquentPrepaymentSubmissionRepository;
+use Sanf\Core\Modules\Prepayment\Repositories\PrepaymentSubmissionRepositoryInterface;
 use Sanf\Core\Modules\Product\EloquentProductRepository;
 use Sanf\Core\Modules\Product\ProductRepositoryInterface;
 use Sanf\Core\Modules\Project\Repositories\EloquentProjectRepository;
@@ -111,6 +113,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(FinancingApplicationRepositoryInterface::class,EloquentFinancingApplicationRepository::class);
         $this->app->bind(PlafondTypeRepositoryInterface::class,EloquentPlafondTypeRepository::class);
         $this->app->bind(PlafondRepositoryInterface::class,GuzzleAndEloquentPlafondRepository::class);
+        $this->app->bind(PrepaymentSubmissionRepositoryInterface::class,EloquentPrepaymentSubmissionRepository::class);
 
         //SPECIFICATION FACTORY
         $this->app->bind(ProjectSpecificationFactoryInterface::class, EloquentProjectSpecificationFactory::class);

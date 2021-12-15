@@ -4,20 +4,23 @@ namespace Sanf\Core\Modules\Prepayment\Services;
 
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
+use Sanf\Core\Modules\Prepayment\Dtos\AddPrepaymentSubmissionByUserRequestDto;
+use Sanf\Core\Modules\Prepayment\Dtos\AddPrepaymentSubmissionByUserResponseDto;
+use Sanf\Core\Modules\Prepayment\Enums\PrepaymentStatusEnum;
+use Sanf\Core\Modules\Prepayment\Repositories\PrepaymentSubmissionRepositoryInterface;
 
 final class AddPrepaymentSubmissionByUserService implements ApplicationServiceInterface
 {
-    /*For Case Browse
-    protected PrepaymentSubmissionSpecificationFactoryInterface $specificationFactory;
+    protected PrepaymentSubmissionRepositoryInterface $repository;
 
-    public function __construct(
-        PrepaymentSubmissionRepositoryInterface $repository,
-        PrepaymentSubmissionSpecificationFactoryInterface $specificationFactory
-    ) {
-        parent::__construct($repository);
-        $this->specificationFactory = $specificationFactory;
+    /**
+     * AddPrepaymentSubmissionByUserService constructor.
+     * @param PrepaymentSubmissionRepositoryInterface $repository
+     */
+    public function __construct(PrepaymentSubmissionRepositoryInterface $repository)
+    {
+        $this->repository = $repository;
     }
-    /*
 
     /**
      * @param AddPrepaymentSubmissionByUserRequestDto $dto
@@ -25,42 +28,24 @@ final class AddPrepaymentSubmissionByUserService implements ApplicationServiceIn
      */
     public function execute($dto = null)
     {
-        /* For Case Browse
-        $result = $this->repository->query(
-            $this->specificationFactory->paginate($dto->keyword, $dto->sortBy, $dto->skip, $dto->limit)
-        );
-        $total = $this->repository->size(
-            $this->specificationFactory->paginate($dto->keyword)
-        );
+        //TODO VALIDATE USER
+        //TODO VALIDATE PROFILE
+        //TODO VALIDATE ALREADY SUBMITTED
 
-        $data = array_map(function ($item) {
-            return (object)[
-                'xid' => $item->xid,
-                'createdAt' => $item->created_at,
-                'updatedAt' => $item->updated_at,
-            ];
-        }, $result);
+        $data = $this->repository->add([
+            'xid' => nano_id(),
+            'status_id' => PrepaymentStatusEnum::PROCESSED,
+            'user_id' => $dto->userId,
+            'profile_xid' => $dto->profileXid,
+            'contract_no' => $dto->prepaymentSimulation->contractNo,
+            'prepayment_date' => $dto->prepaymentSimulation->prepaymentDate,
+            'total_prepayment' => $dto->prepaymentSimulation->totalPrepayment,
+            'currency_type' => $dto->prepaymentSimulation->currencyType,
+            'items' => $dto->prepaymentSimulation->items,
+        ]);
 
         return new AddPrepaymentSubmissionByUserResponseDto([
-            'data' => $data,
-            'paginate' => [
-                'total' => (int)$total,
-                'count' => count($data),
-                'skip' => (int)$dto->skip,
-                'limit' => (int)$dto->limit,
-                'sortBy' => $dto->sortBy,
-            ]
+            'xid' => $data->xid,
         ]);
-        */
-
-        /* For Case Read/Add/Update
-        $entity = $this->repository->findByXid($dto->xid);
-        if (is_null($entity)) {
-            throw new PrepaymentSubmissionNotFoundException();
-        }
-        return new AddPrepaymentSubmissionByUserResponseDto([
-            'id' => $entity->getId(),
-        ]);
-        */
     }
 }

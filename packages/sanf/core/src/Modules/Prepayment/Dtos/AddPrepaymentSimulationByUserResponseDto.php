@@ -6,12 +6,9 @@ use NbsPhp\Core\Dto\CamelCaseDataTransferObject;
 
 class AddPrepaymentSimulationByUserResponseDto extends CamelCaseDataTransferObject
 {
-    // For browse type DTO
-    //public array $data;
-    //public PaginateResponseDto $paginate;
-
-    // Or Usual Case
-    //public $id;
-    //public ?\DateTimeImmutable $createdAt;
-    //public ?\DateTimeImmutable $updatedAt;
+    public string $contractNo;
+    public ?\DateTimeImmutable $prepaymentDate;
+    public string $totalPrepayment;
+    public string $currencyType;
+    public array $items;
 }
