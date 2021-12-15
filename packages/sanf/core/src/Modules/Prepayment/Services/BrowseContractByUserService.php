@@ -36,22 +36,19 @@ final class BrowseContractByUserService implements ApplicationServiceInterface
             $dto->timestamp,
             $dto->keyword
         );
-
-        dd($result);
-
-
         $data = array_map(function ($item) {
             return (object)[
-                'xid' => $item->xid,
-                'createdAt' => $item->created_at,
-                'updatedAt' => $item->updated_at,
+                'contractNo' => $item->AGREE_NO,
+                'isSubmitted' => false, //TODO VALIDATE PERNAH DIAJUKAN
+                'remainingBalance' => $item->PAY_AMT,
+                'currencyType' => $item->CURR_ID,
             ];
-        }, $result['data']);
+        }, $result->data);
 
         return new BrowseContractByUserResponseDto([
             'data' => $data,
             'paginate' => [
-                'total' => (int)$total,
+                'total' => (int)$result->count,
                 'count' => count($data),
                 'skip' => (int)$dto->skip,
                 'limit' => (int)$dto->limit,

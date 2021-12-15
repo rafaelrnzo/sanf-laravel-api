@@ -4,6 +4,7 @@
 namespace Sanf\Integration;
 
 
+use Carbon\Carbon;
 use GuzzleHttp\Exception\GuzzleException;
 use NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException;
 use NbsPhp\ApiWrapper\Api\Request;
@@ -14,6 +15,10 @@ use stdClass;
 
 class InternalApiClient
 {
+    const DEFAULT_SKIP = 0;
+    const DEFAULT_LIMIT = 10;
+    const DEFAULT_ORDER = 'Earliest';
+
     /**
      * @param $email
      * @return array|stdClass|null
@@ -92,16 +97,16 @@ class InternalApiClient
     {
         $response = Request::route('customer.create-company')
             /**
-            {
-            "cust_accnt": "3ACCNT",
-            "cust_title": "PT",
-            "nama": "SURYA ABADI 4",
-            "npwp": "01281821882883817",
-            "no_telp": "0218199998",
-            "pic_name": "Rizma Utami",
-            "no_hp": "0819291991923",
-            "email": "rizmautami@sanf.co.id"
-            }
+             * {
+             * "cust_accnt": "3ACCNT",
+             * "cust_title": "PT",
+             * "nama": "SURYA ABADI 4",
+             * "npwp": "01281821882883817",
+             * "no_telp": "0218199998",
+             * "pic_name": "Rizma Utami",
+             * "no_hp": "0819291991923",
+             * "email": "rizmautami@sanf.co.id"
+             * }
              */
             ->json($data)
             ->send();
@@ -328,16 +333,16 @@ class InternalApiClient
     public function getStaffs($id)
     {
         /**
-        {
-        "CUST_ID": "2010000334",
-        "SR_NO": "1",
-        "CUST_TITLE": "MRS",
-        "CUST_NAME": "LUCYNDA TANJUNG",
-        "PERC_SHARE": "0",
-        "JABATAN": "DIREKTUR",
-        "F_PC": "P",
-        "EMAIL": "LUCYNDA_TANJUNG@GMAIL.COM"
-        }
+         * {
+         * "CUST_ID": "2010000334",
+         * "SR_NO": "1",
+         * "CUST_TITLE": "MRS",
+         * "CUST_NAME": "LUCYNDA TANJUNG",
+         * "PERC_SHARE": "0",
+         * "JABATAN": "DIREKTUR",
+         * "F_PC": "P",
+         * "EMAIL": "LUCYNDA_TANJUNG@GMAIL.COM"
+         * }
          */
         $response = Request::route('customer.staff.list')
             ->pathParams(['id' => $id])
@@ -459,7 +464,8 @@ class InternalApiClient
      * 'DATE_UPDATE': '03-NOV-21'
      * }
      */
-    public function getCustomerPlafonds($customerId){
+    public function getCustomerPlafonds($customerId)
+    {
         $response = Request::route('customer.plafond.list')
             ->pathParams([
                 'customer_id' => $customerId,
@@ -501,7 +507,8 @@ class InternalApiClient
      * ]
      * }
      */
-    public function getCustomerPlafondsByType($customerId, $plafondCode){
+    public function getCustomerPlafondsByType($customerId, $plafondCode)
+    {
         $response = Request::route('customer.plafond.list-by-type')
             ->pathParams([
                 'customer_id' => $customerId,
@@ -518,7 +525,8 @@ class InternalApiClient
      * @throws EndpointNotDefinedException
      * @throws GuzzleException
      */
-    public function requestPlafond($customerId, $plafondCode, $amount){
+    public function requestPlafond($customerId, $plafondCode, $amount)
+    {
         $response = Request::route('customer.plafond.create')
             ->json([
                 'cust_id' => $customerId,
@@ -567,7 +575,8 @@ class InternalApiClient
      * ]
      * }
      */
-    public function getCustomerPlafondHistories($customerId, $plafondCode = 'all'){
+    public function getCustomerPlafondHistories($customerId, $plafondCode = 'all')
+    {
         $response = Request::route('customer.plafond.history')
             ->queryParams([
                 'uid' => $customerId,
@@ -630,6 +639,105 @@ class InternalApiClient
             ])
             ->send();
 
+        return $response->json();
+    }
+
+    /**
+     * @param $customerId
+     * @param int $offset
+     * @param int $limit
+     * @param string $order
+     * @param int|null $timestamp
+     * @param string|null $keyword
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     * @example
+     *{
+     * 'status': true,
+     * 'code': 'S_GetData',
+     * 'message': 'Success',
+     * 'count': 10,
+     * 'data': [
+     * {
+     * 'AGREE_NO': '30707000086',
+     * 'PAY_AMT': '78341.44',
+     * 'CURR_ID': 'USD',
+     * 'ROWINDEX': '1'
+     * }
+     * ]
+     * }
+     */
+    public function getContractOfPrepayment($customerId, $skip, $limit, $order, ?int $timestamp, ?string $keyword)
+    {
+        $response = Request::route('prepayment.contract.list')
+            ->queryParams([
+                'cust_id' => $customerId,
+                'skip' => $skip ?? self::DEFAULT_SKIP,
+                'limit' => $limit ?? self::DEFAULT_LIMIT,
+                'order' => $order ?? self::DEFAULT_ORDER,
+                'timestamp' => $timestamp,
+                'keyword' => $keyword
+            ])
+            ->send();
+        return $response->json(false);
+    }
+
+    /**
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     * @example
+     * {
+     * 'status': true,
+     * 'code': 'S_GetData',
+     * 'message': 'Success',
+     * 'count': 7,
+     * 'data': {
+     * 'NO_KONTRAK': '30712000741',
+     * 'TGL_PREPAY': '31102008',
+     * 'TOTAL_PAYMENT': '1475000000',
+     * 'ITEM': [
+     * {
+     * 'DESCRIPTION': 'Outstanding Principal',
+     * 'JUMLAH': '1302649294.02'
+     * },
+     * {
+     * 'DESCRIPTION': 'Installment Overdue',
+     * 'JUMLAH': '107974000'
+     * },
+     * {
+     * 'DESCRIPTION': 'Prepayment Penalty',
+     * 'JUMLAH': '32566232'
+     * },
+     * {
+     * 'DESCRIPTION': 'Advance Payment Customer',
+     * 'JUMLAH': '0'
+     * },
+     * {
+     * 'DESCRIPTION': 'Admin Charge Prepay',
+     * 'JUMLAH': '500000'
+     * },
+     * {
+     * 'DESCRIPTION': 'Overdue Penalty',
+     * 'JUMLAH': '15856557.98'
+     * },
+     * {
+     * 'DESCRIPTION': 'Bunga Berjalan Prepay',
+     * 'JUMLAH': '15453916'
+     * }
+     * ]
+     * }
+     * }
+     */
+    public function getPrepaymentDetail(string $contractNo, \DateTimeImmutable $prepaymentDate)
+    {
+        $response = Request::route('customer.plafond.history')
+            ->queryParams([
+                'AgreeNo' => $contractNo,
+                'TglPrepay' => Carbon::createFromImmutable($prepaymentDate)->format('dmY')
+            ])
+            ->send();
         return $response->json();
     }
 }

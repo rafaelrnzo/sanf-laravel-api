@@ -39,6 +39,9 @@ Route::group(config('sanf-internal.url'), [InternalApiProcessor::class], functio
     Route::post('customer.plafond.create', '/Plafond');
     Route::get('customer.plafond.history', '/plafond/history');
 
+    Route::get('prepayment.contract.list', '/Prepayment/header');
+    Route::get('prepayment.detail', '/Prepayment');
+
     Route::get('contract.metadata', '/Kontrak/Dashboard');
     Route::get('contract.account-receivable', '/Kontrak/DashboardDetail');
     Route::get('contracts', '/Kontrak');
