@@ -2,6 +2,7 @@
 
 namespace Sanf\Api\Modules\Location\Transformers;
 
+use Illuminate\Support\Str;
 use League\Fractal\TransformerAbstract;
 
 class AllCityListTransformer extends TransformerAbstract
@@ -10,7 +11,7 @@ class AllCityListTransformer extends TransformerAbstract
     {
         return [
             'id' => $item->id,
-            'name' => $item->name,
+            'name' => Str::title($item->name),
         ];
     }
 }

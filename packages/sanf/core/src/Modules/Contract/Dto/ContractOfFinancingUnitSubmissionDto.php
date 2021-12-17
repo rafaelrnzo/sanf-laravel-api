@@ -6,7 +6,7 @@ use Spatie\DataTransferObject\DataTransferObject;
 
 class ContractOfFinancingUnitSubmissionDto extends DataTransferObject
 {
-    public ?string $xid;
+    public ?string $user_id;
 
     public int $skip = 0;
 

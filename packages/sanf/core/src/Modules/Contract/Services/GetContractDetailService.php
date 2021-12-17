@@ -1,0 +1,73 @@
+<?php
+
+namespace Sanf\Core\Modules\Contract\Services;
+
+use GuzzleHttp\Exception\GuzzleException;
+use NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException;
+use NbsPhp\Core\Exceptions\UserNotFoundException;
+use NbsPhp\Core\Services\ApplicationServiceInterface;
+use Sanf\Core\Modules\User\AuthModel;
+use Sanf\Core\Modules\User\Services\UserService;
+use Sanf\Integration\InternalApiClient;
+
+class GetContractDetailService extends UserService implements ApplicationServiceInterface
+{
+
+    protected InternalApiClient $internalApiClient;
+
+    public function __construct(AuthModel $userRepository, InternalApiClient $internalApiClient)
+    {
+        parent::__construct($userRepository);
+        $this->internalApiClient = $internalApiClient;
+    }
+
+    /**
+     * @param $dto
+     * @return object
+     * @throws UserNotFoundException
+     * @throws GuzzleException
+     * @throws EndpointNotDefinedException
+     */
+    public function execute($dto = null)
+    {
+        $user = $this->userRepository->newQuery()->find($dto->user_id);
+        if (!$user) {
+            throw new UserNotFoundException();
+        }
+
+        $response = $this->internalApiClient->getContractDetail($dto);
+        $data = $response['data'][$response['count'] - 1];
+
+        return (object)[
+            'contract_at' => $data['TGL_KONTRAK'] ?? null,
+            'contract_no' => $data['NO_KONTRAK'] ?? null,
+            'currency_type' => $data['CURR_ID'] ?? null,
+            'status' => (object)[
+                'id' => $data['STATUS_ID'] ?? null,
+                'name' => $data['STATUS'] ?? null,
+            ],
+            'total_amount' => $data['TOTAL_PEMBIAYAAN'] ?? 0,
+            'total_installment' => $data['TENOR'] ?? 0,
+            'total_outstanding_amount' => $data['TAGIHAN_SISA'] ?? 0,
+            'total_paid_amount' => $data['TERBAYAR'] ?? 0,
+            'total_invoice' => $data['INSTALL_AMT'] ?? 0,
+            'due_at' => $data['DT_DUE'] ?? null,
+            'installment_count' => $data['ANGSURAN_KE'] ?? 0,
+            'financing' => (object)[
+                'due_at' => $data['DT_DUE'] ?? null,
+                'finished_at' => null,
+                'interest_percentage' => $data['RATE_EFF'] ?? 0,
+                'facility' => (object)[
+                    'id' => $data['JENIS_PEMBIAYAAN_ID'] ?? null,
+                    'name' => $data['JENIS_PEMBIAYAAN'] ?? null,
+                ],
+                'method' => (object)[
+                    'id' => $data['CARA_PEMBIAYAAN_ID'] ?? null,
+                    'name' => $data['CARA_PEMBIAYAAN'] ?? null,
+                ],
+                'total_tenor' => $data['TENOR'] ?? 0
+            ],
+            'total_financing_unit' => $data['TOT_UNIT'] ?? 0,
+        ];
+    }
+}

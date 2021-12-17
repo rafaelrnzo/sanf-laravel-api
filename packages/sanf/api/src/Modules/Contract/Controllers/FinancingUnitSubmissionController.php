@@ -4,6 +4,7 @@ namespace Sanf\Api\Modules\Contract\Controllers;
 
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
 use Sanf\Api\Modules\Contract\Transformers\ContractOfFinancingUnitSubmissionTransformer;
@@ -11,81 +12,50 @@ use Sanf\Api\Modules\Contract\Transformers\FinancingUnitSubmissionContractTransf
 use Sanf\Core\Modules\Contract\Dto\ContractOfFinancingUnitSubmissionDto;
 use Sanf\Core\Modules\Contract\Dto\CreateFinancingUnitSubmissionDto;
 use Sanf\Core\Modules\Contract\Dto\FinancingUnitSubmissionDto;
+use Sanf\Core\Modules\Contract\Services\GetFinancingUnitSubmissionContractService;
+use Sanf\Core\Modules\Contract\Services\ListContractOfFinancingUnitSubmissionService;
 
 class FinancingUnitSubmissionController extends RestApiController
 {
-    public function getContractList(Guard $auth, Request $request)
-    {
+    public function getContractList(
+        Guard $auth,
+        Request $request,
+        ListContractOfFinancingUnitSubmissionService $service
+    ) {
         $input = $this->validate($request, [
-            'contract_no' => ['nullable', 'string', 'max:255'],
             'skip' => ['nullable', 'integer', 'max:99'],
             'limit' => ['nullable', 'integer', 'max:99'],
-            'sort_by' => ['nullable', 'in:earliest'],
+            'sort_by' => ['nullable', 'in:earliest,latest'],
         ]);
 
         $dto = new ContractOfFinancingUnitSubmissionDto($input);
+        $dto->sort_by = Str::title($dto->sort_by);
+        $dto->user_id = $auth->id();
 
-        $result = (object)[
-            'data' => [
-                (object)[
-                    'contract_no' => '21KON98010',
-                    'created_at' => '2021-12-06 12:12:12'
-                ]
-            ],
-            'paginate' => (object)[
-                'total' => 1,
-                'count' => 1,
-                'skip' => $dto->skip,
-                'limit' => $dto->limit,
-                'sort_by' => $dto->sort_by,
-            ],
-        ];
+        $result = $service->execute($dto);
 
         return fractal($result->data, ContractOfFinancingUnitSubmissionTransformer::class)
             ->paginateWith(new LazyPaginatorAdapter($result->paginate));
     }
 
-    public function getFinancingUnit(Guard $auth, $contract_no, Request $request)
-    {
+    public function getFinancingUnit(
+        Guard $auth,
+        $contract_no,
+        Request $request,
+        GetFinancingUnitSubmissionContractService $service
+    ) {
         $input = $this->validate($request, [
             'skip' => ['nullable', 'integer', 'max:99'],
             'limit' => ['nullable', 'integer', 'max:99'],
-            'sort_by' => ['nullable', 'in:earliest'],
+            'sort_by' => ['nullable', 'in:earliest,latest'],
         ]);
 
-        $input['contract_no'] = $contract_no;
-
         $dto = new FinancingUnitSubmissionDto($input);
+        $dto->sort_by = Str::title($dto->sort_by);
+        $dto->user_id = $auth->id();
+        $dto->contract_no = $contract_no;
 
-        $result = (object)[
-            'data' => [
-                (object)[
-                    'serial_no' => 'ZX12387SJKSD',
-                    'brand_type_model' => 'KOMATSU HYDRAULIC EXCAVATOR PC130F-7/P7',
-                    'provider_name' => 'Penyedia 1',
-                    'year' => '2021',
-                    'location_metadata' => (object)[
-                        'city_id' => '001001001',
-                        'city_name' => 'Jakarta Utara'
-                    ],
-                    'status' => (object)[
-                        'id' => 10,
-                        'name' => 'Diproses'
-                    ],
-                    'submitted_location_metadata' => (object)[
-                        'city_id' => '001001002',
-                        'city_name' => 'Jakarta Selatan'
-                    ]
-                ],
-            ],
-            'paginate' => (object)[
-                'total' => 1,
-                'count' => 1,
-                'skip' => $dto->skip,
-                'limit' => $dto->limit,
-                'sort_by' => $dto->sort_by,
-            ],
-        ];
+        $result = $service->execute($dto);
 
         return fractal($result->data, FinancingUnitSubmissionContractTransformer::class)
             ->paginateWith(new LazyPaginatorAdapter($result->paginate));

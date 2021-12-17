@@ -139,7 +139,7 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::get('users/profiles/{xid}/contracts/{contract_no}/financing-units', ['as' => 'users.contract.financing-object', 'uses' => 'Contract\Controllers\ContractController@getFinancingUnit']);
     Route::get('users/profiles/{xid}/contracts/{contract_no}/penalties', ['as' => 'users.contract.penalties', 'uses' => 'Contract\Controllers\ContractController@getPenalties']);
 
-    Route::get('all-cities', ['as' => 'all-cities.list', 'uses' => 'Location\CoreLocationController@getAllCities']);
+    Route::get('cities', ['as' => 'all-cities.list', 'uses' => 'Location\CoreLocationController@getCities']);
 
     # INVOICE
     Route::get('users/profiles/{xid}/financing-units-invoice-collection', ['as' => 'users.invoice-collection-financing-units.browse', 'uses' => 'Invoice\Controllers\FinancingUnitByUserController@getBrowse']);

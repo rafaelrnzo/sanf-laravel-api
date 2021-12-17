@@ -18,7 +18,7 @@ class GetListCityService
 
     public function execute($dto)
     {
-        $response = $this->client->getCities($dto->province_id);
+        $response = $this->client->getCitiesByProviceId($dto->province_id);
 
         return collect($response['data'])
             ->map(function ($item) {

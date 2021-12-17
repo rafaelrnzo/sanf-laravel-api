@@ -45,4 +45,13 @@ Route::group(config('sanf-internal.url'), [InternalApiProcessor::class], functio
     Route::get('contract.metadata', '/Kontrak/Dashboard');
     Route::get('contract.account-receivable', '/Kontrak/DashboardDetail');
     Route::get('contracts', '/Kontrak');
+    Route::get('contracts.detail', '/Kontrak/DetailKontrak');
+    Route::get('contracts.financing-unit.item', '/Kontrak/ItemKontrak');
+    Route::get('contracts.financing-unit.invoice', '/Kontrak/TagihanKontrak');
+    Route::get('contracts.pdc', '/PDC');
+    Route::get('contracts.pdc.detail', '/PDC/detail');
+    Route::get('contracts.financing-unit-submission', '/UnitPembiayaan');
+    Route::get('contracts.financing-unit-submission.item', '/UnitPembiayaan/detail');
+
+    Route::get('location.all-cities', '/Address/allcity');
 });

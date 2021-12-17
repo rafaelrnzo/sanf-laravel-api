@@ -8,7 +8,14 @@ use GuzzleHttp\Exception\GuzzleException;
 use NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException;
 use NbsPhp\ApiWrapper\Api\Request;
 use Sanf\Core\Modules\Contract\Dto\AccountReceivableContractDto;
+use Sanf\Core\Modules\Contract\Dto\ContractOfFinancingUnitSubmissionDto;
+use Sanf\Core\Modules\Contract\Dto\ContractPostDatedChequeDto;
+use Sanf\Core\Modules\Contract\Dto\FinancingUnitContractDto;
+use Sanf\Core\Modules\Contract\Dto\FinancingUnitSubmissionDto;
 use Sanf\Core\Modules\Contract\Dto\ListContractDto;
+use Sanf\Core\Modules\Contract\Dto\PostDatedChequeDto;
+use Sanf\Core\Modules\Contract\Dto\SummaryBillContractDto;
+use Sanf\Core\Modules\Location\ListCityDto;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 use stdClass;
 
@@ -247,7 +254,7 @@ class InternalApiClient
      * @throws EndpointNotDefinedException
      * @throws GuzzleException
      */
-    public function getCities($province_id)
+    public function getCitiesByProviceId($province_id)
     {
         $response = Request::route('location.cities')
             ->pathParams(['province_id' => $province_id])
@@ -739,5 +746,157 @@ class InternalApiClient
             ])
             ->send();
         return $response->json(false);
+    }
+
+    /**
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     */
+    public function getContractDetail($dto)
+    {
+        $response = Request::route('contracts.detail')
+            ->queryParams([
+                'cust_id' => $dto->user_id,
+                'contrak_no' => $dto->contract_no,
+            ])
+            ->send();
+
+        return $response->json();
+    }
+
+    /**
+     * @param FinancingUnitContractDto $dto
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     */
+    public function getFinancingUnitItem(FinancingUnitContractDto $dto)
+    {
+        $response = Request::route('contracts.financing-unit.item')
+            ->queryParams([
+                'cust_id' => $dto->user_id,
+                'contrak_no' => $dto->contract_no,
+                'skip' => $dto->skip,
+                'limit' => $dto->limit,
+                'order' => $dto->sort_by,
+            ])
+            ->send();
+
+        return $response->json();
+    }
+
+    /**
+     * @param SummaryBillContractDto $dto
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     */
+    public function getFinancingUnitInvoice(SummaryBillContractDto $dto)
+    {
+        $response = Request::route('contracts.financing-unit.invoice')
+            ->queryParams([
+                'cust_id' => $dto->user_id,
+                'contrak_no' => $dto->contract_no,
+                'skip' => $dto->skip,
+                'limit' => $dto->limit,
+                'order' => $dto->sort_by,
+            ])
+            ->send();
+
+        return $response->json();
+    }
+
+    /**
+     * @param ContractPostDatedChequeDto $dto
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     */
+    public function getPdc(ContractPostDatedChequeDto $dto)
+    {
+        $response = Request::route('contracts.pdc')
+            ->queryParams([
+                'cust_id' => $dto->user_id,
+                'skip' => $dto->skip,
+                'limit' => $dto->limit,
+                'order' => $dto->sort_by,
+            ])
+            ->send();
+
+        return $response->json();
+    }
+
+    /**
+     * @param PostDatedChequeDto $dto
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     */
+    public function getPdcDetail(PostDatedChequeDto $dto)
+    {
+        $response = Request::route('contracts.pdc.detail')
+            ->queryParams([
+                'cust_id' => $dto->user_id,
+                'contrak_no' => $dto->contract_no,
+                'skip' => $dto->skip,
+                'limit' => $dto->limit,
+                'order' => $dto->sort_by,
+            ])
+            ->send();
+
+        return $response->json();
+    }
+
+    /**
+     * @param ContractOfFinancingUnitSubmissionDto $dto
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     */
+    public function getFinancingUnitSubmission(ContractOfFinancingUnitSubmissionDto $dto)
+    {
+        $response = Request::route('contracts.financing-unit-submission.item')
+            ->queryParams([
+                'cust_id' => $dto->user_id,
+                'skip' => $dto->skip,
+                'limit' => $dto->limit,
+                'order' => $dto->sort_by,
+            ])
+            ->send();
+
+        return $response->json();
+    }
+
+    /**
+     * @param FinancingUnitSubmissionDto $dto
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     */
+    public function getFinancingUnitSubmissionItem(FinancingUnitSubmissionDto $dto)
+    {
+        $response = Request::route('contracts.financing-unit-submission.item')
+            ->queryParams([
+                'cust_id' => $dto->user_id,
+                'no_kontrak' => $dto->contract_no,
+                'skip' => $dto->skip,
+                'limit' => $dto->limit,
+                'order' => $dto->sort_by,
+            ])
+            ->send();
+
+        return $response->json();
+    }
+
+    /**
+     * @param ListCityDto $dto
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     */
+    public function getCities(ListCityDto $dto)
+    {
+        return Request::route('location.all-cities')->send()->json();
     }
 }
