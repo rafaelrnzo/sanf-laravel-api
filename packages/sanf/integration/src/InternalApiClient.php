@@ -919,4 +919,88 @@ class InternalApiClient
     {
         return Request::route('location.all-cities')->send()->json(false);
     }
+
+    /**
+     * @param $customerId
+     * @param $skip
+     * @param $limit
+     * @param $order
+     * @param int|null $timestamp
+     * @param string|null $keyword
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     * @example
+     * {
+     * 'status': true,
+     * 'code': 'S_GetData',
+     * 'message': 'Success',
+     * 'count': 10,
+     * 'data': [
+     * {
+     * 'AGREE_NO': '30707000094',
+     * 'SERIAL_NO': 'JNBCGB45A5AT00179',
+     * 'BTM': 'NISSAN DUMP TRUCK CGB45ATHN',
+     * 'POLIS_NO': 'HEMC05QX2B-0802',
+     * 'ROWINDEX': '1'
+     * }
+     * ]
+     * }
+     */
+    public function getFinancingUnitOfInsurance($customerId, $skip, $limit, $order, ?int $timestamp, ?string $keyword)
+    {
+        $response = Request::route('insurances.financing-units.list')
+            ->queryParams([
+                'cust_id' => $customerId,
+                'skip' => $skip ?? self::DEFAULT_SKIP,
+                'limit' => $limit ?? self::DEFAULT_LIMIT,
+                'order' => $order ?? self::DEFAULT_ORDER,
+                'timestamp' => $timestamp,
+                'keyword' => $keyword
+            ])
+            ->send();
+        return $response->json(false);
+    }
+
+    /**
+     * @param $customerId
+     * @param $skip
+     * @param $limit
+     * @param $order
+     * @param int|null $timestamp
+     * @param string|null $keyword
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     * @example
+     * {
+     * 'status': true,
+     * 'code': 'S_GetData',
+     * 'message': 'Success',
+     * 'count': 10,
+     * 'data': [
+     * {
+     * 'AGREE_NO': '41205000882',
+     * 'SERIAL_NO': '19340',
+     * 'BTM': 'KOMATSU BULLDOZER D375A-5',
+     * 'YEAR': '2010',
+     * 'ROWINDEX': '1'
+     * }
+     * ]
+     * }
+     */
+    public function getFinancingUnitOfInvoiceCollection($customerId, $skip, $limit, $order, ?int $timestamp, ?string $keyword)
+    {
+        $response = Request::route('invoice-collections.financing-units.list')
+            ->queryParams([
+                'cust_id' => $customerId,
+                'skip' => $skip ?? self::DEFAULT_SKIP,
+                'limit' => $limit ?? self::DEFAULT_LIMIT,
+                'order' => $order ?? self::DEFAULT_ORDER,
+                'timestamp' => $timestamp,
+                'keyword' => $keyword
+            ])
+            ->send();
+        return $response->json(false);
+    }
 }

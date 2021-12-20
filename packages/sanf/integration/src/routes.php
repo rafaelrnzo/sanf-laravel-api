@@ -54,4 +54,7 @@ Route::group(config('sanf-internal.url'), [InternalApiProcessor::class], functio
     Route::get('contracts.financing-unit-submission.item', '/UnitPembiayaan/detail');
 
     Route::get('location.all-cities', '/Address/allcity');
+
+    Route::get('invoice-collections.financing-units.list', '/PengambilanInv');
+    Route::get('insurances.financing-units.list', '/Insurance');
 });

@@ -5,7 +5,10 @@ namespace Sanf\Api\Modules\Insurance\Controllers;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
+use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
+use Sanf\Api\Modules\Insurance\Transformers\FinancingUnitTransformer;
 use Sanf\Core\Modules\Insurance\Services\BrowseFinancingUnitByUserService;
+use Sanf\Core\Modules\Invoice\Dtos\BrowseFinancingUnitByUserRequestDto;
 
 final class FinancingUnitByUserController extends RestApiController
 {
@@ -17,27 +20,13 @@ final class FinancingUnitByUserController extends RestApiController
             'sort_by' => ['nullable', 'string'],
             'keyword' => ['nullable', 'string'],
         ]);
-        return json_decode('{
-    "rows": [
-      {
-        "contract_no": "2012321232323",
-        "serial_no": "ZX12387SJKSD",
-        "provider_name": "Shimizu",
-        "brand_type_model": "KOMATSU HYDRAULIC EXCAVATOR PC130F-7/P7",
-        "year": "2021"
-      }
-    ],
-    "metadata": {
-      "count": 1,
-      "skip": 0,
-      "limit": 10,
-      "sort_by": "earliest"
-    }
-  }',true);
-//        $dto = new BrowseFinancingUnitByUserRequestDto($input + ['userId' => $auth->id()]);
-//        $result = $service->execute($dto);
-//
-//        return fractal($result->data, new FinancingUnitSimpleTransformer())
-//            ->paginateWith(new LazyPaginatorAdapter($result->paginate));
+        $dto = new BrowseFinancingUnitByUserRequestDto($input + [
+                'profileXid' => $xid,
+                'userId' => $auth->id()
+            ]);
+        $result = $service->execute($dto);
+
+        return fractal($result->data, new FinancingUnitTransformer())
+            ->paginateWith(new LazyPaginatorAdapter($result->paginate));
     }
 }

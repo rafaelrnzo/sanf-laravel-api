@@ -4,20 +4,22 @@ namespace Sanf\Core\Modules\Invoice\Services;
 
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
+use Sanf\Core\Modules\Invoice\Dtos\BrowseFinancingUnitByUserRequestDto;
+use Sanf\Core\Modules\Invoice\Dtos\BrowseFinancingUnitByUserResponseDto;
+use Sanf\Integration\InternalApiClient;
 
 final class BrowseFinancingUnitByUserService implements ApplicationServiceInterface
 {
-    /*For Case Browse
-    protected FinancingUnitSpecificationFactoryInterface $specificationFactory;
+    protected InternalApiClient $apiClient;
 
-    public function __construct(
-        FinancingUnitRepositoryInterface $repository,
-        FinancingUnitSpecificationFactoryInterface $specificationFactory
-    ) {
-        parent::__construct($repository);
-        $this->specificationFactory = $specificationFactory;
+    /**
+     * BrowseContractByUserService constructor.
+     * @param InternalApiClient $apiClient
+     */
+    public function __construct(InternalApiClient $apiClient)
+    {
+        $this->apiClient = $apiClient;
     }
-    /*
 
     /**
      * @param BrowseFinancingUnitByUserRequestDto $dto
@@ -25,42 +27,32 @@ final class BrowseFinancingUnitByUserService implements ApplicationServiceInterf
      */
     public function execute($dto = null)
     {
-        /* For Case Browse
-        $result = $this->repository->query(
-            $this->specificationFactory->paginate($dto->keyword, $dto->sortBy, $dto->skip, $dto->limit)
+        $result = $this->apiClient->getFinancingUnitOfInvoiceCollection(
+            $dto->profileXid,
+            $dto->skip,
+            $dto->limit,
+            $dto->sortBy,
+            $dto->timestamp,
+            $dto->keyword
         );
-        $total = $this->repository->size(
-            $this->specificationFactory->paginate($dto->keyword)
-        );
-
         $data = array_map(function ($item) {
             return (object)[
-                'xid' => $item->xid,
-                'createdAt' => $item->created_at,
-                'updatedAt' => $item->updated_at,
+                'contractNo' => $item->AGREE_NO,
+                'serialNo' => $item->SERIAL_NO,
+                'brandTypeModel' => $item->BTM,
+                'year' => $item->YEAR,
             ];
-        }, $result);
+        }, $result->data);
 
         return new BrowseFinancingUnitByUserResponseDto([
             'data' => $data,
             'paginate' => [
-                'total' => (int)$total,
+                'total' => (int)$result->count,
                 'count' => count($data),
                 'skip' => (int)$dto->skip,
                 'limit' => (int)$dto->limit,
                 'sortBy' => $dto->sortBy,
             ]
         ]);
-        */
-
-        /* For Case Read/Add/Update
-        $entity = $this->repository->findByXid($dto->xid);
-        if (is_null($entity)) {
-            throw new FinancingUnitNotFoundException();
-        }
-        return new BrowseFinancingUnitByUserResponseDto([
-            'id' => $entity->getId(),
-        ]);
-        */
     }
 }

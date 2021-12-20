@@ -14,7 +14,7 @@ use Sanf\Core\Modules\Invoice\Services\ReadInvoiceCollectionSubmissionByUserServ
 
 final class InvoiceCollectionSubmissionByUserController extends RestApiController
 {
-    public function getBrowse(Guard $auth, Request $request, BrowseInvoiceCollectionSubmissionByUserService $service)
+    public function getBrowse(Guard $auth, Request $request, $xid, BrowseInvoiceCollectionSubmissionByUserService $service)
     {
         $input = $this->validate($request, [
             'skip' => ['nullable', 'integer'],
@@ -50,7 +50,7 @@ final class InvoiceCollectionSubmissionByUserController extends RestApiControlle
 //            ->paginateWith(new LazyPaginatorAdapter($result->paginate));
     }
 
-    public function postAdd(Guard $auth, Request $request, AddInvoiceCollectionSubmissionByUserService $service)
+    public function postAdd(Guard $auth, Request $request, $xid, AddInvoiceCollectionSubmissionByUserService $service)
     {
 //        $input = $this->validate($request, [
 //            'email' => ['required', 'email', 'max:255'],
