@@ -2,65 +2,44 @@
 
 namespace Sanf\Core\Modules\Invoice\Services;
 
-
 use NbsPhp\Core\Services\ApplicationServiceInterface;
+use Sanf\Core\Modules\Invoice\Dtos\AddInvoiceCollectionSubmissionByUserRequestDto;
+use Sanf\Core\Modules\Invoice\Dtos\AddInvoiceCollectionSubmissionByUserResponseDto;
+use Sanf\Core\Modules\Invoice\Enums\InvoiceCollectionSubmissionStatusEnum;
+use Sanf\Core\Modules\Invoice\Events\InvoiceCollectionSubmissionAddedEvent;
 
-final class AddInvoiceCollectionSubmissionByUserService implements ApplicationServiceInterface
+final class AddInvoiceCollectionSubmissionByUserService extends InvoiceCollectionSubmissionByUserService implements ApplicationServiceInterface
 {
-    /*For Case Browse
-    protected InvoiceCollectionSubmissionSpecificationFactoryInterface $specificationFactory;
-
-    public function __construct(
-        InvoiceCollectionSubmissionRepositoryInterface $repository,
-        InvoiceCollectionSubmissionSpecificationFactoryInterface $specificationFactory
-    ) {
-        parent::__construct($repository);
-        $this->specificationFactory = $specificationFactory;
-    }
-    /*
-
     /**
      * @param AddInvoiceCollectionSubmissionByUserRequestDto $dto
      * @return AddInvoiceCollectionSubmissionByUserResponseDto
      */
     public function execute($dto = null)
     {
-        /* For Case Browse
-        $result = $this->repository->query(
-            $this->specificationFactory->paginate($dto->keyword, $dto->sortBy, $dto->skip, $dto->limit)
-        );
-        $total = $this->repository->size(
-            $this->specificationFactory->paginate($dto->keyword)
-        );
-
-        $data = array_map(function ($item) {
-            return (object)[
-                'xid' => $item->xid,
-                'createdAt' => $item->created_at,
-                'updatedAt' => $item->updated_at,
-            ];
-        }, $result);
-
-        return new AddInvoiceCollectionSubmissionByUserResponseDto([
-            'data' => $data,
-            'paginate' => [
-                'total' => (int)$total,
-                'count' => count($data),
-                'skip' => (int)$dto->skip,
-                'limit' => (int)$dto->limit,
-                'sortBy' => $dto->sortBy,
-            ]
-        ]);
-        */
-
-        /* For Case Read/Add/Update
-        $entity = $this->repository->findByXid($dto->xid);
-        if (is_null($entity)) {
-            throw new InvoiceCollectionSubmissionNotFoundException();
+        //TODO VALIDATE USER
+        $batchNo = nano_id();
+        $entities = [];
+        foreach ($dto->financingUnits as $financingUnit) {
+            $entities[] = $this->repository->add([
+                'xid' => nano_id(),
+                'profile_xid' => $dto->profileXid,
+                'batch_no' => $batchNo,
+                'status_id' => InvoiceCollectionSubmissionStatusEnum::PROCESSED,
+                'user_id' => $dto->userId,
+                'pickup_date' => $dto->pickupDate,
+                'contract_no' => $financingUnit->contractNo,
+                'serial_no' => $financingUnit->serialNo,
+                'year' => $financingUnit->year,
+                'brand_type_model' => $financingUnit->brandTypeModel,
+            ]);
         }
+
+        if ($entities) {
+            event(new InvoiceCollectionSubmissionAddedEvent($entities));
+        }
+
         return new AddInvoiceCollectionSubmissionByUserResponseDto([
-            'id' => $entity->getId(),
+            'submissions' => $entities
         ]);
-        */
     }
 }

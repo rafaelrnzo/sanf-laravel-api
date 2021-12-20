@@ -3,21 +3,26 @@
 namespace Sanf\Core\Modules\Invoice\Services;
 
 
+use Carbon\CarbonImmutable;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
+use Sanf\Core\Modules\Invoice\Dtos\BrowseInvoiceCollectionSubmissionByUserRequestDto;
+use Sanf\Core\Modules\Invoice\Dtos\BrowseInvoiceCollectionSubmissionByUserResponseDto;
+use Sanf\Core\Modules\Invoice\Repositories\InvoiceCollectionSubmissionRepositoryInterface;
+use Sanf\Core\Modules\Invoice\Specifications\InvoiceCollectionSubmissionSpecificationFactoryInterface;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 
-final class BrowseInvoiceCollectionSubmissionByUserService implements ApplicationServiceInterface
+final class BrowseInvoiceCollectionSubmissionByUserService extends InvoiceCollectionSubmissionByUserService implements ApplicationServiceInterface
 {
-    /*For Case Browse
     protected InvoiceCollectionSubmissionSpecificationFactoryInterface $specificationFactory;
 
     public function __construct(
-        InvoiceCollectionSubmissionRepositoryInterface $repository,
+        InvoiceCollectionSubmissionRepositoryInterface $invoiceCollectionSubmissionRepository,
+        UserRepositoryInterface $userRepository,
         InvoiceCollectionSubmissionSpecificationFactoryInterface $specificationFactory
     ) {
-        parent::__construct($repository);
+        parent::__construct($invoiceCollectionSubmissionRepository, $userRepository);
         $this->specificationFactory = $specificationFactory;
     }
-    /*
 
     /**
      * @param BrowseInvoiceCollectionSubmissionByUserRequestDto $dto
@@ -25,17 +30,23 @@ final class BrowseInvoiceCollectionSubmissionByUserService implements Applicatio
      */
     public function execute($dto = null)
     {
-        /* For Case Browse
         $result = $this->repository->query(
-            $this->specificationFactory->paginate($dto->keyword, $dto->sortBy, $dto->skip, $dto->limit)
+            $this->specificationFactory->paginateByUser($dto->userId, $dto->keyword, $dto->sortBy, $dto->skip, $dto->limit)
         );
         $total = $this->repository->size(
-            $this->specificationFactory->paginate($dto->keyword)
+            $this->specificationFactory->paginateByUser($dto->userId, $dto->keyword, $dto->statusId)
         );
 
         $data = array_map(function ($item) {
             return (object)[
+                'id' => $item->id,
                 'xid' => $item->xid,
+                'status' => $item->status,
+                'contractNo' => $item->contract_no,
+                'serialNo' => $item->serial_no,
+                'pickupDate' => CarbonImmutable::make($item->pickup_date),
+                'brandTypeModel' => $item->brand_type_model,
+                'year' => $item->year,
                 'createdAt' => $item->created_at,
                 'updatedAt' => $item->updated_at,
             ];
@@ -51,16 +62,5 @@ final class BrowseInvoiceCollectionSubmissionByUserService implements Applicatio
                 'sortBy' => $dto->sortBy,
             ]
         ]);
-        */
-
-        /* For Case Read/Add/Update
-        $entity = $this->repository->findByXid($dto->xid);
-        if (is_null($entity)) {
-            throw new InvoiceCollectionSubmissionNotFoundException();
-        }
-        return new BrowseInvoiceCollectionSubmissionByUserResponseDto([
-            'id' => $entity->getId(),
-        ]);
-        */
     }
 }

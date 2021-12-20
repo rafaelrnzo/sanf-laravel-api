@@ -38,6 +38,10 @@ use Sanf\Core\Modules\Financing\Specifications\FinancingApplicationSpecification
 use Sanf\Core\Modules\Financing\Specifications\FinancingFacilitySpecificationFactoryInterface;
 use Sanf\Core\Modules\Financing\Specifications\FinancingMethodSpecificationFactoryInterface;
 use Sanf\Core\Modules\Financing\Specifications\FinancingPrerequisiteSpecificationFactoryInterface;
+use Sanf\Core\Modules\Invoice\Repositories\EloquentInvoiceCollectionSubmissionRepository;
+use Sanf\Core\Modules\Invoice\Repositories\InvoiceCollectionSubmissionRepositoryInterface;
+use Sanf\Core\Modules\Invoice\Specifications\EloquentInvoiceCollectionSubmissionSpecificationFactory;
+use Sanf\Core\Modules\Invoice\Specifications\InvoiceCollectionSubmissionSpecificationFactoryInterface;
 use Sanf\Core\Modules\Location\EloquentLocationRepository;
 use Sanf\Core\Modules\Location\LocationRepositoryInterface;
 use Sanf\Core\Modules\News\EloquentNewsRepository;
@@ -122,6 +126,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(PlafondRepositoryInterface::class,GuzzleAndEloquentPlafondRepository::class);
         $this->app->bind(PrepaymentSubmissionRepositoryInterface::class,EloquentPrepaymentSubmissionRepository::class);
         $this->app->bind(FinancingUnitLocationSubmissionRepositoryInterface::class,EloquentFinancingUnitLocationSubmissionRepository::class);
+        $this->app->bind(InvoiceCollectionSubmissionRepositoryInterface::class,EloquentInvoiceCollectionSubmissionRepository::class);
 
         //SPECIFICATION FACTORY
         $this->app->bind(ProjectSpecificationFactoryInterface::class, EloquentProjectSpecificationFactory::class);
@@ -131,6 +136,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(FinancingFacilitySpecificationFactoryInterface::class,EloquentFinancingFacilitySpecificationFactory::class);
         $this->app->bind(FinancingApplicationSpecificationFactoryInterface::class, EloquentFinancingApplicationSpecificationFactory::class);
         $this->app->bind(FinancingUnitLocationSubmissionSpecificationFactoryInterface::class, EloquentFinancingUnitLocationSubmissionSpecificationFactory::class);
+        $this->app->bind(InvoiceCollectionSubmissionSpecificationFactoryInterface::class, EloquentInvoiceCollectionSubmissionSpecificationFactory::class);
     }
 
     protected function registerViews()
