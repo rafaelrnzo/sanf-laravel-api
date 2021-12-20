@@ -54,6 +54,8 @@ use Sanf\Core\Modules\Promo\EloquentPromoRepository;
 use Sanf\Core\Modules\Promo\PromoRepositoryInterface;
 use Sanf\Core\Modules\Staff\EloquentStaffRepository;
 use Sanf\Core\Modules\Staff\StaffRepositoryInterface;
+use Sanf\Core\Modules\User\Repositories\EloquentUserRepository;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 
 class CoreServiceProvider extends ServiceProvider
 {
@@ -96,6 +98,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(TransactionalSessionInterface::class, IlluminateSession::class);
 
         //REPOSITORY
+        $this->app->bind(UserRepositoryInterface::class, EloquentUserRepository::class);
         $this->app->bind(AskUsTopicRepositoryInterface::class, EloquentAskUsTopicRepository::class);
         $this->app->bind(AskUsRepositoryInterface::class, EloquentAskUsRepository::class);
         $this->app->bind(ProductRepositoryInterface::class, EloquentProductRepository::class);
