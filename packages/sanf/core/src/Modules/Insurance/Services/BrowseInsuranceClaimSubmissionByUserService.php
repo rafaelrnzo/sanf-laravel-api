@@ -4,38 +4,45 @@ namespace Sanf\Core\Modules\Insurance\Services;
 
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
+use Sanf\Core\Modules\Insurance\Dtos\BrowseInsuranceClaimSubmissionByUserRequestDto;
+use Sanf\Core\Modules\Insurance\Dtos\BrowseInsuranceClaimSubmissionByUserResponseDto;
+use Sanf\Core\Modules\Insurance\Repositories\InsuranceClaimSubmissionRepositoryInterface;
+use Sanf\Core\Modules\Insurance\Specifications\InsuranceClaimSubmissionSpecificationFactoryInterface;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 
-final class BrowseInsuranceClaimSubmissionByUserService implements ApplicationServiceInterface
+final class BrowseInsuranceClaimSubmissionByUserService extends InsuranceClaimSubmissionByUserService implements ApplicationServiceInterface
 {
-    /*For Case Browse
     protected InsuranceClaimSubmissionSpecificationFactoryInterface $specificationFactory;
 
     public function __construct(
         InsuranceClaimSubmissionRepositoryInterface $repository,
+        UserRepositoryInterface $userRepository,
         InsuranceClaimSubmissionSpecificationFactoryInterface $specificationFactory
     ) {
-        parent::__construct($repository);
+        parent::__construct($repository, $userRepository);
         $this->specificationFactory = $specificationFactory;
     }
-    /*
 
     /**
      * @param BrowseInsuranceClaimSubmissionByUserRequestDto $dto
      * @return BrowseInsuranceClaimSubmissionByUserResponseDto
      */
-    public function execute($dto = null)
+    public
+    function execute($dto = null)
     {
-        /* For Case Browse
         $result = $this->repository->query(
-            $this->specificationFactory->paginate($dto->keyword, $dto->sortBy, $dto->skip, $dto->limit)
+            $this->specificationFactory->paginateByUser($dto->userId, $dto->keyword, $dto->sortBy, $dto->skip, $dto->limit)
         );
         $total = $this->repository->size(
-            $this->specificationFactory->paginate($dto->keyword)
+            $this->specificationFactory->paginateByUser($dto->userId, $dto->keyword)
         );
 
         $data = array_map(function ($item) {
             return (object)[
+                'id' => $item->id,
                 'xid' => $item->xid,
+                'status' => $item->status,
+                //TODO
                 'createdAt' => $item->created_at,
                 'updatedAt' => $item->updated_at,
             ];
@@ -51,16 +58,5 @@ final class BrowseInsuranceClaimSubmissionByUserService implements ApplicationSe
                 'sortBy' => $dto->sortBy,
             ]
         ]);
-        */
-
-        /* For Case Read/Add/Update
-        $entity = $this->repository->findByXid($dto->xid);
-        if (is_null($entity)) {
-            throw new InsuranceClaimSubmissionNotFoundException();
-        }
-        return new BrowseInsuranceClaimSubmissionByUserResponseDto([
-            'id' => $entity->getId(),
-        ]);
-        */
     }
 }

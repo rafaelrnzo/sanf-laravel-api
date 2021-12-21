@@ -7,5 +7,6 @@ use NbsPhp\Core\Dto\CamelCaseDataTransferObject;
 class ReadInsuranceClaimSubmissionByUserRequestDto extends CamelCaseDataTransferObject
 {
     public int $userId;
+    public string $profileXid;
     public string $xid;
 }

@@ -2,65 +2,34 @@
 
 namespace Sanf\Core\Modules\Insurance\Services;
 
-
+use Carbon\CarbonImmutable;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
+use Sanf\Core\Modules\Insurance\Dtos\ReadInsuranceClaimSubmissionByUserRequestDto;
+use Sanf\Core\Modules\Insurance\Dtos\ReadInsuranceClaimSubmissionByUserResponseDto;
+use Sanf\Core\Modules\Insurance\Exceptions\InsuranceClaimSubmissionNotFoundException;
 
-final class ReadInsuranceClaimSubmissionByUserService implements ApplicationServiceInterface
+final class ReadInsuranceClaimSubmissionByUserService extends InsuranceClaimSubmissionByUserService implements ApplicationServiceInterface
 {
-    /*For Case Browse
-    protected InsuranceClaimSubmissionSpecificationFactoryInterface $specificationFactory;
-
-    public function __construct(
-        InsuranceClaimSubmissionRepositoryInterface $repository,
-        InsuranceClaimSubmissionSpecificationFactoryInterface $specificationFactory
-    ) {
-        parent::__construct($repository);
-        $this->specificationFactory = $specificationFactory;
-    }
-    /*
-
     /**
      * @param ReadInsuranceClaimSubmissionByUserRequestDto $dto
      * @return ReadInsuranceClaimSubmissionByUserResponseDto
      */
     public function execute($dto = null)
     {
-        /* For Case Browse
-        $result = $this->repository->query(
-            $this->specificationFactory->paginate($dto->keyword, $dto->sortBy, $dto->skip, $dto->limit)
-        );
-        $total = $this->repository->size(
-            $this->specificationFactory->paginate($dto->keyword)
-        );
-
-        $data = array_map(function ($item) {
-            return (object)[
-                'xid' => $item->xid,
-                'createdAt' => $item->created_at,
-                'updatedAt' => $item->updated_at,
-            ];
-        }, $result);
-
-        return new ReadInsuranceClaimSubmissionByUserResponseDto([
-            'data' => $data,
-            'paginate' => [
-                'total' => (int)$total,
-                'count' => count($data),
-                'skip' => (int)$dto->skip,
-                'limit' => (int)$dto->limit,
-                'sortBy' => $dto->sortBy,
-            ]
-        ]);
-        */
-
-        /* For Case Read/Add/Update
         $entity = $this->repository->findByXid($dto->xid);
         if (is_null($entity)) {
             throw new InsuranceClaimSubmissionNotFoundException();
         }
+        //TODO VALIDATE USER & OWNERSHIP
+
         return new ReadInsuranceClaimSubmissionByUserResponseDto([
-            'id' => $entity->getId(),
+            'id' => $entity->id,
+            'xid' => $entity->xid,
+            'userId' => $entity->user_id,
+            'status' => $entity->status,
+            //TODO HERE
+            'createdAt' => CarbonImmutable::make($entity->created_at),
+            'updatedAt' => CarbonImmutable::make($entity->updated_at),
         ]);
-        */
     }
 }

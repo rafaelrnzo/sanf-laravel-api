@@ -5,6 +5,11 @@ namespace Sanf\Api\Modules\Insurance\Controllers;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
+use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
+use Sanf\Api\Modules\Insurance\Transformers\MyInsuranceClaimSubmissionSimpleTransformer;
+use Sanf\Api\Modules\Insurance\Transformers\MyInsuranceClaimSubmissionTransformer;
+use Sanf\Core\Modules\Insurance\Dtos\AddInsuranceClaimSubmissionByUserRequestDto;
+use Sanf\Core\Modules\Insurance\Dtos\BrowseInsuranceClaimSubmissionByUserRequestDto;
 use Sanf\Core\Modules\Insurance\Dtos\ReadInsuranceClaimSubmissionByUserRequestDto;
 use Sanf\Core\Modules\Insurance\Services\AddInsuranceClaimSubmissionByUserService;
 use Sanf\Core\Modules\Insurance\Services\BrowseInsuranceClaimSubmissionByUserService;
@@ -19,81 +24,43 @@ final class InsuranceClaimSubmissionByUserController extends RestApiController
             'limit' => ['nullable', 'integer'],
             'sort_by' => ['nullable', 'string'],
             'keyword' => ['nullable', 'string'],
+            'timestamp' => ['nullable', 'integer'],
         ]);
-        return json_decode('{
-    "rows": [
-      {
-        "xid": "lklasd123876123",
-        "serial_no": "J21232",
-        "polis_no": "02052012232",
-        "brand_type_model": "KOMATSU HYDRAULIC EXCAVATOR PC130F-7/P7",
-        "status": {
-          "id": 10,
-          "name": "Diproses"
-        }
-      }
-    ],
-    "metadata": {
-      "count": 1,
-      "skip": 0,
-      "limit": 10,
-      "sort_by": "earliest"
-    }
-  }', true);
-//        $dto = new BrowseInsuranceClaimSubmissionByUserRequestDto($input + ['userId' => $auth->id()]);
-//        $result = $service->execute($dto);
-//
-//        return fractal($result->data, new InsuranceClaimSubmissionSimpleTransformer())
-//            ->paginateWith(new LazyPaginatorAdapter($result->paginate));
+        $dto = new BrowseInsuranceClaimSubmissionByUserRequestDto($input + ['userId' => $auth->id()]);
+        $result = $service->execute($dto);
+
+        return fractal($result->data, new MyInsuranceClaimSubmissionSimpleTransformer())
+            ->paginateWith(new LazyPaginatorAdapter($result->paginate));
     }
 
-    public function getRead(Guard $auth, $xid, ReadInsuranceClaimSubmissionByUserService $service)
+    public function getRead(Guard $auth, $xid, $submissionXid, ReadInsuranceClaimSubmissionByUserService $service)
     {
         $dto = new ReadInsuranceClaimSubmissionByUserRequestDto([
-            'xid' => $xid,
+            'profileXid' => $xid,
+            'xid' => $submissionXid,
             'userId' => $auth->id()
         ]);
-        return json_decode('{
-    "xid": "lklasd123876123",
-    "serial_no": "J21232",
-    "polis_no": "02052012232",
-    "brand_type_model": "KOMATSU HYDRAULIC EXCAVATOR PC130F-7/P7",
-    "status": {
-      "id": 10,
-      "name": "Diproses"
-    },
-    "location_metadata": {
-      "city_id": "10010010",
-      "city_name": "Jakarta Utara"
-    },
-    "incident_date": "2021-12-01",
-    "description": "ini deskripsi",
-    "image_files": [
-      {
-        "file_name": "JSK923123s132.png",
-        "origin_name": "fff.png",
-        "url": "https://via.placeholder.com/300/09f/fff.png"
-      }
-    ]
-  }', true);
-//        $result = $service->execute($dto);
-//        return fractal($result, new InsuranceClaimSubmissionTransformer());
+        $result = $service->execute($dto);
+        return fractal($result, new MyInsuranceClaimSubmissionTransformer());
     }
 
-    public function postAdd(Guard $auth, Request $request, AddInsuranceClaimSubmissionByUserService $service)
+    public function postAdd(Guard $auth, Request $request, $xid, AddInsuranceClaimSubmissionByUserService $service)
     {
-//        $input = $this->validate($request, [
-//            'email' => ['required', 'email', 'max:255'],
-//            'title' => ['required', 'string', 'max:255'],
-//            'description' => ['nullable', 'string', 'max:65535'],
-//            'total' => ['nullable', 'integer', 'max:2147483647'],
-//            'price' => ['nullable', 'numeric', 'max:999999999999999.9999'],
-//            'is_enabled' => ['nullable', 'boolean'],
-//            'images' => ['nullable', 'array'],
-//            'created_at' => ['nullable', 'integer', 'max:99999999999']
-//        ]);
-//        $dto = new AddInsuranceClaimSubmissionByUserRequestDto($input + ['userId' => $auth->id()]);
-//        $service->execute($dto);
+        $input = $this->validate($request, [
+//            'financing_unit' => ['required', 'array'],
+//            'financing_unit.serial_no' => ['required', 'string', 'max:255'],
+//            'financing_unit.polis_no' => ['required', 'string', 'max:255'],
+//            'financing_unit.brand_type_model' => ['required', 'string', 'max:255'],
+//            'financing_unit.year' => ['required', 'string', 'date_format:Y'],
+//            'image_files' => ['nullable', 'array'],
+//            'description' => ['required', 'string', 'max:65535'],
+//            'incident_date' => ['required', 'string', 'date_format:Y-m-d'],
+        ]);
+        $dto = new AddInsuranceClaimSubmissionByUserRequestDto($input + [
+                'profileXid' => $xid,
+                'userId' => $auth->id()
+            ]);
+        $service->execute($dto);
         return $this->responseOk();
     }
 }

@@ -6,14 +6,12 @@ use NbsPhp\Core\Dto\CamelCaseDataTransferObject;
 
 class AddInsuranceClaimSubmissionByUserRequestDto extends CamelCaseDataTransferObject
 {
-    // For browse type DTO
-    //public ?int $userId;
-    //public ?int $skip;
-    //public ?int $limit;
-    //public ?string $sortBy;
-    //public ?string $keyword;
-
-    // For Read type DTO
-    //public int $userId;
-    //public string $xid;
+//    public \DateTimeImmutable $dateTime;
+    public int $userId;
+    public string $profileXid;
+//    public int $amount;
+//    public float $total;
+//    public string $title;
+//    public ?string $description;
+//    public bool $isEnabled;
 }

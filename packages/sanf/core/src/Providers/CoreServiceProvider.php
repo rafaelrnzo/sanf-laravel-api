@@ -42,6 +42,10 @@ use Sanf\Core\Modules\Invoice\Repositories\EloquentInvoiceCollectionSubmissionRe
 use Sanf\Core\Modules\Invoice\Repositories\InvoiceCollectionSubmissionRepositoryInterface;
 use Sanf\Core\Modules\Invoice\Specifications\EloquentInvoiceCollectionSubmissionSpecificationFactory;
 use Sanf\Core\Modules\Invoice\Specifications\InvoiceCollectionSubmissionSpecificationFactoryInterface;
+use Sanf\Core\Modules\Insurance\Repositories\EloquentInsuranceClaimSubmissionRepository;
+use Sanf\Core\Modules\Insurance\Repositories\InsuranceClaimSubmissionRepositoryInterface;
+use Sanf\Core\Modules\Insurance\Specifications\EloquentInsuranceClaimSubmissionSpecificationFactory;
+use Sanf\Core\Modules\Insurance\Specifications\InsuranceClaimSubmissionSpecificationFactoryInterface;
 use Sanf\Core\Modules\Location\EloquentLocationRepository;
 use Sanf\Core\Modules\Location\LocationRepositoryInterface;
 use Sanf\Core\Modules\News\EloquentNewsRepository;
@@ -127,6 +131,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(PrepaymentSubmissionRepositoryInterface::class,EloquentPrepaymentSubmissionRepository::class);
         $this->app->bind(FinancingUnitLocationSubmissionRepositoryInterface::class,EloquentFinancingUnitLocationSubmissionRepository::class);
         $this->app->bind(InvoiceCollectionSubmissionRepositoryInterface::class,EloquentInvoiceCollectionSubmissionRepository::class);
+        $this->app->bind(InsuranceClaimSubmissionRepositoryInterface::class,EloquentInsuranceClaimSubmissionRepository::class);
 
         //SPECIFICATION FACTORY
         $this->app->bind(ProjectSpecificationFactoryInterface::class, EloquentProjectSpecificationFactory::class);
@@ -137,6 +142,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(FinancingApplicationSpecificationFactoryInterface::class, EloquentFinancingApplicationSpecificationFactory::class);
         $this->app->bind(FinancingUnitLocationSubmissionSpecificationFactoryInterface::class, EloquentFinancingUnitLocationSubmissionSpecificationFactory::class);
         $this->app->bind(InvoiceCollectionSubmissionSpecificationFactoryInterface::class, EloquentInvoiceCollectionSubmissionSpecificationFactory::class);
+        $this->app->bind(InsuranceClaimSubmissionSpecificationFactoryInterface::class, EloquentInsuranceClaimSubmissionSpecificationFactory::class);
     }
 
     protected function registerViews()
