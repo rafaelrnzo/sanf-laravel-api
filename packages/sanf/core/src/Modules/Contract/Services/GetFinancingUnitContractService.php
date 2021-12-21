@@ -35,22 +35,27 @@ class GetFinancingUnitContractService extends UserService implements Application
         if (!$user) {
             throw new UserNotFoundException();
         }
-
-        $response = $this->internalApiClient->getFinancingUnitItem($dto);
-        $data = collect($response['data'])->map(function ($item) {
+        $response = $this->internalApiClient->getFinancingUnitItem(
+            $user->personal_xid,
+            $dto->contract_no,
+            $dto->limit,
+            $dto->skip,
+            $dto->sort_by
+        );
+        $data = collect($response->data)->map(function ($item) {
             return (object)[
-                'serial_no' => $item['SERIAL_NO'] ?? null,
-                'brand_type_model' => $item['BTM'] ?? null,
-                'year' => $item['YEAR'] ?? null,
-                'provider_name' => $item['SUPPLIER'] ?? null,
+                'serial_no' => $item->SERIAL_NO ?? null,
+                'brand_type_model' => $item->BTM ?? null,
+                'year' => $item->YEAR ?? null,
+                'provider_name' => $item->SUPPLIER ?? null,
             ];
         });
 
         return (object)[
             'data' => $data,
             'paginate' => (object)[
-                'total' => $response['total'] ?? $response['count'],
-                'count' => $response['count'] ?? 0,
+                'total' => $response->total ?? $response->count,
+                'count' => $response->count ?? 0,
                 'skip' => $dto->skip,
                 'limit' => $dto->limit,
                 'sort_by' => $dto->sort_by,

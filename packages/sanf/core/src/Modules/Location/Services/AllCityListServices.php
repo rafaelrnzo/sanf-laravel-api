@@ -26,11 +26,11 @@ class AllCityListServices implements ApplicationServiceInterface
      */
     public function execute($dto = null)
     {
-        $response = $this->internalApiClient->getCities($dto);
-        $data = collect($response['data'])->map(function ($item) {
+        $response = $this->internalApiClient->getCities();
+        $data = collect($response->data)->map(function ($item) {
             return (object)[
-                'id' => $item['CITY_ID'] ?? null,
-                'name' => $item['DESCRIPTION'] ?? null,
+                'id' => $item->CITY_ID ?? null,
+                'name' => $item->DESCRIPTION ?? null,
             ];
         });
 
@@ -47,8 +47,8 @@ class AllCityListServices implements ApplicationServiceInterface
         return (object)[
             'data' => $sort,
             'paginate' => (object)[
-                'total' => $response['total'] ?? $response['count'],
-                'count' => $response['count'] ?? 0,
+                'total' => $response->total ?? $response->count,
+                'count' => $response->count ?? 0,
                 'skip' => $dto->skip,
                 'limit' => $dto->limit,
                 'sort_by' => $dto->sort_by,

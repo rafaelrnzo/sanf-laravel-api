@@ -36,17 +36,23 @@ class GetPostDatedChequeDetailService extends UserService implements Application
             throw new UserNotFoundException();
         }
 
-        $response = $this->internalApiClient->getPdcDetail($dto);
-        $data = collect($response['data'])->map(function ($item) {
+        $response = $this->internalApiClient->getPdcDetail(
+            $user->personal_xid,
+            $dto->contract_no,
+            $dto->limit,
+            $dto->skip,
+            $dto->sort_by
+        );
+        $data = collect($response->data)->map(function ($item) {
             return (object)[
-                'pdc_no' => $item['PDC_NO'] ?? null,
-                'amount' => $item['PDC_AMT'] ?? 0,
-                'currency_type' => $item['CURR_ID'] ?? null,
-                'submitted_date' => $item['PDC_DUE_DT'] ?? null,
-                'pdc_type' => $item['PDC_TYPE'] ?? null,
+                'pdc_no' => $item->PDC_NO ?? null,
+                'amount' => $item->PDC_AMT ?? 0,
+                'currency_type' => $item->CURR_ID ?? null,
+                'submitted_date' => $item->PDC_DUE_DT ?? null,
+                'pdc_type' => $item->PDC_TYPE ?? null,
                 'status' => (object)[
-                    'id' => $item['STATUS_ID'] ?? null,
-                    'name' => $item['STATUS'] ?? null,
+                    'id' => $item->STATUS_ID ?? null,
+                    'name' => $item->STATUS ?? null,
                 ]
             ];
         });
@@ -54,8 +60,8 @@ class GetPostDatedChequeDetailService extends UserService implements Application
         return (object)[
             'data' => $data,
             'paginate' => (object)[
-                'total' => $response['total'] ?? $response['count'],
-                'count' => $response['count'] ?? 0,
+                'total' => $response->total ?? $response->count,
+                'count' => $response->count ?? 0,
                 'skip' => $dto->skip,
                 'limit' => $dto->limit,
                 'sort_by' => $dto->sort_by,

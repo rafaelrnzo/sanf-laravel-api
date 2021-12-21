@@ -23,6 +23,7 @@ class FinancingUnitSubmissionController extends RestApiController
         ListContractOfFinancingUnitSubmissionService $service
     ) {
         $input = $this->validate($request, [
+            'contract_no' => ['nullable', 'string', 'max:255'],
             'skip' => ['nullable', 'integer', 'max:99'],
             'limit' => ['nullable', 'integer', 'max:99'],
             'sort_by' => ['nullable', 'in:earliest,latest'],

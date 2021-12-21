@@ -26,7 +26,7 @@ class GetUserMetadataAccountReceivableService extends UserService implements App
         }
 
         $response = $this->internalApiClient->getMetadataContract($user->personal_xid);
-        $collect = collect($response['data']);
+        $collect = collect($response->data);
         $totalOutstandingAmount = 0;
         $totalPaidAmount = 0;
 

@@ -36,23 +36,29 @@ class ListAccountReceivableContractService extends UserService implements Applic
             throw new UserNotFoundException();
         }
 
-        $response = $this->internalApiClient->getAccountReceivable($dto);
-        $data = collect($response['data'])->map(function ($item) {
+        $response = $this->internalApiClient->getAccountReceivable(
+            $user->personal_xid,
+            $dto->currency_type,
+            $dto->limit,
+            $dto->skip,
+            $dto->sort_by
+        );
+        $data = collect($response->data)->map(function ($item) {
             return (object)[
-                'outstanding_amount' => $item['AR_OUT'] ?? 0,
-                'paid_amount' => $item['AR_PAID'] ?? 0,
-                'due_date' => $item['JATUH_TEMPO'] ?? null,
-                'installment' => $item['INSTALLMENT'] ?? 0,
-                'registration_no' => $item['REG_NO'] ?? null,
-                'contract_no' => $item['NO_KONTRAK'] ?? null,
+                'outstanding_amount' => $item->AR_OUT ?? 0,
+                'paid_amount' => $item->AR_PAID ?? 0,
+                'due_date' => $item->JATUH_TEMPO ?? null,
+                'installment' => $item->INSTALLMENT ?? 0,
+                'registration_no' => $item->REG_NO ?? null,
+                'contract_no' => $item->NO_KONTRAK ?? null,
             ];
         });
 
         return (object)[
             'data' => $data,
             'paginate' => (object)[
-                'total' => $response['total'] ?? $response['count'],
-                'count' => (int)$response['count'],
+                'total' => $response->total ?? $response->count,
+                'count' => (int)$response->count,
                 'skip' => $dto->skip,
                 'limit' => $dto->limit,
                 'sort_by' => $dto->sort_by,

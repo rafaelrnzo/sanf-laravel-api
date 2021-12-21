@@ -35,7 +35,7 @@ class GetUserMetadataContractService extends UserService implements ApplicationS
         }
 
         $response = $this->internalApiClient->getMetadataContract($user->personal_xid);
-        $collect = collect($response['data']);
+        $collect = collect($response->data);
         $totalActive = 0;
         $totalFinish = 0;
 
