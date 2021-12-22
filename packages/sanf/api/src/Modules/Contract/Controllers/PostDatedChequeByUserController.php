@@ -15,9 +15,9 @@ use Sanf\Core\Modules\Contract\Dto\PostDatedChequeDto;
 use Sanf\Core\Modules\Contract\Services\GetPostDatedChequeDetailService;
 use Sanf\Core\Modules\Contract\Services\ListContractPostDatedChequeService;
 
-class PostDatedChequeController extends RestApiController
+class PostDatedChequeByUserController extends RestApiController
 {
-    public function getContractList(
+    public function getContract(
         Guard $auth,
         Request $request,
         ListContractPostDatedChequeService $service
@@ -39,7 +39,7 @@ class PostDatedChequeController extends RestApiController
             ->paginateWith(new LazyPaginatorAdapter($result->paginate));
     }
 
-    public function getPDCList(
+    public function getPDC(
         Guard $auth,
         $contract_no,
         Request $request,

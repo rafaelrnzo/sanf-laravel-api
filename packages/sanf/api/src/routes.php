@@ -128,16 +128,16 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     # CONTRACT
     Route::get('users/profiles/{xid}/metadata-contract', ['as' => 'users.metadata-contract', 'uses' => 'User\Controllers\ProfileController@getMetadataContract']);
     Route::get('users/profiles/{xid}/metadata-account-receivable', ['as' => 'users.metadata-account-receivable', 'uses' => 'User\Controllers\ProfileController@getMetadataAccountReceivable']);
-    Route::get('users/profiles/{xid}/account-receivables/info', ['as' => 'users.account-receivables.info', 'uses' => 'Contract\Controllers\AccountReceivableController@getList']);
-    Route::get('users/profiles/{xid}/contract-post-dated-cheques', ['as' => 'users.contract-pdc', 'uses' => 'Contract\Controllers\PostDatedChequeController@getContractList']);
-    Route::get('users/profiles/{xid}/contracts/{contract_no}/post-dated-cheques', ['as' => 'users.contract.pdc.detail', 'uses' => 'Contract\Controllers\PostDatedChequeController@getPDCList']);
-    Route::get('users/profiles/{xid}/contracts-financing-unit', ['as' => 'users.contract-financing-object', 'uses' => 'Contract\Controllers\FinancingUnitLocationSubmissionByUserController@getContract']);
-    Route::get('users/profiles/{xid}/contracts/{contract_no}/financing-unit-location-submissions', ['as' => 'users.contract-financing-unit-location-submissions.browse', 'uses' => 'Contract\Controllers\FinancingUnitLocationSubmissionByUserController@getBrowse']);
-    Route::post('users/profiles/{xid}/contracts/{contract_no}/financing-units/{serial_no}/location-submissions', ['as' => 'users.contract-financing-unit-location-submissions.add', 'uses' => 'Contract\Controllers\FinancingUnitLocationSubmissionByUserController@postAdd']);
-    Route::get('users/profiles/{xid}/contracts', ['as' => 'users.contract', 'uses' => 'Contract\Controllers\ContractController@getList']);
-    Route::get('users/profiles/{xid}/contracts/{contract_no}', ['as' => 'users.contract.detail', 'uses' => 'Contract\Controllers\ContractController@getDetail']);
-    Route::get('users/profiles/{xid}/contracts/{contract_no}/financing-units', ['as' => 'users.contract.financing-object', 'uses' => 'Contract\Controllers\ContractController@getFinancingUnit']);
-    Route::get('users/profiles/{xid}/contracts/{contract_no}/penalties', ['as' => 'users.contract.penalties', 'uses' => 'Contract\Controllers\ContractController@getPenalties']);
+    Route::get('users/profiles/{xid}/account-receivables/info', ['as' => 'users.account-receivables.info', 'uses' => 'Contract\Controllers\AccountReceivableByUserController@getInfo']);
+    Route::get('users/profiles/{xid}/contract-post-dated-cheques', ['as' => 'users.contract-pdc.browse', 'uses' => 'Contract\Controllers\PostDatedChequeByUserController@getContract']);
+    Route::get('users/profiles/{xid}/contracts/{contract_no}/post-dated-cheques', ['as' => 'users.contracts-pdc.read', 'uses' => 'Contract\Controllers\PostDatedChequeByUserController@getPDC']);
+    Route::get('users/profiles/{xid}/contracts-financing-unit', ['as' => 'users.contracts-financing-object.browse', 'uses' => 'Contract\Controllers\FinancingUnitLocationSubmissionByUserController@getContract']);
+    Route::get('users/profiles/{xid}/contracts/{contract_no}/financing-unit-location-submissions', ['as' => 'users.contracts-financing-unit-location-submissions.read', 'uses' => 'Contract\Controllers\FinancingUnitLocationSubmissionByUserController@getFinancingUnitLocation']);
+    Route::post('users/profiles/{xid}/contracts/{contract_no}/financing-units/{serial_no}/location-submissions', ['as' => 'users.contracts-financing-unit-location-submissions.add', 'uses' => 'Contract\Controllers\FinancingUnitLocationSubmissionByUserController@postAdd']);
+    Route::get('users/profiles/{xid}/contracts', ['as' => 'users.contracts.browse', 'uses' => 'Contract\Controllers\ContractFinancingUnitByUserController@getList']);
+    Route::get('users/profiles/{xid}/contracts/{contract_no}', ['as' => 'users.contracts.read', 'uses' => 'Contract\Controllers\ContractFinancingUnitByUserController@getDetail']);
+    Route::get('users/profiles/{xid}/contracts/{contract_no}/financing-units', ['as' => 'users.contracts-financing-object.browse', 'uses' => 'Contract\Controllers\ContractFinancingUnitByUserController@getFinancingUnit']);
+    Route::get('users/profiles/{xid}/contracts/{contract_no}/penalties', ['as' => 'users.contracts.penalties', 'uses' => 'Contract\Controllers\ContractFinancingUnitByUserController@getPenalties']);
 
     Route::get('cities', ['as' => 'all-cities.list', 'uses' => 'Location\CoreLocationController@getCities']);
 

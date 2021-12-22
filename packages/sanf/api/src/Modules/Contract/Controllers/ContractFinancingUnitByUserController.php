@@ -20,7 +20,7 @@ use Sanf\Core\Modules\Contract\Services\GetFinancingUnitContractService;
 use Sanf\Core\Modules\Contract\Services\ListContractService;
 use Sanf\Core\Modules\Contract\Services\SummaryBillContractService;
 
-class ContractController extends RestApiController
+class ContractFinancingUnitByUserController extends RestApiController
 {
     public function getList(
         Guard $auth,

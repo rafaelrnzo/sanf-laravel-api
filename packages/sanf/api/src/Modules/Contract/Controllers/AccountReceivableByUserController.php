@@ -12,9 +12,9 @@ use Sanf\Api\Modules\Contract\Transformers\AccountReceivableContractTransformer;
 use Sanf\Core\Modules\Contract\Services\ListAccountReceivableContractService;
 use Sanf\Core\Modules\Contract\Dto\AccountReceivableContractDto;
 
-class AccountReceivableController extends RestApiController
+class AccountReceivableByUserController extends RestApiController
 {
-    public function getList(
+    public function getInfo(
         Guard $auth,
         Request $request,
         ListAccountReceivableContractService $service
