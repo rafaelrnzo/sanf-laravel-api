@@ -7,11 +7,22 @@ use NbsPhp\Core\Dto\CamelCaseDataTransferObject;
 class AddFinancingUnitLocationSubmissionByUserRequestDto extends CamelCaseDataTransferObject
 {
     public int $userId;
-    //TODO HERE
-    //public \DateTimeImmutable $dateTime;
-    //public int $amount;
-    //public float $total;
-    //public string $title;
-    //public ?string $description;
-    //public bool $isEnabled;
+
+    public string $xid;
+
+    public string $serialNo;
+
+    public int $skip = 0;
+
+    public int $limit = 10;
+
+    public string $sortBy = 'earliest';
+
+    public string  $brandTypeModel;
+
+    public string  $year;
+
+    public array $locationMetadata;
+
+    public array $submittedLocationMetadata;
 }

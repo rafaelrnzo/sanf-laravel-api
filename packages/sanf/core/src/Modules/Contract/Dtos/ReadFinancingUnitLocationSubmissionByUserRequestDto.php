@@ -7,5 +7,12 @@ use NbsPhp\Core\Dto\CamelCaseDataTransferObject;
 class ReadFinancingUnitLocationSubmissionByUserRequestDto extends CamelCaseDataTransferObject
 {
     public int $userId;
+
     public string $xid;
+
+    public int $skip = 0;
+
+    public int $limit = 10;
+
+    public string $sortBy = 'earliest';
 }

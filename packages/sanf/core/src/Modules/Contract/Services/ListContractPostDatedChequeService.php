@@ -45,7 +45,7 @@ class ListContractPostDatedChequeService extends UserService implements Applicat
         );
         $data = collect($response->data)->map(function ($item) {
             return (object)[
-                'contract_no' => $item->NO_KONTRAK ?? null,
+                'contract_no' => $item->AGREE_NO ?? null,
                 'currency_type' => $item->CURR_ID ?? null,
                 'created_at' => $item->TGL_PDC ?? null
             ];

@@ -2,34 +2,74 @@
 
 namespace Sanf\Core\Modules\Contract\Services;
 
-use Carbon\CarbonImmutable;
+use GuzzleHttp\Exception\GuzzleException;
+use NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException;
+use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Dtos\ReadFinancingUnitLocationSubmissionByUserRequestDto;
-use Sanf\Core\Modules\Contract\Dtos\ReadFinancingUnitLocationSubmissionByUserResponseDto;
-use Sanf\Core\Modules\Contract\Exceptions\FinancingUnitLocationSubmissionNotFoundException;
 
-final class ReadFinancingUnitLocationSubmissionByUserService extends FinancingUnitLocationSubmissionByUserService implements ApplicationServiceInterface
+final class ReadFinancingUnitLocationSubmissionByUserService extends
+    FinancingUnitLocationSubmissionByUserService implements ApplicationServiceInterface
 {
     /**
      * @param ReadFinancingUnitLocationSubmissionByUserRequestDto $dto
-     * @return ReadFinancingUnitLocationSubmissionByUserResponseDto
+     * @return object
+     * @throws UserNotFoundException
+     * @throws GuzzleException
+     * @throws EndpointNotDefinedException
      */
     public function execute($dto = null)
     {
-        $entity = $this->repository->findByXid($dto->xid);
-        if (is_null($entity)) {
-            throw new FinancingUnitLocationSubmissionNotFoundException();
+        $user = $this->userRepository->newQuery()->find($dto->userId);
+        if (!$user) {
+            throw new UserNotFoundException();
         }
-        //TODO VALIDATE USER & OWNERSHIP
 
-        return new ReadFinancingUnitLocationSubmissionByUserResponseDto([
-            'id' => $entity->id,
-            'xid' => $entity->xid,
-            //TODO HERE
-            'userId' => $entity->user_id,
-            'status' => $entity->status,
-            'createdAt' => CarbonImmutable::make($entity->created_at),
-            'updatedAt' => CarbonImmutable::make($entity->updated_at),
-        ]);
+        $submissions = $this->repository->query(
+            $this->specificationFactory->getByContractNo($dto->userId, $dto->xid)
+        );
+
+        $response = $this->internalApiClient->getFinancingUnitSubmissionItem(
+            $user->personal_xid,
+            $dto->xid,
+            $dto->limit,
+            $dto->skip,
+            $dto->sortBy,
+        );
+
+        $collection = collect($submissions);
+        $data = collect($response->data)->map(function ($item) use ($collection) {
+            $submission = $collection->where('serial_no', $item->SERIAL_NO)->first();
+            $metadata = json_decode($submission->submitted_location_metadata ?? "");
+            return (object)[
+                'serial_no' => $item->SERIAL_NO ?: null,
+                'brand_type_model' => $item->BTM ?: null,
+                'provider_name' => null,
+                'year' => $item->YEAR,
+                'location_metadata' => (object)[
+                    'city_id' => $item->CITY_ID,
+                    'city_name' => $item->CITY
+                ],
+                'status' => ($submission) ? (object)[
+                    'id' => $submission->status->id,
+                    'name' => $submission->status->name
+                ] : null,
+                'submitted_location_metadata' => ($submission) ? (object)[
+                    'city_id' => $metadata->city_id,
+                    'city_name' => $metadata->city_name,
+                ] : null,
+            ];
+        });
+
+        return (object)[
+            'data' => $data,
+            'paginate' => (object)[
+                'total' => $response->total ?? $response->count,
+                'count' => $response->count ?? 0,
+                'skip' => $dto->skip,
+                'limit' => $dto->limit,
+                'sort_by' => $dto->sortBy,
+            ],
+        ];
     }
 }

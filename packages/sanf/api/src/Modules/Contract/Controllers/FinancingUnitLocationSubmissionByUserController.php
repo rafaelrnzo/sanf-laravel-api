@@ -4,60 +4,91 @@ namespace Sanf\Api\Modules\Contract\Controllers;
 
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
-use Sanf\Api\Modules\Contract\Transformers\MyFinancingUnitLocationSubmissionSimpleTransformer;
-use Sanf\Api\Modules\Contract\Transformers\MyFinancingUnitLocationSubmissionTransformer;
+use Sanf\Api\Modules\Contract\Transformers\ContractOfFinancingUnitSubmissionTransformer;
+use Sanf\Api\Modules\Contract\Transformers\FinancingUnitSubmissionContractTransformer;
+use Sanf\Core\Modules\Contract\Dto\ContractOfFinancingUnitSubmissionDto;
 use Sanf\Core\Modules\Contract\Dtos\AddFinancingUnitLocationSubmissionByUserRequestDto;
-use Sanf\Core\Modules\Contract\Dtos\BrowseFinancingUnitLocationSubmissionByUserRequestDto;
 use Sanf\Core\Modules\Contract\Dtos\ReadFinancingUnitLocationSubmissionByUserRequestDto;
 use Sanf\Core\Modules\Contract\Services\AddFinancingUnitLocationSubmissionByUserService;
-use Sanf\Core\Modules\Contract\Services\BrowseFinancingUnitLocationSubmissionByUserService;
+use Sanf\Core\Modules\Contract\Services\ListContractOfFinancingUnitSubmissionService;
 use Sanf\Core\Modules\Contract\Services\ReadFinancingUnitLocationSubmissionByUserService;
 
 final class FinancingUnitLocationSubmissionByUserController extends RestApiController
 {
-    public function getBrowse(Guard $auth, Request $request, BrowseFinancingUnitLocationSubmissionByUserService $service)
+    public function getContract(Guard $auth, Request $request, ListContractOfFinancingUnitSubmissionService $service)
     {
         $input = $this->validate($request, [
-            'skip' => ['nullable', 'integer'],
-            'limit' => ['nullable', 'integer'],
-            'sort_by' => ['nullable', 'string'],
-            'keyword' => ['nullable', 'string'],
-            'timestamp' => ['nullable', 'integer'],
+            'contract_no' => ['nullable', 'string', 'max:255'],
+            'skip' => ['nullable', 'integer', 'max:99'],
+            'limit' => ['nullable', 'integer', 'max:99'],
+            'sort_by' => ['nullable', 'in:earliest,latest'],
         ]);
-        $dto = new BrowseFinancingUnitLocationSubmissionByUserRequestDto($input + ['userId' => $auth->id()]);
+
+        $dto = new ContractOfFinancingUnitSubmissionDto($input);
+        $dto->sort_by = Str::title($dto->sort_by);
+        $dto->user_id = $auth->id();
+
         $result = $service->execute($dto);
 
-        return fractal($result->data, new MyFinancingUnitLocationSubmissionSimpleTransformer())
+        return fractal($result->data, new ContractOfFinancingUnitSubmissionTransformer())
             ->paginateWith(new LazyPaginatorAdapter($result->paginate));
     }
 
-    public function getRead(Guard $auth, $xid, ReadFinancingUnitLocationSubmissionByUserService $service)
-    {
-        $dto = new ReadFinancingUnitLocationSubmissionByUserRequestDto([
-            'xid' => $xid,
-            'userId' => $auth->id()
+    public function getFinancingUnitLocation(
+        Guard $auth,
+        $contract_no,
+        Request $request,
+        ReadFinancingUnitLocationSubmissionByUserService $service
+    ) {
+        $input = $this->validate($request, [
+            'skip' => ['nullable', 'integer', 'max:99'],
+            'limit' => ['nullable', 'integer', 'max:99'],
+            'sort_by' => ['nullable', 'in:earliest,latest'],
         ]);
+
+        $dto = new ReadFinancingUnitLocationSubmissionByUserRequestDto(
+            $input + [
+                'xid' => $contract_no,
+                'userId' => $auth->id(),
+            ]
+        );
+        $dto->sortBy = Str::title($dto->sortBy);
+
         $result = $service->execute($dto);
-        return fractal($result, new MyFinancingUnitLocationSubmissionTransformer());
+
+        return fractal($result->data, FinancingUnitSubmissionContractTransformer::class)
+            ->paginateWith(new LazyPaginatorAdapter($result->paginate));
     }
 
-    public function postAdd(Guard $auth, Request $request, AddFinancingUnitLocationSubmissionByUserService $service)
-    {
+    public function postAdd(
+        Guard $auth,
+        $contract_no,
+        $serial_no,
+        Request $request,
+        AddFinancingUnitLocationSubmissionByUserService $service
+    ) {
         $input = $this->validate($request, [
-//            'email' => ['required', 'email', 'max:255'],
-//            'title' => ['required', 'string', 'max:255'],
-//            'description' => ['nullable', 'string', 'max:65535'],
-//            'total' => ['nullable', 'integer', 'max:2147483647'],
-//            'price' => ['nullable', 'numeric', 'max:999999999999999.9999'],
-//            'is_enabled' => ['nullable', 'boolean'],
-//            'images' => ['nullable', 'array'],
-//            'timestamp' => ['nullable', 'integer', 'max:99999999999'],
-//            'date' => ['required', 'string', 'date_format:Y-m-d'],
+            'brand_type_model' => ['required', 'string', 'max:255'],
+            'year' => ['required', 'string', 'max:255'],
+            'location_metadata.city_id' => ['required', 'string', 'max:255'],
+            'location_metadata.city_name' => ['required', 'string', 'max:255'],
+            'submitted_location_metadata.city_id' => ['required', 'string', 'max:255'],
+            'submitted_location_metadata.city_name' => ['required', 'string', 'max:255'],
         ]);
-        $dto = new AddFinancingUnitLocationSubmissionByUserRequestDto($input + ['userId' => $auth->id()]);
+        $dto = new AddFinancingUnitLocationSubmissionByUserRequestDto(
+            $input + [
+                'userId' => $auth->id(),
+                'xid' => $contract_no,
+                'serialNo' => $serial_no
+            ]
+        );
+        $dto->sortBy = Str::title($dto->sortBy);
+
         $service->execute($dto);
+
         return $this->responseOk();
     }
 }

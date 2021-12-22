@@ -46,7 +46,7 @@ class ListContractOfFinancingUnitSubmissionService extends UserService implement
         );
         $data = collect($response->data)->map(function ($item) {
             return (object)[
-                'contract_no' => $item->NO_KONTRAK ?? null,
+                'contract_no' => $item->AGREE_NO ?? null,
                 'created_at' => $item->TGL_PDC ?? null
             ];
         });

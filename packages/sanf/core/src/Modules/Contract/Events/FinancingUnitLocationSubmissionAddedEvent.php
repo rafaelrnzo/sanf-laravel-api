@@ -6,11 +6,10 @@ use NbsPhp\Core\Event;
 
 class FinancingUnitLocationSubmissionAddedEvent extends Event
 {
-    //TODO HERE
-    public $entity;
+    public $submission;
 
-    public function __construct($entity)
+    public function __construct($submission)
     {
-        $this->entity = $entity;
+        $this->submission = $submission;
     }
 }

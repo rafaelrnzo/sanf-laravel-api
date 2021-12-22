@@ -19,7 +19,10 @@ class CreateFinancingUnitLocationSubmissionTable extends Migration
             $table->string('xid', 32)->index()->unique();
             $table->unsignedBigInteger('user_id')->index();
             $table->unsignedBigInteger('status_id')->index();
-            //TODO HERE
+            $table->string('profile_xid')->index()->nullable();
+            $table->string('contract_no')->index()->nullable();
+            $table->string('serial_no')->index()->nullable();
+            $table->json('submitted_location_metadata')->nullable();
             $table->timestamps();
         });
     }

@@ -6,6 +6,8 @@ use Laravel\Lumen\Providers\EventServiceProvider as ServiceProvider;
 use Sanf\Core\Modules\Commodity\Events\CommodityCreatedEvent;
 use Sanf\Core\Modules\Commodity\Events\CommodityUpdatedEvent;
 use Sanf\Core\Modules\Commodity\Listeners\SendEmailRequestApprovalCommodityListener;
+use Sanf\Core\Modules\Contract\Events\FinancingUnitLocationSubmissionAddedEvent;
+use Sanf\Core\Modules\Contract\Listeners\SendEmailRequestChangeFinancingUnitLocationListener;
 use Sanf\Core\Modules\Financing\Events\FinancingApplicationCreatedEvent;
 use Sanf\Core\Modules\Financing\Listeners\SendEmailNewFinancingApplicationListener;
 use Sanf\Core\Modules\Plafond\Events\PlafondIncreaseRequestedEvent;
@@ -44,6 +46,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         PrepaymentSubmissionAddedEvent::class => [
             SendEmailNewPrepaymentSubmissionListener::class
+        ],
+        FinancingUnitLocationSubmissionAddedEvent::class => [
+            SendEmailRequestChangeFinancingUnitLocationListener::class
         ],
     ];
 }

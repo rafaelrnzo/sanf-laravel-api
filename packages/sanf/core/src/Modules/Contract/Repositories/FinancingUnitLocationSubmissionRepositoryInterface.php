@@ -9,6 +9,10 @@ interface FinancingUnitLocationSubmissionRepositoryInterface
 
     public function findByXid($xid);
 
+    public function findByContractNo($userId, $contractNo);
+
+    public function findByContractNoAndSerialNo($userId, $contractNo, $serialNo);
+
     public function query($specification);
 
     public function add($fields);

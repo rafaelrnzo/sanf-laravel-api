@@ -2,6 +2,7 @@
 
 namespace Sanf\Api\Modules\Contract\Transformers;
 
+use Illuminate\Support\Str;
 use League\Fractal\TransformerAbstract;
 
 class ContractFinancingUnitLocationTransformer extends TransformerAbstract
@@ -10,7 +11,7 @@ class ContractFinancingUnitLocationTransformer extends TransformerAbstract
     {
         return [
             'city_id' => (string)$item->city_id,
-            'city_name' => (string)$item->city_name,
+            'city_name' => Str::title($item->city_name),
         ];
     }
 }

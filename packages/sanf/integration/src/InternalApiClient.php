@@ -820,12 +820,12 @@ class InternalApiClient
      * @throws EndpointNotDefinedException
      * @throws GuzzleException
      */
-    public function getPdc($user_id, $limit, $skip, $sort_by, $contract_no)
+    public function getPdc($user_id, $limit, $skip, $sort_by, $contract_no = null)
     {
         $response = Request::route('contracts.pdc')
             ->queryParams([
                 'cust_id' => $user_id,
-                'contract_no' => $contract_no,
+                'contrak_no' => $contract_no,
                 'skip' => $skip,
                 'limit' => $limit,
                 'order' => $sort_by,
@@ -870,9 +870,9 @@ class InternalApiClient
         $limit,
         $skip,
         $sort_by,
-        $contract_no
+        $contract_no = null
     ) {
-        $response = Request::route('contracts.financing-unit-submission.item')
+        $response = Request::route('contracts.financing-unit-submission')
             ->queryParams([
                 'cust_id' => $user_id,
                 'skip' => $skip,
@@ -886,24 +886,28 @@ class InternalApiClient
     }
 
     /**
-     * @param FinancingUnitSubmissionDto $dto
      * @return array|stdClass|null
      * @throws EndpointNotDefinedException
      * @throws GuzzleException
      */
-    public function getFinancingUnitSubmissionItem(FinancingUnitSubmissionDto $dto)
-    {
+    public function getFinancingUnitSubmissionItem(
+        $user_id,
+        $contract_no,
+        $limit,
+        $skip,
+        $sort_by
+    ) {
         $response = Request::route('contracts.financing-unit-submission.item')
             ->queryParams([
-                'cust_id' => $dto->user_id,
-                'no_kontrak' => $dto->contract_no,
-                'skip' => $dto->skip,
-                'limit' => $dto->limit,
-                'order' => $dto->sort_by,
+                'cust_id' => $user_id,
+                'no_kontrak' => $contract_no,
+                'skip' => $skip,
+                'limit' => $limit,
+                'order' => $sort_by,
             ])
             ->send();
 
-        return $response->json();
+        return $response->json(false);
     }
 
     /**
