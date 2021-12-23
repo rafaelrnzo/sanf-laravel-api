@@ -22,13 +22,20 @@ class EloquentPrepaymentSubmissionRepository extends AbstractEloquentRepository 
     {
         $model = DB::transaction(function () use ($fields) {
             $model = $this->model->newQuery()->forceCreate($fields);
-            $historyModel = $this->historyModel->newQuery()->forceCreate([
-                'submission_id' => $model->id,
-                'status_id' => $model->status_id,
-                'created_by' => new \stdClass() //TODO SNAPSHOT
-            ]);
+            $this->historyModel
+                ->newQuery()->forceCreate([
+                    'submission_id' => $model->id,
+                    'status_id' => $model->status_id,
+                    'created_by' => new \stdClass() //TODO SNAPSHOT
+                ]);
             return $model;
         });
         return $this->stripEloquentModel($model);
+    }
+
+    public function whereContractNo($contractNo): array
+    {
+        $models = $this->model->newQuery()->where('contract_no', $contractNo)->get();
+        return $this->stripEloquentModel($models);
     }
 }

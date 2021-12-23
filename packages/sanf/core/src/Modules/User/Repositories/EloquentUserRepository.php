@@ -14,4 +14,9 @@ class EloquentUserRepository extends AbstractEloquentRepository implements UserR
     {
         $this->model = $model;
     }
+
+    public function findById($id)
+    {
+        return $this->model->newQuery()->find($id);
+    }
 }

@@ -123,6 +123,10 @@
         .another-email-content td {
             padding: 8px 0;
         }
+
+        .tb-50 {
+            width: 50% !important;
+        }
     </style>
 
 </head>
@@ -135,10 +139,10 @@
                     <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
                         <tr>
                             <td align="left" width="50%">
-                                <img src="{{ $contents['images'][0] }}" alt="" />
+                                <img src="{{ $contents['images'][0] }}" alt="" class="tb-50" />
                             </td>
                             <td align="right" width="50%">
-                                <img src="{{ $contents['images'][1] }}" alt="" />
+                                <img src="{{ $contents['images'][1] }}" alt="" class="tb-50" />
                             </td>
                         </tr>
                     </table>
@@ -151,7 +155,7 @@
                         </tr>
                         <tr>
                             <td align="left">
-                                @php 
+                                @php
                                     setlocale(LC_ALL, "id_ID.UTF-8", "id_ID.UTF-8");
                                 @endphp
                                 {{ strftime("%A, %d %B %Y") }}
@@ -159,9 +163,7 @@
                         </tr>
                         <tr>
                             <td align="left">
-                                <p>Selamat siang {{ $contents['name']}}, berikut kami lampirkan hasil perhitungan
-                                    simulasi pengajuan pembiayaan anda
-                                </p>
+                                <p>{{$contents['openingSentence']}}</p>
                             </td>
                         </tr>
                     </table>
@@ -173,10 +175,17 @@
                                 $key === 'Persen Dp' ? $key = 'Persen DP' : $key;
                             @endphp
 
-                            <tr>
-                                <td align="left" width="50%" class="font-weight-normal">{{ $key }}</td>
-                                <td align="right" width="50%" class="font-weight-bold">{{ $value }}</td>
-                            </tr>
+                            @if (is_int($key) || is_numeric($key))
+                                <tr>
+                                    <td colspan="2">{!! htmlspecialchars_decode($value) !!}</td>
+                                </tr>
+                            @else
+                                <tr>
+                                    <td align="left" width="50%" class="font-weight-normal">{{ $key }}</td>
+                                    <td align="right" width="50%" class="font-weight-bold">{{ $value }}</td>
+                                </tr>
+                            @endif
+
                         @endforeach
                     </table>
                 </div>
@@ -184,7 +193,7 @@
                 <div class="footer">
                     <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                         <tr>
-                            <td align="center">Hasil perhitungan ini bersifat tidak mengikat</td>
+                            <td align="center">{{ $contents['closingSentence']}}</td>
                         </tr>
                         <tr>
                             <td align="center">&copy; {{ date('Y') }} Surya Artha Nusantara Finance</td>

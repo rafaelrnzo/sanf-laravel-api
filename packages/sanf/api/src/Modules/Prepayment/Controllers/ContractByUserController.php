@@ -8,11 +8,11 @@ use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
 use Sanf\Api\Modules\Prepayment\Transformers\ContractSimpleTransformer;
 use Sanf\Core\Modules\Prepayment\Dtos\BrowseContractByUserRequestDto;
-use Sanf\Core\Modules\Prepayment\Services\BrowseContractByUserService;
+use Sanf\Core\Modules\Prepayment\Services\BrowseContractForPrepaymentSubmissionByUserService;
 
 final class ContractByUserController extends RestApiController
 {
-    public function getBrowse(Guard $auth, Request $request, $xid, BrowseContractByUserService $service)
+    public function getBrowse(Guard $auth, Request $request, $xid, BrowseContractForPrepaymentSubmissionByUserService $service)
     {
         $input = $this->validate($request, [
             'skip' => ['nullable', 'integer'],

@@ -732,11 +732,10 @@ class InternalApiClient
      */
     public function getPrepaymentDetail(string $contractNo, \DateTimeImmutable $prepaymentDate)
     {
-//        dd(Carbon::createFromImmutable($prepaymentDate)->format('dmY'));
         $response = Request::route('prepayment.detail')
             ->queryParams([
-                'AgreeNo' => '30712000741',
-                'TglPrepay' => '31102008'
+                'AgreeNo' => $contractNo,
+                'TglPrepay' => $prepaymentDate->format('dmY')
             ])
             ->send();
         return $response->json(false);

@@ -12,6 +12,8 @@ use Sanf\Core\Modules\Plafond\Events\PlafondIncreaseRequestedEvent;
 use Sanf\Core\Modules\Plafond\Events\PlafondRequestedEvent;
 use Sanf\Core\Modules\Plafond\Listeners\SendEmailRequestIncreasePlafondListener;
 use Sanf\Core\Modules\Plafond\Listeners\SendEmailRequestNewPlafondListener;
+use Sanf\Core\Modules\Prepayment\Events\PrepaymentSubmissionAddedEvent;
+use Sanf\Core\Modules\Prepayment\Listeners\SendEmailNewPrepaymentSubmissionListener;
 use Sanf\Core\Modules\Project\Events\ProjectCreatedEvent;
 use Sanf\Core\Modules\Project\Events\ProjectUpdatedEvent;
 use Sanf\Core\Modules\Project\Listeners\SendEmailRequestApprovalProjectListener;
@@ -20,19 +22,15 @@ class EventServiceProvider extends ServiceProvider
 {
     protected $listen = [
         ProjectCreatedEvent::class => [
-            //TODO LOGGING STATUS CHANGES USING EVENT
             SendEmailRequestApprovalProjectListener::class
         ],
         CommodityCreatedEvent::class => [
-            //TODO LOGGING STATUS CHANGES USING EVENT
             SendEmailRequestApprovalCommodityListener::class
         ],
         ProjectUpdatedEvent::class => [
-            //TODO LOGGING STATUS CHANGES USING EVENT
             SendEmailRequestApprovalProjectListener::class
         ],
         CommodityUpdatedEvent::class => [
-            //TODO LOGGING STATUS CHANGES USING EVENT
             SendEmailRequestApprovalCommodityListener::class
         ],
         PlafondRequestedEvent::class => [
@@ -43,6 +41,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         FinancingApplicationCreatedEvent::class => [
             SendEmailNewFinancingApplicationListener::class
+        ],
+        PrepaymentSubmissionAddedEvent::class => [
+            SendEmailNewPrepaymentSubmissionListener::class
         ],
     ];
 }

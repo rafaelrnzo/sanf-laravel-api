@@ -6,18 +6,24 @@ namespace Sanf\Core\Modules\Prepayment\Services;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Prepayment\Dtos\BrowseContractByUserRequestDto;
 use Sanf\Core\Modules\Prepayment\Dtos\BrowseContractByUserResponseDto;
+use Sanf\Core\Modules\Prepayment\Repositories\PrepaymentSubmissionRepositoryInterface;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Integration\InternalApiClient;
 
-final class BrowseContractByUserService implements ApplicationServiceInterface
+final class BrowseContractForPrepaymentSubmissionByUserService extends PrepaymentSubmissionByUserService implements ApplicationServiceInterface
 {
     protected InternalApiClient $apiClient;
 
     /**
-     * BrowseContractByUserService constructor.
+     * BrowseContractForPrepaymentSubmissionByUserService constructor.
      * @param InternalApiClient $apiClient
      */
-    public function __construct(InternalApiClient $apiClient)
-    {
+    public function __construct(
+        PrepaymentSubmissionRepositoryInterface $repository,
+        UserRepositoryInterface $userRepository,
+        InternalApiClient $apiClient
+    ) {
+        parent::__construct($repository, $userRepository);
         $this->apiClient = $apiClient;
     }
 
@@ -39,7 +45,7 @@ final class BrowseContractByUserService implements ApplicationServiceInterface
         $data = array_map(function ($item) {
             return (object)[
                 'contractNo' => $item->AGREE_NO,
-                'isSubmitted' => false, //TODO VALIDATE PERNAH DIAJUKAN
+                'isSubmitted' => !empty($this->repository->whereContractNo($item->AGREE_NO)),
                 'remainingBalance' => $item->PAY_AMT,
                 'currencyType' => $item->CURR_ID,
             ];

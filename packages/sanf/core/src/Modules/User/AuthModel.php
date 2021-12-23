@@ -28,7 +28,6 @@ class AuthModel extends \NbsPhp\Core\Models\AuthModel
      */
 
     protected $fillable = [
-        'name',
         'username',
         'password',
         'full_name',

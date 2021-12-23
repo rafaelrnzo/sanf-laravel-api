@@ -23,7 +23,7 @@ class GetPdfFinancingSimulationService extends FinancingByUserService implements
                 0 => $this->toBase64('assets/png/sanf-logo-blue.png'),
                 1 => $this->toBase64('assets/png/sanf-tagline.png'),
             ],
-            'name' => $user->full_name,
+            'openingSentence' => 'Selamat siang '. $user->full_name. ', berikut kami lampirkan hasil perhitungan simulasi pengajuan pembiayaan anda',
             'email' => $user->username,
             'data' => [
                 'cara_pembiayaan' => $dto->financing_method_name,
@@ -33,7 +33,8 @@ class GetPdfFinancingSimulationService extends FinancingByUserService implements
                 'tenor' => $dto->tenor_in_month . ' Bulan',
                 'angsuran_perbulan' => 'Rp. ' . number_format($dto->installment_per_month, 3, ',', '.'),
                 'suku_bunga' => $dto->interest_rate_percentage . '%'
-            ]
+            ],
+            'closingSentence' => 'Hasil perhitungan ini bersifat tidak mengikat',
         ]])->render();
 
         $pdf = new Dompdf();
