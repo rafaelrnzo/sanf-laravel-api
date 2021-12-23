@@ -8,6 +8,7 @@ class BrowseFinancingUnitByUserRequestDto extends CamelCaseDataTransferObject
 {
     public int $userId;
     public string $profileXid;
+    public ?int $statusId;
     public ?int $skip;
     public ?int $limit;
     public ?string $sortBy;

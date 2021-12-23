@@ -31,7 +31,7 @@ final class BrowseInvoiceCollectionSubmissionByUserService extends InvoiceCollec
     public function execute($dto = null)
     {
         $result = $this->repository->query(
-            $this->specificationFactory->paginateByUser($dto->userId, $dto->keyword, $dto->sortBy, $dto->skip, $dto->limit)
+            $this->specificationFactory->paginateByUser($dto->userId, $dto->keyword, $dto->statusId, $dto->sortBy, $dto->skip, $dto->limit)
         );
         $total = $this->repository->size(
             $this->specificationFactory->paginateByUser($dto->userId, $dto->keyword, $dto->statusId)

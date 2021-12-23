@@ -8,11 +8,11 @@ use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
 use Sanf\Api\Modules\Invoice\Transformers\FinancingUnitTransformer;
 use Sanf\Core\Modules\Invoice\Dtos\BrowseFinancingUnitByUserRequestDto;
-use Sanf\Core\Modules\Invoice\Services\BrowseFinancingUnitByUserService;
+use Sanf\Core\Modules\Invoice\Services\BrowseAvailableFinancingUnitByUserService;
 
 final class FinancingUnitByUserController extends RestApiController
 {
-    public function getBrowse(Guard $auth, Request $request, $xid, BrowseFinancingUnitByUserService $service)
+    public function getBrowse(Guard $auth, Request $request, $xid, BrowseAvailableFinancingUnitByUserService $service)
     {
         $input = $this->validate($request, [
             'skip' => ['nullable', 'integer'],

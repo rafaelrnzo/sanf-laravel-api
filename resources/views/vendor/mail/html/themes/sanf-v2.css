@@ -561,3 +561,14 @@ hr {
     color: #232227;
     line-height: 150%;
 }
+
+table.table-content-view {
+    width: 100%;
+    font-size: 13px;
+    border: 1px solid rgba(3, 37, 126, 0.08);
+    color: #0a1629;
+}
+
+.table-content-view > thead {
+    background-color: #f4f6fa;
+}

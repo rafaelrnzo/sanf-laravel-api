@@ -18,10 +18,6 @@ Route::group(['prefix' => 'v1/external',], function () {
     Route::get('projects/{xid}/reject', ['as' => 'projects.reject', 'uses' => 'Project\ProjectByExternalController@postRejectByExternal']);
     Route::get('commodities/{xid}/approve', ['as' => 'commodities.approve', 'uses' => 'Commodity\CommodityByExternalController@postApproveByExternal']);
     Route::get('commodities/{xid}/reject', ['as' => 'commodities.reject', 'uses' => 'Commodity\CommodityByExternalController@postRejectByExternal']);
-
-    Route::get('email-insurance-user', ['uses' => 'Insurance\InsuranceController@sendEmailUser']);
-    Route::get('email-insurance-admin', ['uses' => 'Insurance\InsuranceController@sendEmailAdmin']);
-    // END TODO
 });
 
 Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {

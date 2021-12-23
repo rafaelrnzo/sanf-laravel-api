@@ -8,4 +8,9 @@ class EloquentInvoiceCollectionSubmissionSpecificationFactory implements Invoice
     {
         return new EloquentPaginateInvoiceCollectionSubmissionByUserSpecification($userId, $keyword, $statusId, $sortBy, $skip, $limit, $timestamp);
     }
+
+    public function whereStillProcessedBySerialNoAndUser(string $serialNo, int $userId)
+    {
+        return new EloquentWhereInvoiceCollectionSubmissionStillProcessedByContractAndUserSpecification($serialNo, $userId);
+    }
 }

@@ -52,6 +52,13 @@
                 @endisset
                 {{--END EMAIL CONTENT--}}
 
+                {{--START EMAIL TABLE CONTENT--}}
+                @if((count($emailTableHeader) || count($emailTableBody)) > 0)
+                    @component('mail::table', ['tableHead' => $emailTableHeader, 'tableBody' => $emailTableBody ])
+                    @endcomponent
+                @endif
+                {{--END EMAIL TABLE CONTENT--}}
+
                 {{--START OUTRO MESSAGE--}}
                 @isset($outroLines)
                     @component('mail::words')

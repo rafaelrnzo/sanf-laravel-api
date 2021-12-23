@@ -6,10 +6,10 @@ use NbsPhp\Core\Event;
 
 class InvoiceCollectionSubmissionAddedEvent extends Event
 {
-    public $entity;
+    public array $invoiceCollectionSubmissions;
 
-    public function __construct($entity)
+    public function __construct($invoiceCollectionSubmissions)
     {
-        $this->entity = $entity;
+        $this->invoiceCollectionSubmissions = $invoiceCollectionSubmissions;
     }
 }

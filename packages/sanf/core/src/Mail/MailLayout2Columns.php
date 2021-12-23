@@ -22,12 +22,28 @@ class MailLayout2Columns extends BaseMail
 
     public $emailContent = [];
 
+    /**
+     * Table header template for the message (if applicable).
+     *
+     * @var array
+    **/
+
+    public $emailTableHeader = [];
+
+    /**
+     * Table body template for the message (if applicable).
+     *
+     * @var array
+     **/
+
+    public $emailTableBody = [];
+
     public function generateSeparator($separator = [])
     {
         foreach($separator as $value)
         {
-            array_splice($this->emailContent, $value['joinToIndex'], 0, 
-                [ 
+            array_splice($this->emailContent, $value['joinToIndex'], 0,
+                [
                     array(
                         'separator' => $value['html']
                     )
@@ -56,11 +72,27 @@ class MailLayout2Columns extends BaseMail
         return $this;
 
     }
-    
+
+    public function writeTableHead($th = [])
+    {
+        $this->emailTableHeader = $th;
+
+        return $this;
+    }
+
+    public function writeTableBody($tb = [])
+    {
+        $this->emailTableBody = $tb;
+
+        return $this;
+    }
+
     public function toArray()
     {
         return [
-            'content' => $this->emailContent,
+            'content'   => $this->emailContent,
+            'tableHead' => $this->emailTableHeader,
+            'tableBody' => $this->emailTableBody,
         ];
     }
 

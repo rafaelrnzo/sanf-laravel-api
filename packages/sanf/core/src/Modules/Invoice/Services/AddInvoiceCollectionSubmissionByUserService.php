@@ -16,11 +16,11 @@ final class AddInvoiceCollectionSubmissionByUserService extends InvoiceCollectio
      */
     public function execute($dto = null)
     {
-        //TODO VALIDATE USER
+        $user = $this->findUserOrFail($dto->userId);
         $batchNo = nano_id();
         $entities = [];
         foreach ($dto->financingUnits as $financingUnit) {
-            $entities[] = $this->repository->add([
+            $entity = $this->repository->add([
                 'xid' => nano_id(),
                 'profile_xid' => $dto->profileXid,
                 'batch_no' => $batchNo,
@@ -32,6 +32,9 @@ final class AddInvoiceCollectionSubmissionByUserService extends InvoiceCollectio
                 'year' => $financingUnit->year,
                 'brand_type_model' => $financingUnit->brandTypeModel,
             ]);
+
+            $entity->user = $user;
+            $entities[] = $entity;
         }
 
         if ($entities) {

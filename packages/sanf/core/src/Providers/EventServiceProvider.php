@@ -10,6 +10,8 @@ use Sanf\Core\Modules\Contract\Events\FinancingUnitLocationSubmissionAddedEvent;
 use Sanf\Core\Modules\Contract\Listeners\SendEmailRequestChangeFinancingUnitLocationListener;
 use Sanf\Core\Modules\Financing\Events\FinancingApplicationCreatedEvent;
 use Sanf\Core\Modules\Financing\Listeners\SendEmailNewFinancingApplicationListener;
+use Sanf\Core\Modules\Invoice\Events\InvoiceCollectionSubmissionAddedEvent;
+use Sanf\Core\Modules\Invoice\Listeners\SendEmailNewInvoiceCollectionSubmissionListener;
 use Sanf\Core\Modules\Plafond\Events\PlafondIncreaseRequestedEvent;
 use Sanf\Core\Modules\Plafond\Events\PlafondRequestedEvent;
 use Sanf\Core\Modules\Plafond\Listeners\SendEmailRequestIncreasePlafondListener;
@@ -50,5 +52,8 @@ class EventServiceProvider extends ServiceProvider
         FinancingUnitLocationSubmissionAddedEvent::class => [
             SendEmailRequestChangeFinancingUnitLocationListener::class
         ],
+        InvoiceCollectionSubmissionAddedEvent::class => [
+            SendEmailNewInvoiceCollectionSubmissionListener::class
+        ]
     ];
 }

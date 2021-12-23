@@ -5,12 +5,14 @@ namespace Sanf\Api\Modules\Invoice\Controllers;
 use Carbon\CarbonImmutable;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
 use Sanf\Api\Modules\Invoice\Transformers\MyInvoiceCollectionSubmissionSimpleTransformer;
 use Sanf\Core\Modules\Invoice\Dtos\AddInvoiceCollectionSubmissionByUserRequestDto;
 use Sanf\Core\Modules\Invoice\Dtos\BrowseInvoiceCollectionSubmissionByUserRequestDto;
 use Sanf\Core\Modules\Invoice\Dtos\FinancingUnitRequestDto;
+use Sanf\Core\Modules\Invoice\Enums\InvoiceCollectionSubmissionStatusEnum;
 use Sanf\Core\Modules\Invoice\Services\AddInvoiceCollectionSubmissionByUserService;
 use Sanf\Core\Modules\Invoice\Services\BrowseInvoiceCollectionSubmissionByUserService;
 
@@ -22,29 +24,9 @@ final class InvoiceCollectionSubmissionByUserController extends RestApiControlle
             'skip' => ['nullable', 'integer'],
             'limit' => ['nullable', 'integer'],
             'sort_by' => ['nullable', 'string'],
-            'keyword' => ['nullable', 'string'],
+            'status_id' => ['nullable', 'integer', Rule::in(InvoiceCollectionSubmissionStatusEnum::ALL_STATUS)],
+            'keyword' => ['nullable', 'string', 'max:255'],
         ]);
-//        return json_decode('{
-//    "rows": [
-//      {
-//        "contract_no": "1209234232",
-//        "serial_no": "KXXD220023",
-//        "pickup_date": "2021-12-20",
-//        "brand_type_model": "KOMATSU HYDRAULIC EXCAVATOR PC130F-7/P7",
-//        "year": "2021",
-//        "status": {
-//          "id": 10,
-//          "name": "Diproses"
-//        }
-//      }
-//    ],
-//    "metadata": {
-//      "count": 1,
-//      "skip": 0,
-//      "limit": 10,
-//      "sort_by": "earliest"
-//    }
-//  }', true);
         $dto = new BrowseInvoiceCollectionSubmissionByUserRequestDto($input + ['userId' => $auth->id()]);
         $result = $service->execute($dto);
 
