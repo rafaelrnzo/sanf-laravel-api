@@ -27,8 +27,6 @@ class SendEmailNewPrepaymentSubmissionListener
     public function handle($event)
     {
         $prepaymentSubmission = $event->prepaymentSubmission;
-        setlocale(LC_ALL, 'id_ID.UTF-8', 'id_ID.UTF-8'); // set locale to use local time Indonesia
-
         $adminRecipients = explode(',', config('sanf-mobile.mail_to_admin'));
         $userRecipient =(object)[
             'email' =>  $prepaymentSubmission->user->username,

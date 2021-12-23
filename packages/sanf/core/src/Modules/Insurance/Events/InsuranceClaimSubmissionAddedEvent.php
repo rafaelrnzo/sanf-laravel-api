@@ -6,15 +6,15 @@ use NbsPhp\Core\Event;
 
 class InsuranceClaimSubmissionAddedEvent extends Event
 {
-    public $entity;
+    public $insuranceClaimSubmission;
 
     /**
      * InsuranceClaimSubmissionAddedEvent constructor.
-     * @param $entity
+     * @param $insuranceClaimSubmission
      */
-    public function __construct($entity)
+    public function __construct($insuranceClaimSubmission)
     {
-        $this->entity = $entity;
+        $this->insuranceClaimSubmission = $insuranceClaimSubmission;
     }
 
 }

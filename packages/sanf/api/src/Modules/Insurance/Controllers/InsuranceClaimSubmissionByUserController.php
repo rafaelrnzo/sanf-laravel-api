@@ -2,6 +2,7 @@
 
 namespace Sanf\Api\Modules\Insurance\Controllers;
 
+use Carbon\CarbonImmutable;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
@@ -47,15 +48,19 @@ final class InsuranceClaimSubmissionByUserController extends RestApiController
     public function postAdd(Guard $auth, Request $request, $xid, AddInsuranceClaimSubmissionByUserService $service)
     {
         $input = $this->validate($request, [
-//            'financing_unit' => ['required', 'array'],
-//            'financing_unit.serial_no' => ['required', 'string', 'max:255'],
-//            'financing_unit.polis_no' => ['required', 'string', 'max:255'],
-//            'financing_unit.brand_type_model' => ['required', 'string', 'max:255'],
-//            'financing_unit.year' => ['required', 'string', 'date_format:Y'],
-//            'image_files' => ['nullable', 'array'],
-//            'description' => ['required', 'string', 'max:65535'],
-//            'incident_date' => ['required', 'string', 'date_format:Y-m-d'],
+            'financing_unit' => ['required', 'array'],
+            'financing_unit.serial_no' => ['required', 'string', 'max:255'],
+            'financing_unit.polis_no' => ['required', 'string', 'max:255'],
+            'financing_unit.brand_type_model' => ['required', 'string', 'max:255'],
+            'financing_unit.year' => ['required', 'string', 'date_format:Y'],
+            'location_metadata.city_id' => ['required', 'string', 'max:255'],
+            'location_metadata.city_name' => ['required', 'string', 'max:255'],
+            'image_files' => ['nullable', 'array'],
+            'description' => ['required', 'string', 'max:65535'],
+            'contract_no' => ['required', 'string', 'max:255'],
+            'incident_date' => ['required', 'string', 'date_format:Y-m-d'],
         ]);
+        $input['incident_date'] = CarbonImmutable::make($input['incident_date']);
         $dto = new AddInsuranceClaimSubmissionByUserRequestDto($input + [
                 'profileXid' => $xid,
                 'userId' => $auth->id()

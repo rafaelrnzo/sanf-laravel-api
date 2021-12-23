@@ -12,6 +12,8 @@ use Sanf\Core\Modules\Financing\Events\FinancingApplicationCreatedEvent;
 use Sanf\Core\Modules\Financing\Listeners\SendEmailNewFinancingApplicationListener;
 use Sanf\Core\Modules\Invoice\Events\InvoiceCollectionSubmissionAddedEvent;
 use Sanf\Core\Modules\Invoice\Listeners\SendEmailNewInvoiceCollectionSubmissionListener;
+use Sanf\Core\Modules\Insurance\Events\InsuranceClaimSubmissionAddedEvent;
+use Sanf\Core\Modules\Insurance\Listeners\SendEmailNewInsuranceClaimSubmissionListener;
 use Sanf\Core\Modules\Plafond\Events\PlafondIncreaseRequestedEvent;
 use Sanf\Core\Modules\Plafond\Events\PlafondRequestedEvent;
 use Sanf\Core\Modules\Plafond\Listeners\SendEmailRequestIncreasePlafondListener;
@@ -54,6 +56,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         InvoiceCollectionSubmissionAddedEvent::class => [
             SendEmailNewInvoiceCollectionSubmissionListener::class
-        ]
+        ],
+        InsuranceClaimSubmissionAddedEvent::class => [
+            SendEmailNewInsuranceClaimSubmissionListener::class
+        ],
     ];
 }

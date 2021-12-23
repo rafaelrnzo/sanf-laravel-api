@@ -34,6 +34,7 @@ class SendEmailPrepaymentSubmissionForAdminJob implements ShouldQueue
 
     public function handle(GetPdfPrepaymentSimulationService $service)
     {
+        setlocale(LC_ALL, 'id_ID.UTF-8', 'id_ID.UTF-8'); // set locale to use local time Indonesia
         $prepayment = (new BaseMail)
             ->subject('Hasil Simulasi Pelunasan Dipercepat')
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))

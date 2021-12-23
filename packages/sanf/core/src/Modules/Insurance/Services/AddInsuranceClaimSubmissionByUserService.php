@@ -2,6 +2,8 @@
 
 namespace Sanf\Core\Modules\Insurance\Services;
 
+use Illuminate\Support\Facades\Storage;
+use League\Flysystem\FileNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Insurance\Dtos\AddInsuranceClaimSubmissionByUserRequestDto;
 use Sanf\Core\Modules\Insurance\Dtos\AddInsuranceClaimSubmissionByUserResponseDto;
@@ -16,15 +18,56 @@ final class AddInsuranceClaimSubmissionByUserService extends InsuranceClaimSubmi
      */
     public function execute($dto = null)
     {
-        //TODO VALIDATE USER & OWNERSHIP
+        $user = $this->findUserOrFail($dto->userId);
 
+        //TODO REFACTOR
+        $imageFiles = [];
+        if ($dto->imageFiles) {
+            $newPath = config('image-path.insurance');
+            $tempPath = config('image-path.temp');
+
+            foreach ($dto->imageFiles as $imageFile) {
+                $exist = Storage::exists("{$newPath}{$imageFile}");
+                try {
+                    if (!$exist) {
+                        Storage::move("{$tempPath}{$imageFile}", "{$newPath}{$imageFile}");
+                    }
+
+                    $metadata = Storage::getMetadata("{$newPath}{$imageFile}");
+
+                    $imageFiles[] = [
+                        'file_name' => $imageFile,
+                        'directory' => $metadata['dirname'] ?? $newPath,
+                        'path' => $metadata['path'],
+                        'mime_type' => $metadata['mimetype'] ?? Storage::getMimeType("{$newPath}{$imageFile}"),
+                        'timestamp' => $metadata['timestamp'],
+                        'size' => $metadata['size'],
+                    ];
+                } catch (FileNotFoundException $exception) {
+                    report($exception);
+                }
+            }
+        }
+        $imagePath = implode('|', array_column($imageFiles, 'file_name'));
         $entity = $this->repository->add([
             'xid' => nano_id(),
             'status_id' => InsuranceClaimSubmissionStatusEnum::PROCESSED,
-            'user_id' => $dto->userId,
-            //TODO MORE FIELD HERE
+            'user_id' => $user->id,
+            'profile_xid' => $dto->profileXid,
+            'contract_no' => $dto->contractNo,
+            'serial_no' => $dto->financingUnit->serialNo,
+            'polis_no' => $dto->financingUnit->polisNo,
+            'brand_type_model' => $dto->financingUnit->brandTypeModel,
+            'year' => $dto->financingUnit->year,
+            'location_metadata' => $dto->locationMetadata,
+            'city_id' => $dto->locationMetadata['city_id'],
+            'incident_date' => $dto->incidentDate,
+            'image_files' => $imageFiles,
+            'image_path' => $imagePath,
+            'description' => $dto->description,
         ]);
 
+        $entity->user = $user;
         event(new InsuranceClaimSubmissionAddedEvent($entity));
 
         return new AddInsuranceClaimSubmissionByUserResponseDto([

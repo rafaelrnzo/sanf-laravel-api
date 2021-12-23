@@ -6,5 +6,6 @@ return [
     'ask-us' => 'ask-us/',
     'product' => 'product/',
     'project' => 'project/',
-    'commodity' => 'commodity/'
+    'commodity' => 'commodity/',
+    'insurance' => 'insurance/'
 ];

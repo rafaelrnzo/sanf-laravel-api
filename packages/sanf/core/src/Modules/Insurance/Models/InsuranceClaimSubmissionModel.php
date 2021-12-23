@@ -9,6 +9,11 @@ class InsuranceClaimSubmissionModel extends AbstractModel
 {
     protected $table = 'insurance_claim_submission';
 
+    protected $casts = [
+        'location_metadata' => 'object',
+        'image_files' => 'array'
+    ];
+
     public function status()
     {
         return $this->belongsTo(InsuranceClaimSubmissionStatusModel::class, 'status_id');
