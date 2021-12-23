@@ -1,6 +1,6 @@
 <?php
 
-namespace Sanf\Core\Modules\Invoice\Specifications;
+namespace Sanf\Core\Modules\Invoice\Exceptions;
 
 use NbsPhp\Core\Exceptions\ApiException;
 
