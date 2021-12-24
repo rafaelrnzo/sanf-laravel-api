@@ -15,7 +15,7 @@ use Sanf\Core\Modules\Contract\Dto\PostDatedChequeDto;
 use Sanf\Core\Modules\Contract\Services\GetPostDatedChequeDetailService;
 use Sanf\Core\Modules\Contract\Services\ListContractPostDatedChequeService;
 
-class PostDatedChequeByUserController extends RestApiController
+final class PostDatedChequeByUserController extends RestApiController
 {
     public function getContract(
         Guard $auth,

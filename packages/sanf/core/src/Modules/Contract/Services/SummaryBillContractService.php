@@ -9,6 +9,7 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Dto\SummaryBillContractDto;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Core\Modules\User\Services\UserService;
+use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 use Sanf\Integration\InternalApiClient;
 
 class SummaryBillContractService extends UserService implements ApplicationServiceInterface
@@ -36,13 +37,27 @@ class SummaryBillContractService extends UserService implements ApplicationServi
             throw new UserNotFoundException();
         }
 
-        $response = $this->internalApiClient->getFinancingUnitInvoice(
-            $user->personal_xid,
-            $dto->contract_no,
-            $dto->limit,
-            $dto->skip,
-            $dto->sort_by
-        );
+        try {
+            $response = $this->internalApiClient->getFinancingUnitInvoice(
+                $user->personal_xid,
+                $dto->contract_no,
+                $dto->limit,
+                $dto->skip,
+                $dto->sort_by
+            );
+        } catch (SanfInternalApiDataNotFoundException $exception) {
+            return (object)[
+                'data' => [],
+                'paginate' => (object)[
+                    'total' => 0,
+                    'count' => 0,
+                    'skip' => (int)$dto->skip,
+                    'limit' => (int)$dto->limit,
+                    'sortBy' => $dto->sort_by,
+                ]
+            ];
+        }
+
         $data = collect($response->data)->map(function ($item) {
             return (object)[
                 'due_at' => $item->TGL_JATUHTEMPO ?? null,

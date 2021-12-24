@@ -7,9 +7,9 @@ use NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Dto\ContractOfFinancingUnitSubmissionDto;
-use Sanf\Core\Modules\Contract\Dto\ContractPostDatedChequeDto;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Core\Modules\User\Services\UserService;
+use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 use Sanf\Integration\InternalApiClient;
 
 class ListContractOfFinancingUnitSubmissionService extends UserService implements ApplicationServiceInterface
@@ -37,19 +37,32 @@ class ListContractOfFinancingUnitSubmissionService extends UserService implement
             throw new UserNotFoundException();
         }
 
-        $response = $this->internalApiClient->getFinancingUnitSubmission(
-            $user->personal_xid,
-            $dto->limit,
-            $dto->skip,
-            $dto->sort_by,
-            $dto->contract_no
-        );
-        $data = collect($response->data)->map(function ($item) {
+        try {
+            $response = $this->internalApiClient->getFinancingUnitSubmission(
+                $user->personal_xid,
+                $dto->limit,
+                $dto->skip,
+                $dto->sort_by,
+                $dto->contract_no
+            );
+            $data = collect($response->data)->map(function ($item) {
+                return (object)[
+                    'contract_no' => $item->AGREE_NO ?? null,
+                    'created_at' => $item->TGL_PDC ?? null
+                ];
+            });
+        } catch (SanfInternalApiDataNotFoundException $exception) {
             return (object)[
-                'contract_no' => $item->AGREE_NO ?? null,
-                'created_at' => $item->TGL_PDC ?? null
+                'data' => [],
+                'paginate' => (object)[
+                    'total' => 0,
+                    'count' => 0,
+                    'skip' => (int)$dto->skip,
+                    'limit' => (int)$dto->limit,
+                    'sortBy' => $dto->sort_by,
+                ]
             ];
-        });
+        }
 
         return (object)[
             'data' => $data,

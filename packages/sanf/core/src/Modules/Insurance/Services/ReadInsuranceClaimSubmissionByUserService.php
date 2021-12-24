@@ -20,14 +20,19 @@ final class ReadInsuranceClaimSubmissionByUserService extends InsuranceClaimSubm
         if (is_null($entity)) {
             throw new InsuranceClaimSubmissionNotFoundException();
         }
-        //TODO VALIDATE USER & OWNERSHIP
 
         return new ReadInsuranceClaimSubmissionByUserResponseDto([
             'id' => $entity->id,
             'xid' => $entity->xid,
             'userId' => $entity->user_id,
             'status' => $entity->status,
-            //TODO HERE
+            'serialNo' => $entity->serial_no,
+            'polisNo' => $entity->polis_no,
+            'brandTypeModel' => $entity->brand_type_model,
+            'locationMetadata' => $entity->location_metadata,
+            'incidentDate' => CarbonImmutable::make($entity->incident_date),
+            'description' => $entity->description,
+            'imageFiles' => $entity->image_files,
             'createdAt' => CarbonImmutable::make($entity->created_at),
             'updatedAt' => CarbonImmutable::make($entity->updated_at),
         ]);

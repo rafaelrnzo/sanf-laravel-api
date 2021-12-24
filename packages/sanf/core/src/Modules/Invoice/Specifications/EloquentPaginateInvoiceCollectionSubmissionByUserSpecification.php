@@ -8,6 +8,7 @@ use Sanf\Core\Modules\Invoice\Models\InvoiceCollectionSubmissionModel;
 final class EloquentPaginateInvoiceCollectionSubmissionByUserSpecification
 {
     private int $userId;
+    private string $profileXid;
     private ?string $keyword;
     private ?int $statusId;
     private ?string $sortBy;
@@ -17,6 +18,7 @@ final class EloquentPaginateInvoiceCollectionSubmissionByUserSpecification
 
     public function __construct(
         int $userId,
+        string $profileXid,
         ?string $keyword,
         ?int $statusId,
         ?string $sortBy,
@@ -25,6 +27,7 @@ final class EloquentPaginateInvoiceCollectionSubmissionByUserSpecification
         ?int $timestamp
     ) {
         $this->userId = $userId;
+        $this->profileXid = $profileXid;
         $this->keyword = $keyword;
         $this->statusId = $statusId;
         $this->skip = $skip;
@@ -51,6 +54,7 @@ final class EloquentPaginateInvoiceCollectionSubmissionByUserSpecification
         $query = $model->newQuery()
             ->with('status')
             ->where('user_id', $this->userId)
+            ->where('profile_xid', $this->profileXid)
             ->orderBy($orderBy, $orderDirection)
             ->when($this->statusId, function ($query) {
                 return $query->where('status_id', $this->statusId);

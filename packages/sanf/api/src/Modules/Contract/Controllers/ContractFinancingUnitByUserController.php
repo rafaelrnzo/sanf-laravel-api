@@ -20,7 +20,7 @@ use Sanf\Core\Modules\Contract\Services\GetFinancingUnitContractService;
 use Sanf\Core\Modules\Contract\Services\ListContractService;
 use Sanf\Core\Modules\Contract\Services\SummaryBillContractService;
 
-class ContractFinancingUnitByUserController extends RestApiController
+final class ContractFinancingUnitByUserController extends RestApiController
 {
     public function getList(
         Guard $auth,
@@ -97,7 +97,6 @@ class ContractFinancingUnitByUserController extends RestApiController
             'limit' => ['nullable', 'integer', 'max:99'],
             'sort_by' => ['nullable', 'in:earliest,latest'],
         ]);
-
 
         $dto = new SummaryBillContractDto($input);
         $dto->sort_by = Str::title($dto->sort_by);

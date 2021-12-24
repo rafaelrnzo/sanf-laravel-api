@@ -31,10 +31,10 @@ final class BrowseInvoiceCollectionSubmissionByUserService extends InvoiceCollec
     public function execute($dto = null)
     {
         $result = $this->repository->query(
-            $this->specificationFactory->paginateByUser($dto->userId, $dto->keyword, $dto->statusId, $dto->sortBy, $dto->skip, $dto->limit)
+            $this->specificationFactory->paginateByUserAndProfile($dto->userId, $dto->profileXid, $dto->keyword, $dto->statusId, $dto->sortBy, $dto->skip, $dto->limit)
         );
         $total = $this->repository->size(
-            $this->specificationFactory->paginateByUser($dto->userId, $dto->keyword, $dto->statusId)
+            $this->specificationFactory->paginateByUserAndProfile($dto->userId, $dto->profileXid, $dto->keyword, $dto->statusId)
         );
 
         $data = array_map(function ($item) {

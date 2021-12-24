@@ -10,6 +10,13 @@ class ReadInsuranceClaimSubmissionByUserResponseDto extends CamelCaseDataTransfe
     public string $xid;
     public int $userId;
     public object $status;
+    public string $serialNo;
+    public string $polisNo;
+    public string $brandTypeModel;
+    public $locationMetadata;
+    public \DateTimeImmutable $incidentDate;
+    public string $description;
+    public array $imageFiles;
     public \DateTimeImmutable $createdAt;
     public \DateTimeImmutable $updatedAt;
 }

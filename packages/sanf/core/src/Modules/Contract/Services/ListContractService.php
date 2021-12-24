@@ -9,6 +9,7 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Dto\ListContractDto;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Core\Modules\User\Services\UserService;
+use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 use Sanf\Integration\InternalApiClient;
 
 class ListContractService extends UserService implements ApplicationServiceInterface
@@ -36,24 +37,37 @@ class ListContractService extends UserService implements ApplicationServiceInter
             throw new UserNotFoundException();
         }
 
-        $response = $this->internalApiClient->getContractList(
-            $user->personal_xid,
-            $dto->contract_type,
-            $dto->limit,
-            $dto->skip,
-            $dto->sort_by,
-        );
-        $data = collect($response->data)->map(function ($item) {
+        try {
+            $response = $this->internalApiClient->getContractList(
+                $user->personal_xid,
+                $dto->contract_type,
+                $dto->limit,
+                $dto->skip,
+                $dto->sort_by,
+            );
+            $data = collect($response->data)->map(function ($item) {
+                return (object)[
+                    'contract_at' => $item->TGL_KONTRAK ?? null,
+                    'contract_no' => $item->NO_KONTRAK ?? null,
+                    'financing_type' => (object)[
+                        'id' => null,
+                        'name' => $item->JENIS_PEMBIAYAAN ?? null,
+                    ],
+                    'total_amount' => $item->TOTAL_PEMBIAYAAN ?? 0,
+                ];
+            });
+        } catch (SanfInternalApiDataNotFoundException $exception) {
             return (object)[
-                'contract_at' => $item->TGL_KONTRAK ?? null,
-                'contract_no' => $item->NO_KONTRAK ?? null,
-                'financing_type' => (object)[
-                    'id' => null,
-                    'name' => $item->JENIS_PEMBIAYAAN ?? null,
-                ],
-                'total_amount' => $item->TOTAL_PEMBIAYAAN ?? 0,
+                'data' => [],
+                'paginate' => (object)[
+                    'total' => 0,
+                    'count' => 0,
+                    'skip' => (int)$dto->skip,
+                    'limit' => (int)$dto->limit,
+                    'sortBy' => $dto->sort_by,
+                ]
             ];
-        });
+        }
 
         return (object)[
             'data' => $data,

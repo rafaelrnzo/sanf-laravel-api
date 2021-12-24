@@ -5,6 +5,7 @@ namespace Sanf\Api\Modules\Insurance\Controllers;
 use Carbon\CarbonImmutable;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
 use Sanf\Api\Modules\Insurance\Transformers\MyInsuranceClaimSubmissionSimpleTransformer;
@@ -12,22 +13,27 @@ use Sanf\Api\Modules\Insurance\Transformers\MyInsuranceClaimSubmissionTransforme
 use Sanf\Core\Modules\Insurance\Dtos\AddInsuranceClaimSubmissionByUserRequestDto;
 use Sanf\Core\Modules\Insurance\Dtos\BrowseInsuranceClaimSubmissionByUserRequestDto;
 use Sanf\Core\Modules\Insurance\Dtos\ReadInsuranceClaimSubmissionByUserRequestDto;
+use Sanf\Core\Modules\Insurance\Enums\InsuranceClaimSubmissionStatusEnum;
 use Sanf\Core\Modules\Insurance\Services\AddInsuranceClaimSubmissionByUserService;
 use Sanf\Core\Modules\Insurance\Services\BrowseInsuranceClaimSubmissionByUserService;
 use Sanf\Core\Modules\Insurance\Services\ReadInsuranceClaimSubmissionByUserService;
 
 final class InsuranceClaimSubmissionByUserController extends RestApiController
 {
-    public function getBrowse(Guard $auth, Request $request, BrowseInsuranceClaimSubmissionByUserService $service)
+    public function getBrowse(Guard $auth, Request $request, $xid, BrowseInsuranceClaimSubmissionByUserService $service)
     {
         $input = $this->validate($request, [
             'skip' => ['nullable', 'integer'],
             'limit' => ['nullable', 'integer'],
             'sort_by' => ['nullable', 'string'],
             'keyword' => ['nullable', 'string'],
+            'status_id' => ['nullable', 'integer', Rule::in(InsuranceClaimSubmissionStatusEnum::ALL_STATUS)],
             'timestamp' => ['nullable', 'integer'],
         ]);
-        $dto = new BrowseInsuranceClaimSubmissionByUserRequestDto($input + ['userId' => $auth->id()]);
+        $dto = new BrowseInsuranceClaimSubmissionByUserRequestDto($input + [
+                'userId' => $auth->id(),
+                'profileXid' => $xid,
+            ]);
         $result = $service->execute($dto);
 
         return fractal($result->data, new MyInsuranceClaimSubmissionSimpleTransformer())

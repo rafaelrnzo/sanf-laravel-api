@@ -31,10 +31,10 @@ final class BrowseInsuranceClaimSubmissionByUserService extends InsuranceClaimSu
     function execute($dto = null)
     {
         $result = $this->repository->query(
-            $this->specificationFactory->paginateByUser($dto->userId, $dto->keyword, $dto->sortBy, $dto->skip, $dto->limit)
+            $this->specificationFactory->paginateByUserAndProfile($dto->userId, $dto->profileXid, $dto->keyword, $dto->statusId, $dto->sortBy, $dto->skip, $dto->limit)
         );
         $total = $this->repository->size(
-            $this->specificationFactory->paginateByUser($dto->userId, $dto->keyword)
+            $this->specificationFactory->paginateByUserAndProfile($dto->userId, $dto->profileXid, $dto->keyword, $dto->statusId)
         );
 
         $data = array_map(function ($item) {
@@ -42,7 +42,9 @@ final class BrowseInsuranceClaimSubmissionByUserService extends InsuranceClaimSu
                 'id' => $item->id,
                 'xid' => $item->xid,
                 'status' => $item->status,
-                //TODO
+                'serialNo' => $item->serial_no,
+                'polisNo' => $item->polis_no,
+                'brandTypeModel' => $item->brand_type_model,
                 'createdAt' => $item->created_at,
                 'updatedAt' => $item->updated_at,
             ];

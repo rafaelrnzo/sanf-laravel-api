@@ -9,10 +9,10 @@ use Illuminate\Support\Str;
 use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
 use Sanf\Api\Modules\Contract\Transformers\AccountReceivableContractTransformer;
-use Sanf\Core\Modules\Contract\Services\ListAccountReceivableContractService;
 use Sanf\Core\Modules\Contract\Dto\AccountReceivableContractDto;
+use Sanf\Core\Modules\Contract\Services\ListAccountReceivableContractService;
 
-class AccountReceivableByUserController extends RestApiController
+final class AccountReceivableByUserController extends RestApiController
 {
     public function getInfo(
         Guard $auth,

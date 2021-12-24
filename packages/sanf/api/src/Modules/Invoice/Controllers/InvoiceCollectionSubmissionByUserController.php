@@ -27,7 +27,10 @@ final class InvoiceCollectionSubmissionByUserController extends RestApiControlle
             'status_id' => ['nullable', 'integer', Rule::in(InvoiceCollectionSubmissionStatusEnum::ALL_STATUS)],
             'keyword' => ['nullable', 'string', 'max:255'],
         ]);
-        $dto = new BrowseInvoiceCollectionSubmissionByUserRequestDto($input + ['userId' => $auth->id()]);
+        $dto = new BrowseInvoiceCollectionSubmissionByUserRequestDto($input + [
+                'userId' => $auth->id(),
+                'profileXid' => $xid,
+            ]);
         $result = $service->execute($dto);
 
         return fractal($result->data, new MyInvoiceCollectionSubmissionSimpleTransformer())

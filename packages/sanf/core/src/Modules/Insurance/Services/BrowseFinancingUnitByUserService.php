@@ -6,6 +6,7 @@ namespace Sanf\Core\Modules\Insurance\Services;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Insurance\Dtos\BrowseFinancingUnitByUserResponseDto;
 use Sanf\Core\Modules\Invoice\Dtos\BrowseFinancingUnitByUserRequestDto;
+use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 use Sanf\Integration\InternalApiClient;
 
 final class BrowseFinancingUnitByUserService implements ApplicationServiceInterface
@@ -27,14 +28,29 @@ final class BrowseFinancingUnitByUserService implements ApplicationServiceInterf
      */
     public function execute($dto = null)
     {
-        $result = $this->apiClient->getFinancingUnitOfInsurance(
-            $dto->profileXid,
-            $dto->skip,
-            $dto->limit,
-            $dto->sortBy,
-            $dto->timestamp,
-            $dto->keyword
-        );
+        try {
+            $result = $this->apiClient->getFinancingUnitOfInsurance(
+                $dto->profileXid,
+                $dto->skip,
+                $dto->limit,
+                $dto->sortBy,
+                $dto->timestamp,
+                $dto->keyword
+            );
+        } catch (SanfInternalApiDataNotFoundException $exception) {
+            return new BrowseFinancingUnitByUserResponseDto([
+                'data' => [],
+                'paginate' => [
+                    'total' => 0,
+                    'count' => 0,
+                    'skip' => (int)$dto->skip,
+                    'limit' => (int)$dto->limit,
+                    'sortBy' => $dto->sortBy,
+                ]
+            ]);
+        }
+
+
         $data = array_map(function ($item) {
             return (object)[
                 'polisNo' => $item->POLIS_NO,
@@ -43,7 +59,6 @@ final class BrowseFinancingUnitByUserService implements ApplicationServiceInterf
                 'year' => $item->YEAR ?? '',
             ];
         }, $result->data);
-
 
         return new BrowseFinancingUnitByUserResponseDto([
             'data' => $data,

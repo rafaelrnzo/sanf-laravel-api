@@ -9,6 +9,7 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Dto\FinancingUnitContractDto;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Core\Modules\User\Services\UserService;
+use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 use Sanf\Integration\InternalApiClient;
 
 class GetFinancingUnitContractService extends UserService implements ApplicationServiceInterface
@@ -35,21 +36,34 @@ class GetFinancingUnitContractService extends UserService implements Application
         if (!$user) {
             throw new UserNotFoundException();
         }
-        $response = $this->internalApiClient->getFinancingUnitItem(
-            $user->personal_xid,
-            $dto->contract_no,
-            $dto->limit,
-            $dto->skip,
-            $dto->sort_by
-        );
-        $data = collect($response->data)->map(function ($item) {
+        try {
+            $response = $this->internalApiClient->getFinancingUnitItem(
+                $user->personal_xid,
+                $dto->contract_no,
+                $dto->limit,
+                $dto->skip,
+                $dto->sort_by
+            );
+            $data = collect($response->data)->map(function ($item) {
+                return (object)[
+                    'serial_no' => $item->SERIAL_NO ?? null,
+                    'brand_type_model' => $item->BTM ?? null,
+                    'year' => $item->YEAR ?? null,
+                    'provider_name' => $item->SUPPLIER ?? null,
+                ];
+            });
+        } catch (SanfInternalApiDataNotFoundException $exception) {
             return (object)[
-                'serial_no' => $item->SERIAL_NO ?? null,
-                'brand_type_model' => $item->BTM ?? null,
-                'year' => $item->YEAR ?? null,
-                'provider_name' => $item->SUPPLIER ?? null,
+                'data' => [],
+                'paginate' => (object)[
+                    'total' => 0,
+                    'count' => 0,
+                    'skip' => (int)$dto->skip,
+                    'limit' => (int)$dto->limit,
+                    'sortBy' => $dto->sort_by,
+                ]
             ];
-        });
+        }
 
         return (object)[
             'data' => $data,

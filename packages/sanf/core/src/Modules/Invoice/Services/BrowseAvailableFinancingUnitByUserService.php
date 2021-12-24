@@ -9,6 +9,7 @@ use Sanf\Core\Modules\Invoice\Dtos\BrowseFinancingUnitByUserResponseDto;
 use Sanf\Core\Modules\Invoice\Repositories\InvoiceCollectionSubmissionRepositoryInterface;
 use Sanf\Core\Modules\Invoice\Specifications\InvoiceCollectionSubmissionSpecificationFactoryInterface;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
+use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 use Sanf\Integration\InternalApiClient;
 
 final class BrowseAvailableFinancingUnitByUserService implements ApplicationServiceInterface
@@ -39,14 +40,28 @@ final class BrowseAvailableFinancingUnitByUserService implements ApplicationServ
      */
     public function execute($dto = null)
     {
-        $result = $this->apiClient->getFinancingUnitOfInvoiceCollection(
-            $dto->profileXid,
-            $dto->skip,
-            $dto->limit,
-            $dto->sortBy,
-            $dto->timestamp,
-            $dto->keyword
-        );
+        try {
+            $result = $this->apiClient->getFinancingUnitOfInvoiceCollection(
+                $dto->profileXid,
+                $dto->skip,
+                $dto->limit,
+                $dto->sortBy,
+                $dto->timestamp,
+                $dto->keyword
+            );
+        } catch (SanfInternalApiDataNotFoundException $exception) {
+            return new BrowseFinancingUnitByUserResponseDto([
+                'data' => [],
+                'paginate' => [
+                    'total' => 0,
+                    'count' => 0,
+                    'skip' => (int)$dto->skip,
+                    'limit' => (int)$dto->limit,
+                    'sortBy' => $dto->sortBy,
+                ]
+            ]);
+        }
+
         $data = array_map(function ($item) {
             return (object)[
                 'contractNo' => $item->AGREE_NO,

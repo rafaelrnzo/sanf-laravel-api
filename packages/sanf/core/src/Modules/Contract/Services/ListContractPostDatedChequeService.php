@@ -9,6 +9,7 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Dto\ContractPostDatedChequeDto;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Core\Modules\User\Services\UserService;
+use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 use Sanf\Integration\InternalApiClient;
 
 class ListContractPostDatedChequeService extends UserService implements ApplicationServiceInterface
@@ -36,20 +37,33 @@ class ListContractPostDatedChequeService extends UserService implements Applicat
             throw new UserNotFoundException();
         }
 
-        $response = $this->internalApiClient->getPdc(
-            $user->personal_xid,
-            $dto->limit,
-            $dto->skip,
-            $dto->sort_by,
-            $dto->contract_no
-        );
-        $data = collect($response->data)->map(function ($item) {
+        try {
+            $response = $this->internalApiClient->getPdc(
+                $user->personal_xid,
+                $dto->limit,
+                $dto->skip,
+                $dto->sort_by,
+                $dto->contract_no
+            );
+            $data = collect($response->data)->map(function ($item) {
+                return (object)[
+                    'contract_no' => $item->AGREE_NO ?? null,
+                    'currency_type' => $item->CURR_ID ?? null,
+                    'created_at' => $item->TGL_PDC ?? null
+                ];
+            });
+        } catch (SanfInternalApiDataNotFoundException $exception) {
             return (object)[
-                'contract_no' => $item->AGREE_NO ?? null,
-                'currency_type' => $item->CURR_ID ?? null,
-                'created_at' => $item->TGL_PDC ?? null
+                'data' => [],
+                'paginate' => (object)[
+                    'total' => 0,
+                    'count' => 0,
+                    'skip' => (int)$dto->skip,
+                    'limit' => (int)$dto->limit,
+                    'sortBy' => $dto->sort_by,
+                ]
             ];
-        });
+        }
 
         return (object)[
             'data' => $data,

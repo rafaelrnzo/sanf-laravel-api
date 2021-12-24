@@ -8,7 +8,7 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Prepayment\Dtos\GetPdfPrepaymentSimulationRequestDto;
 
 
-class GetPdfPrepaymentSimulationService extends PrepaymentSubmissionByUserService implements ApplicationServiceInterface
+final class GetPdfPrepaymentSimulationService extends PrepaymentSubmissionByUserService implements ApplicationServiceInterface
 {
     /**
      * @param GetPdfPrepaymentSimulationRequestDto $dto

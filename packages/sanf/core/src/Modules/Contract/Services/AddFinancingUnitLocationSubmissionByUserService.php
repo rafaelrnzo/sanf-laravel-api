@@ -10,8 +10,7 @@ use Sanf\Core\Modules\Contract\Dtos\AddFinancingUnitLocationSubmissionByUserResp
 use Sanf\Core\Modules\Contract\Enums\FinancingUnitLocationSubmissionStatusEnum;
 use Sanf\Core\Modules\Contract\Events\FinancingUnitLocationSubmissionAddedEvent;
 
-final class AddFinancingUnitLocationSubmissionByUserService extends
-    FinancingUnitLocationSubmissionByUserService implements ApplicationServiceInterface
+final class AddFinancingUnitLocationSubmissionByUserService extends FinancingUnitLocationSubmissionByUserService implements ApplicationServiceInterface
 {
     /**
      * @param AddFinancingUnitLocationSubmissionByUserRequestDto $dto
