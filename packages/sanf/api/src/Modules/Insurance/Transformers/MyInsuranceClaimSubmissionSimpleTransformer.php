@@ -13,6 +13,7 @@ final class MyInsuranceClaimSubmissionSimpleTransformer extends TransformerAbstr
             'serial_no' => $dto->serialNo,
             'polis_no' => $dto->polisNo,
             'brand_type_model' => $dto->brandTypeModel,
+            'year' => $dto->year,
             'status' => fractal($dto->status, new InsuranceClaimSubmissionStatusTransformer()),
             'created_at' => unix_timestamp($dto->createdAt),
             'updated_at' => unix_timestamp($dto->updatedAt)

@@ -15,6 +15,7 @@ final class MyInsuranceClaimSubmissionTransformer extends TransformerAbstract
             'serial_no' => $dto->serialNo,
             'polis_no' => $dto->polisNo,
             'brand_type_model' => $dto->brandTypeModel,
+            'year' => $dto->year,
             'location_metadata' => $dto->locationMetadata,
             'incident_date' => $dto->incidentDate->format('Y-m-d'),
             'description' => $dto->description,

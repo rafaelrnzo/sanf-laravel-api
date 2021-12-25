@@ -28,6 +28,7 @@ final class ReadInsuranceClaimSubmissionByUserService extends InsuranceClaimSubm
             'status' => $entity->status,
             'serialNo' => $entity->serial_no,
             'polisNo' => $entity->polis_no,
+            'year' => $entity->year,
             'brandTypeModel' => $entity->brand_type_model,
             'locationMetadata' => $entity->location_metadata,
             'incidentDate' => CarbonImmutable::make($entity->incident_date),

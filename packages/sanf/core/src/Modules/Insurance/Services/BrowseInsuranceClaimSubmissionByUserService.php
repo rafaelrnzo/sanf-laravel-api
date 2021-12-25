@@ -45,6 +45,7 @@ final class BrowseInsuranceClaimSubmissionByUserService extends InsuranceClaimSu
                 'serialNo' => $item->serial_no,
                 'polisNo' => $item->polis_no,
                 'brandTypeModel' => $item->brand_type_model,
+                'year' => $item->year,
                 'createdAt' => $item->created_at,
                 'updatedAt' => $item->updated_at,
             ];
