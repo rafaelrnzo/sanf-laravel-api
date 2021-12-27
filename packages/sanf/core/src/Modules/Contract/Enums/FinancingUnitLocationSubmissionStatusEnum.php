@@ -7,9 +7,15 @@ use MyCLabs\Enum\Enum;
 
 class FinancingUnitLocationSubmissionStatusEnum extends Enum
 {
-    const PROCESSED = 10;
+    const IN_PROGRESS = 10;
     const ACCEPTED = 20;
     const REJECTED = 30;
+
+    const ALL = [
+        self::IN_PROGRESS,
+        self::ACCEPTED,
+        self::REJECTED,
+    ];
 
     public function getTranslation()
     {

@@ -10,5 +10,10 @@ return [
         'REJECT' => 'Ditolak',
         'APPROVED' => 'Disetujui',
         'CLOSED' => 'Ditutup',
+    ],
+    'financing_unit_location_submission' => [
+        'IN_PROGRESS' => 'Diproses',
+        'REJECT' => 'Ditolak',
+        'APPROVED' => 'Disetujui',
     ]
 ];

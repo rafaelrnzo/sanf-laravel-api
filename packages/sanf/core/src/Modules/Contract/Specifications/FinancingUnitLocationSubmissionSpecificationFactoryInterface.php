@@ -8,5 +8,5 @@ interface FinancingUnitLocationSubmissionSpecificationFactoryInterface
 
     public function paginateByUser(?int $userId, ?string $keyword = null, ?int $statusId = null, ?string $sortBy = null, ?int $skip = null, ?int $limit = null, ?int $timestamp = null);
 
-    public function getByContractNo(?int $userId, string $contractNo);
+    public function getWhereContractNumberAndIsProcess(?int $userId, string $contractNumber);
 }

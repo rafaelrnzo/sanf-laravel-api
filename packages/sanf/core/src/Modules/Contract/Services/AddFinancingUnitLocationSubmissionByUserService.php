@@ -30,7 +30,7 @@ final class AddFinancingUnitLocationSubmissionByUserService extends FinancingUni
         if (is_null($entity)) {
             $entity = $this->repository->add([
                 'xid' => nano_id(),
-                'status_id' => FinancingUnitLocationSubmissionStatusEnum::PROCESSED,
+                'status_id' => FinancingUnitLocationSubmissionStatusEnum::IN_PROGRESS,
                 'user_id' => $dto->userId,
                 'profile_xid' => $user->personal_xid,
                 'contract_no' => $dto->xid,
@@ -40,7 +40,7 @@ final class AddFinancingUnitLocationSubmissionByUserService extends FinancingUni
         } else {
             $this->repository->update([
                 'id' => $entity->id,
-                'status_id' => FinancingUnitLocationSubmissionStatusEnum::PROCESSED,
+                'status_id' => FinancingUnitLocationSubmissionStatusEnum::IN_PROGRESS,
                 'submitted_location_metadata' => json_encode($dto->submittedLocationMetadata),
             ]);
 

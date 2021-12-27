@@ -11,10 +11,10 @@ use Sanf\Api\Modules\Contract\Transformers\ContractOfFinancingUnitSubmissionTran
 use Sanf\Api\Modules\Contract\Transformers\FinancingUnitSubmissionContractTransformer;
 use Sanf\Core\Modules\Contract\Dto\ContractOfFinancingUnitSubmissionDto;
 use Sanf\Core\Modules\Contract\Dtos\AddFinancingUnitLocationSubmissionByUserRequestDto;
-use Sanf\Core\Modules\Contract\Dtos\ReadFinancingUnitLocationSubmissionByUserRequestDto;
+use Sanf\Core\Modules\Contract\Dtos\BrowseProcessFinancingUnitLocationSubmissionByUserRequestDto;
 use Sanf\Core\Modules\Contract\Services\AddFinancingUnitLocationSubmissionByUserService;
 use Sanf\Core\Modules\Contract\Services\ListContractOfFinancingUnitSubmissionService;
-use Sanf\Core\Modules\Contract\Services\ReadFinancingUnitLocationSubmissionByUserService;
+use Sanf\Core\Modules\Contract\Services\BrowseProcessFinancingUnitLocationSubmissionByUserService;
 
 final class FinancingUnitLocationSubmissionByUserController extends RestApiController
 {
@@ -41,7 +41,7 @@ final class FinancingUnitLocationSubmissionByUserController extends RestApiContr
         Guard $auth,
         $contract_no,
         Request $request,
-        ReadFinancingUnitLocationSubmissionByUserService $service
+        BrowseProcessFinancingUnitLocationSubmissionByUserService $service
     ) {
         $input = $this->validate($request, [
             'skip' => ['nullable', 'integer', 'max:99'],
@@ -49,7 +49,7 @@ final class FinancingUnitLocationSubmissionByUserController extends RestApiContr
             'sort_by' => ['nullable', 'in:earliest,latest'],
         ]);
 
-        $dto = new ReadFinancingUnitLocationSubmissionByUserRequestDto(
+        $dto = new BrowseProcessFinancingUnitLocationSubmissionByUserRequestDto(
             $input + [
                 'xid' => $contract_no,
                 'userId' => $auth->id(),

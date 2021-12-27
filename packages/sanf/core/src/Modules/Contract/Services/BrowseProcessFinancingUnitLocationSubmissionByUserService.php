@@ -6,13 +6,13 @@ use GuzzleHttp\Exception\GuzzleException;
 use NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\Contract\Dtos\ReadFinancingUnitLocationSubmissionByUserRequestDto;
+use Sanf\Core\Modules\Contract\Dtos\BrowseProcessFinancingUnitLocationSubmissionByUserRequestDto;
 
-final class ReadFinancingUnitLocationSubmissionByUserService extends
+final class BrowseProcessFinancingUnitLocationSubmissionByUserService extends
     FinancingUnitLocationSubmissionByUserService implements ApplicationServiceInterface
 {
     /**
-     * @param ReadFinancingUnitLocationSubmissionByUserRequestDto $dto
+     * @param BrowseProcessFinancingUnitLocationSubmissionByUserRequestDto $dto
      * @return object
      * @throws UserNotFoundException
      * @throws GuzzleException
@@ -26,7 +26,7 @@ final class ReadFinancingUnitLocationSubmissionByUserService extends
         }
 
         $submissions = $this->repository->query(
-            $this->specificationFactory->getByContractNo($dto->userId, $dto->xid)
+            $this->specificationFactory->getWhereContractNumberAndIsProcess($dto->userId, $dto->xid)
         );
 
         $response = $this->internalApiClient->getFinancingUnitSubmissionItem(

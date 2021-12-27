@@ -14,8 +14,8 @@ class EloquentFinancingUnitLocationSubmissionSpecificationFactory implements Fin
         return new EloquentPaginateFinancingUnitLocationSubmissionByUserSpecification($userId, $keyword, $statusId, $sortBy, $skip, $limit, $timestamp);
     }
 
-    public function getByContractNo(?int $userId, string $contractNo)
+    public function getWhereContractNumberAndIsProcess(?int $userId, string $contractNumber)
     {
-        return new EloquentByContractNo($userId, $contractNo);
+        return new EloquentWhereContractNumberAndIsProcess($userId, $contractNumber);
     }
 }

@@ -4,7 +4,7 @@ namespace Sanf\Core\Modules\Contract\Dtos;
 
 use NbsPhp\Core\Dto\CamelCaseDataTransferObject;
 
-class ReadFinancingUnitLocationSubmissionByUserRequestDto extends CamelCaseDataTransferObject
+class BrowseProcessFinancingUnitLocationSubmissionByUserRequestDto extends CamelCaseDataTransferObject
 {
     public int $userId;
 
