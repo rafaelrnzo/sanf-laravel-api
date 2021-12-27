@@ -41,7 +41,7 @@ final class AddFinancingUnitLocationSubmissionByUserService extends FinancingUni
             $this->repository->update([
                 'id' => $entity->id,
                 'status_id' => FinancingUnitLocationSubmissionStatusEnum::PROCESSED,
-                'submitted_location_metadata' => json_encode($dto->locationMetadata),
+                'submitted_location_metadata' => json_encode($dto->submittedLocationMetadata),
             ]);
 
             $entity = $this->repository->findByContractNoAndSerialNo($dto->userId, $dto->xid, $dto->serialNo);
