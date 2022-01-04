@@ -152,4 +152,7 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::get('users/profiles/{xid}/contracts-prepayment', ['as' => 'users.prepayment-contracts.browse', 'uses' => 'Prepayment\Controllers\ContractByUserController@getBrowse']);
     Route::post('users/prepayment-simulations', ['as' => 'users.prepayment-simulations.add', 'uses' => 'Prepayment\Controllers\PrepaymentSimulationByUserController@postAdd']);
     Route::post('users/profiles/{xid}/prepayment-submissions', ['as' => 'users.prepayment-submissions.add', 'uses' => 'Prepayment\Controllers\PrepaymentSubmissionByUserController@postAdd']);
+
+    # NOTIFICATION
+    Route::get('users/notifications', ['as' => 'users.notifications', 'uses' => 'Notification\Controllers\NotificationByUserController@getBrowse']);
 });
