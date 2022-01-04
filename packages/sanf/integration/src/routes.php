@@ -57,4 +57,8 @@ Route::group(config('sanf-internal.url'), [InternalApiProcessor::class], functio
 
     Route::get('invoice-collections.financing-units.list', '/PengambilanInv');
     Route::get('insurances.financing-units.list', '/Insurance');
+
+    Route::get('assignee-survey', '/SelfSurvei/offline');
+    Route::post('surveys.add', '/SelfSurvei');
+    Route::get('surveys', '/SelfSurvei');
 });

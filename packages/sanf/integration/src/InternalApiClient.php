@@ -1002,4 +1002,56 @@ class InternalApiClient
             ->send();
         return $response->json(false);
     }
+
+    /**
+     * @param string $email
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     */
+    public function getAssigneeSurvey(string $email)
+    {
+        $response = Request::route('assignee-survey')
+            ->queryParams(['email' => $email])->send();
+
+        return $response->json(false);
+    }
+
+    /**
+     * @param string $email
+     * @param int $limit
+     * @param int $skip
+     * @param string $order
+     * @param string|null $regNo
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     */
+    public function getSurveys(
+        string $email,
+        int $limit,
+        int $skip,
+        string $order,
+        string $regNo = null
+    ) {
+        $response = Request::route('surveys')
+            ->queryParams([
+                'email' => $email,
+                'limit' => $limit,
+                'skip' => $skip,
+                'order' => $order,
+                'reg_no' => $regNo,
+            ])->send();
+
+        return $response->json(false);
+    }
+
+    public function addSurvey($input)
+    {
+        $response = Request::route('surveys.add')
+            ->json($input)
+            ->send();
+
+        return $response->json(false);
+    }
 }

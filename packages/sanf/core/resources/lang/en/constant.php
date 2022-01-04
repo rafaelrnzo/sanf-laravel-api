@@ -15,5 +15,9 @@ return [
         'IN_PROGRESS' => 'Diproses',
         'REJECT' => 'Ditolak',
         'APPROVED' => 'Disetujui',
-    ]
+    ],
+    'survey' => [
+        'SUBMIT' => 'Isi Survey',
+        'FINISHED' => 'Selesai',
+    ],
 ];

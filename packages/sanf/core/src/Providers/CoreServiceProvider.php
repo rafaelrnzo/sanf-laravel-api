@@ -66,6 +66,10 @@ use Sanf\Core\Modules\Promo\EloquentPromoRepository;
 use Sanf\Core\Modules\Promo\PromoRepositoryInterface;
 use Sanf\Core\Modules\Staff\EloquentStaffRepository;
 use Sanf\Core\Modules\Staff\StaffRepositoryInterface;
+use Sanf\Core\Modules\Survey\Entities\EloquentSurveyFactoryEntity;
+use Sanf\Core\Modules\Survey\Entities\SurveyEntityFactoryInterface;
+use Sanf\Core\Modules\Survey\Repositories\EloquentSurveyRepository;
+use Sanf\Core\Modules\Survey\Repositories\SurveyRepositoryInterface;
 use Sanf\Core\Modules\User\Repositories\EloquentUserRepository;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 
@@ -132,6 +136,9 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(FinancingUnitLocationSubmissionRepositoryInterface::class,EloquentFinancingUnitLocationSubmissionRepository::class);
         $this->app->bind(InvoiceCollectionSubmissionRepositoryInterface::class,EloquentInvoiceCollectionSubmissionRepository::class);
         $this->app->bind(InsuranceClaimSubmissionRepositoryInterface::class,EloquentInsuranceClaimSubmissionRepository::class);
+        $this->app->bind(SurveyRepositoryInterface::class,EloquentSurveyRepository::class);
+
+        $this->app->bind(SurveyEntityFactoryInterface::class, EloquentSurveyFactoryEntity::class);
 
         //SPECIFICATION FACTORY
         $this->app->bind(ProjectSpecificationFactoryInterface::class, EloquentProjectSpecificationFactory::class);
