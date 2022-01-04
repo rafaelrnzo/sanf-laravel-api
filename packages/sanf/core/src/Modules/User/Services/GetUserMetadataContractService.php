@@ -34,7 +34,7 @@ class GetUserMetadataContractService extends UserService implements ApplicationS
             throw new UserNotFoundException();
         }
 
-        $response = $this->internalApiClient->getMetadataContract($user->personal_xid);
+        $response = $this->internalApiClient->getMetadataContract($dto->profile_xid);
         $collect = collect($response->data);
         $totalActive = 0;
         $totalFinish = 0;

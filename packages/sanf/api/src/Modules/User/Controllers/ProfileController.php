@@ -14,12 +14,12 @@ use Sanf\Api\Modules\User\Transformers\UserMetadataContractTransformer;
 use Sanf\Core\Modules\User\Services\CreateCompanyProfileService;
 use Sanf\Core\Modules\User\Services\GetListEligibleCustomerProfileService;
 use Sanf\Core\Modules\User\Services\GetMyProfileService;
+use Sanf\Core\Modules\User\Services\GetUserMetadataAccountReceivableService;
+use Sanf\Core\Modules\User\Services\GetUserMetadataContractService;
 use Sanf\Core\Modules\User\Services\RegisterAsContractOwnerService;
 use Sanf\Core\Modules\User\Services\SwitchActiveCustomerProfileService;
 use Sanf\Core\Modules\User\Services\UpdateCompanyProfileService;
 use Sanf\Core\Modules\User\Services\UpdatePersonalProfileService;
-use Sanf\Core\Modules\User\Services\GetUserMetadataAccountReceivableService;
-use Sanf\Core\Modules\User\Services\GetUserMetadataContractService;
 use Spatie\Fractalistic\ArraySerializer;
 
 class ProfileController extends RestApiController
@@ -175,9 +175,9 @@ class ProfileController extends RestApiController
         return $this->responseOk('Success', fractal($data, config('auth.transformers.profile')));
     }
 
-    public function getMetadataContract(Guard $auth, GetUserMetadataContractService $service)
+    public function getMetadataContract(Guard $auth, $xid, GetUserMetadataContractService $service)
     {
-        $dto = (object)['user_id' => $auth->id()];
+        $dto = (object)['user_id' => $auth->id(), 'profile_xid' => $xid];
         $result = $service->execute($dto);
 
         return fractal($result, UserMetadataContractTransformer::class);
@@ -185,6 +185,7 @@ class ProfileController extends RestApiController
 
     public function getMetadataAccountReceivable(
         Guard $auth,
+        $xid,
         Request $request,
         GetUserMetadataAccountReceivableService $service
     ) {
@@ -194,6 +195,7 @@ class ProfileController extends RestApiController
 
         $dto = (object)[
             'user_id' => $auth->id(),
+            'profile_xid' => $xid,
             'currency_type' => $input['currency_type'] ?? 'IDR',
         ];
         $result = $service->execute($dto);

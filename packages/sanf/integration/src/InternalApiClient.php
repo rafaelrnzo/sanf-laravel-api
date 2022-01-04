@@ -683,7 +683,7 @@ class InternalApiClient
                 'limit' => $limit ?? self::DEFAULT_LIMIT,
                 'order' => $order ?? self::DEFAULT_ORDER,
                 'timestamp' => $timestamp,
-                'keyword' => $keyword
+                'no_kontrak' => $keyword
             ])
             ->send();
         return $response->json(false);

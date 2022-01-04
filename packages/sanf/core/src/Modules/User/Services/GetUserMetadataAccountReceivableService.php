@@ -25,7 +25,7 @@ class GetUserMetadataAccountReceivableService extends UserService implements App
             throw new UserNotFoundException();
         }
 
-        $response = $this->internalApiClient->getMetadataContract($user->personal_xid);
+        $response = $this->internalApiClient->getMetadataContract($dto->profile_xid);
         $collect = collect($response->data);
         $totalOutstandingAmount = 0;
         $totalPaidAmount = 0;
