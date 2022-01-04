@@ -604,7 +604,7 @@ class InternalApiClient
      * @throws GuzzleException
      */
     public function getAccountReceivable(
-        $user_id,
+        $customerId,
         $currency_type,
         $limit,
         $skip,
@@ -612,7 +612,7 @@ class InternalApiClient
     ) {
         $response = Request::route('contract.account-receivable')
             ->queryParams([
-                'cust_id' => $user_id,
+                'cust_id' => $customerId,
                 'curr' => $currency_type,
                 'skip' => $skip,
                 'limit' => $limit,
