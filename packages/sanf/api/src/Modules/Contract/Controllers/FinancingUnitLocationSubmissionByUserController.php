@@ -13,12 +13,12 @@ use Sanf\Core\Modules\Contract\Dto\ContractOfFinancingUnitSubmissionDto;
 use Sanf\Core\Modules\Contract\Dtos\AddFinancingUnitLocationSubmissionByUserRequestDto;
 use Sanf\Core\Modules\Contract\Dtos\BrowseProcessFinancingUnitLocationSubmissionByUserRequestDto;
 use Sanf\Core\Modules\Contract\Services\AddFinancingUnitLocationSubmissionByUserService;
-use Sanf\Core\Modules\Contract\Services\ListContractOfFinancingUnitSubmissionService;
 use Sanf\Core\Modules\Contract\Services\BrowseProcessFinancingUnitLocationSubmissionByUserService;
+use Sanf\Core\Modules\Contract\Services\ListContractOfFinancingUnitSubmissionService;
 
 final class FinancingUnitLocationSubmissionByUserController extends RestApiController
 {
-    public function getContract(Guard $auth, Request $request, ListContractOfFinancingUnitSubmissionService $service)
+    public function getContract(Guard $auth, Request $request, $xid, ListContractOfFinancingUnitSubmissionService $service)
     {
         $input = $this->validate($request, [
             'contract_no' => ['nullable', 'string', 'max:255'],
@@ -27,7 +27,7 @@ final class FinancingUnitLocationSubmissionByUserController extends RestApiContr
             'sort_by' => ['nullable', 'in:earliest,latest'],
         ]);
 
-        $dto = new ContractOfFinancingUnitSubmissionDto($input);
+        $dto = new ContractOfFinancingUnitSubmissionDto($input + ['profile_xid' => $xid]);
         $dto->sort_by = Str::title($dto->sort_by);
         $dto->user_id = $auth->id();
 
@@ -39,6 +39,7 @@ final class FinancingUnitLocationSubmissionByUserController extends RestApiContr
 
     public function getFinancingUnitLocation(
         Guard $auth,
+        $xid,
         $contract_no,
         Request $request,
         BrowseProcessFinancingUnitLocationSubmissionByUserService $service
@@ -52,6 +53,7 @@ final class FinancingUnitLocationSubmissionByUserController extends RestApiContr
         $dto = new BrowseProcessFinancingUnitLocationSubmissionByUserRequestDto(
             $input + [
                 'xid' => $contract_no,
+                'profileXid' => $xid,
                 'userId' => $auth->id(),
             ]
         );
@@ -65,6 +67,7 @@ final class FinancingUnitLocationSubmissionByUserController extends RestApiContr
 
     public function postAdd(
         Guard $auth,
+        $xid,
         $contract_no,
         $serial_no,
         Request $request,
@@ -81,6 +84,7 @@ final class FinancingUnitLocationSubmissionByUserController extends RestApiContr
         $dto = new AddFinancingUnitLocationSubmissionByUserRequestDto(
             $input + [
                 'userId' => $auth->id(),
+                'profileXid' => $xid,
                 'xid' => $contract_no,
                 'serialNo' => $serial_no
             ]

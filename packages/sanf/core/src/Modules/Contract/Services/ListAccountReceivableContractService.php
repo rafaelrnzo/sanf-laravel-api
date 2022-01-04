@@ -39,7 +39,7 @@ class ListAccountReceivableContractService extends UserService implements Applic
 
         try {
             $response = $this->internalApiClient->getAccountReceivable(
-                $user->personal_xid,
+                $user->profile_xid,
                 $dto->currency_type,
                 $dto->limit,
                 $dto->skip,

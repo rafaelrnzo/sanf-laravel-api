@@ -8,6 +8,8 @@ class AddFinancingUnitLocationSubmissionByUserRequestDto extends CamelCaseDataTr
 {
     public int $userId;
 
+    public string $profileXid;
+
     public string $xid;
 
     public string $serialNo;

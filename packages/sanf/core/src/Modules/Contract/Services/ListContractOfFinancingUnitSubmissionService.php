@@ -39,7 +39,7 @@ class ListContractOfFinancingUnitSubmissionService extends UserService implement
 
         try {
             $response = $this->internalApiClient->getFinancingUnitSubmission(
-                $user->personal_xid,
+                $dto->profile_xid,
                 $dto->limit,
                 $dto->skip,
                 $dto->sort_by,

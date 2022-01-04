@@ -39,7 +39,7 @@ class SummaryBillContractService extends UserService implements ApplicationServi
 
         try {
             $response = $this->internalApiClient->getFinancingUnitInvoice(
-                $user->personal_xid,
+                $dto->profile_xid,
                 $dto->contract_no,
                 $dto->limit,
                 $dto->skip,

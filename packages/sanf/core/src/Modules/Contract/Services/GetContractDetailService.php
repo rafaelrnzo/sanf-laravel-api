@@ -35,7 +35,7 @@ class GetContractDetailService extends UserService implements ApplicationService
             throw new UserNotFoundException();
         }
 
-        $response = $this->internalApiClient->getContractDetail($user->personal_xid, $dto->contract_no);
+        $response = $this->internalApiClient->getContractDetail($dto->profile_xid, $dto->contract_no);
         $data = $response->data[$response->count - 1];
 
         return (object)[

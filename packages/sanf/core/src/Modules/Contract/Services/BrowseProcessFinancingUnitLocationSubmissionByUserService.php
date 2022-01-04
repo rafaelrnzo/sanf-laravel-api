@@ -30,7 +30,7 @@ final class BrowseProcessFinancingUnitLocationSubmissionByUserService extends
         );
 
         $response = $this->internalApiClient->getFinancingUnitSubmissionItem(
-            $user->personal_xid,
+            $dto->profileXid,
             $dto->xid,
             $dto->limit,
             $dto->skip,

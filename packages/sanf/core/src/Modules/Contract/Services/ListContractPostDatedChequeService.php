@@ -39,7 +39,7 @@ class ListContractPostDatedChequeService extends UserService implements Applicat
 
         try {
             $response = $this->internalApiClient->getPdc(
-                $user->personal_xid,
+                $dto->profile_xid,
                 $dto->limit,
                 $dto->skip,
                 $dto->sort_by,

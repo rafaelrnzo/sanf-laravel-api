@@ -8,6 +8,8 @@ class BrowseProcessFinancingUnitLocationSubmissionByUserRequestDto extends Camel
 {
     public int $userId;
 
+    public string $profileXid;
+
     public string $xid;
 
     public int $skip = 0;

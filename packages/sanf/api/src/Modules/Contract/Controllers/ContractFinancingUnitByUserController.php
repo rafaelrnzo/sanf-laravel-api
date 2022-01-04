@@ -25,6 +25,7 @@ final class ContractFinancingUnitByUserController extends RestApiController
     public function getList(
         Guard $auth,
         Request $request,
+        $xid,
         ListContractService $service
     ) {
         $input = $this->validate($request, [
@@ -34,7 +35,7 @@ final class ContractFinancingUnitByUserController extends RestApiController
             'sort_by' => ['nullable', 'in:earliest,latest'],
         ]);
 
-        $dto = new ListContractDto($input);
+        $dto = new ListContractDto($input + ['profile_xid' => $xid]);
         $dto->sort_by = Str::title($dto->sort_by);
         $dto->user_id = $auth->id();
 
@@ -54,10 +55,11 @@ final class ContractFinancingUnitByUserController extends RestApiController
             ->paginateWith(new LazyPaginatorAdapter($result->paginate));
     }
 
-    public function getDetail(Guard $auth, $contract_no, GetContractDetailService $service)
+    public function getDetail(Guard $auth, $xid, $contract_no, GetContractDetailService $service)
     {
         $dto = (object)[
             'user_id' => $auth->id(),
+            'profile_xid' => $xid,
             'contract_no' => $contract_no,
         ];
 
@@ -66,18 +68,20 @@ final class ContractFinancingUnitByUserController extends RestApiController
         return fractal($result, DetailContractTransformer::class);
     }
 
-    public function getFinancingUnit(Guard $auth,
+    public function getFinancingUnit(
+        Guard $auth,
+        $xid,
         $contract_no,
         Request $request,
-        GetFinancingUnitContractService $service)
-    {
+        GetFinancingUnitContractService $service
+    ) {
         $input = $this->validate($request, [
             'skip' => ['nullable', 'integer', 'max:99'],
             'limit' => ['nullable', 'integer', 'max:99'],
             'sort_by' => ['nullable', 'in:earliest,latest'],
         ]);
 
-        $dto = new FinancingUnitContractDto($input);
+        $dto = new FinancingUnitContractDto($input + ['profile_xid' => $xid]);
         $dto->sort_by = Str::title($dto->sort_by);
         $dto->user_id = $auth->id();
         $dto->contract_no = $contract_no;
@@ -88,17 +92,20 @@ final class ContractFinancingUnitByUserController extends RestApiController
             ->paginateWith(new LazyPaginatorAdapter($result->paginate));
     }
 
-    public function getPenalties(Guard $auth, $contract_no,
+    public function getPenalties(
+        Guard $auth,
+        $xid,
+        $contract_no,
         Request $request,
-        SummaryBillContractService $service)
-    {
+        SummaryBillContractService $service
+    ) {
         $input = $this->validate($request, [
             'skip' => ['nullable', 'integer', 'max:99'],
             'limit' => ['nullable', 'integer', 'max:99'],
             'sort_by' => ['nullable', 'in:earliest,latest'],
         ]);
 
-        $dto = new SummaryBillContractDto($input);
+        $dto = new SummaryBillContractDto($input = ['profile_xid' => $xid]);
         $dto->sort_by = Str::title($dto->sort_by);
         $dto->user_id = $auth->id();
         $dto->contract_no = $contract_no;

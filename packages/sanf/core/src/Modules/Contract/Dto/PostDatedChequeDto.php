@@ -8,6 +8,8 @@ class PostDatedChequeDto extends DataTransferObject
 {
     public ?string $user_id;
 
+    public string $profile_xid;
+
     public ?string $contract_no;
 
     public int $skip = 0;

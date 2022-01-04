@@ -20,6 +20,7 @@ final class PostDatedChequeByUserController extends RestApiController
     public function getContract(
         Guard $auth,
         Request $request,
+        $xid,
         ListContractPostDatedChequeService $service
     ) {
         $input = $this->validate($request, [
@@ -29,7 +30,7 @@ final class PostDatedChequeByUserController extends RestApiController
             'sort_by' => ['nullable', 'in:earliest,latest'],
         ]);
 
-        $dto = new ContractPostDatedChequeDto($input);
+        $dto = new ContractPostDatedChequeDto($input + ['profile_xid' => $xid]);
         $dto->sort_by = Str::title($dto->sort_by);
         $dto->user_id = $auth->id();
 

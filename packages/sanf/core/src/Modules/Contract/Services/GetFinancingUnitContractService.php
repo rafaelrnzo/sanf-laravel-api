@@ -38,7 +38,7 @@ class GetFinancingUnitContractService extends UserService implements Application
         }
         try {
             $response = $this->internalApiClient->getFinancingUnitItem(
-                $user->personal_xid,
+                $dto->profile_xid,
                 $dto->contract_no,
                 $dto->limit,
                 $dto->skip,

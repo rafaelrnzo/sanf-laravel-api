@@ -820,11 +820,11 @@ class InternalApiClient
      * @throws EndpointNotDefinedException
      * @throws GuzzleException
      */
-    public function getPdc($user_id, $limit, $skip, $sort_by, $contract_no = null)
+    public function getPdc($customerId, $limit, $skip, $sort_by, $contract_no = null)
     {
         $response = Request::route('contracts.pdc')
             ->queryParams([
-                'cust_id' => $user_id,
+                'cust_id' => $customerId,
                 'contrak_no' => $contract_no,
                 'skip' => $skip,
                 'limit' => $limit,
@@ -841,19 +841,19 @@ class InternalApiClient
      * @throws GuzzleException
      */
     public function getPdcDetail(
-        $user_id,
-        $contract_no,
+        $customerId,
+        $contractNo,
         $limit,
         $skip,
-        $sort_by
+        $sortBy
     ) {
         $response = Request::route('contracts.pdc.detail')
             ->queryParams([
-                'cust_id' => $user_id,
-                'contrak_no' => $contract_no,
+                'cust_id' => $customerId,
+                'contrak_no' => $contractNo,
                 'skip' => $skip,
                 'limit' => $limit,
-                'order' => $sort_by,
+                'order' => $sortBy,
             ])
             ->send();
 

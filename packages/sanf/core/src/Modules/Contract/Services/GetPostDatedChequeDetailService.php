@@ -37,7 +37,7 @@ class GetPostDatedChequeDetailService extends UserService implements Application
         }
 
         $response = $this->internalApiClient->getPdcDetail(
-            $user->personal_xid,
+            $dto->profile_xid,
             $dto->contract_no,
             $dto->limit,
             $dto->skip,

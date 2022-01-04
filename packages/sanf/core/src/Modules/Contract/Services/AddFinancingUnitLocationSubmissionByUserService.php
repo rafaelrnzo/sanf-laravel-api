@@ -32,7 +32,7 @@ final class AddFinancingUnitLocationSubmissionByUserService extends FinancingUni
                 'xid' => nano_id(),
                 'status_id' => FinancingUnitLocationSubmissionStatusEnum::IN_PROGRESS,
                 'user_id' => $dto->userId,
-                'profile_xid' => $user->personal_xid,
+                'profile_xid' => $dto->profileXid,
                 'contract_no' => $dto->xid,
                 'serial_no' => $dto->serialNo,
                 'submitted_location_metadata' => json_encode($dto->submittedLocationMetadata),

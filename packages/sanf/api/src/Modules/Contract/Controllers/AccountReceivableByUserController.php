@@ -17,6 +17,7 @@ final class AccountReceivableByUserController extends RestApiController
     public function getInfo(
         Guard $auth,
         Request $request,
+        $xid,
         ListAccountReceivableContractService $service
     ) {
         $input = $this->validate($request, [
@@ -26,7 +27,7 @@ final class AccountReceivableByUserController extends RestApiController
             'sort_by' => ['nullable', 'in:earliest,latest'],
         ]);
 
-        $dto = new AccountReceivableContractDto($input);
+        $dto = new AccountReceivableContractDto($input + ['profile_xid' => $xid]);
         $dto->sort_by = Str::title($dto->sort_by);
         $dto->user_id = $auth->id();
 

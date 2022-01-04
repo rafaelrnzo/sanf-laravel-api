@@ -39,7 +39,7 @@ class ListContractService extends UserService implements ApplicationServiceInter
 
         try {
             $response = $this->internalApiClient->getContractList(
-                $user->personal_xid,
+                $dto->profile_xid,
                 $dto->contract_type,
                 $dto->limit,
                 $dto->skip,
