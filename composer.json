@@ -19,6 +19,7 @@
         "illuminate/notifications": "^6.18",
         "illuminate/redis": "^6.0",
         "jenssegers/agent": "^2.6",
+        "kreait/firebase-php": "^5.25",
         "laravel/helpers": "^1.1",
         "laravel/lumen-framework": "^6.0",
         "laravel/tinker": "^2.6",
@@ -27,6 +28,7 @@
         "pragmarx/health": "^1.0",
         "predis/predis": "^1.1",
         "ramsey/uuid": "^4.1",
+        "sentry/sentry-laravel": "^2.10",
         "spatie/data-transfer-object": "^2.8",
         "spatie/laravel-fractal": "^5.8",
         "yajra/laravel-datatables-oracle": "~9.0"
@@ -46,6 +48,7 @@
         "psr-4": {
             "App\\": "app/",
             "NbsPhp\\Core\\": "packages/nbs-php/lumen-core/src",
+            "NbsPhp\\Notification\\": "packages/nbs-php/laravel-notification/src",
             "NbsPhp\\ApiWrapper\\": "packages/nbs-php/api-wrapper/src",
             "Sanf\\Core\\": "packages/sanf/core/src",
             "Sanf\\Console\\": "packages/sanf/console/src",

@@ -162,6 +162,7 @@ class CoreServiceProvider extends ServiceProvider
             __DIR__ . '/../../database/migrations/create_device_platform_table.php.stub' => $this->getMigrationFileName($filesystem, 'create_device_platform_table'),
             __DIR__ . '/../../database/migrations/create_auth_provider_table.php.stub' => $this->getMigrationFileName($filesystem, 'create_auth_provider_table'),
             __DIR__ . '/../../database/migrations/create_user_session_table.php.stub' => $this->getMigrationFileName($filesystem, 'create_user_session_table'),
+            __DIR__ . '/../../database/migrations/create_user_metadata_table.php.stub' => $this->getMigrationFileName($filesystem, 'create_user_metadata_table'),
         ], 'migrations');
 
         $this->publishes([

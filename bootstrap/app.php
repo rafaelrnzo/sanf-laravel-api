@@ -68,6 +68,8 @@ $app->configure('filesystems');
 $app->configure('services');
 $app->configure('mail');
 $app->configure('response-codes');
+$app->configure('fcm');
+$app->configure('notifications');
 $app->alias('mailer', Illuminate\Mail\Mailer::class);
 $app->alias('mailer', Illuminate\Contracts\Mail\Mailer::class);
 $app->alias('mailer', Illuminate\Contracts\Mail\MailQueue::class);
@@ -101,9 +103,13 @@ $app->configure('tinker');
 | totally optional, so you are not required to uncomment this line.
 |
 */
+$app->register(\Sentry\Laravel\ServiceProvider::class);
+// To enable Sentry Performance Monitoring, the `TracingServiceProvider` has to be registered additionally:
+// $app->register(Sentry\Laravel\Tracing\ServiceProvider::class);
 $app->register(Illuminate\Redis\RedisServiceProvider::class);
 $app->register(Illuminate\Mail\MailServiceProvider::class);
 $app->register(NbsPhp\Core\Providers\CoreServiceProvider::class);
+$app->register(NbsPhp\Notification\NotificationServiceProvider::class);
 $app->register(Sanf\Integration\IntegrationServiceProvider::class);
 $app->register(Sanf\Core\Providers\CoreServiceProvider::class);
 $app->register(Sanf\Console\Providers\ConsoleServiceProvider::class);

@@ -1,0 +1,22 @@
+{
+    "name": "nbs-php/notification",
+    "version": "1.0.0",
+    "require": {
+        "php": "^7.2",
+        "kreait/firebase-php": "5.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "NbsPhp\\Notification\\": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "extra": {
+        "laravel": {
+            "providers": [
+                "NbsPhp\\Notification\\NotificationServiceProvider"
+            ]
+        }
+    }
+}

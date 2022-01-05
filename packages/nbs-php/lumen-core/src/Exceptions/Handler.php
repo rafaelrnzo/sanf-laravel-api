@@ -55,6 +55,10 @@ class Handler extends ExceptionHandler
             return;
         }
 
+        if (app()->bound('sentry') && $this->shouldReport($e)) {
+            app('sentry')->captureException($e);
+        }
+
         if (method_exists($e, 'report')) {
             return $e->report();
         }

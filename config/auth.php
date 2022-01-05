@@ -1,9 +1,9 @@
 <?php
 
 return [
-
     'repositories' => [
         'profile' => \NbsPhp\Core\Repositories\MockProfileRepository::class,
+        'user' => \NbsPhp\Core\Repositories\EloquentUserRepository::class,
     ],
 
     'services' => [

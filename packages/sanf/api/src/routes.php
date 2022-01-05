@@ -154,5 +154,5 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::post('users/profiles/{xid}/prepayment-submissions', ['as' => 'users.prepayment-submissions.add', 'uses' => 'Prepayment\Controllers\PrepaymentSubmissionByUserController@postAdd']);
 
     # NOTIFICATION
-    Route::get('users/notifications', ['as' => 'users.notifications', 'uses' => 'Notification\Controllers\NotificationByUserController@getBrowse']);
+    Route::get('users/notifications', ['as' => 'users.notifications', 'uses' => 'Notification\NotificationByUserController@getBrowse']);
 });
