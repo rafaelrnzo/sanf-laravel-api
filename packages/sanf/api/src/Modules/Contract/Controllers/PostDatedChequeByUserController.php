@@ -42,6 +42,7 @@ final class PostDatedChequeByUserController extends RestApiController
 
     public function getPDC(
         Guard $auth,
+        $xid,
         $contract_no,
         Request $request,
         GetPostDatedChequeDetailService $service
@@ -52,7 +53,7 @@ final class PostDatedChequeByUserController extends RestApiController
             'sort_by' => ['nullable', 'in:earliest,latest'],
         ]);
 
-        $dto = new PostDatedChequeDto($input);
+        $dto = new PostDatedChequeDto($input + ['profile_xid' => $xid]);
         $dto->sort_by = Str::title($dto->sort_by);
         $dto->user_id = $auth->id();
         $dto->contract_no = $contract_no;
