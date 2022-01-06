@@ -67,8 +67,8 @@ class GetDetailSurveyByUserService extends UserService implements ApplicationSer
 
                 $items[] = (object)[
                     'code' => $item->DOC_ID_SURVEY ?? null,
-                    'title' => $item->TITLE ?? null,
-                    'description' => $item->DESCRIPTION ?? null,
+                    'title' => $item->DESCRIPTION ?? null,
+                    'description' => $item->NOTE ?? null,
                     'image_files' => $imagesFiles ?? null
                 ];
             }
