@@ -7,5 +7,6 @@ return [
     'product' => 'product/',
     'project' => 'project/',
     'commodity' => 'commodity/',
-    'insurance' => 'insurance/'
+    'insurance' => 'insurance/',
+    'survey' => 'survey/'
 ];

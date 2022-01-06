@@ -55,8 +55,7 @@ class SurveyByUserController extends RestApiController
                 'items.*.title' => ['required', 'string', 'max:255'],
                 'items.*.description' => ['required', 'string', 'max:65535'],
                 'items.*.image_files' => ['required', 'array'],
-                'items.*.image_files.*.file_name' => ['required', 'string', 'max:255'],
-                'items.*.image_files.*.path' => ['required', 'string', 'max:255'],
+                'items.*.image_files.*' => ['required', 'string', 'max:255'],
             ]
         );
 
