@@ -49,6 +49,7 @@ class ProductSeeder extends Seeder
                     'path' => $uploadFile,
                     'mime_type' => $type
                 ]),
+                'image_path' => $uploadFile,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
                 'modified_by' => json_encode([])

@@ -1,18 +1,25 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Project\Services;
 
-
 use Carbon\Carbon;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\FileNotFoundException;
+use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
+use Sanf\Core\Modules\Project\Dto\CreateProjectDto;
 use Sanf\Core\Modules\Project\Events\ProjectCreatedEvent;
 use Sanf\Core\Modules\Project\ProjectStatus;
 
 class CreateProjectByUserService extends ProjectByUserService implements ApplicationServiceInterface
 {
+    /**
+     * @param CreateProjectDto|null $dto
+     * @return mixed
+     * @throws BindingResolutionException
+     * @throws UserNotFoundException
+     */
     public function execute($dto = null)
     {
         $user = $this->findUserOrFail($dto->userId);
@@ -58,6 +65,9 @@ class CreateProjectByUserService extends ProjectByUserService implements Applica
             'submission_limit_at' => Carbon::createFromTimestamp($dto->submissionLimitAt),
             'status_id' => ProjectStatus::WAITING_APPROVAL,
 //            'modified_by' => //TODO USER SNAPSHOT
+            'city_name' => $dto->locationMetadata['city_name'],
+            'province_name' => $dto->locationMetadata['province_name'],
+            'image_path' => $imageFile['path']
         ]);
 
         event(new ProjectCreatedEvent($project));

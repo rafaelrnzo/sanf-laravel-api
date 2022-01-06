@@ -1,19 +1,25 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Project\Services;
-
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\FileNotFoundException;
+use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
+use Sanf\Core\Modules\Project\Dto\UpdateProjectDto;
 use Sanf\Core\Modules\Project\Events\ProjectUpdatedEvent;
 use Sanf\Core\Modules\Project\Exceptions\GeneralProjectException;
 use Sanf\Core\Modules\Project\ProjectStatus;
 
 class UpdateUserProjectService extends ProjectByUserService implements ApplicationServiceInterface
 {
+    /**
+     * @param UpdateProjectDto|null $dto
+     * @return mixed
+     * @throws GeneralProjectException
+     * @throws UserNotFoundException
+     */
     public function execute($dto = null)
     {
         $user = $this->findUserOrFail($dto->userId);
@@ -64,6 +70,9 @@ class UpdateUserProjectService extends ProjectByUserService implements Applicati
             'submission_limit_at' => Carbon::createFromTimestamp($dto->submissionLimitAt),
             'status_id' => ($needApproval) ? ProjectStatus::WAITING_APPROVAL : $project->status_id,
 //            'modified_by' => //TODO USER SNAPSHOT
+            'city_name' => $dto->locationMetadata['city_name'],
+            'province_name' => $dto->locationMetadata['province_name'],
+            'image_path' => $imageFile['path']
         ]);
 
         event(new ProjectUpdatedEvent($project, $updatedProject));
