@@ -3,7 +3,9 @@
 namespace Sanf\Core\Modules\Survey\Services;
 
 use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use League\Flysystem\FileNotFoundException;
 use NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
@@ -47,7 +49,7 @@ class GetDetailSurveyByUserService extends UserService implements ApplicationSer
 
         try {
             $response = $this->internalApiClient->getSurveys(
-                $user->username,
+                'pt.mitrajayakencanaindah@yahoo.com',
                 $dto->limit,
                 $dto->skip,
                 Str::title($dto->sortBy),
@@ -56,20 +58,29 @@ class GetDetailSurveyByUserService extends UserService implements ApplicationSer
 
             $surveyData = $response->data;
 
-            foreach ($surveyData->ITEMS ?? [] as $item) {
-                foreach ($item->IMAGES ?? [] as $file) {
-                    $imagesFiles[] = (object)[
-                        'file_name' => $file->FILE_NAME ?? null,
-                        'origin_name' => $file->ORIGIN_NAME ?? null,
-                        'url' => $file->URL ?? null,
-                    ];
+            foreach ($surveyData->ITEM ?? [] as $item) {
+                $imageFiles = null;
+                $images = is_array($item->IMAGE) ? $item->IMAGE : [];
+                foreach ($images as $file) {
+                    try {
+                        if ($file->IMAGE) {
+                            $metadata = Storage::getMetaData($file->IMAGE);
+                            $imageFiles[] = (object)[
+                                'file_name' => $metadata['path'],
+                                'origin_name' => $metadata['filename'] ?? null,
+                                'url' => Storage::url($file->IMAGE),
+                            ];
+                        }
+                    } catch (FileNotFoundException $exception) {
+                        report($exception);
+                    }
                 }
 
                 $items[] = (object)[
                     'code' => $item->DOC_ID_SURVEY ?? null,
                     'title' => $item->DESCRIPTION ?? null,
                     'description' => $item->NOTE ?? null,
-                    'image_files' => $imagesFiles ?? null
+                    'image_files' => $imageFiles ?? null
                 ];
             }
 
