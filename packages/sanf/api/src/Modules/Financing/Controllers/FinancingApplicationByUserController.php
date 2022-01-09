@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Sanf\Api\Modules\Financing\Controllers;
 
 use Illuminate\Contracts\Auth\Guard;
@@ -21,25 +20,37 @@ use Sanf\Core\Modules\User\Services\GetDetailCustomerProfileByUserService;
 
 class FinancingApplicationByUserController extends RestApiController
 {
-    public function getBrowse(Guard $auth, Request $request, BrowseFinancingApplicationByUserService $service)
-    {
+    public function getBrowse(
+        Guard $auth,
+        $xid,
+        Request $request,
+        BrowseFinancingApplicationByUserService $service
+    ) {
         $input = $this->validate($request, [
             'skip' => ['nullable', 'integer'],
             'limit' => ['nullable', 'integer'],
             'sort_by' => ['nullable', 'string'],
             'keyword' => ['nullable', 'string'],
         ]);
-        $dto = new BrowseFinancingApplicationDto($input + ['userId' => $auth->id()]);
+        $dto = new BrowseFinancingApplicationDto($input + [
+            'userId' => $auth->id(),
+            'xid' => $xid,
+        ]);
         $result = $service->execute($dto);
 
         return fractal($result->data, new FinancingApplicationSimpleTransformer())
             ->paginateWith(new LazyPaginatorAdapter($result->paginate));
     }
 
-    public function getRead(Guard $auth, $xid, ReadFinancingApplicationByUserService $service)
-    {
+    public function getRead(
+        Guard $auth,
+        $xid,
+        $application_xid,
+        ReadFinancingApplicationByUserService $service
+    ) {
         $dto = new ReadFinancingApplicationDto([
             'xid' => $xid,
+            'applicationXid' => $application_xid,
             'userId' => $auth->id()
         ]);
         $result = $service->execute($dto);

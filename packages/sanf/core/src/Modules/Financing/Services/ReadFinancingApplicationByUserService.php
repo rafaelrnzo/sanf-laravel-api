@@ -12,7 +12,7 @@ class ReadFinancingApplicationByUserService extends FinancingByUserService imple
     public function execute($dto = null)
     {
         $user = $this->findUserOrFail($dto->userId);
-        $financingApplication = $this->financingApplicationRepository->findByXid($dto->xid);
+        $financingApplication = $this->financingApplicationRepository->findByXid($dto->userId, $dto->xid, $dto->applicationXid);
         if (is_null($financingApplication) || $financingApplication->user_id != $user->id) {
             throw new FinancingApplicationInvalidException('Financing Application Not Found');
         }

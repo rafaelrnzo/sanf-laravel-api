@@ -22,9 +22,12 @@ class EloquentFinancingApplicationRepository extends AbstractEloquentRepository 
         return $this->stripEloquentModel($model);
     }
 
-    public function findByXid($xid)
+    public function findByXid($userId, $xid, $applicationXid)
     {
-        $model = $this->model->newQuery()->where('xid', $xid)
+        $model = $this->model->newQuery()
+            ->where('user_id', $userId)
+            ->where('profile_xid', $xid)
+            ->where('xid', $applicationXid)
             ->with(['status', 'objects', 'facility', 'method'])->first();
         return $this->stripEloquentModel($model);
     }

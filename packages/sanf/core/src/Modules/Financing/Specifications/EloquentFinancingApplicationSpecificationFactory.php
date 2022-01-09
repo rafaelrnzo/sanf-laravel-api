@@ -4,9 +4,9 @@ namespace Sanf\Core\Modules\Financing\Specifications;
 
 class EloquentFinancingApplicationSpecificationFactory implements FinancingApplicationSpecificationFactoryInterface
 {
-    public function paginateByUser(int $userId, ?int $skip = null, ?int $limit = null, ?string $sortBy = null, ?string $keyword = null)
+    public function paginateByUser(int $userId, string $profileXid, ?int $skip = null, ?int $limit = null, ?string $sortBy = null, ?string $keyword = null)
     {
-        return new EloquentPaginateFinancingApplicationByUserSpecification($userId, $skip, $limit, $sortBy, $keyword);
+        return new EloquentPaginateFinancingApplicationByUserSpecification($userId, $profileXid, $skip, $limit, $sortBy, $keyword);
     }
 
     public function findByMonth(\DateTimeImmutable $dateTime)

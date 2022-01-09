@@ -9,4 +9,5 @@ class ReadFinancingApplicationDto extends CamelCaseDataTransferObject
 {
     public ?int $userId;
     public string $xid;
+    public string $applicationXid;
 }

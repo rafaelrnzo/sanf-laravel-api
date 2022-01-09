@@ -7,7 +7,7 @@ interface FinancingApplicationRepositoryInterface
 {
     public function findById($id);
 
-    public function findByXid($xid);
+    public function findByXid($userId, $xid, $applicationXid);
 
     public function query($specification);
 
