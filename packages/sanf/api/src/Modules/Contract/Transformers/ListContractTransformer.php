@@ -14,6 +14,7 @@ class ListContractTransformer extends TransformerAbstract
             'contract_no' => (string)$item->contract_no,
             'financing_type' => fractal($item->financing_type, FinancingContractTypeTransformer::class),
             'total_amount' => (string)$item->total_amount,
+            'currency_type' => (string)$item->currency_type,
         ];
     }
 }

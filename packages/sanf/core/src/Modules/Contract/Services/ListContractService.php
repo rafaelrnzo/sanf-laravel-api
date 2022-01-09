@@ -54,6 +54,7 @@ class ListContractService extends UserService implements ApplicationServiceInter
                         'name' => $item->JENIS_PEMBIAYAAN ?? null,
                     ],
                     'total_amount' => $item->TOTAL_PEMBIAYAAN ?? 0,
+                    'currency_type' => $item->CURR_ID ?? null,
                 ];
             });
         } catch (SanfInternalApiDataNotFoundException $exception) {
