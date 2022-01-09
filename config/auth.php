@@ -155,7 +155,11 @@ return [
         'app-auth' => [
             'client_id' => env('APP_CLIENT_ID'),
             'client_secret' => env('APP_CLIENT_SECRET'),
-        ]
+        ],
+        'api' => [
+            'driver' => 'api-user',
+            'model' => \NbsPhp\Core\Models\ApiAuthModel::class,
+        ],
     ],
 
     /*

@@ -115,6 +115,7 @@ $app->register(Sanf\Core\Providers\CoreServiceProvider::class);
 $app->register(Sanf\Console\Providers\ConsoleServiceProvider::class);
 $app->register(Sanf\Api\Providers\ApiServiceProvider::class);
 $app->register(Sanf\Web\Providers\WebServiceProvider::class);
+$app->register(\Sanf\External\ExternalServiceProvider::class);
 $app->register(\Laravel\Tinker\TinkerServiceProvider::class);
 
 /*

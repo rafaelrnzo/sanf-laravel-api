@@ -6,7 +6,7 @@ namespace NbsPhp\Notification\Repositories;
 
 use Carbon\Carbon;
 use NbsPhp\Core\Repositories\AbstractEloquentRepository;
-use NbsPhp\Notification\Models\NotificationChannelModel;
+use NbsPhp\Notification\Enums\NotificationChannelEnum;
 use NbsPhp\Notification\Models\UserNotificationModel;
 use NbsPhp\Notification\Models\UserSessionModel;
 
@@ -23,7 +23,7 @@ class EloquentUserNotificationRepository extends AbstractEloquentRepository impl
 
     public function create($data)
     {
-        $this->notificationModel->newQuery()->forceCreate($data);
+        return $this->notificationModel->newQuery()->forceCreate($data);
     }
 
     public function getNotificationsByUserIdAndTypes(
@@ -107,7 +107,7 @@ class EloquentUserNotificationRepository extends AbstractEloquentRepository impl
         $tokens = $this->userSessionModel->newQuery()
             ->where('user_id', $userId)
             ->update([
-                'notification_channel_id' => NotificationChannelModel::FCM,
+                'notification_channel_id' => NotificationChannelEnum::FCM,
                 'notification_token' => $token,
             ]);
         return json_decode(json_encode($tokens));
@@ -136,11 +136,19 @@ class EloquentUserNotificationRepository extends AbstractEloquentRepository impl
 
     public function getFcmTokens($userId)
     {
-        $tokens = $this->userSessionModel->newQuery()
+        return $this->userSessionModel->newQuery()
             ->select('notification_token')
-            ->where('notification_channel_id', NotificationChannelModel::FCM)
+            ->where('notification_channel_id', NotificationChannelEnum::FCM)
             ->where('user_id', $userId)
-            ->get();
-        return json_decode(json_encode($tokens));
+            ->pluck('notification_token')
+            ->toArray();
+    }
+
+    public function deleteFcmToken($token)
+    {
+        return $this->userSessionModel->newQuery()
+            ->where('notification_token', $token)
+            ->where('notification_channel_id', NotificationChannelEnum::FCM)
+            ->delete();
     }
 }

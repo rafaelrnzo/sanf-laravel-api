@@ -7,7 +7,6 @@ namespace Sanf\Integration;
 use GuzzleHttp\Exception\GuzzleException;
 use NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException;
 use NbsPhp\ApiWrapper\Api\Request;
-use Sanf\Core\Modules\Contract\Dto\FinancingUnitSubmissionDto;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 use stdClass;
 

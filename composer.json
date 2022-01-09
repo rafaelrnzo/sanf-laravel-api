@@ -54,6 +54,7 @@
             "Sanf\\Console\\": "packages/sanf/console/src",
             "Sanf\\Api\\": "packages/sanf/api/src",
             "Sanf\\Web\\": "packages/sanf/web/src",
+            "Sanf\\External\\": "packages/sanf/external/src",
             "Sanf\\Integration\\": "packages/sanf/integration/src"
         },
         "files": [

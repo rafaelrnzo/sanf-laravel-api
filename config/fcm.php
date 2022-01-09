@@ -12,5 +12,6 @@ return [
     'web_push_key' => env('FIREBASE_WEB_PUSH_KEY'),
 
     // Firebase Service Account (json file)
+    // https://console.firebase.google.com/u/0/project/_/settings/serviceaccounts/adminsdk
     'key' => __DIR__ . DIRECTORY_SEPARATOR . 'firebase-keys' . DIRECTORY_SEPARATOR . env('FIREBASE_SA_FILE', 'firebase.json'),
 ];

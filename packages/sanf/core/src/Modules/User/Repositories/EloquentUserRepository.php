@@ -19,4 +19,9 @@ class EloquentUserRepository extends AbstractEloquentRepository implements UserR
     {
         return $this->model->newQuery()->find($id);
     }
+
+    public function findByEmail($email)
+    {
+        return $this->model->newQuery()->where('username', $email)->first();
+    }
 }

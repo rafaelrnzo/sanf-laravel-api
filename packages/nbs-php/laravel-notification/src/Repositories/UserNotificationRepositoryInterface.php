@@ -19,4 +19,6 @@ interface UserNotificationRepositoryInterface
     public function getUserNotificationUnreadCountByTypes($userId, $notificationTypes);
 
     public function setUserNotificationReadByIdsAndTypes($userId, $notificationIds, $notificationTypes, $readAt);
+
+    public function deleteFcmToken($token);
 }

@@ -8,5 +8,5 @@ class PrepaymentSimulationNotFoundException extends ApiException
 {
     protected $code = '001';
 
-    protected $message = 'Prepayment Simulation Not Found Exception';
+    protected $message = 'Prepayment Simulation Not Found';
 }

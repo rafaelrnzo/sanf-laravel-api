@@ -14,13 +14,16 @@ class AlterNotificationUserSessionTable extends Migration
 
             $table->foreign('notification_channel_id')
                 ->references('id')
-                ->on('user_session')
+                ->on('notification_channel')
                 ->onDelete('RESTRICT');
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('user_session');
+        Schema::table('user_session', function (Blueprint $table) {
+            $table->dropColumn('notification_channel_id');
+            $table->dropColumn('notification_token');
+        });
     }
 }

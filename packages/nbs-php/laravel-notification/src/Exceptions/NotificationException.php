@@ -1,12 +1,12 @@
 <?php
 
 
-namespace NbsPhp\Notification;
+namespace NbsPhp\Notification\Exceptions;
 
 
 use NbsPhp\Core\Exceptions\ApiException;
 
-class NotificationException extends ApiException
+abstract class NotificationException extends ApiException
 {
     protected $code;
 

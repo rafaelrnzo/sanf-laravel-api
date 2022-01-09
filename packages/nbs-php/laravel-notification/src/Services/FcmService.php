@@ -2,11 +2,6 @@
 
 namespace NbsPhp\Notification\Services;
 
-use Firebase\Auth\Token\Exception\InvalidToken;
-use Firebase\Auth\Token\Exception\IssuedInTheFuture;
-use Kreait\Firebase\Exception\Messaging\AuthenticationError;
-use Kreait\Firebase\Exception\Messaging\InvalidArgument;
-use Kreait\Firebase\Exception\Messaging\NotFound;
 use Kreait\Firebase\Factory;
 use Kreait\Firebase\Messaging\AppInstance;
 use Kreait\Firebase\Messaging\RawMessageFromArray;
@@ -72,7 +67,7 @@ class FcmService implements PushNotificationServiceInterface
                     'icon' => (string)($data['icon'] ?? ''),
                 ],
                 'fcm_options' => [
-                    'link' => (string)$data['link'],
+                    'link' => (string)($data['link'] ?? ''),
                 ],
             ],
         ];
@@ -87,62 +82,47 @@ class FcmService implements PushNotificationServiceInterface
 
     public function sendToDevice(string $token, array $data, array $options = [])
     {
-        try {
-            $message = [
-                'token' => $token,
+        $message = [
+            'token' => $token,
+            'notification' => [
+                // https://firebase.google.com/docs/reference/fcm/rest/v1/projects.messages#notification
+                'title' => (string)$data['title'],
+                'body' => (string)$data['body'],
+            ],
+            'data' => array_merge([
+                'sound' => 'default',
+            ], $data),
+            'apns' => [
+                'headers' => [
+                    'apns-priority' => '10',
+                ],
+                'payload' => [
+                    'aps' => array_merge([
+                        'alert' => array_merge([
+                            'sound' => 'default',
+                        ], $data),
+                        'badge' => 1,
+                        'mutable-content' => 1,
+                        'sound' => 'default',
+                    ], $options),
+                ],
+            ],
+            'webpush' => [
+                // https://firebase.google.com/docs/reference/fcm/rest/v1/projects.messages#webpushconfig
                 'notification' => [
-                    // https://firebase.google.com/docs/reference/fcm/rest/v1/projects.messages#notification
                     'title' => (string)$data['title'],
                     'body' => (string)$data['body'],
+                    'icon' => (string)($data['icon'] ?? ''),
                 ],
-                'data' => array_merge([
-                    'sound' => 'default',
-                ], $data),
-                'apns' => [
-                    'headers' => [
-                        'apns-priority' => '10',
-                    ],
-                    'payload' => [
-                        'aps' => array_merge([
-                            'alert' => array_merge([
-                                'sound' => 'default',
-                            ], $data),
-                            'badge' => 1,
-                            'mutable-content' => 1,
-                            'sound' => 'default',
-                        ], $options),
-                    ],
+                'fcm_options' => [
+                    'link' => (string)($data['link'] ?? ''),
                 ],
-                'webpush' => [
-                    // https://firebase.google.com/docs/reference/fcm/rest/v1/projects.messages#webpushconfig
-                    'notification' => [
-                        'title' => (string)$data['title'],
-                        'body' => (string)$data['body'],
-                        'icon' => (string)($data['icon'] ?? ''),
-                    ],
-                    'fcm_options' => [
-                        'link' => (string)$data['link'],
-                    ],
-                ],
-            ];
+            ],
+        ];
 
-            if (strlen($token) > 0) {
-                $messaging = $this->firebase->createMessaging();
-                $messaging->send(new RawMessageFromArray($message));
-            }
-        } catch (IssuedInTheFuture $e) {
-            report($e);
-        } catch (InvalidToken $e) {
-            // TODO: DELETE TOKEN
-            report($e);
-        } catch (NotFound $e) {
-            // TODO: DELETE TOKEN
-        } catch (InvalidArgument $e) {
-            // TODO: DELETE TOKEN
-            report($e);
-        } catch (AuthenticationError $e) {
-            //TODO throw fatal exception
-            report($e);
+        if (strlen($token) > 0) {
+            $messaging = $this->firebase->createMessaging();
+            $messaging->send(new RawMessageFromArray($message));
         }
     }
 
