@@ -3,11 +3,11 @@
 namespace NbsPhp\Notification\Jobs;
 
 use Kreait\Firebase\Exception\MessagingException;
-use NbsPhp\Core\Job;
+use NbsPhp\Core\AbstractJob;
 use NbsPhp\Notification\Models\UserSessionModel;
 use NbsPhp\Notification\Services\PushNotificationServiceInterface;
 
-class SendPushNotificationJob extends Job
+class SendPushNotificationJob extends AbstractJob
 {
     protected $token;
     protected $payload;

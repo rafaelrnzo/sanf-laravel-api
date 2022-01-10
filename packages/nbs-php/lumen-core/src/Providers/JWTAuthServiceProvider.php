@@ -3,8 +3,8 @@
 namespace NbsPhp\Core\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use NbsPhp\Core\JWTHelper;
-use NbsPhp\Core\JWTGuard;
+use NbsPhp\Core\Jwt\JWTGuard;
+use NbsPhp\Core\Jwt\JWTHelper;
 
 class JWTAuthServiceProvider extends ServiceProvider
 {

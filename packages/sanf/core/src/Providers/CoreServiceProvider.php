@@ -38,14 +38,14 @@ use Sanf\Core\Modules\Financing\Specifications\FinancingApplicationSpecification
 use Sanf\Core\Modules\Financing\Specifications\FinancingFacilitySpecificationFactoryInterface;
 use Sanf\Core\Modules\Financing\Specifications\FinancingMethodSpecificationFactoryInterface;
 use Sanf\Core\Modules\Financing\Specifications\FinancingPrerequisiteSpecificationFactoryInterface;
-use Sanf\Core\Modules\Invoice\Repositories\EloquentInvoiceCollectionSubmissionRepository;
-use Sanf\Core\Modules\Invoice\Repositories\InvoiceCollectionSubmissionRepositoryInterface;
-use Sanf\Core\Modules\Invoice\Specifications\EloquentInvoiceCollectionSubmissionSpecificationFactory;
-use Sanf\Core\Modules\Invoice\Specifications\InvoiceCollectionSubmissionSpecificationFactoryInterface;
 use Sanf\Core\Modules\Insurance\Repositories\EloquentInsuranceClaimSubmissionRepository;
 use Sanf\Core\Modules\Insurance\Repositories\InsuranceClaimSubmissionRepositoryInterface;
 use Sanf\Core\Modules\Insurance\Specifications\EloquentInsuranceClaimSubmissionSpecificationFactory;
 use Sanf\Core\Modules\Insurance\Specifications\InsuranceClaimSubmissionSpecificationFactoryInterface;
+use Sanf\Core\Modules\Invoice\Repositories\EloquentInvoiceCollectionSubmissionRepository;
+use Sanf\Core\Modules\Invoice\Repositories\InvoiceCollectionSubmissionRepositoryInterface;
+use Sanf\Core\Modules\Invoice\Specifications\EloquentInvoiceCollectionSubmissionSpecificationFactory;
+use Sanf\Core\Modules\Invoice\Specifications\InvoiceCollectionSubmissionSpecificationFactoryInterface;
 use Sanf\Core\Modules\Location\EloquentLocationRepository;
 use Sanf\Core\Modules\Location\LocationRepositoryInterface;
 use Sanf\Core\Modules\News\EloquentNewsRepository;
@@ -81,8 +81,8 @@ class CoreServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
         $this->loadFactoriesFrom(__DIR__ . '/../../database/factories');
 
-        Auth::provider('mobile-user', function ($app, array $config) {
-            return new MobileUserProvider($app['hash'], $config['model']);
+        Auth::provider('eloquent-mobile-user-provider', function ($app, array $config) {
+            return new EloquentMobileUserProvider($app['hash'], $config['model']);
         });
     }
 

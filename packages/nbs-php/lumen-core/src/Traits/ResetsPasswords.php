@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 use NbsPhp\Core\Exceptions\ResetPasswordFailedException;
-use NbsPhp\Core\JWTHelper;
+use NbsPhp\Core\Jwt\JWTHelper;
 
 trait ResetsPasswords
 {

@@ -9,7 +9,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use NbsPhp\Core\Enum\EntityType;
 use NbsPhp\Core\Enum\UserStatus;
 use NbsPhp\Core\Exceptions\EmailAlreadyExistException;
-use NbsPhp\Core\JWTHelper;
+use NbsPhp\Core\Jwt\JWTHelper;
 use NbsPhp\Core\Models\AuthModel;
 
 class RegisterByEmailService implements RegisterByEmailServiceInterface

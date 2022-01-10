@@ -1,6 +1,6 @@
 <?php
 
-namespace NbsPhp\Core;
+namespace NbsPhp\Core\Jwt;
 
 use Firebase\JWT\JWK;
 use Firebase\JWT\JWT;
@@ -9,6 +9,8 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use NbsPhp\Core\Exceptions\ExpiredAccessTokenException;
 use NbsPhp\Core\Exceptions\InvalidTokenException;
 use NbsPhp\Core\Models\UserSessionModel;
+use function config;
+use function report;
 
 
 class JWTHelper

@@ -53,7 +53,7 @@ class ResetPasswordNotification extends Notification
     {
         $agent = new Agent();
         $tokenDuration = 60 * 60; //1 hours
-        $jwtToken = (new \NbsPhp\Core\JWTHelper())->newResetPasswordToken($notifiable->getEmailForPasswordReset(), $this->token, $tokenDuration);
+        $jwtToken = (new \NbsPhp\Core\Jwt\JWTHelper())->newResetPasswordToken($notifiable->getEmailForPasswordReset(), $this->token, $tokenDuration);
         $resetPasswordUrl = ($agent->isiPhone() || $agent->isiOS() || $agent->isiPad()) ? config('auth.urls.reset_password_ios') : config('auth.urls.reset_password');
         if ($resetPasswordUrl != '' || $resetPasswordUrl != null) {
             return "{$resetPasswordUrl}?token={$jwtToken}";

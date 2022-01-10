@@ -126,8 +126,12 @@ return [
     'guards' => [
         'api' => [
             'driver' => 'jwt-auth',
-            'provider' => 'mobile-auth'
+            'provider' => 'mobile-user-provider'
         ],
+//        'external' => [
+//            'driver' => 'basic-auth',
+//            'provider' => 'mobile-auth'
+//        ],
     ],
 
     /*
@@ -148,18 +152,22 @@ return [
     */
 
     'providers' => [
-        'mobile-auth' => [
-            'driver' => 'mobile-user',
+        'mobile-user-provider' => [
+            'driver' => 'eloquent-mobile-user-provider',
             'model' => \NbsPhp\Core\Models\AuthModel::class,
         ],
-        'app-auth' => [
+        'mobile-client-user-provider' => [
             'client_id' => env('APP_CLIENT_ID'),
             'client_secret' => env('APP_CLIENT_SECRET'),
         ],
-        'api' => [
-            'driver' => 'api-user',
-            'model' => \NbsPhp\Core\Models\ApiAuthModel::class,
+        'core-h2h-user-provider' => [
+            'client_id' => env('CORE_H2H_CLIENT_ID'),
+            'client_secret' => env('CORE_H2H_CLIENT_SECRET'),
         ],
+//        'api-user-provider' => [
+//            'driver' => 'eloquent-api-user-provider',
+//            'model' => \NbsPhp\Core\Models\ApiAuthModel::class,
+//        ],
     ],
 
     /*
@@ -201,7 +209,7 @@ return [
                 'uri' => "v1/auth/user-app",
                 'name' => 'auth.user-app',
                 'action' => "{$namespace}AuthController@loginApp",
-                'middleware' => [],
+                'middleware' => ['basic-auth-config:mobile-client-user-provider'],
             ],
             [
                 'method' => 'post',

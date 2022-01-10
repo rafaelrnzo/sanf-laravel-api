@@ -96,8 +96,10 @@ class CoreServiceProvider extends ServiceProvider
         ]);
         $this->app->routeMiddleware([
             'auth' => \NbsPhp\Core\Middleware\AuthenticateMiddleware::class,
+            'user-auth' => \NbsPhp\Core\Middleware\AuthenticateMiddleware::class,
+            'basic-auth-config' => \NbsPhp\Core\Middleware\BasicAuthConfigMiddleware::class,
+            'can' => \NbsPhp\Core\Middleware\AuthorizationMiddleware::class,
             'horizonBasicAuth' => \NbsPhp\Core\Middleware\HorizonBasicAuthMiddleware::class,
-            'basicClient' => \NbsPhp\Core\Middleware\BasicClientAuthMiddleware::class,
         ]);
     }
 

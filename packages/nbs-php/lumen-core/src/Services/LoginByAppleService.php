@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use NbsPhp\Core\Enum\AuthProvider;
 use NbsPhp\Core\Enum\OAuthProvider;
 use NbsPhp\Core\Exceptions\OAuthUserNotBoundException;
-use NbsPhp\Core\JWTHelper;
+use NbsPhp\Core\Jwt\JWTHelper;
 use NbsPhp\Core\Models\AuthModel;
 use NbsPhp\Core\Models\UserOAuthModel;
 use NbsPhp\Core\Models\UserSessionModel;

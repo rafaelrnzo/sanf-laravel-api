@@ -4,8 +4,7 @@
 namespace NbsPhp\Core\Services;
 
 
-use NbsPhp\Core\Exceptions\InvalidCredentialException;
-use NbsPhp\Core\JWTHelper;
+use NbsPhp\Core\Jwt\JWTHelper;
 
 class AppLoginService implements ApplicationServiceInterface
 {
@@ -22,11 +21,6 @@ class AppLoginService implements ApplicationServiceInterface
 
     public function execute($dto = null)
     {
-        if ($dto->clientId !== config('auth.providers.app-auth.client_id')
-            || $dto->clientSecret !== config('auth.providers.app-auth.client_secret')) {
-            throw new InvalidCredentialException();
-        }
-
         $token = $this->jwt->getAppToken();
         $accessTokenExpiredAt = $this->jwt->getDecodedAppToken()->exp;
 

@@ -3,10 +3,10 @@
 namespace NbsPhp\Notification\Jobs;
 
 use Illuminate\Mail\Mailer;
-use NbsPhp\Core\Job;
+use NbsPhp\Core\AbstractJob;
 use NbsPhp\Core\Mail\BaseMail;
 
-class SendEmailNotificationJob extends Job
+class SendEmailNotificationJob extends AbstractJob
 {
     protected $notifiable;
     protected $payload;

@@ -15,7 +15,7 @@ use NbsPhp\Core\Enum\DevicePlatform;
 use NbsPhp\Core\Exceptions\UnauthorizedException;
 use NbsPhp\Core\Exceptions\UserActivationFailedException;
 use NbsPhp\Core\Exceptions\VerifyEmailFailedException;
-use NbsPhp\Core\JWTHelper;
+use NbsPhp\Core\Jwt\JWTHelper;
 use NbsPhp\Core\Services\ActivateUserServiceInterface;
 use NbsPhp\Core\Services\AppLoginService;
 use NbsPhp\Core\Services\ChangePasswordService;

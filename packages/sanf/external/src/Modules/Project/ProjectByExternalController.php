@@ -1,6 +1,6 @@
 <?php
 
-namespace Sanf\External\Modules\Commodity;
+namespace Sanf\External\Modules\Project;
 
 
 use NbsPhp\Core\Controllers\AbstractController;

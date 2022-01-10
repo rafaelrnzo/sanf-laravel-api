@@ -3,10 +3,10 @@
 namespace NbsPhp\Notification\Jobs;
 
 
-use NbsPhp\Core\Job;
+use NbsPhp\Core\AbstractJob;
 use NbsPhp\Notification\Models\UserNotificationModel;
 
-class InsertDatabaseNotificationJob extends Job
+class InsertDatabaseNotificationJob extends AbstractJob
 {
     protected $notifiable;
     protected $payload;

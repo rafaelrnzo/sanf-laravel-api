@@ -44,7 +44,7 @@ class VerifyEmailNotification extends Notification
         //TODO CONFIGURABLE TOKEN DURATION
         $tokenDuration = 60 * 60; //1 hours
         $token = sha1($notifiable->getEmailForVerification());
-        $jwtToken = (new \NbsPhp\Core\JWTHelper())->newVerifyEmailToken($notifiable->getKey(), $token, $tokenDuration);
+        $jwtToken = (new \NbsPhp\Core\Jwt\JWTHelper())->newVerifyEmailToken($notifiable->getKey(), $token, $tokenDuration);
         if ($emailVerifyUrl !== '' || $emailVerifyUrl !== null) {
             return "{$emailVerifyUrl}?token={$jwtToken}";
         }

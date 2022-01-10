@@ -7,7 +7,7 @@ namespace NbsPhp\Core\Services;
 use Illuminate\Support\Facades\Auth;
 use NbsPhp\Core\Enum\AuthProvider;
 use NbsPhp\Core\Exceptions\InvalidRefreshTokenException;
-use NbsPhp\Core\JWTHelper;
+use NbsPhp\Core\Jwt\JWTHelper;
 use NbsPhp\Core\Models\AuthModel;
 use NbsPhp\Core\Models\UserSessionModel;
 

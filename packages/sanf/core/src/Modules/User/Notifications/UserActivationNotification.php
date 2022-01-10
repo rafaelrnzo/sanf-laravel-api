@@ -46,7 +46,7 @@ class UserActivationNotification extends Notification
         //TODO CONFIGURABLE TOKEN DURATION
         $tokenDuration = 60 * 60; //1 hours
         $token = sha1($email);
-        $jwtToken = (new \NbsPhp\Core\JWTHelper())->newVerifyEmailToken($notifiable->getKey(), $token, $tokenDuration);
+        $jwtToken = (new \NbsPhp\Core\Jwt\JWTHelper())->newVerifyEmailToken($notifiable->getKey(), $token, $tokenDuration);
         if ($userActivationUrl !== '' || $userActivationUrl !== null) {
             return "{$userActivationUrl}?email={$email}&token={$jwtToken}";
         }

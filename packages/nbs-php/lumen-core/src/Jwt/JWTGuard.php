@@ -1,14 +1,15 @@
 <?php
 
-namespace NbsPhp\Core;
+namespace NbsPhp\Core\Jwt;
 
-use Illuminate\Http\Request;
-use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Auth\GuardHelpers;
-use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Contracts\Auth\UserProvider;
+use Illuminate\Http\Request;
 use NbsPhp\Core\Exceptions\InvalidTokenException;
 use NbsPhp\Core\Exceptions\UnauthorizedException;
+use NbsPhp\Core\JWTSubject;
 
 class JWTGuard implements Guard
 {
@@ -40,7 +41,7 @@ class JWTGuard implements Guard
     /**
      * The JWT Helper Object.
      *
-     * @var \NbsPhp\Core\JWTHelper
+     * @var \NbsPhp\Core\Jwt\JWTHelper
      */
     protected $jwt;
 

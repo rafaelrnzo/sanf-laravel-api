@@ -4,10 +4,10 @@ namespace NbsPhp\Notification\Jobs;
 
 
 use Illuminate\Support\Facades\DB;
-use NbsPhp\Core\Job;
+use NbsPhp\Core\AbstractJob;
 use NbsPhp\Notification\Models\UserMetadataModel;
 
-class UpdateMetadataNotificationJob extends Job
+class UpdateMetadataNotificationJob extends AbstractJob
 {
     protected $notifiable;
     protected $event;
