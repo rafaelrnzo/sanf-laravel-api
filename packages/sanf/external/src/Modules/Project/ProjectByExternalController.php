@@ -2,6 +2,7 @@
 
 namespace Sanf\External\Modules\Project;
 
+namespace Sanf\External\Modules\Project;
 
 use NbsPhp\Core\Controllers\AbstractController;
 use Sanf\Core\Modules\Project\Services\ApproveProjectByExternalService;
