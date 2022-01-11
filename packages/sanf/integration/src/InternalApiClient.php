@@ -819,12 +819,12 @@ class InternalApiClient
      * @throws EndpointNotDefinedException
      * @throws GuzzleException
      */
-    public function getPdc($customerId, $limit, $skip, $sort_by, $contract_no = null)
+    public function getPdc($customerId, $limit, $skip, $sort_by, $keyword = null)
     {
         $response = Request::route('contracts.pdc')
             ->queryParams([
                 'cust_id' => $customerId,
-                'contrak_no' => $contract_no,
+                'contrak_no' => $keyword,
                 'skip' => $skip,
                 'limit' => $limit,
                 'order' => $sort_by,
@@ -869,7 +869,7 @@ class InternalApiClient
         $limit,
         $skip,
         $sort_by,
-        $contract_no = null
+        $keyword = null
     ) {
         $response = Request::route('contracts.financing-unit-submission')
             ->queryParams([
@@ -877,7 +877,7 @@ class InternalApiClient
                 'skip' => $skip,
                 'limit' => $limit,
                 'order' => $sort_by,
-                'contract_no' => $contract_no
+                'no_kontrak' => $keyword
             ])
             ->send();
 

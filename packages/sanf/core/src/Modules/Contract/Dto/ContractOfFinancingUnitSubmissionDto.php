@@ -16,5 +16,5 @@ class ContractOfFinancingUnitSubmissionDto extends DataTransferObject
 
     public string $sort_by = 'earliest';
 
-    public ?string $contract_no;
+    public ?string $keyword;
 }

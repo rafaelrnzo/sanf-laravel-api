@@ -24,7 +24,7 @@ final class PostDatedChequeByUserController extends RestApiController
         ListContractPostDatedChequeService $service
     ) {
         $input = $this->validate($request, [
-            'contract_no' => ['nullable', 'string', 'max:255'],
+            'keyword' => ['nullable', 'string', 'max:255'],
             'skip' => ['nullable', 'integer', 'max:99'],
             'limit' => ['nullable', 'integer', 'max:99'],
             'sort_by' => ['nullable', 'in:earliest,latest'],

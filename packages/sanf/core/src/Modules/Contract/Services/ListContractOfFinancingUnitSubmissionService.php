@@ -43,7 +43,7 @@ class ListContractOfFinancingUnitSubmissionService extends UserService implement
                 $dto->limit,
                 $dto->skip,
                 $dto->sort_by,
-                $dto->contract_no
+                $dto->keyword
             );
             $data = collect($response->data)->map(function ($item) {
                 return (object)[
