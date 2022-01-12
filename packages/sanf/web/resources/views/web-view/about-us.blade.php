@@ -274,9 +274,9 @@
         <div class="mt-3">
           <p class="sf-title">Social Media Kami</p>
           <div class="sf-social-media mt-2">
-            <a href="#"><img src="{{ asset('assets/svg/web.svg') }}" alt="SANF Web" draggable="false" /></a>
-            <a href="#"><img src="{{ asset('assets/svg/ig.svg') }}" alt="SANF Instagram" draggable="false" /></a>
-            <a href="#"><img src="{{ asset('assets/svg/linkedin.svg') }}" alt="SANF Linkedin" draggable="false" /></a>
+            <a href="https://www.sanf.co.id" target="_blank"><img src="{{ asset('assets/svg/web.svg') }}" alt="SANF Web" draggable="false" /></a>
+            <a href="https://www.instagram.com/joinsanf/?hl=en" target="_blank"><img src="{{ asset('assets/svg/ig.svg') }}" alt="SANF Instagram" draggable="false" /></a>
+            <a href="https://id.linkedin.com/company/pt-surya-artha-nusantara-finance" target="_blank"><img src="{{ asset('assets/svg/linkedin.svg') }}" alt="SANF Linkedin" draggable="false" /></a>
           </div>
         </div>
         <div class="mt-3">
