@@ -2,6 +2,7 @@
 
 namespace NbsPhp\Core\Jwt;
 
+use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\GuardHelpers;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Guard;
@@ -196,7 +197,7 @@ class JWTGuard implements Guard
     /**
      * Create a token for a user.
      *
-     * @param JWTSubject $user
+     * @param $user
      *
      * @return string
      */
@@ -204,7 +205,7 @@ class JWTGuard implements Guard
     {
         //TODO SET USER SESSION IN HERE
         $this->setUser($user);
-
+        event(new Login($this->name, $user, false));
         return $this->generateTokenFromUser();
     }
 
