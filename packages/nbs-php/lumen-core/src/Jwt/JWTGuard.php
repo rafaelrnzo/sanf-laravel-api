@@ -10,7 +10,6 @@ use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Http\Request;
 use NbsPhp\Core\Exceptions\InvalidTokenException;
 use NbsPhp\Core\Exceptions\UnauthorizedException;
-use NbsPhp\Core\JWTSubject;
 
 class JWTGuard implements Guard
 {

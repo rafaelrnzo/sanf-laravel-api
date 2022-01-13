@@ -229,7 +229,7 @@ return [
                 'method' => 'post',
                 'uri' => "{$routePrefix}/log-in",
                 'name' => 'login.email',
-                'action' => "{$namespace}AuthController@login",
+                'action' => "Sanf\Api\Modules\User\Controllers\AuthController@login",
                 'middleware' => ['auth'],
             ],
             [
