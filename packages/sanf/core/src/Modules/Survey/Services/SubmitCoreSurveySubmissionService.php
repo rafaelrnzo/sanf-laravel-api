@@ -3,7 +3,8 @@
 namespace Sanf\Core\Modules\Survey\Services;
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\Survey\Dtos\FormAddSurveyByUserDto;
+use Sanf\Core\Modules\Survey\Dtos\AddSurveySubmissionRequestDTO;
+use Sanf\Core\Modules\Survey\Entities\SurveyEntity;
 use Sanf\Integration\InternalApiClient;
 
 class SubmitCoreSurveySubmissionService implements ApplicationServiceInterface
@@ -16,21 +17,22 @@ class SubmitCoreSurveySubmissionService implements ApplicationServiceInterface
     }
 
     /**
-     * @param FormAddSurveyByUserDto|null $dto
+     * @param SurveyEntity $entity
      * @return bool
      */
-    public function execute($dto = null)
+    public function execute($entity = null)
     {
         $input = [
-            'cust_id' => $dto->profileXid,
-            'reg_no' => $dto->contractNo,
-            'br_id' => $dto->branchId,
+            'cust_id' => $entity->getProfileXid(),
+            'reg_no' => $entity->getContractNo(),
+            'br_id' => $entity->getBranchId(),
         ];
-        $input['item'] = collect($dto->items)->map(function ($data) use ($dto) {
+        $input['item'] = collect($entity->getItems())->map(function ($data) {
             $imagesFile = [];
-            foreach ($data['image_files'] as $image) {
+            $paths = explode('|', $data['image_path']);
+            foreach ($paths as $path) {
                 $imagesFile[] = (object)[
-                    'IMAGEITEM' => "/surveys/$dto->contractNo/{$data['code']}/{$image['file_name']}"
+                    'IMAGEITEM' => $path,
                 ];
             }
             return (object)[

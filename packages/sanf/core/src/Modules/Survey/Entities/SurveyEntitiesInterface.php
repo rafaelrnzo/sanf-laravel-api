@@ -11,5 +11,6 @@ interface SurveyEntitiesInterface
     public function getProfileXid();
     public function getCustomerName();
     public function getProjectName();
-    public function getProjetLocation();
+    public function getProjectLocation();
+    public function getItems();
 }

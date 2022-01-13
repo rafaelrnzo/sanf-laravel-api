@@ -4,6 +4,7 @@ namespace Sanf\Core\Modules\Survey\Repositories;
 
 use Illuminate\Support\Facades\DB;
 use NbsPhp\Core\Repositories\AbstractEloquentRepository;
+use Sanf\Core\Modules\Survey\Entities\SurveyEntitiesInterface;
 use Sanf\Core\Modules\Survey\Entities\SurveyEntityFactoryInterface;
 use Sanf\Core\Modules\Survey\Models\SurveyItemModel;
 use Sanf\Core\Modules\Survey\Models\SurveyModel;
@@ -24,22 +25,26 @@ class EloquentSurveyRepository extends AbstractEloquentRepository implements Sur
         $this->entityFactory = $entityFactory;
     }
 
-    public function add($fields)
+    /**
+     * @param array $fields
+     * @return SurveyEntitiesInterface
+     */
+    public function add($fields): SurveyEntitiesInterface
     {
-        $transaction = DB::transaction(function () use ($fields) {
+        [$transaction, $transactionItem] = DB::transaction(function () use ($fields) {
             $surveyInput = collect($fields)->except('items')->toArray();
-            $model = $this->surveyModel
+            $survey = $this->surveyModel
                 ->newQuery()
                 ->forceCreate($surveyInput);
 
             foreach ($fields['items'] as $surveyItemInput) {
-                $surveyItemInput['survey_id'] = $model->id;
+                $surveyItemInput['survey_id'] = $survey->id;
                 $this->surveyItemModel
                     ->newQuery()
                     ->forceCreate($surveyItemInput);
             }
 
-            return $model;
+            return [$survey, $survey->surveyItems];
         });
 
         return $this->entityFactory->make($transaction->toArray());

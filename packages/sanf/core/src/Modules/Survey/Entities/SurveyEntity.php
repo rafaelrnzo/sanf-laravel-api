@@ -46,8 +46,13 @@ final class SurveyEntity implements SurveyEntitiesInterface
         return $this->attributes['project_name'];
     }
 
-    public function getProjetLocation()
+    public function getProjectLocation()
     {
         return $this->attributes['project_location'];
+    }
+
+    public function getItems()
+    {
+        return $this->attributes['survey_items'];
     }
 }

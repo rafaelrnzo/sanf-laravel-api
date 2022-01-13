@@ -13,7 +13,7 @@ use Sanf\Core\Modules\User\Services\UserService;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 use Sanf\Integration\InternalApiClient;
 
-class GetListSurveyByUserService extends UserService implements ApplicationServiceInterface
+class GetListSurveyService extends UserService implements ApplicationServiceInterface
 {
     /**
      * @var InternalApiClient

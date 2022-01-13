@@ -3,9 +3,8 @@
 namespace Sanf\Api\Modules\Survey\Transformers;
 
 use League\Fractal\TransformerAbstract;
-use Spatie\Fractalistic\ArraySerializer;
 
-class SurveyByUserTransformer extends TransformerAbstract
+class GetListSurveyResponseTransformer extends TransformerAbstract
 {
     public function transform($data)
     {
@@ -18,8 +17,6 @@ class SurveyByUserTransformer extends TransformerAbstract
             'company_name' => $data->company_name,
             'customer_name' => $data->customer_name,
             'project_location' => $data->project_location,
-            'items' => fractal($data->items, SurveyItemTransformer::class)
-                ->serializeWith(new ArraySerializer()),
         ];
     }
 }

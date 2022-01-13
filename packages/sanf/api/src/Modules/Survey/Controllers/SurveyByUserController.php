@@ -6,20 +6,20 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
-use Sanf\Api\Modules\Survey\Transformers\SurveyByUserSimpleTransformer;
-use Sanf\Api\Modules\Survey\Transformers\SurveyByUserTransformer;
-use Sanf\Core\Modules\Survey\Dtos\FormAddSurveyByUserDto;
-use Sanf\Core\Modules\Survey\Dtos\PaginateSurveyByUserDto;
+use Sanf\Api\Modules\Survey\Transformers\GetListSurveyResponseTransformer;
+use Sanf\Api\Modules\Survey\Transformers\GetDetailSurveyResponseTransformer;
+use Sanf\Core\Modules\Survey\Dtos\AddSurveySubmissionRequestDTO;
+use Sanf\Core\Modules\Survey\Dtos\GetListSurveyRequestDTO;
 use Sanf\Core\Modules\Survey\Services\AddSurveySubmissionService;
 use Sanf\Core\Modules\Survey\Services\GetDetailSurveyByUserService;
-use Sanf\Core\Modules\Survey\Services\GetListSurveyByUserService;
+use Sanf\Core\Modules\Survey\Services\GetListSurveyService;
 
 class SurveyByUserController extends RestApiController
 {
     public function browse(
         Guard $auth,
         Request $request,
-        GetListSurveyByUserService $service
+        GetListSurveyService $service
     ) {
         $input = $this->validate(
             $request,
@@ -30,11 +30,11 @@ class SurveyByUserController extends RestApiController
                 'sort_by' => ['nullable', 'in:earliest,latest'],
             ]
         );
-        $dto = new PaginateSurveyByUserDto($input + ['userId' => $auth->id()]);
+        $dto = new GetListSurveyRequestDTO($input + ['userId' => $auth->id()]);
 
         $result = $service->execute($dto);
 
-        return fractal($result->data, SurveyByUserSimpleTransformer::class)
+        return fractal($result->data, GetListSurveyResponseTransformer::class)
             ->paginateWith(new LazyPaginatorAdapter($result->paginate));
     }
 
@@ -55,11 +55,11 @@ class SurveyByUserController extends RestApiController
                 'items.*.title' => ['required', 'string', 'max:255'],
                 'items.*.description' => ['required', 'string', 'max:65535'],
                 'items.*.image_files' => ['required', 'array'],
-                'items.*.image_files.*' => ['required', 'string', 'max:255'],
+                'items.*.image_files.*' => ['required', 'image', 'mimes:jpg,jpeg,png', 'max:5000'],
             ]
         );
 
-        $dto = new FormAddSurveyByUserDto($input);
+        $dto = new AddSurveySubmissionRequestDTO($input);
 
         $result = $service->execute($dto);
 
@@ -81,7 +81,7 @@ class SurveyByUserController extends RestApiController
             ]
         );
 
-        $dto = new PaginateSurveyByUserDto(
+        $dto = new GetListSurveyRequestDTO(
             $input + [
                 'userId' => $auth->id(),
                 'contractNo' => $contract_no,
@@ -90,6 +90,6 @@ class SurveyByUserController extends RestApiController
 
         $result = $service->execute($dto);
 
-        return fractal($result->data, SurveyByUserTransformer::class);
+        return fractal($result->data, GetDetailSurveyResponseTransformer::class);
     }
 }
