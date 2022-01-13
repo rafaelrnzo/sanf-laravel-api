@@ -15,25 +15,18 @@ class CreateMLocationTable extends Migration
     {
         Schema::create('m_location', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('administrative_area_id')->index();
-            $table->string('name')->index();
-            $table->bigInteger('parent_id')->nullable();
-            $table->string('location_code', 50)->index();
-            $table->string('postal_code', 50)->nullable()->index();
-            $table->double('latitude')->nullable();
-            $table->double('longitude')->nullable();
+            $table->string('xid', 32);
+            $table->string('name', 128);
             $table->smallInteger('level');
-            $table->smallInteger('sort')->default(0);
+            $table->smallInteger('depth');
+            $table->smallInteger('parent_id')->nullable();
+            $table->smallInteger('postal_code')->nullable();
+            $table->integer('sort')->default(1);
             $table->json('metadata');
-            $table->timestamp('created_at')->nullable();
-            $table->timestamp('updated_at')->nullable();
+            $table->timestampTz('created_at', 6)->nullable()->default((DB::raw('CURRENT_TIMESTAMP')));
+            $table->timestampTz('updated_at', 6)->nullable()->default((DB::raw('CURRENT_TIMESTAMP')));
             $table->json('modified_by');
-            $table->bigInteger('version')->default(1);
-
-            $table->foreign('administrative_area_id')
-                ->references('id')
-                ->on('m_administrative_area')
-                ->onDelete('RESTRICT');
+            $table->bigInteger('version')->unsigned()->default(0);
         });
     }
 
@@ -44,6 +37,6 @@ class CreateMLocationTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('m_location');
+//        Schema::dropIfExists('m_location');
     }
 }
