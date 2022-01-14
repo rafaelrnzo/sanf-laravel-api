@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use League\Flysystem\FileNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\Survey\Dtos\AddSurveySubmissionRequestDTO;
+use Sanf\Core\Modules\Survey\Dtos\AddSurveySubmissionRequestDto;
 use Sanf\Core\Modules\Survey\Jobs\SubmitCoreSurveySubmissionJob;
 use Sanf\Core\Modules\Survey\Repositories\SurveyRepositoryInterface;
 
@@ -21,7 +21,7 @@ class AddSurveySubmissionService implements ApplicationServiceInterface
     }
 
     /**
-     * @param AddSurveySubmissionRequestDTO|null $dto
+     * @param AddSurveySubmissionRequestDto|null $dto
      * @return bool
      * @throws BindingResolutionException
      */
@@ -67,7 +67,5 @@ class AddSurveySubmissionService implements ApplicationServiceInterface
         $surveySubmission = $this->repository->add($input);
 
         dispatch(new SubmitCoreSurveySubmissionJob($surveySubmission));
-
-        return true;
     }
 }

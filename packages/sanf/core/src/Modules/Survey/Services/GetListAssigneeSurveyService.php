@@ -56,14 +56,14 @@ class GetListAssigneeSurveyService extends UserService implements ApplicationSer
                 }
 
                 return (object)[
-                    'branch_id' => $property->BR_ID ?? null,
-                    'profile_xid' => $property->CUST_ID ?? null,
-                    'contract_no' => $property->REG_NO ?? null,
-                    'project_name' => $property->PROJ_NAME ?? null,
-                    'segment' => $property->SEGMENT ?? null,
-                    'company_name' => $property->COMPANY_NAME ?? null,
-                    'customer_name' => $property->CUST_NAME ?? null,
-                    'project_location' => $property->LOCATION ?? null,
+                    'branch_id' => $property->HEADER->BR_ID ?? null,
+                    'profile_xid' => $property->HEADER->CUST_ID ?? null,
+                    'contract_no' => $property->HEADER->REG_NO ?? null,
+                    'project_name' => $property->HEADER->PROJ_NAME ?? null,
+                    'segment' => $property->HEADER->SEGMENT ?? null,
+                    'pic_name' => $property->HEADER->PIC_NAME ?? null,
+                    'customer_name' => $property->HEADER->CUST_NAME ?? null,
+                    'project_location' => $property->HEADER->LOCATION ?? null,
                     'items' => $items ?? null,
                 ];
             });

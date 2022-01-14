@@ -3,7 +3,6 @@
 namespace Sanf\Core\Modules\Survey\Services;
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\Survey\Dtos\AddSurveySubmissionRequestDTO;
 use Sanf\Core\Modules\Survey\Entities\SurveyEntity;
 use Sanf\Integration\InternalApiClient;
 
@@ -42,9 +41,6 @@ class SubmitCoreSurveySubmissionService implements ApplicationServiceInterface
                 'IMAGES' => $imagesFile
             ];
         })->toArray();
-
-        $submit = $this->internalApiClient->addSurvey($input);
-
-        return true;
+        $this->internalApiClient->addSurvey($input);
     }
 }

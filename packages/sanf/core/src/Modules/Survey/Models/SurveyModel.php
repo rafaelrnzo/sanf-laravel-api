@@ -14,7 +14,7 @@ class SurveyModel extends AbstractModel
         'contract_no',
         'profile_xid',
         'customer_name',
-        'company_name',
+        'pic_name',
         'project_name',
         'project_location',
         'segment',

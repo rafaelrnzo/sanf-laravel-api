@@ -4,7 +4,7 @@ namespace Sanf\Core\Modules\Survey\Dtos;
 
 use NbsPhp\Core\Dto\CamelCaseDataTransferObject;
 
-class GetListSurveyRequestDTO extends CamelCaseDataTransferObject
+class GetListSurveyRequestDto extends CamelCaseDataTransferObject
 {
     public int $userId;
 

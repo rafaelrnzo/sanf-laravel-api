@@ -7,7 +7,6 @@ use Illuminate\Support\Str;
 use NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\Survey\Enums\SurveyStatusEnum;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Core\Modules\User\Services\UserService;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
@@ -52,29 +51,16 @@ class GetListSurveyService extends UserService implements ApplicationServiceInte
                 $dto->limit,
                 $dto->skip,
                 Str::title($dto->sortBy),
+                $dto->statusId
             );
 
-            $filter = [];
-            if ($dto->statusId === SurveyStatusEnum::FINISHED) {
-                $filter = collect($response->data)->filter(function ($property) {
-                    return isset($property->STATUS);
-                });
-            }
-
-            if ($dto->statusId === SurveyStatusEnum::SUBMIT) {
-                $filter = collect($response->data)->filter(function ($property) {
-                    return !isset($property->STATUS);
-                });
-            }
-
-            $data = collect($filter)->map(function ($property) {
+            $data = collect($response->data)->map(function ($property) {
                 return (object)[
                     'branch_id' => $property->BR_ID ?? null,
                     'profile_xid' => $property->CUST_ID ?? null,
                     'contract_no' => $property->REG_NO ?? null,
-                    'project_name' => $property->PROJ_NAME ?? null,
                     'segment' => $property->SEGMENT ?? null,
-                    'company_name' => $property->COMPANY_NAME ?? null,
+                    'pic_name' => $property->PIC_NAME ?? null,
                     'customer_name' => $property->CUST_NAME ?? null,
                     'project_location' => $property->LOCATION ?? null,
                 ];

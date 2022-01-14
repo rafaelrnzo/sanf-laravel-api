@@ -1032,7 +1032,7 @@ class InternalApiClient
         int $limit,
         int $skip,
         string $order,
-        string $regNo = null
+        int $statusId = null
     ) {
         $response = Request::route('surveys')
             ->queryParams([
@@ -1040,7 +1040,21 @@ class InternalApiClient
                 'limit' => $limit,
                 'skip' => $skip,
                 'order' => $order,
-                'reg_no' => $regNo,
+                'statusId' => $statusId,
+            ])->send();
+
+        return $response->json(false);
+    }
+
+    public function findSurveyByEmailAndContractNo(string $email, string $contractNo)
+    {
+        $response = Request::route('surveys')
+            ->queryParams([
+                'email' => $email,
+                'limit' => 10,
+                'skip' => 0,
+                'order' => 'Earliest',
+                'reg_no' => $contractNo,
             ])->send();
 
         return $response->json(false);

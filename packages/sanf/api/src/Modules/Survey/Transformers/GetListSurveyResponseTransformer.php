@@ -12,9 +12,8 @@ class GetListSurveyResponseTransformer extends TransformerAbstract
             'branch_id' => $data->branch_id,
             'profile_xid' => $data->profile_xid,
             'contract_no' => $data->contract_no,
-            'project_name' => $data->project_name,
             'segment' => $data->segment,
-            'company_name' => $data->company_name,
+            'pic_name' => $data->pic_name,
             'customer_name' => $data->customer_name,
             'project_location' => $data->project_location,
         ];

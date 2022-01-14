@@ -20,7 +20,7 @@ class CreateSurveyTable extends Migration
             $table->string('contract_no')->nullable();
             $table->string('profile_xid')->nullable();
             $table->string('customer_name')->nullable();
-            $table->string('company_name')->nullable();
+            $table->string('pic_name')->nullable();
             $table->string('project_name')->nullable();
             $table->string('project_location')->nullable();
             $table->string('segment')->nullable();

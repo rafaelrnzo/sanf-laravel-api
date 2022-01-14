@@ -4,7 +4,7 @@ namespace Sanf\Core\Modules\Survey\Dtos;
 
 use NbsPhp\Core\Dto\CamelCaseDataTransferObject;
 
-class AddSurveySubmissionRequestDTO extends CamelCaseDataTransferObject
+class AddSurveySubmissionRequestDto extends CamelCaseDataTransferObject
 {
     public string $profileXid;
 
@@ -12,7 +12,7 @@ class AddSurveySubmissionRequestDTO extends CamelCaseDataTransferObject
 
     public string $contractNo;
 
-    public ?string $companyName;
+    public ?string $picName;
 
     public ?string $customerName;
 

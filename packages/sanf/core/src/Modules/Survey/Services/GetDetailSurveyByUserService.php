@@ -4,7 +4,6 @@ namespace Sanf\Core\Modules\Survey\Services;
 
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use League\Flysystem\FileNotFoundException;
 use NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
@@ -48,11 +47,8 @@ class GetDetailSurveyByUserService extends UserService implements ApplicationSer
         }
 
         try {
-            $response = $this->internalApiClient->getSurveys(
-                'pt.mitrajayakencanaindah@yahoo.com',
-                $dto->limit,
-                $dto->skip,
-                Str::title($dto->sortBy),
+            $response = $this->internalApiClient->findSurveyByEmailAndContractNo(
+                $user->username,
                 $dto->contractNo
             );
 
@@ -90,7 +86,7 @@ class GetDetailSurveyByUserService extends UserService implements ApplicationSer
                 'contract_no' => $surveyData->REG_NO ?? null,
                 'project_name' => $surveyData->PROJ_NAME ?? null,
                 'segment' => $surveyData->SEGMENT ?? null,
-                'company_name' => $surveyData->COMPANY_NAME ?? null,
+                'pic_name' => $surveyData->PIC_NAME ?? null,
                 'customer_name' => $surveyData->CUST_NAME ?? null,
                 'project_location' => $surveyData->LOCATION ?? null,
                 'items' => $items ?? null,

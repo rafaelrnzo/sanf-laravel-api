@@ -29,7 +29,7 @@ class AlterColumnProjectTable extends Migration
     {
         Schema::table('project', function (Blueprint $table) {
             $table->dropColumn('city_name');
-            $table->dropColumn('project_name');
+            $table->dropColumn('province_name');
             $table->dropColumn('image_path');
         });
     }

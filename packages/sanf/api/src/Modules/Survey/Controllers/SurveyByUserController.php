@@ -6,10 +6,10 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
-use Sanf\Api\Modules\Survey\Transformers\GetListSurveyResponseTransformer;
 use Sanf\Api\Modules\Survey\Transformers\GetDetailSurveyResponseTransformer;
-use Sanf\Core\Modules\Survey\Dtos\AddSurveySubmissionRequestDTO;
-use Sanf\Core\Modules\Survey\Dtos\GetListSurveyRequestDTO;
+use Sanf\Api\Modules\Survey\Transformers\GetListSurveyResponseTransformer;
+use Sanf\Core\Modules\Survey\Dtos\AddSurveySubmissionRequestDto;
+use Sanf\Core\Modules\Survey\Dtos\GetListSurveyRequestDto;
 use Sanf\Core\Modules\Survey\Services\AddSurveySubmissionService;
 use Sanf\Core\Modules\Survey\Services\GetDetailSurveyByUserService;
 use Sanf\Core\Modules\Survey\Services\GetListSurveyService;
@@ -21,16 +21,14 @@ class SurveyByUserController extends RestApiController
         Request $request,
         GetListSurveyService $service
     ) {
-        $input = $this->validate(
-            $request,
-            [
-                'status_id' => ['required', 'integer', 'in:1,2'],
+        $input = $this->validate($request, [
+                'status_id' => ['nullable', 'integer', 'in:2'],
                 'skip' => ['nullable', 'integer', 'max:99'],
                 'limit' => ['nullable', 'integer', 'max:99'],
                 'sort_by' => ['nullable', 'in:earliest,latest'],
             ]
         );
-        $dto = new GetListSurveyRequestDTO($input + ['userId' => $auth->id()]);
+        $dto = new GetListSurveyRequestDto($input + ['userId' => $auth->id()]);
 
         $result = $service->execute($dto);
 
@@ -46,7 +44,7 @@ class SurveyByUserController extends RestApiController
                 'profile_xid' => ['required', 'string', 'max:255'],
                 'branch_id' => ['required', 'string', 'max:255'],
                 'contract_no' => ['required', 'string', 'max:255'],
-                'company_name' => ['nullable', 'string', 'max:255'],
+                'pic_name' => ['nullable', 'string', 'max:255'],
                 'customer_name' => ['nullable', 'string', 'max:255'],
                 'project_name' => ['nullable', 'string', 'max:255'],
                 'segment' => ['nullable', 'string', 'max:255'],
@@ -59,9 +57,9 @@ class SurveyByUserController extends RestApiController
             ]
         );
 
-        $dto = new AddSurveySubmissionRequestDTO($input);
+        $dto = new AddSurveySubmissionRequestDto($input);
 
-        $result = $service->execute($dto);
+        $service->execute($dto);
 
         return $this->responseOk();
     }
@@ -81,7 +79,7 @@ class SurveyByUserController extends RestApiController
             ]
         );
 
-        $dto = new GetListSurveyRequestDTO(
+        $dto = new GetListSurveyRequestDto(
             $input + [
                 'userId' => $auth->id(),
                 'contractNo' => $contract_no,

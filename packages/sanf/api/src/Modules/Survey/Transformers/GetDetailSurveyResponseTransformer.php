@@ -15,7 +15,7 @@ class GetDetailSurveyResponseTransformer extends TransformerAbstract
             'contract_no' => $data->contract_no,
             'project_name' => $data->project_name,
             'segment' => $data->segment,
-            'company_name' => $data->company_name,
+            'pic_name' => $data->pic_name,
             'customer_name' => $data->customer_name,
             'project_location' => $data->project_location,
             'items' => fractal($data->items, SurveyItemTransformer::class)

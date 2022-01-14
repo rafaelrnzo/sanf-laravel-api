@@ -147,11 +147,11 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::post('users/profiles/{xid}/prepayment-submissions', ['as' => 'users.prepayment-submissions.add', 'uses' => 'Prepayment\Controllers\PrepaymentSubmissionByUserController@postAdd']);
 
     # NOTIFICATION
-    Route::get('users/notifications', ['as' => 'users.notifications', 'uses' => 'Notification\Controllers\NotificationByUserController@getBrowse']);
+    Route::get('users/notifications', ['as' => 'users.notifications', 'uses' => 'Notification\NotificationByUserController@getBrowse']);
 
     # Survey
     Route::get('users/surveys', ['as' => 'users.surveys.browse', 'uses' => 'Survey\Controllers\SurveyByUserController@browse']);
     Route::get('users/surveys/{contract_no}', ['as' => 'users.surveys.detail', 'uses' => 'Survey\Controllers\SurveyByUserController@detail']);
     Route::post('users/survey-submissions', ['as' => 'users.survey-submissions.add', 'uses' => 'Survey\Controllers\SurveyByUserController@add']);
-    Route::get('users/survey-assignments', ['as' => 'users.survey-assignments.browse', 'uses' => 'Survey\Controllers\AssigneeSurveyByUserController@browse']);
+    Route::get('users/survey-assignments', ['as' => 'users.survey-assignments.browse', 'uses' => 'Survey\Controllers\SurveyAssignmentByUserController@browse']);
 });

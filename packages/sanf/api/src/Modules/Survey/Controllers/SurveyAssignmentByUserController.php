@@ -13,10 +13,8 @@ use Sanf\Core\Modules\Survey\Dtos\PaginateAssigneeSurveyDto;
 use Sanf\Core\Modules\Survey\Services\GetListAssigneeSurveyService;
 use Spatie\Fractal\Fractal;
 
-class AssigneeSurveyByUserController extends RestApiController
+class SurveyAssignmentByUserController extends RestApiController
 {
-
-
     /**
      * @param Guard $auth
      * @param GetListAssigneeSurveyService $service
