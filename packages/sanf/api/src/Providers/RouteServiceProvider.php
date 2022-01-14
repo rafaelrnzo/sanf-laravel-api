@@ -21,6 +21,7 @@ class RouteServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->app->router->group([
+            'middleware' => 'http-logger',
             'namespace' => $this->namespace,
         ], function ($router) {
             require __DIR__ . '/../routes.php';

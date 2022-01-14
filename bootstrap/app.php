@@ -70,6 +70,7 @@ $app->configure('mail');
 $app->configure('response-codes');
 $app->configure('fcm');
 $app->configure('notifications');
+$app->configure('http-logger');
 $app->alias('mailer', Illuminate\Mail\Mailer::class);
 $app->alias('mailer', Illuminate\Contracts\Mail\Mailer::class);
 $app->alias('mailer', Illuminate\Contracts\Mail\MailQueue::class);

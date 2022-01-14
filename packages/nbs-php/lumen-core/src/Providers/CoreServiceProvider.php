@@ -92,7 +92,8 @@ class CoreServiceProvider extends ServiceProvider
     {
         $this->app->middleware([
             \NbsPhp\Core\Middleware\TrustProxies::class,
-            \NbsPhp\Core\Middleware\ForceUpdateAppMiddleware::class
+            \NbsPhp\Core\Middleware\ForceUpdateAppMiddleware::class,
+//            \NbsPhp\Core\Middleware\HttpLoggerMiddleware::class
         ]);
         $this->app->routeMiddleware([
             'auth' => \NbsPhp\Core\Middleware\AuthenticateMiddleware::class,
@@ -100,6 +101,7 @@ class CoreServiceProvider extends ServiceProvider
             'basic-auth-config' => \NbsPhp\Core\Middleware\BasicAuthConfigMiddleware::class,
             'can' => \NbsPhp\Core\Middleware\AuthorizationMiddleware::class,
             'horizonBasicAuth' => \NbsPhp\Core\Middleware\HorizonBasicAuthMiddleware::class,
+            'http-logger' => \NbsPhp\Core\Middleware\HttpLoggerMiddleware::class
         ]);
     }
 
