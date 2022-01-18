@@ -39,7 +39,7 @@ class LocationSeeder extends Seeder
                 $chunkedData = $datas->chunk($this->chunk);
                 $this->command->getOutput()->progressStart(count($chunkedData));
                 foreach ($chunkedData as $data) {
-                    $model::query()->insert($data->toArray());
+                    $model::query()->insertOrIgnore($data->toArray());
                     $this->command->getOutput()->progressAdvance();
                 }
 
