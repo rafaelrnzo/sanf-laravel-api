@@ -17,7 +17,7 @@ class CreateInvoiceCollectionSubmissionTable extends Migration
             $table->bigIncrements('id');
             $table->string('xid', 32)->index()->unique();
             $table->unsignedBigInteger('user_id')->index();
-            $table->unsignedBigInteger('profile_xid')->index();
+            $table->string('profile_xid')->index();
             $table->unsignedBigInteger('status_id')->index();
             $table->string('batch_no', 32);
             $table->string('contract_no');
