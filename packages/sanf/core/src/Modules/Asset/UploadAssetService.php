@@ -13,10 +13,7 @@ class UploadAssetService implements ApplicationServiceInterface
 
     public function execute($dto = null)
     {
-        $configs = [
-            1 => 'image-path',
-        ];
-        $path = config("{$configs[$dto->type]}.temp");
+        $path = config('image-path.temp');
 
         // upload file;
         $filename = file_upload($dto->file, $path, 'public');
@@ -35,6 +32,5 @@ class UploadAssetService implements ApplicationServiceInterface
             'file_name' => $filename,
             'url' => $url
         ]);
-
     }
 }
