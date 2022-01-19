@@ -41,13 +41,13 @@ class EloquentLocationRepository implements LocationRepositoryInterface
                 return $query->where('m_location.name', 'ilike', "%{$dto->keyword}%");
             })
             ->when($dto->xid, function ($query) use ($dto) {
-                return $query->where('m_location.location_code', 'ilike', "{$dto->xid}%");
+                return $query->where('m_location.xid', 'ilike', "{$dto->xid}%");
             });
 
         $total = $query->count();
 
         $lists = $query->select([
-            'm_location.location_code',
+            'm_location.xid as location_code',
             'm_location.name',
             'm_location.level',
             'm_location.created_at',
