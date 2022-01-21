@@ -17,6 +17,8 @@ class AssigneeSurveyTransformer extends TransformerAbstract
             'pic_name' => $data->pic_name,
             'customer_name' => $data->customer_name,
             'project_location' => $data->project_location,
+            'status_id' => $data->status_id,
+            'status' => $data->status,
             'items' => fractal($data->items, AssigneeSurveyItemTransformer::class),
         ];
     }

@@ -63,6 +63,8 @@ class GetListSurveyService extends UserService implements ApplicationServiceInte
                     'pic_name' => $property->PIC_NAME ?? null,
                     'customer_name' => $property->CUST_NAME ?? null,
                     'project_location' => $property->LOCATION ?? null,
+                    'status_id' => $property->STATUS_ID ?? null,
+                    'status' => $property->STATUS ?? null,
                 ];
             });
         } catch (SanfInternalApiDataNotFoundException $exception) {
