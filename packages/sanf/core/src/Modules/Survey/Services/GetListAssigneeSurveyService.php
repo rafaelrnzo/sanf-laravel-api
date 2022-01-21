@@ -46,7 +46,7 @@ class GetListAssigneeSurveyService extends UserService implements ApplicationSer
         }
 
         try {
-            $response = $this->internalApiClient->getAssigneeSurvey('pt.mitrajayakencanaindah@yahoo.com');
+            $response = $this->internalApiClient->getAssigneeSurvey($user->username);
             $data = collect($response->data)->map(function ($property) {
                 foreach ($property->ITEMS ?? [] as $item) {
                     $items[] = (object)[
