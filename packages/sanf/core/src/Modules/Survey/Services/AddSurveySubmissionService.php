@@ -27,12 +27,12 @@ class AddSurveySubmissionService implements ApplicationServiceInterface
      */
     public function execute($dto = null)
     {
-        $input = [];
+        $inputs = [];
         foreach ($dto->toArray() as $key => $value) {
-            $input[Str::snake($key)] = $value;
+            $inputs[Str::snake($key)] = $value;
         }
-        $input['xid'] = nano_id();
-        $input['items'] = collect($dto->items)->map(function ($data) use ($dto) {
+        $inputs['xid'] = nano_id();
+        $inputs['items'] = collect($dto->items)->map(function ($data) use ($dto) {
             $imageFiles = null;
             $imagePaths = null;
 
@@ -68,7 +68,7 @@ class AddSurveySubmissionService implements ApplicationServiceInterface
             return $input;
         })->toArray();
 
-        $surveySubmission = $this->repository->add($input);
+        $surveySubmission = $this->repository->add($inputs);
 
         dispatch(new SubmitCoreSurveySubmissionJob($surveySubmission));
     }
