@@ -37,22 +37,26 @@ class AddSurveySubmissionService implements ApplicationServiceInterface
             $imagePaths = null;
 
             try {
-                $path = config('image-path.survey');
-                foreach ($data['image_files'] as $image) {
-                    $filename = file_upload($image, $path, 'public');
+                $tempDir = config('image-path.temp');
+                $dir = config('image-path.survey');
+                foreach ($data['image_files'] as $fileName) {
+                    $path = $dir . "$dto->contractNo/{$data['code']}/" . $fileName;
 
-                    $exist = Storage::exists($path . $filename);
-                    throw_if(!$exist, new FileNotFoundException($path));
+                    $exist = Storage::exists($tempDir . $fileName);
+                    if ($exist) {
+                        Storage::move($tempDir . $fileName, $path);
+                    }
 
+                    $metadata = Storage::getMetaData($path);
                     $imageFiles[] = [
-                        'file_name' => $filename,
-                        'directory' => $path,
-                        'path' => $path . $filename,
-                        'mime_type' => $image->getClientMimeType(),
-                        'size' => $image->getSize(),
+                        'file_name' => $fileName,
+                        'directory' => $dir,
+                        'path' => $path,
+                        'mime_type' => $metadata['mimetype'],
+                        'size' => $metadata['size'],
                     ];
 
-                    $imagePaths[] = $path . "$dto->contractNo/{$data['code']}/" . $filename;
+                    $imagePaths[] = $path;
                 }
             } catch (FileNotFoundException $exception) {
                 report($exception);
