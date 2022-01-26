@@ -7,6 +7,8 @@ use NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Survey\Dtos\PaginateAssigneeSurveyDto;
+use Sanf\Core\Modules\Survey\Repositories\SurveyRepositoryInterface;
+use Sanf\Core\Modules\Survey\Specifications\SurveySpecificationFactoryInterface;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Core\Modules\User\Services\UserService;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
@@ -18,16 +20,24 @@ class GetListAssigneeSurveyService extends UserService implements ApplicationSer
      * @var InternalApiClient
      */
     protected InternalApiClient $internalApiClient;
+    protected SurveyRepositoryInterface $surveyRepository;
+    protected SurveySpecificationFactoryInterface $specificationFactory;
 
 
     /**
      * @param AuthModel $userRepository
      * @param InternalApiClient $internalApiClient
      */
-    public function __construct(AuthModel $userRepository, InternalApiClient $internalApiClient)
-    {
+    public function __construct(
+        AuthModel $userRepository,
+        InternalApiClient $internalApiClient,
+        SurveyRepositoryInterface $surveyRepository,
+        SurveySpecificationFactoryInterface $specificationFactory
+    ) {
         parent::__construct($userRepository);
         $this->internalApiClient = $internalApiClient;
+        $this->surveyRepository = $surveyRepository;
+        $this->specificationFactory = $specificationFactory;
     }
 
 
@@ -47,13 +57,21 @@ class GetListAssigneeSurveyService extends UserService implements ApplicationSer
 
         try {
             $response = $this->internalApiClient->getAssigneeSurvey($user->username);
-            $data = collect($response->data)->map(function ($property) {
+
+            $surveys = $this->surveyRepository->query($this->specificationFactory->getAll());
+            $surveyCollection = collect($surveys);
+
+            $data = collect($response->data)->map(function ($property) use ($surveyCollection) {
                 foreach ($property->ITEMS ?? [] as $item) {
                     $items[] = (object)[
                         'code' => $item->DOC_ID_SURVEY ?? null,
                         'title' => $item->DESCRIPTION ?? null,
                     ];
                 }
+
+                $isSubmitted = $surveyCollection->where('branch_id', '=', $property->HEADER->BR_ID)
+                    ->where('contract_no', '=', $property->HEADER->REG_NO)
+                    ->first();
 
                 return (object)[
                     'branch_id' => $property->HEADER->BR_ID ?? null,
@@ -67,6 +85,7 @@ class GetListAssigneeSurveyService extends UserService implements ApplicationSer
                     'status_id' => $property->HEADER->STATUS_ID ?? null,
                     'status' => $property->HEADER->STATUS ?? null,
                     'items' => $items ?? null,
+                    'is_submitted' => isset($isSubmitted),
                 ];
             });
         } catch (SanfInternalApiDataNotFoundException $exception) {
