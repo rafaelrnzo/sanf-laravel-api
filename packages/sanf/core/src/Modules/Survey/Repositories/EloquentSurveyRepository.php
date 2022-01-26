@@ -25,6 +25,12 @@ class EloquentSurveyRepository extends AbstractEloquentRepository implements Sur
         $this->entityFactory = $entityFactory;
     }
 
+    public function query($specification)
+    {
+        $models = $specification->buildQuery($this->surveyModel)->get();
+        return $this->stripEloquentModel($models);
+    }
+
     /**
      * @param array $fields
      * @return SurveyEntitiesInterface

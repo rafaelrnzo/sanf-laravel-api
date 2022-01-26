@@ -70,6 +70,8 @@ use Sanf\Core\Modules\Survey\Entities\EloquentSurveyFactoryEntity;
 use Sanf\Core\Modules\Survey\Entities\SurveyEntityFactoryInterface;
 use Sanf\Core\Modules\Survey\Repositories\EloquentSurveyRepository;
 use Sanf\Core\Modules\Survey\Repositories\SurveyRepositoryInterface;
+use Sanf\Core\Modules\Survey\Specifications\EloquentSurveySpecificationFactory;
+use Sanf\Core\Modules\Survey\Specifications\SurveySpecificationFactoryInterface;
 use Sanf\Core\Modules\User\Repositories\EloquentUserRepository;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 
@@ -150,6 +152,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(FinancingUnitLocationSubmissionSpecificationFactoryInterface::class, EloquentFinancingUnitLocationSubmissionSpecificationFactory::class);
         $this->app->bind(InvoiceCollectionSubmissionSpecificationFactoryInterface::class, EloquentInvoiceCollectionSubmissionSpecificationFactory::class);
         $this->app->bind(InsuranceClaimSubmissionSpecificationFactoryInterface::class, EloquentInsuranceClaimSubmissionSpecificationFactory::class);
+        $this->app->bind(SurveySpecificationFactoryInterface::class, EloquentSurveySpecificationFactory::class);
     }
 
     protected function registerViews()

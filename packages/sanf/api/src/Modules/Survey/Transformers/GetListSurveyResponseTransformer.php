@@ -18,6 +18,7 @@ class GetListSurveyResponseTransformer extends TransformerAbstract
             'status_id' => $data->status_id,
             'status' => $data->status,
             'project_location' => $data->project_location,
+            'is_submitted' => $data->is_submitted,
         ];
     }
 }

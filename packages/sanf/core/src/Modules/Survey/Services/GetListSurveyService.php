@@ -7,6 +7,8 @@ use Illuminate\Support\Str;
 use NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
+use Sanf\Core\Modules\Survey\Repositories\SurveyRepositoryInterface;
+use Sanf\Core\Modules\Survey\Specifications\SurveySpecificationFactoryInterface;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Core\Modules\User\Services\UserService;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
@@ -18,16 +20,24 @@ class GetListSurveyService extends UserService implements ApplicationServiceInte
      * @var InternalApiClient
      */
     protected InternalApiClient $internalApiClient;
+    private SurveyRepositoryInterface $surveyRepository;
+    private SurveySpecificationFactoryInterface $specificationFactory;
 
 
     /**
      * @param AuthModel $userRepository
      * @param InternalApiClient $internalApiClient
      */
-    public function __construct(AuthModel $userRepository, InternalApiClient $internalApiClient)
-    {
+    public function __construct(
+        AuthModel $userRepository,
+        InternalApiClient $internalApiClient,
+        SurveyRepositoryInterface $surveyRepository,
+        SurveySpecificationFactoryInterface $specificationFactory
+    ) {
         parent::__construct($userRepository);
         $this->internalApiClient = $internalApiClient;
+        $this->surveyRepository = $surveyRepository;
+        $this->specificationFactory = $specificationFactory;
     }
 
 
@@ -54,7 +64,13 @@ class GetListSurveyService extends UserService implements ApplicationServiceInte
                 $dto->statusId
             );
 
-            $data = collect($response->data)->map(function ($property) {
+            $surveys = $this->surveyRepository->query($this->specificationFactory->getAll());
+            $surveyCollection = collect($surveys);
+
+            $data = collect($response->data)->map(function ($property) use ($surveyCollection) {
+                $isSubmitted = $surveyCollection->where('branch_id', '=', $property->BR_ID)
+                    ->where('contract_no', '=', $property->REG_NO)
+                    ->first();
                 return (object)[
                     'branch_id' => $property->BR_ID ?? null,
                     'profile_xid' => $property->CUST_ID ?? null,
@@ -65,6 +81,7 @@ class GetListSurveyService extends UserService implements ApplicationServiceInte
                     'project_location' => $property->LOCATION ?? null,
                     'status_id' => $property->STATUS_ID ?? null,
                     'status' => $property->STATUS ?? null,
+                    'is_submitted' => isset($isSubmitted),
                 ];
             });
         } catch (SanfInternalApiDataNotFoundException $exception) {
