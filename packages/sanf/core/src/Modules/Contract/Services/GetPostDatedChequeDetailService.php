@@ -9,11 +9,11 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Dto\PostDatedChequeDto;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Core\Modules\User\Services\UserService;
+use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 use Sanf\Integration\InternalApiClient;
 
 class GetPostDatedChequeDetailService extends UserService implements ApplicationServiceInterface
 {
-
     protected InternalApiClient $internalApiClient;
 
     public function __construct(AuthModel $userRepository, InternalApiClient $internalApiClient)
@@ -36,26 +36,40 @@ class GetPostDatedChequeDetailService extends UserService implements Application
             throw new UserNotFoundException();
         }
 
-        $response = $this->internalApiClient->getPdcDetail(
-            $dto->profile_xid,
-            $dto->contract_no,
-            $dto->limit,
-            $dto->skip,
-            $dto->sort_by
-        );
-        $data = collect($response->data)->map(function ($item) {
+        try {
+            $response = $this->internalApiClient->getPdcDetail(
+                $dto->profile_xid,
+                $dto->contract_no,
+                $dto->limit,
+                $dto->skip,
+                $dto->sort_by
+            );
+
+            $data = collect($response->data)->map(function ($item) {
+                return (object)[
+                    'pdc_no' => $item->PDC_NO ?? null,
+                    'amount' => $item->PDC_AMT ?? 0,
+                    'currency_type' => $item->CURR_ID ?? null,
+                    'submitted_date' => $item->PDC_DUE_DT ?? null,
+                    'pdc_type' => $item->PDC_TYPE ?? null,
+                    'status' => (object)[
+                        'id' => $item->STATUS_ID ?? null,
+                        'name' => $item->STATUS ?? null,
+                    ]
+                ];
+            });
+        } catch (SanfInternalApiDataNotFoundException $exception) {
             return (object)[
-                'pdc_no' => $item->PDC_NO ?? null,
-                'amount' => $item->PDC_AMT ?? 0,
-                'currency_type' => $item->CURR_ID ?? null,
-                'submitted_date' => $item->PDC_DUE_DT ?? null,
-                'pdc_type' => $item->PDC_TYPE ?? null,
-                'status' => (object)[
-                    'id' => $item->STATUS_ID ?? null,
-                    'name' => $item->STATUS ?? null,
+                'data' => [],
+                'paginate' => (object)[
+                    'total' => 0,
+                    'count' => 0,
+                    'skip' => (int)$dto->skip,
+                    'limit' => (int)$dto->limit,
+                    'sortBy' => $dto->sort_by,
                 ]
             ];
-        });
+        }
 
         return (object)[
             'data' => $data,
