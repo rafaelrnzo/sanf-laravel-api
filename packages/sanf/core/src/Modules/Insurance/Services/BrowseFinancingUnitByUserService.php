@@ -64,8 +64,8 @@ final class BrowseFinancingUnitByUserService implements ApplicationServiceInterf
         return new BrowseFinancingUnitByUserResponseDto([
             'data' => $data,
             'paginate' => [
-                'total' => (int)$result->count,
-                'count' => count($data),
+                'total' => (int)($result->total ?? $result->count),
+                'count' => (int)$result->count,
                 'skip' => (int)$dto->skip,
                 'limit' => (int)$dto->limit,
                 'sortBy' => $dto->sortBy,

@@ -80,7 +80,7 @@ final class BrowseAvailableFinancingUnitByUserService implements ApplicationServ
         return new BrowseFinancingUnitByUserResponseDto([
             'data' => $data,
             'paginate' => [
-                'total' => (int)$result->count,
+                'total' => (int)($result->total ?? $result->count),
                 'count' => count($data),
                 'skip' => (int)$dto->skip,
                 'limit' => (int)$dto->limit,
