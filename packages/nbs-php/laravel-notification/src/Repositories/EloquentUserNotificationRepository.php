@@ -125,12 +125,31 @@ class EloquentUserNotificationRepository extends AbstractEloquentRepository impl
             ->update(["read_at" => $readAt]);
     }
 
+    public function setUserNotificationReadByXids($userId, $notificationXids, $readAt)
+    {
+        return $this->notificationModel->newQuery()
+            ->whereNull('read_at')
+            ->where('user_id', $userId)
+            ->when(!empty($notificationXids), function ($query) use ($notificationXids) {
+                $query->whereIn('xid', $notificationXids);
+            })
+            ->update(['read_at' => $readAt]);
+    }
+
     public function getUserNotificationUnreadCountByTypes($userId, $notificationType)
     {
         return $this->notificationModel->newQuery()
             ->whereNull('read_at')
             ->where('user_id', $userId)
             ->whereIn('type', $notificationType)
+            ->count();
+    }
+
+    public function getUserNotificationUnreadCount($userId)
+    {
+        return $this->notificationModel->newQuery()
+            ->whereNull('read_at')
+            ->where('user_id', $userId)
             ->count();
     }
 

@@ -148,6 +148,7 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
 
     # NOTIFICATION
     Route::get('users/notifications', ['as' => 'users.notifications', 'uses' => 'Notification\NotificationByUserController@getBrowse']);
+    Route::patch('users/notifications/read', ['as' => 'users.notifications.read', 'uses' => 'Notification\NotificationByUserController@patchMarkAsRead']);
 
     # Survey
     Route::get('users/surveys', ['as' => 'users.surveys.browse', 'uses' => 'Survey\Controllers\SurveyByUserController@browse']);

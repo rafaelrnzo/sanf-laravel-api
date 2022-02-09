@@ -4,6 +4,7 @@ namespace NbsPhp\Core\Repositories;
 
 
 use Illuminate\Support\Facades\DB;
+use NbsPhp\Core\Models\UserMetadataModel;
 use Sanf\Core\Modules\User\AuthModel;
 
 class EloquentUserRepository extends AbstractEloquentRepository implements UserRepositoryInterface
@@ -11,9 +12,10 @@ class EloquentUserRepository extends AbstractEloquentRepository implements UserR
     protected $model;
     protected $userMetadataModel;
 
-    public function __construct(AuthModel $model)
+    public function __construct(AuthModel $model, UserMetadataModel $userMetadataModel)
     {
         $this->model = $model;
+        $this->userMetadataModel = $userMetadataModel;
     }
 
     public function findById($id)

@@ -75,7 +75,7 @@ class NotificationService
         foreach ($metadata as $metadataKey => $notificationTypes) {
             $readCount = $this->notificationRepository->setUserNotificationReadByIdsAndTypes($userId, $notificationIds, $notificationTypes, Carbon::now());
             if ($readCount > 0) {
-                $this->optimisticUpdateMetadataUnreadCount($userId, $notificationTypes, $metadataKey);
+                $this->optimisticUpdateMetadataUnreadCount($userId, $metadataKey, $notificationTypes);
             }
         }
     }
@@ -88,20 +88,24 @@ class NotificationService
      * @param int $maxTry
      * @throws \Exception
      */
-    protected function optimisticUpdateMetadataUnreadCount($userId, $notificationTypes, $metadataKey, $tryCount = 0, $maxTry = 10)
+    protected function optimisticUpdateMetadataUnreadCount($userId, $metadataKey, $notificationTypes = null,  $tryCount = 0, $maxTry = 10)
     {
         $tryCount++;
         if ($tryCount >= $maxTry) {
             throw new \Exception("Notification: failed to update metadata, optimistic locking max try reached");
         }
-        $unreadCount = $this->notificationRepository->getUserNotificationUnreadCountByTypes($userId, $notificationTypes);
+        if(is_null($notificationTypes)){
+            $unreadCount = $this->notificationRepository->getUserNotificationUnreadCount($userId);
+        }else{
+            $unreadCount = $this->notificationRepository->getUserNotificationUnreadCountByTypes($userId, $notificationTypes);
+        }
         $notificationMetadata = $this->userRepository->getMetadata($userId, $metadataKey);
         if (is_null($notificationMetadata)) {
             return $this->userRepository->createMetadata($userId, $metadataKey, $unreadCount);
         }
         $success = $this->userRepository->updateMetadata($userId, $metadataKey, $unreadCount, $notificationMetadata->version);
         if (!$success) {
-            return $this->optimisticUpdateMetadataUnreadCount($userId, $notificationTypes, $metadataKey, $tryCount);
+            return $this->optimisticUpdateMetadataUnreadCount($userId, $metadataKey, $notificationTypes, $tryCount);
         }
     }
 
