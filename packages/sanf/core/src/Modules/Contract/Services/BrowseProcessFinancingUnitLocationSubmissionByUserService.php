@@ -70,7 +70,7 @@ final class BrowseProcessFinancingUnitLocationSubmissionByUserService extends
                     'count' => 0,
                     'skip' => (int)$dto->skip,
                     'limit' => (int)$dto->limit,
-                    'sortBy' => $dto->sort_by,
+                    'sortBy' => $dto->sortBy,
                 ]
             ];
         }
