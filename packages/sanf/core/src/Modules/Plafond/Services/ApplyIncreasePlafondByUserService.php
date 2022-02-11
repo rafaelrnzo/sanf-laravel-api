@@ -24,8 +24,8 @@ final class ApplyIncreasePlafondByUserService extends PlafondByUserService imple
         }
         $plafondRequest = (object)[
             'currentBalance' => $plafond->getCurrentBalance(),
-            'addedBalance' => $dto->amount,
-            'submittedBalance' => (int)$dto->amount + (int)$plafond->getCurrentBalance(),
+            'addedBalance' => $dto->amount - $plafond->getCurrentBalance(),
+            'submittedBalance' => $dto->amount,
             'createdAt' => Carbon::now()
         ];
         event(new PlafondIncreaseRequestedEvent($plafondRequest, $dto->profile));
