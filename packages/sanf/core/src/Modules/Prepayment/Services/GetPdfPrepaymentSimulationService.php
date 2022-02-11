@@ -5,6 +5,7 @@ namespace Sanf\Core\Modules\Prepayment\Services;
 
 use Dompdf\Dompdf;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
+use Sanf\Core\Modules\Contract\Enums\CurrencyTypeEnum;
 use Sanf\Core\Modules\Prepayment\Dtos\GetPdfPrepaymentSimulationRequestDto;
 
 
@@ -18,6 +19,7 @@ final class GetPdfPrepaymentSimulationService extends PrepaymentSubmissionByUser
     public function execute($dto = null)
     {
         $user = $this->findUserOrFail($dto->userId);
+        $currencySymbol = (new CurrencyTypeEnum($dto->currencyType))->getSymbol();
 
         $lineItems = [
             'nomor_kontrak' => $dto->contractNo,
@@ -25,11 +27,11 @@ final class GetPdfPrepaymentSimulationService extends PrepaymentSubmissionByUser
             '<hr style="border: 1px solid rgba(3, 37, 126, 0.08); margin: 5px 0;">', // let key as number for separator
         ];
 
-        foreach ($dto->items as $item){
-            $lineItems[$item->description] = $item->amount;
+        foreach ($dto->items as $item) {
+            $lineItems[$item->description] = $currencySymbol . ' ' . number_format($item->amount, 0, ',', '.');
         }
         $lineItems[] = '<hr style="border: 1px solid rgba(3, 37, 126, 0.08); margin: 5px 0;">';
-        $lineItems['total_pelunasan_dipercepat'] = 'Rp. ' . number_format($dto->totalPrepayment, 0, ',', '.');
+        $lineItems['total_pelunasan_dipercepat'] = $currencySymbol . ' ' . number_format($dto->totalPrepayment, 0, ',', '.');
 
         $template = view('vendor/pdf/PDFView', ['contents' => [
             'images' => [
