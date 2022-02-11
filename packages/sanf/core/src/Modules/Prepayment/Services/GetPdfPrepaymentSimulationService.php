@@ -23,7 +23,7 @@ final class GetPdfPrepaymentSimulationService extends PrepaymentSubmissionByUser
 
         $lineItems = [
             'nomor_kontrak' => $dto->contractNo,
-            'tanggal_pelunasan_dipercepat' => $dto->prepaymentDate->formatLocalized('%A, %d %B %Y'),
+            'tanggal_pelunasan_dipercepat' => date_localized($dto->prepaymentDate),
             '<hr style="border: 1px solid rgba(3, 37, 126, 0.08); margin: 5px 0;">', // let key as number for separator
         ];
 

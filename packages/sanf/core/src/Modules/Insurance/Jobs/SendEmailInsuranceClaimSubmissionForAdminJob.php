@@ -3,7 +3,6 @@
 
 namespace Sanf\Core\Modules\Insurance\Jobs;
 
-use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -32,15 +31,14 @@ class SendEmailInsuranceClaimSubmissionForAdminJob implements ShouldQueue
 
     public function handle()
     {
-        setlocale(LC_ALL, 'id_ID.UTF-8', 'id_ID.UTF-8'); // set locale to use local time Indonesia
         $data = [
-            'Tanggal Pengajuan' => Carbon::parse($this->data->created_at)->formatLocalized('%A, %d %B %Y'),
+            'Tanggal Pengajuan' => date_localized($this->data->created_at),
             'Serial Number' => $this->data->serial_no,
             'No Polisi' => $this->data->polis_no,
             'Data Unit' => $this->data->brand_type_model,
             'Tahun Kendaraan' => $this->data->year,
             'Lokasi Pertangguhan' => $this->data->location_metadata->city_name,
-            'Tanggal Kejadian' => Carbon::parse($this->data->incident_date)->formatLocalized('%d/%m/%Y'),
+            'Tanggal Kejadian' => date_localized($this->data->incident_date, '%d/%m/%Y'),
             'Keterangan' => $this->data->description,
         ];
         $insurance = (new MailLayout2Columns)

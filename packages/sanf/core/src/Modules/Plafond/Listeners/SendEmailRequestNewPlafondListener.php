@@ -3,7 +3,6 @@
 namespace Sanf\Core\Modules\Plafond\Listeners;
 
 
-use Carbon\Carbon;
 use Sanf\Core\Modules\Plafond\SendEmailNewRequestPlafondJob;
 use Sanf\Core\Modules\User\Enums\ProfileType;
 
@@ -29,11 +28,10 @@ class SendEmailRequestNewPlafondListener
     {
         $plafondRequest = $event->plafondRequest;
         $profile = $event->profile;
-        setlocale(LC_ALL, 'id_ID.UTF-8', 'id_ID.UTF-8'); // set locale to use local time Indonesia
 
         // Send array data into email for the content
         $data = [
-            'Tanggal Pengajuan' => Carbon::parse($plafondRequest->createdAt)->formatLocalized('%A %d %B %Y'),
+            'Tanggal Pengajuan' => date_localized($plafondRequest->createdAt),
             'Nama Customer' => ($profile->typeId === ProfileType::PERSONAL) ? $profile->fullName : null,
             'Nama PIC' => ($profile->typeId === ProfileType::COMPANY) ? $profile->picName : null,
             'Nama Perusahaan' => $profile->fullName,

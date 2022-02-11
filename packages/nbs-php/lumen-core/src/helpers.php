@@ -59,9 +59,9 @@ if (!function_exists('file_get_url')) {
         }
 
         if ($expiry) {
-            try{
+            try {
                 return Storage::temporaryUrl($path . $fileId, Carbon::now()->addDay());
-            }catch (RuntimeException $exception){
+            } catch (RuntimeException $exception) {
                 return Storage::url($path . $fileId);
                 //TODO BETTER HANDLING unsupported adapter method temporaryUrl
             }
@@ -99,7 +99,7 @@ if (!function_exists('config_path')) {
     /**
      * Get the configuration path.
      *
-     * @param  string $path
+     * @param string $path
      * @return string
      */
     function config_path($path = '')
@@ -120,12 +120,12 @@ if (!function_exists('public_path')) {
     }
 }
 
-if (! function_exists('bcrypt')) {
+if (!function_exists('bcrypt')) {
     /**
      * Hash the given value against the bcrypt algorithm.
      *
-     * @param  string  $value
-     * @param  array  $options
+     * @param string $value
+     * @param array $options
      * @return string
      */
     function bcrypt($value, $options = [])
@@ -144,5 +144,22 @@ if (!function_exists('unix_timestamp')) {
     function unix_timestamp($date)
     {
         return optional(Carbon::make($date))->timestamp;
+    }
+}
+
+
+if (!function_exists('date_localized')) {
+    /**
+     * Get the configuration path.
+     *
+     * @param string $path
+     * @return string
+     */
+    function date_localized($dateTime, $format = '%A %d %B %Y', $timezone = 'Asia/Jakarta')
+    {
+        Carbon::setLocale(config('app.locale'));
+        return optional(Carbon::make($dateTime))
+            ->setTimezone(new \DateTimeZone($timezone))
+            ->formatLocalized('%A %d %B %Y');
     }
 }

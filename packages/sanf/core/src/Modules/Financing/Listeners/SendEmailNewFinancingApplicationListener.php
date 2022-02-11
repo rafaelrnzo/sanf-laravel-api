@@ -3,7 +3,6 @@
 namespace Sanf\Core\Modules\Financing\Listeners;
 
 
-use Carbon\Carbon;
 use Sanf\Core\Modules\Financing\SendEmailFinancingApplicationJob;
 use Sanf\Core\Modules\User\Enums\ProfileType;
 
@@ -29,12 +28,11 @@ class SendEmailNewFinancingApplicationListener
     {
         $financingApplication = $event->financingApplication;
         $profile = $event->financingApplication->profile;
-        setlocale(LC_ALL, 'id_ID.UTF-8', 'id_ID.UTF-8'); // set locale to use local time Indonesia
 
         // COMPANY
         if ($profile->typeId == ProfileType::COMPANY) {
             $data = [
-                'Tanggal Pengajuan' => Carbon::parse($financingApplication->created_at)->formatLocalized('%A %d %B %Y'),
+                'Tanggal Pengajuan' => date_localized($financingApplication->created_at),
                 'Nomor Pengajuan' => $financingApplication->application_code,
                 'Nama PIC' => $profile->picName,
                 'Nama Perusahaan' => $profile->fullName,
@@ -44,7 +42,7 @@ class SendEmailNewFinancingApplicationListener
             ];
         } elseif ($profile->typeId == ProfileType::PERSONAL) {
             $data = [
-                'Tanggal Pengajuan' => Carbon::parse($financingApplication->created_at)->formatLocalized('%A %d %B %Y'),
+                'Tanggal Pengajuan' => date_localized($financingApplication->created_at),
                 'Nomor Pengajuan' => $event->financingApplication->application_code,
                 'Nama' => $profile->fullName,
                 'Email' => $profile->email,

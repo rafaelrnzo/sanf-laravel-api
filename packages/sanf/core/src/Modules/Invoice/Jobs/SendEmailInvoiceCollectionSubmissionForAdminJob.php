@@ -3,7 +3,6 @@
 
 namespace Sanf\Core\Modules\Invoice\Jobs;
 
-use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -35,11 +34,9 @@ class SendEmailInvoiceCollectionSubmissionForAdminJob implements ShouldQueue
 
     public function handle()
     {
-        setlocale(LC_ALL, 'id_ID.UTF-8', 'id_ID.UTF-8'); // set locale to use local time Indonesia
-
         $data = [
-            'Tanggal Pengajuan' => Carbon::parse($this->data[0]->created_at)->formatLocalized('%A %d %B %Y'),
-            'Tanggal Pengambilan' => Carbon::parse($this->data[0]->pickup_date)->formatLocalized('%A %d %B %Y')
+            'Tanggal Pengajuan' => date_localized($this->data[0]->created_at),
+            'Tanggal Pengambilan' => date_localized($this->data[0]->pickup_date),
         ];
 
         $tableData = [];

@@ -2,7 +2,6 @@
 
 namespace Sanf\Core\Modules\Contract\Listeners;
 
-use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Sanf\Core\Modules\Contract\Jobs\SendEmailFinancingUnitLocationJob;
 
@@ -19,7 +18,7 @@ class SendEmailRequestChangeFinancingUnitLocationListener
         $recipients = explode(',', config('sanf-mobile.mail_to_admin'));
 
 
-        $createdAt = Carbon::parse($event->submission->created_at)->formatLocalized('%A %d %B %Y');
+        $createdAt = date_localized($event->submission->created_at);
         $oldLocation = Str::title($event->submission->location_metadata->city_name);
         $newLocation = Str::title($event->submission->submitted_location_metadata->city_name);
         $data['content'] = [

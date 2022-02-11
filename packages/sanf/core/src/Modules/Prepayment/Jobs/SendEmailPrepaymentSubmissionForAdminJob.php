@@ -3,7 +3,6 @@
 
 namespace Sanf\Core\Modules\Prepayment\Jobs;
 
-use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -34,7 +33,6 @@ class SendEmailPrepaymentSubmissionForAdminJob implements ShouldQueue
 
     public function handle(GetPdfPrepaymentSimulationService $service)
     {
-        setlocale(LC_ALL, 'id_ID.UTF-8', 'id_ID.UTF-8'); // set locale to use local time Indonesia
         $prepayment = (new BaseMail)
             ->subject('Hasil Simulasi Pelunasan Dipercepat')
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
@@ -44,7 +42,7 @@ class SendEmailPrepaymentSubmissionForAdminJob implements ShouldQueue
             ->line(__(
                 '<p>
                     Pengguna atas nama <strong>“' . $this->data->user->full_name . '“</strong> telah mengajukan pelunasan dipercepat pertanggal
-                    <strong>' . Carbon::parse($this->data->created_at)->formatLocalized('%d %B %Y') . '</strong> dari nomor kontrak
+                    <strong>' . date_localized($this->data->created_at, '%d %B %Y') . '</strong> dari nomor kontrak
                     <strong>“' . $this->data->contract_no . '”</strong>. Berikut lampiran hasil perhitungan pelunasan dipercepat
                     dalam bentuk PDF untuk kepentingan proses selanjutnya Terimakasih.
                 </p>'
