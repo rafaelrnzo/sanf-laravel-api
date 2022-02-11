@@ -14,7 +14,7 @@ class AlterUserAuthTable extends Migration
     public function up()
     {
         Schema::table('user_auth', function (Blueprint $table) {
-            $table->string('xid')->index()->unique()->nullable();
+            $table->string('xid')->index()->nullable();
             $table->string('personal_xid')->index()->unique()->nullable();
             $table->string('profile_type',1)->nullable();
             $table->string('company_name')->nullable();
