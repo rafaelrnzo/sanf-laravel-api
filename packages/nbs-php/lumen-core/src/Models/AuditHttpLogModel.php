@@ -10,6 +10,7 @@ class AuditHttpLogModel extends AbstractModel
         'id',
         'user_id',
         'request_id',
+        'status_code',
         'method',
         'name',
         'path',
