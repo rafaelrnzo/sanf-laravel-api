@@ -25,7 +25,7 @@ class DeactivateCompanyStaffService extends StaffService implements ApplicationS
             throw new UserNotFoundException();
         }
 
-        $invitedStaff = $this->staffRepository->findByCompanyXidAndUserId($dto->xid, $dto->userId);
+        $invitedStaff = $this->staffRepository->findByCompanyXidAndUserId($dto->xid, $user->id);
         if (!$invitedStaff) {
             throw new GeneralStaffException('User Not Found');
         }
