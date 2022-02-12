@@ -5,21 +5,31 @@ namespace Sanf\Core\Modules\Insurance\Services;
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Insurance\Dtos\BrowseFinancingUnitByUserResponseDto;
+use Sanf\Core\Modules\Insurance\Enums\InsuranceClaimSubmissionStatusEnum;
+use Sanf\Core\Modules\Insurance\Repositories\InsuranceClaimSubmissionRepositoryInterface;
+use Sanf\Core\Modules\Insurance\Specifications\InsuranceClaimSubmissionSpecificationFactoryInterface;
 use Sanf\Core\Modules\Invoice\Dtos\BrowseFinancingUnitByUserRequestDto;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 use Sanf\Integration\InternalApiClient;
 
-final class BrowseFinancingUnitByUserService implements ApplicationServiceInterface
+final class BrowseAvailableFinancingUnitByUserService implements ApplicationServiceInterface
 {
     protected InternalApiClient $apiClient;
+    protected InsuranceClaimSubmissionRepositoryInterface $insuranceClaimSubmissionRepository;
+    protected InsuranceClaimSubmissionSpecificationFactoryInterface $specificationFactory;
 
     /**
      * BrowseContractByUserService constructor.
      * @param InternalApiClient $apiClient
      */
-    public function __construct(InternalApiClient $apiClient)
-    {
+    public function __construct(
+        InternalApiClient $apiClient,
+        InsuranceClaimSubmissionRepositoryInterface $insuranceClaimSubmissionRepository,
+        InsuranceClaimSubmissionSpecificationFactoryInterface $specificationFactory
+    ) {
         $this->apiClient = $apiClient;
+        $this->insuranceClaimSubmissionRepository = $insuranceClaimSubmissionRepository;
+        $this->specificationFactory = $specificationFactory;
     }
 
     /**
@@ -60,6 +70,15 @@ final class BrowseFinancingUnitByUserService implements ApplicationServiceInterf
                 'year' => $item->YEAR ?? '',
             ];
         }, $result->data);
+
+        $data = array_filter($data, function ($datum) use ($dto) {
+            return !$this->insuranceClaimSubmissionRepository->query(
+                $this->specificationFactory->whereBySerialNoAndUserAndStatus(
+                    $datum->serialNo,
+                    $dto->userId,
+                    InsuranceClaimSubmissionStatusEnum::NOT_ELIGIBLE_FOR_SUBMISSION)
+            );
+        });
 
         return new BrowseFinancingUnitByUserResponseDto([
             'data' => $data,

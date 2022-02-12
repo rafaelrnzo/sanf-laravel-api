@@ -6,6 +6,7 @@ namespace Sanf\Core\Modules\Invoice\Services;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Invoice\Dtos\BrowseFinancingUnitByUserRequestDto;
 use Sanf\Core\Modules\Invoice\Dtos\BrowseFinancingUnitByUserResponseDto;
+use Sanf\Core\Modules\Invoice\Enums\InvoiceCollectionSubmissionStatusEnum;
 use Sanf\Core\Modules\Invoice\Repositories\InvoiceCollectionSubmissionRepositoryInterface;
 use Sanf\Core\Modules\Invoice\Specifications\InvoiceCollectionSubmissionSpecificationFactoryInterface;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
@@ -26,8 +27,12 @@ final class BrowseAvailableFinancingUnitByUserService implements ApplicationServ
      * @param InvoiceCollectionSubmissionSpecificationFactoryInterface $specificationFactory
      * @param InternalApiClient $apiClient
      */
-    public function __construct(InvoiceCollectionSubmissionRepositoryInterface $invoiceCollectionSubmissionRepository, UserRepositoryInterface $userRepository, InvoiceCollectionSubmissionSpecificationFactoryInterface $specificationFactory, InternalApiClient $apiClient)
-    {
+    public function __construct(
+        InvoiceCollectionSubmissionRepositoryInterface $invoiceCollectionSubmissionRepository,
+        UserRepositoryInterface $userRepository,
+        InvoiceCollectionSubmissionSpecificationFactoryInterface $specificationFactory,
+        InternalApiClient $apiClient
+    ) {
         $this->invoiceCollectionSubmissionRepository = $invoiceCollectionSubmissionRepository;
         $this->userRepository = $userRepository;
         $this->specificationFactory = $specificationFactory;
@@ -73,7 +78,11 @@ final class BrowseAvailableFinancingUnitByUserService implements ApplicationServ
 
         $data = array_filter($data, function ($datum) use ($dto) {
             return !$this->invoiceCollectionSubmissionRepository->query(
-                $this->specificationFactory->whereStillProcessedBySerialNoAndUser($datum->serialNo, $dto->userId)
+                $this->specificationFactory->whereBySerialNoAndUserAndStatus(
+                    $datum->serialNo,
+                    $dto->userId,
+                    InvoiceCollectionSubmissionStatusEnum::NOT_ELIGIBLE_FOR_SUBMISSION
+                )
             );
         });
 

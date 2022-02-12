@@ -2,18 +2,19 @@
 
 namespace Sanf\Core\Modules\Invoice\Specifications;
 
-use Sanf\Core\Modules\Invoice\Enums\InvoiceCollectionSubmissionStatusEnum;
 use Sanf\Core\Modules\Invoice\Models\InvoiceCollectionSubmissionModel;
 
-final class EloquentWhereInvoiceCollectionSubmissionStillProcessedByContractAndUserSpecification
+final class EloquentWhereInvoiceCollectionSubmissionBySerialNoAndUserAndStatusSpecification
 {
     private int $userId;
     private string $serialNo;
+    private array $status;
 
-    public function __construct(string $serialNo, int $userId)
+    public function __construct(string $serialNo, int $userId, array $status)
     {
         $this->serialNo = $serialNo;
         $this->userId = $userId;
+        $this->status = $status;
     }
 
     public function buildQuery(InvoiceCollectionSubmissionModel $model)
@@ -21,7 +22,7 @@ final class EloquentWhereInvoiceCollectionSubmissionStillProcessedByContractAndU
         $query = $model->newQuery()
             ->where('user_id', $this->userId)
             ->where('serial_no', $this->serialNo)
-            ->where('status_id', InvoiceCollectionSubmissionStatusEnum::PROCESSED);
+            ->where('status_id', $this->status);
         return $query;
     }
 }

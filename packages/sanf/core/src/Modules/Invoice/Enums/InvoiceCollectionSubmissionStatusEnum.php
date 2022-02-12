@@ -11,6 +11,7 @@ class InvoiceCollectionSubmissionStatusEnum extends Enum
     const ACCEPTED = 20;
     const REJECTED = 30;
     const ALL_STATUS = [self::PROCESSED, self::ACCEPTED, self::REJECTED];
+    const NOT_ELIGIBLE_FOR_SUBMISSION = [self::PROCESSED, self::ACCEPTED];
 
     public function getTranslation()
     {

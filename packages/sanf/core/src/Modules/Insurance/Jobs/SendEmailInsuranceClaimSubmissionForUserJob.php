@@ -37,7 +37,7 @@ class SendEmailInsuranceClaimSubmissionForUserJob implements ShouldQueue
             'No Polisi' => $this->data->polis_no,
             'Data Unit' => $this->data->brand_type_model,
             'Tahun Kendaraan' => $this->data->year,
-            'Lokasi Pertangguhan' => $this->data->location_metadata->city_name,
+            'Lokasi Pertanggungan' => $this->data->location_metadata->city_name,
             'Tanggal Kejadian' => date_localized($this->data->incident_date, '%d/%m/%Y'),
             'Keterangan' => $this->data->description,
         ];
@@ -65,6 +65,7 @@ class SendEmailInsuranceClaimSubmissionForUserJob implements ShouldQueue
                 [__('Laporkan email ini'), '#']
             );
 
+        //TODO LOAD FROM STORAGE
         $insurance->attach(public_path('assets/news-1.png'));
 
         return Mail::to($this->recipient->email)->send($insurance);

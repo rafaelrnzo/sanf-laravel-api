@@ -8,4 +8,9 @@ class EloquentInsuranceClaimSubmissionSpecificationFactory implements InsuranceC
     {
         return new EloquentPaginateInsuranceClaimSubmissionByUserAndProfileSpecification($userId, $profileXid, $keyword, $statusId, $sortBy, $skip, $limit, $timestamp);
     }
+
+    public function whereBySerialNoAndUserAndStatus(string $serialNo, int $userId, array $status)
+    {
+        return new EloquentWhereInsuranceClaimSubmissionBySerialNoAndUserAndStatusSpecification($serialNo, $userId, $status);
+    }
 }
