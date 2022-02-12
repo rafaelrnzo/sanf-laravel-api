@@ -24,17 +24,23 @@ class GetListCompanyStaffService extends StaffService implements ApplicationServ
             throw new UserNotFoundException();
         }
 
+        $activeStaffs = $this->staffRepository->getByCompanyXid($dto->xid);
+        $activeStaffCollections = collect($activeStaffs);
         $data = collect($staffs)
-            ->map(function ($item) use ($user) {
+            ->map(function ($item) use ($activeStaffCollections, $user) {
                 $email = strtolower($item['EMAIL'] ?? '');
+                $activeStaff = $activeStaffCollections->filter(function ($activeStaff) use ($email) {
+                    return optional($activeStaff->user)->username === $email;
+                })->first();
                 $registeredUser = AuthModel::where('username', $email)->first();
                 $status = optional($registeredUser)->status;
                 return (object)[
-                    'no' => $item['SR_NO'] ?? '',
-                    'name' => ucwords(strtolower($item['CUST_NAME'] ?? '')),
-                    'email' => $email,
-                    'status' => $status,
-                    'isMe' => $email == $user->username,
+                    "no" => $item['SR_NO'] ?? '',
+                    "name" => ucwords(strtolower($item['CUST_NAME'] ?? '')),
+                    "email" => $email,
+                    "status" => $status,
+                    "isMe" => $email == $user->username,
+                    "isInvited" => !is_null($activeStaff)
                 ];
             });
 

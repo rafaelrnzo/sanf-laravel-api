@@ -17,6 +17,7 @@ class StaffTransformer extends TransformerAbstract
             "status_id" => (int)optional(optional($item)->status)->id,
             'status_name' => (string)optional(optional($item)->status)->name,
             'is_me' => $item->isMe,
+            'is_invited' => $item->isInvited,
         ];
     }
 }

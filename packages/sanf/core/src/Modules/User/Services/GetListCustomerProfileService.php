@@ -43,10 +43,15 @@ class GetListCustomerProfileService implements ApplicationServiceInterface
                     "typeId" => $item['ID_IDENTITY'],
                     "typeName" => $item['DESC_IDENTITY'],
                     "fullName" => $item['IDENTITY_NAME'],
-                    "email" => $item['EMAIL_ADDR'],
+                    "email" => $item['EMAIL_ADDR'],//EMAIL PIC NYA
                     "isActive" => ($user->xid === $item['CUST_ID_SANF']),
-                    "isPic" => (bool)$item['PIC']
+                    "isPic" => $this->decidePic($item, $user)
                 ];
             });
+    }
+
+    protected function decidePic($item, $user)
+    {
+        return $item['EMAIL_ADDR'] == $user->username && (bool)$item['PIC'];
     }
 }
