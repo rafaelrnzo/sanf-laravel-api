@@ -6,6 +6,7 @@ namespace Sanf\Core\Modules\Staff;
 
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
+use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 
 class GetListCompanyStaffService extends StaffService implements ApplicationServiceInterface
@@ -23,21 +24,17 @@ class GetListCompanyStaffService extends StaffService implements ApplicationServ
             throw new UserNotFoundException();
         }
 
-        $activeStaffs = $this->staffRepository->getByCompanyXid($dto->xid);
-        $activeStaffCollections = collect($activeStaffs);
         $data = collect($staffs)
-            ->map(function ($item) use ($activeStaffCollections, $user) {
+            ->map(function ($item) use ($user) {
                 $email = strtolower($item['EMAIL'] ?? '');
-                $activeStaff = $activeStaffCollections->filter(function ($activeStaff) use ($email) {
-                    return optional($activeStaff->user)->username === $email;
-                })->first();
-                $status = optional(optional($activeStaff)->user)->status;
+                $registeredUser = AuthModel::where('username', $email)->first();
+                $status = optional($registeredUser)->status;
                 return (object)[
-                    "no" => $item['SR_NO'] ?? '',
-                    "name" => ucwords(strtolower($item['CUST_NAME'] ?? '')),
-                    "email" => $email,
-                    "status" => $status,
-                    "isMe" => $email == $user->username,
+                    'no' => $item['SR_NO'] ?? '',
+                    'name' => ucwords(strtolower($item['CUST_NAME'] ?? '')),
+                    'email' => $email,
+                    'status' => $status,
+                    'isMe' => $email == $user->username,
                 ];
             });
 
