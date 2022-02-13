@@ -88,6 +88,7 @@ class AddCompanyFinancingApplicationByUserService extends FinancingByUserService
 
         $financingApplication = $this->financingApplicationRepository->findById($newFinancingApplication->id);
         $financingApplication->profile = $dto->profile;
+        $financingApplication->user = $user;
         event(new FinancingApplicationCreatedEvent($financingApplication));
         return $financingApplication;
     }

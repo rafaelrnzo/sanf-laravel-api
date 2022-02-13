@@ -13,7 +13,10 @@ use Sanf\Core\Mail\MailLayout2Columns;
 class SendEmailFinancingApplicationJob implements ShouldQueue
 {
     use InteractsWithQueue, Queueable, SerializesModels;
-    protected $financing;
+
+    protected $data;
+
+    protected $user;
 
     protected $emailRecipients;
 
@@ -23,29 +26,29 @@ class SendEmailFinancingApplicationJob implements ShouldQueue
      * @return void
      */
 
-    public function __construct($financing, $emailRecipients)
+    public function __construct($data, $user, $emailRecipients)
     {
-        $this->financing = $financing;
+        $this->data = $data;
+        $this->user = $user;
         $this->emailRecipients = $emailRecipients;
     }
 
     public function handle()
     {
-
-        $financingCalculationMail = (new MailLayout2Columns())
+        $mailable = (new MailLayout2Columns())
             ->subject('Pengajuan Pembiayaan Baru')
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
             ->rightLogo(asset('assets/png/sanf-tagline.png'))
             ->banner(asset('assets/png/email-verification.png'))
-            ->greeting(__('Halo Bambang!'))
+            ->greeting(__('Halo Admin SANF!'))
             ->line(__(
                 '<blockquote style="margin: 0 0;font-size: 16px; line-height: 150%;">
                     Pengajuan Pembiayaan Anda Sedang Diproses oleh tim kami, berikut kami lampirkan ringkasan pengajuan pembiayaan Anda.
                 </blockquote>
             '))
-            ->writeContent($this->financing)
+            ->writeContent($this->data)
             ->generateSeparator([
-                [ 'joinToIndex' => 1, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08);">' ],
+                ['joinToIndex' => 1, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08);">'],
             ])
             ->lineWithUrl(
                 __('Email ini dibuat secara otomatis mohon tidak membalas email ini, jika terdapat keluhan silahkan hubungi'),
@@ -56,6 +59,6 @@ class SendEmailFinancingApplicationJob implements ShouldQueue
                 [__('Laporkan email ini'), '#']
             );
 
-        return Mail::to($this->emailRecipients)->send($financingCalculationMail);
+        return Mail::to($this->emailRecipients)->send($mailable);
     }
 }

@@ -27,7 +27,7 @@ class SendEmailNewFinancingApplicationListener
     public function handle($event)
     {
         $financingApplication = $event->financingApplication;
-        $profile = $event->financingApplication->profile;
+        $profile = $financingApplication->profile;
 
         // COMPANY
         if ($profile->typeId == ProfileType::COMPANY) {
@@ -58,6 +58,6 @@ class SendEmailNewFinancingApplicationListener
         });
 
         $recipients = explode(',', config('sanf-mobile.mail_to_admin'));
-        dispatch(new SendEmailFinancingApplicationJob($data, $recipients));
+        dispatch(new SendEmailFinancingApplicationJob($data, $financingApplication->user, $recipients));
     }
 }
