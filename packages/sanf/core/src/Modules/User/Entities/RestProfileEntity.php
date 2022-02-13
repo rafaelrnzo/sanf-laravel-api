@@ -87,7 +87,7 @@ final class RestProfileEntity implements ProfileEntityInterface
         return $this->attributes['GENDER'];
     }
 
-    public function getBirthdate(): \DateTimeImmutable
+    public function getBirthdate(): ?\DateTimeImmutable
     {
         return CarbonImmutable::make($this->attributes['TGL_LAHIR']);
     }

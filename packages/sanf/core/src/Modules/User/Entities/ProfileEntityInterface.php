@@ -30,7 +30,7 @@ interface ProfileEntityInterface
 
     public function getGender();
 
-    public function getBirthdate(): \DateTimeImmutable;
+    public function getBirthdate(): ?\DateTimeImmutable;
 
     public function getCountryId();
 
