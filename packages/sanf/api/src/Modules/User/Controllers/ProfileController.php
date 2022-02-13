@@ -156,6 +156,13 @@ class ProfileController extends RestApiController
         return $this->responseOk();
     }
 
+    /**
+     * @param Guard $guard
+     * @param $xid
+     * @param SwitchActiveCustomerProfileService $service
+     * @throws \NbsPhp\Core\Exceptions\UserNotFoundException
+     * @deprecated Switch Profile Not Persisted On Backend Anymore
+     */
     public function postSwitch(Guard $guard, $xid, SwitchActiveCustomerProfileService $service)
     {
         $dto = (object)[

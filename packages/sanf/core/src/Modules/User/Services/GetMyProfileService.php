@@ -4,50 +4,61 @@
 namespace Sanf\Core\Modules\User\Services;
 
 
+use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Models\AuthModel;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\User\Enums\ProfileType;
-use Sanf\Integration\InternalApiClient;
-use function collect;
+use Sanf\Core\Modules\User\Dtos\MyProfileDto;
+use Sanf\Core\Modules\User\Entities\ProfileEntityInterface;
+use Sanf\Core\Modules\User\Repositories\ProfileRepositoryInterface;
 
 class GetMyProfileService implements ApplicationServiceInterface
 {
     protected $repository;
 
-    protected $internalApiClient;
+    protected $profileRepository;
 
     /**
      * GetProfileService constructor.
      * @param $repository
      */
-    public function __construct(AuthModel $repository, InternalApiClient $internalApiClient) //TODO REPOSITORY
+    public function __construct(AuthModel $repository, ProfileRepositoryInterface $profileRepository) //TODO REPOSITORY
     {
         $this->repository = $repository;
-        $this->internalApiClient = $internalApiClient;
+        $this->profileRepository = $profileRepository;
     }
 
     public function execute($dto = null)
     {
-        $user = AuthModel::findOrFail($dto->userId);
+        $user = $this->repository->findOrFail($dto->userId);
         if (empty($user->xid) || empty($user->personal_xid)) {
-            $profiles = $this->internalApiClient->findCustomerByEmail($user->username);
-            $profile = (collect($profiles['data'])->where('ID_IDENTITY', ProfileType::PERSONAL)->first());
-            $user->xid = $profile['CUST_ID_SANF'];
-            $user->personal_xid = $profile['CUST_ID_SANF'];
-            $user->profile_type = $profile['ID_IDENTITY'];
+            $profile = $this->profileRepository->findPersonalProfileByEmail($user->username);
+            if (is_null($profile)) {
+                throw new UserNotFoundException('Personal Profile Not Found By Email');
+            }
+            $user->xid = $profile->getCustomerId();
+            $user->personal_xid = $profile->getCustomerId();
+            $user->profile_type = $profile->getTypeId();
             $user->save();
         } else {
-            $profiles = $this->internalApiClient->findCustomerById($user->xid);
-            $profile = collect($profiles['data'])->first();
+            $profile = $this->profileRepository->findById($user->personal_xid);
+            if (is_null($profile)) {
+                throw new UserNotFoundException('Personal Profile Not Found By Id');
+            }
         }
-        //TODO TIDY UP ENTITY
-        $user->profile = (object)[
-            'isPic' => (bool)$profile['PIC'],
-            'companyName' => $profile['IDENTITY_NAME'],
-            'phoneNumber' => $profile['NO_HP']
-        ];
 
-        //TODO DTO
-        return json_decode(json_encode($user));
+        $profile = $this->correctionIsPic($profile, $user);
+
+        return new MyProfileDto($profile->toArray());
+    }
+
+    protected function correctionIsPic(ProfileEntityInterface $profile, $user): ProfileEntityInterface
+    {
+        $isPic = $profile->getEmail() == $user->username && $profile->getIsPic();
+        if ($isPic) {
+            $profile->setAsPic();
+        } else {
+            $profile->setNotAsPic();
+        }
+        return $profile;
     }
 }

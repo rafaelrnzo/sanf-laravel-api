@@ -73,6 +73,8 @@ use Sanf\Core\Modules\Survey\Repositories\SurveyRepositoryInterface;
 use Sanf\Core\Modules\Survey\Specifications\EloquentSurveySpecificationFactory;
 use Sanf\Core\Modules\Survey\Specifications\SurveySpecificationFactoryInterface;
 use Sanf\Core\Modules\User\Repositories\EloquentUserRepository;
+use Sanf\Core\Modules\User\Repositories\ProfileRepositoryInterface;
+use Sanf\Core\Modules\User\Repositories\RestProfileRepository;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 
 class CoreServiceProvider extends ServiceProvider
@@ -139,6 +141,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(InvoiceCollectionSubmissionRepositoryInterface::class,EloquentInvoiceCollectionSubmissionRepository::class);
         $this->app->bind(InsuranceClaimSubmissionRepositoryInterface::class,EloquentInsuranceClaimSubmissionRepository::class);
         $this->app->bind(SurveyRepositoryInterface::class,EloquentSurveyRepository::class);
+        $this->app->bind(ProfileRepositoryInterface::class,RestProfileRepository::class);
 
         $this->app->bind(SurveyEntityFactoryInterface::class, EloquentSurveyFactoryEntity::class);
 

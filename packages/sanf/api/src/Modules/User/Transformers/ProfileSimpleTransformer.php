@@ -6,7 +6,6 @@ namespace Sanf\Api\Modules\User\Transformers;
 
 use League\Fractal\TransformerAbstract;
 use Sanf\Core\Modules\User\Enums\ProfileType;
-use function optional;
 
 class ProfileSimpleTransformer extends TransformerAbstract
 {
@@ -14,13 +13,13 @@ class ProfileSimpleTransformer extends TransformerAbstract
     {
         return [
             'xid' => (string)$item->xid,
-            'email' => $item->username,
-            'full_name' => $item->full_name,
-            'type_name' => (new ProfileType($item->profile_type))->getTranslation(),
-            'type_id' => $item->profile_type,
-            'is_pic' => optional($item->profile)->isPic,
-            'company_name' => optional($item->profile)->companyName,
-            'phone_number' => optional($item->profile)->phoneNumber
+            'email' => $item->email,
+            'full_name' => $item->typeId == ProfileType::PERSONAL ? $item->fullName : $item->picName,
+            'type_name' => (new ProfileType($item->typeId))->getTranslation(),
+            'type_id' => $item->typeId,
+            'is_pic' => $item->isPic,
+            'company_name' => $item->fullName,
+            'phone_number' => $item->phoneNumber,
         ];
     }
 }

@@ -24,6 +24,36 @@ class InternalApiClient
      */
     public function findCustomerByEmail($email)
     {
+        /**
+         * {
+         * 'CUST_ID_SANF': '2010000125',
+         * 'ID_IDENTITY': 'C',
+         * 'DESC_IDENTITY': 'COMPANY',
+         * 'COMPANY_TYPE': 'PT.',
+         * 'IDENTITY_NAME': 'PT. MITRA INDAH LESTARI',
+         * 'PIC_NAME': 'ADE S',
+         * 'KTP': null,
+         * 'NPWP': '024411811725000',
+         * 'EMAIL_ADDR': 'ade.s@nusantarabetastudio.com',
+         * 'NO_TELP': '0542748657',
+         * 'NO_HP': '0811542682',
+         * 'GENDER': ' ',
+         * 'TGL_LAHIR': '1970/01/01',
+         * 'ID_NEGARA': '001',
+         * 'ID_PROVINSI': '00154',
+         * 'PROVINSI': 'KALIMANTAN TIMUR',
+         * 'ID_KOTA': '0015492',
+         * 'KOTA': 'BALIKPAPAN',
+         * 'KECAMATAN': 'BALIKPAPAN UTARA',
+         * 'KELURAHAN': 'BATU AMPAR',
+         * 'KODEPOS': '76126',
+         * 'ALAMAT': 'JL.SOEKARNO HATTA RT.005 KEL.BATU AMPAR',
+         * 'LAMA_USAHA': '2005',
+         * 'F_ACTIVE': 'Y',
+         * 'PIC': '1',
+         * 'NO_AE': null
+         * }
+         */
         $response = Request::route('customer.find-by-email')
             ->pathParams(['email' => $email])
             ->send();
@@ -38,6 +68,38 @@ class InternalApiClient
      */
     public function findCustomerById($id)
     {
+        /**
+         * {
+         * 'CUST_ID_SANF': '2010000125',
+         * 'ID_IDENTITY': 'C',
+         * 'DESC_IDENTITY': 'COMPANY',
+         * 'COMPANY_TYPE': 'PT.',
+         * 'IDENTITY_NAME': 'PT. MITRA INDAH LESTARI',
+         * 'PIC_NAME': 'ADE S',
+         * 'KTP': null,
+         * 'NPWP': '024411811725000',
+         * 'EMAIL_ADDR': 'ade.s@nusantarabetastudio.com',
+         * 'NO_TELP': '0542748657',
+         * 'NO_HP': '0811542682',
+         * 'GENDER': ' ',
+         * 'TGL_LAHIR': '1970/01/01',
+         * 'ID_NEGARA': '001',
+         * 'NEGARA': 'INDONESIA',
+         * 'ID_PROVINSI': '00154',
+         * 'PROVINSI': 'KALIMANTAN TIMUR',
+         * 'ID_KOTA': '0015492',
+         * 'KOTA': 'BALIKPAPAN',
+         * 'KECAMATAN': 'BALIKPAPAN UTARA',
+         * 'KELURAHAN': 'BATU AMPAR',
+         * 'KODEPOS': '76126',
+         * 'ALAMAT': 'JL.SOEKARNO HATTA RT.005 KEL.BATU AMPAR',
+         * 'LAMA_USAHA': '2005',
+         * 'F_ACTIVE': 'Y',
+         * 'PIC': '1',
+         * 'NO_AE': null,
+         * 'EMAIL_STAFF': 'suhendar.ade23@gmail.com'
+         * }
+         */
         $response = Request::route('customer.find-by-id')
             ->pathParams(['id' => $id])
             ->send();

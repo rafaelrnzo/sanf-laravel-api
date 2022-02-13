@@ -11,6 +11,11 @@ use Sanf\Core\Modules\User\Enums\ProfileType;
 use Sanf\Integration\InternalApiClient;
 use function collect;
 
+/**
+ * Class SwitchActiveCustomerProfileService
+ * @package Sanf\Core\Modules\User\Services
+ * @deprecated Active Profile Not Persisted On Backend Anymore
+ */
 class SwitchActiveCustomerProfileService implements ApplicationServiceInterface
 {
     protected $repository;
