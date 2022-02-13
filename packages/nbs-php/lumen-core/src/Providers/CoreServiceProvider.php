@@ -91,9 +91,10 @@ class CoreServiceProvider extends ServiceProvider
     protected function registerMiddleware()
     {
         $this->app->middleware([
+            \NbsPhp\Core\Middleware\RequestIdMiddleware::class,
             \NbsPhp\Core\Middleware\TrustProxies::class,
             \NbsPhp\Core\Middleware\ForceUpdateAppMiddleware::class,
-//            \NbsPhp\Core\Middleware\HttpLoggerMiddleware::class
+//            \NbsPhp\Core\Middleware\HttpLoggerMiddleware::class //uncomment if track all endpoint
         ]);
         $this->app->routeMiddleware([
             'auth' => \NbsPhp\Core\Middleware\AuthenticateMiddleware::class,

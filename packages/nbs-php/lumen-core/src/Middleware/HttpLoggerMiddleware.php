@@ -26,7 +26,7 @@ class HttpLoggerMiddleware
                 //TODO REPOSITORY
                 AuditHttpLogModel::create([
                     'user_id' => Auth::id(),
-                    'request_id' => nano_id(),
+                    'request_id' => $request->header('X-Request-ID'),
                     'method' => $request->method(),
                     'name' => optional(optional($request->route())[1])['as'],
                     'status_code' => $response->status(),
