@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use NbsPhp\Core\Database\IlluminateSession;
 use NbsPhp\Core\Database\TransactionalSessionInterface;
+use Sanf\Core\CheckPicMiddleware;
 use Sanf\Core\Modules\Astra\EloquentProductAstraRepository;
 use Sanf\Core\Modules\Astra\ProductAstraRepositoryInterface;
 use Sanf\Core\Modules\Branch\BranchRepositoryInterface;
@@ -106,6 +107,10 @@ class CoreServiceProvider extends ServiceProvider
         $this->registerViews();
         $this->registerBindings();
         $this->registerProviders();
+
+        $this->app->routeMiddleware([
+            'pic' => CheckPicMiddleware::class,
+        ]);
     }
 
     public function registerProviders()

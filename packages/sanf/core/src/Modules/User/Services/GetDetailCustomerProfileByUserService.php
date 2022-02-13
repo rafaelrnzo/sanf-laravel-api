@@ -68,10 +68,6 @@ class GetDetailCustomerProfileByUserService implements ApplicationServiceInterfa
                 ];
             })->first();
 
-        if ($profile->email != $user->username) {
-            throw new ForbiddenException('illegal access profile owner detected');
-        }
-
         return $profile;
     }
 }

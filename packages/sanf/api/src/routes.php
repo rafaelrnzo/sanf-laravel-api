@@ -13,6 +13,19 @@
 
 use Illuminate\Support\Facades\Route;
 
+// ONLY PIC ROUTES
+Route::group(['prefix' => 'v1', 'middleware' => ['auth', 'pic']], function () {
+    Route::post('users/financing-applications/company', ['as' => 'financing-applications.company.create', 'uses' => 'Financing\Controllers\FinancingApplicationByUserController@postAddByCompanyProfile']);
+    Route::post('users/survey-submissions', ['as' => 'users.survey-submissions.add', 'uses' => 'Survey\Controllers\SurveyByUserController@add']);
+    Route::put('users/profiles/{xid}/company', ['as' => 'users.profiles.company.update', 'uses' => 'User\Controllers\ProfileController@putUpdateCompanyProfile']);
+    Route::post('users/profiles/{xid}/plafonds', ['as' => 'users.plafonds.create', 'uses' => 'Plafond\Controllers\PlafondController@postAddByUserProfile']);
+    Route::post('users/profiles/{xid}/plafonds/increase', ['as' => 'users.plafonds.increase', 'uses' => 'Plafond\Controllers\PlafondController@postIncreaseByUserProfile']);
+    Route::post('users/profiles/{xid}/contracts/{contract_no}/financing-units/{serial_no}/location-submissions', ['as' => 'users.contracts-financing-unit-location-submissions.add', 'uses' => 'Contract\Controllers\FinancingUnitLocationSubmissionByUserController@postAdd']);
+    Route::post('users/profiles/{xid}/insurance-claim-submissions', ['as' => 'users.insurance-claim-submissions.add', 'uses' => 'Insurance\Controllers\InsuranceClaimSubmissionByUserController@postAdd']);
+    Route::post('users/profiles/{xid}/invoice-collection-submissions', ['as' => 'users.invoice-collection-submissions.add', 'uses' => 'Invoice\Controllers\InvoiceCollectionSubmissionByUserController@postAdd']);
+    Route::post('users/profiles/{xid}/prepayment-submissions', ['as' => 'users.prepayment-submissions.add', 'uses' => 'Prepayment\Controllers\PrepaymentSubmissionByUserController@postAdd']);
+});
+
 Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
 
     Route::post('assets', ['as' => 'assets.upload', 'uses' => 'Asset\AssetFileController@upload']);
@@ -33,14 +46,14 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
 
     Route::post('users/register-with-contract', ['as' => 'users.register-with-contract', 'uses' => 'User\Controllers\ProfileController@postRegisterWithContract']);
     Route::get('users/profiles', ['as' => 'users.profiles.list', 'uses' => 'User\Controllers\ProfileController@getList']);
-    Route::get('users/profiles/{xid}', ['as' => 'users.profiles.detail', 'uses' => 'User\Controllers\ProfileController@getDetail']);
     Route::put('users/profiles/{xid}', ['as' => 'users.profiles.update', 'uses' => 'User\Controllers\ProfileController@putUpdatePersonalProfile']);
+    Route::get('users/profiles/{xid}', ['as' => 'users.profiles.detail', 'uses' => 'User\Controllers\ProfileController@getDetail']);
     Route::post('users/profile/{xid}/assets', ['as' => 'financing.assets', 'uses' => 'User\Controllers\ProfileAssetController@postUpload']);
+
     //TODO REFACTOR
     Route::get('users/profiles/{xid}/has-valid-ktp', ['as' => 'users.profiles.validate-ktp', 'uses' => 'Financing\Controllers\FinancingCompletionController@validateKtp']);
     Route::get('users/profiles/{xid}/has-valid-npwp', ['as' => 'users.profiles.validate-npwp', 'uses' => 'Financing\Controllers\FinancingCompletionController@validateNpwp']);
     Route::post('users/profiles/{xid}/company', ['as' => 'users.profiles.company.create', 'uses' => 'User\Controllers\ProfileController@postCreateCompanyProfile']);
-    Route::put('users/profiles/{xid}/company', ['as' => 'users.profiles.company.update', 'uses' => 'User\Controllers\ProfileController@putUpdateCompanyProfile']);
     Route::post('users/profiles/{xid}/switch', ['as' => 'users.profiles.switch', 'uses' => 'User\Controllers\ProfileController@postSwitch']);
 
     Route::post('users/profiles/{xid}/shareholders', ['as' => 'users.shareholders.create', 'uses' => 'Shareholder\ShareholderController@postCreate']);
@@ -103,7 +116,6 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
 
     Route::get('users/profiles/{xid}/financing-applications', ['as' => 'financing-applications.list', 'uses' => 'Financing\Controllers\FinancingApplicationByUserController@getBrowse']);
     Route::get('users/profiles/{xid}/financing-applications/{application_xid}', ['as' => 'financing-applications.detail', 'uses' => 'Financing\Controllers\FinancingApplicationByUserController@getRead']);
-    Route::post('users/financing-applications/company', ['as' => 'financing-applications.company.create', 'uses' => 'Financing\Controllers\FinancingApplicationByUserController@postAddByCompanyProfile']);
     Route::post('users/financing-applications/personal', ['as' => 'financing-applications.personal.create', 'uses' => 'Financing\Controllers\FinancingApplicationByUserController@postAddByPersonalProfile']);
 
     # PLAFOND
@@ -111,8 +123,6 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::get('users/profiles/{xid}/plafonds', ['as' => 'users.plafonds.list', 'uses' => 'Plafond\Controllers\PlafondController@getBrowseByUserProfile']);
     Route::get('users/profiles/{xid}/plafonds/histories', ['as' => 'users.plafonds.histories.list', 'uses' => 'Plafond\Controllers\PlafondController@getBrowseHistoryByUserProfile']);
     Route::get('users/profiles/{xid}/plafonds/types/{typeId}', ['as' => 'users.plafonds.detail-by-type', 'uses' => 'Plafond\Controllers\PlafondController@getReadByUserProfileAndType']);
-    Route::post('users/profiles/{xid}/plafonds', ['as' => 'users.plafonds.create', 'uses' => 'Plafond\Controllers\PlafondController@postAddByUserProfile']);
-    Route::post('users/profiles/{xid}/plafonds/increase', ['as' => 'users.plafonds.increase', 'uses' => 'Plafond\Controllers\PlafondController@postIncreaseByUserProfile']);
 
     # CONTRACT
     Route::get('users/profiles/{xid}/metadata-contract', ['as' => 'users.metadata-contract', 'uses' => 'User\Controllers\ProfileController@getMetadataContract']);
@@ -122,7 +132,6 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::get('users/profiles/{xid}/contracts/{contract_no}/post-dated-cheques', ['as' => 'users.contracts-pdc.read', 'uses' => 'Contract\Controllers\PostDatedChequeByUserController@getPDC']);
     Route::get('users/profiles/{xid}/contracts-financing-unit', ['as' => 'users.contracts-financing-object.browse', 'uses' => 'Contract\Controllers\FinancingUnitLocationSubmissionByUserController@getContract']);
     Route::get('users/profiles/{xid}/contracts/{contract_no}/financing-unit-location-submissions', ['as' => 'users.contracts-financing-unit-location-submissions.read', 'uses' => 'Contract\Controllers\FinancingUnitLocationSubmissionByUserController@getFinancingUnitLocation']);
-    Route::post('users/profiles/{xid}/contracts/{contract_no}/financing-units/{serial_no}/location-submissions', ['as' => 'users.contracts-financing-unit-location-submissions.add', 'uses' => 'Contract\Controllers\FinancingUnitLocationSubmissionByUserController@postAdd']);
     Route::get('users/profiles/{xid}/contracts', ['as' => 'users.contracts.browse', 'uses' => 'Contract\Controllers\ContractFinancingUnitByUserController@getList']);
     Route::get('users/profiles/{xid}/contracts/{contract_no}', ['as' => 'users.contracts.read', 'uses' => 'Contract\Controllers\ContractFinancingUnitByUserController@getDetail']);
     Route::get('users/profiles/{xid}/contracts/{contract_no}/financing-units', ['as' => 'users.contracts-financing-object.browse', 'uses' => 'Contract\Controllers\ContractFinancingUnitByUserController@getFinancingUnit']);
@@ -133,18 +142,15 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     # INVOICE
     Route::get('users/profiles/{xid}/financing-units-invoice-collection', ['as' => 'users.invoice-collection-financing-units.browse', 'uses' => 'Invoice\Controllers\FinancingUnitByUserController@getBrowse']);
     Route::get('users/profiles/{xid}/invoice-collection-submissions', ['as' => 'users.invoice-collection-submissions.browse', 'uses' => 'Invoice\Controllers\InvoiceCollectionSubmissionByUserController@getBrowse']);
-    Route::post('users/profiles/{xid}/invoice-collection-submissions', ['as' => 'users.invoice-collection-submissions.add', 'uses' => 'Invoice\Controllers\InvoiceCollectionSubmissionByUserController@postAdd']);
 
     # INSURANCE
     Route::get('users/profiles/{xid}/financing-units-insurance-claim', ['as' => 'users.insurance-claim-financing-units.browse', 'uses' => 'Insurance\Controllers\FinancingUnitByUserController@getBrowse']);
     Route::get('users/profiles/{xid}/insurance-claim-submissions', ['as' => 'users.insurance-claim-submissions.browse', 'uses' => 'Insurance\Controllers\InsuranceClaimSubmissionByUserController@getBrowse']);
-    Route::post('users/profiles/{xid}/insurance-claim-submissions', ['as' => 'users.insurance-claim-submissions.add', 'uses' => 'Insurance\Controllers\InsuranceClaimSubmissionByUserController@postAdd']);
     Route::get('users/profiles/{xid}/insurance-claim-submissions/{submissionXid}', ['as' => 'users.insurance-claim-submissions.read', 'uses' => 'Insurance\Controllers\InsuranceClaimSubmissionByUserController@getRead']);
 
     # PREPAYMENT
     Route::get('users/profiles/{xid}/contracts-prepayment', ['as' => 'users.prepayment-contracts.browse', 'uses' => 'Prepayment\Controllers\ContractByUserController@getBrowse']);
     Route::post('users/prepayment-simulations', ['as' => 'users.prepayment-simulations.add', 'uses' => 'Prepayment\Controllers\PrepaymentSimulationByUserController@postAdd']);
-    Route::post('users/profiles/{xid}/prepayment-submissions', ['as' => 'users.prepayment-submissions.add', 'uses' => 'Prepayment\Controllers\PrepaymentSubmissionByUserController@postAdd']);
 
     # NOTIFICATION
     Route::get('users/notifications', ['as' => 'users.notifications', 'uses' => 'Notification\NotificationByUserController@getBrowse']);
@@ -153,6 +159,5 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     # Survey
     Route::get('users/surveys', ['as' => 'users.surveys.browse', 'uses' => 'Survey\Controllers\SurveyByUserController@browse']);
     Route::get('users/surveys/{contract_no}', ['as' => 'users.surveys.detail', 'uses' => 'Survey\Controllers\SurveyByUserController@detail']);
-    Route::post('users/survey-submissions', ['as' => 'users.survey-submissions.add', 'uses' => 'Survey\Controllers\SurveyByUserController@add']);
     Route::get('users/survey-assignments', ['as' => 'users.survey-assignments.browse', 'uses' => 'Survey\Controllers\SurveyAssignmentByUserController@browse']);
 });
