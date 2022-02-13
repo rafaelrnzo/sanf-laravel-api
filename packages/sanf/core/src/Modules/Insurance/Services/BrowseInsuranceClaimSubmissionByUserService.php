@@ -8,6 +8,7 @@ use Sanf\Core\Modules\Insurance\Dtos\BrowseInsuranceClaimSubmissionByUserRequest
 use Sanf\Core\Modules\Insurance\Dtos\BrowseInsuranceClaimSubmissionByUserResponseDto;
 use Sanf\Core\Modules\Insurance\Repositories\InsuranceClaimSubmissionRepositoryInterface;
 use Sanf\Core\Modules\Insurance\Specifications\InsuranceClaimSubmissionSpecificationFactoryInterface;
+use Sanf\Core\Modules\User\Repositories\ProfileRepositoryInterface;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 
 final class BrowseInsuranceClaimSubmissionByUserService extends InsuranceClaimSubmissionByUserService implements ApplicationServiceInterface
@@ -17,9 +18,10 @@ final class BrowseInsuranceClaimSubmissionByUserService extends InsuranceClaimSu
     public function __construct(
         InsuranceClaimSubmissionRepositoryInterface $repository,
         UserRepositoryInterface $userRepository,
+        ProfileRepositoryInterface $profileRepository,
         InsuranceClaimSubmissionSpecificationFactoryInterface $specificationFactory
     ) {
-        parent::__construct($repository, $userRepository);
+        parent::__construct($repository, $userRepository, $profileRepository);
         $this->specificationFactory = $specificationFactory;
     }
 

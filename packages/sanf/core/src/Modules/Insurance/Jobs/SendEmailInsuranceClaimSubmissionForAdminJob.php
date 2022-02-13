@@ -9,6 +9,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 use Sanf\Core\Mail\MailLayout2Columns;
+use Sanf\Core\Modules\User\Entities\ProfileEntityInterface;
 
 
 class SendEmailInsuranceClaimSubmissionForAdminJob implements ShouldQueue
@@ -31,6 +32,8 @@ class SendEmailInsuranceClaimSubmissionForAdminJob implements ShouldQueue
 
     public function handle()
     {
+        /** @var ProfileEntityInterface $profile */
+        $profile = $this->data->profile;
         $data = [
             'Tanggal Pengajuan' => date_localized($this->data->created_at),
             'Serial Number' => $this->data->serial_no,
@@ -40,8 +43,10 @@ class SendEmailInsuranceClaimSubmissionForAdminJob implements ShouldQueue
             'Lokasi Pertanggungan' => $this->data->location_metadata->city_name,
             'Tanggal Kejadian' => date_localized($this->data->incident_date, '%d/%m/%Y'),
             'Keterangan' => $this->data->description,
+            'No Telepon PIC' => $profile->getPhoneNumber(),
+            'Email PIC' => $profile->getEmail(),
         ];
-        $insurance = (new MailLayout2Columns)
+        $mailable = (new MailLayout2Columns)
             ->subject('Pengajuan Klaim Asuransi ' . $this->data->user->full_name)
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
             ->rightLogo(asset('assets/png/sanf-tagline.png'))
@@ -64,11 +69,12 @@ class SendEmailInsuranceClaimSubmissionForAdminJob implements ShouldQueue
                 [__('Laporkan email ini'), '#']
             );
 
-        //TODO LOAD FROM STORAGE
-        $insurance->attach(public_path('assets/news-1.png'));
+        foreach ($this->data->image_files as $imageFile){
+            $mailable->attachFromStorage($imageFile->path);
+        }
 
         $recipients = explode(',', config('sanf-mobile.mail_to_admin'));
 
-        return Mail::to($recipients)->send($insurance);
+        return Mail::to($recipients)->send($mailable);
     }
 }

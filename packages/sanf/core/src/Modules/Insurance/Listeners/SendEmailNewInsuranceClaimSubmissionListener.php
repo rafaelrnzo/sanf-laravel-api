@@ -28,9 +28,9 @@ class SendEmailNewInsuranceClaimSubmissionListener
     {
         $insuranceClaimSubmission = $event->insuranceClaimSubmission;
         $adminRecipients = explode(',', config('sanf-mobile.mail_to_admin'));
-        $userRecipient =(object)[
-            'email' =>  $insuranceClaimSubmission->user->username,
-            'fullName' =>  $insuranceClaimSubmission->user->full_name
+        $userRecipient = (object)[
+            'email' => $insuranceClaimSubmission->user->username,
+            'fullName' => $insuranceClaimSubmission->user->full_name
         ];
         dispatch(new SendEmailInsuranceClaimSubmissionForUserJob($insuranceClaimSubmission, $userRecipient));
         dispatch(new SendEmailInsuranceClaimSubmissionForAdminJob($insuranceClaimSubmission, $adminRecipients));
