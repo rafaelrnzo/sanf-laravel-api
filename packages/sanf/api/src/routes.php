@@ -24,6 +24,9 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth', 'pic']], function () {
     Route::post('users/profiles/{xid}/insurance-claim-submissions', ['as' => 'users.insurance-claim-submissions.add', 'uses' => 'Insurance\Controllers\InsuranceClaimSubmissionByUserController@postAdd']);
     Route::post('users/profiles/{xid}/invoice-collection-submissions', ['as' => 'users.invoice-collection-submissions.add', 'uses' => 'Invoice\Controllers\InvoiceCollectionSubmissionByUserController@postAdd']);
     Route::post('users/profiles/{xid}/prepayment-submissions', ['as' => 'users.prepayment-submissions.add', 'uses' => 'Prepayment\Controllers\PrepaymentSubmissionByUserController@postAdd']);
+    Route::put('users/profiles/{xid}/shareholders/{no}', ['as' => 'users.shareholders.update', 'uses' => 'Shareholder\ShareholderController@putUpdate']);
+    Route::delete('users/profiles/{xid}/shareholders/{no}', ['as' => 'users.shareholders.delete', 'uses' => 'Shareholder\ShareholderController@delete']);
+    Route::post('users/profiles/{xid}/shareholders', ['as' => 'users.shareholders.create', 'uses' => 'Shareholder\ShareholderController@postCreate']);
 });
 
 Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
@@ -56,11 +59,8 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::post('users/profiles/{xid}/company', ['as' => 'users.profiles.company.create', 'uses' => 'User\Controllers\ProfileController@postCreateCompanyProfile']);
     Route::post('users/profiles/{xid}/switch', ['as' => 'users.profiles.switch', 'uses' => 'User\Controllers\ProfileController@postSwitch']);
 
-    Route::post('users/profiles/{xid}/shareholders', ['as' => 'users.shareholders.create', 'uses' => 'Shareholder\ShareholderController@postCreate']);
     Route::get('users/profiles/{xid}/shareholders', ['as' => 'users.shareholders.list', 'uses' => 'Shareholder\ShareholderController@getList']);
     Route::get('users/profiles/{xid}/shareholders/{no}', ['as' => 'users.shareholders.detail', 'uses' => 'Shareholder\ShareholderController@getDetail']);
-    Route::put('users/profiles/{xid}/shareholders/{no}', ['as' => 'users.shareholders.update', 'uses' => 'Shareholder\ShareholderController@putUpdate']);
-    Route::delete('users/profiles/{xid}/shareholders/{no}', ['as' => 'users.shareholders.delete', 'uses' => 'Shareholder\ShareholderController@delete']);
 
     Route::get('users/profiles/{xid}/staffs', ['as' => 'users.staffs.list', 'uses' => 'Staff\StaffController@getList']);
     Route::get('users/profiles/{xid}/staffs/invited', ['as' => 'users.staffs.list-invited', 'uses' => 'Staff\StaffController@getInvitedList']);
