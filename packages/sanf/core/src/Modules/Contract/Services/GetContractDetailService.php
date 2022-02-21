@@ -55,7 +55,7 @@ class GetContractDetailService extends UserService implements ApplicationService
             'installment_count' => $data->ANGSURAN_KE ?? 0,
             'financing' => (object)[
                 'due_at' => $data->DT_DUE ?? null,
-                'finished_at' => null,
+                'finished_at' => $data->TGL_SELESAI ?? null,
                 'interest_percentage' => $data->RATE_EFF ?? 0,
                 'facility' => (object)[
                     'id' => $data->ID_JENIS_PEMBIAYAAN ?? null,
