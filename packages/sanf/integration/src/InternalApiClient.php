@@ -880,6 +880,22 @@ class InternalApiClient
      * @return array|stdClass|null
      * @throws EndpointNotDefinedException
      * @throws GuzzleException
+     * @example
+     * {
+     * 'status': true,
+     * 'code': 'S_GetData',
+     * 'message': 'Success',
+     * 'total': 1,
+     * 'count': 1,
+     * 'data': [
+     * {
+     * 'AGREE_NO': '30710000420',
+     * 'CURR_ID': 'IDR',
+     * 'DT_GL': '31-10-2007',
+     * 'ROWINDEX': '1'
+     * }
+     * ]
+     * }
      */
     public function getPdc($customerId, $limit, $skip, $sort_by, $keyword = null)
     {
