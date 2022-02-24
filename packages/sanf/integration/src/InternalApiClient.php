@@ -13,8 +13,8 @@ use stdClass;
 class InternalApiClient
 {
     const DEFAULT_SKIP = 0;
-    const DEFAULT_LIMIT = 10;
-    const DEFAULT_ORDER = 'Earliest';
+    const DEFAULT_LIMIT = 2147483647;
+    const DEFAULT_ORDER = 'Latest';
 
     /**
      * @param $email
@@ -1113,9 +1113,9 @@ class InternalApiClient
         $response = Request::route('surveys')
             ->queryParams([
                 'email' => $email,
-                'limit' => 10,
+                'limit' => self::DEFAULT_LIMIT,
                 'skip' => 0,
-                'order' => 'Earliest',
+                'order' => self::DEFAULT_ORDER,
                 'reg_no' => $contractNo,
             ])->send();
 

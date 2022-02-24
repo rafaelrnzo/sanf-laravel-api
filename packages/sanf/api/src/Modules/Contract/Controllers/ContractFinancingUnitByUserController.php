@@ -30,8 +30,8 @@ final class ContractFinancingUnitByUserController extends RestApiController
     ) {
         $input = $this->validate($request, [
             'contract_type' => ['nullable', 'in:active,settled'],
-            'skip' => ['nullable', 'integer', 'max:99'],
-            'limit' => ['nullable', 'integer', 'max:99'],
+            'skip' => ['nullable', 'integer', 'max:2147483647'],
+            'limit' => ['nullable', 'integer', 'max:2147483647'],
             'sort_by' => ['nullable', 'in:earliest,latest'],
         ]);
 
@@ -76,8 +76,8 @@ final class ContractFinancingUnitByUserController extends RestApiController
         GetFinancingUnitContractService $service
     ) {
         $input = $this->validate($request, [
-            'skip' => ['nullable', 'integer', 'max:99'],
-            'limit' => ['nullable', 'integer', 'max:99'],
+            'skip' => ['nullable', 'integer', 'max:2147483647'],
+            'limit' => ['nullable', 'integer', 'max:2147483647'],
             'sort_by' => ['nullable', 'in:earliest,latest'],
         ]);
 
@@ -100,12 +100,12 @@ final class ContractFinancingUnitByUserController extends RestApiController
         SummaryBillContractService $service
     ) {
         $input = $this->validate($request, [
-            'skip' => ['nullable', 'integer', 'max:99'],
-            'limit' => ['nullable', 'integer', 'max:99'],
+            'skip' => ['nullable', 'integer', 'max:2147483647'],
+            'limit' => ['nullable', 'integer', 'max:2147483647'],
             'sort_by' => ['nullable', 'in:earliest,latest'],
         ]);
 
-        $dto = new SummaryBillContractDto($input = ['profile_xid' => $xid]);
+        $dto = new SummaryBillContractDto($input + ['profile_xid' => $xid]);
         $dto->sort_by = Str::title($dto->sort_by);
         $dto->user_id = $auth->id();
         $dto->contract_no = $contract_no;

@@ -23,8 +23,8 @@ class SurveyByUserController extends RestApiController
     ) {
         $input = $this->validate($request, [
                 'status_id' => ['nullable', 'integer', 'in:2'],
-                'skip' => ['nullable', 'integer', 'max:99'],
-                'limit' => ['nullable', 'integer', 'max:99'],
+                'skip' => ['nullable', 'integer', 'max:2147483647'],
+                'limit' => ['nullable', 'integer', 'max:2147483647'],
                 'sort_by' => ['nullable', 'in:earliest,latest'],
             ]
         );
@@ -73,8 +73,8 @@ class SurveyByUserController extends RestApiController
         $input = $this->validate(
             $request,
             [
-                'skip' => ['nullable', 'integer', 'max:99'],
-                'limit' => ['nullable', 'integer', 'max:99'],
+                'skip' => ['nullable', 'integer', 'max:2147483647'],
+                'limit' => ['nullable', 'integer', 'max:2147483647'],
                 'sort_by' => ['nullable', 'in:earliest,latest'],
             ]
         );

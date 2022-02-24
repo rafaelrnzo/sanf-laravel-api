@@ -22,8 +22,8 @@ final class AccountReceivableByUserController extends RestApiController
     ) {
         $input = $this->validate($request, [
             'currency_type' => ['nullable', 'in:IDR,USD'],
-            'skip' => ['nullable', 'integer', 'max:99'],
-            'limit' => ['nullable', 'integer', 'max:99'],
+            'skip' => ['nullable', 'integer', 'max:2147483647'],
+            'limit' => ['nullable', 'integer', 'max:2147483647'],
             'sort_by' => ['nullable', 'in:earliest,latest'],
         ]);
 
