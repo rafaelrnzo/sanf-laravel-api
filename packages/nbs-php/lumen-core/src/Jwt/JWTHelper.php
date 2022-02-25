@@ -203,7 +203,7 @@ class JWTHelper
     {
         $decoded = (array)$this->getDecodedAppToken();
         $issuedAt = time();
-        $expire = $issuedAt + 131400; // 3 Month
+        $expire = $issuedAt + 131400 * 60; // 3 Month
 
         $decoded['ent'] = self::ENTITY_TYPE_APP;
         $decoded['iat'] = $issuedAt;

@@ -42,7 +42,7 @@ class SendEmailInsuranceClaimSubmissionForUserJob implements ShouldQueue
             'Keterangan' => $this->data->description,
         ];
 
-        $insurance = (new MailLayout2Columns)
+        $mailable = (new MailLayout2Columns)
             ->subject('Pengajuan Klaim Asuransi')
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
             ->rightLogo(asset('assets/png/sanf-tagline.png'))
@@ -65,9 +65,10 @@ class SendEmailInsuranceClaimSubmissionForUserJob implements ShouldQueue
                 [__('Laporkan email ini'), '#']
             );
 
-        //TODO LOAD FROM STORAGE
-        $insurance->attach(public_path('assets/news-1.png'));
+        foreach ($this->data->image_files as $imageFile){
+            $mailable->attachFromStorage($imageFile->path);
+        }
 
-        return Mail::to($this->recipient->email)->send($insurance);
+        return Mail::to($this->recipient->email)->send($mailable);
     }
 }
