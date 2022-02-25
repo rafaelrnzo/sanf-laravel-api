@@ -32,7 +32,7 @@ class UserActivationNotification extends Notification
             ->line(__('Mohon verifikasi email Anda dengan mengklik tombol di bawah ini'))
             ->action(__('Verifikasi Email'), $verificationUrl)
             ->lineWithUrl(
-                __('Kami menerima permintaan pembuatan akun SANFXtra yang memakai email Anda. Jika Anda merasa tidak membuat request tersebut mohon abaikan email ini atau anda dapat'),
+                __('Kami menerima permintaan pembuatan akun SANFind yang memakai email Anda. Jika Anda merasa tidak membuat request tersebut mohon abaikan email ini atau anda dapat'),
                 [__('laporkan email ini'), $reportUrl]
             )
             ->to($notifiable->getEmailForPasswordReset(), $fullName);

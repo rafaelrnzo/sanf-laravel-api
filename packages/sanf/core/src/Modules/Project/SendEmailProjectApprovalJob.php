@@ -32,7 +32,7 @@ class SendEmailProjectApprovalJob implements ShouldQueue
     public function handle()
     {
         $projectApprovalMail = (new BaseMail())
-            ->subject('Pengajuan project baru dari pengguna SANFXtra!')
+            ->subject('Pengajuan project baru dari pengguna SANFind!')
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
             ->rightLogo(asset('assets/png/sanf-tagline.png'))
             ->banner(file_get_url(optional($this->project->image_file)->path) ?? asset('assets/png/email-verification.png'))

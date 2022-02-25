@@ -33,7 +33,7 @@ class SendCommodityJob implements ShouldQueue
     {
 
         $commodityApprovalMail = (new BaseMail())
-            ->subject('Pengajuan komoditi baru dari pengguna SANFXtra!')
+            ->subject('Pengajuan komoditi baru dari pengguna SANFind!')
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
             ->rightLogo(asset('assets/png/sanf-tagline.png'))
             ->banner(asset('assets/png/email-verification.png'))

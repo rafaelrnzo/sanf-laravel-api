@@ -7,7 +7,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
-
 use Sanf\Core\Mail\BaseMailV2;
 
 class SendAskUsJob implements ShouldQueue
@@ -33,7 +32,7 @@ class SendAskUsJob implements ShouldQueue
     {
 
         $askUsEmail = (new BaseMailV2)
-            ->subject('Kritik dan saran dari pengguna SANFXtra!')
+            ->subject('Kritik dan saran dari pengguna SANFind!')
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
             ->rightLogo(asset('assets/png/sanf-tagline.png'))
             ->banner(asset('assets/png/email-verification.png'))
