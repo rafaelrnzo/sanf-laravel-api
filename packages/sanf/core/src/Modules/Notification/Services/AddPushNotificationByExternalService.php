@@ -52,7 +52,7 @@ final class AddPushNotificationByExternalService implements ApplicationServiceIn
 
         $fcmTokens = $this->userNotificationRepository->getFcmTokens($user->id);
         $data = [
-            'id' => $dto->id,
+            'xid' => $dto->id,
             'title' => $dto->title,
             'subtitle' => $dto->subtitle,
             'body' => $dto->body,
