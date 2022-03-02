@@ -17,10 +17,10 @@ class AssetTypeEnum extends Enum
     public const AVATAR = 1;
     public const ID_KTP = 2;
     public const ID_NPWP = 3;
-    public const INSURANCE_CLAIM = 3;
+    public const INSURANCE_CLAIM = 4;
 
-    public const KTP = 'KTP BORROWER';
-    public const NPWP = 'NPWP';
+    public const KTP = '017';
+    public const NPWP = '004';
 
     public const ASSET_TYPE = [self::AVATAR, self::ID_KTP, self::ID_NPWP, self::INSURANCE_CLAIM];
     public const PROFILE_DOCUMENT = [self::KTP, self::NPWP];
