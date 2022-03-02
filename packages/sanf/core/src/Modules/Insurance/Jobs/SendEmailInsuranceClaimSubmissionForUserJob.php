@@ -34,7 +34,7 @@ class SendEmailInsuranceClaimSubmissionForUserJob implements ShouldQueue
         $data = [
             'Tanggal Pengajuan' => date_localized($this->data->created_at),
             'Serial Number' => $this->data->serial_no,
-            'No Polisi' => $this->data->polis_no,
+            'No Polis' => $this->data->polis_no,
             'Data Unit' => $this->data->brand_type_model,
             'Tahun Kendaraan' => $this->data->year,
             'Lokasi Pertanggungan' => $this->data->location_metadata->city_name,
