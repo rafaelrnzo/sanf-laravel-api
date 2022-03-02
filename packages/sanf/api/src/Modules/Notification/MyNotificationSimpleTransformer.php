@@ -14,7 +14,7 @@ final class MyNotificationSimpleTransformer extends TransformerAbstract
             'title' => $dto->data->title,
             'subtitle' => $dto->data->subtitle,
             'body' => $dto->data->body,
-            'type' => $dto->data->type,
+            'type' => (int)$dto->data->type,
             'screen' => $dto->data->screen,
             'read_at' => (int)unix_timestamp($dto->readAt),
             'published_at' => (int)unix_timestamp($dto->data->published_at),
