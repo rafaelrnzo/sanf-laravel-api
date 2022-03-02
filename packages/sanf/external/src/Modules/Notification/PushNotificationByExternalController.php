@@ -15,7 +15,7 @@ class PushNotificationByExternalController extends RestApiController
     public function postAdd(Request $request, AddPushNotificationByExternalService $service)
     {
         $input = $this->validate($request, [
-            'id' => ['required', 'string', 'max:255'],
+            'id' => ['required', 'string', 'max:36'],
             'type' => ['required', 'integer', Rule::in(NotificationTypeEnum::ALL_TYPE)],
             'email' => ['required', 'string', 'max:255'],
             'customer_id' => ['required', 'string', 'max:255'],
