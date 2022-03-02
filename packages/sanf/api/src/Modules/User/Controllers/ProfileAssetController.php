@@ -27,7 +27,6 @@ final class ProfileAssetController extends RestApiController
                 Rule::in(AssetTypeEnum::ASSET_TYPE)
             ]
         ]);
-
         if (in_array($input['asset_type'], AssetTypeEnum::PROFILE_DOCUMENT)) {
             $dto = new UploadFinancingDocumentDto([
                 'xid' => $xid,

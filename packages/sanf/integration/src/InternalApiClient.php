@@ -496,11 +496,28 @@ class InternalApiClient
     public function uploadFinancingAsset($request)
     {
         $response = Request::route('customer.upload')
-            ->json([
-                'image' => $request->file,
-                'author' => $request->author,
-                'JenisDoc' => $request->asset_type,
-                'CustomerId' => $request->xid,
+            ->multipart([
+                [
+                    'name' => 'image',
+                    'contents' => $request->file,
+                    'filename' => $request->file->getClientOriginalName(),
+                ],
+                [
+                    'name' => 'filename',
+                    'contents' => $request->file->getClientOriginalName(),
+                ],
+                [
+                    'name' => 'author',
+                    'contents' => $request->author,
+                ],
+                [
+                    'name' => 'JenisDoc',
+                    'contents' => $request->asset_type,
+                ],
+                [
+                    'name' => 'CustomerId',
+                    'contents' => $request->xid,
+                ],
             ])
             ->send();
 

@@ -23,5 +23,5 @@ class AssetTypeEnum extends Enum
     public const NPWP = '004';
 
     public const ASSET_TYPE = [self::AVATAR, self::ID_KTP, self::ID_NPWP, self::INSURANCE_CLAIM];
-    public const PROFILE_DOCUMENT = [self::KTP, self::NPWP];
+    public const PROFILE_DOCUMENT = [self::ID_KTP, self::ID_NPWP];
 }
