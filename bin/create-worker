@@ -1,6 +1,8 @@
 #!/usr/bin/env sh
 
 echo "  > Build Docker container..."
+docker stop sanf-worker
+docker rm sanf-worker
 docker run -d --name sanf-worker -v "$(pwd)":/var/app -p 4007:80 sanf/worker
 
 echo "  > Done"

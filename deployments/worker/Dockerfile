@@ -50,6 +50,8 @@ RUN addgroup -g ${PGID} deployer && \
   adduser -D -G deployer -u ${PUID} deployer
 
 COPY supervisord.conf /etc/supervisord.conf
+COPY ./supervisord.conf /etc/supervisor/
+COPY ./supervisord.d/* /etc/supervisor/conf.d/
 
 ENTRYPOINT ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisord.conf"]
 
