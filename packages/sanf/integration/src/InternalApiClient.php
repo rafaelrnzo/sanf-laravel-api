@@ -16,6 +16,14 @@ class InternalApiClient
     const DEFAULT_LIMIT = 2147483647;
     const DEFAULT_ORDER = 'Latest';
 
+    protected $client;
+
+    public function __construct()
+    {
+        //TODO INJECT
+        $this->client = app(\GuzzleHttp\Client::class);
+    }
+
     /**
      * @param $email
      * @return array|stdClass|null
@@ -54,7 +62,7 @@ class InternalApiClient
          * 'NO_AE': null
          * }
          */
-        $response = Request::route('customer.find-by-email')
+        $response = Request::route('customer.find-by-email', $this->client)
             ->pathParams(['email' => $email])
             ->send();
         return $response->json();
@@ -100,7 +108,7 @@ class InternalApiClient
          * 'EMAIL_STAFF': 'suhendar.ade23@gmail.com'
          * }
          */
-        $response = Request::route('customer.find-by-id')
+        $response = Request::route('customer.find-by-id', $this->client)
             ->pathParams(['id' => $id])
             ->send();
         return $response->json();
@@ -115,7 +123,7 @@ class InternalApiClient
      */
     public function findByEmailAndNpwp($email, $npwp)
     {
-        $response = Request::route('customer.find-by-email-and-npwp')
+        $response = Request::route('customer.find-by-email-and-npwp', $this->client)
             ->pathParams([
                 'email' => $email,
                 'npwp' => $npwp
@@ -135,7 +143,7 @@ class InternalApiClient
      */
     public function registerPersonal($name, $email, $landlineNumber, $phoneNumber)
     {
-        $response = Request::route('customer.register')
+        $response = Request::route('customer.register', $this->client)
             ->json([
                 'nama' => $name,
                 'email' => $email,
@@ -154,7 +162,7 @@ class InternalApiClient
      */
     public function createCompany($data) //TODO DTO
     {
-        $response = Request::route('customer.create-company')
+        $response = Request::route('customer.create-company', $this->client)
             /**
              * {
              * "cust_accnt": "3ACCNT",
@@ -180,7 +188,7 @@ class InternalApiClient
      */
     public function updateCustomer($data)//TODO DTO
     {
-        $response = Request::route('customer.update')
+        $response = Request::route('customer.update', $this->client)
             /*
             {
               "cust_id": "2010002519",
@@ -217,7 +225,7 @@ class InternalApiClient
      */
     public function getShareholders($id)
     {
-        $response = Request::route('customer.shareholder.list')
+        $response = Request::route('customer.shareholder.list', $this->client)
             ->pathParams(['id' => $id])
             ->send();
 
@@ -232,7 +240,7 @@ class InternalApiClient
      */
     public function createShareholder($request) //TODO USE DTO
     {
-        $response = Request::route('customer.shareholder.create')
+        $response = Request::route('customer.shareholder.create', $this->client)
             ->json([
                 "cust_id" => $request->id,
                 "cust_title" => $request->title,
@@ -254,7 +262,7 @@ class InternalApiClient
      */
     public function updateShareholder($request)
     {
-        $response = Request::route('customer.shareholder.update')
+        $response = Request::route('customer.shareholder.update', $this->client)
             ->json([
                 "cust_id" => $request->id,
                 "sr_no" => $request->no,
@@ -279,7 +287,7 @@ class InternalApiClient
      */
     public function deleteShareholder($id, $no)
     {
-        $response = Request::route('customer.shareholder.delete')
+        $response = Request::route('customer.shareholder.delete', $this->client)
             ->json([
                 "cust_id" => $id,
                 "sr_no" => $no,
@@ -296,7 +304,7 @@ class InternalApiClient
      */
     public function getProvinces()
     {
-        $response = Request::route('location.provinces')->send();
+        $response = Request::route('location.provinces', $this->client)->send();
 
         return $response->json();
     }
@@ -309,7 +317,7 @@ class InternalApiClient
      */
     public function getCitiesByProviceId($province_id)
     {
-        $response = Request::route('location.cities')
+        $response = Request::route('location.cities', $this->client)
             ->pathParams(['province_id' => $province_id])
             ->send();
 
@@ -325,7 +333,7 @@ class InternalApiClient
      */
     public function getDistrict($province_id, $city_id)
     {
-        $response = Request::route('location.districts')
+        $response = Request::route('location.districts', $this->client)
             ->pathParams([
                 'province_id' => $province_id,
                 'city_id' => $city_id,
@@ -344,7 +352,7 @@ class InternalApiClient
      */
     public function getSubDistrict($province_id, $city_id, $district_name)
     {
-        $response = Request::route('location.sub-districts')
+        $response = Request::route('location.sub-districts', $this->client)
             ->pathParams([
                 'province_id' => $province_id,
                 'city_id' => $city_id,
@@ -361,7 +369,7 @@ class InternalApiClient
      */
     public function getPosition()
     {
-        $response = Request::route('customer.positions')->send();
+        $response = Request::route('customer.positions', $this->client)->send();
 
         return $response->json();
     }
@@ -374,7 +382,7 @@ class InternalApiClient
      */
     public function getTitle($type)
     {
-        $response = Request::route('customer.titles')
+        $response = Request::route('customer.titles', $this->client)
             ->pathParams([
                 'type' => $type,
             ])->send();
@@ -403,7 +411,7 @@ class InternalApiClient
          * "EMAIL": "LUCYNDA_TANJUNG@GMAIL.COM"
          * }
          */
-        $response = Request::route('customer.staff.list')
+        $response = Request::route('customer.staff.list', $this->client)
             ->pathParams(['id' => $id])
             ->send();
 
@@ -417,7 +425,7 @@ class InternalApiClient
      */
     public function getBrands()
     {
-        $response = Request::route('financing-object.brand')->send();
+        $response = Request::route('financing-object.brand', $this->client)->send();
 
         return $response->json();
     }
@@ -430,7 +438,7 @@ class InternalApiClient
      */
     public function getTypes($brandId)
     {
-        $response = Request::route('financing-object.type')
+        $response = Request::route('financing-object.type', $this->client)
             ->pathParams(['brand_id' => $brandId])
             ->send();
 
@@ -446,7 +454,7 @@ class InternalApiClient
      */
     public function getModels($brandId, $typeId)
     {
-        $response = Request::route('financing-object.model')
+        $response = Request::route('financing-object.model', $this->client)
             ->pathParams([
                 'brand_id' => $brandId,
                 'type_id' => $typeId,
@@ -463,7 +471,7 @@ class InternalApiClient
      */
     public function validateKtp($customerId)
     {
-        $response = Request::route('financing-completion.ktp')
+        $response = Request::route('financing-completion.ktp', $this->client)
             ->pathParams([
                 'customer_id' => $customerId,
             ])->send();
@@ -479,7 +487,7 @@ class InternalApiClient
      */
     public function validateNpwp($customerId)
     {
-        $response = Request::route('financing-completion.npwp')
+        $response = Request::route('financing-completion.npwp', $this->client)
             ->pathParams([
                 'customer_id' => $customerId,
             ])->send();
@@ -495,7 +503,7 @@ class InternalApiClient
      */
     public function uploadFinancingAsset($request)
     {
-        $response = Request::route('customer.upload')
+        $response = Request::route('customer.upload', $this->client)
             ->multipart([
                 [
                     'name' => 'image',
@@ -542,7 +550,7 @@ class InternalApiClient
      */
     public function getCustomerPlafonds($customerId)
     {
-        $response = Request::route('customer.plafond.list')
+        $response = Request::route('customer.plafond.list', $this->client)
             ->pathParams([
                 'customer_id' => $customerId,
             ])->send();
@@ -585,7 +593,7 @@ class InternalApiClient
      */
     public function getCustomerPlafondsByType($customerId, $plafondCode)
     {
-        $response = Request::route('customer.plafond.list-by-type')
+        $response = Request::route('customer.plafond.list-by-type', $this->client)
             ->pathParams([
                 'customer_id' => $customerId,
                 'p_code' => $plafondCode,
@@ -603,7 +611,7 @@ class InternalApiClient
      */
     public function requestPlafond($customerId, $plafondCode, $amount)
     {
-        $response = Request::route('customer.plafond.create')
+        $response = Request::route('customer.plafond.create', $this->client)
             ->json([
                 'cust_id' => $customerId,
                 'p_code' => $plafondCode,
@@ -653,7 +661,7 @@ class InternalApiClient
      */
     public function getCustomerPlafondHistories($customerId, $plafondCode = 'all')
     {
-        $response = Request::route('customer.plafond.history')
+        $response = Request::route('customer.plafond.history', $this->client)
             ->queryParams([
                 'uid' => $customerId,
                 'typeplafond' => $plafondCode
@@ -669,7 +677,7 @@ class InternalApiClient
      */
     public function getMetadataContract($user_id)
     {
-        $response = Request::route('contract.metadata')
+        $response = Request::route('contract.metadata', $this->client)
             ->queryParams(['cust_id' => $user_id])
             ->send();
 
@@ -688,7 +696,7 @@ class InternalApiClient
         $skip,
         $sort_by
     ) {
-        $response = Request::route('contract.account-receivable')
+        $response = Request::route('contract.account-receivable', $this->client)
             ->queryParams([
                 'cust_id' => $customerId,
                 'curr' => $currency_type,
@@ -713,7 +721,7 @@ class InternalApiClient
         $skip,
         $sort_by
     ) {
-        $response = Request::route('contracts')
+        $response = Request::route('contracts', $this->client)
             ->queryParams([
                 'cust_id' => $user_id,
                 'status' => $contract_type,
@@ -754,7 +762,7 @@ class InternalApiClient
      */
     public function getContractOfPrepayment($customerId, $skip, $limit, $order, ?int $timestamp, ?string $keyword)
     {
-        $response = Request::route('prepayment.contract.list')
+        $response = Request::route('prepayment.contract.list', $this->client)
             ->queryParams([
                 'cust_id' => $customerId,
                 'skip' => $skip ?? self::DEFAULT_SKIP,
@@ -817,7 +825,7 @@ class InternalApiClient
      */
     public function getPrepaymentDetail(string $contractNo, \DateTimeImmutable $prepaymentDate)
     {
-        $response = Request::route('prepayment.detail')
+        $response = Request::route('prepayment.detail', $this->client)
             ->queryParams([
                 'AgreeNo' => $contractNo,
                 'TglPrepay' => $prepaymentDate->format('dmY')
@@ -833,7 +841,7 @@ class InternalApiClient
      */
     public function getContractDetail($user_id, $contract_no)
     {
-        $response = Request::route('contracts.detail')
+        $response = Request::route('contracts.detail', $this->client)
             ->queryParams([
                 'cust_id' => $user_id,
                 'contrak_no' => $contract_no,
@@ -855,7 +863,7 @@ class InternalApiClient
         $skip,
         $sort_by
     ) {
-        $response = Request::route('contracts.financing-unit.item')
+        $response = Request::route('contracts.financing-unit.item', $this->client)
             ->queryParams([
                 'cust_id' => $user_id,
                 'contrak_no' => $contract_no,
@@ -880,7 +888,7 @@ class InternalApiClient
         $skip,
         $sort_by
     ) {
-        $response = Request::route('contracts.financing-unit.invoice')
+        $response = Request::route('contracts.financing-unit.invoice', $this->client)
             ->queryParams([
                 'cust_id' => $user_id,
                 'contrak_no' => $contract_no,
@@ -916,7 +924,7 @@ class InternalApiClient
      */
     public function getPdc($customerId, $limit, $skip, $sort_by, $keyword = null)
     {
-        $response = Request::route('contracts.pdc')
+        $response = Request::route('contracts.pdc', $this->client)
             ->queryParams([
                 'cust_id' => $customerId,
                 'contrak_no' => $keyword,
@@ -941,7 +949,7 @@ class InternalApiClient
         $skip,
         $sortBy
     ) {
-        $response = Request::route('contracts.pdc.detail')
+        $response = Request::route('contracts.pdc.detail', $this->client)
             ->queryParams([
                 'cust_id' => $customerId,
                 'contrak_no' => $contractNo,
@@ -966,7 +974,7 @@ class InternalApiClient
         $sort_by,
         $keyword = null
     ) {
-        $response = Request::route('contracts.financing-unit-submission')
+        $response = Request::route('contracts.financing-unit-submission', $this->client)
             ->queryParams([
                 'cust_id' => $user_id,
                 'skip' => $skip,
@@ -991,7 +999,7 @@ class InternalApiClient
         $skip,
         $sort_by
     ) {
-        $response = Request::route('contracts.financing-unit-submission.item')
+        $response = Request::route('contracts.financing-unit-submission.item', $this->client)
             ->queryParams([
                 'cust_id' => $user_id,
                 'no_kontrak' => $contract_no,
@@ -1011,7 +1019,7 @@ class InternalApiClient
      */
     public function getCities()
     {
-        return Request::route('location.all-cities')->send()->json(false);
+        return Request::route('location.all-cities', $this->client)->send()->json(false);
     }
 
     /**
@@ -1043,7 +1051,7 @@ class InternalApiClient
      */
     public function getFinancingUnitOfInsurance($customerId, $skip, $limit, $order, ?int $timestamp, ?string $keyword)
     {
-        $response = Request::route('insurances.financing-units.list')
+        $response = Request::route('insurances.financing-units.list', $this->client)
             ->queryParams([
                 'cust_id' => $customerId,
                 'skip' => $skip ?? self::DEFAULT_SKIP,
@@ -1085,7 +1093,7 @@ class InternalApiClient
      */
     public function getFinancingUnitOfInvoiceCollection($customerId, $skip, $limit, $order, ?int $timestamp, ?string $keyword)
     {
-        $response = Request::route('invoice-collections.financing-units.list')
+        $response = Request::route('invoice-collections.financing-units.list', $this->client)
             ->queryParams([
                 'cust_id' => $customerId,
                 'skip' => $skip ?? self::DEFAULT_SKIP,
@@ -1106,7 +1114,7 @@ class InternalApiClient
      */
     public function getAssigneeSurvey(string $email)
     {
-        $response = Request::route('assignee-survey')
+        $response = Request::route('assignee-survey', $this->client)
             ->queryParams(['email' => $email])->send();
 
         return $response->json(false);
@@ -1129,7 +1137,7 @@ class InternalApiClient
         string $order,
         int $statusId = null
     ) {
-        $response = Request::route('surveys')
+        $response = Request::route('surveys', $this->client)
             ->queryParams([
                 'email' => $email,
                 'limit' => $limit,
@@ -1143,7 +1151,7 @@ class InternalApiClient
 
     public function findSurveyByEmailAndContractNo(string $email, string $contractNo)
     {
-        $response = Request::route('surveys')
+        $response = Request::route('surveys', $this->client)
             ->queryParams([
                 'email' => $email,
                 'limit' => self::DEFAULT_LIMIT,
@@ -1157,7 +1165,7 @@ class InternalApiClient
 
     public function addSurvey($input)
     {
-        $response = Request::route('surveys.add')
+        $response = Request::route('surveys.add', $this->client)
             ->json($input)
             ->send();
 

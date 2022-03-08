@@ -114,6 +114,7 @@ class CoreServiceProvider extends ServiceProvider
     protected function registerProviders()
     {
         $this->app->register(TrustedProxyServiceProvider::class);
+        $this->app->register(GuzzleLoggerServiceProvider::class);
         $this->app->register(MaintenanceModeServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
         $this->app->register(JWTAuthServiceProvider::class);
@@ -152,11 +153,11 @@ class CoreServiceProvider extends ServiceProvider
         ], 'auth-lang');
 
         $this->publishes([
-            __DIR__.'/../resources/views/mail' => resource_path('views/vendor/mail'),
+            __DIR__ . '/../resources/views/mail' => resource_path('views/vendor/mail'),
         ], 'auth-email');
 
         $this->publishes([
-            __DIR__.'/../resources/views/mail' => resource_path('views/vendor/core'),
+            __DIR__ . '/../resources/views/mail' => resource_path('views/vendor/core'),
         ], 'core');
 
         //TODO PUBLISH VIEW
