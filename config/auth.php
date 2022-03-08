@@ -191,7 +191,7 @@ return [
 
     'passwords' => [
         'mobile-password-reset' => [
-            'provider' => 'mobile-auth',
+            'provider' => 'mobile-user-provider',
             'table' => 'password_reset',
             'expire' => 60,
             'throttle' => 1,
