@@ -1,9 +1,12 @@
 #!/usr/bin/env sh
 
-echo "  > Build Docker image app/builder..."
+echo "  > Build Docker image sanf/builder..."
 docker build -t sanf/builder deployments/builder
 
-echo "  > Build Docker image app/core..."
+echo "  > Build Docker image sanf/core..."
 docker build -t sanf/core deployments/core
+
+echo "  > Build Docker image sanf/worker..."
+docker build -t sanf/worker deployments/worker
 
 echo "  > Done"
