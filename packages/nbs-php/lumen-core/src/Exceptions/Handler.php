@@ -130,8 +130,9 @@ class Handler extends ExceptionHandler
     {
         try {
             return [
+                'request_id' => $_SERVER['HTTP_X_REQUEST_ID'],
                 'url' => $request->url(),
-                'header' => $request->header(),
+                'header' => $this->headers($request),
                 'input' => $request->except($this->ignoredInput),
             ];
         } catch (\Throwable $e) {

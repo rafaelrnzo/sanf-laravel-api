@@ -507,7 +507,7 @@ class InternalApiClient
             ->multipart([
                 [
                     'name' => 'image',
-                    'contents' => $request->file,
+                    'contents' => file_get_contents($request->file->getPathName()),
                     'filename' => $request->file->getClientOriginalName(),
                 ],
                 [
