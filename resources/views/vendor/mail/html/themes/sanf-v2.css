@@ -109,7 +109,6 @@ img {
 }
 
 .footer .copyright {
-    display: flex;
     justify-content: center;
     align-items: center;
     /* text-align: right;
@@ -425,10 +424,9 @@ hr {
     box-sizing: border-box;
     color: #fff;
     cursor: pointer;
-    display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 18px;
+    font-size: 14px;
     font-weight: bold;
     max-width: 200px;
     max-height: 54px;

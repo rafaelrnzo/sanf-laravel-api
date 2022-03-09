@@ -107,8 +107,11 @@ php artisan migrate
 ```
 composer dump-autoload
 
-# run sample data seeder for development purpose
+# OPTIONAL run sample data seeder for development purpose
 php artisan db:seed --class=SampleSeeder
+
+$ run master location table seeder
+php -d=memory_limit=-1 artisan db:seed --class=LocationSeeder
 ```
 
 # Run Application

@@ -26,7 +26,7 @@ class ResetPasswordNotification extends Notification
     public function toMail($notifiable)
     {
         $resetUrl = $this->resetUrl($notifiable);
-        $reportUrl = 'https://www.google.com';
+        $reportUrl = '';
 
         return (new BaseMail)
             ->subject('Reset Password')
