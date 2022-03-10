@@ -14,7 +14,7 @@ class LoginTransformer extends TransformerAbstract
         return [
             'profile' => [
                 'id' => $item->id,
-                'xid' => (string)$item->personal_xid,
+                'xid' => (string)($item->personal_xid ?? $item->xid),
                 'full_name' => $item->full_name,
                 'email' => $item->username,
                 'type_name' => ProfileType::PERSONAL()->getTranslation(),

@@ -39,6 +39,7 @@ class AuthModel extends \NbsPhp\Core\Models\AuthModel
         'entity_type_id',
         'xid',
         'profile_type',
+        'personal_xid',
     ];
 
     public function status()

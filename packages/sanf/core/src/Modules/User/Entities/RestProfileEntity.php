@@ -99,7 +99,7 @@ final class RestProfileEntity implements ProfileEntityInterface
 
     public function getCountryName()
     {
-        return $this->attributes['NEGARA'];
+        return $this->attributes['NEGARA'] ?? null;
     }
 
     public function getProvinceId()
