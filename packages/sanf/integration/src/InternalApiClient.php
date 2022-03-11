@@ -1143,7 +1143,7 @@ class InternalApiClient
                 'limit' => $limit,
                 'skip' => $skip,
                 'order' => $order,
-                'statusId' => $statusId,
+                'status_id' => $statusId,
             ])->send();
 
         return $response->json(false);

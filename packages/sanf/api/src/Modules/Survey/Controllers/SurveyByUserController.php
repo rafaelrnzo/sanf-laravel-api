@@ -22,7 +22,7 @@ class SurveyByUserController extends RestApiController
         GetListSurveyService $service
     ) {
         $input = $this->validate($request, [
-                'status_id' => ['nullable', 'integer', 'in:2'],
+                'status_id' => ['nullable', 'integer', 'in:0,2'],
                 'skip' => ['nullable', 'integer', 'max:2147483647'],
                 'limit' => ['nullable', 'integer', 'max:2147483647'],
                 'sort_by' => ['nullable', 'in:earliest,latest'],
