@@ -30,11 +30,12 @@ return [
 //        'reset-password' => 'core::auth.reset-password',
         'reset-password' => 'core::pages.install-mobile-app',
         'verify-email' => 'core::layouts.email-verified',
-        'user-activation' => 'core::pages.install-mobile-app',
+        'user-activation' => 'core::layouts.activation',
     ],
 
     'features' => [
-        'strict-reset-password' => false
+        'strict-reset-password' => false,
+        'app-url' => ''
     ],
 
     'table_names' => [
