@@ -16,7 +16,7 @@ class CreateApiRequestLogTable extends Migration
         Schema::create('api_request_log', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('user_id')->nullable();
-            $table->string('request_id', '32')->unique();
+            $table->string('request_id', '32')->nullable();
             $table->tinyInteger('status_code');
             $table->string('host');
             $table->string('method', 7);

@@ -40,8 +40,13 @@ class LogApiRequestToDatabaseJob extends AbstractJob
     {
         $censoredKeys = config('guzzle-logger.censor.bad-keys');
         //TODO SERVICE AND REPO
+        try{
+            $userId = Auth::id();
+        } catch (\Exception $exception) {
+            $userId = null;
+        }
         ApiRequestLogModel::create([
-            'user_id' => Auth::id(),
+            'user_id' => $userId,
             'request_id' => optional($this->request->getHeader('X-Request-ID'))[0],
             'status_code' => $this->response->getStatusCode(),
             'host' => ($this->request->getUri()->getPort()) ? "{$this->request->getUri()->getHost()}:{$this->request->getUri()->getPort()}" : $this->request->getUri()->getHost(),

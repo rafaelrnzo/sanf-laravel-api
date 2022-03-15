@@ -24,8 +24,13 @@ class HttpLoggerMiddleware
             if ($response instanceof JsonResponse) {
                 $censoredKeys = config('http-logger.censor.bad-keys');
                 //TODO REPOSITORY
+                try{
+                    $userId = Auth::id();
+                } catch (\Exception $exception) {
+                    $userId = null;
+                }
                 AuditHttpLogModel::create([
-                    'user_id' => Auth::id(),
+                    'user_id' => $userId,
                     'request_id' => $request->header('X-Request-ID'),
                     'method' => $request->method(),
                     'name' => optional(optional($request->route())[1])['as'],
