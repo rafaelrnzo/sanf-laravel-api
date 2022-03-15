@@ -15,11 +15,13 @@ class InviteOrGetUserService extends UserService implements ApplicationServiceIn
     {
         $user = $this->userRepository
             ->newQuery()
-            ->select('id')
             ->where('username', $dto->email)
             ->first();
 
         if ($user) {
+            if ($user instanceof NeedSetupPasswordInterface && $user->needActivation()) {
+                $user->sendUserActivationNotification();
+            }
             return $user;
         }
 
