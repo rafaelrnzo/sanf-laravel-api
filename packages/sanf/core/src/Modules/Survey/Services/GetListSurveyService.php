@@ -84,6 +84,16 @@ class GetListSurveyService extends UserService implements ApplicationServiceInte
                     'is_submitted' => isset($isSubmitted),
                 ];
             });
+            if (is_null($dto->statusId)) {
+                $data = $data->filter(function ($item) {
+                    return $item->is_submitted;
+                });
+            } else {
+                $data = $data->filter(function ($item) {
+                    return !$item->is_submitted;
+                });
+            }
+
         } catch (SanfInternalApiDataNotFoundException $exception) {
             return (object)[
                 'data' => [],
@@ -101,7 +111,7 @@ class GetListSurveyService extends UserService implements ApplicationServiceInte
             'data' => $data,
             'paginate' => (object)[
                 'total' => $response->total ?? $response->count,
-                'count' => $response->count ?? 0,
+                'count' => count($data),
                 'skip' => $dto->skip,
                 'limit' => $dto->limit,
                 'sort_by' => $dto->sortBy,

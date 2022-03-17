@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
 use Sanf\Api\Modules\Survey\Transformers\GetDetailSurveyResponseTransformer;
+use Sanf\Api\Modules\Survey\Transformers\GetListFinishedSurveyResponseTransformer;
 use Sanf\Api\Modules\Survey\Transformers\GetListSurveyResponseTransformer;
 use Sanf\Core\Modules\Survey\Dtos\AddSurveySubmissionRequestDto;
 use Sanf\Core\Modules\Survey\Dtos\GetListSurveyRequestDto;
@@ -28,9 +29,15 @@ class SurveyByUserController extends RestApiController
                 'sort_by' => ['nullable', 'in:earliest,latest'],
             ]
         );
+        if ((int)($input['status_id'] ?? null) === 0) {
+            $input['status_id'] = null;
+        }
         $dto = new GetListSurveyRequestDto($input + ['userId' => $auth->id()]);
-
         $result = $service->execute($dto);
+        if (is_null($input['status_id'])) {
+            return fractal($result->data, GetListFinishedSurveyResponseTransformer::class)
+                ->paginateWith(new LazyPaginatorAdapter($result->paginate));
+        }
 
         return fractal($result->data, GetListSurveyResponseTransformer::class)
             ->paginateWith(new LazyPaginatorAdapter($result->paginate));
