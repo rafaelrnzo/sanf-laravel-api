@@ -80,10 +80,12 @@ class GuzzleLoggerServiceProvider extends ServiceProvider
             if ($isEnabled && $logDriver == self::DRIVER_DATABASE) {
                 $handlerStack->push(
                     Middleware::tap(null, function (RequestInterface $request, array $options, PromiseInterface $promise) {
-                        $promise->then(function (ResponseInterface $response) use ($request) {
+                        $requestBody = $request->getBody();
+                        $requestBody->rewind();  // need to rewind stream to be able read request content again
+                        $promise->then(function (ResponseInterface $response) use ($request, $requestBody) {
                             return dispatch(new LogApiRequestToDatabaseJob(
                                 $request,
-                                $request->getBody()->getContents(),
+                                $requestBody->getContents(),
                                 $response,
                                 $response->getBody()->getContents(),
                             ));
