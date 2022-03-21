@@ -43,7 +43,7 @@ class HealthCheckController extends Controller
             return $current;
         });
         $status = 200;
-        foreach ($results as $key => $value) {
+        foreach ($results ?? [] as $key => $value) {
             if ($value === false) {
                 $status = 500;
                 break;

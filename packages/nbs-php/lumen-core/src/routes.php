@@ -15,10 +15,4 @@
 
 use Laravel\Lumen\Routing\Router;
 
-$router->get('/', function () use ($router) {
-    return response()->json($router->app->version());
-});
-
-$router->get('docs/response-codes', function () use ($router) {
-    return response()->json(config('response-codes'));
-});
+$router->get('/', 'PingController@getPing');

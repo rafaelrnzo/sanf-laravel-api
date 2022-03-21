@@ -1,0 +1,11 @@
+name: S3
+abbreviation: storage_acc
+checker: PragmaRX\Health\Checkers\CloudStorage
+notify: true
+column_size: 3
+error_message: "Cloud Storage connection is failing."
+targets:
+  - default:
+      driver: '{{ env("FILESYSTEM_DRIVER") }}'
+      file: pragmarx-health-s3-testfile.txt
+      contents: "{{ \\Illuminate\\Support\\Str::random(32) }}"

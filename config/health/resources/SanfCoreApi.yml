@@ -1,0 +1,16 @@
+name: SANF Core API
+abbreviation: sanf_coreapi
+checker: PragmaRX\Health\Checkers\Http
+notify: true
+column_size: 3
+timeout_message: "[TIMEOUT] A request to %s took %s seconds. Timeout is set to %s seconds."
+connection_timeout: 5
+roundtrip_timeout: 10
+targets:
+  - default:
+      urls:
+        - uv_open_api':
+            url: "{{ config('sanf-internal.url') }}/Address/provinsi"
+            method: GET
+            headers:
+              Client-id: "{{ config('sanf-internal.client_id') }}"

@@ -1,0 +1,12 @@
+name: Database
+abbreviation: db_load
+checker: PragmaRX\Health\Checkers\Database
+notify: true
+column_size: 3
+targets:
+  - "query speed":
+      type: "raw_query"
+      connection: "default"
+      query: "select * from user_auth u join password_reset pr on pr.email = u.username order by u.created_at desc"
+      maximum_time: 1
+      error_message: "Query took %sms when it should have last at most %sms"

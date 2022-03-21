@@ -1,0 +1,11 @@
+name: PostgreSQL Connectable
+abbreviation: db_pgsql_conn
+checker: PragmaRX\Health\Checkers\PortCheck
+notify: true
+column_size: 3
+error_message: "Could not connect to %s on port %s"
+targets:
+  - default:
+      hostname: '{{ env("DB_HOST") }}'
+      port: '{{ env("DB_PORT") }}'
+      timeout: 2
