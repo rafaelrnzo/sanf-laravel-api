@@ -82,12 +82,14 @@ class GuzzleLoggerServiceProvider extends ServiceProvider
                     Middleware::tap(null, function (RequestInterface $request, array $options, PromiseInterface $promise) {
                         $requestBody = $request->getBody();
                         $requestBody->rewind();  // need to rewind stream to be able read request content again
-                        $promise->then(function (ResponseInterface $response) use ($request, $requestBody) {
+                        $requestContent = json_decode($requestBody, true);
+                        $promise->then(function (ResponseInterface $response) use ($request, $requestContent) {
+                            $responseContent = json_decode($response->getBody(), true);
                             return dispatch(new LogApiRequestToDatabaseJob(
                                 $request,
-                                $requestBody->getContents(),
+                                $requestContent,
                                 $response,
-                                $response->getBody()->getContents(),
+                                $responseContent,
                             ));
                         });
                     })

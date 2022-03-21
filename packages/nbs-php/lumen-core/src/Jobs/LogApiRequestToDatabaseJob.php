@@ -54,8 +54,8 @@ class LogApiRequestToDatabaseJob extends AbstractJob
             'path' => $this->request->getUri()->getPath(),
             'header' => $this->censoringNestedArray($censoredKeys, $this->request->getHeaders()),
             'query' => $this->censoringNestedArray($censoredKeys, $this->request->getUri()->getQuery()),
-            'body' => $this->censoringNestedArray($censoredKeys, json_decode($this->requestBody, true)),
-            'response' => $this->censoringNestedArray($censoredKeys, json_decode($this->responseBody, true)),
+            'body' => $this->censoringNestedArray($censoredKeys, $this->requestBody,),
+            'response' => $this->censoringNestedArray($censoredKeys, $this->responseBody)
         ]);
     }
 
