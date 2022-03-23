@@ -1,8 +1,10 @@
 #!/usr/bin/env sh
 
-echo "  > Build Docker container..."
+echo "  > Stop running container..."
 docker stop sanf-worker
+echo "  > Remove old container..."
 docker rm sanf-worker
-docker run -d --name sanf-worker -v "$(pwd)":/var/app -p 4007:80 sanf/worker
+echo "  > Run Docker container..."
+docker run -d --name sanf-worker --restart unless-stopped -v "$(pwd)":/var/app sanf/worker
 
 echo "  > Done"
