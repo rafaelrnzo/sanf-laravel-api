@@ -10,7 +10,7 @@ targets:
   - default:
       urls:
         - uv_open_api':
-            url: "{{ config('sanf-internal.url') }}/Address/provinsi"
+            url: "{{ config('sanf-internal.url') }}"
             method: GET
             headers:
               Client-id: "{{ config('sanf-internal.client_id') }}"
