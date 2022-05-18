@@ -20,8 +20,8 @@ class GetPdfFinancingSimulationService extends FinancingByUserService implements
         $user = $this->findUserOrFail($dto->user_id);
         $template = view('vendor/pdf/PDFView', ['contents' => [
             'images' => [
-                0 => $this->toBase64('assets/png/sanf-logo-blue.png'),
-                1 => $this->toBase64('assets/png/sanf-tagline.png'),
+                0 => $this->toBase64(asset('assets/png/sanf-logo-blue.png')),
+                1 => $this->toBase64(asset('assets/png/sanf-tagline.png')),
             ],
             'openingSentence' => 'Selamat siang '. $user->full_name. ', berikut kami lampirkan hasil perhitungan simulasi pengajuan pembiayaan anda',
             'email' => $user->username,
