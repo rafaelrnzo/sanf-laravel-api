@@ -5,7 +5,7 @@ namespace Sanf\Api\Modules\User\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use NbsPhp\Core\Controllers\RestApiController;
-use Sanf\Api\Modules\Asset\AssetFileSimpleTransformer;
+use Sanf\Api\Modules\Asset\PublicAssetFileSimpleTransformer;
 use Sanf\Core\Modules\Asset\AssetTypeEnum;
 use Sanf\Core\Modules\Asset\AssetUploadRequestDto;
 use Sanf\Core\Modules\Asset\UploadAssetService;
@@ -46,6 +46,6 @@ final class ProfileAssetController extends RestApiController
         ]);
 
         $result = $assetService->execute($dto);
-        return fractal($result, AssetFileSimpleTransformer::class);
+        return fractal($result, PublicAssetFileSimpleTransformer::class);
     }
 }

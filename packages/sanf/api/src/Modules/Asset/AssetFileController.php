@@ -26,7 +26,7 @@ class AssetFileController extends RestApiController
         $result = $service->execute($dto);
 
         // sent response;
-        return fractal($result, AssetFileSimpleTransformer::class);
+        return fractal($result, PrivateAssetFileSimpleTransformer::class);
     }
 
     private function validating(Request $request)

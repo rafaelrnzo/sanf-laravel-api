@@ -5,7 +5,7 @@ namespace Sanf\Api\Modules\Commodity\Transformers;
 
 
 use League\Fractal\TransformerAbstract;
-use Sanf\Api\Modules\Asset\AssetFileSimpleTransformer;
+use Sanf\Api\Modules\Asset\PublicAssetFileSimpleTransformer;
 
 class CommoditySimpleTransformer extends TransformerAbstract
 {
@@ -14,7 +14,7 @@ class CommoditySimpleTransformer extends TransformerAbstract
         return [
             "xid" => $item->xid,
             "title" => $item->title,
-            "image_file" => fractal($item->image_file, new AssetFileSimpleTransformer()),
+            "image_file" => fractal($item->image_file, new PublicAssetFileSimpleTransformer()),
             "location_metadata" => fractal($item->location_metadata, new CommodityLocationTransformer()),
             "is_owner" => (bool)$item->is_owner,
             "published_at" => (int)unix_timestamp($item->published_at),

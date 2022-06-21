@@ -23,7 +23,7 @@ class UploadAssetService implements ApplicationServiceInterface
         throw_if(!$exist, new FileNotFoundException("{$path}"));
 
         // get url file;
-        $url = file_get_url($filename, $path);
+        $url = file_get_temp_url($filename, $path);
 
         // return result;
         return new AssetUploadResultDto([
