@@ -40,6 +40,19 @@ class AuthModel extends \NbsPhp\Core\Models\AuthModel
         'xid',
         'profile_type',
         'personal_xid',
+        'pin',
+        'pin_updated_at',
+    ];
+
+    protected $hidden = [
+        'password', 'remember_token', 'pin',
+    ];
+
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'last_login_at' => 'datetime',
+        'password_updated_at' => 'datetime',
+        'pin_updated_at' => 'datetime',
     ];
 
     public function status()

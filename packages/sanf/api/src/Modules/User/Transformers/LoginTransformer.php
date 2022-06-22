@@ -18,7 +18,8 @@ class LoginTransformer extends TransformerAbstract
                 'full_name' => $item->full_name,
                 'email' => $item->username,
                 'type_name' => ProfileType::PERSONAL()->getTranslation(),
-                'type_id' => ProfileType::PERSONAL()
+                'type_id' => ProfileType::PERSONAL(),
+                'has_pin' => isset($item->pin_updated_at),
             ]
         ];
     }
