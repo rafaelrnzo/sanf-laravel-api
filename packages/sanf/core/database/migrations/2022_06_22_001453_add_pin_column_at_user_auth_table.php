@@ -28,6 +28,7 @@ class AddPinColumnAtUserAuthTable extends Migration
     {
         Schema::table('user_auth', function (Blueprint $table) {
             $table->dropColumn('pin');
+            $table->dropColumn('pin_updated_at');
         });
     }
 }
