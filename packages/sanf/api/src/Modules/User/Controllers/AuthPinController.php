@@ -16,7 +16,7 @@ class AuthPinController extends RestApiController
         AddPinService $service
     ) {
         $input = $this->validate($request, [
-            'pin' => ['required', 'int', 'min:6', 'max:6'],
+            'pin' => ['required', 'int', 'digits:6'],
         ]);
 
         $dto = (object)[
@@ -35,7 +35,7 @@ class AuthPinController extends RestApiController
         CheckPinService $service
     ) {
         $input = $this->validate($request, [
-            'pin' => ['required', 'int', 'min:6', 'max:6'],
+            'pin' => ['required', 'int', 'digits:6'],
         ]);
 
         $dto = (object)[
