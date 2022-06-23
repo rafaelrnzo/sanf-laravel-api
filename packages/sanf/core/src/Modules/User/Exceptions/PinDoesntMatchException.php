@@ -8,5 +8,5 @@ class PinDoesntMatchException extends ApiException
 {
     protected $code = 'E_PIN_2';
 
-    protected $message = 'User Pin Doesnt Match';
+    protected $message = "User Pin Doesn't Match";
 }

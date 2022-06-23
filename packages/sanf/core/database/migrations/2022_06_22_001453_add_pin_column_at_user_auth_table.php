@@ -16,6 +16,8 @@ class AddPinColumnAtUserAuthTable extends Migration
         Schema::table('user_auth', function (Blueprint $table) {
             $table->string('pin')->nullable();
             $table->timestamp('pin_updated_at')->nullable();
+            $table->string('reset_pin_code')->nullable();
+            $table->timestamp('exp_reset_pin_at')->nullable();
         });
     }
 
@@ -29,6 +31,8 @@ class AddPinColumnAtUserAuthTable extends Migration
         Schema::table('user_auth', function (Blueprint $table) {
             $table->dropColumn('pin');
             $table->dropColumn('pin_updated_at');
+            $table->dropColumn('reset_pin_code');
+            $table->dropColumn('exp_reset_pin_at');
         });
     }
 }
