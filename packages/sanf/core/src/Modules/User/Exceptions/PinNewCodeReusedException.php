@@ -4,7 +4,7 @@ namespace Sanf\Core\Modules\User\Exceptions;
 
 use NbsPhp\Core\Exceptions\ApiException;
 
-class NewPinSameException extends ApiException
+class PinNewCodeReusedException extends ApiException
 {
     protected $code = 'E_PIN_3';
 

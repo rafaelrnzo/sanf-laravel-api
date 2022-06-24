@@ -12,7 +12,7 @@ class RequestForgotPinTransformer extends TransformerAbstract
     {
         return [
             'code' => $item->reset_pin_code,
-            'expired_at' => unix_timestamp($item->exp_reset_pin_at),
+            'expired_at' => unix_timestamp($item->reset_pin_expired_at),
         ];
     }
 }

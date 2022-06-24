@@ -4,7 +4,7 @@ namespace Sanf\Core\Modules\User\Exceptions;
 
 use NbsPhp\Core\Exceptions\ApiException;
 
-class ResetPinCodeDoesntMatchException extends ApiException
+class PinResetCodeNotMatchException extends ApiException
 {
     protected $code = 'E_PIN_4';
 

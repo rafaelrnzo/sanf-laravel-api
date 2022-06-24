@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\User\AuthModel;
-use Sanf\Core\Modules\User\Exceptions\NewPinSameException;
+use Sanf\Core\Modules\User\Exceptions\PinNewCodeReusedException;
 use Sanf\Core\Modules\User\Exceptions\PinDoesntMatchException;
 
 class UpdatePinService implements ApplicationServiceInterface
@@ -37,7 +37,7 @@ class UpdatePinService implements ApplicationServiceInterface
 
         $isSame = Hash::check($dto->new_pin, $user->pin);
         if ($isSame) {
-            throw new NewPinSameException();
+            throw new PinNewCodeReusedException();
         }
 
         $user->update([

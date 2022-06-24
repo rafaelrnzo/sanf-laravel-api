@@ -36,13 +36,13 @@ class RequestForgotPinService implements ApplicationServiceInterface
 
         $user->update([
             'reset_pin_code' => rand(pow(10, 4 - 1), pow(10, 4) - 1), //TODO set code length into dynamic variable
-            'exp_reset_pin_at' => Carbon::now()->addDays(),
+            'reset_pin_expired_at' => Carbon::now()->addDays(),
             'updated_at' => Carbon::now(),
         ]);
 
         return (object)[
             'reset_pin_code' => $user->reset_pin_code,
-            'exp_reset_pin_at' => $user->exp_reset_pin_at,
+            'reset_pin_expired_at' => $user->reset_pin_expired_at,
         ]; // TODO use transformer
     }
 }
