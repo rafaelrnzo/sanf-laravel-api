@@ -20,7 +20,7 @@ class AuthPinController extends RestApiController
         AddPinService $service
     ) {
         $input = $this->validate($request, [
-            'pin' => ['required', 'int', 'digits:6'],
+            'pin' => ['required', 'string', 'min:6', 'max:6'],
         ]);
 
         $dto = (object)[
@@ -39,7 +39,7 @@ class AuthPinController extends RestApiController
         CheckPinService $service
     ) {
         $input = $this->validate($request, [
-            'pin' => ['required', 'int', 'digits:6'],
+            'pin' => ['required', 'string', 'min:6', 'max:6'],
         ]);
 
         $dto = (object)[
@@ -58,8 +58,8 @@ class AuthPinController extends RestApiController
         UpdatePinService $service
     ) {
         $input = $this->validate($request, [
-            'current_pin' => ['required', 'int', 'digits:6'],
-            'new_pin' => ['required', 'int', 'digits:6'],
+            'current_pin' => ['required', 'string', 'min:6', 'max:6'],
+            'new_pin' => ['required', 'string', 'min:6', 'max:6'],
         ]);
 
         $dto = (object)[
@@ -98,8 +98,8 @@ class AuthPinController extends RestApiController
         ResetPinService $service
     ) {
         $input = $this->validate($request, [
-            'pin' => ['required', 'int', 'digits:6'],
-            'code' => ['required', 'int', 'digits:4']
+            'pin' => ['required', 'string', 'min:6', 'max:6'],
+            'code' => ['required', 'string', 'min:4', 'max:4']
         ]);
 
         $dto = (object)[

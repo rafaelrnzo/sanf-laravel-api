@@ -38,7 +38,7 @@ class ResetPinService implements ApplicationServiceInterface
             throw new PinResetExpiredException();
         }
 
-        $isMatch = ((int)$dto->code === (int) $user->reset_pin_code);
+        $isMatch = ($dto->code == $user->reset_pin_code);
         if (!$isMatch) {
             throw new PinResetCodeNotMatchException();
         }
