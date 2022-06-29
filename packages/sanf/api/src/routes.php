@@ -124,6 +124,9 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::get('users/profiles/{xid}/plafonds/histories', ['as' => 'users.plafonds.histories.list', 'uses' => 'Plafond\Controllers\PlafondController@getBrowseHistoryByUserProfile']);
     Route::get('users/profiles/{xid}/plafonds/types/{typeId}', ['as' => 'users.plafonds.detail-by-type', 'uses' => 'Plafond\Controllers\PlafondController@getReadByUserProfileAndType']);
 
+    # E-SIGN
+    Route::get('users/profiles/{xid}/contracts/esign-files', ['as' => 'users.contracts.esign-files', 'uses' => 'Contract\Controllers\ESignDocumentByUserController@getBrowse']);
+
     # CONTRACT
     Route::get('users/profiles/{xid}/metadata-contract', ['as' => 'users.metadata-contract', 'uses' => 'User\Controllers\ProfileController@getMetadataContract']);
     Route::get('users/profiles/{xid}/metadata-account-receivable', ['as' => 'users.metadata-account-receivable', 'uses' => 'User\Controllers\ProfileController@getMetadataAccountReceivable']);
@@ -167,5 +170,4 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::put('users/update-pin', ['as' => 'users.pin.update', 'uses' => 'User\Controllers\AuthPinController@postUpdate']);
     Route::post('users/request-forgot-pin', ['as' => 'users.pin.request-forgot', 'uses' => 'User\Controllers\AuthPinController@postRequestForgot']);
     Route::post('users/reset-pin', ['as' => 'users.pin.reset', 'uses' => 'User\Controllers\AuthPinController@postReset']);
-
 });
