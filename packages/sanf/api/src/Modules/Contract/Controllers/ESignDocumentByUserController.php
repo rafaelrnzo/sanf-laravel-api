@@ -25,7 +25,7 @@ final class ESignDocumentByUserController extends RestApiController
             'skip' => ['nullable', 'integer', 'max:2147483647',],
             'limit' => ['nullable', 'integer', 'max:2147483647',],
             'sort_by' => ['nullable', 'in:earliest,latest',],
-            'timestamp' => ['nullabel', 'integer',],
+            'timestamp' => ['nullable', 'integer',],
         ]);
 
         $dto = new BrowseESignDocumentDto($input + ['profile_xid' => $xid]);
