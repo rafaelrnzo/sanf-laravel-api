@@ -14,7 +14,8 @@ class IntegrationServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        ApiWrapper::load(__DIR__ . '/routes.php');
+        ApiWrapper::load(__DIR__ . '/sanf-routes.php');
+        ApiWrapper::load(__DIR__ . '/tekenaja-routes.php');
     }
 
     /**
@@ -35,5 +36,6 @@ class IntegrationServiceProvider extends ServiceProvider
     protected function registerConfigs()
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/sanf-internal.php', 'sanf-internal');
+        $this->mergeConfigFrom(__DIR__ . '/../config/tekenaja-internal.php', 'tekenaja-internal');
     }
 }
