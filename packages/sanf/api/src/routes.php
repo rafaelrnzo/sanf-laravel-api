@@ -127,6 +127,7 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     # E-SIGN
     Route::get('users/profiles/{xid}/contracts/esign-files', ['as' => 'users.contracts.esign-files', 'uses' => 'Contract\Controllers\ESignDocumentByUserController@getBrowse']);
     Route::get('users/profiles/{xid}/contracts/provinces', ['as' => 'users.contracts.master-data.provinces', 'uses' => 'Contract\Controllers\ESignDocumentByUserController@getProvinces']);
+    Route::get('users/profiles/{xid}/contracts/provinces/{provinceXid}/districts', ['as' => 'users.contracts.master-data.districts', 'uses' => 'Contract\Controllers\ESignDocumentByUserController@getDistricts']);
 
     # CONTRACT
     Route::get('users/profiles/{xid}/metadata-contract', ['as' => 'users.metadata-contract', 'uses' => 'User\Controllers\ProfileController@getMetadataContract']);
