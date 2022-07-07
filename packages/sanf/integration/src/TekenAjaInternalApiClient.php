@@ -53,4 +53,15 @@ class TekenAjaInternalApiClient {
             ->send();
         return $response->json();
     }
+
+    public function getSubDistricts(string $provinceId, string $subDistrict)
+    {
+        $response = Request::route('location.subdistrict', $this->client)
+            ->queryParams([
+                'province' => $provinceId,
+                'district' => $subDistrict,
+            ])
+            ->send();
+        return $response->json();
+    }
 }

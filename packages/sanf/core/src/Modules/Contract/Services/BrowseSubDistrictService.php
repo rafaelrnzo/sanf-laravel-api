@@ -5,11 +5,11 @@ namespace Sanf\Core\Modules\Contract\Services;
 use Carbon\Carbon;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\Contract\Dto\BrowseDistrictDto;
+use Sanf\Core\Modules\Contract\Dto\BrowseSubDistrictDto;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Integration\TekenAjaInternalApiClient;
 
-final class BrowseDistrictService implements ApplicationServiceInterface
+final class BrowseSubDistrictService implements ApplicationServiceInterface
 {
     protected AuthModel $userRepository;
     protected TekenAjaInternalApiClient $client;
@@ -29,18 +29,19 @@ final class BrowseDistrictService implements ApplicationServiceInterface
      */
     public function execute($dto = null): object
     {
-        /** @var BrowseDistrictDto $dto */
+        /** @var BrowseSubDistrictDto $dto */
         $user = $this->userRepository->newQuery()->find($dto->user_id);
         if (!$user) {
             throw new UserNotFoundException();
         }
 
-        $result = $this->client->getDistricts($dto->province_id);
+        $result = $this->client->getSubDistricts($dto->province_id, $dto->district_id);
         $mapping = array_map(function ($key, $item) use ($dto) {
             return (object)[
                 'xid' => $key,
                 'name' => mb_convert_case($item, MB_CASE_TITLE, 'UTF-8'),
                 'province_id' => $dto->province_id,
+                'district_id' => $dto->district_id,
                 'created_at' => Carbon::now(),
             ];
         }, array_keys($result['data']), $result['data']);

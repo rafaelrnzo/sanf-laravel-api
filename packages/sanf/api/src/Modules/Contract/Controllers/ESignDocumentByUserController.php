@@ -10,12 +10,15 @@ use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
 use Sanf\Api\Modules\Contract\Transformers\BrowseDistrictTransformer;
 use Sanf\Api\Modules\Contract\Transformers\BrowseESignDocumentTransformer;
 use Sanf\Api\Modules\Contract\Transformers\BrowseProvinceTransformer;
+use Sanf\Api\Modules\Contract\Transformers\BrowseSubDistrictTransformer;
 use Sanf\Core\Modules\Contract\Dto\BrowseDistrictDto;
 use Sanf\Core\Modules\Contract\Dto\BrowseESignDocumentDto;
 use Sanf\Core\Modules\Contract\Dto\BrowseProvinceDto;
+use Sanf\Core\Modules\Contract\Dto\BrowseSubDistrictDto;
 use Sanf\Core\Modules\Contract\Services\BrowseDistrictService;
 use Sanf\Core\Modules\Contract\Services\BrowseESignDocumentService;
 use Sanf\Core\Modules\Contract\Services\BrowseProvinceService;
+use Sanf\Core\Modules\Contract\Services\BrowseSubDistrictService;
 
 final class ESignDocumentByUserController extends RestApiController
 {
@@ -87,6 +90,33 @@ final class ESignDocumentByUserController extends RestApiController
         $result = $service->execute($dto);
 
         return fractal($result->data, BrowseDistrictTransformer::class)
+            ->paginateWith(new LazyPaginatorAdapter($result->paginate));
+    }
+
+    public function getSubDistricts(
+        Guard $auth,
+        Request $request,
+        $xid,
+        $provinceXid,
+        $districtXid,
+        BrowseSubDistrictService $service
+    ) {
+        $input = $this->validate($request, [
+            'keyword' => ['nullable', 'string', 'max:255',],
+            'skip' => ['nullable', 'integer', 'max:2147483647',],
+            'limit' => ['nullable', 'integer', 'max:2147483647',],
+            'sort_by' => ['nullable', 'in:asc,desc',],
+        ]);
+
+        $dto = new BrowseSubDistrictDto($input + [
+            'province_id' => $provinceXid,
+            'district_id' => $districtXid,
+            'user_id' => $auth->id(),
+        ]);
+
+        $result = $service->execute($dto);
+
+        return fractal($result->data, BrowseSubDistrictTransformer::class)
             ->paginateWith(new LazyPaginatorAdapter($result->paginate));
     }
 }
