@@ -6,16 +6,20 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use NbsPhp\Core\Controllers\RestApiController;
+use NbsPhp\Core\Database\TransactionalSessionInterface;
+use NbsPhp\Core\Services\TransactionalApplicationService;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
 use Sanf\Api\Modules\Contract\Transformers\BrowseDistrictTransformer;
 use Sanf\Api\Modules\Contract\Transformers\BrowseESignDocumentTransformer;
 use Sanf\Api\Modules\Contract\Transformers\BrowseProvinceTransformer;
 use Sanf\Api\Modules\Contract\Transformers\BrowseSubDistrictTransformer;
 use Sanf\Api\Modules\Contract\Transformers\GetESignUserTransformer;
+use Sanf\Core\Modules\Contract\Dto\AddESignUserDto;
 use Sanf\Core\Modules\Contract\Dto\BrowseDistrictDto;
 use Sanf\Core\Modules\Contract\Dto\BrowseESignDocumentDto;
 use Sanf\Core\Modules\Contract\Dto\BrowseProvinceDto;
 use Sanf\Core\Modules\Contract\Dto\BrowseSubDistrictDto;
+use Sanf\Core\Modules\Contract\Services\AddESignUserService;
 use Sanf\Core\Modules\Contract\Services\BrowseDistrictService;
 use Sanf\Core\Modules\Contract\Services\BrowseESignDocumentService;
 use Sanf\Core\Modules\Contract\Services\BrowseProvinceService;
@@ -60,6 +64,38 @@ final class ESignDocumentByUserController extends RestApiController
 
         return fractal($result->data, BrowseESignDocumentTransformer::class)
             ->paginateWith(new LazyPaginatorAdapter($result->paginate));
+    }
+
+    public function postRegistration(
+        Guard $auth,
+        Request $request,
+        $xid,
+        AddESignUserService $service,
+        TransactionalSessionInterface $transactionalSession
+    ) {
+        $input = $this->validate($request, [
+            'email' => 'required|string|max:255|unique:user_tekenaja,email',
+            'msisdn' => 'required|max:13|regex:/^[0-9]+$/',
+            'nik' => 'required|string|max:255|unique:user_tekenaja,nik',
+            'full_name' => 'required|string|max:255',
+            'pob' => 'required|string|max:255',
+            'dob' => 'required|string|date_format:Y-m-d',
+            'gender' => 'required|integer|in:0,1',
+            'province_id' => 'required|integer|digits_between:1,1000',
+            'district_id' => 'required|integer|digits_between:1,1000',
+            'sub_district_id' => 'required|integer|digits_between:1,1000',
+            'address' => 'required|string|max:255',
+            'postal_code' => 'required|integer|digits_between:1,1000',
+            'selfie_file' => 'required|string|max:255',
+            'identity_file' => 'required|string|max:255',
+        ]);
+
+        $dto = new AddESignUserDto($input + ['user_id' => $auth->id()]);
+
+        $transactionalService = new TransactionalApplicationService($service, $transactionalSession);
+        $transactionalService->execute($dto);
+
+        return $this->responseOk();
     }
 
     public function getProvinces(

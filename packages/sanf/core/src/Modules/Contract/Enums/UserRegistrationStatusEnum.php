@@ -7,5 +7,5 @@ use MyCLabs\Enum\Enum;
 class UserRegistrationStatusEnum extends Enum
 {
     public const AVAILABLE = 10;
-    public const SETTLED = 'settled';
+    public const SUBMIT = 20;
 }
