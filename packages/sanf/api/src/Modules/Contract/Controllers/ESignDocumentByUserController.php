@@ -25,7 +25,7 @@ use Spatie\Fractalistic\ArraySerializer;
 
 final class ESignDocumentByUserController extends RestApiController
 {
-    public function getESignUser(
+    public function getUser(
         Guard $auth,
         GetESignUserService $service
     ) {

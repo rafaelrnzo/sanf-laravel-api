@@ -125,7 +125,8 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::get('users/profiles/{xid}/plafonds/types/{typeId}', ['as' => 'users.plafonds.detail-by-type', 'uses' => 'Plafond\Controllers\PlafondController@getReadByUserProfileAndType']);
 
     # E-SIGN
-    Route::get('users/profiles/{xid}/contracts/esign-user', ['as' => 'users.contracts.esign-user', 'uses' => 'Contract\Controllers\ESignDocumentByUserController@getESignUser']);
+    Route::get('users/profiles/{xid}/contracts/esign-user', ['as' => 'users.contracts.esign-user', 'uses' => 'Contract\Controllers\ESignDocumentByUserController@getUser']);
+    Route::post('users/profiles/{xid}/contracts/esign-registration', ['as' => 'users.contracts.esign-registration', 'uses' => 'Contract\Controllers\ESignDocumentByUserController@postRegistration']);
     Route::get('users/profiles/{xid}/contracts/esign-files', ['as' => 'users.contracts.esign-files', 'uses' => 'Contract\Controllers\ESignDocumentByUserController@getBrowse']);
     Route::get('users/profiles/{xid}/contracts/provinces', ['as' => 'users.contracts.master-data.provinces', 'uses' => 'Contract\Controllers\ESignDocumentByUserController@getProvinces']);
     Route::get('users/profiles/{xid}/contracts/provinces/{provinceXid}/districts', ['as' => 'users.contracts.master-data.districts', 'uses' => 'Contract\Controllers\ESignDocumentByUserController@getDistricts']);
