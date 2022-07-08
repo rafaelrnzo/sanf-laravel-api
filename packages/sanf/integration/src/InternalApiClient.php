@@ -1171,4 +1171,13 @@ class InternalApiClient
 
         return $response->json(false);
     }
+
+    public function getAvailableESignUser(string $email)
+    {
+        $response = Request::route('e-sign.user', $this->client)
+            ->queryParams(['email' => $email])
+            ->send();
+
+        return $response->json();
+    }
 }
