@@ -7,4 +7,9 @@ use NbsPhp\Core\Models\AbstractModel;
 class UserTekenAjaModel extends AbstractModel
 {
     protected $table = 'user_tekenaja';
+
+    protected $casts = [
+        'selfie_file' => 'object',
+        'identity_file' => 'object',
+    ];
 }
