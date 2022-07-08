@@ -19,7 +19,9 @@ use Sanf\Core\Modules\ContactUs\AskUsRepositoryInterface;
 use Sanf\Core\Modules\ContactUs\AskUsTopicRepositoryInterface;
 use Sanf\Core\Modules\ContactUs\EloquentAskUsRepository;
 use Sanf\Core\Modules\ContactUs\EloquentAskUsTopicRepository;
+use Sanf\Core\Modules\Contract\Repositories\EloquentESignRepository;
 use Sanf\Core\Modules\Contract\Repositories\EloquentFinancingUnitLocationSubmissionRepository;
+use Sanf\Core\Modules\Contract\Repositories\ESignRepositoryInterface;
 use Sanf\Core\Modules\Contract\Repositories\FinancingUnitLocationSubmissionRepositoryInterface;
 use Sanf\Core\Modules\Contract\Specifications\EloquentFinancingUnitLocationSubmissionSpecificationFactory;
 use Sanf\Core\Modules\Contract\Specifications\FinancingUnitLocationSubmissionSpecificationFactoryInterface;
@@ -147,6 +149,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(InsuranceClaimSubmissionRepositoryInterface::class,EloquentInsuranceClaimSubmissionRepository::class);
         $this->app->bind(SurveyRepositoryInterface::class,EloquentSurveyRepository::class);
         $this->app->bind(ProfileRepositoryInterface::class,RestProfileRepository::class);
+        $this->app->bind(ESignRepositoryInterface::class,EloquentESignRepository::class);
 
         $this->app->bind(SurveyEntityFactoryInterface::class, EloquentSurveyFactoryEntity::class);
 

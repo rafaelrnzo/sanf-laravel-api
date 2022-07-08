@@ -11,6 +11,7 @@ use Sanf\Api\Modules\Contract\Transformers\BrowseDistrictTransformer;
 use Sanf\Api\Modules\Contract\Transformers\BrowseESignDocumentTransformer;
 use Sanf\Api\Modules\Contract\Transformers\BrowseProvinceTransformer;
 use Sanf\Api\Modules\Contract\Transformers\BrowseSubDistrictTransformer;
+use Sanf\Api\Modules\Contract\Transformers\GetESignUserTransformer;
 use Sanf\Core\Modules\Contract\Dto\BrowseDistrictDto;
 use Sanf\Core\Modules\Contract\Dto\BrowseESignDocumentDto;
 use Sanf\Core\Modules\Contract\Dto\BrowseProvinceDto;
@@ -19,9 +20,23 @@ use Sanf\Core\Modules\Contract\Services\BrowseDistrictService;
 use Sanf\Core\Modules\Contract\Services\BrowseESignDocumentService;
 use Sanf\Core\Modules\Contract\Services\BrowseProvinceService;
 use Sanf\Core\Modules\Contract\Services\BrowseSubDistrictService;
+use Sanf\Core\Modules\Contract\Services\GetESignUserService;
+use Spatie\Fractalistic\ArraySerializer;
 
 final class ESignDocumentByUserController extends RestApiController
 {
+    public function getESignUser(
+        Guard $auth,
+        GetESignUserService $service
+    ) {
+        $dto = (object)['user_id' => $auth->id(),];
+
+        $result = $service->execute($dto);
+
+        return fractal($result, GetESignUserTransformer::class)
+            ->serializeWith(new ArraySerializer());
+    }
+
     public function getBrowse(
         Guard $auth,
         Request $request,
