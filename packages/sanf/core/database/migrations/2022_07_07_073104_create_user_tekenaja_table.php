@@ -16,10 +16,10 @@ class CreateUserTekenajaTable extends Migration
         Schema::create('user_tekenaja', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('xid');
-            $table->string('registration_id');
+            $table->string('user_id')->nullable()->comment("source by tekenAja user id");
             $table->string('email')->unique();
             $table->string('msisdn');
-            $table->string('nik');
+            $table->string('nik')->unique();
             $table->string('full_name');
             $table->string('dob');
             $table->string('pob');
@@ -28,9 +28,9 @@ class CreateUserTekenajaTable extends Migration
             $table->integer('postal_code')->nullable();
             $table->tinyInteger('province_id');
             $table->tinyInteger('district_id');
-            $table->tinyInteger('subdistrict_id');
-            $table->string('selfie_file');
-            $table->string('identity_file');
+            $table->tinyInteger('sub_district_id');
+            $table->json('selfie_file');
+            $table->json('identity_file');
             $table->tinyInteger('status_id');
             $table->tinyInteger('total_submit_registration');
             $table->timestamps();
