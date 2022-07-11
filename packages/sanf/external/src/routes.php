@@ -14,4 +14,6 @@ Route::group(['prefix' => 'v1/public'], function () {
     Route::get('commodities/{xid}/reject', ['as' => 'commodities.reject', 'uses' => 'Commodity\CommodityByExternalController@postRejectByExternal']);
 
     Route::post('push-notifications', ['as' => 'public.push-notifications.add', 'uses' => 'Notification\PushNotificationByExternalController@postAdd']);
+
+    Route::post('e-sign/register-verified', ['as' => 'e-sign.verified', 'uses' => 'Contract\ESignDocumentByExternalController@postHasVerified']);
 });

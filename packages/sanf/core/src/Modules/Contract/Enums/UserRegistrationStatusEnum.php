@@ -8,4 +8,5 @@ class UserRegistrationStatusEnum extends Enum
 {
     public const AVAILABLE = 10;
     public const SUBMIT = 20;
+    public const COMPLETE = 30;
 }

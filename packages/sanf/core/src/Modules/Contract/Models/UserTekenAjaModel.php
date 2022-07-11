@@ -24,6 +24,7 @@ class UserTekenAjaModel extends AbstractModel
         'selfie_file',
         'identity_file',
         'total_submit_registration',
+        'status_id',
         'updated_at',
     ];
 
