@@ -30,9 +30,10 @@ class JsonResponseMapper implements ResponseMapperInterface
         //TODO RESPONSE MODEL OBJECT
         $responseSuccess = [
             'success' => true,
-            'code' => '200',
+            'code' => $content['response_code'] ?? '200',
             'message' => $content['message'] ?? 'OK'
         ];
+        unset($content['response_code']);
 
         if ($content != '') {
             unset($content['message']);
