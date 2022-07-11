@@ -5,6 +5,7 @@ namespace Sanf\Api\Modules\Contract\Controllers;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Database\TransactionalSessionInterface;
 use NbsPhp\Core\Services\TransactionalApplicationService;
@@ -74,9 +75,19 @@ final class ESignDocumentByUserController extends RestApiController
         TransactionalSessionInterface $transactionalSession
     ) {
         $input = $this->validate($request, [
-            'email' => 'required|string|max:255|unique:user_tekenaja,email',
+            'email' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('user_tekenaja', 'email')->ignore($xid, 'profile_id'),
+            ],
             'msisdn' => 'required|max:13|regex:/^[0-9]+$/',
-            'nik' => 'required|string|max:255|unique:user_tekenaja,nik',
+            'nik' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('user_tekenaja', 'nik')->ignore($xid, 'profile_id'),
+            ],
             'full_name' => 'required|string|max:255',
             'pob' => 'required|string|max:255',
             'dob' => 'required|string|date_format:Y-m-d',
