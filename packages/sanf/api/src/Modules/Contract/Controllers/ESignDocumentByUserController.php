@@ -25,7 +25,9 @@ use Sanf\Core\Modules\Contract\Services\BrowseDistrictService;
 use Sanf\Core\Modules\Contract\Services\BrowseESignDocumentService;
 use Sanf\Core\Modules\Contract\Services\BrowseProvinceService;
 use Sanf\Core\Modules\Contract\Services\BrowseSubDistrictService;
+use Sanf\Core\Modules\Contract\Services\GetESignUserCheckService;
 use Sanf\Core\Modules\Contract\Services\GetESignUserService;
+use Sanf\Core\Modules\Contract\Services\ResendESignVerificationService;
 use Spatie\Fractalistic\ArraySerializer;
 
 final class ESignDocumentByUserController extends RestApiController
@@ -180,5 +182,49 @@ final class ESignDocumentByUserController extends RestApiController
 
         return fractal($result->data, BrowseSubDistrictTransformer::class)
             ->paginateWith(new LazyPaginatorAdapter($result->paginate));
+    }
+
+    public function postRegistrationCheck(
+        Guard $auth,
+        Request $request,
+        $xid,
+        GetESignUserCheckService $service
+    ) {
+        $input  = $this->validate($request, [
+            'email' => 'required|string|max:255',
+            'nik' => 'required|string|max:255',
+        ]);
+
+        $dto = (object)[
+            'nik' => $input['nik'],
+            'email' => $input['email'],
+            'userId' => $auth->id(),
+        ];
+
+        $service->execute($dto);
+
+        return $this->responseOk();
+    }
+
+    public function postResendVerification(
+        Guard $auth,
+        Request $request,
+        $xid,
+        ResendESignVerificationService $service
+    ) {
+        $input  = $this->validate($request, [
+            'email' => 'required|string|max:255',
+            'nik' => 'required|string|max:255',
+        ]);
+
+        $dto = (object)[
+            'nik' => $input['nik'],
+            'email' => $input['email'],
+            'userId' => $auth->id(),
+        ];
+
+        $service->execute($dto);
+
+        return $this->responseOk();
     }
 }
