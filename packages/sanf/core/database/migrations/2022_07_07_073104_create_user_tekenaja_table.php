@@ -16,7 +16,7 @@ class CreateUserTekenajaTable extends Migration
         Schema::create('user_tekenaja', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('xid');
-            $table->string('user_id')->nullable()->comment("source by tekenAja user id");
+            $table->bigInteger('user_id')->unsigned()->nullable();
             $table->string('email')->unique();
             $table->string('msisdn');
             $table->string('nik')->unique();

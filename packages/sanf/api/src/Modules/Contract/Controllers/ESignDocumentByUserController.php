@@ -73,22 +73,21 @@ final class ESignDocumentByUserController extends RestApiController
         Guard $auth,
         Request $request,
         $xid,
-        AddESignUserService $service,
-        TransactionalSessionInterface $transactionalSession
+        AddESignUserService $service
     ) {
         $input = $this->validate($request, [
             'email' => [
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('user_tekenaja', 'email')->ignore($xid, 'profile_id'),
+                Rule::unique('user_tekenaja', 'email')->ignore($auth->id(), 'user_id'),
             ],
             'msisdn' => 'required|max:13|regex:/^[0-9]+$/',
             'nik' => [
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('user_tekenaja', 'nik')->ignore($xid, 'profile_id'),
+                Rule::unique('user_tekenaja', 'nik')->ignore($auth->id(), 'user_id'),
             ],
             'full_name' => 'required|string|max:255',
             'pob' => 'required|string|max:255',
@@ -105,8 +104,7 @@ final class ESignDocumentByUserController extends RestApiController
 
         $dto = new AddESignUserDto($input + ['user_id' => $auth->id()]);
 
-        $transactionalService = new TransactionalApplicationService($service, $transactionalSession);
-        $transactionalService->execute($dto);
+        $service->execute($dto);
 
         return $this->responseOk();
     }
