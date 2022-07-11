@@ -60,7 +60,7 @@ final class AddESignUserService implements ApplicationServiceInterface
         } else {
             // insert new
             $request['xid'] = nano_id();
-            $request['status_id'] = UserRegistrationStatusEnum::AVAILABLE;
+            $request['status_id'] = UserRegistrationStatusEnum::SUBMIT;
             $request['total_submit_registration'] = 0;
             $request['created_at'] = Carbon::now();
 
