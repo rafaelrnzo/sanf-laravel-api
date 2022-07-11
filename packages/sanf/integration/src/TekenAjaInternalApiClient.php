@@ -74,4 +74,32 @@ class TekenAjaInternalApiClient {
 
         return $response->json();
     }
+
+    public function registerCheck(array $request)
+    {
+        $request[] = [
+            'name' => 'action',
+            'contents' => 'check_nik',
+        ];
+        $response = Request::route('user.registration.check', $this->client)
+            ->headers(['Accept' => 'application/json',])
+            ->multipart($request)
+            ->send();
+
+        return $response->json();
+    }
+
+    public function sendVerificationMail(array $request)
+    {
+        $request[] = [
+            'name' => 'action',
+            'contents' => 'resend_email',
+        ];
+        $response = Request::route('user.registration.check', $this->client)
+            ->headers(['Accept' => 'application/json',])
+            ->multipart($request)
+            ->send();
+
+        return $response->json();
+    }
 }
