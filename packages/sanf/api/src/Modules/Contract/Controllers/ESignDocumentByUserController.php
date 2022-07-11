@@ -7,8 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use NbsPhp\Core\Controllers\RestApiController;
-use NbsPhp\Core\Database\TransactionalSessionInterface;
-use NbsPhp\Core\Services\TransactionalApplicationService;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
 use Sanf\Api\Modules\Contract\Transformers\BrowseDistrictTransformer;
 use Sanf\Api\Modules\Contract\Transformers\BrowseESignDocumentTransformer;
@@ -78,6 +76,7 @@ final class ESignDocumentByUserController extends RestApiController
         $input = $this->validate($request, [
             'email' => [
                 'required',
+                'email',
                 'string',
                 'max:255',
                 Rule::unique('user_tekenaja', 'email')->ignore($auth->id(), 'user_id'),
@@ -189,7 +188,7 @@ final class ESignDocumentByUserController extends RestApiController
         GetESignUserCheckService $service
     ) {
         $input  = $this->validate($request, [
-            'email' => 'required|string|max:255',
+            'email' => 'required|email|string|max:255',
             'nik' => 'required|string|max:255',
         ]);
 
@@ -211,7 +210,7 @@ final class ESignDocumentByUserController extends RestApiController
         ResendESignVerificationService $service
     ) {
         $input  = $this->validate($request, [
-            'email' => 'required|string|max:255',
+            'email' => 'required|email|string|max:255',
             'nik' => 'required|string|max:255',
         ]);
 
