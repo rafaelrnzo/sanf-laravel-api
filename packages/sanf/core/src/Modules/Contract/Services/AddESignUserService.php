@@ -10,6 +10,9 @@ use Sanf\Core\Modules\Contract\Dto\AddESignUserDto;
 use Sanf\Core\Modules\Contract\Enums\UserRegistrationStatusEnum;
 use Sanf\Core\Modules\Contract\Repositories\ESignRepositoryInterface;
 use Sanf\Core\Modules\User\AuthModel;
+use Sanf\Integration\Enums\TekenAjaRegistrationErrorCodeEnum;
+use Sanf\Integration\Exceptions\TekenAjaExternalApiException;
+use Sanf\Integration\Exceptions\TekenAjaInvalidParameterRegistrationException;
 use Sanf\Integration\TekenAjaInternalApiClient;
 
 final class AddESignUserService implements ApplicationServiceInterface
@@ -64,25 +67,35 @@ final class AddESignUserService implements ApplicationServiceInterface
         }
 
         // hit endpoint registration by tekenAja
-        // TODO uncomment this section after tekenAja fix the endpoint url
-        /**
-        $this->client->addRegisterUser([
-            'email' => $userRegistration->email,
-            'name' => $userRegistration->full_name,
-            'gender' => (string) $userRegistration->gender,
-            'dob' => $userRegistration->dob,
-            'pob' => $userRegistration->pob,
-            'nik' => $userRegistration->nik,
-            'mobile' => $userRegistration->msisdn,
-            'province' => (string) $userRegistration->province_id,
-            'district' => (string) $userRegistration->district_id,
-            'sub_district' => (string) $userRegistration->sub_district_id,
-            'address' => $userRegistration->address,
-            'zip_code' => $userRegistration->postal_code,
-            'ktp_photo' => file_get_contents(file_get_temp_url($userRegistration->identity_file->path)),
-            'selfie_photo' => file_get_contents(file_get_temp_url($userRegistration->selfie_file->path)),
+        // TODO use self service like registration tekenAja service
+        $result = $this->client->addRegisterUser([
+            ['name' => 'email', 'contents' => $userRegistration->email,],
+            ['name' => 'name', 'contents' => $userRegistration->full_name,],
+            ['name' => 'gender', 'contents' => (string)$userRegistration->gender,],
+            ['name' => 'dob', 'contents' => $userRegistration->dob,],
+            ['name' => 'pob', 'contents' => $userRegistration->pob,],
+            ['name' => 'nik', 'contents' => $userRegistration->nik,],
+            ['name' => 'mobile', 'contents' => $userRegistration->msisdn,],
+            ['name' => 'province', 'contents' => $userRegistration->province_id,],
+            ['name' => 'district', 'contents' => $userRegistration->district_id,],
+            ['name' => 'sub_district', 'contents' => $userRegistration->sub_district_id,],
+            ['name' => 'address', 'contents' => $userRegistration->address,],
+            ['name' => 'zip_code', 'contents' => $userRegistration->postal_code,],
+            [
+                'name' => 'ktp_photo',
+                'contents' => file_get_contents(file_get_temp_url($userRegistration->identity_file->path)),
+                'filename' => $userRegistration->identity_file->file_name,
+            ],
+            [
+                'name' => 'selfie_photo',
+                'contents' => file_get_contents(file_get_temp_url($userRegistration->selfie_file->path)),
+                'filename' => $userRegistration->selfie_file->file_name,
+            ],
         ]);
-        */
+
+        if ($result['code']) {
+            $this->errorHandle($result['code'], $result['message']);
+        }
 
         return true;
     }
@@ -130,5 +143,20 @@ final class AddESignUserService implements ApplicationServiceInterface
             'path' => "{$path}{$file}",
             'mime_type' => Storage::getMimeType("{$path}{$file}")
         ];
+    }
+
+    private function errorHandle(string $code, $messages)
+    {
+        switch ($code) {
+            case TekenAjaRegistrationErrorCodeEnum::INVALID_PARAMETER:
+                $response = array_map(function ($item) {
+                    return $item[0];
+                }, $messages);
+                throw new TekenAjaInvalidParameterRegistrationException(implode('|', $response));
+                break;
+            default:
+            case TekenAjaRegistrationErrorCodeEnum::SYSTEM_FAILURE:
+                throw new TekenAjaExternalApiException($messages);
+        }
     }
 }
