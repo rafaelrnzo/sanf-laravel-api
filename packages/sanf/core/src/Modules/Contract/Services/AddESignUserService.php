@@ -55,12 +55,13 @@ final class AddESignUserService implements ApplicationServiceInterface
         $userRegistration = $this->eSignRepository->findUserByEmail($dto->email);
         if ($userRegistration) {
             // update data
+            $request['updated_at'] = Carbon::now();
             $userRegistration = $this->eSignRepository->updateUser($userRegistration->id, $request);
         } else {
             // insert new
             $request['xid'] = nano_id();
             $request['status_id'] = UserRegistrationStatusEnum::AVAILABLE;
-            $request['total_submit_registration'] = 1;
+            $request['total_submit_registration'] = 0;
             $request['created_at'] = Carbon::now();
 
             $userRegistration = $this->eSignRepository->createUser($request);
@@ -92,6 +93,10 @@ final class AddESignUserService implements ApplicationServiceInterface
                 'filename' => $userRegistration->selfie_file->file_name,
             ],
         ]);
+
+        $request['total_submit_registration'] = $userRegistration->total_submit_registration + 1;
+        $request['updated_at'] = Carbon::now();
+        $this->eSignRepository->updateUser($userRegistration->id, $request);
 
         if ($result['code']) {
             $this->errorHandle($result['code'], $result['message']);

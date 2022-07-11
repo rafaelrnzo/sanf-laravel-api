@@ -23,7 +23,8 @@ class UserTekenAjaModel extends AbstractModel
         'sub_district_id',
         'selfie_file',
         'identity_file',
-        'updated_at'
+        'total_submit_registration',
+        'updated_at',
     ];
 
     protected $casts = [
