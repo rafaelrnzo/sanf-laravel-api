@@ -1180,4 +1180,13 @@ class InternalApiClient
 
         return $response->json();
     }
+
+    public function updateESignUserStatus(string $email)
+    {
+        $response = Request::route('e-sign.user.update-status', $this->client)
+            ->json(['email' => $email])
+            ->send();
+
+        return $response->json();
+    }
 }

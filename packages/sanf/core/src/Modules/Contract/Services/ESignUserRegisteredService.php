@@ -15,6 +15,7 @@ use Sanf\Core\Modules\Contract\Repositories\ESignRepositoryInterface;
 use Sanf\Core\Modules\Notification\Exceptions\NotificationInvalidException;
 use Sanf\Core\Modules\Notification\NotificationTypeEnum;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
+use Sanf\Integration\InternalApiClient;
 
 final class ESignUserRegisteredService implements ApplicationServiceInterface
 {
@@ -22,16 +23,20 @@ final class ESignUserRegisteredService implements ApplicationServiceInterface
     protected UserRepositoryInterface $userRepository;
     protected UserNotificationRepositoryInterface $userNotificationRepository;
     protected PushNotificationServiceInterface $pushNotificationService;
+    protected InternalApiClient $client;
 
     public function __construct(
         ESignRepositoryInterface $eSignRepository,
         UserRepositoryInterface $userRepository,
         UserNotificationRepositoryInterface $userNotificationRepository,
-        PushNotificationServiceInterface $pushNotificationService
+        PushNotificationServiceInterface $pushNotificationService,
+        InternalApiClient $client
     ) {
         $this->eSignRepository = $eSignRepository;
         $this->userNotificationRepository = $userNotificationRepository;
         $this->userRepository = $userRepository;
+        $this->pushNotificationService = $pushNotificationService;
+        $this->client = $client;
     }
 
     /**
@@ -57,8 +62,12 @@ final class ESignUserRegisteredService implements ApplicationServiceInterface
             'updated_at' => Carbon::now(),
         ]);
 
+        // update core
+        // TODO create self service of send notification using event service
+        $this->client->updateESignUserStatus($dto->email);
+
         // send notification
-        // TODO create self service of send notification
+        // TODO create self service of send notification using event service
         $fcmTokens = $this->userNotificationRepository->getFcmTokens($user->id);
         $data = [
             'xid' => nano_id(),

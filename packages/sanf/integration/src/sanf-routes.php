@@ -63,4 +63,5 @@ Route::group(config('sanf-internal.url'), [InternalApiProcessor::class], functio
     Route::get('surveys', '/SelfSurvei');
 
     Route::get('e-sign.user', '/esign/Pendaftaran');
+    Route::post('e-sign.user.update-status', '/esign/pendaftaran');
 });
