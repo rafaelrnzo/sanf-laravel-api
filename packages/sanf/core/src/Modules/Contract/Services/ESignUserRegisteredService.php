@@ -10,7 +10,7 @@ use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use NbsPhp\Notification\Repositories\UserNotificationRepositoryInterface;
 use NbsPhp\Notification\Services\PushNotificationServiceInterface;
-use Sanf\Core\Modules\Contract\Enums\UserRegistrationStatusEnum;
+use Sanf\Core\Modules\Contract\Enums\ESignRegistrationStatusEnum;
 use Sanf\Core\Modules\Contract\Repositories\ESignRepositoryInterface;
 use Sanf\Core\Modules\Notification\Exceptions\NotificationInvalidException;
 use Sanf\Core\Modules\Notification\NotificationTypeEnum;
@@ -58,7 +58,7 @@ final class ESignUserRegisteredService implements ApplicationServiceInterface
 
         // update status into complete state
         $eSignUser = $this->eSignRepository->updateUser($eSignUser->id, [
-            'status_id' => UserRegistrationStatusEnum::COMPLETE,
+            'status_id' => ESignRegistrationStatusEnum::COMPLETE,
             'updated_at' => Carbon::now(),
         ]);
 

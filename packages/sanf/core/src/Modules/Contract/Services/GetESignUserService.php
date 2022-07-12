@@ -5,7 +5,7 @@ namespace Sanf\Core\Modules\Contract\Services;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Dto\GetESignUserResponseDto;
-use Sanf\Core\Modules\Contract\Enums\UserRegistrationStatusEnum;
+use Sanf\Core\Modules\Contract\Enums\ESignRegistrationStatusEnum;
 use Sanf\Core\Modules\Contract\Repositories\ESignRepositoryInterface;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Integration\InternalApiClient;
@@ -50,7 +50,7 @@ final class GetESignUserService implements ApplicationServiceInterface
                 'gender' => (int) $item['GENDER'] ?? null,
                 'address' => $item['ADDRESS'] ?? null,
                 'postalCode' => (int) $item['ZIP_CODE'] ?? null,
-                'statusId' => UserRegistrationStatusEnum::AVAILABLE,
+                'statusId' => ESignRegistrationStatusEnum::AVAILABLE,
             ];
         }, $response['data'])[0];
 

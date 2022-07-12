@@ -4,7 +4,7 @@ namespace Sanf\Core\Modules\Contract\Enums;
 
 use MyCLabs\Enum\Enum;
 
-class UserRegistrationStatusEnum extends Enum
+class ESignRegistrationStatusEnum extends Enum
 {
     public const AVAILABLE = 10;
     public const SUBMIT = 20;

@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Dto\AddESignUserDto;
-use Sanf\Core\Modules\Contract\Enums\UserRegistrationStatusEnum;
+use Sanf\Core\Modules\Contract\Enums\ESignRegistrationStatusEnum;
 use Sanf\Core\Modules\Contract\Repositories\ESignRepositoryInterface;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Integration\Enums\TekenAjaRegistrationErrorCodeEnum;
@@ -65,7 +65,8 @@ final class AddESignUserService implements ApplicationServiceInterface
         } else {
             // insert new
             $request['xid'] = nano_id();
-            $request['status_id'] = UserRegistrationStatusEnum::SUBMIT;
+            $request['user_id'] = $dto->userId;
+            $request['status_id'] = ESignRegistrationStatusEnum::SUBMIT;
             $request['total_submit_registration'] = 0;
             $request['created_at'] = Carbon::now();
 
