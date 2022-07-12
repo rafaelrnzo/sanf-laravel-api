@@ -12,6 +12,7 @@ use Sanf\Api\Modules\Contract\Transformers\BrowseDistrictTransformer;
 use Sanf\Api\Modules\Contract\Transformers\BrowseESignDocumentTransformer;
 use Sanf\Api\Modules\Contract\Transformers\BrowseProvinceTransformer;
 use Sanf\Api\Modules\Contract\Transformers\BrowseSubDistrictTransformer;
+use Sanf\Api\Modules\Contract\Transformers\GenerateSignUrlTransformer;
 use Sanf\Api\Modules\Contract\Transformers\GetESignUserTransformer;
 use Sanf\Core\Modules\Contract\Dto\AddESignUserDto;
 use Sanf\Core\Modules\Contract\Dto\BrowseDistrictDto;
@@ -23,6 +24,7 @@ use Sanf\Core\Modules\Contract\Services\BrowseDistrictService;
 use Sanf\Core\Modules\Contract\Services\BrowseESignDocumentService;
 use Sanf\Core\Modules\Contract\Services\BrowseProvinceService;
 use Sanf\Core\Modules\Contract\Services\BrowseSubDistrictService;
+use Sanf\Core\Modules\Contract\Services\GenerateSignUrlService;
 use Sanf\Core\Modules\Contract\Services\GetESignUserCheckService;
 use Sanf\Core\Modules\Contract\Services\GetESignUserService;
 use Sanf\Core\Modules\Contract\Services\ResendESignVerificationService;
@@ -223,5 +225,28 @@ final class ESignDocumentByUserController extends RestApiController
         $service->execute($dto);
 
         return $this->responseOk();
+    }
+
+    public function postGenerateSignUrl(
+        Guard $auth,
+        Request $request,
+        $xid,
+        $document_id,
+        GenerateSignUrlService $service
+    ) {
+        $input  = $this->validate($request, [
+            'email' => 'required|email|string|max:255',
+        ]);
+
+        $dto = (object)[
+            'documentId' => $document_id,
+            'email' => $input['email'],
+            'userId' => $auth->id(),
+        ];
+
+        $result = $service->execute($dto);
+
+        return fractal($result, GenerateSignUrlTransformer::class)
+            ->serializeWith(new ArraySerializer());
     }
 }

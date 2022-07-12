@@ -130,6 +130,7 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::post('users/profiles/{xid}/contracts/esign-registration-check', ['as' => 'users.contracts.esign-user', 'uses' => 'Contract\Controllers\ESignDocumentByUserController@postRegistrationCheck']);
     Route::post('users/profiles/{xid}/contracts/esign-send-verification', ['as' => 'users.contracts.esign-user', 'uses' => 'Contract\Controllers\ESignDocumentByUserController@postResendVerification']);
     Route::get('users/profiles/{xid}/contracts/esign-files', ['as' => 'users.contracts.esign-files', 'uses' => 'Contract\Controllers\ESignDocumentByUserController@getBrowse']);
+    Route::post('users/profiles/{xid}/contracts/esign-files/{document_id}/generate-url', ['as' => 'users.contracts.esign-files.url', 'uses' => 'Contract\Controllers\ESignDocumentByUserController@postGenerateSignUrl']);
     Route::get('users/profiles/{xid}/contracts/provinces', ['as' => 'users.contracts.master-data.provinces', 'uses' => 'Contract\Controllers\ESignDocumentByUserController@getProvinces']);
     Route::get('users/profiles/{xid}/contracts/provinces/{provinceXid}/districts', ['as' => 'users.contracts.master-data.districts', 'uses' => 'Contract\Controllers\ESignDocumentByUserController@getDistricts']);
     Route::get('users/profiles/{xid}/contracts/provinces/{provinceXid}/districts/{districtXid}/subdistrict', ['as' => 'users.contracts.master-data.sub-districts', 'uses' => 'Contract\Controllers\ESignDocumentByUserController@getSubDistricts']);

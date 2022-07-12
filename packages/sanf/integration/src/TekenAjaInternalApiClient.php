@@ -102,4 +102,17 @@ class TekenAjaInternalApiClient {
 
         return $response->json();
     }
+
+    public function generateSignUrl(string $documentId, string $email)
+    {
+        $response = Request::route('user.registration.check', $this->client)
+            ->headers(['Accept' => 'application/json',])
+            ->multipart([
+                ['name' => 'document_id', 'contents' => $documentId],
+                ['name' => 'user_email', 'contents' => $email],
+            ])
+            ->send();
+
+        return $response->json();
+    }
 }
