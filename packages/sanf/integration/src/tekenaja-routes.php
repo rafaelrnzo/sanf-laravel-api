@@ -8,7 +8,7 @@ Route::group(config('tekenaja-internal.url'), [TekenAjaInternalApiProcessor::cla
     Route::get('location.district', '/v2/data/district');
     Route::get('location.subdistrict', '/v2/data/subdistrict');
 
-    Route::post('user.registration', '/v2/register');
+    Route::post('user.registration.detail', '/v2/register');
     Route::post('user.registration.check', '/v2/register-check');
     Route::post('document.generate-url', '/v2/url/sign');
 });

@@ -67,7 +67,7 @@ class TekenAjaInternalApiClient {
 
     public function addRegisterUser(array $request)
     {
-        $response = Request::route('user.registration', $this->client)
+        $response = Request::route('user.registration.detail', $this->client)
             ->headers(['Accept' => 'application/json',])
             ->multipart($request)
             ->send();
