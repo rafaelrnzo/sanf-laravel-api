@@ -13,6 +13,7 @@ use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Integration\Enums\TekenAjaRegistrationErrorCodeEnum;
 use Sanf\Integration\Exceptions\TekenAjaExternalApiException;
 use Sanf\Integration\Exceptions\TekenAjaInvalidParameterRegistrationException;
+use Sanf\Integration\Exceptions\TekenAjaSubmitRegistrationHasLimitException;
 use Sanf\Integration\TekenAjaInternalApiClient;
 
 final class AddESignUserService implements ApplicationServiceInterface
@@ -54,6 +55,10 @@ final class AddESignUserService implements ApplicationServiceInterface
         // get existing user
         $userRegistration = $this->eSignRepository->findUserByEmail($dto->email);
         if ($userRegistration) {
+            if ($userRegistration->total_submit_registration >= config('tekenaja-internal.max_total_submit')) {
+                throw new TekenAjaSubmitRegistrationHasLimitException();
+            }
+
             // update data
             $request['updated_at'] = Carbon::now();
             $userRegistration = $this->eSignRepository->updateUser($userRegistration->id, $request);

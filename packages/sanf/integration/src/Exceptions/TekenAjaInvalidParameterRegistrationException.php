@@ -8,5 +8,5 @@ use NbsPhp\Core\Exceptions\ApiException;
 
 class TekenAjaInvalidParameterRegistrationException extends ApiException
 {
-    protected $code = 'E_TEKEN_2';
+    protected $code = 'E_TEKEN_3';
 }
