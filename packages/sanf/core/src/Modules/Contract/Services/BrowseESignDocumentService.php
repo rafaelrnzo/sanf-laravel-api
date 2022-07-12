@@ -8,15 +8,29 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Dto\BrowseESignDocumentDto;
 use Sanf\Core\Modules\Contract\Dtos\BrowseProcessFinancingUnitLocationSubmissionByUserRequestDto;
 use Sanf\Core\Modules\Contract\Enums\ESignContractStatusEnum;
+use Sanf\Core\Modules\Contract\Repositories\ESignDocumentSpecificationFactoryInterface;
+use Sanf\Core\Modules\Contract\Repositories\ESignRepositoryInterface;
 use Sanf\Core\Modules\User\AuthModel;
+use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
+use Sanf\Integration\InternalApiClient;
 
 final class BrowseESignDocumentService implements ApplicationServiceInterface
 {
     protected AuthModel $userRepository;
+    protected ESignRepositoryInterface $eSignRepository;
+    protected ESignDocumentSpecificationFactoryInterface $eSignDocumentSpecificationFactory;
+    protected InternalApiClient $client;
 
-    public function __construct(AuthModel $userRepository)
-    {
+    public function __construct(
+        AuthModel $userRepository,
+        ESignRepositoryInterface $eSignRepository,
+        ESignDocumentSpecificationFactoryInterface $eSignDocumentSpecificationFactory,
+        InternalApiClient $client
+    ) {
         $this->userRepository = $userRepository;
+        $this->eSignRepository = $eSignRepository;
+        $this->eSignDocumentSpecificationFactory = $eSignDocumentSpecificationFactory;
+        $this->client = $client;
     }
 
     /**
@@ -71,12 +85,31 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
             }, $result['data']);
 
             // skip same document id from core and sanf db
+            $existingDocumentId = array_pluck($data, 'documentId');
+            $newDocumentId = array_pluck($mapping, 'documentId');
+            $diffDocumentId = array_diff($newDocumentId, $existingDocumentId);
+
+            foreach ($mapping as $newDocument) {
+                if (in_array($newDocument->documentId, $diffDocumentId)) {
+                    $data[] = (object) [
+                        'xid' => null,
+                        'documentName' => $newDocument->documentName,
+                        'documentId' => $newDocument->documentId,
+                        'documentFile' => null,
+                        'statusId' => ESignContractStatusEnum::SUBMIT,
+                        'expiredAt' => $newDocument->expiredAt,
+                        'createdAt' => $newDocument->createdAt,
+                    ];
+                    $total++;
+                }
+            }
+        }
 
         return (object)[
             'data' => $data,
             'paginate' => (object)[
-                'total' => $response->total ?? $data->count(),
-                'count' => $data->count() ?? 0,
+                'total' => $total,
+                'count' => count($data),
                 'skip' => $dto->skip ?? 0,
                 'limit' => $dto->limit ?? null,
                 'sort_by' => $dto->sortBy ?? '',

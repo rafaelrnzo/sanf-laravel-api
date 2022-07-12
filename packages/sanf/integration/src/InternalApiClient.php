@@ -1189,4 +1189,15 @@ class InternalApiClient
 
         return $response->json();
     }
+
+    public function browseESignDocument(string $email, string $keyword = null)
+    {
+        $response = Request::route('e-sign.document.browse', $this->client)
+            ->queryParams([
+                'email' => $email,
+                'keyword' => $keyword,
+            ])->send();
+
+        return $response->json();
+    }
 }

@@ -6,7 +6,7 @@ use Spatie\DataTransferObject\DataTransferObject;
 
 class BrowseESignDocumentDto extends DataTransferObject
 {
-    public int $status_id;
+    public ?int $status_id;
     public string $profile_xid;
     public ?string $user_id;
     public ?string $keyword;

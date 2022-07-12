@@ -11,11 +11,12 @@ class BrowseESignDocumentTransformer extends TransformerAbstract
     {
         return [
             'xid' => $item->xid,
-            'title' => $item->title,
-            'status_id' => $item->status_id,
-            'file_url' => $item->file_url,
-            'expired_at' => unix_timestamp($item->expired_at),
-            'created_at' => unix_timestamp($item->created_at),
+            'title' => $item->documentName ?? $item->documentId,
+            'document_id' => $item->documentId,
+            'status_id' => $item->statusId,
+            'file_url' => ($item->documentFile) ? file_get_temp_url($item->documentFile->path) : null,
+            'expired_at' => ($item->expiredAt) ? unix_timestamp($item->expiredAt) : null,
+            'created_at' => ($item->createdAt) ? unix_timestamp($item->createdAt) : null,
         ];
     }
 }

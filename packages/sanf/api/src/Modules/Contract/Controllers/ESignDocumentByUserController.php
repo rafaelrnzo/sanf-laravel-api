@@ -19,6 +19,7 @@ use Sanf\Core\Modules\Contract\Dto\BrowseDistrictDto;
 use Sanf\Core\Modules\Contract\Dto\BrowseESignDocumentDto;
 use Sanf\Core\Modules\Contract\Dto\BrowseProvinceDto;
 use Sanf\Core\Modules\Contract\Dto\BrowseSubDistrictDto;
+use Sanf\Core\Modules\Contract\Enums\ESignContractStatusEnum;
 use Sanf\Core\Modules\Contract\Services\AddESignUserService;
 use Sanf\Core\Modules\Contract\Services\BrowseDistrictService;
 use Sanf\Core\Modules\Contract\Services\BrowseESignDocumentService;
@@ -51,7 +52,7 @@ final class ESignDocumentByUserController extends RestApiController
         BrowseESignDocumentService $service
     ) {
         $input = $this->validate($request, [
-            'status_id' => ['required', 'integer', 'in:10,20,30',],
+            'status_id' => ['nullable', 'integer', Rule::in(ESignContractStatusEnum::ALL),],
             'keyword' => ['nullable', 'string', 'max:255',],
             'skip' => ['nullable', 'integer', 'max:2147483647',],
             'limit' => ['nullable', 'integer', 'max:2147483647',],

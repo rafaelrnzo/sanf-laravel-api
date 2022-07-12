@@ -19,8 +19,10 @@ use Sanf\Core\Modules\ContactUs\AskUsRepositoryInterface;
 use Sanf\Core\Modules\ContactUs\AskUsTopicRepositoryInterface;
 use Sanf\Core\Modules\ContactUs\EloquentAskUsRepository;
 use Sanf\Core\Modules\ContactUs\EloquentAskUsTopicRepository;
+use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentSpecificationFactory;
 use Sanf\Core\Modules\Contract\Repositories\EloquentESignRepository;
 use Sanf\Core\Modules\Contract\Repositories\EloquentFinancingUnitLocationSubmissionRepository;
+use Sanf\Core\Modules\Contract\Repositories\ESignDocumentSpecificationFactoryInterface;
 use Sanf\Core\Modules\Contract\Repositories\ESignRepositoryInterface;
 use Sanf\Core\Modules\Contract\Repositories\FinancingUnitLocationSubmissionRepositoryInterface;
 use Sanf\Core\Modules\Contract\Specifications\EloquentFinancingUnitLocationSubmissionSpecificationFactory;
@@ -164,6 +166,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(InvoiceCollectionSubmissionSpecificationFactoryInterface::class, EloquentInvoiceCollectionSubmissionSpecificationFactory::class);
         $this->app->bind(InsuranceClaimSubmissionSpecificationFactoryInterface::class, EloquentInsuranceClaimSubmissionSpecificationFactory::class);
         $this->app->bind(SurveySpecificationFactoryInterface::class, EloquentSurveySpecificationFactory::class);
+        $this->app->bind(ESignDocumentSpecificationFactoryInterface::class, EloquentESignDocumentSpecificationFactory::class);
     }
 
     protected function registerViews()
