@@ -31,94 +31,46 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
             throw new UserNotFoundException();
         }
 
-        // TODO remove this dummy data
-        $collection = [
-            [
-                'xid' => nano_id(),
-                'title' => 'Kontrak Pengajuan Pembiayaan No.1234.pdf',
-                'status_id' => ESignContractStatusEnum::SUBMIT,
-                'file_url' => file_get_temp_url('0CDXQ4eSK85BzjlNQJaMr705YVANM3RQvlkSLjqb.pdf'),
-                'expired_at' => Carbon::now()->addDays(4),
-                'created_at' => Carbon::now(),
-            ],
-            [
-                'xid' => nano_id(),
-                'title' => 'Kontrak Pengajuan Pembiayaan No.76126357.pdf',
-                'status_id' => ESignContractStatusEnum::SUBMIT,
-                'file_url' => file_get_temp_url('0CDXQ4eSK85BzjlNQJaMr705YVANM3RQvlkSLjqb.pdf'),
-                'expired_at' => Carbon::now()->addDays(4),
-                'created_at' => Carbon::now(),
-            ],
-            [
-                'xid' => nano_id(),
-                'title' => 'Kontrak Pengajuan Pembiayaan No.7871237.pdf',
-                'status_id' => ESignContractStatusEnum::SUBMIT,
-                'file_url' => file_get_temp_url('0CDXQ4eSK85BzjlNQJaMr705YVANM3RQvlkSLjqb.pdf'),
-                'expired_at' => Carbon::now()->addDays(-2),
-                'created_at' => Carbon::now(),
-            ],
-            [
-                'xid' => nano_id(),
-                'title' => 'Kontrak Pengajuan Pembiayaan No.8961723.pdf',
-                'status_id' => ESignContractStatusEnum::SUBMIT,
-                'file_url' => file_get_temp_url('0CDXQ4eSK85BzjlNQJaMr705YVANM3RQvlkSLjqb.pdf'),
-                'expired_at' => Carbon::now()->addDays(1),
-                'created_at' => Carbon::now(),
-            ],
-            [
-                'xid' => nano_id(),
-                'title' => 'Kontrak Pengajuan Pembiayaan No.88616.pdf',
-                'status_id' => ESignContractStatusEnum::SUBMIT,
-                'file_url' => file_get_temp_url('0CDXQ4eSK85BzjlNQJaMr705YVANM3RQvlkSLjqb.pdf'),
-                'expired_at' => Carbon::now()->addDays(7),
-                'created_at' => Carbon::now(),
-            ],
-            [
-                'xid' => nano_id(),
-                'title' => 'Kontrak Pengajuan Pembiayaan No.11188822.pdf',
-                'status_id' => ESignContractStatusEnum::ON_PROGRESS,
-                'file_url' => file_get_temp_url('0CDXQ4eSK85BzjlNQJaMr705YVANM3RQvlkSLjqb.pdf'),
-                'expired_at' => Carbon::now()->addDays(6),
-                'created_at' => Carbon::now(),
-            ],
-            [
-                'xid' => nano_id(),
-                'title' => 'Kontrak Pengajuan Pembiayaan No.98786123.pdf',
-                'status_id' => ESignContractStatusEnum::ON_PROGRESS,
-                'file_url' => file_get_temp_url('0CDXQ4eSK85BzjlNQJaMr705YVANM3RQvlkSLjqb.pdf'),
-                'expired_at' => Carbon::now()->addDays(1),
-                'created_at' => Carbon::now(),
-            ],
-            [
-                'xid' => nano_id(),
-                'title' => 'Kontrak Pengajuan Pembiayaan No.123876.pdf',
-                'status_id' => ESignContractStatusEnum::ON_PROGRESS,
-                'file_url' => file_get_temp_url('0CDXQ4eSK85BzjlNQJaMr705YVANM3RQvlkSLjqb.pdf'),
-                'expired_at' => Carbon::now()->addDays(5),
-                'created_at' => Carbon::now(),
-            ],
-            [
-                'xid' => nano_id(),
-                'title' => 'Kontrak Pengajuan Pembiayaan No.7612364.pdf',
-                'status_id' => ESignContractStatusEnum::COMPLETED,
-                'file_url' => file_get_temp_url('0CDXQ4eSK85BzjlNQJaMr705YVANM3RQvlkSLjqb.pdf'),
-                'expired_at' => Carbon::now()->addDays(5),
-                'created_at' => Carbon::now(),
-            ],
-        ];
+        $userTekenAja = $this->eSignRepository->findUserByUserId($user->id);
 
-        $data = collect($collection)
-            ->where('status_id', $dto->status_id)
-            ->map(function ($item) {
+        $query = $this->eSignRepository->documentQuery(
+            $this->eSignDocumentSpecificationFactory->paginateByUserId($user->id, $dto->status_id, $dto->keyword)
+        );
+        $total = $this->eSignRepository->documentSize(
+            $this->eSignDocumentSpecificationFactory->paginateByUserId($user->id, $dto->status_id)
+        );
+
+        $data = array_map(function ($item) {
+            return (object)[
+                'xid' => $item->xid,
+                'documentName' => $item->document_name,
+                'documentId' => $item->document_id,
+                'documentFile' => $item->document_file ?? null,
+                'statusId' => $item->status_id,
+                'expiredAt' => Carbon::make($item->expired_at),
+                'createdAt' => Carbon::make($item->created_at),
+            ];
+        }, $query);
+
+        // get list document from core
+        if (!$dto->status_id OR $dto->status_id === ESignContractStatusEnum::SUBMIT) {
+            $userTekenAja->email = 'anton@sanf.co.id'; // TODO remove this
+            try {
+                $result = $this->client->browseESignDocument($userTekenAja->email, $dto->keyword);
+            } catch (SanfInternalApiDataNotFoundException $exception) {
+                $result['data'] = [];
+            }
+
+            $mapping = array_map(function ($item) {
                 return (object)[
-                    'xid' => $item['xid'],
-                    'title' => $item['title'],
-                    'status_id' => $item['status_id'],
-                    'file_url' => $item['file_url'],
-                    'expired_at' => $item['expired_at'],
-                    'created_at' => $item['created_at'],
+                    'documentName' => $item['NAME'] ?? null,
+                    'documentId' => $item['DOC_ID_TEKENAJA'] ?? null,
+                    'expiredAt' => isset($item['EXPIRED_AT']) ? Carbon::createFromFormat('Y-m-d', $item['EXPIRED_AT']) : null,
+                    'createdAt' => isset($item['CREATED_AT']) ? Carbon::createFromFormat('Y-m-d', $item['CREATED_AT']) : null,
                 ];
-            });
+            }, $result['data']);
+
+            // skip same document id from core and sanf db
 
         return (object)[
             'data' => $data,
