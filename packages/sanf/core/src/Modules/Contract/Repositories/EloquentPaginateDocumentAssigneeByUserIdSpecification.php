@@ -3,6 +3,7 @@
 namespace Sanf\Core\Modules\Contract\Repositories;
 
 use Carbon\Carbon;
+use Sanf\Core\Modules\Contract\Enums\ESignContractStatusEnum;
 use Sanf\Core\Modules\Contract\Models\ESignDocumentAssigneeModel;
 
 class EloquentPaginateDocumentAssigneeByUserIdSpecification
@@ -70,6 +71,7 @@ class EloquentPaginateDocumentAssigneeByUserIdSpecification
                 'esign_document.status_id',
             ])
             ->join('esign_document', 'esign_document.document_id', '=', 'esign_document_assignee.document_id')
+            ->where('esign_document.status_id', '!=', ESignContractStatusEnum::FAILED)
             ->where('esign_document.expired_at', '>', Carbon::now())
             ->where('esign_document_assignee.user_id', '=', $this->userId)
             ->orderBy($orderBy, $orderDirection)
