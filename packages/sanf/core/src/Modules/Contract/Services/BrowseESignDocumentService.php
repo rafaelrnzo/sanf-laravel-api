@@ -47,11 +47,15 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
 
         $userTekenAja = $this->eSignRepository->findUserByUserId($user->id);
 
-        $query = $this->eSignRepository->documentQuery(
-            $this->eSignDocumentSpecificationFactory->paginateByUserId($user->id, $dto->status_id, $dto->keyword)
+        $status = $dto->status_id;
+        if ($status === ESignContractStatusEnum::SUBMIT) {
+            $status = null;
+        }
+        $query = $this->eSignRepository->documentAssigneeQuery(
+            $this->eSignDocumentSpecificationFactory->paginateDocumentAssigneeByUserId($user->id, $status, $dto->keyword)
         );
-        $total = $this->eSignRepository->documentSize(
-            $this->eSignDocumentSpecificationFactory->paginateByUserId($user->id, $dto->status_id)
+        $total = $this->eSignRepository->documentAssigneeSize(
+            $this->eSignDocumentSpecificationFactory->paginateDocumentAssigneeByUserId($user->id, $status)
         );
 
         $data = array_map(function ($item) {
@@ -68,7 +72,6 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
 
         // get list document from core
         if (!$dto->status_id OR $dto->status_id === ESignContractStatusEnum::SUBMIT) {
-            $userTekenAja->email = 'anton@sanf.co.id'; // TODO remove this
             try {
                 $result = $this->client->browseESignDocument($userTekenAja->email, $dto->keyword);
             } catch (SanfInternalApiDataNotFoundException $exception) {
