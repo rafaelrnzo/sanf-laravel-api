@@ -46,6 +46,9 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
         }
 
         $userTekenAja = $this->eSignRepository->findUserByUserId($user->id);
+        if (!$userTekenAja) {
+            throw new ESignUserNotRegisteredException();
+        }
 
         $status = $dto->status_id;
         if ($status === ESignContractStatusEnum::SUBMIT) {
