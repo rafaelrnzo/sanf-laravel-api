@@ -33,6 +33,7 @@ use Sanf\Core\Modules\Contract\Services\GenerateSignUrlService;
 use Sanf\Core\Modules\Contract\Services\GetESignUserCheckService;
 use Sanf\Core\Modules\Contract\Services\GetESignUserService;
 use Sanf\Core\Modules\Contract\Services\ResendESignVerificationService;
+use Sanf\Core\Modules\Contract\Services\SycnESignDocumentSignService;
 use Spatie\Fractalistic\ArraySerializer;
 
 final class ESignDocumentByUserController extends RestApiController
@@ -53,7 +54,9 @@ final class ESignDocumentByUserController extends RestApiController
         Guard $auth,
         Request $request,
         $xid,
-        BrowseESignDocumentService $service
+        BrowseESignDocumentService $service,
+        SycnESignDocumentSignService $syncService,
+        TransactionalSessionInterface $transactionalSession
     ) {
         $input = $this->validate($request, [
             'status_id' => ['nullable', 'integer', Rule::in(ESignContractStatusEnum::ALL),],
@@ -69,6 +72,9 @@ final class ESignDocumentByUserController extends RestApiController
         $dto->user_id = $auth->id();
 
         $result = $service->execute($dto);
+
+        $transactionalService = new TransactionalApplicationService($syncService, $transactionalSession);
+        $transactionalService->execute($result);
 
         return fractal($result->data, BrowseESignDocumentTransformer::class)
             ->paginateWith(new LazyPaginatorAdapter($result->paginate));

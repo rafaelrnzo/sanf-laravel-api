@@ -75,7 +75,7 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
                 $this->eSignDocumentSpecificationFactory->paginateDocumentAssigneeByUserId($user->id, null)
             );
 
-            $data = array_map(function ($item) {
+            $data = array_map(function ($item) use ($dto, $user){
                 return (object)[
                     'xid' => $item->xid,
                     'documentName' => $item->document_name,
@@ -84,6 +84,8 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
                     'statusId' => $item->status_id,
                     'expiredAt' => Carbon::make($item->expired_at),
                     'createdAt' => Carbon::make($item->created_at),
+                    'userId' => $dto->user_id,
+                    'email' => $user->username,
                 ];
             }, $query);
 
@@ -102,6 +104,8 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
                         'statusId' => ESignContractStatusEnum::SUBMIT,
                         'expiredAt' => $newDocument->expiredAt,
                         'createdAt' => $newDocument->createdAt,
+                        'userId' => $dto->user_id,
+                        'email' => $user->username,
                     ];
                     $total++;
                 }
@@ -130,6 +134,8 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
                     'statusId' => $item->status_id,
                     'expiredAt' => Carbon::make($item->expired_at),
                     'createdAt' => Carbon::make($item->created_at),
+                    'userId' => $dto->user_id,
+                    'email' => $user->username,
                 ];
             }, $query);
         }
