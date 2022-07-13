@@ -2,25 +2,30 @@
 
 namespace Sanf\External\Modules\Contract;
 
-
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use NbsPhp\Core\Controllers\RestApiController;
+use NbsPhp\Core\Database\TransactionalSessionInterface;
+use NbsPhp\Core\Services\TransactionalApplicationService;
+use Sanf\Api\Modules\Contract\Transformers\ESignDocumentCompleteTransformer;
 use Sanf\Api\Modules\Contract\Transformers\ESignUserRegisteredTransformer;
-use Sanf\Core\Modules\Contract\Services\ESignUserRegisteredService;
+use Sanf\Core\Modules\Contract\Services\ESignUserDocumentCompleteService;
 use Spatie\Fractalistic\ArraySerializer;
 
 class ESignDocumentByExternalController extends RestApiController
 {
-    public function postHasVerified(Request $request, ESignUserRegisteredService $service)
-    {
+    public function postHasVerified(
+        Request $request,
+        ESignUserDocumentCompleteService $service,
+        TransactionalSessionInterface $transactionalSession
+    ) {
         $input  = $this->validate($request, [
             'email' => 'required|email|string|max:255',
         ]);
 
         $dto = (object) ['email' => $input['email']];
 
-        $result = $service->execute($dto);
+        $transactionalService = new TransactionalApplicationService($service, $transactionalSession);
+        $result = $transactionalService->execute($dto);
         $result->response_code = 'REGISTRATION_COMPLETE';
 
         return fractal($result, ESignUserRegisteredTransformer::class)
