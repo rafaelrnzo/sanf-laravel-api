@@ -5,6 +5,9 @@ namespace Sanf\Core\Modules\Contract\Services;
 use Carbon\Carbon;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
+use Sanf\Core\Modules\Contract\Exceptions\ESignDocumentNotFoundException;
+use Sanf\Core\Modules\Contract\Exceptions\ESignUserNotRegisteredException;
+use Sanf\Core\Modules\Contract\Repositories\ESignRepositoryInterface;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Integration\Enums\TekenAjaRegistrationErrorCodeEnum;
 use Sanf\Integration\Exceptions\TekenAjaExternalApiException;
@@ -14,14 +17,17 @@ use Sanf\Integration\TekenAjaInternalApiClient;
 final class GenerateSignUrlService implements ApplicationServiceInterface
 {
     protected AuthModel $userRepository;
+    protected ESignRepositoryInterface $eSignRepository;
     protected TekenAjaInternalApiClient $client;
 
     public function __construct(
+        AuthModel $userRepository,
         TekenAjaInternalApiClient $client,
-        AuthModel $userRepository
+        ESignRepositoryInterface $eSignRepository
     ) {
         $this->userRepository = $userRepository;
         $this->client = $client;
+        $this->eSignRepository = $eSignRepository;
     }
 
     /**
@@ -43,6 +49,15 @@ final class GenerateSignUrlService implements ApplicationServiceInterface
         if ($result['code']) {
             $this->errorHandle($result['code'], $result['message']);
         }
+
+        $assigneeDocument = $this->eSignRepository->findDocumentAssigneeByDocId($user->id, $dto->documentId);
+        if (!$assigneeDocument) {
+            throw new ESignDocumentNotFoundException();
+        }
+        $this->eSignRepository->updateDocumentAssignee($assigneeDocument->id, [
+            'document_sign_url' => $result['data']['url'] ?? null,
+            'updated_at' => Carbon::now(),
+        ]);
 
         return (object)[
             'url' => $result['data']['url'] ?? null,

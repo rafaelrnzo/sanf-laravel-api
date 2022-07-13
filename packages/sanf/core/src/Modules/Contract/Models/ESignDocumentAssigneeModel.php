@@ -8,6 +8,11 @@ class ESignDocumentAssigneeModel extends AbstractModel
 {
     protected $table = 'esign_document_assignee';
 
+    protected $fillable = [
+        'document_sign_url',
+        'updated_at',
+    ];
+
     public function eSignDocument()
     {
         return $this->hasOne(ESignDocumentModel::class, 'document_id', 'document_id');

@@ -19,6 +19,7 @@ class CreateEsignDocumentAssigneeTable extends Migration
             $table->bigInteger('user_id')->unsigned();
             $table->string('email');
             $table->string('document_id');
+            $table->string('document_sign_url')->nullable();
             $table->timestamps();
         });
     }
