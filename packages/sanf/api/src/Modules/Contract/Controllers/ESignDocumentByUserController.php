@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use NbsPhp\Core\Controllers\RestApiController;
+use NbsPhp\Core\Database\TransactionalSessionInterface;
+use NbsPhp\Core\Services\TransactionalApplicationService;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
 use Sanf\Api\Modules\Contract\Transformers\BrowseDistrictTransformer;
 use Sanf\Api\Modules\Contract\Transformers\BrowseESignDocumentTransformer;
@@ -14,12 +16,14 @@ use Sanf\Api\Modules\Contract\Transformers\BrowseProvinceTransformer;
 use Sanf\Api\Modules\Contract\Transformers\BrowseSubDistrictTransformer;
 use Sanf\Api\Modules\Contract\Transformers\GenerateSignUrlTransformer;
 use Sanf\Api\Modules\Contract\Transformers\GetESignUserTransformer;
+use Sanf\Core\Modules\Contract\Dto\AddESignDocumentSignDto;
 use Sanf\Core\Modules\Contract\Dto\AddESignUserDto;
 use Sanf\Core\Modules\Contract\Dto\BrowseDistrictDto;
 use Sanf\Core\Modules\Contract\Dto\BrowseESignDocumentDto;
 use Sanf\Core\Modules\Contract\Dto\BrowseProvinceDto;
 use Sanf\Core\Modules\Contract\Dto\BrowseSubDistrictDto;
 use Sanf\Core\Modules\Contract\Enums\ESignContractStatusEnum;
+use Sanf\Core\Modules\Contract\Services\AddESignDocumentSignService;
 use Sanf\Core\Modules\Contract\Services\AddESignUserService;
 use Sanf\Core\Modules\Contract\Services\BrowseDistrictService;
 use Sanf\Core\Modules\Contract\Services\BrowseESignDocumentService;
@@ -250,4 +254,33 @@ final class ESignDocumentByUserController extends RestApiController
         return fractal($result, GenerateSignUrlTransformer::class)
             ->serializeWith(new ArraySerializer());
     }
+
+    public function postDocumentSigned(
+        Guard $auth,
+        Request $request,
+        $xid,
+        $document_id,
+        AddESignDocumentSignService $service,
+        TransactionalSessionInterface $transactionalSession
+    ) {
+        $input = $this->validate($request, [
+            'email' => 'required|email|max:255',
+            'document_name' => 'required|string|max:255',
+            'expired_at' => 'required|integer',
+        ]);
+
+        $dto = new AddESignDocumentSignDto([
+            'email' => $input['email'],
+            'documentId' => $document_id,
+            'documentName' => $input['document_name'],
+            'expiredAt' => $input['expired_at'],
+            'userId' => $auth->id(),
+        ]);
+
+        $transactionalService = new TransactionalApplicationService($service, $transactionalSession);
+        $transactionalService->execute($dto);
+
+        return $this->responseOk();
+    }
 }
+

@@ -4,7 +4,7 @@ namespace Sanf\Core\Modules\Contract\Repositories;
 
 interface ESignDocumentSpecificationFactoryInterface
 {
-    public function paginateByUserId(
+    public function paginateDocumentAssigneeByUserId(
         int $userId,
         ?int $statusId,
         ?string $keyword = null,

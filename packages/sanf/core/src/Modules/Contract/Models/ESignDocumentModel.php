@@ -12,9 +12,11 @@ class ESignDocumentModel extends AbstractModel
         'document_file',
         'status_id',
         'updated_at',
+        'modified_by',
     ];
 
     protected $casts = [
-        'document_file' => 'object'
+        'document_file' => 'object',
+        'modified_by' => 'object',
     ];
 }

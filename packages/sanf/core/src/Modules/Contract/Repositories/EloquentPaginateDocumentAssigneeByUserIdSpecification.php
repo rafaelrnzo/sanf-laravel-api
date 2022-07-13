@@ -3,9 +3,9 @@
 namespace Sanf\Core\Modules\Contract\Repositories;
 
 use Carbon\Carbon;
-use Sanf\Core\Modules\Contract\Models\ESignDocumentModel;
+use Sanf\Core\Modules\Contract\Models\ESignDocumentAssigneeModel;
 
-class EloquentPaginateByUserIdSpecification
+class EloquentPaginateDocumentAssigneeByUserIdSpecification
 {
     private int $userId;
     private ?int $statusId;
@@ -42,36 +42,48 @@ class EloquentPaginateByUserIdSpecification
         $this->timestamp = $timestamp;
     }
 
-    public function buildQuery(ESignDocumentModel $model)
+    public function buildQuery(ESignDocumentAssigneeModel $model)
     {
         switch ($this->sortBy) {
             case 'earliest':
             case 'oldest':
-                $orderBy = 'created_at';
+                $orderBy = 'esign_document_assignee.created_at';
                 $orderDirection = 'ASC';
                 break;
             case 'latest':
             case 'newest':
             default:
-                $orderBy = 'created_at';
+                $orderBy = 'esign_document_assignee.created_at';
                 $orderDirection = 'DESC';
         }
 
         return $model->newQuery()
-            ->where('expired_at', '>', Carbon::now())
-            ->where('user_id', '=', $this->userId)
+            ->select([
+                'esign_document_assignee.id',
+                'esign_document_assignee.xid',
+                'esign_document_assignee.created_at',
+
+                'esign_document.document_id',
+                'esign_document.document_name',
+                'esign_document.document_file',
+                'esign_document.expired_at',
+                'esign_document.status_id',
+            ])
+            ->join('esign_document', 'esign_document.document_id', '=', 'esign_document_assignee.document_id')
+            ->where('esign_document.expired_at', '>', Carbon::now())
+            ->where('esign_document_assignee.user_id', '=', $this->userId)
             ->orderBy($orderBy, $orderDirection)
             ->when($this->statusId, function ($query) {
-                return $query->where('status_id', $this->statusId);
+                return $query->where('esign_document.status_id', $this->statusId);
             })->when($this->keyword, function ($query) {
-                return $query->where('document_name', "ILIKE", '%' . $this->keyword . '%')
-                    ->orWhere('document_id', "ILIKE", '%' . $this->keyword . '%');
+                return $query->where('esign_document.document_name', "ILIKE", '%' . $this->keyword . '%')
+                    ->orWhere('esign_document_assignee.document_id', "ILIKE", '%' . $this->keyword . '%');
             })->when($this->skip, function ($query) {
                 return $query->skip($this->skip);
             })->when($this->limit, function ($query) {
                 return $query->limit($this->limit);
             })->when($this->timestamp, function ($query) {
-                return $query->where('created_at', '>', Carbon::createFromTimestamp($this->timestamp));
+                return $query->where('esign_document_assignee.created_at', '>', Carbon::createFromTimestamp($this->timestamp));
             });
     }
 }

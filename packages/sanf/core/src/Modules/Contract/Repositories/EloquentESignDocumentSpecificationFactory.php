@@ -4,7 +4,7 @@ namespace Sanf\Core\Modules\Contract\Repositories;
 
 class EloquentESignDocumentSpecificationFactory implements ESignDocumentSpecificationFactoryInterface
 {
-    public function paginateByUserId(
+    public function paginateDocumentAssigneeByUserId(
         int $userId,
         ?int $statusId,
         ?string $keyword = null,
@@ -13,6 +13,6 @@ class EloquentESignDocumentSpecificationFactory implements ESignDocumentSpecific
         ?int $limit = null,
         ?int $timestamp = null
     ) {
-        return new EloquentPaginateByUserIdSpecification($userId, $statusId, $keyword, $sortBy, $skip, $limit, $timestamp);
+        return new EloquentPaginateDocumentAssigneeByUserIdSpecification($userId, $statusId, $keyword, $sortBy, $skip, $limit, $timestamp);
     }
 }
