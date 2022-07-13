@@ -16,14 +16,14 @@ use Sanf\Api\Modules\Contract\Transformers\BrowseProvinceTransformer;
 use Sanf\Api\Modules\Contract\Transformers\BrowseSubDistrictTransformer;
 use Sanf\Api\Modules\Contract\Transformers\GenerateSignUrlTransformer;
 use Sanf\Api\Modules\Contract\Transformers\GetESignUserTransformer;
-use Sanf\Core\Modules\Contract\Dto\AddESignDocumentSignDto;
+use Sanf\Core\Modules\Contract\Dto\UpdateESignDocumentStatusDto;
 use Sanf\Core\Modules\Contract\Dto\AddESignUserDto;
 use Sanf\Core\Modules\Contract\Dto\BrowseDistrictDto;
 use Sanf\Core\Modules\Contract\Dto\BrowseESignDocumentDto;
 use Sanf\Core\Modules\Contract\Dto\BrowseProvinceDto;
 use Sanf\Core\Modules\Contract\Dto\BrowseSubDistrictDto;
 use Sanf\Core\Modules\Contract\Enums\ESignContractStatusEnum;
-use Sanf\Core\Modules\Contract\Services\AddESignDocumentSignService;
+use Sanf\Core\Modules\Contract\Services\UpdateESignDocumentStatusService;
 use Sanf\Core\Modules\Contract\Services\AddESignUserService;
 use Sanf\Core\Modules\Contract\Services\BrowseDistrictService;
 use Sanf\Core\Modules\Contract\Services\BrowseESignDocumentService;
@@ -266,20 +266,16 @@ final class ESignDocumentByUserController extends RestApiController
         Request $request,
         $xid,
         $document_id,
-        AddESignDocumentSignService $service,
+        UpdateESignDocumentStatusService $service,
         TransactionalSessionInterface $transactionalSession
     ) {
         $input = $this->validate($request, [
             'email' => 'required|email|max:255',
-            'document_name' => 'required|string|max:255',
-            'expired_at' => 'required|integer',
         ]);
 
-        $dto = new AddESignDocumentSignDto([
+        $dto = new UpdateESignDocumentStatusDto([
             'email' => $input['email'],
             'documentId' => $document_id,
-            'documentName' => $input['document_name'],
-            'expiredAt' => $input['expired_at'],
             'userId' => $auth->id(),
         ]);
 

@@ -11,6 +11,7 @@ class ESignDocumentModel extends AbstractModel
     protected $fillable = [
         'document_file',
         'status_id',
+        'version',
         'updated_at',
         'modified_by',
     ];
