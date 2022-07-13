@@ -1200,4 +1200,26 @@ class InternalApiClient
 
         return $response->json();
     }
+
+    public function updateESignDocumentStatus(string $documentId)
+    {
+        $response = Request::route('e-sign.document.update-status', $this->client)
+            ->json(['doc_id' => $documentId])
+            ->send();
+
+        return $response->json();
+    }
+
+    public function updateESignDocumentFile(string $documentId, string $documentName, string $path)
+    {
+        $response = Request::route('e-sign.document.update-status', $this->client)
+            ->json([
+                'f_download' => 'Y',
+                'doc_id' => $documentId,
+                'doc_name' => $documentName,
+                'path_name' => $path,
+            ])->send();
+
+        return $response->json();
+    }
 }

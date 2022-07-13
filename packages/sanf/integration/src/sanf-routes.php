@@ -65,4 +65,6 @@ Route::group(config('sanf-internal.url'), [InternalApiProcessor::class], functio
     Route::get('e-sign.user', '/esign/Pendaftaran');
     Route::post('e-sign.user.update-status', '/esign/pendaftaran');
     Route::get('e-sign.document.browse', '/esign/list');
+    Route::post('e-sign.document.update-status', '/esign/fincall');
+    Route::post('e-sign.document.update-file', '/esign/download');
 });
