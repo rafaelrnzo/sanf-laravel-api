@@ -284,5 +284,18 @@ final class ESignDocumentByUserController extends RestApiController
 
         return $this->responseOk();
     }
+
+    public function postSendDocument(
+        Guard $auth,
+        Request $request,
+        $xid,
+        $document_id
+    ) {
+        $input = $this->validate($request, [
+            'email' => 'required|email|max:255',
+        ]);
+
+        return $this->responseOk();
+    }
 }
 
