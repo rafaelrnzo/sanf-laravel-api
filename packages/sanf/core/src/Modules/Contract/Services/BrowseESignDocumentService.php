@@ -8,6 +8,7 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Dto\BrowseESignDocumentDto;
 use Sanf\Core\Modules\Contract\Dtos\BrowseProcessFinancingUnitLocationSubmissionByUserRequestDto;
 use Sanf\Core\Modules\Contract\Enums\ESignContractStatusEnum;
+use Sanf\Core\Modules\Contract\Exceptions\ESignUserNotRegisteredException;
 use Sanf\Core\Modules\Contract\Repositories\ESignDocumentSpecificationFactoryInterface;
 use Sanf\Core\Modules\Contract\Repositories\ESignRepositoryInterface;
 use Sanf\Core\Modules\User\AuthModel;
@@ -50,31 +51,8 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
             throw new ESignUserNotRegisteredException();
         }
 
-        $status = $dto->status_id;
-        if ($status === ESignContractStatusEnum::SUBMIT) {
-            $status = null;
-        }
-        $query = $this->eSignRepository->documentAssigneeQuery(
-            $this->eSignDocumentSpecificationFactory->paginateDocumentAssigneeByUserId($user->id, $status, $dto->keyword)
-        );
-        $total = $this->eSignRepository->documentAssigneeSize(
-            $this->eSignDocumentSpecificationFactory->paginateDocumentAssigneeByUserId($user->id, $status)
-        );
-
-        $data = array_map(function ($item) {
-            return (object)[
-                'xid' => $item->xid,
-                'documentName' => $item->document_name,
-                'documentId' => $item->document_id,
-                'documentFile' => $item->document_file ?? null,
-                'statusId' => $item->status_id,
-                'expiredAt' => Carbon::make($item->expired_at),
-                'createdAt' => Carbon::make($item->created_at),
-            ];
-        }, $query);
-
         // get list document from core
-        if (!$dto->status_id OR $dto->status_id === ESignContractStatusEnum::SUBMIT) {
+        if (!$dto->status_id or $dto->status_id === ESignContractStatusEnum::SUBMIT) {
             try {
                 $result = $this->client->browseESignDocument($userTekenAja->email, $dto->keyword);
             } catch (SanfInternalApiDataNotFoundException $exception) {
@@ -89,6 +67,25 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
                     'createdAt' => isset($item['CREATED_AT']) ? Carbon::createFromFormat('Y-m-d', $item['CREATED_AT']) : null,
                 ];
             }, $result['data']);
+
+            $query = $this->eSignRepository->documentAssigneeQuery(
+                $this->eSignDocumentSpecificationFactory->paginateDocumentAssigneeByUserId($user->id, null, $dto->keyword)
+            );
+            $total = $this->eSignRepository->documentAssigneeSize(
+                $this->eSignDocumentSpecificationFactory->paginateDocumentAssigneeByUserId($user->id, null)
+            );
+
+            $data = array_map(function ($item) {
+                return (object)[
+                    'xid' => $item->xid,
+                    'documentName' => $item->document_name,
+                    'documentId' => $item->document_id,
+                    'documentFile' => $item->document_file ?? null,
+                    'statusId' => $item->status_id,
+                    'expiredAt' => Carbon::make($item->expired_at),
+                    'createdAt' => Carbon::make($item->created_at),
+                ];
+            }, $query);
 
             // skip same document id from core and sanf db
             $existingDocumentId = array_pluck($data, 'documentId');
@@ -109,6 +106,32 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
                     $total++;
                 }
             }
+
+            // filter based on submit status
+            if ($dto->status_id === ESignContractStatusEnum::SUBMIT) {
+                $data = array_filter($data, function ($item) {
+                    return $item->statusId === ESignContractStatusEnum::SUBMIT;
+                });
+            }
+        } else {
+            $query = $this->eSignRepository->documentAssigneeQuery(
+                $this->eSignDocumentSpecificationFactory->paginateDocumentAssigneeByUserId($user->id, $dto->status_id, $dto->keyword)
+            );
+            $total = $this->eSignRepository->documentAssigneeSize(
+                $this->eSignDocumentSpecificationFactory->paginateDocumentAssigneeByUserId($user->id, $dto->status_id)
+            );
+
+            $data = array_map(function ($item) {
+                return (object)[
+                    'xid' => $item->xid,
+                    'documentName' => $item->document_name,
+                    'documentId' => $item->document_id,
+                    'documentFile' => $item->document_file ?? null,
+                    'statusId' => $item->status_id,
+                    'expiredAt' => Carbon::make($item->expired_at),
+                    'createdAt' => Carbon::make($item->created_at),
+                ];
+            }, $query);
         }
 
         return (object)[
