@@ -1,14 +1,14 @@
 <?php
 
-namespace Sanf\Core\Modules\Contract\Repositories;
+namespace Sanf\Core\Modules\Contract\Specifications;
 
 use Carbon\Carbon;
 use Sanf\Core\Modules\Contract\Enums\ESignContractStatusEnum;
 use Sanf\Core\Modules\Contract\Models\ESignDocumentAssigneeModel;
 
-class EloquentPaginateDocumentAssigneeByUserIdSpecification
+class EloquentPaginateDocumentAssigneeByDocIdSpecification
 {
-    private int $userId;
+    private string $documentId;
     private ?int $statusId;
     private ?string $keyword;
     private ?string $sortBy;
@@ -17,7 +17,7 @@ class EloquentPaginateDocumentAssigneeByUserIdSpecification
     private ?int $timestamp;
 
     /**
-     * @param int $userId
+     * @param string $documentId
      * @param int|null $statusId
      * @param string|null $keyword
      * @param string|null $sortBy
@@ -26,7 +26,7 @@ class EloquentPaginateDocumentAssigneeByUserIdSpecification
      * @param int|null $timestamp
      */
     public function __construct(
-        int $userId,
+        string $documentId,
         ?int $statusId,
         ?string $keyword = null,
         ?string $sortBy = null,
@@ -34,7 +34,7 @@ class EloquentPaginateDocumentAssigneeByUserIdSpecification
         ?int $limit = null,
         ?int $timestamp = null
     ) {
-        $this->userId = $userId;
+        $this->documentId = $documentId;
         $this->statusId = $statusId;
         $this->keyword = $keyword;
         $this->sortBy = $sortBy;
@@ -62,6 +62,8 @@ class EloquentPaginateDocumentAssigneeByUserIdSpecification
             ->select([
                 'esign_document_assignee.id',
                 'esign_document_assignee.xid',
+                'esign_document_assignee.email',
+                'esign_document_assignee.user_id',
                 'esign_document_assignee.created_at',
 
                 'esign_document.document_id',
@@ -71,9 +73,7 @@ class EloquentPaginateDocumentAssigneeByUserIdSpecification
                 'esign_document.status_id',
             ])
             ->join('esign_document', 'esign_document.document_id', '=', 'esign_document_assignee.document_id')
-            ->where('esign_document.status_id', '!=', ESignContractStatusEnum::FAILED)
-            ->where('esign_document.expired_at', '>', Carbon::now())
-            ->where('esign_document_assignee.user_id', '=', $this->userId)
+            ->where('esign_document_assignee.document_id', '=', $this->documentId)
             ->orderBy($orderBy, $orderDirection)
             ->when($this->statusId, function ($query) {
                 return $query->where('esign_document.status_id', $this->statusId);
