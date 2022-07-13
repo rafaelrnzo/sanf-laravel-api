@@ -26,4 +26,27 @@ class ESignDocumentByExternalController extends RestApiController
         return fractal($result, ESignUserRegisteredTransformer::class)
             ->serializeWith(ArraySerializer::class);
     }
+
+    public function postDocumentComplete(
+        Request $request,
+        ESignUserDocumentCompleteService $service,
+        TransactionalSessionInterface $transactionalSession
+    ) {
+        $input  = $this->validate($request, [
+            'email' => 'required|email|string|max:255',
+            'document_id' => 'required|string|max:255',
+        ]);
+
+        $dto = (object) [
+            'email' => $input['email'],
+            'documentId' => $input['document_id'],
+        ];
+
+        $transactionalService = new TransactionalApplicationService($service, $transactionalSession);
+        $result = $transactionalService->execute($dto);
+        $result->response_code = 'DOCUMENT_SIGN_COMPLETE';
+
+        return fractal($result, ESignDocumentCompleteTransformer::class)
+            ->serializeWith(ArraySerializer::class);
+    }
 }
