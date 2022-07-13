@@ -76,11 +76,12 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
             );
 
             $data = array_map(function ($item) use ($dto, $user){
+                $file = is_string($item->document_file) ? json_decode($item->document_file) : $item->document_file;
                 return (object)[
                     'xid' => $item->xid,
                     'documentName' => $item->document_name,
                     'documentId' => $item->document_id,
-                    'documentFile' => $item->document_file ?? null,
+                    'documentFile' => $file,
                     'statusId' => $item->status_id,
                     'expiredAt' => Carbon::make($item->expired_at),
                     'createdAt' => Carbon::make($item->created_at),
@@ -125,12 +126,13 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
                 $this->eSignDocumentSpecificationFactory->paginateDocumentAssigneeByUserId($user->id, $dto->status_id)
             );
 
-            $data = array_map(function ($item) {
+            $data = array_map(function ($item) use ($dto, $user) {
+                $file = is_string($item->document_file) ? json_decode($item->document_file) : $item->document_file;
                 return (object)[
                     'xid' => $item->xid,
                     'documentName' => $item->document_name,
                     'documentId' => $item->document_id,
-                    'documentFile' => $item->document_file ?? null,
+                    'documentFile' => $file,
                     'statusId' => $item->status_id,
                     'expiredAt' => Carbon::make($item->expired_at),
                     'createdAt' => Carbon::make($item->created_at),
