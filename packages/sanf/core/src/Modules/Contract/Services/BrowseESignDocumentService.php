@@ -9,7 +9,7 @@ use Sanf\Core\Modules\Contract\Dto\BrowseESignDocumentDto;
 use Sanf\Core\Modules\Contract\Dtos\BrowseProcessFinancingUnitLocationSubmissionByUserRequestDto;
 use Sanf\Core\Modules\Contract\Enums\ESignContractStatusEnum;
 use Sanf\Core\Modules\Contract\Exceptions\ESignUserNotRegisteredException;
-use Sanf\Core\Modules\Contract\Repositories\ESignDocumentSpecificationFactoryInterface;
+use Sanf\Core\Modules\Contract\Specifications\ESignDocumentSpecificationFactoryInterface;
 use Sanf\Core\Modules\Contract\Repositories\ESignRepositoryInterface;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
@@ -52,7 +52,7 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
         }
 
         // get list document from core
-        if (!$dto->status_id or $dto->status_id === ESignContractStatusEnum::SUBMIT) {
+        if (!$dto->status_id or $dto->status_id === ESignContractStatusEnum::SUBMITTED) {
             try {
                 $result = $this->client->browseESignDocument($userTekenAja->email, $dto->keyword);
             } catch (SanfInternalApiDataNotFoundException $exception) {
@@ -101,7 +101,7 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
                         'documentName' => $newDocument->documentName,
                         'documentId' => $newDocument->documentId,
                         'documentFile' => null,
-                        'statusId' => ESignContractStatusEnum::SUBMIT,
+                        'statusId' => ESignContractStatusEnum::SUBMITTED,
                         'expiredAt' => $newDocument->expiredAt,
                         'createdAt' => $newDocument->createdAt,
                         'userId' => $dto->user_id,
@@ -112,9 +112,9 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
             }
 
             // filter based on submit status
-            if ($dto->status_id === ESignContractStatusEnum::SUBMIT) {
+            if ($dto->status_id === ESignContractStatusEnum::SUBMITTED) {
                 $data = array_filter($data, function ($item) {
-                    return $item->statusId === ESignContractStatusEnum::SUBMIT;
+                    return $item->statusId === ESignContractStatusEnum::SUBMITTED;
                 });
             }
         } else {

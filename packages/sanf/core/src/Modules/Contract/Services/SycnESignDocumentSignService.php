@@ -57,7 +57,7 @@ final class SycnESignDocumentSignService implements ApplicationServiceInterface
                     'document_id' => $data->documentId,
                     'document_name' => $data->documentName ?? null,
                     'expired_at' => Carbon::createFromTimestamp($data->expiredAt),
-                    'status_id' => ESignContractStatusEnum::SUBMIT,
+                    'status_id' => ESignContractStatusEnum::SUBMITTED,
                     'version' => 1,
                     'modified_by' => [
                         'user_id' => $user->id,

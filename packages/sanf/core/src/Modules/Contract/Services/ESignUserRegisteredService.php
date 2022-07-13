@@ -73,7 +73,7 @@ final class ESignUserRegisteredService implements ApplicationServiceInterface
             'xid' => nano_id(),
             'title' => __('Pendaftaran Tanda Tangan Digital Berhasil'),
             'subtitle' => __('Sukses Pendaftaran e-Sign'),
-            'body' => __('Data yang anda kirimkan berhasil di verifikasi. Saat ini Anda sudah mendapatkan akses untuk melakukan tanda tangan digital di halaman Ttd Kontrak'),
+            'body' => __('Data yang anda kirimkan berhasil di verifikasi. Saat ini Anda sudah mendapatkan akses untuk melakukan tanda tangan digital di halaman Ttd Kontrak.'),
             'type' => (string) NotificationTypeEnum::INFO,
             'screen' => 'esign_registration_complete',
             'published_at' => Carbon::now(),
