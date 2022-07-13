@@ -2,7 +2,9 @@
 
 namespace Sanf\Integration\Enums;
 
-class TekenAjaRegistrationErrorCodeEnum extends \MyCLabs\Enum\Enum
+use MyCLabs\Enum\Enum;
+
+class TekenAjaApiResponseErrorCodeEnum extends Enum
 {
     public const SYSTEM_FAILURE = 'SYSTEM_FAILURE';
 
@@ -19,4 +21,9 @@ class TekenAjaRegistrationErrorCodeEnum extends \MyCLabs\Enum\Enum
     public const USER_EXISTS_UNVERIFIED = 'USER_EXISTS_UNVERIFIED';
     public const USER_EXISTS_CERTIFICATE_EXPIRED = 'USER_EXISTS_CERTIFICATE_EXPIRED';
     public const NIK_EMAIL_UNMATCH = 'NIK_EMAIL_UNMATCH';
+
+    /** Document Code */
+    public const NOT_COMPLETE_SIGN = 'DOCUMENT_IS_NOT_COMPLETELY_SIGNED';
+    public const NOT_FOUND = 'DOCUMENT_NOT_FOUND';
+    public const ACCESS_UNAUTHORIZED = 'DOCUMENT_ACCESS_UNAUTHORIZED';
 }

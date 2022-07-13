@@ -5,7 +5,7 @@ namespace Sanf\Core\Modules\Contract\Services;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\User\AuthModel;
-use Sanf\Integration\Enums\TekenAjaRegistrationErrorCodeEnum;
+use Sanf\Integration\Enums\TekenAjaApiResponseErrorCodeEnum;
 use Sanf\Integration\Exceptions\TekenAjaExternalApiException;
 use Sanf\Integration\Exceptions\TekenAjaInvalidParameterRegistrationException;
 use Sanf\Integration\Exceptions\TekenAjaRegisterCheckException;
@@ -41,7 +41,7 @@ final class GetESignUserCheckService implements ApplicationServiceInterface
             ['name' => 'email', 'contents' => $dto->email,],
         ]);
 
-        if ($result['code'] && $result['code'] !== TekenAjaRegistrationErrorCodeEnum::USER_EXISTS_VERIFIED) {
+        if ($result['code'] && $result['code'] !== TekenAjaApiResponseErrorCodeEnum::USER_EXISTS_VERIFIED) {
             $this->errorHandle($result['code'], $result['message']);
         }
 
@@ -51,19 +51,19 @@ final class GetESignUserCheckService implements ApplicationServiceInterface
     private function errorHandle(string $code, $messages)
     {
         switch ($code) {
-            case TekenAjaRegistrationErrorCodeEnum::INVALID_PARAMETER:
+            case TekenAjaApiResponseErrorCodeEnum::INVALID_PARAMETER:
                 $response = array_map(function ($item) {
                     return $item[0];
                 }, $messages);
                 throw new TekenAjaInvalidParameterRegistrationException(implode('|', $response));
                 break;
-            case TekenAjaRegistrationErrorCodeEnum::USER_DO_NOT_EXISTS:
-            case TekenAjaRegistrationErrorCodeEnum::USER_EXISTS_UNVERIFIED:
-            case TekenAjaRegistrationErrorCodeEnum::USER_EXISTS_CERTIFICATE_EXPIRED:
-            case TekenAjaRegistrationErrorCodeEnum::NIK_EMAIL_UNMATCH:
+            case TekenAjaApiResponseErrorCodeEnum::USER_DO_NOT_EXISTS:
+            case TekenAjaApiResponseErrorCodeEnum::USER_EXISTS_UNVERIFIED:
+            case TekenAjaApiResponseErrorCodeEnum::USER_EXISTS_CERTIFICATE_EXPIRED:
+            case TekenAjaApiResponseErrorCodeEnum::NIK_EMAIL_UNMATCH:
                 throw new TekenAjaRegisterCheckException($messages);
                 break;
-            case TekenAjaRegistrationErrorCodeEnum::SYSTEM_FAILURE:
+            case TekenAjaApiResponseErrorCodeEnum::SYSTEM_FAILURE:
             default:
                 throw new TekenAjaExternalApiException($messages);
         }

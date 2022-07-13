@@ -9,7 +9,7 @@ use Sanf\Core\Modules\Contract\Exceptions\ESignDocumentNotFoundException;
 use Sanf\Core\Modules\Contract\Exceptions\ESignUserNotRegisteredException;
 use Sanf\Core\Modules\Contract\Repositories\ESignRepositoryInterface;
 use Sanf\Core\Modules\User\AuthModel;
-use Sanf\Integration\Enums\TekenAjaRegistrationErrorCodeEnum;
+use Sanf\Integration\Enums\TekenAjaApiResponseErrorCodeEnum;
 use Sanf\Integration\Exceptions\TekenAjaExternalApiException;
 use Sanf\Integration\Exceptions\TekenAjaInvalidParameterRegistrationException;
 use Sanf\Integration\TekenAjaInternalApiClient;
@@ -68,13 +68,13 @@ final class GenerateSignUrlService implements ApplicationServiceInterface
     private function errorHandle(string $code, $messages)
     {
         switch ($code) {
-            case TekenAjaRegistrationErrorCodeEnum::INVALID_PARAMETER:
+            case TekenAjaApiResponseErrorCodeEnum::INVALID_PARAMETER:
                 $response = array_map(function ($item) {
                     return $item[0];
                 }, $messages);
                 throw new TekenAjaInvalidParameterRegistrationException(implode('|', $response));
                 break;
-            case TekenAjaRegistrationErrorCodeEnum::SYSTEM_FAILURE:
+            case TekenAjaApiResponseErrorCodeEnum::SYSTEM_FAILURE:
             default:
                 throw new TekenAjaExternalApiException($messages);
         }

@@ -10,7 +10,7 @@ use Sanf\Core\Modules\Contract\Dto\AddESignUserDto;
 use Sanf\Core\Modules\Contract\Enums\ESignRegistrationStatusEnum;
 use Sanf\Core\Modules\Contract\Repositories\ESignRepositoryInterface;
 use Sanf\Core\Modules\User\AuthModel;
-use Sanf\Integration\Enums\TekenAjaRegistrationErrorCodeEnum;
+use Sanf\Integration\Enums\TekenAjaApiResponseErrorCodeEnum;
 use Sanf\Integration\Exceptions\TekenAjaExternalApiException;
 use Sanf\Integration\Exceptions\TekenAjaInvalidParameterRegistrationException;
 use Sanf\Integration\Exceptions\TekenAjaSubmitRegistrationHasLimitException;
@@ -159,14 +159,14 @@ final class AddESignUserService implements ApplicationServiceInterface
     private function errorHandle(string $code, $messages)
     {
         switch ($code) {
-            case TekenAjaRegistrationErrorCodeEnum::INVALID_PARAMETER:
+            case TekenAjaApiResponseErrorCodeEnum::INVALID_PARAMETER:
                 $response = array_map(function ($item) {
                     return $item[0];
                 }, $messages);
                 throw new TekenAjaInvalidParameterRegistrationException(implode('|', $response));
                 break;
             default:
-            case TekenAjaRegistrationErrorCodeEnum::SYSTEM_FAILURE:
+            case TekenAjaApiResponseErrorCodeEnum::SYSTEM_FAILURE:
                 throw new TekenAjaExternalApiException($messages);
         }
     }

@@ -115,4 +115,16 @@ class TekenAjaInternalApiClient {
 
         return $response->json();
     }
+
+    public function download(string $documentId)
+    {
+        $response = Request::route('document.download', $this->client)
+            ->headers(['Accept' => 'application/json',])
+            ->multipart([
+                ['name' => 'document_id', 'contents' => $documentId],
+            ])
+            ->send();
+
+        return $response->json();
+    }
 }

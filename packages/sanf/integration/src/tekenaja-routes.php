@@ -11,4 +11,5 @@ Route::group(config('tekenaja-internal.url'), [TekenAjaInternalApiProcessor::cla
     Route::post('user.registration.detail', '/v2/register');
     Route::post('user.registration.check', '/v2/register-check');
     Route::post('document.generate-url', '/v2/url/sign');
+    Route::post('document.download', '/v2/document/download');
 });
