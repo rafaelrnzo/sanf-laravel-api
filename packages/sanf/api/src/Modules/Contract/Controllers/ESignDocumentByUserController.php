@@ -23,6 +23,7 @@ use Sanf\Core\Modules\Contract\Dto\BrowseESignDocumentDto;
 use Sanf\Core\Modules\Contract\Dto\BrowseProvinceDto;
 use Sanf\Core\Modules\Contract\Dto\BrowseSubDistrictDto;
 use Sanf\Core\Modules\Contract\Enums\ESignContractStatusEnum;
+use Sanf\Core\Modules\Contract\Services\SendESignDocumentViaEmailService;
 use Sanf\Core\Modules\Contract\Services\UpdateESignDocumentStatusService;
 use Sanf\Core\Modules\Contract\Services\AddESignUserService;
 use Sanf\Core\Modules\Contract\Services\BrowseDistrictService;
@@ -285,15 +286,24 @@ final class ESignDocumentByUserController extends RestApiController
         return $this->responseOk();
     }
 
-    public function postSendDocument(
+    public function postSendDocumentViaEmail(
         Guard $auth,
         Request $request,
         $xid,
-        $document_id
+        $document_id,
+        SendESignDocumentViaEmailService $service
     ) {
         $input = $this->validate($request, [
             'email' => 'required|email|max:255',
         ]);
+
+        $dto = (object) [
+            'email' => $input['email'],
+            'documentId' => $document_id,
+            'userId' => $auth->id(),
+        ];
+
+        $service->execute($dto);
 
         return $this->responseOk();
     }
