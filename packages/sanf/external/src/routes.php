@@ -16,5 +16,6 @@ Route::group(['prefix' => 'v1/public'], function () {
     Route::post('push-notifications', ['as' => 'public.push-notifications.add', 'uses' => 'Notification\PushNotificationByExternalController@postAdd']);
 
     Route::post('e-sign/register-verified', ['as' => 'e-sign.verified', 'uses' => 'Contract\ESignDocumentByExternalController@postHasVerified']);
+    Route::post('e-sign/document-signed', ['as' => 'e-sign.document-signed', 'uses' => 'Contract\ESignDocumentByExternalController@postDocumentSigned']);
     Route::post('e-sign/document-complete', ['as' => 'e-sign.document-complete', 'uses' => 'Contract\ESignDocumentByExternalController@postDocumentComplete']);
 });
