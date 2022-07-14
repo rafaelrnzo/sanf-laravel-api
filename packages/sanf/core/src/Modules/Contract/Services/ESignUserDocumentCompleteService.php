@@ -14,6 +14,7 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use NbsPhp\Notification\Repositories\UserNotificationRepositoryInterface;
 use NbsPhp\Notification\Services\PushNotificationServiceInterface;
 use Sanf\Core\Modules\Contract\Enums\ESignContractStatusEnum;
+use Sanf\Core\Modules\Contract\Exceptions\ESignDocumentNotFoundException;
 use Sanf\Core\Modules\Contract\Repositories\ESignRepositoryInterface;
 use Sanf\Core\Modules\Contract\Specifications\ESignDocumentSpecificationFactoryInterface;
 use Sanf\Core\Modules\Notification\Exceptions\NotificationInvalidException;
@@ -72,13 +73,17 @@ final class ESignUserDocumentCompleteService implements ApplicationServiceInterf
             throw new UserNotFoundException();
         }
 
-        $user = $this->userRepository->findByEmail($dto->email);
+        $user = $this->userRepository->findById($eSignUser->user_id);
         if (!$user) {
             throw new UserNotFoundException();
         }
 
         // update e-sign document status
         $document = $this->eSignRepository->findDocumentByDocId($dto->documentId);
+        if (!$document) {
+            throw new ESignDocumentNotFoundException();
+        }
+
         $documentsAssignee = $this->eSignRepository->documentAssigneeQuery(
             $this->eSignDocumentAssigneeSpecificaton->paginateDocumentAssigneeByDocId($document->document_id, null)
         );
@@ -126,7 +131,12 @@ final class ESignUserDocumentCompleteService implements ApplicationServiceInterf
             'status_id' => ESignContractStatusEnum::COMPLETED,
             'updated_at' => Carbon::now(),
             'modified_by' => [
-                'username' => 'TekenAja'
+                'source_by' => 'TekenAja',
+                'user_id' => $user->id,
+                'username' => $user->username,
+                'full_name' => $user->full_name,
+                'xid' => $user->xid,
+                'personal_xid' => $user->personal_xid,
             ]
         ]);
 
