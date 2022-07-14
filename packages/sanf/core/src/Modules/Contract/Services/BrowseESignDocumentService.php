@@ -61,7 +61,7 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
 
             $mapping = array_map(function ($item) {
                 return (object)[
-                    'documentName' => $item['NAME'] ?? null,
+                    'documentName' => $item['FILENAME'] ?? null,
                     'documentId' => $item['DOC_ID_TEKENAJA'] ?? null,
                     'expiredAt' => isset($item['EXPIRED_AT']) ? Carbon::createFromFormat('Y-m-d', $item['EXPIRED_AT']) : null,
                     'createdAt' => isset($item['CREATED_AT']) ? Carbon::createFromFormat('Y-m-d', $item['CREATED_AT']) : null,
