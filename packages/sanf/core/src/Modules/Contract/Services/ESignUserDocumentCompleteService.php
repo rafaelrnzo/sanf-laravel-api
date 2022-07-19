@@ -100,7 +100,6 @@ final class ESignUserDocumentCompleteService implements ApplicationServiceInterf
                 'email' => $user->username,
             ];
         }
-        $document->signs = $signs;
 
         // download e-sign file
         $result = $this->tekenAjaClient->download($document->document_id);
@@ -139,6 +138,8 @@ final class ESignUserDocumentCompleteService implements ApplicationServiceInterf
                 'personal_xid' => $user->personal_xid,
             ]
         ]);
+
+        $document->signs = $signs;
 
         // update core
         // TODO create self service of send notification using event service
