@@ -120,7 +120,7 @@ final class ESignUserDocumentCompleteService implements ApplicationServiceInterf
         throw_if(!$exist, new FileNotFoundException("{$path}{$filename}"));
 
         // update e-sign document status
-        $this->eSignRepository->updateDocument($document->id, [
+        $document = $this->eSignRepository->updateDocument($document->id, [
             'version' => $document->version + 1,
             'document_file' => [
                 'file_name' => $filename,
