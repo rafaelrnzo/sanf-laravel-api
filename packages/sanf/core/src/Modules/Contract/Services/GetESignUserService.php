@@ -47,8 +47,6 @@ final class GetESignUserService implements ApplicationServiceInterface
             throw new UserNotFoundException();
         }
 
-
-        $user->username = 'anton@sanf.co.id';
         $response = $this->client->getAvailableESignUser($user->username);
         $result = array_map(function ($item) {
             return [
