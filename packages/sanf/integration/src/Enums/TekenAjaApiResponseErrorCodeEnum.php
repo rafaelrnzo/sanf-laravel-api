@@ -17,6 +17,7 @@ class TekenAjaApiResponseErrorCodeEnum extends Enum
 
     /** Register Check or Send Verification Code */
     public const USER_EXISTS_VERIFIED = 'USER_EXISTS_VERIFIED';
+    public const NIK_EMAIL_MATCHED = 'NIK_EMAIL_MATCHED';
     public const USER_DO_NOT_EXISTS = 'USER_DO_NOT_EXISTS';
     public const USER_EXISTS_UNVERIFIED = 'USER_EXISTS_UNVERIFIED';
     public const USER_EXISTS_CERTIFICATE_EXPIRED = 'USER_EXISTS_CERTIFICATE_EXPIRED';
