@@ -47,8 +47,10 @@ class GetMyProfileService implements ApplicationServiceInterface
         }
 
         $profile = $this->correctionIsPic($profile, $user);
+        $result = $profile->toArray();
+        $result['hasPin'] = isset($user->pin);
 
-        return new MyProfileDto($profile->toArray());
+        return new MyProfileDto($result);
     }
 
     protected function correctionIsPic(ProfileEntityInterface $profile, $user): ProfileEntityInterface

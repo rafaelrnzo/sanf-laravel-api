@@ -20,6 +20,7 @@ class ProfileSimpleTransformer extends TransformerAbstract
             'is_pic' => $item->isPic,
             'company_name' => $item->fullName,
             'phone_number' => $item->phoneNumber,
+            'has_pin' => $item->hasPin,
         ];
     }
 }
