@@ -13,13 +13,14 @@ use Sanf\Api\Modules\Contract\Transformers\ESignUserRegisteredTransformer;
 use Sanf\Core\Modules\Contract\Services\ESignUserDocumentCompleteService;
 use Sanf\Core\Modules\Contract\Services\ESignUserDocumentFailedService;
 use Sanf\Core\Modules\Contract\Services\ESignUserDocumentSignedService;
+use Sanf\Core\Modules\Contract\Services\ESignUserRegisteredService;
 use Spatie\Fractalistic\ArraySerializer;
 
 class ESignDocumentByExternalController extends RestApiController
 {
     public function postHasVerified(
         Request $request,
-        ESignUserDocumentCompleteService $service,
+        ESignUserRegisteredService $service,
         TransactionalSessionInterface $transactionalSession
     ) {
         $input  = $this->validate($request, [
