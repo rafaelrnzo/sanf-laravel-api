@@ -59,6 +59,7 @@ final class GetESignUserService implements ApplicationServiceInterface
                 'gender' => isset($item['GENDER']) ? (int) $item['GENDER'] : null,
                 'address' => isset($item['ADDRESS']) ? $item['ADDRESS'] : null,
                 'postalCode' => isset($item['ZIP_CODE']) ? (int) $item['ZIP_CODE'] : null,
+                'statusId' => ESignRegistrationStatusEnum::AVAILABLE,
             ];
         }, $response['data'])[0];
 
