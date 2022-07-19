@@ -48,10 +48,10 @@ final class GetESignUserService implements ApplicationServiceInterface
         }
 
         $response = $this->client->getAvailableESignUser($user->username);
-        $result = array_map(function ($item) {
+        $result = array_map(function ($item) use ($user){
             return [
                 'email' => isset($item['EMAIL']) ? $item['EMAIL'] : null,
-                'msisdn' => isset($item['MOBILE']) ? $item['MOBILE'] : null,
+                'msisdn' => $user->phone_number,
                 'nik' => isset($item['NIK']) ? $item['NIK'] : null,
                 'fullName' => isset($item['NAME']) ? $item['NAME'] : null,
                 'dob' => isset($item['DOB']) ? $item['DOB'] : null,
