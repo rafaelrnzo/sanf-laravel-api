@@ -45,7 +45,7 @@ final class AddPushNotificationByExternalService implements ApplicationServiceIn
      */
     public function execute($dto = null)
     {
-        $user = $this->userRepository->findByEmail($dto->email);
+        $user = $this->userRepository->findByEmail(strtolower($dto->email));
         if (!$user) {
             throw new UserNotFoundException();
         }
