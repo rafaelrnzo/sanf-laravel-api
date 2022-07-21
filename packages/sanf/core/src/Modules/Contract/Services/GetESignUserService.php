@@ -73,7 +73,6 @@ final class GetESignUserService implements ApplicationServiceInterface
         if ($resultTekenAja['code'] and !$exceptCodeCondition) {
             $this->errorHandle($resultTekenAja['code'], $resultTekenAja['message'], $result['email'], $result['nik']);
         } else {
-            $result['statusId'] = $userTekenAja->status_id;
             if (!$userTekenAja) {
                 $request['xid'] = nano_id();
                 $request['email'] = $result['email'];
@@ -84,6 +83,7 @@ final class GetESignUserService implements ApplicationServiceInterface
                 $request['created_at'] = Carbon::now();
                 $userTekenAja = $this->eSignRepository->createUser($request);
             }
+            $result['statusId'] = $userTekenAja->status_id;
         }
 
         if ($userTekenAja) {
