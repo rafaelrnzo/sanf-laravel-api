@@ -21,8 +21,8 @@ class GetESignUserResponseDto extends DataTransferObject
     public ?int $provinceId;
     public ?int $districtId;
     public ?int $subDistrictId;
-    public ?string $selfieFile;
-    public ?string $identityFile;
+    public ?object $selfieFile;
+    public ?object $identityFile;
     public int $statusId;
     public ?Carbon $createdAt;
     public ?Carbon $updatedAt;
