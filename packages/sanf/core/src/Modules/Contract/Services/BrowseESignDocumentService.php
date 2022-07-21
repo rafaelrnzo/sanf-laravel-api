@@ -63,7 +63,7 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
                 return (object)[
                     'documentName' => $item['FILENAME'] ?? null,
                     'documentId' => $item['DOC_ID_TEKENAJA'] ?? null,
-                    'expiredAt' => isset($item['EXPIRATION_DATE']) ? Carbon::createFromFormat('d/m/Y', $item['EXPIRATION_DATE']) : null,
+                    'expiredAt' => isset($item['EXPIRATION_DATE']) ? Carbon::createFromFormat('d/m/Y', $item['EXPIRATION_DATE'])->endOfDay() : null,
                     'createdAt' => isset($item['CREATED_AT']) ? Carbon::createFromFormat('d/m/Y', $item['CREATED_AT']) : null,
                 ];
             }, $result['data']);

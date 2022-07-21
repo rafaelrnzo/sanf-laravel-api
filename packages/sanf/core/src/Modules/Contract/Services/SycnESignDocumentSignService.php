@@ -56,7 +56,7 @@ final class SycnESignDocumentSignService implements ApplicationServiceInterface
                     'xid' => nano_id(),
                     'document_id' => $data->documentId,
                     'document_name' => $data->documentName ?? null,
-                    'expired_at' => Carbon::createFromTimestamp($data->expiredAt),
+                    'expired_at' => $data->expiredAt ?? null,
                     'status_id' => ESignContractStatusEnum::SUBMITTED,
                     'version' => 1,
                     'modified_by' => [
