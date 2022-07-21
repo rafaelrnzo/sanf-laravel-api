@@ -48,7 +48,7 @@ final class GetESignUserService implements ApplicationServiceInterface
         }
 
         $response = $this->client->getAvailableESignUser($user->username);
-        $result = array_map(function ($item) use ($user){
+        $result = array_map(function ($item) use ($user) {
             return [
                 'email' => isset($item['EMAIL']) ? $item['EMAIL'] : null,
                 'msisdn' => $user->phone_number,
@@ -56,9 +56,9 @@ final class GetESignUserService implements ApplicationServiceInterface
                 'fullName' => isset($item['NAME']) ? $item['NAME'] : null,
                 'dob' => isset($item['DOB']) ? $item['DOB'] : null,
                 'pob' => isset($item['POB']) ? $item['POB'] : null,
-                'gender' => isset($item['GENDER']) ? (int) $item['GENDER'] : null,
+                'gender' => isset($item['GENDER']) ? (int)$item['GENDER'] : null,
                 'address' => isset($item['ADDRESS']) ? $item['ADDRESS'] : null,
-                'postalCode' => isset($item['ZIP_CODE']) ? (int) $item['ZIP_CODE'] : null,
+                'postalCode' => isset($item['ZIP_CODE']) ? (int)$item['ZIP_CODE'] : null,
                 'statusId' => ESignRegistrationStatusEnum::AVAILABLE,
             ];
         }, $response['data'])[0];
