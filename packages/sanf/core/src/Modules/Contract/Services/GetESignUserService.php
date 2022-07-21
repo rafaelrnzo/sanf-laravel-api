@@ -95,7 +95,29 @@ final class GetESignUserService implements ApplicationServiceInterface
 
     private function mapping(array $data, object $regression): array
     {
-        return $data;
+        return [
+            'xid' => $regression->xid ?? null,
+            'registrationId' => null,
+            'email' => $regression->email ?? $data['email'],
+            'msisdn' => $regression->msisdn ?? $data['msisdn'],
+            'nik' => $regression->nik ?? $data['nik'],
+            'fullName' => $regression->full_name ?? $data['fullName'],
+            'dob' => ($regression->dob) ? Carbon::createFromFormat('Y-m-d', $regression->dob)->format(
+                'd/m/Y'
+            ) : $data['dob'],
+            'pob' => $regression->pob ?? $data['pob'],
+            'gender' => $regression->gender ?? $data['gender'],
+            'address' => $regression->address ?? $data['address'],
+            'postalCode' => $regression->postal_code ?? $data['postalCode'],
+            'provinceId' => $regression->province_id ?? $data['provinceId'],
+            'districtId' => $regression->district_id ?? $data['districtId'],
+            'subDistrictId' => $regression->sub_district_id ?? $data['subDistrictId'],
+            'selfieFile' => $regression->selfie_file ?? null,
+            'identityFile' => $regression->identity_file ?? null,
+            'statusId' => $regression->status_id ?? $data['statusId'],
+            'createdAt' => ($regression->created_at) ? Carbon::parse($regression->created_at) : null,
+            'updatedAt' => ($regression->updated_at) ? Carbon::parse($regression->updated_at) : null,
+        ];
     }
 
     private function errorHandle(string $code, $messages, string $email, string $nik)
