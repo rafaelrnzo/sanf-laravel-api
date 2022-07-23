@@ -10,6 +10,7 @@ class ESignDocumentAssigneeModel extends AbstractModel
 
     protected $fillable = [
         'document_sign_url',
+        'status_id',
         'updated_at',
     ];
 

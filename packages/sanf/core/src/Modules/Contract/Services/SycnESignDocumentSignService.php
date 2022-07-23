@@ -43,6 +43,7 @@ final class SycnESignDocumentSignService implements ApplicationServiceInterface
                     'document_id' => $data->documentId,
                     'user_id' => $data->userId,
                     'email' => $data->email,
+                    'status_id' => ESignContractStatusEnum::ASSIGNEE,
                 ]);
             }
 

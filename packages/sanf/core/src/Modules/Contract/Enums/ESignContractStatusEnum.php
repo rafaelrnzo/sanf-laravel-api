@@ -11,4 +11,7 @@ class ESignContractStatusEnum extends Enum
     public const COMPLETED = 30;
     public const FAILED = 40;
     public const ALL = [self::SUBMITTED, self::ON_PROGRESS, self::COMPLETED];
+
+    public const ASSIGNEE = 10;
+    public const DONE = 30;
 }

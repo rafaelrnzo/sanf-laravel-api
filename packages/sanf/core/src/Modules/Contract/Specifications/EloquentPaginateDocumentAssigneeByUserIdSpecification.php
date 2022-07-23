@@ -62,6 +62,7 @@ class EloquentPaginateDocumentAssigneeByUserIdSpecification
             ->select([
                 'esign_document_assignee.id',
                 'esign_document_assignee.xid',
+                'esign_document_assignee.status_id as assignee_status_id',
                 'esign_document_assignee.created_at',
 
                 'esign_document.document_id',

@@ -70,6 +70,11 @@ final class ESignUserDocumentSignedService implements ApplicationServiceInterfac
             throw new ESignDocumentNotFoundException();
         }
 
+        $this->eSignRepository->updateDocumentAssignee($documentAssignee->id, [
+            'status_id' => ESignContractStatusEnum::DONE,
+            'updated_at' => Carbon::now(),
+        ]);
+
         $this->eSignRepository->updateDocument($document->id, [
             'version' => $document->version + 1,
             'status_id' => ESignContractStatusEnum::ON_PROGRESS,
