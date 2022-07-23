@@ -77,7 +77,7 @@ class EloquentPaginateDocumentAssigneeByUserIdSpecification
             ->where('esign_document_assignee.user_id', '=', $this->userId)
             ->orderBy($orderBy, $orderDirection)
             ->when($this->statusId, function ($query) {
-                return $query->where('esign_document.status_id', $this->statusId);
+                return $query->where('esign_document_assignee.status_id', $this->statusId);
             })->when($this->keyword, function ($query) {
                 return $query->where('esign_document.document_name', "ILIKE", '%' . $this->keyword . '%')
                     ->orWhere('esign_document_assignee.document_id', "ILIKE", '%' . $this->keyword . '%');
