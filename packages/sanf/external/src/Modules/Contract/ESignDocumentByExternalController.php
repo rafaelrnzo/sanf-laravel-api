@@ -3,6 +3,7 @@
 namespace Sanf\External\Modules\Contract;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Database\TransactionalSessionInterface;
 use NbsPhp\Core\Services\TransactionalApplicationService;
@@ -18,91 +19,117 @@ use Spatie\Fractalistic\ArraySerializer;
 
 class ESignDocumentByExternalController extends RestApiController
 {
-    public function postHasVerified(
-        Request $request,
-        ESignUserRegisteredService $service,
-        TransactionalSessionInterface $transactionalSession
+    private TransactionalSessionInterface $transactionalSession;
+    private ESignUserRegisteredService $registerService;
+    private ESignUserDocumentSignedService $signedDocumentService;
+    private ESignUserDocumentFailedService $failedDocumentService;
+    private ESignUserDocumentCompleteService $completeDocumentService;
+
+    public function __construct(
+        TransactionalSessionInterface $transactionalSession,
+        ESignUserRegisteredService $registerService,
+        ESignUserDocumentSignedService $signedDocumentService,
+        ESignUserDocumentFailedService $failedDocumentService,
+        ESignUserDocumentCompleteService $completeDocumentService
     ) {
-        $input  = $this->validate($request, [
-            'email' => 'required|email|string|max:255',
-        ]);
-
-        $dto = (object) ['email' => $input['email']];
-
-        $transactionalService = new TransactionalApplicationService($service, $transactionalSession);
-        $result = $transactionalService->execute($dto);
-        $result->response_code = 'REGISTRATION_COMPLETE';
-
-        return fractal($result, ESignUserRegisteredTransformer::class)
-            ->serializeWith(ArraySerializer::class);
+        parent::__construct();
+        $this->transactionalSession = $transactionalSession;
+        $this->registerService = $registerService;
+        $this->signedDocumentService = $signedDocumentService;
+        $this->failedDocumentService = $failedDocumentService;
+        $this->completeDocumentService = $completeDocumentService;
     }
 
-    public function postDocumentSigned(
-        Request $request,
-        ESignUserDocumentSignedService $service,
-        TransactionalSessionInterface $transactionalSession
-    ) {
+    public function postCallback(Request $request)
+    {
         $input  = $this->validate($request, [
-            'email' => 'required|email|string|max:255',
-            'document_id' => 'required|string|max:255',
+            'status' => 'required|bool',
+            'code' => 'required|string|in:REGISTRATION_COMPLETE,DOCUMENT_SIGNED,DOCUMENT_SIGN_FAILED,DOCUMENT_SIGN_COMPLETE',
+            'data' => 'required',
+            'data.email' => [
+                'email',
+                Rule::requiredIf(function () use ($request) {
+                return $request->code === 'REGISTRATION_COMPLETE';
+            })],
+            'data.document_id' => Rule::requiredIf(function () use ($request) {
+                return in_array($request->code, ['DOCUMENT_SIGNED','DOCUMENT_SIGN_FAILED','DOCUMENT_SIGN_COMPLETE']);
+            }),
+            'data.sign' => [
+                'array',
+                Rule::requiredIf(function () use ($request) {
+                return $request->code === 'DOCUMENT_SIGNED';
+            })],
+            'data.sign.*.email' => [
+                'email',
+                Rule::requiredIf(function () use ($request) {
+                return $request->code === 'DOCUMENT_SIGNED';
+            })],
+            'data.signers' => [
+                'array',
+                Rule::requiredIf(function () use ($request) {
+                return $request->code === 'DOCUMENT_SIGN_COMPLETE';
+            })],
+            'data.signers.*.email' => [
+                'email',
+                Rule::requiredIf(function () use ($request) {
+                    return $request->code === 'DOCUMENT_SIGN_COMPLETE';
+                })],
         ]);
 
-        $dto = (object) [
-            'email' => $input['email'],
-            'documentId' => $input['document_id'],
-        ];
+        if ($input['code'] === 'REGISTRATION_COMPLETE') {
+            $dto = (object) [
+                'email' => $input['data']['email']
+            ];
+            $this->postHasVerified($dto);
+        }
 
-        $transactionalService = new TransactionalApplicationService($service, $transactionalSession);
-        $result = $transactionalService->execute($dto);
-        $result->response_code = 'DOCUMENT_SIGNED';
+        if ($input['code'] === 'DOCUMENT_SIGNED') {
+            $dto = (object) [
+                'documentId' => $input['data']['document_id'],
+                'email' => $input['data']['sign'][0]['email'],
+            ];
+            $this->postDocumentSigned($dto);
+        }
 
-        return fractal($result, ESignDocumentSignedTransformer::class)
-            ->serializeWith(ArraySerializer::class);
+        if ($input['code'] === 'DOCUMENT_SIGN_FAILED') {
+            $dto = (object) [
+                'documentId' => $input['data']['document_id'],
+            ];
+            $this->postDocumentFailed($dto);
+        }
+
+        if ($input['code'] === 'DOCUMENT_SIGN_COMPLETE') {
+            $dto = (object) [
+                'documentId' => $input['data']['document_id'],
+                'email' => $input['data']['signers'][0]['email'],
+            ];
+            $this->postDocumentComplete($dto);
+        }
+
+        $this->responseOk();
     }
 
-    public function postDocumentFailed(
-        Request $request,
-        ESignUserDocumentFailedService $service,
-        TransactionalSessionInterface $transactionalSession
-    ) {
-        $input  = $this->validate($request, [
-            'email' => 'required|email|string|max:255',
-            'document_id' => 'required|string|max:255',
-        ]);
-
-        $dto = (object) [
-            'email' => $input['email'],
-            'documentId' => $input['document_id'],
-        ];
-
-        $transactionalService = new TransactionalApplicationService($service, $transactionalSession);
-        $result = $transactionalService->execute($dto);
-        $result->response_code = 'DOCUMENT_SIGN_FAILED';
-
-        return fractal($result, ESignDocumentFailedTransformer::class)
-            ->serializeWith(ArraySerializer::class);
+    private function postHasVerified(object $dto)
+    {
+        $transactionalService = new TransactionalApplicationService($this->registerService, $this->transactionalSession);
+        $transactionalService->execute($dto);
     }
 
-    public function postDocumentComplete(
-        Request $request,
-        ESignUserDocumentCompleteService $service,
-        TransactionalSessionInterface $transactionalSession
-    ) {
-        $input  = $this->validate($request, [
-            'email' => 'required|email|string|max:255',
-            'document_id' => 'required|string|max:255',
-        ]);
+    private function postDocumentSigned(object $dto)
+    {
+        $transactionalService = new TransactionalApplicationService($this->signedDocumentService, $this->transactionalSession);
+        $transactionalService->execute($dto);
+    }
 
-        $dto = (object) [
-            'email' => $input['email'],
-            'documentId' => $input['document_id'],
-        ];
+    private function postDocumentFailed(object $dto)
+    {
+        $transactionalService = new TransactionalApplicationService($this->failedDocumentService, $this->transactionalSession);
+        $transactionalService->execute($dto);
+    }
 
-        $transactionalService = new TransactionalApplicationService($service, $transactionalSession);
-        $result = $transactionalService->execute($dto);
-        $result->response_code = 'DOCUMENT_SIGN_COMPLETE';
-
-        return fractal($result, ESignDocumentCompleteTransformer::class)
-            ->serializeWith(ArraySerializer::class);
+    private function postDocumentComplete(object $dto)
+    {
+        $transactionalService = new TransactionalApplicationService($this->completeDocumentService, $this->transactionalSession);
+        $transactionalService->execute($dto);
     }
 }

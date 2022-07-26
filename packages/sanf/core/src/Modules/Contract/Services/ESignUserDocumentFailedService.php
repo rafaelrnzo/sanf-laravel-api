@@ -48,21 +48,23 @@ final class ESignUserDocumentFailedService implements ApplicationServiceInterfac
      */
     public function execute($dto = null): object
     {
-        // get user base on email
-        $eSignUser = $this->eSignRepository->findUserByEmail($dto->email);
-        if (!$eSignUser) {
-            throw new UserNotFoundException();
-        }
-
-        $user = $this->userRepository->findById($eSignUser->user_id);
-        if (!$user) {
-            throw new UserNotFoundException();
-        }
-
         // update e-sign document status
         $document = $this->eSignRepository->findDocumentByDocId($dto->documentId);
         if (!$document) {
             throw new ESignDocumentNotFoundException();
+        }
+
+        $userId = $document->modified_by->user_id ?? null;
+        if ($userId) {
+            $user = $this->userRepository->findById($userId);
+            if (!$user) {
+                throw new UserNotFoundException();
+            }
+
+            $eSignUser = $this->eSignRepository->findUserByEmail($user->username);
+            if (!$eSignUser) {
+                throw new UserNotFoundException();
+            }
         }
 
         $this->eSignRepository->updateDocument($document->id, [
@@ -71,11 +73,11 @@ final class ESignUserDocumentFailedService implements ApplicationServiceInterfac
             'updated_at' => Carbon::now(),
             'modified_by' => [
                 'source_by' => 'TekenAja',
-                'user_id' => $user->id,
-                'username' => $user->username,
-                'full_name' => $user->full_name,
-                'xid' => $user->xid,
-                'personal_xid' => $user->personal_xid,
+                'user_id' => ($userId) ? $user->id : null,
+                'username' => ($userId) ? $user->username : null,
+                'full_name' => ($userId) ? $user->full_name : null,
+                'xid' => ($userId) ? $user->xid : null,
+                'personal_xid' => ($userId) ? $user->personal_xid : null,
             ],
         ]);
 
