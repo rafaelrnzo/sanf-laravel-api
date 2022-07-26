@@ -165,6 +165,9 @@ return [
             'client_id' => env('CORE_H2H_CLIENT_ID'),
             'client_secret' => env('CORE_H2H_CLIENT_SECRET'),
         ],
+        'tekenaja-provider' => [
+            'client_secret' => env('CALLBACK_CLIENT_SECRET'),
+        ],
 //        'api-user-provider' => [
 //            'driver' => 'eloquent-api-user-provider',
 //            'model' => \NbsPhp\Core\Models\ApiAuthModel::class,
