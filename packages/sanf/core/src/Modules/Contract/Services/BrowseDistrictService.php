@@ -47,7 +47,9 @@ final class BrowseDistrictService implements ApplicationServiceInterface
 
         $data = collect($mapping)
             ->when($dto->keyword, function ($collection, $value) {
-                return $collection->where('name', '=', mb_convert_case($value, MB_CASE_TITLE, 'UTF-8'));
+                return $collection->filter(function ($item) use ($value) {
+                    return stristr($item->name, $value);
+                });
             })
             ->when(($dto->sort_by == false), function ($collection, $value) {
                 return $collection->sortBy(function ($item) {
