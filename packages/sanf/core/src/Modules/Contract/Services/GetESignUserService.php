@@ -71,6 +71,12 @@ final class GetESignUserService implements ApplicationServiceInterface
 
         $exceptCodeCondition = ($resultTekenAja['code'] == TekenAjaApiResponseErrorCodeEnum::USER_EXISTS_VERIFIED or $resultTekenAja['code'] == TekenAjaApiResponseErrorCodeEnum::NIK_EMAIL_MATCHED);
         if ($resultTekenAja['code'] and !$exceptCodeCondition) {
+            if ($resultTekenAja['code'] == TekenAjaApiResponseErrorCodeEnum::USER_DO_NOT_EXISTS) {
+                if ($userTekenAja and ($userTekenAja->email == $result['email'] and $userTekenAja->nik == $result['nik'])) {
+                    $result['statusId'] = ESignRegistrationStatusEnum::AVAILABLE;
+                }
+            }
+
             $this->errorHandle($resultTekenAja['code'], $resultTekenAja['message'], $result['email'], $result['nik']);
         } else {
             if (!$userTekenAja) {
@@ -114,7 +120,7 @@ final class GetESignUserService implements ApplicationServiceInterface
             'subDistrictId' => $regression->sub_district_id ?? null,
             'selfieFile' => $regression->selfie_file ?? null,
             'identityFile' => $regression->identity_file ?? null,
-            'statusId' => $regression->status_id ?? $data['statusId'],
+            'statusId' => $data['statusId'],
             'createdAt' => ($regression->created_at) ? Carbon::parse($regression->created_at) : null,
             'updatedAt' => ($regression->updated_at) ? Carbon::parse($regression->updated_at) : null,
         ];
