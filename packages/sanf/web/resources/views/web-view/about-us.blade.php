@@ -280,7 +280,9 @@
           </div>
         </div>
         <div class="mt-3">
+          <p class="sf-title" style="font-size: 14px !important; color: orangered">PT SURYA ARTHA NUSANTARA FINANCE</p>
           <p class="sf-title">Terdaftar dan diawasi oleh</p>
+          <p class="sf-title" style="font-size: 13px !important; color: orangered">Otoritas Jasa Keuangan</p>
           <div class="sf-ojk mt-2">
             <img src="{{ asset('assets/png/ojk.png') }}" alt="SANF Web" draggable="false" />
           </div>
