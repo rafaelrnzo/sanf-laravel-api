@@ -142,6 +142,14 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
             }, $query);
         }
 
+        $data = array_filter($data, function ($item) {
+            if ($item->statusId !== ESignContractStatusEnum::DONE) {
+                return $item->expiredAt > Carbon::now();
+            }
+
+            return $item;
+        });
+
         return (object)[
             'data' => $data,
             'paginate' => (object)[

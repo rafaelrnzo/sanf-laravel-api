@@ -73,10 +73,13 @@ class EloquentPaginateDocumentAssigneeByUserIdSpecification
             ])
             ->join('esign_document', 'esign_document.document_id', '=', 'esign_document_assignee.document_id')
             ->where('esign_document.status_id', '!=', ESignContractStatusEnum::FAILED)
-            ->where('esign_document.expired_at', '>', Carbon::now())
             ->where('esign_document_assignee.user_id', '=', $this->userId)
             ->orderBy($orderBy, $orderDirection)
-            ->when($this->statusId, function ($query) {
+            ->when($this->statusId !== ESignContractStatusEnum::COMPLETED, function ($query) {
+                return $query->where('esign_document_assignee.status_id', $this->statusId)
+                    ->where('esign_document.expired_at', '>', Carbon::now());
+            })
+            ->when($this->statusId === ESignContractStatusEnum::COMPLETED, function ($query) {
                 return $query->where('esign_document_assignee.status_id', $this->statusId);
             })->when($this->keyword, function ($query) {
                 return $query->where('esign_document.document_name', "ILIKE", '%' . $this->keyword . '%')
