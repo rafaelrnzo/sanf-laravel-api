@@ -119,10 +119,12 @@ final class ESignUserDocumentCompleteService implements ApplicationServiceInterf
         throw_if(!$exist, new FileNotFoundException("{$path}{$filename}"));
 
         // update e-sign document assignee status
-        $this->eSignRepository->updateDocumentAssignee($documentAssignee->id, [
-            'status_id' => ESignContractStatusEnum::DONE,
-            'updated_at' => Carbon::now(),
-        ]);
+        foreach ($documentsAssignee as $documentAssignee) {
+            $this->eSignRepository->updateDocumentAssignee($documentAssignee->id, [
+                'status_id' => ESignContractStatusEnum::DONE,
+                'updated_at' => Carbon::now(),
+            ]);
+        }
 
         // update e-sign document status
         $document = $this->eSignRepository->updateDocument($document->id, [
