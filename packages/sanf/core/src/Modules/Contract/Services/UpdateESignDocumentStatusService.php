@@ -2,6 +2,7 @@
 
 namespace Sanf\Core\Modules\Contract\Services;
 
+use Carbon\Carbon;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Dto\UpdateESignDocumentStatusDto;
@@ -46,17 +47,29 @@ final class UpdateESignDocumentStatusService implements ApplicationServiceInterf
             throw new ESignDocumentNotFoundException();
         }
 
-        $this->eSignRepository->updateDocument($document->id, [
-            'version' => $document->version + 1,
-            'status_id' => ESignContractStatusEnum::ON_PROGRESS,
-            'modified_by' => [
-                'user_id' => $user->id,
-                'username' => $user->username,
-                'full_name' => $user->full_name,
-                'xid' => $user->xid,
-                'personal_xid' => $user->personal_xid,
-            ],
+        $documentAssignee = $this->eSignRepository->findDocumentAssigneeByDocId($dto->userId, $document->document_id);
+        if (!$documentAssignee) {
+            throw new ESignDocumentNotFoundException();
+        }
+
+        $this->eSignRepository->updateDocumentAssignee($documentAssignee->id, [
+            'status_id' => ESignContractStatusEnum::DONE,
+            'updated_at' => Carbon::now(),
         ]);
+
+        if ($document->status_id != ESignContractStatusEnum::COMPLETED) {
+            $this->eSignRepository->updateDocument($document->id, [
+                'version' => $document->version + 1,
+                'status_id' => ESignContractStatusEnum::ON_PROGRESS,
+                'modified_by' => [
+                    'user_id' => $user->id,
+                    'username' => $user->username,
+                    'full_name' => $user->full_name,
+                    'xid' => $user->xid,
+                    'personal_xid' => $user->personal_xid,
+                ],
+            ]);
+        }
 
         return true;
     }
