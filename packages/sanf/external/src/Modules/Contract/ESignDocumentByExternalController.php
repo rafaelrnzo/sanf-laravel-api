@@ -81,7 +81,7 @@ class ESignDocumentByExternalController extends RestApiController
             $dto = (object) [
                 'email' => $input['data']['email']
             ];
-            $this->postHasVerified($dto);
+            $user = $this->postHasVerified($dto);
         }
 
         if ($input['code'] === 'DOCUMENT_SIGNED') {
@@ -89,14 +89,14 @@ class ESignDocumentByExternalController extends RestApiController
                 'documentId' => $input['data']['document_id'],
                 'email' => $input['data']['sign'][0]['email'],
             ];
-            $this->postDocumentSigned($dto);
+            $document = $this->postDocumentSigned($dto);
         }
 
         if ($input['code'] === 'DOCUMENT_SIGN_FAILED') {
             $dto = (object) [
                 'documentId' => $input['data']['document_id'],
             ];
-            $this->postDocumentFailed($dto);
+            $document = $this->postDocumentFailed($dto);
         }
 
         if ($input['code'] === 'DOCUMENT_SIGN_COMPLETE') {
@@ -104,37 +104,33 @@ class ESignDocumentByExternalController extends RestApiController
                 'documentId' => $input['data']['document_id'],
                 'email' => $input['data']['signers'][0]['email'],
             ];
-            $this->postDocumentComplete($dto);
+            $document = $this->postDocumentComplete($dto);
         }
 
-        $this->responseOk();
+        return $this->responseOk();
     }
 
     private function postHasVerified(object $dto)
     {
-        Log::info("Callback User Has Verified");
         $transactionalService = new TransactionalApplicationService($this->registerService, $this->transactionalSession);
-        $transactionalService->execute($dto);
+        return $transactionalService->execute($dto);
     }
 
     private function postDocumentSigned(object $dto)
     {
-        Log::info("Callback Document Was Signed");
         $transactionalService = new TransactionalApplicationService($this->signedDocumentService, $this->transactionalSession);
-        $transactionalService->execute($dto);
+        return $transactionalService->execute($dto);
     }
 
     private function postDocumentFailed(object $dto)
     {
-        Log::info("Callback Document Was Failed");
         $transactionalService = new TransactionalApplicationService($this->failedDocumentService, $this->transactionalSession);
-        $transactionalService->execute($dto);
+        return $transactionalService->execute($dto);
     }
 
     private function postDocumentComplete(object $dto)
     {
-        Log::info("Callback Document Was Complete");
         $transactionalService = new TransactionalApplicationService($this->completeDocumentService, $this->transactionalSession);
-        $transactionalService->execute($dto);
+        return $transactionalService->execute($dto);
     }
 }

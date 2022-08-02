@@ -11,7 +11,8 @@ return [
             'password',
             'password_confirmation',
             'auth_token',
-            'notification_token'
+            'notification_token',
+            'token',
         ],
         /*TODO IMPROVE CENSORING VALUE
         'bad-values' => []

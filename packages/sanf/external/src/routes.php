@@ -16,6 +16,6 @@ Route::group(['prefix' => 'v1/public'], function () {
     Route::post('push-notifications', ['as' => 'public.push-notifications.add', 'uses' => 'Notification\PushNotificationByExternalController@postAdd']);
 });
 
-Route::group(['middleware' => 'callback:tekenaja-provider'], function () {
+Route::group(['middleware' => ['http-logger', 'callback:tekenaja-provider']], function () {
     Route::post('v1/public/tekenaja/callback', ['as' => 'tekenaja.callback', 'uses' => 'Contract\ESignDocumentByExternalController@postCallback']);
 });
