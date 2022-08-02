@@ -3,6 +3,7 @@
 namespace Sanf\External\Modules\Contract;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Database\TransactionalSessionInterface;
@@ -111,24 +112,28 @@ class ESignDocumentByExternalController extends RestApiController
 
     private function postHasVerified(object $dto)
     {
+        Log::info("Callback User Has Verified");
         $transactionalService = new TransactionalApplicationService($this->registerService, $this->transactionalSession);
         $transactionalService->execute($dto);
     }
 
     private function postDocumentSigned(object $dto)
     {
+        Log::info("Callback Document Was Signed");
         $transactionalService = new TransactionalApplicationService($this->signedDocumentService, $this->transactionalSession);
         $transactionalService->execute($dto);
     }
 
     private function postDocumentFailed(object $dto)
     {
+        Log::info("Callback Document Was Failed");
         $transactionalService = new TransactionalApplicationService($this->failedDocumentService, $this->transactionalSession);
         $transactionalService->execute($dto);
     }
 
     private function postDocumentComplete(object $dto)
     {
+        Log::info("Callback Document Was Complete");
         $transactionalService = new TransactionalApplicationService($this->completeDocumentService, $this->transactionalSession);
         $transactionalService->execute($dto);
     }
