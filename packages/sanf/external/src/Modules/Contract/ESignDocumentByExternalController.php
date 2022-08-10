@@ -3,20 +3,14 @@
 namespace Sanf\External\Modules\Contract;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Database\TransactionalSessionInterface;
 use NbsPhp\Core\Services\TransactionalApplicationService;
-use Sanf\Api\Modules\Contract\Transformers\ESignDocumentCompleteTransformer;
-use Sanf\Api\Modules\Contract\Transformers\ESignDocumentFailedTransformer;
-use Sanf\Api\Modules\Contract\Transformers\ESignDocumentSignedTransformer;
-use Sanf\Api\Modules\Contract\Transformers\ESignUserRegisteredTransformer;
 use Sanf\Core\Modules\Contract\Services\ESignUserDocumentCompleteService;
 use Sanf\Core\Modules\Contract\Services\ESignUserDocumentFailedService;
 use Sanf\Core\Modules\Contract\Services\ESignUserDocumentSignedService;
 use Sanf\Core\Modules\Contract\Services\ESignUserRegisteredService;
-use Spatie\Fractalistic\ArraySerializer;
 
 class ESignDocumentByExternalController extends RestApiController
 {

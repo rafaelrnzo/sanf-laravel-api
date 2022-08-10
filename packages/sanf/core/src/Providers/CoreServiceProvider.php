@@ -55,6 +55,10 @@ use Sanf\Core\Modules\Location\EloquentLocationRepository;
 use Sanf\Core\Modules\Location\LocationRepositoryInterface;
 use Sanf\Core\Modules\News\EloquentNewsRepository;
 use Sanf\Core\Modules\News\NewsRepositoryInterface;
+use Sanf\Core\Modules\OnBoarding\Repositories\EloquentOnBoardingRepository;
+use Sanf\Core\Modules\OnBoarding\Repositories\OnBoardingRepositoryInterface;
+use Sanf\Core\Modules\OnBoarding\Specifications\EloquentOnBoardingSpecificationFactory;
+use Sanf\Core\Modules\OnBoarding\Specifications\OnBoardingSpecificationFactoryInterface;
 use Sanf\Core\Modules\Plafond\Repositories\EloquentPlafondTypeRepository;
 use Sanf\Core\Modules\Plafond\Repositories\GuzzleAndEloquentPlafondRepository;
 use Sanf\Core\Modules\Plafond\Repositories\PlafondRepositoryInterface;
@@ -152,6 +156,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(SurveyRepositoryInterface::class,EloquentSurveyRepository::class);
         $this->app->bind(ProfileRepositoryInterface::class,RestProfileRepository::class);
         $this->app->bind(ESignRepositoryInterface::class,EloquentESignRepository::class);
+        $this->app->bind(OnBoardingRepositoryInterface::class,EloquentOnBoardingRepository::class);
 
         $this->app->bind(SurveyEntityFactoryInterface::class, EloquentSurveyFactoryEntity::class);
 
@@ -167,6 +172,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(InsuranceClaimSubmissionSpecificationFactoryInterface::class, EloquentInsuranceClaimSubmissionSpecificationFactory::class);
         $this->app->bind(SurveySpecificationFactoryInterface::class, EloquentSurveySpecificationFactory::class);
         $this->app->bind(ESignDocumentSpecificationFactoryInterface::class, EloquentESignDocumentSpecificationFactory::class);
+        $this->app->bind(OnBoardingSpecificationFactoryInterface::class, EloquentOnBoardingSpecificationFactory::class);
     }
 
     protected function registerViews()

@@ -53,11 +53,14 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
 
         // get list document from core
         if (!$dto->status_id or $dto->status_id === ESignContractStatusEnum::SUBMITTED) {
-            try {
-                $result = $this->client->browseESignDocument($userTekenAja->email, $dto->keyword);
-            } catch (SanfInternalApiDataNotFoundException $exception) {
-                $result['data'] = [];
-            }
+//            try {
+//                $result = $this->client->browseESignDocument($userTekenAja->email, $dto->keyword);
+//            } catch (SanfInternalApiDataNotFoundException $exception) {
+//                $result['data'] = [];
+//            }
+
+            $string = '{"status":true,"code":"S_GetData","message":"Success","count":5,"data":[{"BR_ID":"201","AGREE_NO":"10707001466","SR_NO":"9","CUST_NAME":"ERAKARYA PRIMA","DOC_ID_TEKENAJA":"96d28273-bd00-4a9d-96f4-b65c6838dbeb","EXPIRATION_DATE":"27/07/2022","FILENAME":"tes multiple 3.pdf"},{"BR_ID":"201","AGREE_NO":"10707001466","SR_NO":"12","CUST_NAME":"ERAKARYA PRIMA","DOC_ID_TEKENAJA":"96de5ae1-b8ad-4433-bd35-14bc21cd0131","EXPIRATION_DATE":"02/08/2022","FILENAME":"single3.pdf"},{"BR_ID":"201","AGREE_NO":"10707001466","SR_NO":"16","CUST_NAME":"ERAKARYA PRIMA","DOC_ID_TEKENAJA":"96eca777-9ab2-4a7d-a52a-edabf846b468","EXPIRATION_DATE":"09/08/2022","FILENAME":"multi2.pdf"},{"BR_ID":"201","AGREE_NO":"10707001466","SR_NO":"8","CUST_NAME":"ERAKARYA PRIMA","DOC_ID_TEKENAJA":"96d257bf-c592-42d5-8c36-ea3070aac38d","EXPIRATION_DATE":"27/07/2022","FILENAME":"tes multiple 2.pdf"},{"BR_ID":"201","AGREE_NO":"10707001466","SR_NO":"3","CUST_NAME":"ERAKARYA PRIMA","DOC_ID_TEKENAJA":"96d04e2a-41de-4de7-8a87-e61a77e1efda","EXPIRATION_DATE":"26/07/2022","FILENAME":"tes1.pdf"}]}';
+            $result = json_decode($string, true);
 
             $mapping = array_map(function ($item) {
                 return (object)[

@@ -14,6 +14,10 @@
 use Illuminate\Support\Facades\Route;
 
 // ONLY PIC ROUTES
+Route::group(['prefix' => 'v1', 'middleware' => ['auth']], function () {
+    Route::get('on-boarding', ['as' => 'on-boarding.browse', 'uses' => 'OnBoarding\OnBoardingController@getBrowse']);
+});
+
 Route::group(['prefix' => 'v1', 'middleware' => ['auth', 'pic']], function () {
     Route::post('users/financing-applications/company', ['as' => 'financing-applications.company.create', 'uses' => 'Financing\Controllers\FinancingApplicationByUserController@postAddByCompanyProfile']);
     Route::post('users/survey-submissions', ['as' => 'users.survey-submissions.add', 'uses' => 'Survey\Controllers\SurveyByUserController@add']);
