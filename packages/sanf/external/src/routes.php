@@ -2,8 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::group(['prefix' => 'v1/external', 'middleware' => 'basic-auth-config:core-h2h-user-provider'], function () {
+Route::group(['prefix' => 'v1/external', 'middleware' => ['basic-auth-config:core-h2h-user-provider']], function () {
     Route::post('push-notifications', ['as' => 'push-notifications.add', 'uses' => 'Notification\PushNotificationByExternalController@postAdd']);
+    Route::get('on-boardings', ['as' => 'on-boarding.browse', 'uses' => 'OnBoarding\OnBoardingByExternalController@getBrowse']);
+    Route::post('on-boardings/{xid}', ['as' => 'on-boarding.update', 'uses' => 'OnBoarding\OnBoardingByExternalController@postUpdate']);
 });
 
 Route::group(['prefix' => 'v1/public'], function () {

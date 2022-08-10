@@ -20,4 +20,17 @@ class EloquentOnBoardingRepository extends AbstractEloquentRepository implements
 
         return $this->stripEloquentModel($models);
     }
+
+    public function findById($id)
+    {
+        return $this->model->newQuery()->find($id);
+    }
+
+    public function update($id, $request)
+    {
+        $this->findById($id)->update($request);
+        $model = $this->findById($id);
+
+        return $this->stripEloquentModel($model);
+    }
 }

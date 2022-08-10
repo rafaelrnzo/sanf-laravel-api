@@ -11,4 +11,5 @@ return [
     'selfie_tekenaja' => 'tekenaja/selfie/',
     'identity_tekenaja' => 'tekenaja/identity/',
     'document_tekenaja' => 'tekenaja/document/',
+    'on-board' => 'on-board/',
 ];
