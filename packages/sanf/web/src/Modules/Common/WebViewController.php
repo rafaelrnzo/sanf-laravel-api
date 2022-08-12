@@ -53,4 +53,19 @@ class WebViewController extends RestApiController
 
         return view('core::layouts.message', ['message' => $message]);
     }
+
+    public function faq()
+    {
+        return 'frequently ask question list';
+    }
+
+    public function faqPopular()
+    {
+        return 'frequently ask question for popular list';
+    }
+
+    public function faqByCategory()
+    {
+        return 'frequently ask question by category';
+    }
 }
