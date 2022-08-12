@@ -17,5 +17,6 @@ class SampleSeeder extends Seeder
          $this->call(PromoAstraSeeder::class);
          $this->call(NewsSeeder::class);
          $this->call(PromoSanfSeeder::class);
+         $this->call(FaqSeeder::class);
     }
 }
