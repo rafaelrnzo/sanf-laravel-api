@@ -4,7 +4,7 @@ namespace Sanf\Core\Modules\Setting\Dto;
 
 use NbsPhp\Core\Dto\CamelCaseDataTransferObject;
 
-class UpdateFaqCategoryDto extends CamelCaseDataTransferObject
+class UpdateFrequentlyAskQuestionCategoryDto extends CamelCaseDataTransferObject
 {
     public string $xid;
     public ?string $name;

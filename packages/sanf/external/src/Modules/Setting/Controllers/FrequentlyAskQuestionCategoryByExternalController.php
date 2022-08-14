@@ -4,39 +4,42 @@ namespace Sanf\External\Modules\Setting\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use League\Fractal\Serializer\ArraySerializer;
 use NbsPhp\Core\Controllers\RestApiController;
-use Sanf\Core\Modules\Setting\Dto\UpdateFaqCategoryDto;
-use Sanf\Core\Modules\Setting\Services\AddFaqCategoryService;
-use Sanf\Core\Modules\Setting\Services\BrowseFaqCategoryService;
-use Sanf\Core\Modules\Setting\Services\DeleteFaqCategoryService;
-use Sanf\Core\Modules\Setting\Services\UpdateFaqCategoryService;
-use Sanf\External\Modules\Setting\Transformers\BrowseFaqCategoryTransformer;
+use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
+use Sanf\Core\Modules\Setting\Dto\UpdateFrequentlyAskQuestionCategoryDto;
+use Sanf\Core\Modules\Setting\Services\AddFrequentlyAskQuestionCategoryService;
+use Sanf\Core\Modules\Setting\Services\BrowseFrequentlyAskQuestionCategoryService;
+use Sanf\Core\Modules\Setting\Services\DeleteFrequentlyAskQuestionCategoryService;
+use Sanf\Core\Modules\Setting\Services\UpdateFrequentlyAskQuestionCategoryService;
+use Sanf\External\Modules\Setting\Transformers\BrowseFrequentlyAskQuestionCategoryTransformer;
 
-class FaqCategoryByExternalController extends RestApiController
+class FrequentlyAskQuestionCategoryByExternalController extends RestApiController
 {
-    public function getBrowse(Request $request, BrowseFaqCategoryService $service)
+    public function getBrowse(Request $request, BrowseFrequentlyAskQuestionCategoryService $service)
     {
         $input = $this->validate($request, [
             'limit' => 'nullable|integer',
             'skip' => 'nullable|integer',
+            'keyword' => 'nullable|string|max:255',
             'sort_by' => ['nullable', Rule::in(['asc', 'desc',])],
         ]);
 
         $dto = (object)[
+            'keyword' => $input['keyword'] ?? null,
             'limit' => $input['limit'] ?? null,
             'skip' => $input['skip'] ?? null,
             'sortBy' => $input['sort_by'] ?? null,
         ];
+
         $result = $service->execute($dto);
 
-        return fractal($result, BrowseFaqCategoryTransformer::class)
-            ->serializeWith(ArraySerializer::class);
+        return fractal($result->data, BrowseFrequentlyAskQuestionCategoryTransformer::class)
+            ->paginateWith(new LazyPaginatorAdapter($result->paginate));
     }
 
     public function postAdd(
         Request $request,
-        AddFaqCategoryService $service
+        AddFrequentlyAskQuestionCategoryService $service
     ) {
         $inputs = $this->validate($request, [
             'name' => 'required|string|max:50',
@@ -50,13 +53,13 @@ class FaqCategoryByExternalController extends RestApiController
     public function putUpdate(
         $xid,
         Request $request,
-        UpdateFaqCategoryService $service
+        UpdateFrequentlyAskQuestionCategoryService $service
     ) {
         $inputs = $this->validate($request, [
             'name' => 'required|string|max:50',
         ]);
 
-        $dto = new UpdateFaqCategoryDto(array_merge($inputs, ['xid' => $xid]));
+        $dto = new UpdateFrequentlyAskQuestionCategoryDto(array_merge($inputs, ['xid' => $xid]));
         $service->execute($dto);
 
         return $this->responseOk();
@@ -64,7 +67,7 @@ class FaqCategoryByExternalController extends RestApiController
 
     public function delete(
         $xid,
-        DeleteFaqCategoryService $service
+        DeleteFrequentlyAskQuestionCategoryService $service
     ) {
 
         $service->execute((object) ['xid' => $xid]);
