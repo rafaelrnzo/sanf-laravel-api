@@ -4,6 +4,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'v1/external', 'middleware' => ['basic-auth-config:core-h2h-user-provider']], function () {
     Route::post('push-notifications', ['as' => 'push-notifications.add', 'uses' => 'Notification\PushNotificationByExternalController@postAdd']);
+    Route::post('frequently-ask-questions/categories', ['as' => 'faq.category.add', 'uses' => 'Setting\Controllers\FaqCategoryByExternalController@postAdd']);
+    Route::get('frequently-ask-questions/categories', ['as' => 'faq.category.browse', 'uses' => 'Setting\Controllers\FaqCategoryByExternalController@getBrowse']);
+    Route::put('frequently-ask-questions/categories/{xid}', ['as' => 'faq.category.update', 'uses' => 'Setting\Controllers\FaqCategoryByExternalController@putUpdate']);
+    Route::delete('frequently-ask-questions/categories/{xid}', ['as' => 'faq.category.delete', 'uses' => 'Setting\Controllers\FaqCategoryByExternalController@delete']);
     Route::get('on-boardings', ['as' => 'on-boarding.browse', 'uses' => 'Setting\Controllers\OnBoardingByExternalController@getBrowse']);
     Route::post('on-boardings/{xid}', ['as' => 'on-boarding.update', 'uses' => 'Setting\Controllers\OnBoardingByExternalController@postUpdate']);
 });

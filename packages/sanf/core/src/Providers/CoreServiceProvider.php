@@ -69,9 +69,13 @@ use Sanf\Core\Modules\Project\Specifications\EloquentProjectSpecificationFactory
 use Sanf\Core\Modules\Project\Specifications\ProjectSpecificationFactoryInterface;
 use Sanf\Core\Modules\Promo\EloquentPromoRepository;
 use Sanf\Core\Modules\Promo\PromoRepositoryInterface;
+use Sanf\Core\Modules\Setting\Repositories\EloquentFaqCategoryRepository;
 use Sanf\Core\Modules\Setting\Repositories\EloquentOnBoardingRepository;
+use Sanf\Core\Modules\Setting\Repositories\FaqCategoryRepositoryInterface;
 use Sanf\Core\Modules\Setting\Repositories\OnBoardingRepositoryInterface;
+use Sanf\Core\Modules\Setting\Specifications\EloquentFaqCategorySpecificationFactory;
 use Sanf\Core\Modules\Setting\Specifications\EloquentOnBoardingSpecificationFactory;
+use Sanf\Core\Modules\Setting\Specifications\FaqCategorySpecificationFactoryInterface;
 use Sanf\Core\Modules\Setting\Specifications\OnBoardingSpecificationFactoryInterface;
 use Sanf\Core\Modules\Staff\EloquentStaffRepository;
 use Sanf\Core\Modules\Staff\StaffRepositoryInterface;
@@ -157,6 +161,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(ProfileRepositoryInterface::class,RestProfileRepository::class);
         $this->app->bind(ESignRepositoryInterface::class,EloquentESignRepository::class);
         $this->app->bind(OnBoardingRepositoryInterface::class,EloquentOnBoardingRepository::class);
+        $this->app->bind(FaqCategoryRepositoryInterface::class,EloquentFaqCategoryRepository::class);
 
         $this->app->bind(SurveyEntityFactoryInterface::class, EloquentSurveyFactoryEntity::class);
 
@@ -173,6 +178,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(SurveySpecificationFactoryInterface::class, EloquentSurveySpecificationFactory::class);
         $this->app->bind(ESignDocumentSpecificationFactoryInterface::class, EloquentESignDocumentSpecificationFactory::class);
         $this->app->bind(OnBoardingSpecificationFactoryInterface::class, EloquentOnBoardingSpecificationFactory::class);
+        $this->app->bind(FaqCategorySpecificationFactoryInterface::class, EloquentFaqCategorySpecificationFactory::class);
     }
 
     protected function registerViews()
