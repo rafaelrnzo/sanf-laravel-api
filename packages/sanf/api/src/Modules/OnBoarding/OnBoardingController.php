@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use League\Fractal\Serializer\ArraySerializer;
 use NbsPhp\Core\Controllers\RestApiController;
-use Sanf\Core\Modules\OnBoarding\Services\BrowseOnBoardingService;
+use Sanf\Api\Modules\Setting\Transformers\BrowseOnBoardingTransformer;
+use Sanf\Core\Modules\Setting\Services\BrowseOnBoardingService;
 
 class OnBoardingController extends RestApiController
 {

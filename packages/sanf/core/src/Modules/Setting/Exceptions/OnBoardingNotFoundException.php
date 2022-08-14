@@ -1,6 +1,6 @@
 <?php
 
-namespace Sanf\Core\Modules\OnBoarding\Exceptions;
+namespace Sanf\Core\Modules\Setting\Exceptions;
 
 use NbsPhp\Core\Exceptions\ApiException;
 

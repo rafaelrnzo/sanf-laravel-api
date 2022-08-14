@@ -1,6 +1,6 @@
 <?php
 
-namespace Sanf\Core\Modules\OnBoarding\Repositories;
+namespace Sanf\Core\Modules\Setting\Repositories;
 
 interface OnBoardingRepositoryInterface
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Sanf\Api\Modules\OnBoarding;
+namespace Sanf\External\Modules\Setting\Transformers;
 
 use Illuminate\Support\Str;
 use League\Fractal\TransformerAbstract;

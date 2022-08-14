@@ -1,6 +1,6 @@
 <?php
 
-namespace Sanf\Core\Modules\OnBoarding\Specifications;
+namespace Sanf\Core\Modules\Setting\Specifications;
 
 class EloquentOnBoardingSpecificationFactory implements OnBoardingSpecificationFactoryInterface
 {

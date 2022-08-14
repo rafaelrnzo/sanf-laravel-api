@@ -1,13 +1,13 @@
 <?php
 
-namespace Sanf\Core\Modules\OnBoarding\Services;
+namespace Sanf\Core\Modules\Setting\Services;
 
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\FileNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\OnBoarding\Exceptions\OnBoardingNotFoundException;
-use Sanf\Core\Modules\OnBoarding\Repositories\OnBoardingRepositoryInterface;
-use Sanf\Core\Modules\OnBoarding\UpdateOnBoardingDto;
+use Sanf\Core\Modules\Setting\Dto\UpdateOnBoardingDto;
+use Sanf\Core\Modules\Setting\Exceptions\OnBoardingNotFoundException;
+use Sanf\Core\Modules\Setting\Repositories\OnBoardingRepositoryInterface;
 
 class UpdateOnBoardingService implements ApplicationServiceInterface
 {

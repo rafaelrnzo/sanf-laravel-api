@@ -1,9 +1,9 @@
 <?php
 
-namespace Sanf\Core\Modules\OnBoarding\Repositories;
+namespace Sanf\Core\Modules\Setting\Repositories;
 
 use NbsPhp\Core\Repositories\AbstractEloquentRepository;
-use Sanf\Core\Modules\OnBoarding\Models\OnBoardingModel;
+use Sanf\Core\Modules\Setting\Models\OnBoardingModel;
 
 class EloquentOnBoardingRepository extends AbstractEloquentRepository implements OnBoardingRepositoryInterface
 {

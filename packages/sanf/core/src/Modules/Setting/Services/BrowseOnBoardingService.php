@@ -1,11 +1,11 @@
 <?php
 
-namespace Sanf\Core\Modules\OnBoarding\Services;
+namespace Sanf\Core\Modules\Setting\Services;
 
 use Carbon\Carbon;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\OnBoarding\Repositories\OnBoardingRepositoryInterface;
-use Sanf\Core\Modules\OnBoarding\Specifications\OnBoardingSpecificationFactoryInterface;
+use Sanf\Core\Modules\Setting\Repositories\OnBoardingRepositoryInterface;
+use Sanf\Core\Modules\Setting\Specifications\OnBoardingSpecificationFactoryInterface;
 
 class BrowseOnBoardingService implements ApplicationServiceInterface
 {

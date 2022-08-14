@@ -1,6 +1,6 @@
 <?php
 
-namespace Sanf\Core\Modules\OnBoarding\Models;
+namespace Sanf\Core\Modules\Setting\Models;
 
 use NbsPhp\Core\Models\AbstractModel;
 

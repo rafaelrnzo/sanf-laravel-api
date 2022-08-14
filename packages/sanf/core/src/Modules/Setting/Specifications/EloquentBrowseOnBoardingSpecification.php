@@ -1,8 +1,8 @@
 <?php
 
-namespace Sanf\Core\Modules\OnBoarding\Specifications;
+namespace Sanf\Core\Modules\Setting\Specifications;
 
-use Sanf\Core\Modules\OnBoarding\Models\OnBoardingModel;
+use Sanf\Core\Modules\Setting\Models\OnBoardingModel;
 
 class EloquentBrowseOnBoardingSpecification
 {

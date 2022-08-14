@@ -1,15 +1,15 @@
 <?php
 
-namespace Sanf\External\Modules\OnBoarding;
+namespace Sanf\External\Modules\Setting\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use League\Fractal\Serializer\ArraySerializer;
 use NbsPhp\Core\Controllers\RestApiController;
-use Sanf\Api\Modules\OnBoarding\BrowseOnBoardingTransformer;
-use Sanf\Core\Modules\OnBoarding\Services\BrowseOnBoardingService;
-use Sanf\Core\Modules\OnBoarding\Services\UpdateOnBoardingService;
-use Sanf\Core\Modules\OnBoarding\UpdateOnBoardingDto;
+use Sanf\Core\Modules\Setting\Dto\UpdateOnBoardingDto;
+use Sanf\Core\Modules\Setting\Services\BrowseOnBoardingService;
+use Sanf\Core\Modules\Setting\Services\UpdateOnBoardingService;
+use Sanf\External\Modules\Setting\Transformers\BrowseOnBoardingTransformer;
 
 class OnBoardingByExternalController extends RestApiController
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Sanf\Core\Modules\OnBoarding;
+namespace Sanf\Core\Modules\Setting\Dto;
 
 use Illuminate\Http\UploadedFile;
 use NbsPhp\Core\Dto\CamelCaseDataTransferObject;
