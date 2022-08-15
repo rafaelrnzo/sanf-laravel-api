@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 // ONLY PIC ROUTES
 Route::group(['prefix' => 'v1', 'middleware' => ['auth']], function () {
-    Route::get('on-boarding', ['as' => 'on-boarding.browse', 'uses' => 'OnBoarding\OnBoardingController@getBrowse']);
+    Route::get('on-boarding', ['as' => 'on-boarding.browse', 'uses' => 'Setting\OnBoardingController@getBrowse']);
 });
 
 Route::group(['prefix' => 'v1', 'middleware' => ['auth', 'pic']], function () {

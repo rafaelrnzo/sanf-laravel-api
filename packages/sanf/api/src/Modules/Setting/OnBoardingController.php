@@ -1,13 +1,13 @@
 <?php
 
-namespace Sanf\Api\Modules\OnBoarding;
+namespace Sanf\Api\Modules\Setting;
 
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use League\Fractal\Serializer\ArraySerializer;
 use NbsPhp\Core\Controllers\RestApiController;
-use Sanf\Api\Modules\Setting\Transformers\BrowseOnBoardingTransformer;
 use Sanf\Core\Modules\Setting\Services\BrowseOnBoardingService;
+use Sanf\External\Modules\Setting\Transformers\BrowseOnBoardingTransformer;
 
 class OnBoardingController extends RestApiController
 {
