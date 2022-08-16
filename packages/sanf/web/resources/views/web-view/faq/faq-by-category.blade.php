@@ -8,7 +8,7 @@
         <div class="question-text mb-2">Anda Mengalami Kendala?</div>
         <form action="" method="get" class="d-block w-100">
             <div class="input-group">
-                <input type="search" name="keyword" class="form-control"
+                <input type="text" name="keyword" class="form-control"
                        aria-describedby="inputGroupSearch"
                        placeholder="Masukkan pertanyaan atau kategori" value="{{ $keyword }}">
                 <button class="btn btn-search" type="submit" id="inputGroupSearch">
@@ -40,6 +40,9 @@
                         </h2>
                         <div id="faqCollapse{{$faq->id}}" class="accordion-collapse collapse"
                              aria-labelledby="faqHeading{{$faq->id}}" data-bs-parent="#accordionFaq">
+                            <div class="divider-wrapper">
+                                <div class="divider"></div>
+                            </div>
                             <div class="accordion-body">{{ $faq->description }}</div>
                         </div>
                     </div>

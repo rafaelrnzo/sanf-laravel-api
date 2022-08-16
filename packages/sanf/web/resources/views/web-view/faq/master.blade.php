@@ -99,6 +99,69 @@
             border-top-right-radius: 0.625rem;
             border-bottom-right-radius: 0.625rem;
         }
+
+        .accordion {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            font-family: Gilroy-Regular, sans-serif;
+            font-weight: 700;
+        }
+
+        .accordion-item {
+            border: 1px solid rgba(3, 37, 126, 0.08);
+            border-radius: 0.75rem;
+            overflow: hidden;
+            font-weight: 500;
+        }
+
+        .accordion-item:first-child {
+            border-radius: 0.75rem;
+            background-color: #F4F6FA;
+        }
+
+        .accordion-item:last-child {
+            border-radius: 0.75rem;
+        }
+
+        .accordion-item:not(:first-of-type) {
+            border-top: 1px solid rgba(3, 37, 126, 0.08);
+            background-color: #F4F6FA;
+        }
+
+        .accordion-header {
+            overflow: hidden;
+        }
+
+        .accordion-button {
+            color: #03257E;
+            background-color: #F4F6FA;
+        }
+
+        .accordion-button:hover, .accordion-button:focus {
+            text-decoration:none;
+            box-shadow: none;
+        }
+
+        .accordion-button:not(.collapsed) {
+            color: #03257E;
+            background-color: #F4F6FA;
+            box-shadow: none;
+        }
+
+        .accordion-collapse {
+            color: #555555;
+        }
+
+        .accordion-collapse .divider-wrapper {
+            padding: 0 1.25rem;
+        }
+
+        .accordion-collapse .divider-wrapper .divider {
+            border-top: 1px solid #03257E;
+        }
     </style>
 </head>
 <body class="pb-3">

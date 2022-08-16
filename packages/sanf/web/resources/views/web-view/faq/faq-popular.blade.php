@@ -16,6 +16,9 @@
                     </h2>
                     <div id="faqCollapse{{$faq->id}}" class="accordion-collapse collapse"
                          aria-labelledby="faqHeading{{$faq->id}}" data-bs-parent="#accordionFaq">
+                        <div class="divider-wrapper">
+                            <div class="divider"></div>
+                        </div>
                         <div class="accordion-body">{{ $faq->description }}</div>
                     </div>
                 </div>
