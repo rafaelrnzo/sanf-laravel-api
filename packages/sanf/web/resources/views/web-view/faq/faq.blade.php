@@ -76,6 +76,7 @@
                 @endforeach
             </div>
 
+                @if(isset($personalAssistant) and isset($personalAssistant->msisdn))
             <div class="card mt-4" style="border-radius: 1rem; overflow: hidden">
                 <div class="card-body p-0">
                     <div class="d-flex align-items-center">
@@ -84,11 +85,13 @@
                         </div>
                         <div class="flex-grow-1 ms-3 text-center">
                             <p class="card-text mb-2">Anda menemui kendala?</p>
-                            <a href="#" class="btn btn-custom py-2 px-4">Hub Admin SANF</a>
+                            @php $msisdn = (string)preg_replace('/^0/', '+62', $personalAssistant->msisdn) @endphp
+                            <a href='{{"tel:{$msisdn}"}}' class="btn btn-custom py-2 px-4">Hub Admin SANF</a>
                         </div>
                     </div>
                 </div>
             </div>
+                    @endif
         </div>
     @endif
 @endsection
