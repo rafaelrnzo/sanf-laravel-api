@@ -27,10 +27,6 @@ use Sanf\Core\Modules\Contract\Specifications\EloquentESignDocumentSpecification
 use Sanf\Core\Modules\Contract\Specifications\EloquentFinancingUnitLocationSubmissionSpecificationFactory;
 use Sanf\Core\Modules\Contract\Specifications\ESignDocumentSpecificationFactoryInterface;
 use Sanf\Core\Modules\Contract\Specifications\FinancingUnitLocationSubmissionSpecificationFactoryInterface;
-use Sanf\Core\Modules\Faq\Repositories\EloquentFaqCategoryRepository;
-use Sanf\Core\Modules\Faq\Repositories\EloquentFaqRepository;
-use Sanf\Core\Modules\Faq\Repositories\FaqCategoryRepositoryInterface;
-use Sanf\Core\Modules\Faq\Repositories\FaqRepositoryInterface;
 use Sanf\Core\Modules\Financing\Repositories\EloquentFinancingApplicationRepository;
 use Sanf\Core\Modules\Financing\Repositories\EloquentFinancingFacilityRepository;
 use Sanf\Core\Modules\Financing\Repositories\EloquentFinancingMethodRepository;
@@ -166,8 +162,6 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(ESignRepositoryInterface::class,EloquentESignRepository::class);
         $this->app->bind(OnBoardingRepositoryInterface::class,EloquentOnBoardingRepository::class);
         $this->app->bind(FrequentlyAskQuestionRepositoryInterface::class,EloquentFrequentlyAskQuestionRepository::class);
-        $this->app->bind(FaqRepositoryInterface::class,EloquentFaqRepository::class);
-        $this->app->bind(FaqCategoryRepositoryInterface::class,EloquentFaqCategoryRepository::class);
 
         $this->app->bind(SurveyEntityFactoryInterface::class, EloquentSurveyFactoryEntity::class);
 

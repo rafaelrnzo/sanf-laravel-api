@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
-use Sanf\Core\Modules\Setting\Dto\UpdateFrequentlyAskQuestionCategoryDto;
+use Sanf\Core\Modules\Setting\Dtos\UpdateFrequentlyAskQuestionCategoryDto;
 use Sanf\Core\Modules\Setting\Services\AddFrequentlyAskQuestionCategoryService;
 use Sanf\Core\Modules\Setting\Services\BrowseFrequentlyAskQuestionCategoryService;
 use Sanf\Core\Modules\Setting\Services\DeleteFrequentlyAskQuestionCategoryService;

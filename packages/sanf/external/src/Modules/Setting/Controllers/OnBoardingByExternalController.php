@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use League\Fractal\Serializer\ArraySerializer;
 use NbsPhp\Core\Controllers\RestApiController;
-use Sanf\Core\Modules\Setting\Dto\UpdateOnBoardingDto;
+use Sanf\Core\Modules\Setting\Dtos\UpdateOnBoardingDto;
 use Sanf\Core\Modules\Setting\Services\BrowseOnBoardingService;
 use Sanf\Core\Modules\Setting\Services\UpdateOnBoardingService;
 use Sanf\External\Modules\Setting\Transformers\BrowseOnBoardingTransformer;

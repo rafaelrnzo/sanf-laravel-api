@@ -5,7 +5,7 @@ namespace Sanf\Core\Modules\Setting\Services;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\FileNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\Setting\Dto\UpdateOnBoardingDto;
+use Sanf\Core\Modules\Setting\Dtos\UpdateOnBoardingDto;
 use Sanf\Core\Modules\Setting\Exceptions\OnBoardingNotFoundException;
 use Sanf\Core\Modules\Setting\Repositories\OnBoardingRepositoryInterface;
 

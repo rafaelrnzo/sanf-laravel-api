@@ -16,9 +16,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('web-view/about-us', ['as' => 'web-view.about-us', 'uses' => 'Common\WebViewController@aboutUs']);
 Route::get('web-view/terms-and-condition', ['as' => 'web-view.terms-and-condition', 'uses' => 'Common\WebViewController@termsCondition']);
 Route::get('web-view/privacy-policy', ['as' => 'web-view.privacy-policy', 'uses' => 'Common\WebViewController@privacyPolicy']);
-Route::get('web-view/faq', ['as' => 'web-view.faq', 'uses' => 'Common\WebViewController@faq']);
-Route::get('web-view/faq/popular', ['as' => 'web-view.faq-popular', 'uses' => 'Common\WebViewController@faqPopular']);
-Route::get('web-view/faq/{categoryId}', ['as' => 'web-view.faq-by-category', 'uses' => 'Common\WebViewController@faqByCategory']);
+Route::get('web-view/faq', ['as' => 'web-view.faq', 'uses' => 'Common\WebViewController@browseFrequentlyAskQuestion']);
+Route::get('web-view/faq/popular', ['as' => 'web-view.faq-popular', 'uses' => 'Common\WebViewController@browsePopularFrequentlyAskQuestion']);
+Route::get('web-view/faq/{categoryId}', ['as' => 'web-view.faq-by-category', 'uses' => 'Common\WebViewController@browseFrequentlyAskQuestionByCategory']);
 
 Route::get('pages/about-us', ['as' => 'web-view.about-us', 'uses' => 'Common\WebViewController@aboutUs']);
 Route::get('pages/terms-and-condition', ['as' => 'web-view.terms-and-condition', 'uses' => 'Common\WebViewController@termsCondition']);

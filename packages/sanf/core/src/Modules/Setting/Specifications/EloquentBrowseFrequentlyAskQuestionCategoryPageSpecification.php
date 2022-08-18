@@ -2,16 +2,16 @@
 
 namespace Sanf\Core\Modules\Setting\Specifications;
 
-use Sanf\Core\Modules\Setting\Models\FrequentlyAskQuestionModel;
+use Sanf\Core\Modules\Setting\Models\FrequentlyAskQuestionCategoryModel;
 
-class EloquentBrowseFrequentlyAskQuestionSpecification
+class EloquentBrowseFrequentlyAskQuestionCategoryPageSpecification
 {
     private ?string $keyword;
     private ?int $limit;
     private ?int $skip;
     private ?string $sortBy;
 
-    public function __construct(string $keyword = null, int $limit = null, int $skip = null, string $sortBy = null)
+    public function __construct(?string $keyword, ?int $limit, ?int $skip, ?string $sortBy)
     {
         $this->keyword = $keyword;
         $this->limit = $limit;
@@ -19,25 +19,26 @@ class EloquentBrowseFrequentlyAskQuestionSpecification
         $this->sortBy = $sortBy;
     }
 
-    public function buildQuery(FrequentlyAskQuestionModel $model)
+    public function buildQuery(FrequentlyAskQuestionCategoryModel $model)
     {
         switch ($this->sortBy) {
-            case 'asc':
-                $orderBy = 'created_at';
-                $orderDirection = 'ASC';
-                break;
             case 'desc':
-            default:
-                $orderBy = 'created_at';
+                $orderBy = 'name';
                 $orderDirection = 'DESC';
+                break;
+            case 'asc':
+            default:
+                $orderBy = 'name';
+                $orderDirection = 'ASC';
         }
 
         $keyword = $this->keyword;
         return $model->newQuery()
-            ->with('category')
-            ->whereHas('category')
-            ->when($keyword, function ($query) use($keyword) {
-                $query->where('title', 'like', strtolower("%{$keyword}%"));
+            ->when($keyword, function ($query) use ($keyword) {
+                $query->where('name', 'like', strtolower("%{$keyword}%"))
+                    ->orWhereHas('faqs', function ($query) use ($keyword) {
+                        $query->where('title', 'like', strtolower("%{$keyword}%"));
+                    });
             })
             ->when($this->limit, function ($query) {
                 return $query->limit($this->limit);

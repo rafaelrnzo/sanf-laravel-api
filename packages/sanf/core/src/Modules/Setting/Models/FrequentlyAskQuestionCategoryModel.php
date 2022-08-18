@@ -12,4 +12,9 @@ class FrequentlyAskQuestionCategoryModel extends AbstractModel
     protected $table = 'faq_category';
 
     protected $fillable = ['name',];
+
+    public function faqs()
+    {
+        return $this->hasMany(FrequentlyAskQuestionModel::class, 'category_id', 'id');
+    }
 }

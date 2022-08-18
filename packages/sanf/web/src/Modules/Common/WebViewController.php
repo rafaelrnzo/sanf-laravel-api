@@ -1,19 +1,19 @@
 <?php
 
-
 namespace Sanf\Web\Modules\Common;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use League\Fractal\Resource\Collection;
 use NbsPhp\Core\Controllers\RestApiController;
-use Sanf\Core\Modules\Faq\Dtos\DetailFaqCategoryDto;
-use Sanf\Core\Modules\Faq\Dtos\ListFaqCategoryDto;
-use Sanf\Core\Modules\Faq\Dtos\ListFaqDto;
-use Sanf\Core\Modules\Faq\Services\DetailFaqCategoryService;
-use Sanf\Core\Modules\Faq\Services\ListFaqCategoryService;
-use Sanf\Core\Modules\Faq\Services\ListFaqService;
-use Sanf\Web\Modules\Common\Transformers\FaqCategoryTransformer;
-use Sanf\Web\Modules\Common\Transformers\FaqTransformer;
+use Sanf\Core\Modules\Setting\Dtos\DetailFrequentlyAskQuestionCategoryPageDto;
+use Sanf\Core\Modules\Setting\Dtos\ListFrequentlyAskQuestionCategoryPageDto;
+use Sanf\Core\Modules\Setting\Dtos\ListFrequentlyAskQuestionPageDto;
+use Sanf\Core\Modules\Setting\Services\DetailFrequentlyAskQuestionCategoryPageService;
+use Sanf\Core\Modules\Setting\Services\ListFrequentlyAskQuestionCategoryPageService;
+use Sanf\Core\Modules\Setting\Services\ListFrequentlyAskQuestionPageService;
+use Sanf\Web\Modules\Common\Transformers\SimpleFrequentlyAskQuestionCategoryPageTransformer;
+use Sanf\Web\Modules\Common\Transformers\SimpleFrequentlyAskQuestionTransformer;
 
 class WebViewController extends RestApiController
 {
@@ -64,28 +64,36 @@ class WebViewController extends RestApiController
         return view('core::layouts.message', ['message' => $message]);
     }
 
-    public function faq(
-        Request                $request,
-        ListFaqService         $faqService,
-        ListFaqCategoryService $faqCategoryService
-    )
-    {
-        $keyword = $request->get('keyword');
+    public function browseFrequentlyAskQuestion(
+        Request $request,
+        ListFrequentlyAskQuestionPageService $faqService,
+        ListFrequentlyAskQuestionCategoryPageService $faqCategoryService
+    ) {
+        $inputs = $this->validate($request, [
+            'is_popular' => 'nullable|boolean',
+            'keyword' => 'nullable|string|regex:/^[a-zA-Z0-9 ]+$/',
+            'limit' => 'nullable|integer',
+            'skip' => 'nullable|integer',
+            'sort_by' => ['nullable', Rule::in(['titleAsc', 'titleDesc', 'orderAsc', 'orderDesc',])],
+        ]);
 
-        $faqRequest = new ListFaqDto([
-            'limit' => $keyword ? null : 5,
-            'isPopular' => $keyword ? null : true,
-            'searchKeyword' => $keyword,
+        $keyword = $inputs['keyword'] ?? null;
+        $faqRequest = new ListFrequentlyAskQuestionPageDto([
+            'isPopular' => $inputs['is_popular'] ?? false,
+            'keyword' => $keyword,
+            'limit' => $inputs['limit'] ?? null,
+            'skip' => $inputs['skip'] ?? null,
+            'sortBy' => $inputs['sortBy'] ?? null,
         ]);
         $faqResult = $faqService->execute($faqRequest);
-        $faqs = new Collection($faqResult, FaqTransformer::class);
+        $faqs = new Collection($faqResult, SimpleFrequentlyAskQuestionTransformer::class);
         $faqs = $faqs->getData();
 
-        $faqCategoryRequest = new ListFaqCategoryDto([
-            'searchFaqKeyword' => $keyword
+        $faqCategoryRequest = new ListFrequentlyAskQuestionCategoryPageDto([
+            'keyword' => $keyword
         ]);
         $faqCategoryResult = $faqCategoryService->execute($faqCategoryRequest);
-        $faqCategories = new Collection($faqCategoryResult, FaqCategoryTransformer::class);
+        $faqCategories = new Collection($faqCategoryResult, SimpleFrequentlyAskQuestionCategoryPageTransformer::class);
         $faqCategories = $faqCategories->getData();
 
         return view(
@@ -94,17 +102,30 @@ class WebViewController extends RestApiController
         );
     }
 
-    public function faqByCategory(
-        Request                  $request,
-        ListFaqService           $faqService,
-        DetailFaqCategoryService $faqCategoryService,
-                                 $categoryId
-    )
+    public function browsePopularFrequentlyAskQuestion(ListFrequentlyAskQuestionPageService $faqService)
     {
-        $keyword = $request->get('keyword');
-        $categoryId = (int)$categoryId;
+        $faqRequest = new ListFrequentlyAskQuestionPageDto(['isPopular' => true]);
+        $faqResult = $faqService->execute($faqRequest);
+        $faqs = new Collection($faqResult, SimpleFrequentlyAskQuestionTransformer::class);
+        $faqs = $faqs->getData();
 
-        $faqCategoryRequest = new DetailFaqCategoryDto(['id' => $categoryId]);
+        return view(
+            'web::web-view.faq.faq-popular',
+            compact('faqs')
+        );
+    }
+
+    public function browseFrequentlyAskQuestionByCategory(
+        Request $request,
+        ListFrequentlyAskQuestionPageService $faqService,
+        DetailFrequentlyAskQuestionCategoryPageService $faqCategoryService,
+        $categoryId
+    ) {
+        $inputs = $this->validate($request, [
+            'keyword' => 'nullable|string|regex:/^[a-zA-Z0-9 ]+$/',
+        ]);
+
+        $faqCategoryRequest = new DetailFrequentlyAskQuestionCategoryPageDto(['id' => (int) $categoryId]);
 
         $faqCategoryResult = $faqCategoryService->execute($faqCategoryRequest);
 
@@ -112,33 +133,21 @@ class WebViewController extends RestApiController
             return $this->faqNotFound();
         }
 
-        $faqCategory = fractal($faqCategoryResult, FaqCategoryTransformer::class);
+        $faqCategory = fractal($faqCategoryResult, SimpleFrequentlyAskQuestionCategoryPageTransformer::class);
         $faqCategory = (object)$faqCategory->toArray();
 
-        $faqRequest = new ListFaqDto([
-            'searchKeyword' => $keyword,
-            'categoryId' => $categoryId
+        $keyword = $inputs['keyword'] ?? null;
+        $faqRequest = new ListFrequentlyAskQuestionPageDto([
+            'keyword' => $keyword,
+            'categoryId' => (int) $categoryId
         ]);
         $faqResult = $faqService->execute($faqRequest);
-        $faqs = new Collection($faqResult, FaqTransformer::class);
+        $faqs = new Collection($faqResult, SimpleFrequentlyAskQuestionTransformer::class);
         $faqs = $faqs->getData();
 
         return view(
             'web::web-view.faq.faq-by-category',
             compact('faqs', 'faqCategory', 'keyword')
-        );
-    }
-
-    public function faqPopular(ListFaqService $faqService)
-    {
-        $faqRequest = new ListFaqDto(['isPopular' => true]);
-        $faqResult = $faqService->execute($faqRequest);
-        $faqs = new Collection($faqResult, FaqTransformer::class);
-        $faqs = $faqs->getData();
-
-        return view(
-            'web::web-view.faq.faq-popular',
-            compact('faqs')
         );
     }
 

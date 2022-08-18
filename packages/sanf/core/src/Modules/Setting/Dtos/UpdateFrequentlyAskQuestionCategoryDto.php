@@ -1,6 +1,6 @@
 <?php
 
-namespace Sanf\Core\Modules\Setting\Dto;
+namespace Sanf\Core\Modules\Setting\Dtos;
 
 use NbsPhp\Core\Dto\CamelCaseDataTransferObject;
 

@@ -3,7 +3,7 @@
 namespace Sanf\Core\Modules\Setting\Services;
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\Setting\Dto\UpdateFrequentlyAskQuestionCategoryDto;
+use Sanf\Core\Modules\Setting\Dtos\UpdateFrequentlyAskQuestionCategoryDto;
 use Sanf\Core\Modules\Setting\Exceptions\FrequentlyAskQuestionCategoryNotFoundException;
 use Sanf\Core\Modules\Setting\Repositories\FrequentlyAskQuestionRepositoryInterface;
 

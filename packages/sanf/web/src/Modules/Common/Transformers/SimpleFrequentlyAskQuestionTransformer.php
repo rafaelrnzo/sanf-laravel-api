@@ -4,7 +4,7 @@ namespace Sanf\Web\Modules\Common\Transformers;
 
 use League\Fractal\TransformerAbstract;
 
-class FaqTransformer extends TransformerAbstract
+class SimpleFrequentlyAskQuestionTransformer extends TransformerAbstract
 {
     public function transform($dto)
     {
