@@ -83,7 +83,7 @@ class WebViewController extends RestApiController
 
         $keyword = $inputs['keyword'] ?? null;
         $faqRequest = new ListFrequentlyAskQuestionPageDto([
-            'isPopular' => $inputs['is_popular'] ?? false,
+            'isPopular' => true,
             'keyword' => $keyword,
             'limit' => $inputs['limit'] ?? null,
             'skip' => $inputs['skip'] ?? null,
@@ -110,10 +110,26 @@ class WebViewController extends RestApiController
 
     public function browsePopularFrequentlyAskQuestion(
         Guard $auth,
+        Request $request,
         ListFrequentlyAskQuestionPageService $faqService,
         GetPersonalAssistantUserService $personalAssistantUserService
     ) {
-        $faqRequest = new ListFrequentlyAskQuestionPageDto(['isPopular' => true]);
+        $inputs = $this->validate($request, [
+            'is_popular' => 'nullable|boolean',
+            'keyword' => 'nullable|string|regex:/^[a-zA-Z0-9 ]+$/',
+            'limit' => 'nullable|integer',
+            'skip' => 'nullable|integer',
+            'sort_by' => ['nullable', Rule::in(['titleAsc', 'titleDesc', 'orderAsc', 'orderDesc',])],
+        ]);
+
+        $keyword = $inputs['keyword'] ?? null;
+        $faqRequest = new ListFrequentlyAskQuestionPageDto([
+            'isPopular' => $inputs['is_popular'] ?? false,
+            'keyword' => $keyword,
+            'limit' => $inputs['limit'] ?? null,
+            'skip' => $inputs['skip'] ?? null,
+            'sortBy' => $inputs['sortBy'] ?? null,
+        ]);
         $faqResult = $faqService->execute($faqRequest);
         $faqs = new Collection($faqResult, SimpleFrequentlyAskQuestionTransformer::class);
         $faqs = $faqs->getData();
@@ -122,7 +138,7 @@ class WebViewController extends RestApiController
 
         return view(
             'web::web-view.faq.faq-popular',
-            compact('faqs', 'personalAssistant')
+            compact('faqs', 'personalAssistant', 'keyword')
         );
     }
 
