@@ -86,7 +86,7 @@
                         <div class="flex-grow-1 ms-3 text-center">
                             <p class="card-text mb-2">Anda menemui kendala?</p>
                             @php $msisdn = (string)preg_replace('/^0/', '+62', $personalAssistant->msisdn) @endphp
-                            <a href='{{"tel:{$msisdn}"}}' class="btn btn-custom py-2 px-4">Hub Admin SANF</a>
+                            <a href='{{"https://wa.me/{$msisdn}"}}' class="btn btn-custom py-2 px-4">Hub Admin SANF</a>
                         </div>
                     </div>
                 </div>
