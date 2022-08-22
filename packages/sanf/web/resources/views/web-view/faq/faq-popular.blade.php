@@ -29,7 +29,7 @@
     @else
         <div class="container">
             @if(!$keyword)
-                <h1 class="container-title">Pertanyaan Populer</h1>
+                <h1 class="container-title">Pertanyaan</h1>
             @endif
             <div class="accordion" id="accordionFaq">
                 @foreach($faqs as $faq)

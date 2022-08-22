@@ -35,7 +35,7 @@ class EloquentBrowseFrequentlyAskQuestionCategorySpecification
         $keyword = $this->keyword;
         return $model->newQuery()
             ->when($keyword, function ($query) use($keyword) {
-                $query->where('name', 'like', strtolower("%{$keyword}%"));
+                $query->where('name', 'ilike', strtolower("%{$keyword}%"));
             })
             ->when($this->limit, function ($query) {
                 return $query->limit($this->limit);

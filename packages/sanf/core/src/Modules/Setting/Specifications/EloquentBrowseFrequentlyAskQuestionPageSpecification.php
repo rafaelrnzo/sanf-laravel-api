@@ -63,7 +63,7 @@ class EloquentBrowseFrequentlyAskQuestionPageSpecification
                 $query->where('category_id', '=', $categoryId);
             })
             ->when($keyword, function ($query) use ($keyword, $isPopular, $categoryId) {
-                $query->where('title', 'like', strtolower("%{$keyword}%"))
+                $query->where('title', 'ilike', strtolower("%{$keyword}%"))
                     ->when($isPopular, function ($query) use ($isPopular) {
                         $query->where('is_popular', '=', $isPopular);
                     })
