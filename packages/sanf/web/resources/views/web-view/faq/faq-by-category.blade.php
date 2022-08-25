@@ -49,22 +49,19 @@
                 @endforeach
             </div>
 
-            @if(isset($personalAssistant) and isset($personalAssistant->msisdn))
-                <div class="card mt-4" style="border-radius: 1rem; overflow: hidden">
-                    <div class="card-body p-0">
-                        <div class="d-flex align-items-center">
-                            <div class="flex-shrink-0">
-                                <img src="{{ asset('assets/faq/bottom-logo.svg') }}" alt="">
-                            </div>
-                            <div class="flex-grow-1 ms-3 text-center">
-                                <p class="card-text mb-2">Anda menemui kendala?</p>
-                                @php $msisdn = (string)preg_replace('/^0/', '+62', $personalAssistant->msisdn) @endphp
-                                <a href='{{"https://wa.me/{$msisdn}"}}' class="btn btn-custom py-2 px-4">Hub Admin SANF</a>
-                            </div>
+            <div class="card mt-4" style="border-radius: 1rem; overflow: hidden">
+                <div class="card-body p-0">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <img src="{{ asset('assets/faq/bottom-logo.svg') }}" alt="">
+                        </div>
+                        <div class="flex-grow-1 ms-3 text-center">
+                            <p class="card-text mb-2">Anda menemui kendala?</p>
+                            <a href="{{ url('/') . "#ask-us" }}" class="btn btn-custom py-2 px-4">Tanya Admin SANF</a>
                         </div>
                     </div>
                 </div>
-            @endif
+            </div>
         </div>
     @endif
 @endsection

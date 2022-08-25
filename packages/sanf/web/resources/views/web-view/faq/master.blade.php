@@ -151,6 +151,23 @@
             box-shadow: none;
         }
 
+        .accordion-button::after {
+            flex-shrink: 0;
+            width: 1.25rem;
+            height: 1.25rem;
+            margin-left: auto;
+            content: "";
+            background-image: url('{{ asset('assets/faq/down-arrow-icon.svg') }}');
+            background-repeat: no-repeat;
+            background-size: 1.25rem;
+            transition: transform .2s ease-in-out;
+        }
+
+        .accordion-button:not(.collapsed)::after {
+            background-image: url('{{ asset('assets/faq/down-arrow-icon.svg') }}');
+            transform: rotate(-180deg);
+        }
+
         .accordion-collapse {
             color: #555555;
         }

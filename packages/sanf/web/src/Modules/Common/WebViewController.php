@@ -2,7 +2,6 @@
 
 namespace Sanf\Web\Modules\Common;
 
-use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use League\Fractal\Resource\Collection;
@@ -67,7 +66,6 @@ class WebViewController extends RestApiController
     }
 
     public function browseFrequentlyAskQuestion(
-        Guard $auth,
         Request $request,
         ListFrequentlyAskQuestionPageService $faqService,
         ListFrequentlyAskQuestionCategoryPageService $faqCategoryService,
@@ -100,16 +98,13 @@ class WebViewController extends RestApiController
         $faqCategories = new Collection($faqCategoryResult, SimpleFrequentlyAskQuestionCategoryPageTransformer::class);
         $faqCategories = $faqCategories->getData();
 
-        $personalAssistant = $personalAssistantUserService->execute((object)['userId' => $auth->id()]);
-
         return view(
             'web::web-view.faq.faq',
-            compact('faqCategories', 'faqs', 'keyword', 'personalAssistant')
+            compact('faqCategories', 'faqs', 'keyword')
         );
     }
 
     public function browsePopularFrequentlyAskQuestion(
-        Guard $auth,
         Request $request,
         ListFrequentlyAskQuestionPageService $faqService,
         GetPersonalAssistantUserService $personalAssistantUserService
@@ -134,16 +129,13 @@ class WebViewController extends RestApiController
         $faqs = new Collection($faqResult, SimpleFrequentlyAskQuestionTransformer::class);
         $faqs = $faqs->getData();
 
-        $personalAssistant = $personalAssistantUserService->execute((object)['userId' => $auth->id()]);
-
         return view(
             'web::web-view.faq.faq-popular',
-            compact('faqs', 'personalAssistant', 'keyword')
+            compact('faqs', 'keyword')
         );
     }
 
     public function browseFrequentlyAskQuestionByCategory(
-        Guard $auth,
         Request $request,
         $categoryId,
         ListFrequentlyAskQuestionPageService $faqService,
@@ -174,11 +166,9 @@ class WebViewController extends RestApiController
         $faqs = new Collection($faqResult, SimpleFrequentlyAskQuestionTransformer::class);
         $faqs = $faqs->getData();
 
-        $personalAssistant = $personalAssistantUserService->execute((object)['userId' => $auth->id()]);
-
         return view(
             'web::web-view.faq.faq-by-category',
-            compact('faqs', 'faqCategory', 'keyword', 'personalAssistant')
+            compact('faqs', 'faqCategory', 'keyword')
         );
     }
 
