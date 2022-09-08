@@ -24,6 +24,9 @@ Route::group(['prefix' => 'v1/public'], function () {
     Route::get('commodities/{xid}/reject', ['as' => 'commodities.reject', 'uses' => 'Commodity\CommodityByExternalController@postRejectByExternal']);
 
     Route::post('push-notifications', ['as' => 'public.push-notifications.add', 'uses' => 'Notification\PushNotificationByExternalController@postAdd']);
+
+    Route::post('maintenance/up', ['as' => 'setting.maintenance.up', 'uses' => 'Setting\Controllers\MaintenanceModeByExternalController@postUp']);
+    Route::post('maintenance/down', ['as' => 'setting.maintenance.down', 'uses' => 'Setting\Controllers\MaintenanceModeByExternalController@postDown']);
 });
 
 Route::group(['middleware' => ['http-logger', 'callback:tekenaja-provider']], function () {

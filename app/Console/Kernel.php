@@ -4,6 +4,8 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Laravel\Lumen\Console\Kernel as ConsoleKernel;
+use Sanf\External\Modules\Setting\Commands\MaintenanceDownCommand;
+use Sanf\External\Modules\Setting\Commands\MaintenanceUpCommand;
 
 class Kernel extends ConsoleKernel
 {
@@ -13,7 +15,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        MaintenanceDownCommand::class,
+        MaintenanceUpCommand::class,
     ];
 
     /**
