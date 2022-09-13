@@ -16,15 +16,13 @@ use Sanf\Api\Modules\Contract\Transformers\BrowseProvinceTransformer;
 use Sanf\Api\Modules\Contract\Transformers\BrowseSubDistrictTransformer;
 use Sanf\Api\Modules\Contract\Transformers\GenerateSignUrlTransformer;
 use Sanf\Api\Modules\Contract\Transformers\GetESignUserTransformer;
-use Sanf\Core\Modules\Contract\Dto\UpdateESignDocumentStatusDto;
 use Sanf\Core\Modules\Contract\Dto\AddESignUserDto;
 use Sanf\Core\Modules\Contract\Dto\BrowseDistrictDto;
 use Sanf\Core\Modules\Contract\Dto\BrowseESignDocumentDto;
 use Sanf\Core\Modules\Contract\Dto\BrowseProvinceDto;
 use Sanf\Core\Modules\Contract\Dto\BrowseSubDistrictDto;
+use Sanf\Core\Modules\Contract\Dto\UpdateESignDocumentStatusDto;
 use Sanf\Core\Modules\Contract\Enums\ESignContractStatusEnum;
-use Sanf\Core\Modules\Contract\Services\SendESignDocumentViaEmailService;
-use Sanf\Core\Modules\Contract\Services\UpdateESignDocumentStatusService;
 use Sanf\Core\Modules\Contract\Services\AddESignUserService;
 use Sanf\Core\Modules\Contract\Services\BrowseDistrictService;
 use Sanf\Core\Modules\Contract\Services\BrowseESignDocumentService;
@@ -34,7 +32,9 @@ use Sanf\Core\Modules\Contract\Services\GenerateSignUrlService;
 use Sanf\Core\Modules\Contract\Services\GetESignUserCheckService;
 use Sanf\Core\Modules\Contract\Services\GetESignUserService;
 use Sanf\Core\Modules\Contract\Services\ResendESignVerificationService;
+use Sanf\Core\Modules\Contract\Services\SendESignDocumentViaEmailService;
 use Sanf\Core\Modules\Contract\Services\SycnESignDocumentSignService;
+use Sanf\Core\Modules\Contract\Services\UpdateESignDocumentStatusService;
 use Spatie\Fractalistic\ArraySerializer;
 
 final class ESignDocumentByUserController extends RestApiController
@@ -111,8 +111,8 @@ final class ESignDocumentByUserController extends RestApiController
             'sub_district_id' => 'required|integer|digits_between:1,1000',
             'address' => 'required|string|max:255',
             'postal_code' => 'required|integer|digits_between:1,1000',
-            'selfie_file' => 'required|string|max:255',
-            'identity_file' => 'required|string|max:255',
+            'selfie_file' => 'nullable|string|max:255',
+            'identity_file' => 'nullable|string|max:255',
         ]);
 
         $dto = new AddESignUserDto($input + ['user_id' => $auth->id()]);
