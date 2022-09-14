@@ -15,7 +15,10 @@ class AlterUserTekenajaNikEmailColumn extends Migration
     {
         Schema::table('user_tekenaja', function (Blueprint $table) {
             $table->string('email')->nullable()->change();
+            $table->dropUnique('user_tekenaja_email_unique');
+
             $table->string('nik')->nullable()->change();
+            $table->dropUnique('user_tekenaja_nik_unique');
         });
     }
 
