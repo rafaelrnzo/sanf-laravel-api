@@ -23,6 +23,7 @@ use Sanf\Core\Modules\Contract\Dto\BrowseProvinceDto;
 use Sanf\Core\Modules\Contract\Dto\BrowseSubDistrictDto;
 use Sanf\Core\Modules\Contract\Dto\UpdateESignDocumentStatusDto;
 use Sanf\Core\Modules\Contract\Enums\ESignContractStatusEnum;
+use Sanf\Core\Modules\Contract\Enums\ESignRegistrationStatusEnum;
 use Sanf\Core\Modules\Contract\Services\AddESignUserService;
 use Sanf\Core\Modules\Contract\Services\BrowseDistrictService;
 use Sanf\Core\Modules\Contract\Services\BrowseESignDocumentService;
@@ -93,14 +94,18 @@ final class ESignDocumentByUserController extends RestApiController
                 'email',
                 'string',
                 'max:255',
-                Rule::unique('user_tekenaja', 'email')->ignore($auth->id(), 'user_id'),
+                Rule::unique('user_tekenaja', 'email')
+                    ->where('status_id', ESignRegistrationStatusEnum::COMPLETE)
+                    ->ignore($auth->id(), 'user_id'),
             ],
             'msisdn' => 'required|max:13|regex:/^[0-9]+$/',
             'nik' => [
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('user_tekenaja', 'nik')->ignore($auth->id(), 'user_id'),
+                Rule::unique('user_tekenaja', 'nik')
+                    ->where('status_id', ESignRegistrationStatusEnum::COMPLETE)
+                    ->ignore($auth->id(), 'user_id'),
             ],
             'full_name' => 'required|string|max:255',
             'pob' => 'required|string|max:255',
