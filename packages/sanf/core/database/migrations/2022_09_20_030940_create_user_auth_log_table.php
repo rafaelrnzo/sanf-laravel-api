@@ -19,6 +19,7 @@ class CreateUserAuthLogTable extends Migration
             $table->bigInteger('user_id')->unsigned();
             $table->string('email');
             $table->string('personal_xid')->index()->nullable();
+            $table->string('notes')->nullable();
             $table->tinyInteger('status_id');
             $table->timestamp('restore_expired_at')->nullable();
             $table->timestamp('created_at')->nullable();

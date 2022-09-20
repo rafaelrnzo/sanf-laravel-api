@@ -85,10 +85,14 @@ use Sanf\Core\Modules\Survey\Repositories\EloquentSurveyRepository;
 use Sanf\Core\Modules\Survey\Repositories\SurveyRepositoryInterface;
 use Sanf\Core\Modules\Survey\Specifications\EloquentSurveySpecificationFactory;
 use Sanf\Core\Modules\Survey\Specifications\SurveySpecificationFactoryInterface;
+use Sanf\Core\Modules\User\Repositories\EloquentUserAuthLogRepository;
 use Sanf\Core\Modules\User\Repositories\EloquentUserRepository;
 use Sanf\Core\Modules\User\Repositories\ProfileRepositoryInterface;
 use Sanf\Core\Modules\User\Repositories\RestProfileRepository;
+use Sanf\Core\Modules\User\Repositories\UserAuthLogRepositoryInterface;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
+use Sanf\Core\Modules\User\Specifications\EloquentUserAuthLogSpecificationFactory;
+use Sanf\Core\Modules\User\Specifications\UserAuthLogSpecificationFactoryInterface;
 
 class CoreServiceProvider extends ServiceProvider
 {
@@ -161,7 +165,11 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(ProfileRepositoryInterface::class,RestProfileRepository::class);
         $this->app->bind(ESignRepositoryInterface::class,EloquentESignRepository::class);
         $this->app->bind(OnBoardingRepositoryInterface::class,EloquentOnBoardingRepository::class);
-        $this->app->bind(FrequentlyAskQuestionRepositoryInterface::class,EloquentFrequentlyAskQuestionRepository::class);
+        $this->app->bind(
+            FrequentlyAskQuestionRepositoryInterface::class,
+            EloquentFrequentlyAskQuestionRepository::class
+        );
+        $this->app->bind(UserAuthLogRepositoryInterface::class, EloquentUserAuthLogRepository::class);
 
         $this->app->bind(SurveyEntityFactoryInterface::class, EloquentSurveyFactoryEntity::class);
 
@@ -178,7 +186,14 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(SurveySpecificationFactoryInterface::class, EloquentSurveySpecificationFactory::class);
         $this->app->bind(ESignDocumentSpecificationFactoryInterface::class, EloquentESignDocumentSpecificationFactory::class);
         $this->app->bind(OnBoardingSpecificationFactoryInterface::class, EloquentOnBoardingSpecificationFactory::class);
-        $this->app->bind(FrequentlyAskQuestionSpecificationFactoryInterface::class, EloquentFrequentlyAskQuestionSpecificationFactory::class);
+        $this->app->bind(
+            FrequentlyAskQuestionSpecificationFactoryInterface::class,
+            EloquentFrequentlyAskQuestionSpecificationFactory::class
+        );
+        $this->app->bind(
+            UserAuthLogSpecificationFactoryInterface::class,
+            EloquentUserAuthLogSpecificationFactory::class
+        );
     }
 
     protected function registerViews()
