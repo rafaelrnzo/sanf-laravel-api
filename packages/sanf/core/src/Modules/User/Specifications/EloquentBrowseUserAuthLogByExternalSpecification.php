@@ -4,7 +4,7 @@ namespace Sanf\Core\Modules\User\Specifications;
 
 use Sanf\Core\Modules\User\UserAuthLogModel;
 
-class EloquentBrowseUserAuthLogSpecification
+class EloquentBrowseUserAuthLogByExternalSpecification
 {
     private ?int $statusId;
     private ?string $keyword;

@@ -25,4 +25,11 @@ class EloquentUserAuthLogRepository extends AbstractEloquentRepository implement
     {
         return $specification->buildQuery($this->model)->count();
     }
+
+    public function create($request)
+    {
+        $model = $this->model->forceCreate($request);
+
+        return $this->stripEloquentModel($model);
+    }
 }

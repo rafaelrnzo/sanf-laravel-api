@@ -7,4 +7,6 @@ interface UserAuthLogRepositoryInterface
     public function query($specification);
 
     public function size($specification);
+
+    public function create($request);
 }

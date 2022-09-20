@@ -22,11 +22,17 @@ class BrowseUserDeletionAccountService implements ApplicationServiceInterface
     public function execute($dto = null)
     {
         $query = $this->repository->query(
-            $this->specification->paginate($dto->statusId, $dto->keyword, $dto->limit, $dto->skip, $dto->sortBy)
+            $this->specification->paginateByExternal(
+                $dto->statusId,
+                $dto->keyword,
+                $dto->limit,
+                $dto->skip,
+                $dto->sortBy
+            )
         );
 
         $total = $this->repository->size(
-            $this->specification->paginate($dto->keyword, $dto->statusId)
+            $this->specification->paginateByExternal($dto->keyword, $dto->statusId)
         );
 
         $mappingData = array_map(function ($item) {
