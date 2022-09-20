@@ -184,4 +184,6 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::put('users/update-pin', ['as' => 'users.pin.update', 'uses' => 'User\Controllers\AuthPinController@postUpdate']);
     Route::post('users/request-forgot-pin', ['as' => 'users.pin.request-forgot', 'uses' => 'User\Controllers\AuthPinController@postRequestForgot']);
     Route::post('users/reset-pin', ['as' => 'users.pin.reset', 'uses' => 'User\Controllers\AuthPinController@postReset']);
+
+    Route::post('users/request-deactivation', ['as' => 'users.deactivate', 'uses' => 'User\Controllers\AuthUserControllerByUser@postDeactivate']);
 });

@@ -20,4 +20,9 @@ return [
         'SUBMIT' => 'Isi Survey',
         'FINISHED' => 'Selesai',
     ],
+    'auth-log-status' => [
+        'SUBMIT' => 'Pengajuan',
+        'REJECT' => 'Ditolak',
+        'APPROVED' => 'Disetujui',
+    ],
 ];
