@@ -8,5 +8,9 @@ interface UserAuthLogRepositoryInterface
 
     public function size($specification);
 
+    public function findByXid($xid);
+
     public function create($request);
+
+    public function update($fields, $specification = null);
 }

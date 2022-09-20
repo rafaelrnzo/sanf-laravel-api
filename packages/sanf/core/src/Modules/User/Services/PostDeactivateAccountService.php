@@ -9,7 +9,7 @@ use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Core\Modules\User\Dtos\PostDeactivateAccountDto;
 use Sanf\Core\Modules\User\Enums\UserAuthLogStatusEnum;
 use Sanf\Core\Modules\User\Exceptions\InvalidRequestDeletionAccountException;
-use Sanf\Core\Modules\User\Jobs\SendRequestDeletionAccountJob;
+use Sanf\Core\Modules\User\Jobs\SendRequestDeletionAccountNotification;
 use Sanf\Core\Modules\User\Repositories\UserAuthLogRepositoryInterface;
 use Sanf\Core\Modules\User\Specifications\UserAuthLogSpecificationFactoryInterface;
 
@@ -78,7 +78,7 @@ class PostDeactivateAccountService implements ApplicationServiceInterface
         ]);
 
         dispatch(
-            new SendRequestDeletionAccountJob([
+            new SendRequestDeletionAccountNotification([
                 'name' => $user->full_name,
                 'restoreExpiredAt' => Carbon::parse(optional($newLog)->restore_expired_at)
                     ->timezone('Asia/Jakarta')
