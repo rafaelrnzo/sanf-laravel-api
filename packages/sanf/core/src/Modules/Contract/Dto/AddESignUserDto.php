@@ -19,6 +19,6 @@ class AddESignUserDto extends CamelCaseDataTransferObject
     public int $provinceId;
     public int $districtId;
     public int $subDistrictId;
-    public string $selfieFile;
-    public string $identityFile;
+    public ?string $selfieFile;
+    public ?string $identityFile;
 }
