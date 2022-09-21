@@ -13,10 +13,12 @@ class UserAuthLogStatusEnum extends Enum
     public const SUBMIT = 10;
     public const REJECT = 20;
     public const APPROVE = 30;
+    public const RESTORE = 40;
     public const ALL = [
         self::SUBMIT,
         self::REJECT,
         self::APPROVE,
+        self::RESTORE,
     ];
 
     public function getTranslation()

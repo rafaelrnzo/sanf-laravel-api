@@ -14,6 +14,7 @@ use NbsPhp\Core\Services\ThrottleFailureService;
 use NbsPhp\Core\Services\VerifyEmailServiceInterface;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Core\Modules\User\Services\ActivateUserAndRegisterInternalService;
+use Sanf\Core\Modules\User\Services\ValidateUserAccountDeletionService;
 use Sanf\Core\Modules\User\Services\VerifyEmailAndRegisterInternalService;
 use Sanf\Integration\InternalApiClient;
 

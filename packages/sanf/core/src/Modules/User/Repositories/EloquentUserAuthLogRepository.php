@@ -44,6 +44,16 @@ class EloquentUserAuthLogRepository extends AbstractEloquentRepository implement
         return $this->stripEloquentModel($models);
     }
 
+    public function findByUserIdAndStatus($userId, $statusId)
+    {
+        $models = $this->model->newQuery()
+            ->where('user_id', '=', $userId)
+            ->where('status_id', '=', $statusId)
+            ->first();
+
+        return $this->stripEloquentModel($models);
+    }
+
     public function create($request)
     {
         $model = $this->model->forceCreate($request);

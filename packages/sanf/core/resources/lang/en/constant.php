@@ -24,5 +24,6 @@ return [
         'SUBMIT' => 'Pengajuan',
         'REJECT' => 'Ditolak',
         'APPROVED' => 'Disetujui',
+        'RESTORE' => 'Dipulihkan',
     ],
 ];

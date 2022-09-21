@@ -1,9 +1,8 @@
 <?php
 
-
 namespace NbsPhp\Core\Services;
 
-
+use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Facades\Auth;
 use NbsPhp\Core\Enum\AuthProvider;
@@ -12,17 +11,24 @@ use NbsPhp\Core\Exceptions\InvalidCredentialException;
 use NbsPhp\Core\Jwt\JWTHelper;
 use NbsPhp\Core\Models\AuthModel;
 use NbsPhp\Core\Models\UserSessionModel;
+use Sanf\Core\Modules\User\Enums\UserAuthLogStatusEnum;
+use Sanf\Core\Modules\User\Repositories\UserAuthLogRepositoryInterface;
 
 class LoginWithEmailAndPasswordService implements ApplicationServiceInterface
 {
     protected $jwt;
 
     protected $repository;
+    protected UserAuthLogRepositoryInterface $logRepository;
 
-    public function __construct(JWTHelper $jwt, AuthModel $repository) //TODO USE REPOSITORY
-    {
+    public function __construct(
+        JWTHelper $jwt,
+        AuthModel $repository,
+        UserAuthLogRepositoryInterface $logRepository
+    ) {
         $this->jwt = $jwt;
         $this->repository = $repository;
+        $this->logRepository = $logRepository;
     }
 
     public function execute($dto = null)
@@ -46,6 +52,29 @@ class LoginWithEmailAndPasswordService implements ApplicationServiceInterface
         $signature = $jwtToken->getDecoded()->jti;
 
         $device = $dto->device;
+
+        $logApprovedDeletion = $this->logRepository->findByUserIdAndStatus($user->id, UserAuthLogStatusEnum::APPROVE);
+        if ($logApprovedDeletion) {
+            throw new InvalidCredentialException();
+        }
+
+        $logSubmittedDeletion = $this->logRepository->findByUserIdAndStatus($user->id, UserAuthLogStatusEnum::SUBMIT);
+        if ($logSubmittedDeletion) {
+            if (Carbon::parse(optional($logSubmittedDeletion)->restore_expired_at) < Carbon::now()) {
+                throw new InvalidCredentialException();
+            }
+
+            $this->logRepository->update([
+                'id' => $logSubmittedDeletion->id,
+                'status_id' => UserAuthLogStatusEnum::RESTORE,
+                'restore_expired_at' => null,
+                'created_by' => json_encode([
+                    'type' => 10,
+                    'user_id' => $user->id,
+                    'full_name' => $user->full_name,
+                ]),
+            ]);
+        }
 
         //TODO REPOSITORY
         /** @var UserSessionModel $userSession */
