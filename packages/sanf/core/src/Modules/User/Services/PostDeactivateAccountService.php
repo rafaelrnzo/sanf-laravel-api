@@ -3,6 +3,8 @@
 namespace Sanf\Core\Modules\User\Services;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use NbsPhp\Core\Exceptions\InvalidCredentialException;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\User\AuthModel;
@@ -36,7 +38,14 @@ class PostDeactivateAccountService implements ApplicationServiceInterface
 
     public function execute($dto = null)
     {
-        $user = $this->repository->newQuery()->find($dto->userId);
+        if (!$token = Auth::attempt([
+            'username' => $dto->username,
+            'password' => $dto->password
+        ])) {
+            throw new InvalidCredentialException();
+        }
+
+        $user = Auth::user();
         if (!$user) {
             throw new UserNotFoundException();
         }

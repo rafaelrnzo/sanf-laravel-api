@@ -19,7 +19,16 @@ class AuthUserControllerByUser extends RestApiController
         PostDeactivateAccountService $service,
         TransactionalSessionInterface $transactionalSession
     ) {
-        $dto = (object)['userId' => $auth->id(),];
+        $input = $this->validate($request, [
+            'email' => ['required', 'email', 'max:255'],
+            'password' => ['required', 'min:8', 'regex:/^(?=.*\d)(?=.*[a-zA-Z])/']
+        ]);
+
+        $dto = (object)[
+            'userId' => $auth->id(),
+            'username' => $input['email'],
+            'password' => $input['password']
+        ];
 
         $transactionalService = new TransactionalApplicationService($service, $transactionalSession);
         $result = $transactionalService->execute($dto);
