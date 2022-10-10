@@ -24,6 +24,7 @@ class EloquentProductRepository implements ProductRepositoryInterface
                 'id',
                 'title',
                 'description',
+                'financing_method_id',
                 'image'
             ])
             ->when($search, function ($query) use ($search) {

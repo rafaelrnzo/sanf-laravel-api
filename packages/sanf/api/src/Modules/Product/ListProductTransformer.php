@@ -17,6 +17,7 @@ class ListProductTransformer extends TransformerAbstract
             'id' => $dto->id,
             'title' => $dto->title,
             'description' => $dto->description,
+            'financing_method_id' => $dto->financing_method_id ?? null,
             'image_url' => file_get_temp_url($image->path)
         ];
     }
