@@ -39,7 +39,7 @@
                                         <td>
                                             <blockquote>
                                                 <p class="text-lg">
-                                                    Silakan install aplikasi mobile app SANF untuk melanjutkan proses aktivasi
+                                                    Silakan install aplikasi mobile app SANFIND untuk melanjutkan proses aktivasi
                                                 </p>
                                             </blockquote>
                                         </td>

@@ -135,7 +135,7 @@ class FinancingController extends RestApiController
             return $this->streamDownload(function () use ($downloadFinancingService, $dtoDownload) {
                 echo $downloadFinancingService->execute($dtoDownload);
             }
-                , 'SANF-Simulasi' . date('Y-m-d-H-i-s') . '.pdf'
+                , 'SANFIND-Simulasi' . date('Y-m-d-H-i-s') . '.pdf'
             );
         }
 

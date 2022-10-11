@@ -207,10 +207,10 @@
     <div class="sf-container">
       <div class="sf-content">
         <div class="sf-logo-header">
-          <img src="{{ asset('assets/png/sanf-logo-blue.png') }}" alt="SANF" />
+          <img src="{{ asset('assets/png/sanf-logo-blue.png') }}" alt="SANFIND" />
         </div>
         <p class="sf-text mt-4">
-          PT Surya Artha Nusantara Finance (SANF) menyediakan layanan dan produk keuangan yang
+          PT Surya Artha Nusantara Finance (SANFIND) menyediakan layanan dan produk keuangan yang
           menyeluruh dalam layanan pembiayaan investasi dan pembiayaan modal kerja yang berorientasi
           kepada pemenuhan kebutuhan konsumen.
         </p>
@@ -274,9 +274,9 @@
         <div class="mt-3">
           <p class="sf-title">Social Media Kami</p>
           <div class="sf-social-media mt-2">
-            <a href="https://www.sanf.co.id" target="_blank"><img src="{{ asset('assets/svg/web.svg') }}" alt="SANF Web" draggable="false" /></a>
-            <a href="https://www.instagram.com/sanf_official" target="_blank"><img src="{{ asset('assets/svg/ig.svg') }}" alt="SANF Instagram" draggable="false" /></a>
-            <a href="https://id.linkedin.com/company/pt-surya-artha-nusantara-finance" target="_blank"><img src="{{ asset('assets/svg/linkedin.svg') }}" alt="SANF Linkedin" draggable="false" /></a>
+            <a href="https://www.sanf.co.id" target="_blank"><img src="{{ asset('assets/svg/web.svg') }}" alt="SANFIND Web" draggable="false" /></a>
+            <a href="https://www.instagram.com/sanf_official" target="_blank"><img src="{{ asset('assets/svg/ig.svg') }}" alt="SANFIND Instagram" draggable="false" /></a>
+            <a href="https://id.linkedin.com/company/pt-surya-artha-nusantara-finance" target="_blank"><img src="{{ asset('assets/svg/linkedin.svg') }}" alt="SANFIND Linkedin" draggable="false" /></a>
           </div>
         </div>
         <div class="mt-3">
@@ -284,12 +284,12 @@
           <p class="sf-title">Terdaftar dan diawasi oleh</p>
           <p class="sf-title" style="font-size: 13px !important;">Otoritas Jasa Keuangan</p>
           <div class="sf-ojk mt-2">
-            <img src="{{ asset('assets/png/ojk.png') }}" alt="SANF Web" draggable="false" />
+            <img src="{{ asset('assets/png/ojk.png') }}" alt="SANFIND Web" draggable="false" />
           </div>
         </div>
         <div class="mt-3" style="width: 100%;">
           <div class="sf-satu-indonesia mt-2">
-            <img src="{{ asset('assets/png/satu-indonesia.png') }}" alt="SANF Web" draggable="false" />
+            <img src="{{ asset('assets/png/satu-indonesia.png') }}" alt="SANFIND Web" draggable="false" />
           </div>
         </div>
       </div>

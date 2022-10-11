@@ -34,7 +34,7 @@ class SendEmailFinancingUnitLocationJob implements ShouldQueue
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
             ->rightLogo(asset('assets/png/sanf-tagline.png'))
             ->banner(asset('assets/png/email-verification.png'))
-            ->greeting(__('Halo Admin SANF!'))
+            ->greeting(__('Halo Admin SANFIND!'))
             ->line(__(
                 '<blockquote style="margin: 0 0;font-size: 16px; line-height: 150%;">
                     Pengguna atas nama <strong>"'. $this->data['full_name'] . '"</strong> telah mengajukan perubahan untuk lokasi untuk salah satu unit pembiayaan, berikut lampiran detail perubahannya.
@@ -48,7 +48,7 @@ class SendEmailFinancingUnitLocationJob implements ShouldQueue
             ])
             ->lineWithUrl(
                 __('Email ini dibuat secara otomatis mohon tidak membalas email ini, jika terdapat keluhan silahkan hubungi'),
-                [__('SANF Care'), '#']
+                [__('SANFIND Care'), '#']
             )
             ->lineWithUrl(
                 __('. Jika Anda merasa tidak membuat request tersebut mohon abaikan email ini atau anda dapat'),

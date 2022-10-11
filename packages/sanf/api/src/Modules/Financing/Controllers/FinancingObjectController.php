@@ -54,19 +54,19 @@ class FinancingObjectController extends RestApiController
             ],
             (object)[
                 'name' => 'is_confirm_second',
-                'description' => 'Seluruh data dan/atau informasi pribadi yang diberikan dapat dipergunakan dan diinformasikan kepada karyawan, vendor, afiliasi, instansi yang berwenang dan/atau pihak-pihak lainnya yang terkait dengan SANF dan/atau afiliasinya sesuai dengan peraturan perundang-undangan yang berlaku. *'
+                'description' => 'Seluruh data dan/atau informasi pribadi yang diberikan dapat dipergunakan dan diinformasikan kepada karyawan, vendor, afiliasi, instansi yang berwenang dan/atau pihak-pihak lainnya yang terkait dengan SANFIND dan/atau afiliasinya sesuai dengan peraturan perundang-undangan yang berlaku. *'
             ],
             (object)[
                 'name' => 'is_confirm_third',
-                'description' => 'Seluruh data dan/atau informasi pribadi yang diberikan dapat dipergunakan dan diinformasikan kepada karyawan, vendor, afiliasi, instansi yang berwenang dan/atau pihak-pihak lainnya yang terkait dengan SANF dan/atau afiliasinya sesuai dengan peraturan perundang-undangan yang berlaku. *'
+                'description' => 'Seluruh data dan/atau informasi pribadi yang diberikan dapat dipergunakan dan diinformasikan kepada karyawan, vendor, afiliasi, instansi yang berwenang dan/atau pihak-pihak lainnya yang terkait dengan SANFIND dan/atau afiliasinya sesuai dengan peraturan perundang-undangan yang berlaku. *'
             ],
             (object)[
                 'name' => 'is_confirm_fourth',
-                'description' => 'Melalui formulir ini, kami memberikan data dan/atau informasi di atas kepada SANF dan untuk itu kami memberi kuasa kepada SANF untuk melakukan tindakan - tindakan lebih lanjut sehubungan dengan hal tersebut serta kami menyatakan bahwa kami akan mematuhi seluruh ketentuan peraturan perundang-undangan yang berlaku. *'
+                'description' => 'Melalui formulir ini, kami memberikan data dan/atau informasi di atas kepada SANFIND dan untuk itu kami memberi kuasa kepada SANFIND untuk melakukan tindakan - tindakan lebih lanjut sehubungan dengan hal tersebut serta kami menyatakan bahwa kami akan mematuhi seluruh ketentuan peraturan perundang-undangan yang berlaku. *'
             ],
             (object)[
                 'name' => 'is_receive_offer',
-                'description' => 'Kami bersedia untuk mendapatkan penawaran dan/atau informasi produk dari SANF melalui alamat, telepon, faximile, dan/atau email yang kami cantumkan bersama dengan Formulir Data Customer ini.'
+                'description' => 'Kami bersedia untuk mendapatkan penawaran dan/atau informasi produk dari SANFIND melalui alamat, telepon, faximile, dan/atau email yang kami cantumkan bersama dengan Formulir Data Customer ini.'
             ]
         ];
 

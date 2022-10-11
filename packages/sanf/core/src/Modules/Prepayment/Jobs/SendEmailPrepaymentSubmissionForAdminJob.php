@@ -38,7 +38,7 @@ class SendEmailPrepaymentSubmissionForAdminJob implements ShouldQueue
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
             ->rightLogo(asset('assets/png/sanf-tagline.png'))
             ->banner(asset('assets/png/email-verification.png'))
-            ->greeting(__('Halo Admin SANF!'))
+            ->greeting(__('Halo Admin SANFIND!'))
             ->line(__(
                 '<p>
                     Pengguna atas nama <strong>“' . $this->data->user->full_name . '“</strong> telah mengajukan pelunasan dipercepat pertanggal

@@ -194,16 +194,16 @@
         <h3 class="sf-title">Syarat dan Ketentuan</h3>
         <div>
           <p class="sf-text sf-text-justify">Syarat dan ketentuan yang ditetapkan di bawah ini mengatur penggunaan fitur dan seluruh layanan
-            yang ditawarkan oleh PT. Surya Artha Nusantara Finance (<strong>"SANF"</strong> atau <strong>"Kami"</strong>), sebuah perusahaan
-            pembiayaan yang terdaftar dan diawasi oleh Otoritas Jasa Keuangan, dalam aplikasi SANFind (<strong>"Syarat & Ketentuan"</strong>).
-            Pengguna diwajibkan membaca dan memahami dengan seksama Syarat & Ketentuan ini sebelum Pengguna mengakses aplikasi SANFind
+            yang ditawarkan oleh PT. Surya Artha Nusantara Finance (<strong>"SANFIND"</strong> atau <strong>"Kami"</strong>), sebuah perusahaan
+            pembiayaan yang terdaftar dan diawasi oleh Otoritas Jasa Keuangan, dalam aplikasi SANFIND (<strong>"Syarat & Ketentuan"</strong>).
+            Pengguna diwajibkan membaca dan memahami dengan seksama Syarat & Ketentuan ini sebelum Pengguna mengakses aplikasi SANFIND
             (<strong>"Aplikasi"</strong>).
           </p>
           <p class="sf-text sf-text-justify">Dengan mengunduh, mengakses, mendaftar dan/atau menggunakan Aplikasi, maka pengguna dianggap
             telah membaca, mengerti, memahami dan menyetujui untuk terikat oleh, dan menerima seluruh informasi, syarat, dan ketentuan penggunaan
             Aplikasi yang terdapat dalam Syarat & Ketentuan ini beserta dengan perubahannya dari waktu ke waktu. Syarat & Ketentuan ini merupakan
-            suatu perjanjian yang sah dan mengikat antara SANF dan Pengguna terkait tata cara dan persyaratan penggunaan Aplikasi yang berlaku
-            antara Pengguna dan SANF.
+            suatu perjanjian yang sah dan mengikat antara SANFIND dan Pengguna terkait tata cara dan persyaratan penggunaan Aplikasi yang berlaku
+            antara Pengguna dan SANFIND.
           </p>
           <p class="sf-text sf-text-justify">
           Mohon diperhatikan bahwa penggunaan Aplikasi tunduk pada Syarat & Ketentuan yang Kami keluarkan dan/atau perbaharui dari waktu ke waktu.
@@ -218,14 +218,14 @@
           <ol class="sf-text">
             <li>
               <p class="sf-text-justify">
-                Aplikasi ini dimiliki dan dikelola oleh SANF bekerja sama dengan pihak ketiga untuk mengembangkan, menambah dan/atau
+                Aplikasi ini dimiliki dan dikelola oleh SANFIND bekerja sama dengan pihak ketiga untuk mengembangkan, menambah dan/atau
                 meningkatkan fitur serta fungsi dalam Aplikasi, dan/atau menyediakan produk dan/atau Layanan.
               </p>
             </li>
             <li>
               <p class="sf-text-justify">
                 Aplikasi ini merupakan aplikasi perangkat lunak yang berfungsi untuk memberikan informasi dan melakukan pengajuan atas
-                produk yang disediakan oleh SANF. Informasi yang dimaksud termasuk setiap berita yang relevan serta program promosi yang
+                produk yang disediakan oleh SANFIND. Informasi yang dimaksud termasuk setiap berita yang relevan serta program promosi yang
                 diberlakukan, apabila ada. Kami senantiasa berupaya untuk menjaga kebenaran dan kekinian dari informasi tersebut.
                 Kami tidak membuat pernyataan atau memberikan jaminan apapun, baik tersurat maupun tersirat, mengenai kelengkapan, akurasi,
                 keandalan, kesesuaian, kepuasan, keamanan, kecepatan, ketersediaan fitur, informasi, produk, layanan, gambar, estimasi biaya
@@ -351,9 +351,9 @@
               <p class="sf-text-justify">
                 Pengguna hanya diizinkan untuk menggunakan Aplikasi ini untuk mempergunakan layanan yang disediakan dalam Aplikasi ini dan
                 keperluan lain sesuai peraturan perundang-undangan yang berlaku. Untuk lebih tegasnya, Pengguna dilarang menggunakan Aplikasi
-                ini untuk melakukan penipuan dalam bentuk apapun dan/atau membuat ketidaknyamanan terhadap pihak lain maupun SANF,
+                ini untuk melakukan penipuan dalam bentuk apapun dan/atau membuat ketidaknyamanan terhadap pihak lain maupun SANFIND,
                 menyalahgunakan segala informasi yang Pengguna peroleh dari penggunaan layanan, serta melakukan tindakan apapun yang melecehkan
-                atau mengancam SANF, dan untuk hal-hal lain yang dilarang oleh hukum dan peraturan perundang-undangan yang berlaku. Jika Kami
+                atau mengancam SANFIND, dan untuk hal-hal lain yang dilarang oleh hukum dan peraturan perundang-undangan yang berlaku. Jika Kami
                 mencurigai adanya kegiatan penipuan melalui Akun Aplikasi Pengguna, Kami berhak untuk menghapus atau menangguhkan Akun Pengguna
                 sampai masalah tersebut terselesaikan.
               </p>
@@ -507,7 +507,7 @@
           <ol class="sf-text">
             <li>
               <p class="sf-text-justify">
-                SANFind, yang merupakan nama Aplikasi dan logo, dilindungi oleh hak cipta dan hak lainnya yang disediakan berdasarkan hukum
+                SANFIND, yang merupakan nama Aplikasi dan logo, dilindungi oleh hak cipta dan hak lainnya yang disediakan berdasarkan hukum
                 negara Republik Indonesia, termasuk dalam hal ini adalah kepemilikan hak kekayaan intelektual atas seluruh kode sumber
                 (<i>source code</i>) Aplikasi dan hak kekayaan intelektual terkait Aplikasi. Untuk itu, Pengguna dilarang untuk melakukan
                 pelanggaran atas hak kekayaan intelektual Kami dan afiliasi Kami terkait Aplikasi ini, termasuk melakukan modifikasi,

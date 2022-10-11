@@ -51,7 +51,7 @@ class SendEmailInsuranceClaimSubmissionForAdminJob implements ShouldQueue
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
             ->rightLogo(asset('assets/png/sanf-tagline.png'))
             ->banner(asset('assets/png/email-verification.png'))
-            ->greeting(__('Halo Admin SANF!'))
+            ->greeting(__('Halo Admin SANFIND!'))
             ->line(__('Pengguna atas nama <strong>“' . $this->data->user->full_name . '”</strong> telah mengajukan klaim asuransi, berikut kami lampirkan detailnya'
             ))
             ->writeContent($data)

@@ -24,7 +24,7 @@ class UserActivationNotification extends Notification
         $reportUrl = '';
 
         return (new BaseMail)
-            ->subject('Aktivasi akun SANF Anda!')
+            ->subject('Aktivasi akun SANFIND Anda!')
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
             ->rightLogo(asset('assets/png/sanf-tagline.png'))
             ->banner(asset('assets/png/email-verification.png'))
@@ -32,7 +32,7 @@ class UserActivationNotification extends Notification
             ->line(__('Mohon verifikasi email Anda dengan mengklik tombol di bawah ini'))
             ->action(__('Verifikasi Email'), $verificationUrl)
             ->lineWithUrl(
-                __('Kami menerima permintaan pembuatan akun SANFind yang memakai email Anda. Jika Anda merasa tidak membuat request tersebut mohon abaikan email ini atau anda dapat'),
+                __('Kami menerima permintaan pembuatan akun SANFIND yang memakai email Anda. Jika Anda merasa tidak membuat request tersebut mohon abaikan email ini atau anda dapat'),
                 [__('laporkan email ini'), $reportUrl]
             )
             ->to($notifiable->getEmailForPasswordReset(), $fullName);

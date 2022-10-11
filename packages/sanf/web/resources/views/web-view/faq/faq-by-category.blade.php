@@ -57,7 +57,7 @@
                         </div>
                         <div class="flex-grow-1 ms-3 text-center">
                             <p class="card-text mb-2">Anda menemui kendala?</p>
-                            <a href="{{ url('/') . "#ask-us" }}" class="btn btn-custom py-2 px-4">Tanya Admin SANF</a>
+                            <a href="{{ url('/') . "#ask-us" }}" class="btn btn-custom py-2 px-4">Tanya Admin SANFIND</a>
                         </div>
                     </div>
                 </div>

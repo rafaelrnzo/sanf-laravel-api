@@ -199,11 +199,11 @@
   <div class="sf-wrapper">
     <div class="sf-container">
       <div class="sf-content">
-        <h3 class="sf-title sf-text-center">Kebijakan Privasi Aplikasi SANFind</h3>
+        <h3 class="sf-title sf-text-center">Kebijakan Privasi Aplikasi SANFIND</h3>
         <div class="sf-text">
           <p class="sf-text-justify">
             Kebijakan Privasi berikut ini menjelaskan bagaimana PT Surya Artha Nusantara Finance selaku pemilik dan pengelola aplikasi
-            seluler (<i>mobile application</i>) SANFind (“<strong>Aplikasi</strong>”) (selanjutnya disebut “<strong>SANF</strong>” atau
+            seluler (<i>mobile application</i>) SANFIND (“<strong>Aplikasi</strong>”) (selanjutnya disebut “<strong>SANFIND</strong>” atau
             “<strong>Kami</strong>”) memperoleh, mengumpulkan, menggunakan, menampilkan, mengumumkan, mengungkapkan, memproses,
             membukakan akses, menyimpan, mengirimkan, memberikan, membagikan, mengolah, mengelola, memusnahkan, melindungi, dan/atau
             melakukan kerjasama dengan pihak ketiga penyedia layanan teknologi informasi (secara bersama-sama, “<strong>Pemanfaatan</strong>”)

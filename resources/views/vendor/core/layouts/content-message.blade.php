@@ -11,7 +11,7 @@
         <td>
             <blockquote>
                 <p class="text-lg">
-                    Selamat akun SANF anda sudah aktif silahkan login melalui aplikasi SANF pada ponsel anda
+                    Selamat akun SANFIND anda sudah aktif silahkan login melalui aplikasi SANFIND pada ponsel anda
                 </p>
             </blockquote>
         </td>

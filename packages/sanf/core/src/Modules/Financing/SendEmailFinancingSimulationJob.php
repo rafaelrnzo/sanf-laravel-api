@@ -53,7 +53,7 @@ class SendEmailFinancingSimulationJob implements ShouldQueue
                 [__('Laporkan email ini'), '#']
             );
 
-        $simulationEmail->attachData($service->execute($this->data), 'SANF-Simulasi' . date('Y-m-d-H-i-s') . '.pdf');
+        $simulationEmail->attachData($service->execute($this->data), 'SANFIND-Simulasi' . date('Y-m-d-H-i-s') . '.pdf');
 
         return Mail::to($this->recipient->email)->send($simulationEmail);
     }

@@ -32,7 +32,7 @@ class SendAskUsJob implements ShouldQueue
     {
 
         $askUsEmail = (new BaseMailV2)
-            ->subject('Kritik dan saran dari pengguna SANFind!')
+            ->subject('Kritik dan saran dari pengguna SANFIND!')
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
             ->rightLogo(asset('assets/png/sanf-tagline.png'))
             ->banner(asset('assets/png/email-verification.png'))

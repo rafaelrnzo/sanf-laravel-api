@@ -14,5 +14,5 @@ class UploadFinancingDocumentDto extends DataTransferObject
 
     public string $asset_type;
 
-    public $author = 'SANF Mobile';
+    public $author = 'SANFIND Mobile';
 }

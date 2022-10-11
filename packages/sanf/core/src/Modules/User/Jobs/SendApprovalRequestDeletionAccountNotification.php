@@ -37,7 +37,7 @@ class SendApprovalRequestDeletionAccountNotification implements ShouldQueue
             ->rightLogo(asset('assets/png/sanf-tagline.png'))
             ->banner(asset('assets/png/email-verification.png'))
             ->greeting("Halo <span class='text-bold'>{$this->data['name']}</span>")
-            ->line("Permintaan penghapusan akun SANFind berhasil disetujui.")
+            ->line("Permintaan penghapusan akun SANFIND berhasil disetujui.")
             ->line("Jika Anda merasa tidak membuat request tersebut abaikan email ini atau Anda dapat <span class='text-blue text-bold'>laporkan email ini</span>");
 
         return Mail::to($this->emailRecipients)->send($mail);
