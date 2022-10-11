@@ -30,6 +30,7 @@ class GetPersonalAssistantUserService extends UserService implements Application
             ->map(function ($item) {
                 return (object)[
                     'msisdn' => $item['NO_AE'],
+                    'has_contract' => !is_null($item['F_KONTRAK'])
                 ];
             })->first();
 
