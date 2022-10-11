@@ -27,6 +27,7 @@ class EloquentBranchRepository implements BranchRepositoryInterface
                 'latitude',
                 'longitude',
             ])
+            ->orderBy('id')
             ->limit($limit)
             ->offset($offset)
             ->get();
