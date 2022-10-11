@@ -34,8 +34,8 @@ class RegisterAsContractOwnerService implements ApplicationServiceInterface
     {
         $customer = $this->internalApiClient->findCustomerByEmail($dto->email);
         $data = collect($customer['data']);
-        $personalData = $data->firstWhere('ID_IDENTITY', 'P');
-        if (!$personalData) {
+        $personalData = $data->where('ID_IDENTITY', 'P');
+        if ($personalData->count() == 0) {
             throw new ContractOwnerNotFoundException();
         }
 
