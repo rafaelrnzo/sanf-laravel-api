@@ -13,7 +13,7 @@ Route::group(config('sanf-internal.url'), [InternalApiProcessor::class], functio
 
     Route::post('customer.shareholder.update', 'customer/pemegangsahamupdate');
     Route::post('customer.shareholder.delete', 'customer/pemegangsahamdelete');
-    Route::post('customer.shareholder.create', 'customer/pemegangsaham/{id}');
+    Route::post('customer.shareholder.create', 'customer/pemegangsaham');
     Route::get('customer.shareholder.list', 'customer/pemegangsaham/{id}');
 
     Route::get('customer.staff.list', 'Customer/pengurus/{id}');
