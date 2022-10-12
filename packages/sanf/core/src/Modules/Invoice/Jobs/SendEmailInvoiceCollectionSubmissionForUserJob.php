@@ -49,6 +49,8 @@ class SendEmailInvoiceCollectionSubmissionForUserJob implements ShouldQueue
             ];
         }
 
+        $adminMail = config('sanf-mobile.mail_to_admin');
+        $reportUrl = "mailto:{$adminMail}?subject=Laporan Pengajuan Pengambilan Invoice";
         $invoiceSubmission = (new MailLayout2Columns())
             ->subject('Pengajuan Pengambilan Invoice')
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
@@ -69,8 +71,6 @@ class SendEmailInvoiceCollectionSubmissionForUserJob implements ShouldQueue
                 ],
                 ['joinToIndex' => 3, 'html' => '<p style="color: #232227; font-size: 14px;"><strong>Daftar Pengembalian Invoice</strong><p>'],
             ])
-
-
             ->writeTableHead([
                 [
                     'targetData' => 'contract_number',
@@ -96,7 +96,7 @@ class SendEmailInvoiceCollectionSubmissionForUserJob implements ShouldQueue
             )
             ->lineWithUrl(
                 __('. Jika Anda merasa tidak membuat request tersebut mohon abaikan email ini atau anda dapat'),
-                [__('laporkan email ini'), '#']
+                [__('laporkan email ini'), $reportUrl]
             );
 
         return Mail::to($this->recipient->email)->send($invoiceSubmission);

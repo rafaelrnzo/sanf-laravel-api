@@ -31,6 +31,8 @@ class SendApprovalRequestDeletionAccountNotification implements ShouldQueue
 
     public function handle()
     {
+        $adminMail = config('sanf-mobile.mail_to_admin');
+        $reportUrl = "mailto:{$adminMail}?subject=Laporan Pemberitahuan Hapus Akun";
         $mail = (new BaseMail())
             ->subject('Pemberitahuan Hapus Akun')
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
@@ -38,7 +40,10 @@ class SendApprovalRequestDeletionAccountNotification implements ShouldQueue
             ->banner(asset('assets/png/email-verification.png'))
             ->greeting("Halo <span class='text-bold'>{$this->data['name']}</span>")
             ->line("Permintaan penghapusan akun SANFIND berhasil disetujui.")
-            ->line("Jika Anda merasa tidak membuat request tersebut abaikan email ini atau Anda dapat <span class='text-blue text-bold'>laporkan email ini</span>");
+            ->lineWithUrl(
+                __("Jika Anda merasa tidak membuat request tersebut mohon abaikan email ini atau anda dapat"),
+                [__('laporkan email ini'), $reportUrl]
+            );
 
         return Mail::to($this->emailRecipients)->send($mail);
     }

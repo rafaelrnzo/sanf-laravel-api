@@ -20,8 +20,8 @@ class VerifyEmailNotification extends Notification
     {
         $fullName = $notifiable->getNameForVerification();
         $verificationUrl = $this->verificationUrl($notifiable);
-        // TODO: Report Url
-        $reportUrl = '';
+        $adminMail = config('sanf-mobile.mail_to_admin');
+        $reportUrl = "mailto:{$adminMail}?subject=Laporan Aktivasi Akun";
 
         return (new BaseMail())
             ->subject('Registrasi berhasil! Silakan aktivasi akun Anda')

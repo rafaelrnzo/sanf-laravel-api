@@ -26,7 +26,8 @@ class ResetPasswordNotification extends Notification
     public function toMail($notifiable)
     {
         $resetUrl = $this->resetUrl($notifiable);
-        $reportUrl = '';
+        $adminMail = config('sanf-mobile.mail_to_admin');
+        $reportUrl = "mailto:{$adminMail}?subject=Laporan Reset Password";
 
         return (new BaseMail)
             ->subject('Reset Password')

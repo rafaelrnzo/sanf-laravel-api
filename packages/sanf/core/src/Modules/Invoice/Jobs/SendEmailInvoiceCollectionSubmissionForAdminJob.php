@@ -49,6 +49,8 @@ class SendEmailInvoiceCollectionSubmissionForAdminJob implements ShouldQueue
             ];
         }
 
+        $adminMail = config('sanf-mobile.mail_to_admin');
+        $reportUrl = "mailto:{$adminMail}?subject=Laporan Pengajuan Pengambilan Invoice";
         $invoiceSubmission = (new MailLayout2Columns())
             ->subject('Pengajuan Pengambilan Invoice')
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
@@ -91,7 +93,7 @@ class SendEmailInvoiceCollectionSubmissionForAdminJob implements ShouldQueue
             )
             ->lineWithUrl(
                 __('. Jika Anda merasa tidak membuat request tersebut mohon abaikan email ini atau anda dapat'),
-                [__('laporkan email ini'), '#']
+                [__('laporkan email ini'), $reportUrl]
             );
 
         $recipients = explode(',', config('sanf-mobile.mail_to_admin'));
