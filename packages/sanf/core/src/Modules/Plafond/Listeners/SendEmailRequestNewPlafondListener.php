@@ -42,8 +42,6 @@ class SendEmailRequestNewPlafondListener
             return $value !== null;
         });
 
-        $recipients = explode(',', config('sanf-mobile.mail_to_admin'));
-
-        dispatch(new SendEmailNewRequestPlafondJob($data, $recipients));
+        dispatch(new SendEmailNewRequestPlafondJob($data, [$profile->email]));
     }
 }
