@@ -158,7 +158,7 @@
                                 @php
                                     setlocale(LC_ALL, "id_ID.UTF-8", "id_ID.UTF-8");
                                 @endphp
-                                {{ strftime("%A, %d %B %Y") }}
+                                {{ strftime("%d %B %Y") }}
                             </td>
                         </tr>
                         <tr>
