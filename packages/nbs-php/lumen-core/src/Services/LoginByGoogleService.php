@@ -5,10 +5,12 @@ namespace NbsPhp\Core\Services;
 
 
 use Carbon\Carbon;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use NbsPhp\Core\Enum\AuthProvider;
 use NbsPhp\Core\Enum\OAuthProvider;
+use NbsPhp\Core\Exceptions\EmailUnverifiedException;
 use NbsPhp\Core\Exceptions\InvalidCredentialException;
 use NbsPhp\Core\Exceptions\OAuthUserNotBoundException;
 use NbsPhp\Core\Jwt\JWTHelper;
@@ -57,6 +59,10 @@ class LoginByGoogleService implements ApplicationServiceInterface
             $user = null;
             if ($isEmailVerified) {
                 $user = $this->repository->newQuery()->where('username', $email)->first();
+
+                if ($user instanceof MustVerifyEmail && !$user->hasVerifiedEmail()) {
+                    throw new EmailUnverifiedException();
+                }
             }
             $userOAuth = UserOAuthModel::with('user')
                 ->where([
