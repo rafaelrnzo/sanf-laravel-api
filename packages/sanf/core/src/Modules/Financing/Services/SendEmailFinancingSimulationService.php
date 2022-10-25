@@ -5,7 +5,8 @@ namespace Sanf\Core\Modules\Financing\Services;
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Financing\Dto\SendEmailFinancingSimulationDto;
-use Sanf\Core\Modules\Financing\SendEmailFinancingSimulationJob;
+use Sanf\Core\Modules\Financing\SendEmailFinancingSimulationForAdminJob;
+use Sanf\Core\Modules\Financing\SendEmailFinancingSimulationForUserJob;
 
 class SendEmailFinancingSimulationService extends FinancingByUserService implements ApplicationServiceInterface
 {
@@ -20,6 +21,7 @@ class SendEmailFinancingSimulationService extends FinancingByUserService impleme
         $user = $this->findUserOrFail($dto->user_id);
 
         // Execute job
-        dispatch(new SendEmailFinancingSimulationJob($dto, (object)['name' => $user->full_name, 'email' => $user->username]));
+        dispatch(new SendEmailFinancingSimulationForUserJob($dto, (object)['name' => $user->full_name, 'email' => $user->username]));
+        dispatch(new SendEmailFinancingSimulationForAdminJob($dto, (object)['name' => $user->full_name, 'email' => explode(',', config('sanf-mobile.mail_to_admin'))]));
     }
 }
