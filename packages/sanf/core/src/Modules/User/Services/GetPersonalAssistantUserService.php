@@ -30,9 +30,14 @@ class GetPersonalAssistantUserService extends UserService implements Application
             ->map(function ($item) {
                 return (object)[
                     'msisdn' => $item['NO_AE'],
+                    'id_identity' => $item['ID_IDENTITY'],
                     'has_contract' => !is_null($item['F_KONTRAK'])
                 ];
-            })->first();
+            })->where('id_identity', 'P')
+            ->first();
+        if (!$profile) {
+            throw new UserNotFoundException("Theres no user personal");
+        }
 
         $profile->message = ''; //TODO CONFIGURABLE MESSAGE
         return $profile;
