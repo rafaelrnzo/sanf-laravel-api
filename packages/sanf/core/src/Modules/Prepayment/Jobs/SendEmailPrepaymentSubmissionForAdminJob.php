@@ -46,15 +46,7 @@ class SendEmailPrepaymentSubmissionForAdminJob implements ShouldQueue
                     <strong>“' . $this->data->contract_no . '”</strong>. Berikut lampiran hasil perhitungan pelunasan dipercepat
                     dalam bentuk PDF untuk kepentingan proses selanjutnya Terimakasih.
                 </p>'
-            ))
-            ->lineWithUrl(
-                __('Email ini dibuat secara otomatis mohon tidak membalas email ini, jika terdapat keluhan silahkan hubungi'),
-                [__('Sanf Customer Service'), '#']
-            )
-            ->lineWithUrl(
-                __('. Jika Anda merasa tidak membuat request tersebut mohon abaikan email ini atau anda dapat'),
-                [__('Laporkan email ini'), '#']
-            );
+            ));
 
         $prepayment->attachData($service->execute(new GetPdfPrepaymentSimulationRequestDto([
             'userId' => $this->data->user_id,

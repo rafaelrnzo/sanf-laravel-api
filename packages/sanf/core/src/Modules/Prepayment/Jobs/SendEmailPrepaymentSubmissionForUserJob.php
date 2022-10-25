@@ -33,6 +33,8 @@ class SendEmailPrepaymentSubmissionForUserJob implements ShouldQueue
 
     public function handle(GetPdfPrepaymentSimulationService $service)
     {
+        $adminMail = config('sanf-mobile.mail_to_admin');
+        $reportUrl = "mailto:{$adminMail}?subject=Laporan Hasil Simulasi Pelunasan Dipercepat";
         $prepayment = (new BaseMail)
             ->subject('Hasil Simulasi Pelunasan Dipercepat')
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
@@ -46,13 +48,12 @@ class SendEmailPrepaymentSubmissionForUserJob implements ShouldQueue
                     <strong>“' . $this->data->contract_no . '”</strong> Terimakasih.
                 </p>'
             ))
-            ->lineWithUrl(
-                __('Email ini dibuat secara otomatis mohon tidak membalas email ini, jika terdapat keluhan silahkan hubungi'),
-                [__('Sanf Customer Service'), '#']
+            ->line(
+                __('Email ini dibuat secara otomatis mohon tidak membalas email ini, jika terdapat keluhan silahkan hubungi Sanf Customer Service')
             )
             ->lineWithUrl(
                 __('. Jika Anda merasa tidak membuat request tersebut mohon abaikan email ini atau anda dapat'),
-                [__('Laporkan email ini'), '#']
+                [__('Laporkan email ini'), $reportUrl]
             );
 
         $prepayment->attachData($service->execute(new GetPdfPrepaymentSimulationRequestDto([

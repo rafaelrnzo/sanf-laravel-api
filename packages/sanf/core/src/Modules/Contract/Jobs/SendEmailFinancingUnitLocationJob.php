@@ -29,6 +29,8 @@ class SendEmailFinancingUnitLocationJob implements ShouldQueue
 
     public function handle()
     {
+        $adminMail = config('sanf-mobile.mail_to_admin');
+        $reportUrl = "mailto:{$adminMail}?subject=Laporan Peruhbahan Lokasi Unit Pembiayaan";
         $simulationEmail = (new MailLayout2Columns())
             ->subject('Pengajuan Perubahan Lokasi Unit Pembiayaan')
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
@@ -46,13 +48,12 @@ class SendEmailFinancingUnitLocationJob implements ShouldQueue
                 ['joinToIndex' => 5, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08); margin: 5px 0;">'],
                 ['joinToIndex' => 6, 'html' => '<p style="color: #232227; font-size: 14px;"><strong>Perubahan Lokasi</strong></p>'],
             ])
-            ->lineWithUrl(
-                __('Email ini dibuat secara otomatis mohon tidak membalas email ini, jika terdapat keluhan silahkan hubungi'),
-                [__('SANFIND Care'), '#']
+            ->line(
+                __('Email ini dibuat secara otomatis mohon tidak membalas email ini, jika terdapat keluhan silahkan hubungi Sanf Customer Service')
             )
             ->lineWithUrl(
                 __('. Jika Anda merasa tidak membuat request tersebut mohon abaikan email ini atau anda dapat'),
-                [__('Laporkan email ini'), '#']
+                [__('Laporkan email ini'), $reportUrl]
             );
 
         return Mail::to($this->recipient)->send($simulationEmail);

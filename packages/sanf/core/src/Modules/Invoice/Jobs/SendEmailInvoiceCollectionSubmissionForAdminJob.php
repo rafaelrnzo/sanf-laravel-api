@@ -87,9 +87,8 @@ class SendEmailInvoiceCollectionSubmissionForAdminJob implements ShouldQueue
                 ]
             ])
             ->writeTableBody($tableData)
-            ->lineWithUrl(
-                __('Email ini dibuat secara otomatis mohon tidak membalas email ini, jika terdapat keluhan silahkan hubungi'),
-                [__('Sanf Customer Service'), '#']
+            ->line(
+                __('Email ini dibuat secara otomatis mohon tidak membalas email ini, jika terdapat keluhan silahkan hubungi Sanf Customer Service')
             )
             ->lineWithUrl(
                 __('. Jika Anda merasa tidak membuat request tersebut mohon abaikan email ini atau anda dapat'),

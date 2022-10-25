@@ -29,6 +29,8 @@ class SendEmailDownloadESignDocumentJob implements ShouldQueue
 
     public function handle()
     {
+        $adminMail = config('sanf-mobile.mail_to_admin');
+        $reportUrl = "mailto:{$adminMail}?subject=Laporan Dokumen Kontrak";
         $email = (new BaseMail())
             ->subject('Dokumen Kontrak')
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
@@ -41,13 +43,12 @@ class SendEmailDownloadESignDocumentJob implements ShouldQueue
                     Berikut kami lampirkan dokumen yang telah selesai ditanda tangani.
                 </blockquote>
             '))
-            ->lineWithUrl(
-                __('Email ini dibuat secara otomatis mohon tidak membalas email ini, jika terdapat keluhan silahkan hubungi'),
-                [__('Sanf Customer Service'), '#']
+            ->line(
+                __('Email ini dibuat secara otomatis mohon tidak membalas email ini, jika terdapat keluhan silahkan hubungi Sanf Customer Service')
             )
             ->lineWithUrl(
                 __('. Jika Anda merasa tidak membuat request tersebut mohon abaikan email ini atau anda dapat'),
-                [__('Laporkan email ini'), '#']
+                [__('Laporkan email ini'), $reportUrl]
             );
 
         $email->attachFromStorage($this->data['path'], $this->data['documentName']);
