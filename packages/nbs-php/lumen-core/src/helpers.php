@@ -160,6 +160,6 @@ if (!function_exists('date_localized')) {
         Carbon::setLocale(config('app.locale'));
         return optional(Carbon::make($dateTime))
             ->setTimezone(new \DateTimeZone($timezone))
-            ->formatLocalized('%A %d %B %Y');
+            ->formatLocalized($format);
     }
 }

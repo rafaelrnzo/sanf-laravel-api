@@ -31,14 +31,16 @@ class SendEmailInsuranceClaimSubmissionForUserJob implements ShouldQueue
 
     public function handle()
     {
+        $adminMail = config('sanf-mobile.mail_to_admin');
+        $reportUrl = "mailto:{$adminMail}?subject=Laporan Pengajuan Klaim Asuransi";
         $data = [
-            'Tanggal Pengajuan' => date_localized($this->data->created_at),
+            'Tanggal Pengajuan' => date_localized($this->data->created_at, '%d %B %Y'),
             'Serial Number' => $this->data->serial_no,
             'No Polis' => $this->data->polis_no,
             'Data Unit' => $this->data->brand_type_model,
             'Tahun Kendaraan' => $this->data->year,
             'Lokasi Pertanggungan' => $this->data->location_metadata->city_name,
-            'Tanggal Kejadian' => date_localized($this->data->incident_date, '%d/%m/%Y'),
+            'Tanggal Kejadian' => date_localized($this->data->incident_date, '%d %B %Y'),
             'Keterangan' => $this->data->description,
         ];
 
@@ -56,13 +58,12 @@ class SendEmailInsuranceClaimSubmissionForUserJob implements ShouldQueue
                 ['joinToIndex' => 2, 'html' => '<p style="color: #232227; font-size: 14px;"><strong>Detail Klaim Asuransi</strong></p>'],
                 ['joinToIndex' => 7, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08); margin: 5px 0;">'],
             ])
-            ->lineWithUrl(
-                __('Email ini dibuat secara otomatis mohon tidak membalas email ini, jika terdapat keluhan silahkan hubungi'),
-                [__('Sanf Customer Service'), '#']
+            ->line(
+                __('Email ini dibuat secara otomatis mohon tidak membalas email ini, jika terdapat keluhan silahkan hubungi Sanf Customer Service')
             )
             ->lineWithUrl(
                 __('. Jika Anda merasa tidak membuat request tersebut mohon abaikan email ini atau anda dapat'),
-                [__('Laporkan email ini'), '#']
+                [__('Laporkan email ini'), $reportUrl]
             );
 
         foreach ($this->data->image_files as $imageFile){
