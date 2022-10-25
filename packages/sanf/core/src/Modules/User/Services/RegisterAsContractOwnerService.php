@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\User\Services;
-
 
 use NbsPhp\Core\Enum\UserStatus;
 use NbsPhp\Core\Exceptions\EmailAlreadyExistException;
@@ -34,8 +32,8 @@ class RegisterAsContractOwnerService implements ApplicationServiceInterface
     {
         $customer = $this->internalApiClient->findCustomerByEmail($dto->email);
         $data = collect($customer['data']);
-        $personalData = $data->where('ID_IDENTITY', 'P');
-        if ($personalData->count() == 0) {
+        $personalData = $data->firstWhere('ID_IDENTITY', 'P');
+        if (!$personalData) {
             throw new ContractOwnerNotFoundException();
         }
 
