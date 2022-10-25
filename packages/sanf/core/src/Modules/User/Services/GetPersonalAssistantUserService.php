@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\User\Services;
-
 
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
@@ -28,10 +26,16 @@ class GetPersonalAssistantUserService extends UserService implements Application
         $response = $this->internalApiClient->findCustomerById($user->personal_xid);
         $profile = collect($response['data'])
             ->map(function ($item) {
+                $contract = $item['F_KONTRAK'] ?? null;
+                $hasContract = !is_null($contract);
+                if ((string) $contract == 0) {
+                    $hasContract = false;
+                }
+
                 return (object)[
                     'msisdn' => $item['NO_AE'],
                     'id_identity' => $item['ID_IDENTITY'],
-                    'has_contract' => !is_null($item['F_KONTRAK'])
+                    'has_contract' => $hasContract,
                 ];
             })->where('id_identity', 'P')
             ->first();
