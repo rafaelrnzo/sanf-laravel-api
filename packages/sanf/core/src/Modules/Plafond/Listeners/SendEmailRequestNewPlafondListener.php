@@ -31,7 +31,7 @@ class SendEmailRequestNewPlafondListener
 
         // Send array data into email for the content
         $data = [
-            'Tanggal Pengajuan' => date_localized($plafondRequest->createdAt),
+            'Tanggal Pengajuan' => date_localized($plafondRequest->createdAt, '%d %B %Y'),
             'Nama Customer' => ($profile->typeId === ProfileType::PERSONAL) ? $profile->fullName : null,
             'Nama PIC' => ($profile->typeId === ProfileType::COMPANY) ? $profile->picName : null,
             'Nama Perusahaan' => $profile->fullName,
