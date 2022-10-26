@@ -1,8 +1,6 @@
 <?php
 
-
 namespace NbsPhp\Core\Enum;
-
 
 use MyCLabs\Enum\Enum;
 
@@ -12,7 +10,8 @@ use MyCLabs\Enum\Enum;
  */
 class UserStatus extends Enum
 {
-    const ACTIVE = 10;
-    const SUSPENDED = 20;
-    const NEED_ACTIVATION = 30;
+    public const ACTIVE = 10;
+    public const SUSPENDED = 20;
+    public const NEED_ACTIVATION = 30;
+    public const DEACTIVATE = 40;
 }

@@ -2,6 +2,8 @@
 
 namespace Sanf\Core\Modules\User\Services;
 
+use Carbon\Carbon;
+use NbsPhp\Core\Enum\UserStatus;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\User\AuthModel;
@@ -57,6 +59,13 @@ class ApproveDeactivateAccountService implements ApplicationServiceInterface
             'restore_expired_at' => null,
             'created_by' => json_encode(array_merge($createdBy, ['type' => 20])),
         ]);
+
+        $this->repository->newQuery()
+            ->find($userAccountRequest->user_id)
+            ->update([
+                'status_id' => UserStatus::DEACTIVATE,
+                'updated_at' => Carbon::now(),
+            ]);
 
         dispatch(new SendApprovalRequestDeletionAccountNotification(['name' => $user->full_name,], $user->username));
 

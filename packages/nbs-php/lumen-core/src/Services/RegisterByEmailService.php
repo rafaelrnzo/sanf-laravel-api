@@ -1,8 +1,6 @@
 <?php
 
-
 namespace NbsPhp\Core\Services;
-
 
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -30,7 +28,13 @@ class RegisterByEmailService implements RegisterByEmailServiceInterface
 
     public function execute($dto = null)
     {
-        if ($this->repository->newQuery()->select('id')->where('username', $dto->email)->first()) {
+        $hasExist = $this->repository->newQuery()
+            ->select('id')
+            ->where('username', $dto->email)
+            ->whereIn('status_id', [UserStatus::ACTIVE, UserStatus::NEED_ACTIVATION])
+            ->first();
+
+        if ($hasExist) {
             throw new EmailAlreadyExistException();
         }
 
