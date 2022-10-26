@@ -33,10 +33,11 @@ class JsonResponseMapper implements ResponseMapperInterface
             'code' => $content['response_code'] ?? '200',
             'message' => $content['message'] ?? 'OK'
         ];
-        unset($content['response_code']);
 
         if ($content != '') {
+            unset($content['response_code']);
             unset($content['message']);
+
             $responseSuccess['data'] = $content;
             if (array_key_exists('data', $content)) {
                 $responseSuccess['data'] = $content['data'];
