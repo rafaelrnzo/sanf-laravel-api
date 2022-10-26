@@ -10,7 +10,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 use Sanf\Core\Mail\MailLayout2Columns;
 
-class SendEmailFinancingApplicationJob implements ShouldQueue
+class SendEmailFinancingApplicationForUserJob implements ShouldQueue
 {
     use InteractsWithQueue, Queueable, SerializesModels;
 
@@ -36,13 +36,13 @@ class SendEmailFinancingApplicationJob implements ShouldQueue
     public function handle()
     {
         $adminMail = config('sanf-mobile.mail_to_admin');
-        $reportUrl = "mailto:{$adminMail}?subject=Laporan Pengajuan Pembiayaan Barup";
+        $reportUrl = "mailto:{$adminMail}?subject=Laporan Pengajuan Pembiayaan Baru";
         $mailable = (new MailLayout2Columns())
             ->subject('Pengajuan Pembiayaan Baru')
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
             ->rightLogo(asset('assets/png/sanf-tagline.png'))
             ->banner(asset('assets/png/email-verification.png'))
-            ->greeting(__('Halo Admin SANFIND!'))
+            ->greeting(__('Halo :name!', ['name' => $this->user]))
             ->line(__(
                 '<blockquote style="margin: 0 0;font-size: 16px; line-height: 150%;">
                     Pengajuan Pembiayaan Anda Sedang Diproses oleh tim kami, berikut kami lampirkan ringkasan pengajuan pembiayaan Anda.

@@ -3,7 +3,8 @@
 namespace Sanf\Core\Modules\Financing\Listeners;
 
 
-use Sanf\Core\Modules\Financing\SendEmailFinancingApplicationJob;
+use Sanf\Core\Modules\Financing\SendEmailFinancingApplicationForAdminJob;
+use Sanf\Core\Modules\Financing\SendEmailFinancingApplicationForUserJob;
 use Sanf\Core\Modules\User\Enums\ProfileType;
 
 class SendEmailNewFinancingApplicationListener
@@ -32,7 +33,7 @@ class SendEmailNewFinancingApplicationListener
         // COMPANY
         if ($profile->typeId == ProfileType::COMPANY) {
             $data = [
-                'Tanggal Pengajuan' => date_localized($financingApplication->created_at),
+                'Tanggal Pengajuan' => date_localized($financingApplication->created_at, '%d %B %Y'),
                 'Nomor Pengajuan' => $financingApplication->application_code,
                 'Nama PIC' => $profile->picName,
                 'Nama Perusahaan' => $profile->fullName,
@@ -42,7 +43,7 @@ class SendEmailNewFinancingApplicationListener
             ];
         } elseif ($profile->typeId == ProfileType::PERSONAL) {
             $data = [
-                'Tanggal Pengajuan' => date_localized($financingApplication->created_at),
+                'Tanggal Pengajuan' => date_localized($financingApplication->created_at, '%d %B %Y'),
                 'Nomor Pengajuan' => $event->financingApplication->application_code,
                 'Nama' => $profile->fullName,
                 'Email' => $profile->email,
@@ -58,6 +59,7 @@ class SendEmailNewFinancingApplicationListener
         });
 
         $recipients = explode(',', config('sanf-mobile.mail_to_admin'));
-        dispatch(new SendEmailFinancingApplicationJob($data, $financingApplication->user, $recipients));
+        dispatch(new SendEmailFinancingApplicationForAdminJob($data, $financingApplication->user, $recipients));
+        dispatch(new SendEmailFinancingApplicationForUserJob($data, $financingApplication->user, $profile->email));
     }
 }
