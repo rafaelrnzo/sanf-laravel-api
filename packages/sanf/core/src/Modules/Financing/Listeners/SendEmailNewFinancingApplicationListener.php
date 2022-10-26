@@ -60,6 +60,6 @@ class SendEmailNewFinancingApplicationListener
 
         $recipients = explode(',', config('sanf-mobile.mail_to_admin'));
         dispatch(new SendEmailFinancingApplicationForAdminJob($data, $financingApplication->user, $recipients));
-        dispatch(new SendEmailFinancingApplicationForUserJob($data, $financingApplication->user, $profile->email));
+        dispatch(new SendEmailFinancingApplicationForUserJob($data, $financingApplication->user, [$profile->email]));
     }
 }
