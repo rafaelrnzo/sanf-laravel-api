@@ -210,7 +210,7 @@
           <img src="{{ asset('assets/png/sanf-logo-blue.png') }}" alt="SANFIND" />
         </div>
         <p class="sf-text mt-4">
-          PT Surya Artha Nusantara Finance (SANFIND) menyediakan layanan dan produk keuangan yang
+          PT Surya Artha Nusantara Finance (SANF) menyediakan layanan dan produk keuangan yang
           menyeluruh dalam layanan pembiayaan investasi dan pembiayaan modal kerja yang berorientasi
           kepada pemenuhan kebutuhan konsumen.
         </p>
@@ -276,12 +276,12 @@
           <div class="sf-social-media mt-2">
             <a href="https://www.sanf.co.id" target="_blank"><img src="{{ asset('assets/svg/web.svg') }}" alt="SANFIND Web" draggable="false" /></a>
             <a href="https://www.instagram.com/sanf_official" target="_blank"><img src="{{ asset('assets/svg/ig.svg') }}" alt="SANFIND Instagram" draggable="false" /></a>
-            <a href="https://id.linkedin.com/company/pt-surya-artha-nusantara-finance" target="_blank"><img src="{{ asset('assets/svg/linkedin.svg') }}" alt="SANFIND Linkedin" draggable="false" /></a>
+            <a href="https://www.linkedin.com/company/sanf-astra/?viewAsMember=true" target="_blank"><img src="{{ asset('assets/svg/linkedin.svg') }}" alt="SANFIND Linkedin" draggable="false" /></a>
           </div>
         </div>
         <div class="mt-3">
           <p class="sf-title" style="font-size: 14px !important;">PT SURYA ARTHA NUSANTARA FINANCE</p>
-          <p class="sf-title">Terdaftar dan diawasi oleh</p>
+          <p class="sf-title">Berizin dan diawasi oleh</p>
           <p class="sf-title" style="font-size: 13px !important;">Otoritas Jasa Keuangan</p>
           <div class="sf-ojk mt-2">
             <img src="{{ asset('assets/png/ojk.png') }}" alt="SANFIND Web" draggable="false" />
