@@ -9,7 +9,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 use NbsPhp\Core\Mail\BaseMail;
 
-class SendRequestDeletionAccountNotification implements ShouldQueue
+class SendRequestDeletionAccountForAdminNotification implements ShouldQueue
 {
     use InteractsWithQueue, Queueable, SerializesModels;
 
@@ -31,8 +31,6 @@ class SendRequestDeletionAccountNotification implements ShouldQueue
 
     public function handle()
     {
-        $adminMail = config('sanf-mobile.mail_to_admin');
-        $reportUrl = "mailto:{$adminMail}?subject=Laporan Permintaan Hapus Akun";
         $mail = (new BaseMail())
             ->subject('Permintaan Hapus Akun')
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
@@ -40,11 +38,7 @@ class SendRequestDeletionAccountNotification implements ShouldQueue
             ->banner(asset('assets/png/email-verification.png'))
             ->greeting("Halo Admin SANFIND!")
             ->line(
-                "Pengguna atas nama <span class='text-bold'>{$this->data['name']}</span> saat ini {$this->data['createdAt']} WIB telah mengajukan  permintaan untuk Hapus Akun. Sistem akan secara otomatis menghapus akun jika pengguna tidak login ke aplikasi terhitung sejak tanggal {$this->data['restoreExpiredAt']}."
-            )
-            ->lineWithUrl(
-                __("Jika Anda merasa tidak membuat request tersebut mohon abaikan email ini atau anda dapat"),
-                [__('laporkan email ini'), $reportUrl]
+                "Pengguna atas nama <span class='text-bold'>{$this->data['name']}</span> saat ini {$this->data['createdAt']} WIB telah mengajukan  permintaan untuk Hapus Akun."
             );
 
         return Mail::to($this->emailRecipients)->send($mail);

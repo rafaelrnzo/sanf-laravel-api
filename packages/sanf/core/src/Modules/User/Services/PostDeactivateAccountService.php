@@ -11,7 +11,8 @@ use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Core\Modules\User\Dtos\PostDeactivateAccountDto;
 use Sanf\Core\Modules\User\Enums\UserAuthLogStatusEnum;
 use Sanf\Core\Modules\User\Exceptions\InvalidRequestDeletionAccountException;
-use Sanf\Core\Modules\User\Jobs\SendRequestDeletionAccountNotification;
+use Sanf\Core\Modules\User\Jobs\SendRequestDeletionAccountForAdminNotification;
+use Sanf\Core\Modules\User\Jobs\SendRequestDeletionAccountForUserNotification;
 use Sanf\Core\Modules\User\Repositories\UserAuthLogRepositoryInterface;
 use Sanf\Core\Modules\User\Specifications\UserAuthLogSpecificationFactoryInterface;
 
@@ -75,7 +76,6 @@ class PostDeactivateAccountService implements ApplicationServiceInterface
             ]),
         ]);
 
-        $recipients = explode(',', config('sanf-mobile.mail_to_admin'));
         $dto = new PostDeactivateAccountDto([
             'xid' => $newLog->xid,
             'user_id' => $newLog->user_id,
@@ -86,16 +86,24 @@ class PostDeactivateAccountService implements ApplicationServiceInterface
             'created_by' => json_decode($newLog->created_by),
         ]);
 
+        $composeEmail = [
+            'name' => $user->full_name,
+            'restoreExpiredAt' => Carbon::parse(optional($newLog)->restore_expired_at)
+                ->timezone('Asia/Jakarta')
+                ->format('d F Y H:i'),
+            'createdAt' => Carbon::parse(optional($newLog)->created_at)
+                ->timezone('Asia/Jakarta')
+                ->format('d F Y H:i'),
+        ];
+
         dispatch(
-            new SendRequestDeletionAccountNotification([
-                'name' => $user->full_name,
-                'restoreExpiredAt' => Carbon::parse(optional($newLog)->restore_expired_at)
-                    ->timezone('Asia/Jakarta')
-                    ->format('d m Y H:i'),
-                'createdAt' => Carbon::parse(optional($newLog)->created_at)
-                    ->timezone('Asia/Jakarta')
-                    ->format('d m Y H:i'),
-            ], $recipients)
+            new SendRequestDeletionAccountForAdminNotification(
+                $composeEmail,
+                explode(',', config('sanf-mobile.mail_to_admin'))
+            )
+        );
+        dispatch(
+            new SendRequestDeletionAccountForUserNotification($composeEmail, [$newLog->email])
         );
 
         return $dto;
