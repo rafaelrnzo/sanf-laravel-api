@@ -115,12 +115,12 @@ Example Using docker
 
 ```shell
 # api
-docker build -t app/api
-docker run -d --name sanf-api -v "$(pwd)":/var/www -p 4006:80 app/api
+docker build -f deployments/api/Dockerfile -t sanf/api .
+docker run -d --name sanf-api -v "$(pwd)":/var/www -p 4006:80 sanf/api
 
 # worker
-docker build -t app/worker
-docker run -d --name sanf-worker -v "$(pwd)":/var/www app/worker
+docker build -f deployments/worker/Dockerfile -t sanf/worker .
+docker run -d --name sanf-worker -v "$(pwd)":/var/www sanf/worker
 
 ```
 
