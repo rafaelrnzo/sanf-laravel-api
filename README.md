@@ -17,7 +17,7 @@ Lumen starter project for REST API
 1. **Docker Compose**: "^1.21"
 1. **Git**
 
-# Installation
+## Installation
 
 1. Copy file `.env.example` to `.env`
 
@@ -44,14 +44,9 @@ composer install
 or using docker
 
 ```
-docker build -t docker/builder -f deployments/builder/Dockerfile .
+docker build -t sanf/builder -f deployments/builder/Dockerfile .
 
-docker run --rm -v $PWD:/var/app docker/builder composer install
-```
-
-5. Publish Configuration
-```
-php artisan vendor:publish --provider "NbsPhp\Core\Providers\CoreServiceProvider"
+docker run --rm -v $PWD:/var/www sanf/builder composer install
 ```
 
 ## Configuration
@@ -114,40 +109,40 @@ $ run master location table seeder
 php -d=memory_limit=-1 artisan db:seed --class=LocationSeeder
 ```
 
-# Run Application
+## Run Application
 
-Using docker
+Example Using docker
 
 ```shell
-   sh bin/create-core
+# api
+docker build -t app/api
+docker run -d --name sanf-api -v "$(pwd)":/var/www -p 4006:80 app/api
+
+# worker
+docker build -t app/worker
+docker run -d --name sanf-worker -v "$(pwd)":/var/www app/worker
+
 ```
 
-# Deployments
+Example Using docker compose
 
-### Set-up
+```shell
+# all infra stack in container
+docker-compose up -d
 
-1. Create **Deploy Tokens**
-   > Go to Gitlab Project Settings > Repository > Deploy Tokens
+# or api only
+docker-compose up -d api
 
-1. Log-in to Container Registry
-   ```shell
-   echo ${CR_PASS} | docker login -u ${CR_USER} --password-stdin https://cr.nbs.co.id
-   ```
+# or worker only
+docker-compose up -d worker
+```
 
-### Deploy
+## Deployment
 
-1. Build Docker Image
-    ```shell
-    sh bin/build-images
-    ```
-
-1. Run Docker container
-   ```shell
-   sh bin/create-core
-
-## What's next?
-
-Import API Documentation
-
-[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/aa7c188c5dbd0aa6247b)
+### Directory Permission
+```
+# go to project root directory
+# set ownership to nobody:nogroup
+ chown -R nobody:nogroup .
+```
 

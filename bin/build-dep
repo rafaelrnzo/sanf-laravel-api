@@ -1,7 +1,0 @@
-#!/usr/bin/env sh
-
-echo "  > Build Docker image app/builder..."
-docker build -t sanf/builder -f deployments/builder
-
-echo "  > Composer package installation..."
-docker run --rm -v $PWD:/var/app sanf/builder composer install

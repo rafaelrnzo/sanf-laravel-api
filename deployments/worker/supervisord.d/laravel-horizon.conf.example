@@ -1,8 +1,8 @@
 [program:laravel-horizon]
 process_name=%(program_name)s_%(process_num)02d
-command=php /var/app/artisan horizon
+command=php /var/www/artisan horizon
 autostart=true
 autorestart=true
 redirect_stderr=true
 stdout_logfile=/var/log/laravel-horizon.log
-user=deployer
+user=nobody

@@ -3,8 +3,7 @@ FROM php:7.4-cli
 # Define dependencies
 ENV BUILD_PACKAGES="libpng-dev libwebp-dev libgmp-dev libjpeg62-turbo-dev libfreetype6-dev zlib1g-dev libzip-dev libicu-dev g++ libonig-dev" \
     DB_DRIVER_PACKAGE="libpq-dev" \
-    DB_DRIVER="pdo_pgsql"
-#    DB_DRIVER="pdo_mysql"
+    DB_DRIVER="pdo_mysql"
 
 # Install required app
 RUN apt-get update \
@@ -24,4 +23,4 @@ RUN apt-get remove --purge -y ${BUILD_PACKAGES} \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Set work dir
-WORKDIR /var/app
+WORKDIR /var/www

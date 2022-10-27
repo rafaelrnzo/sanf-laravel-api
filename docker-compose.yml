@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  api:
+    image: sanf/core
+    container_name: sanf-api
+    build:
+      context: './'
+      dockerfile: './deployments/api/Dockerfile'
+    ports:
+      - ${APP_PORT:-8000}:8080
+    volumes:
+      - '.:/var/www:cached'
+    networks:
+      - sanf-net
+    restart: unless-stopped
+
+  worker:
+    image: sanf/worker
+    container_name: sanf-worker
+    build:
+      context: './'
+      dockerfile: './deployments/worker/Dockerfile'
+    volumes:
+      - '.:/var/www:cached'
+    networks:
+      - sanf-net
+    restart: unless-stopped
+
+networks:
+  sanf-net:
+    driver: bridge
+
+volumes:
+  sanf-net:
+    driver: local

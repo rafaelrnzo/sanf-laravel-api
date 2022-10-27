@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
-# SITE=api--sanf.nbs.co.id
-# TARGET_PORT=4005
+# EXAMPLE VALUE
+# SITE=api--uv.nbs.dev
+# TARGET_PORT=8000
 
 rm /etc/nginx/sites-enabled/default
 
