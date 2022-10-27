@@ -283,9 +283,6 @@
           <p class="sf-title" style="font-size: 14px !important;">PT SURYA ARTHA NUSANTARA FINANCE</p>
           <p class="sf-title">Berizin dan diawasi oleh</p>
           <p class="sf-title" style="font-size: 13px !important;">Otoritas Jasa Keuangan</p>
-          <div class="sf-ojk mt-2">
-            <img src="{{ asset('assets/png/ojk.png') }}" alt="SANFIND Web" draggable="false" />
-          </div>
         </div>
         <div class="mt-3" style="width: 100%;">
           <div class="sf-satu-indonesia mt-2">
