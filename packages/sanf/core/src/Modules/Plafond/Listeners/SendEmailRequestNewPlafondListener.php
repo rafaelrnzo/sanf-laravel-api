@@ -2,8 +2,8 @@
 
 namespace Sanf\Core\Modules\Plafond\Listeners;
 
-
-use Sanf\Core\Modules\Plafond\SendEmailNewRequestPlafondJob;
+use Sanf\Core\Modules\Plafond\SendEmailNewRequestPlafondForAdminJob;
+use Sanf\Core\Modules\Plafond\SendEmailNewRequestPlafondForUserJob;
 use Sanf\Core\Modules\User\Enums\ProfileType;
 
 class SendEmailRequestNewPlafondListener
@@ -31,6 +31,7 @@ class SendEmailRequestNewPlafondListener
 
         // Send array data into email for the content
         $data = [
+            'name' => ($profile->typeId === ProfileType::PERSONAL) ? $profile->fullName : $profile->picName,
             'Tanggal Pengajuan' => date_localized($plafondRequest->createdAt, '%d %B %Y'),
             'Nama Customer' => ($profile->typeId === ProfileType::PERSONAL) ? $profile->fullName : null,
             'Nama PIC' => ($profile->typeId === ProfileType::COMPANY) ? $profile->picName : null,
@@ -42,6 +43,9 @@ class SendEmailRequestNewPlafondListener
             return $value !== null;
         });
 
-        dispatch(new SendEmailNewRequestPlafondJob($data, [$profile->email]));
+        $recipients = explode(',', config('sanf-mobile.mail_to_admin'));
+
+        dispatch(new SendEmailNewRequestPlafondForUserJob($data, [$profile->email]));
+        dispatch(new SendEmailNewRequestPlafondForAdminJob($data, $recipients));
     }
 }
