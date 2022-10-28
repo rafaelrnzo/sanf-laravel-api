@@ -1,9 +1,9 @@
 FROM php:7.4-cli
 
 # Define dependencies
-ENV BUILD_PACKAGES="libpng-dev libwebp-dev libgmp-dev libjpeg62-turbo-dev libfreetype6-dev zlib1g-dev libzip-dev libicu-dev g++ libonig-dev" \
+ENV BUILD_PACKAGES="libpng-dev libwebp-dev libgmp-dev libjpeg62-turbo-dev libfreetype6-dev zlib1g-dev libzip-dev libicu-dev g++ libonig-dev libpq-dev" \
     DB_DRIVER_PACKAGE="libpq-dev" \
-    DB_DRIVER="pdo_mysql"
+    DB_DRIVER="pdo_pgsql"
 
 # Install required app
 RUN apt-get update \
