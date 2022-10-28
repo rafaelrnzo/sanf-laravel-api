@@ -16,12 +16,19 @@ RUN apk --update add wget \
   supervisor \
   postgresql-dev \
   libzip-dev \
+  libpng-dev \
+  jpeg-dev \
+  freetype-dev \
+  libjpeg-turbo-dev \
+  libjpeg-turbo \
+  libwebp-dev \
   unzip
 
 # Install extensions
 RUN docker-php-ext-configure intl \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg
-RUN docker-php-ext-install pdo_pgsql opcache bcmath exif zip pdo intl
+    && docker-php-ext-configure gd --with-freetype --with-webp --with-jpeg \
+
+RUN docker-php-ext-install pdo_pgsql opcache bcmath exif gd zip pdo intl
 
 # Install mbstring extension
 RUN apk add --no-cache \

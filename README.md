@@ -116,7 +116,7 @@ Example Using docker
 ```shell
 # api
 docker build -f deployments/api/Dockerfile -t sanf/api .
-docker run -d --name sanf-api -v "$(pwd)":/var/www -p 4006:80 sanf/api
+docker run -d --name sanf-api -v "$(pwd)":/var/www -p 4006:8080 sanf/api
 
 # worker
 docker build -f deployments/worker/Dockerfile -t sanf/worker .
