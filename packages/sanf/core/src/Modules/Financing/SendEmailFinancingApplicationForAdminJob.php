@@ -43,7 +43,7 @@ class SendEmailFinancingApplicationForAdminJob implements ShouldQueue
             ->greeting(__('Halo Admin SANFIND!'))
             ->line(
                 __(
-                    '<blockquote style="margin: 0 0;font-size: 16px; line-height: 150%;">Berikut lampiran ringkasan pengajuan pembiayaan ' . $this->user . '.</blockquote>'
+                    '<blockquote style="margin: 0 0;font-size: 16px; line-height: 150%;">Berikut lampiran ringkasan pengajuan pembiayaan ' . $this->user->full_name . '.</blockquote>'
                 )
             )
             ->writeContent($this->data)
