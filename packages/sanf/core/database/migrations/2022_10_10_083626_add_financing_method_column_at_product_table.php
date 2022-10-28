@@ -13,9 +13,11 @@ class AddFinancingMethodColumnAtProductTable extends Migration
      */
     public function up()
     {
-        Schema::table('product', function (Blueprint $table) {
-            $table->unsignedBigInteger('financing_method_id')->nullable();
-        });
+        if (!Schema::hasColumn('product', 'financing_method_id')) {
+            Schema::table('product', function (Blueprint $table) {
+                $table->unsignedBigInteger('financing_method_id')->nullable();
+            });
+        }
     }
 
     /**
