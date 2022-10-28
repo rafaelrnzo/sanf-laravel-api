@@ -43,9 +43,13 @@ class UserController extends RestApiController
 
     public function getPersonalAssistant(
         Guard $auth,
+        $xid,
         GetPersonalAssistantUserService $service
     ) {
-        $dto = (object)['userId' => $auth->id()];
+        $dto = (object)[
+            'userId' => $auth->id(),
+            'profileActiveId' => $xid,
+        ];
         $result = $service->execute($dto);
         return fractal($result, new PersonalAssistantTransformer());
     }

@@ -23,7 +23,7 @@ class GetPersonalAssistantUserService extends UserService implements Application
         if (!$user) {
             throw new UserNotFoundException();
         }
-        $response = $this->internalApiClient->findCustomerById($user->personal_xid);
+        $response = $this->internalApiClient->findCustomerById($dto->profileActiveId);
         $profile = collect($response['data'])
             ->map(function ($item) {
                 $contract = $item['F_KONTRAK'] ?? null;
@@ -34,11 +34,12 @@ class GetPersonalAssistantUserService extends UserService implements Application
 
                 return (object)[
                     'msisdn' => $item['NO_AE'],
-                    'id_identity' => $item['ID_IDENTITY'],
+                    'cust_id' => $item['CUST_ID_SANF'],
                     'has_contract' => $hasContract,
                 ];
-            })->where('id_identity', 'P')
+            })->where('cust_id', $dto->profileActiveId)
             ->first();
+
         if (!$profile) {
             throw new UserNotFoundException("Theres no user personal");
         }
