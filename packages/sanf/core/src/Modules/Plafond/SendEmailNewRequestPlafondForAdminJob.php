@@ -9,6 +9,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 use Sanf\Core\Mail\MailLayout2Columns;
+use Sanf\Core\Modules\User\Enums\ProfileType;
 
 class SendEmailNewRequestPlafondForAdminJob implements ShouldQueue
 {
@@ -18,20 +19,24 @@ class SendEmailNewRequestPlafondForAdminJob implements ShouldQueue
 
     protected $emailRecipients;
 
+    protected $profile;
+
     /**
      * Create a new job instance.
      *
      * @return void
      */
 
-    public function __construct($data, $emailRecipients)
+    public function __construct($data, $profile, $emailRecipients)
     {
         $this->data = $data;
+        $this->profile = $profile;
         $this->emailRecipients = $emailRecipients;
     }
 
     public function handle()
     {
+        $fullName = ($this->profile->typeId === ProfileType::PERSONAL) ? $this->profile->fullName : $this->profile->picName;
         $mailable = (new MailLayout2Columns())
             ->subject('Pengajuan Plafon Baru')
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
@@ -40,7 +45,7 @@ class SendEmailNewRequestPlafondForAdminJob implements ShouldQueue
             ->greeting(__('Halo Admin SANFIND!'))
             ->line(
                 __(
-                    '<blockquote style="margin: 0 0;font-size: 16px; line-height: 150%;">Berikut lampiran ringkasan Pengajuan Plafon ' . $this->data['name'] . '</blockquote> '
+                    '<blockquote style="margin: 0 0;font-size: 16px; line-height: 150%;">Berikut lampiran ringkasan Pengajuan Plafon ' . $fullName . '</blockquote> '
                 )
             )
             ->writeContent($this->data)

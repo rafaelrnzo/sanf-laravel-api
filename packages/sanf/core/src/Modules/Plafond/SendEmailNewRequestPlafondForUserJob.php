@@ -9,6 +9,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 use Sanf\Core\Mail\MailLayout2Columns;
+use Sanf\Core\Modules\User\Enums\ProfileType;
 
 class SendEmailNewRequestPlafondForUserJob implements ShouldQueue
 {
@@ -18,20 +19,24 @@ class SendEmailNewRequestPlafondForUserJob implements ShouldQueue
 
     protected $emailRecipients;
 
+    protected $profile;
+
     /**
      * Create a new job instance.
      *
      * @return void
      */
 
-    public function __construct($data, $emailRecipients)
+    public function __construct($data, $profile, $emailRecipients)
     {
         $this->data = $data;
+        $this->profile = $profile;
         $this->emailRecipients = $emailRecipients;
     }
 
     public function handle()
     {
+        $fullName = ($this->profile->typeId === ProfileType::PERSONAL) ? $this->profile->fullName : $this->profile->picName;
         $adminMail = config('sanf-mobile.mail_to_admin');
         $reportUrl = "mailto:{$adminMail}?subject=Laporan Pengajuan Plafon Baru";
         $mailable = (new MailLayout2Columns())
@@ -39,7 +44,7 @@ class SendEmailNewRequestPlafondForUserJob implements ShouldQueue
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
             ->rightLogo(asset('assets/png/sanf-tagline.png'))
             ->banner(asset('assets/png/email-verification.png'))
-            ->greeting(__('Halo :name!', ['name' => $this->data['name']]))
+            ->greeting(__('Halo :name!', ['name' => $fullName]))
             ->line(__(
                 '<blockquote style="margin: 0 0;font-size: 16px; line-height: 150%;">
                     Pengajuan Plafon Sedang dalam proses oleh tim kami, berikut kami lampirkan ringkasan pengajuan Plafon Anda.
