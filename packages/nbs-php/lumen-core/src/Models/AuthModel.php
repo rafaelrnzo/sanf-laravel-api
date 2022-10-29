@@ -8,6 +8,7 @@ use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Lumen\Auth\Authorizable;
 use NbsPhp\Core\Models\NeedSetupPasswordInterface as NeedSetupPasswordContract;
@@ -33,7 +34,7 @@ class AuthModel extends AbstractModel implements
     CanResetPasswordContract,
     NeedSetupPasswordContract
 {
-    use Authenticatable, Authorizable, MustVerifyEmail, NeedSetupPassword, CanResetPassword, Notifiable;
+    use Authenticatable, Authorizable, MustVerifyEmail, NeedSetupPassword, CanResetPassword, Notifiable, SoftDeletes;
 
     protected $table = 'user_auth'; //overridden in constructor from config auth
 
@@ -44,6 +45,7 @@ class AuthModel extends AbstractModel implements
         'status_id',
         'last_login_at',
         'entity_type_id',
+        'deleted_at',
     ];
 
     protected $hidden = [
