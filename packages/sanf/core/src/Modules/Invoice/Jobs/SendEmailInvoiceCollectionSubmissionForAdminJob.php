@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Invoice\Jobs;
 
 use Illuminate\Bus\Queueable;
@@ -12,10 +11,11 @@ use Sanf\Core\Mail\MailLayout2Columns;
 use Sanf\Core\Modules\Invoice\Dtos\GetPdfPrepaymentSimulationRequestDto;
 use Sanf\Core\Modules\Invoice\Services\GetPdfPrepaymentSimulationService;
 
-
 class SendEmailInvoiceCollectionSubmissionForAdminJob implements ShouldQueue
 {
-    use InteractsWithQueue, Queueable, SerializesModels;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     protected $data;
     protected $recipient;
@@ -49,15 +49,14 @@ class SendEmailInvoiceCollectionSubmissionForAdminJob implements ShouldQueue
             ];
         }
 
-        $adminMail = config('sanf-mobile.mail_to_admin');
-        $reportUrl = "mailto:{$adminMail}?subject=Laporan Pengajuan Pengambilan Invoice";
         $invoiceSubmission = (new MailLayout2Columns())
             ->subject('Pengajuan Pengambilan Invoice')
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
             ->rightLogo(asset('assets/png/sanf-tagline.png'))
             ->banner(asset('assets/png/email-verification.png'))
             ->greeting(__('Halo Admin SANFIND'))
-            ->line(__('
+            ->line(__(
+                '
                 <p>
                     Pengguna atas nama <strong>“' . $this->data[0]->user->full_name . '”</strong> telah mengajukan pengambilan invoice,
                     berikut kami lampirkan detailnya
@@ -86,14 +85,7 @@ class SendEmailInvoiceCollectionSubmissionForAdminJob implements ShouldQueue
                     'label' => 'Tahun'
                 ]
             ])
-            ->writeTableBody($tableData)
-            ->line(
-                __('Email ini dibuat secara otomatis mohon tidak membalas email ini, jika terdapat keluhan silahkan hubungi Sanf Customer Service')
-            )
-            ->lineWithUrl(
-                __('. Jika Anda merasa tidak membuat request tersebut mohon abaikan email ini atau anda dapat'),
-                [__('laporkan email ini'), $reportUrl]
-            );
+            ->writeTableBody($tableData);
 
         $recipients = explode(',', config('sanf-mobile.mail_to_admin'));
 
