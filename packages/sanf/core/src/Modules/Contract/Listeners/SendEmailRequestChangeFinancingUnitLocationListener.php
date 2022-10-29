@@ -18,7 +18,7 @@ class SendEmailRequestChangeFinancingUnitLocationListener
         $recipients = explode(',', config('sanf-mobile.mail_to_admin'));
 
 
-        $createdAt = date_localized($event->submission->created_at);
+        $createdAt = date_localized($event->submission->created_at, '%d %B %Y');
         $oldLocation = Str::title($event->submission->location_metadata->city_name);
         $newLocation = Str::title($event->submission->submitted_location_metadata->city_name);
         $data['content'] = [
