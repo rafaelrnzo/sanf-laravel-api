@@ -26,8 +26,7 @@ RUN apk --update add wget \
 
 # Install extensions
 RUN docker-php-ext-configure intl \
-    && docker-php-ext-configure gd --with-freetype --with-webp --with-jpeg \
-
+    && docker-php-ext-configure gd --with-freetype --with-webp --with-jpeg
 RUN docker-php-ext-install pdo_pgsql opcache bcmath exif gd zip pdo intl
 
 # Install mbstring extension
