@@ -19,24 +19,23 @@ class SendEmailNewRequestPlafondForUserJob implements ShouldQueue
 
     protected $emailRecipients;
 
-    protected $profile;
-
     /**
      * Create a new job instance.
      *
      * @return void
      */
 
-    public function __construct($data, $profile, $emailRecipients)
+    public function __construct($data, $emailRecipients)
     {
         $this->data = $data;
-        $this->profile = $profile;
         $this->emailRecipients = $emailRecipients;
     }
 
     public function handle()
     {
-        $fullName = ($this->profile->typeId === ProfileType::PERSONAL) ? $this->profile->fullName : $this->profile->picName;
+        $fullName = $this->data['name'];
+        unset($this->data['name']);
+
         $adminMail = config('sanf-mobile.mail_to_admin');
         $reportUrl = "mailto:{$adminMail}?subject=Laporan Pengajuan Plafon Baru";
         $mailable = (new MailLayout2Columns())

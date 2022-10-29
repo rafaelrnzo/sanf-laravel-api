@@ -32,6 +32,9 @@ class SendEmailRequestIncreasePlafondForAdminJob implements ShouldQueue
 
     public function handle()
     {
+        $fullName = $this->data['name'];
+        unset($this->data['name']);
+
         $mailable = (new MailLayout2Columns())
             ->subject('Naikan Nilai Plafon')
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
@@ -40,7 +43,7 @@ class SendEmailRequestIncreasePlafondForAdminJob implements ShouldQueue
             ->greeting(__('Halo Admin SANFIND!'))
             ->line(
                 __(
-                    '<blockquote style="margin: 0 0;font-size: 16px; line-height: 150%;">Berikut lampiran ringkasan Pengajuan Plafon ' . $this->data['name'] . '</blockquote> '
+                    '<blockquote style="margin: 0 0;font-size: 16px; line-height: 150%;">Berikut lampiran ringkasan Pengajuan Plafon ' . $fullName . '</blockquote> '
                 )
             )
             ->writeContent($this->data)

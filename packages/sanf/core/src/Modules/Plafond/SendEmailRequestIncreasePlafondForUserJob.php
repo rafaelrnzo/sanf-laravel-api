@@ -31,6 +31,9 @@ class SendEmailRequestIncreasePlafondForUserJob implements ShouldQueue
 
     public function handle()
     {
+        $fullName = $this->data['name'];
+        unset($this->data['name']);
+
         $adminMail = config('sanf-mobile.mail_to_admin');
         $reportUrl = "mailto:{$adminMail}?subject=Laporan Naikan Nilai Plafon";
         $mailable = (new MailLayout2Columns())
@@ -38,7 +41,7 @@ class SendEmailRequestIncreasePlafondForUserJob implements ShouldQueue
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
             ->rightLogo(asset('assets/png/sanf-tagline.png'))
             ->banner(asset('assets/png/email-verification.png'))
-            ->greeting(__('Halo :name!', ['name' => $this->data['name']]))
+            ->greeting(__('Halo :name!', ['name' => $fullName]))
             ->line(__(
                 '<blockquote style="margin: 0 0;font-size: 16px; line-height: 150%;">
                     Pengajuan Plafon Sedang dalam proses oleh tim kami, berikut kami lampirkan ringkasan pengajuan Plafon Anda.
