@@ -39,7 +39,10 @@ class SendRequestDeletionAccountForAdminNotification implements ShouldQueue
             ->greeting("Halo Admin SANFIND!")
             ->line(
                 "Pengguna atas nama <span class='text-bold'>{$this->data['name']}</span> saat ini {$this->data['createdAt']} WIB telah mengajukan  permintaan untuk Hapus Akun."
-            );
+            )
+            ->actionApproval([
+                [__('Setujui'), route('web-view.approval-deactivate-account', ['xid' => $this->data['xid']])],
+            ]);
 
         return Mail::to($this->emailRecipients)->send($mail);
     }

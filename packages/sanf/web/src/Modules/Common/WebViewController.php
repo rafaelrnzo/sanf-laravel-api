@@ -6,12 +6,15 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use League\Fractal\Resource\Collection;
 use NbsPhp\Core\Controllers\RestApiController;
+use NbsPhp\Core\Database\TransactionalSessionInterface;
+use NbsPhp\Core\Services\TransactionalApplicationService;
 use Sanf\Core\Modules\Setting\Dtos\DetailFrequentlyAskQuestionCategoryPageDto;
 use Sanf\Core\Modules\Setting\Dtos\ListFrequentlyAskQuestionCategoryPageDto;
 use Sanf\Core\Modules\Setting\Dtos\ListFrequentlyAskQuestionPageDto;
 use Sanf\Core\Modules\Setting\Services\DetailFrequentlyAskQuestionCategoryPageService;
 use Sanf\Core\Modules\Setting\Services\ListFrequentlyAskQuestionCategoryPageService;
 use Sanf\Core\Modules\Setting\Services\ListFrequentlyAskQuestionPageService;
+use Sanf\Core\Modules\User\Services\ApproveDeactivateAccountService;
 use Sanf\Core\Modules\User\Services\GetPersonalAssistantUserService;
 use Sanf\Web\Modules\Common\Transformers\SimpleFrequentlyAskQuestionCategoryPageTransformer;
 use Sanf\Web\Modules\Common\Transformers\SimpleFrequentlyAskQuestionTransformer;
@@ -63,6 +66,17 @@ class WebViewController extends RestApiController
         }
 
         return view('core::layouts.message', ['message' => $message]);
+    }
+
+    public function approvalDeactivateAccount(
+        string $xid,
+        ApproveDeactivateAccountService $service,
+        TransactionalSessionInterface $transactionalSession
+    ) {
+        $transactionalService = new TransactionalApplicationService($service, $transactionalSession);
+        $transactionalService->execute((object)['xid' => $xid,]);
+
+        return view('core::layouts.message', ['message' => 'Deactivate Account']);
     }
 
     public function browseFrequentlyAskQuestion(

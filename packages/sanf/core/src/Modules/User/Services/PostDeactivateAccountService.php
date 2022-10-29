@@ -87,6 +87,7 @@ class PostDeactivateAccountService implements ApplicationServiceInterface
         ]);
 
         $composeEmail = [
+            'xid' => $dto->xid,
             'name' => $user->full_name,
             'restoreExpiredAt' => Carbon::parse(optional($newLog)->restore_expired_at)
                 ->timezone('Asia/Jakarta')

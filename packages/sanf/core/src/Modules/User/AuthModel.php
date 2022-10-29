@@ -44,6 +44,7 @@ class AuthModel extends \NbsPhp\Core\Models\AuthModel
         'pin_updated_at',
         'reset_pin_code',
         'reset_pin_expired_at',
+        'deleted_at',
     ];
 
     protected $hidden = [

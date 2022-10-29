@@ -27,3 +27,4 @@ Route::get('pages/privacy-policy', ['as' => 'web-view.privacy-policy', 'uses' =>
 
 Route::get('pages/approval-commodity/{status}', ['as' => 'web-view.approval-commodity', 'uses' => 'Common\WebViewController@approvalCommodity']);
 Route::get('pages/approval-project/{status}', ['as' => 'web-view.approval-project', 'uses' => 'Common\WebViewController@approvalProject']);
+Route::get('pages/approval-deactivate-account/{xid}', ['as' => 'web-view.approval-deactivate-account', 'uses' => 'Common\WebViewController@approvalDeactivateAccount']);
