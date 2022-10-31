@@ -6,7 +6,7 @@ namespace Sanf\Core\Modules\Commodity\Listeners;
 
 use Sanf\Core\Modules\Commodity\CommodityStatus;
 use Sanf\Core\Modules\Commodity\Events\CommodityUpdatedEvent;
-use Sanf\Core\Modules\Commodity\SendEmailCommodityApprovalJob;
+use Sanf\Core\Modules\Commodity\Jobs\SendEmailCommodityApprovalJob;
 
 class SendEmailRequestApprovalCommodityListener
 {

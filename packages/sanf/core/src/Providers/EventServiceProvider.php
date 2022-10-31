@@ -4,9 +4,13 @@ namespace Sanf\Core\Providers;
 
 use Illuminate\Auth\Events\Login;
 use Laravel\Lumen\Providers\EventServiceProvider as ServiceProvider;
+use Sanf\Core\Modules\Commodity\Events\CommodityApprovedEvent;
 use Sanf\Core\Modules\Commodity\Events\CommodityCreatedEvent;
+use Sanf\Core\Modules\Commodity\Events\CommodityRejectedEvent;
 use Sanf\Core\Modules\Commodity\Events\CommodityUpdatedEvent;
 use Sanf\Core\Modules\Commodity\Listeners\SendEmailRequestApprovalCommodityListener;
+use Sanf\Core\Modules\Commodity\Listeners\SendNotificationApprovalCommodityListener;
+use Sanf\Core\Modules\Commodity\Listeners\SendNotificationRejectCommodityListener;
 use Sanf\Core\Modules\Contract\Events\ESignDocumentDownloadEvent;
 use Sanf\Core\Modules\Contract\Events\FinancingUnitLocationSubmissionAddedEvent;
 use Sanf\Core\Modules\Contract\Listeners\SendEmailDownloadESignDocumentListener;
@@ -69,6 +73,12 @@ class EventServiceProvider extends ServiceProvider
         ],
         ESignDocumentDownloadEvent::class => [
             SendEmailDownloadESignDocumentListener::class
+        ],
+        CommodityApprovedEvent::class => [
+            SendNotificationApprovalCommodityListener::class
+        ],
+        CommodityRejectedEvent::class => [
+            SendNotificationRejectCommodityListener::class
         ],
     ];
 }

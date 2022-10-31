@@ -4,13 +4,24 @@
 namespace Sanf\Core\Modules\Commodity\Services;
 
 
+use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Commodity\CommodityStatus;
-use Sanf\Core\Modules\Commodity\Events\CommodityUpdatedEvent;
+use Sanf\Core\Modules\Commodity\Events\CommodityRejectedEvent;
 use Sanf\Core\Modules\Commodity\Exceptions\GeneralCommodityException;
+use Sanf\Core\Modules\Commodity\Repositories\CommodityRepositoryInterface;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 
 class RejectCommodityByExternalService extends CommodityService implements ApplicationServiceInterface
 {
+    protected UserRepositoryInterface $userRepository;
+
+    public function __construct(CommodityRepositoryInterface $commodityRepository, UserRepositoryInterface $userRepository)
+    {
+        parent::__construct($commodityRepository);
+        $this->userRepository = $userRepository;
+    }
+
     public function execute($dto = null)
     {
         $commodity = $this->commodityRepository->findByXid($dto->xid);
@@ -23,7 +34,12 @@ class RejectCommodityByExternalService extends CommodityService implements Appli
 //            'modified_by' => //TODO USER SNAPSHOT
         ]);
 
-        event(new CommodityUpdatedEvent($commodity, $updatedCommodity));
+        $user = $this->userRepository->findById($commodity->user_id);
+        if (!$user) {
+            throw new UserNotFoundException();
+        }
+
+        event(new CommodityRejectedEvent($commodity, $updatedCommodity, $user));
 
         return $updatedCommodity;
     }
