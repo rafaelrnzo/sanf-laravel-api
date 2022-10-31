@@ -32,7 +32,6 @@ class SendEmailRequestIncreasePlafondListener
 
         // Send array data into email for the content
         $data = [
-            'name' => ($profile->typeId === ProfileType::PERSONAL) ? $profile->fullName : $profile->picName,
             'Tanggal Pengajuan' => date_localized($plafondRequest->createdAt, '%d %B %Y'),
             'Nama Customer' => ($profile->typeId === ProfileType::PERSONAL) ? $profile->fullName : null,
             'Nama PIC' => ($profile->typeId === ProfileType::COMPANY) ? $profile->picName : null,
@@ -50,7 +49,7 @@ class SendEmailRequestIncreasePlafondListener
 
         $recipients = explode(',', config('sanf-mobile.mail_to_admin'));
 
-        dispatch(new SendEmailRequestIncreasePlafondForUserJob($data, [$profile->email]));
-        dispatch(new SendEmailRequestIncreasePlafondForAdminJob($data, $recipients));
+        dispatch(new SendEmailRequestIncreasePlafondForUserJob($data, [$profile->email], $profile->fullName));
+        dispatch(new SendEmailRequestIncreasePlafondForAdminJob($data, $recipients, $profile->fullName));
     }
 }
