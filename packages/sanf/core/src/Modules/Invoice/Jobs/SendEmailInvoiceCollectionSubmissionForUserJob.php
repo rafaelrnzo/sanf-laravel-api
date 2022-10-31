@@ -35,8 +35,8 @@ class SendEmailInvoiceCollectionSubmissionForUserJob implements ShouldQueue
     public function handle()
     {
         $data = [
-            'Tanggal Pengajuan' => date_localized($this->data[0]->created_at. '%d %B %Y'),
-            'Tanggal Pengambilan' => date_localized($this->data[0]->pickup_date. '%d %B %Y')
+            'Tanggal Pengajuan' => date_localized($this->data[0]->created_at, '%d %B %Y'),
+            'Tanggal Pengambilan' => date_localized($this->data[0]->pickup_date, '%d %B %Y')
         ];
 
         $tableData = [];
