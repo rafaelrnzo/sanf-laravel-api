@@ -67,7 +67,7 @@ class CreateProjectByUserService extends ProjectByUserService implements Applica
 //            'modified_by' => //TODO USER SNAPSHOT
             'city_name' => $dto->locationMetadata['city_name'],
             'province_name' => $dto->locationMetadata['province_name'],
-            'image_path' => $imageFile['path']
+            'image_path' => $imageFile['path'] ?? null,
         ]);
 
         event(new ProjectCreatedEvent($project));
