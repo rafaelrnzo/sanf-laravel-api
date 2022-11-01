@@ -1,6 +1,6 @@
 <?php
 
-namespace Sanf\Core\Modules\Project;
+namespace Sanf\Core\Modules\Project\Jobs;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

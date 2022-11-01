@@ -27,9 +27,13 @@ use Sanf\Core\Modules\Plafond\Listeners\SendEmailRequestIncreasePlafondListener;
 use Sanf\Core\Modules\Plafond\Listeners\SendEmailRequestNewPlafondListener;
 use Sanf\Core\Modules\Prepayment\Events\PrepaymentSubmissionAddedEvent;
 use Sanf\Core\Modules\Prepayment\Listeners\SendEmailNewPrepaymentSubmissionListener;
+use Sanf\Core\Modules\Project\Events\ProjectApprovedEvent;
 use Sanf\Core\Modules\Project\Events\ProjectCreatedEvent;
+use Sanf\Core\Modules\Project\Events\ProjectRejectedEvent;
 use Sanf\Core\Modules\Project\Events\ProjectUpdatedEvent;
 use Sanf\Core\Modules\Project\Listeners\SendEmailRequestApprovalProjectListener;
+use Sanf\Core\Modules\Project\Listeners\SendNotificationApprovalProjectListener;
+use Sanf\Core\Modules\Project\Listeners\SendNotificationRejectProjectListener;
 use Sanf\Core\Modules\User\Listeners\LogSuccessfulLoginListener;
 
 class EventServiceProvider extends ServiceProvider
@@ -79,6 +83,12 @@ class EventServiceProvider extends ServiceProvider
         ],
         CommodityRejectedEvent::class => [
             SendNotificationRejectCommodityListener::class
+        ],
+        ProjectApprovedEvent::class => [
+            SendNotificationApprovalProjectListener::class
+        ],
+        ProjectRejectedEvent::class => [
+            SendNotificationRejectProjectListener::class
         ],
     ];
 }

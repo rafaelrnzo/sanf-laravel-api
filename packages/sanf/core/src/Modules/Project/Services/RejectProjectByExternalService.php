@@ -4,13 +4,24 @@
 namespace Sanf\Core\Modules\Project\Services;
 
 
+use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\Project\Events\ProjectUpdatedEvent;
+use Sanf\Core\Modules\Project\Events\ProjectRejectedEvent;
 use Sanf\Core\Modules\Project\Exceptions\GeneralProjectException;
 use Sanf\Core\Modules\Project\ProjectStatus;
+use Sanf\Core\Modules\Project\Repositories\ProjectRepositoryInterface;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 
 class RejectProjectByExternalService extends ProjectService implements ApplicationServiceInterface
 {
+    protected UserRepositoryInterface $userRepository;
+
+    public function __construct(ProjectRepositoryInterface $projectRepository, UserRepositoryInterface $userRepository)
+    {
+        parent::__construct($projectRepository);
+        $this->userRepository = $userRepository;
+    }
+
     public function execute($dto = null)
     {
         $project = $this->projectRepository->findByXid($dto->xid);
@@ -23,7 +34,12 @@ class RejectProjectByExternalService extends ProjectService implements Applicati
 //            'modified_by' => //TODO USER SNAPSHOT
         ]);
 
-        event(new ProjectUpdatedEvent($project, $updatedProject));
+        $user = $this->userRepository->findById($project->user_id);
+        if (!$user) {
+            throw new UserNotFoundException();
+        }
+
+        event(new ProjectRejectedEvent($project, $updatedProject, $user));
 
         return $updatedProject;
     }

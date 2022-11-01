@@ -6,7 +6,7 @@ namespace Sanf\Core\Modules\Project\Listeners;
 use Sanf\Core\Modules\Project\Events\AbstractProjectEvent;
 use Sanf\Core\Modules\Project\Events\ProjectUpdatedEvent;
 use Sanf\Core\Modules\Project\ProjectStatus;
-use Sanf\Core\Modules\Project\SendEmailProjectApprovalJob;
+use Sanf\Core\Modules\Project\Jobs\SendEmailProjectApprovalJob;
 
 class SendEmailRequestApprovalProjectListener
 {
