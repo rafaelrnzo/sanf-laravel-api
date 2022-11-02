@@ -71,8 +71,10 @@ use Sanf\Core\Modules\Promo\EloquentPromoRepository;
 use Sanf\Core\Modules\Promo\PromoRepositoryInterface;
 use Sanf\Core\Modules\Setting\Repositories\EloquentFrequentlyAskQuestionRepository;
 use Sanf\Core\Modules\Setting\Repositories\EloquentOnBoardingRepository;
+use Sanf\Core\Modules\Setting\Repositories\EloquentStaticContentRepository;
 use Sanf\Core\Modules\Setting\Repositories\FrequentlyAskQuestionRepositoryInterface;
 use Sanf\Core\Modules\Setting\Repositories\OnBoardingRepositoryInterface;
+use Sanf\Core\Modules\Setting\Repositories\StaticContentRepositoryInterface;
 use Sanf\Core\Modules\Setting\Specifications\EloquentFrequentlyAskQuestionSpecificationFactory;
 use Sanf\Core\Modules\Setting\Specifications\EloquentOnBoardingSpecificationFactory;
 use Sanf\Core\Modules\Setting\Specifications\FrequentlyAskQuestionSpecificationFactoryInterface;
@@ -165,10 +167,8 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(ProfileRepositoryInterface::class,RestProfileRepository::class);
         $this->app->bind(ESignRepositoryInterface::class,EloquentESignRepository::class);
         $this->app->bind(OnBoardingRepositoryInterface::class,EloquentOnBoardingRepository::class);
-        $this->app->bind(
-            FrequentlyAskQuestionRepositoryInterface::class,
-            EloquentFrequentlyAskQuestionRepository::class
-        );
+        $this->app->bind(FrequentlyAskQuestionRepositoryInterface::class, EloquentFrequentlyAskQuestionRepository::class);
+        $this->app->bind(StaticContentRepositoryInterface::class, EloquentStaticContentRepository::class);
         $this->app->bind(UserAuthLogRepositoryInterface::class, EloquentUserAuthLogRepository::class);
 
         $this->app->bind(SurveyEntityFactoryInterface::class, EloquentSurveyFactoryEntity::class);

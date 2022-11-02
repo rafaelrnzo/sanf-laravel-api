@@ -1,6 +1,6 @@
 <?php
 
-namespace Sanf\Web\Modules\Common;
+namespace Sanf\Web\Modules\Setting\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -16,8 +16,8 @@ use Sanf\Core\Modules\Setting\Services\ListFrequentlyAskQuestionCategoryPageServ
 use Sanf\Core\Modules\Setting\Services\ListFrequentlyAskQuestionPageService;
 use Sanf\Core\Modules\User\Services\ApproveDeactivateAccountService;
 use Sanf\Core\Modules\User\Services\GetPersonalAssistantUserService;
-use Sanf\Web\Modules\Common\Transformers\SimpleFrequentlyAskQuestionCategoryPageTransformer;
-use Sanf\Web\Modules\Common\Transformers\SimpleFrequentlyAskQuestionTransformer;
+use Sanf\Web\Modules\Setting\Transformers\SimpleFrequentlyAskQuestionCategoryPageTransformer;
+use Sanf\Web\Modules\Setting\Transformers\SimpleFrequentlyAskQuestionTransformer;
 
 class WebViewController extends RestApiController
 {
