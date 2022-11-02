@@ -70,7 +70,6 @@ class LoginByAppleService implements ApplicationServiceInterface
                 ->where([
                     'provider' => OAuthProvider::APPLE,
                     'provider_id' => $providerId,
-                    'user_id' => $user->id,
                 ])
                 ->first();
             if (!$user && !$userOAuth) {

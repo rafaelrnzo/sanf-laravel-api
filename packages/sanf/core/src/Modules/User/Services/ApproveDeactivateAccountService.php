@@ -60,13 +60,13 @@ class ApproveDeactivateAccountService implements ApplicationServiceInterface
             'created_by' => json_encode(array_merge($createdBy, ['type' => 20])),
         ]);
 
-        $this->repository->newQuery()
-            ->find($userAccountRequest->user_id)
-            ->update([
-                'status_id' => UserStatus::DEACTIVATE,
-                'updated_at' => Carbon::now(),
-                'deleted_at' => Carbon::now(),
-            ]);
+        $user = $this->repository->newQuery()->findOrFail($userAccountRequest->user_id);
+        $user->update([
+            'status_id' => UserStatus::DEACTIVATE,
+            'updated_at' => Carbon::now(),
+            'deleted_at' => Carbon::now(),
+        ]);
+        $user->oauth->delete();
 
         dispatch(new SendApprovalRequestDeletionAccountNotification(['name' => $user->full_name,], $user->username));
 

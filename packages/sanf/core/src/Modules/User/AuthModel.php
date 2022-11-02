@@ -4,6 +4,7 @@
 namespace Sanf\Core\Modules\User;
 
 
+use NbsPhp\Core\Models\UserOAuthModel;
 use NbsPhp\Core\Models\UserStatusModel;
 
 class AuthModel extends \NbsPhp\Core\Models\AuthModel
@@ -61,5 +62,10 @@ class AuthModel extends \NbsPhp\Core\Models\AuthModel
     public function status()
     {
         return $this->belongsTo(UserStatusModel::class, 'status_id');
+    }
+
+    public function oauth()
+    {
+        return $this->hasOne(UserOAuthModel::class, 'user_id');
     }
 }

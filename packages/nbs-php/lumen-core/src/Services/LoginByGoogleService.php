@@ -73,7 +73,6 @@ class LoginByGoogleService implements ApplicationServiceInterface
                 ->where([
                     'provider' => OAuthProvider::GOOGLE,
                     'provider_id' => $providerId,
-                    'user_id' => $user->id,
                 ])
                 ->first();
             if (!$user && !$userOAuth) {

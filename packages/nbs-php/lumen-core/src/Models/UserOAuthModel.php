@@ -3,6 +3,7 @@
 namespace NbsPhp\Core\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use NbsPhp\Core\Models\Model;
 
 /**
@@ -19,6 +20,8 @@ use NbsPhp\Core\Models\Model;
  */
 class UserOAuthModel extends AbstractModel
 {
+    use SoftDeletes;
+
     const PROVIDER_GOOGLE = 'google';
     const PROVIDER_FACEBOOK = 'facebook';
     const PROVIDER_APPLE = 'apple';
@@ -34,6 +37,7 @@ class UserOAuthModel extends AbstractModel
         'avatar',
         'created_at',
         'updated_at',
+        'deleted_at',
     ];
 
     public function user()
