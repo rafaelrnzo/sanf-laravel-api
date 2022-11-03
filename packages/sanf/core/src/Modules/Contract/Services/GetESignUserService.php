@@ -51,7 +51,7 @@ final class GetESignUserService implements ApplicationServiceInterface
         $result = array_map(function ($item) use ($user) {
             return [
                 'email' => isset($item['EMAIL']) ? $item['EMAIL'] : null,
-                'msisdn' => isset($item['MOBILE']) ? $item['MOBILE'] :  $user->phone_number,
+                'msisdn' => isset($item['MOBILE']) ? $item['MOBILE'] : $user->phone_number,
                 'nik' => isset($item['NIK']) ? $item['NIK'] : null,
                 'fullName' => isset($item['NAME']) ? $item['NAME'] : null,
                 'dob' => isset($item['DOB']) ? $item['DOB'] : null,
@@ -70,7 +70,7 @@ final class GetESignUserService implements ApplicationServiceInterface
         ]);
 
         $exceptCodeCondition = ($resultTekenAja['code'] == TekenAjaApiResponseErrorCodeEnum::USER_EXISTS_VERIFIED or $resultTekenAja['code'] == TekenAjaApiResponseErrorCodeEnum::NIK_EMAIL_MATCHED);
-        if ($resultTekenAja['code'] and !$exceptCodeCondition and strtolower($resultTekenAja['status']) != 'ok') {
+        if (!$exceptCodeCondition) {
             if ($resultTekenAja['code'] == TekenAjaApiResponseErrorCodeEnum::USER_DO_NOT_EXISTS) {
                 if ($userTekenAja and ($userTekenAja->email == $result['email'] and $userTekenAja->nik == $result['nik'])) {
                     $result['statusId'] = ESignRegistrationStatusEnum::AVAILABLE;
