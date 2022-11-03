@@ -44,7 +44,7 @@ class SendEmailRequestNewPlafondListener
 
         $recipients = explode(',', config('sanf-mobile.mail_to_admin'));
 
-        dispatch(new SendEmailNewRequestPlafondForUserJob($data, ['diar.ichrom@gmail.com'] , $profile->fullName));
+        dispatch(new SendEmailNewRequestPlafondForUserJob($data, [$profile->email] , $profile->fullName));
         dispatch(new SendEmailNewRequestPlafondForAdminJob($data, $recipients, $profile->fullName));
     }
 }
