@@ -181,7 +181,7 @@
     </div>
     @endif
     <div class="container text-center mt-4 mb-4">
-        <h1 class="font-weight-bold">{{ $content->heading }}</h1>
+        <h5 class="font-weight-bold">{{ $content->heading }}</h5>
         <h6>{{ $content->date }}</h6>
         <h5 class="font-weight-bold">{{ $content->subHeading }}</h5>
 
