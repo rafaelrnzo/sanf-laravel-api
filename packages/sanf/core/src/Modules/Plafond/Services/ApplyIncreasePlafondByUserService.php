@@ -6,6 +6,7 @@ namespace Sanf\Core\Modules\Plafond\Services;
 use Carbon\Carbon;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Plafond\Dtos\AddPlafondRequestDto;
+use Sanf\Core\Modules\Plafond\Enums\PlafondTypeEnum;
 use Sanf\Core\Modules\Plafond\Events\PlafondIncreaseRequestedEvent;
 use Sanf\Core\Modules\Plafond\Exceptions\PlafondInvalidException;
 
@@ -26,7 +27,8 @@ final class ApplyIncreasePlafondByUserService extends PlafondByUserService imple
             'currentBalance' => $plafond->getCurrentBalance(),
             'addedBalance' => $dto->amount - $plafond->getCurrentBalance(),
             'submittedBalance' => $dto->amount,
-            'createdAt' => Carbon::now()
+            'createdAt' => Carbon::now(),
+            'type' => ($dto->typeId == PlafondTypeEnum::UNIT) ? 'Unit' : 'Sparepart',
         ];
         event(new PlafondIncreaseRequestedEvent($plafondRequest, $dto->profile));
     }

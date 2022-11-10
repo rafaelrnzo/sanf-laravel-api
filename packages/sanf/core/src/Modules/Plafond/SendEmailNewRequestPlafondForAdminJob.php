@@ -19,32 +19,34 @@ class SendEmailNewRequestPlafondForAdminJob implements ShouldQueue
 
     protected $emailRecipients;
 
-    protected $fullName;
-
     /**
      * Create a new job instance.
      *
      * @return void
      */
 
-    public function __construct($data, $emailRecipients, $fullName)
+    public function __construct($data, $emailRecipients)
     {
         $this->data = $data;
         $this->emailRecipients = $emailRecipients;
-        $this->fullName = $fullName;
     }
 
     public function handle()
     {
+        $fullName = $this->data['fullName'];
+        $type = $this->data['type'];
+
+        unset($this->data['fullName']);
+        unset($this->data['type']);
         $mailable = (new MailLayout2Columns())
-            ->subject('Pengajuan Plafon Baru')
+            ->subject("Pengajuan Plafon {$type} Baru")
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
             ->rightLogo(asset('assets/png/sanf-tagline.png'))
             ->banner(asset('assets/png/email-verification.png'))
             ->greeting(__('Halo Admin SANFIND!'))
             ->line(
                 __(
-                    '<blockquote style="margin: 0 0;font-size: 16px; line-height: 150%;">Berikut lampiran ringkasan Pengajuan Plafon ' . $this->fullName . '</blockquote> '
+                    '<blockquote style="margin: 0 0;font-size: 16px; line-height: 150%;">Berikut lampiran ringkasan Pengajuan Plafon ' . "{$type} {$fullName}" . '</blockquote> '
                 )
             )
             ->writeContent($this->data)

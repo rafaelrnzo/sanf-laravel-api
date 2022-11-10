@@ -18,32 +18,35 @@ class SendEmailRequestIncreasePlafondForAdminJob implements ShouldQueue
 
     protected $emailRecipients;
 
-    protected $fullName;
-
     /**
      * Create a new job instance.
      *
      * @return void
      */
 
-    public function __construct($data, $emailRecipients, $fullName)
+    public function __construct($data, $emailRecipients)
     {
         $this->data = $data;
         $this->emailRecipients = $emailRecipients;
-        $this->fullName = $fullName;
     }
 
     public function handle()
     {
+        $fullName = $this->data['fullName'];
+        $type = $this->data['type'];
+
+        unset($this->data['fullName']);
+        unset($this->data['type']);
+
         $mailable = (new MailLayout2Columns())
-            ->subject('Naikan Nilai Plafon')
+            ->subject("Naikan Nilai Plafon {$type}")
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
             ->rightLogo(asset('assets/png/sanf-tagline.png'))
             ->banner(asset('assets/png/email-verification.png'))
             ->greeting(__('Halo Admin SANFIND!'))
             ->line(
                 __(
-                    '<blockquote style="margin: 0 0;font-size: 16px; line-height: 150%;">Berikut lampiran ringkasan Pengajuan Plafon ' . $this->fullName . '</blockquote> '
+                    '<blockquote style="margin: 0 0;font-size: 16px; line-height: 150%;">Berikut lampiran ringkasan Pengajuan Plafon ' . "{$type} {$fullName}" . '</blockquote> '
                 )
             )
             ->writeContent($this->data)
@@ -51,7 +54,7 @@ class SendEmailRequestIncreasePlafondForAdminJob implements ShouldQueue
                 ['joinToIndex' => 1, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08);">'],
                 [
                     'joinToIndex' => 6,
-                    'html' => '<p style="font-size: 16px; font-weight: 700; color:#232227;">Ringkasan Kenaikan Nilai Plafon</p>'
+                    'html' => '<p style="font-size: 16px; font-weight: 700; color:#232227;">Ringkasan Kenaikan Nilai Plafon ' . $type . '</p>'
                 ],
                 ['joinToIndex' => 7, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08);">'],
                 ['joinToIndex' => 10, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08);">'],
