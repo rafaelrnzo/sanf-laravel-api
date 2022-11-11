@@ -46,7 +46,7 @@
                             <div class="divider-wrapper">
                                 <div class="divider"></div>
                             </div>
-                            <div class="accordion-body">{{ $faq->description }}</div>
+                            <div class="accordion-body">{!! $faq->description !!}</div>
                         </div>
                     </div>
                 @endforeach
