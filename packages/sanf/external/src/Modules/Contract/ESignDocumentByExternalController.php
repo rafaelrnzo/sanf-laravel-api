@@ -49,12 +49,7 @@ class ESignDocumentByExternalController extends RestApiController
             'data.document_id' => Rule::requiredIf(function () use ($request) {
                 return in_array($request->code, ['DOCUMENT_SIGNED','DOCUMENT_SIGN_FAILED','DOCUMENT_SIGN_COMPLETE']);
             }),
-            'data.sign' => [
-                'array',
-                Rule::requiredIf(function () use ($request) {
-                return $request->code === 'DOCUMENT_SIGNED';
-            })],
-            'data.sign.*.email' => [
+            'data.signer_email' => [
                 'email',
                 Rule::requiredIf(function () use ($request) {
                 return $request->code === 'DOCUMENT_SIGNED';
@@ -81,7 +76,7 @@ class ESignDocumentByExternalController extends RestApiController
         if ($input['code'] === 'DOCUMENT_SIGNED') {
             $dto = (object) [
                 'documentId' => $input['data']['document_id'],
-                'email' => $input['data']['sign'][0]['email'],
+                'email' => $input['data']['signer_email'],
             ];
             $document = $this->postDocumentSigned($dto);
         }
