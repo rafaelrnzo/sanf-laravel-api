@@ -19,7 +19,7 @@ class TekenAjaInternalApiProcessor extends Processor
             $response = $next($request);
             $result = $response->json();
             if (is_null($result)) {
-                throw new \Exception('API CORE ERROR');
+                throw new \Exception('API TEKEN AJA ERROR');
             }
             if ($result['status'] === false) {
                 if ($result['code'] === 'E_EmptyData') {
