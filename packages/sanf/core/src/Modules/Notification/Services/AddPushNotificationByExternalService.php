@@ -74,7 +74,7 @@ final class AddPushNotificationByExternalService implements ApplicationServiceIn
             }
             throw $exception;
         }
-        foreach ($fcmTokens as $fcmToken) {
+        foreach (array_unique($fcmTokens) as $fcmToken) {
             try {
                 $this->pushNotificationService->sendToDevice($fcmToken, $data);
             } catch (InvalidToken $exception) {
