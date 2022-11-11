@@ -1212,7 +1212,7 @@ class InternalApiClient
 
     public function updateESignDocumentFile(string $documentId, string $documentName, string $path)
     {
-        $response = Request::route('e-sign.document.update-status', $this->client)
+        $response = Request::route('e-sign.document.update-file', $this->client)
             ->json([
                 'f_download' => 'Y',
                 'doc_id' => $documentId,
