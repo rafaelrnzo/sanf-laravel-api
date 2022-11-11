@@ -68,7 +68,7 @@ final class ESignUserDocumentCompleteService implements ApplicationServiceInterf
     public function execute($dto = null): object
     {
         // get user base on email
-        $eSignUser = $this->eSignRepository->findUserByEmail($dto->email);
+        $eSignUser = $this->eSignRepository->findUserByEmail($dto->signers[0]['email']);
         if (!$eSignUser) {
             throw new UserNotFoundException();
         }
@@ -157,7 +157,22 @@ final class ESignUserDocumentCompleteService implements ApplicationServiceInterf
         $documentName = $document->document_name;
         // send notification
         // TODO create self service of send notification using event service
-        $fcmTokens = $this->userNotificationRepository->getFcmTokens($user->id);
+        $fcmTokens = [];
+        $usersId = [];
+        foreach ($dto->signers as $signer) {
+            $eSignUser = $this->eSignRepository->findUserByEmail($signer['email']);
+            if (!$eSignUser) {
+                throw new UserNotFoundException();
+            }
+
+            $user = $this->userRepository->findById($eSignUser->user_id);
+            if (!$user) {
+                throw new UserNotFoundException();
+            }
+
+            $fcmTokens = array_merge($this->userNotificationRepository->getFcmTokens($user->id), $fcmTokens);
+            $usersId[] = $user->id;
+        }
         $data = [
             'xid' => nano_id(),
             'title' => __('Tanda Tangan Dokumen Kontrak Selesai'),
@@ -169,20 +184,22 @@ final class ESignUserDocumentCompleteService implements ApplicationServiceInterf
             'click_action' => 'FLUTTER_NOTIFICATION_CLICK'
         ];
 
-        try {
-            $this->userNotificationRepository->create([
-                'xid' => $data['xid'],
-                'type' => (int) $data['type'],
-                'user_id' => $user->id,
-                'data' => $data,
-            ]);
-        } catch (QueryException $exception) {
-            if ($exception->getCode() == '23505') {
-                throw new NotificationInvalidException('ID not unique');
+        foreach ($usersId as $userId) {
+            try {
+                $this->userNotificationRepository->create([
+                    'xid' => $data['xid'],
+                    'type' => (int) $data['type'],
+                    'user_id' => $userId,
+                    'data' => $data,
+                ]);
+            } catch (QueryException $exception) {
+                if ($exception->getCode() == '23505') {
+                    throw new NotificationInvalidException('ID not unique');
+                }
+                throw $exception;
             }
-            throw $exception;
         }
-        foreach ($fcmTokens as $fcmToken) {
+
         foreach (array_unique($fcmTokens) as $fcmToken) {
             try {
                 $this->pushNotificationService->sendToDevice($fcmToken, $data);

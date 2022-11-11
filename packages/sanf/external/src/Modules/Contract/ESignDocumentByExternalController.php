@@ -91,7 +91,7 @@ class ESignDocumentByExternalController extends RestApiController
         if ($input['code'] === 'DOCUMENT_SIGN_COMPLETE') {
             $dto = (object) [
                 'documentId' => $input['data']['document_id'],
-                'email' => $input['data']['signers'][0]['email'],
+                'signers' => $input['data']['signers'],
             ];
             $document = $this->postDocumentComplete($dto);
         }
