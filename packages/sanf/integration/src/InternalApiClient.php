@@ -1195,7 +1195,7 @@ class InternalApiClient
         $response = Request::route('e-sign.document.browse', $this->client)
             ->queryParams([
                 'email' => $email,
-                'filter' => $keyword,
+                'filter' => $keyword ?? '',
             ])->send();
 
         return $response->json();
