@@ -117,6 +117,7 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::get('financing-prerequisites', ['as' => 'financing-prerequisites.list', 'uses' => 'Financing\Controllers\FinancingController@getPrerequisiteList']);
     Route::post('financing-simulations', ['as' => 'financing-simulations.create', 'uses' => 'Financing\Controllers\FinancingController@postCalculateSimulation']);
     Route::get('tnc-financing-application', ['as' => 'financing.tnc', 'uses' => 'Financing\Controllers\FinancingObjectController@getTNC']);
+    Route::get('financing-simulation-categories', ['as' => 'financing-simulations.categories.list', 'uses' => 'Financing\Controllers\FinancingController@browseCategories']);
 
     Route::get('users/profiles/{xid}/financing-applications', ['as' => 'financing-applications.list', 'uses' => 'Financing\Controllers\FinancingApplicationByUserController@getBrowse']);
     Route::get('users/profiles/{xid}/financing-applications/{application_xid}', ['as' => 'financing-applications.detail', 'uses' => 'Financing\Controllers\FinancingApplicationByUserController@getRead']);
