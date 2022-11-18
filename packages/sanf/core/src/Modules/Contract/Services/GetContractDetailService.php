@@ -50,6 +50,7 @@ class GetContractDetailService extends UserService implements ApplicationService
             'total_installment' => $data->TENOR ?? 0,
             'total_outstanding_amount' => $data->TAGIHAN_SISA ?? 0,
             'total_paid_amount' => $data->TERBAYAR ?? 0,
+            'total_penalty_amount' => $data->TOTAL_DENDA ?? 0,
             'total_invoice' => $data->INSTALL_AMT ?? 0,
             'due_at' => $data->DT_DUE ?? null,
             'installment_count' => $data->ANGSURAN_KE ?? 0,

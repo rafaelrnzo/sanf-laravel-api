@@ -18,6 +18,7 @@ class DetailContractTransformer extends TransformerAbstract
             'total_installment' => (int)$item->total_installment,
             'total_outstanding_amount' => (string)$item->total_outstanding_amount,
             'total_paid_amount' => (string)$item->total_paid_amount,
+            'total_penalty_amount' => (string)$item->total_penalty_amount,
             'total_invoice' => (string)$item->total_invoice,
             'due_at' => ($item->due_at) ? Carbon::parse($item->due_at)->format('Y-m-d') : null,
             'installment_count' => (int)$item->installment_count,

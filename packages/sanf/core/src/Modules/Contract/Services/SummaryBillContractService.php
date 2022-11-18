@@ -37,6 +37,15 @@ class SummaryBillContractService extends UserService implements ApplicationServi
             throw new UserNotFoundException();
         }
 
+        $response = $this->internalApiClient->getContractDetail($dto->profile_xid, $dto->contract_no);
+        $data = $response->data[$response->count - 1];
+        $metadata = (object)[
+            'total_amount' => $data->TOTAL_PEMBIAYAAN ?? '0',
+            'total_outstanding_amount' => $data->TAGIHAN_SISA ?? '0',
+            'total_paid_amount' => $data->TERBAYAR ?? '0',
+            'total_penalty_amount' => $data->TOTAL_DENDA ?? '0',
+        ];
+
         try {
             $response = $this->internalApiClient->getFinancingUnitInvoice(
                 $dto->profile_xid,
@@ -69,6 +78,7 @@ class SummaryBillContractService extends UserService implements ApplicationServi
 
         return (object)[
             'data' => $data,
+            'metadata' => $metadata,
             'paginate' => (object)[
                 'total' => $response->total ?? $response->count,
                 'count' => $response->count ?? 0,
