@@ -28,18 +28,22 @@ use Sanf\Core\Modules\Contract\Specifications\EloquentFinancingUnitLocationSubmi
 use Sanf\Core\Modules\Contract\Specifications\ESignDocumentSpecificationFactoryInterface;
 use Sanf\Core\Modules\Contract\Specifications\FinancingUnitLocationSubmissionSpecificationFactoryInterface;
 use Sanf\Core\Modules\Financing\Repositories\EloquentFinancingApplicationRepository;
+use Sanf\Core\Modules\Financing\Repositories\EloquentFinancingCategoryRepository;
 use Sanf\Core\Modules\Financing\Repositories\EloquentFinancingFacilityRepository;
 use Sanf\Core\Modules\Financing\Repositories\EloquentFinancingMethodRepository;
 use Sanf\Core\Modules\Financing\Repositories\EloquentFinancingPrerequisiteRepository;
 use Sanf\Core\Modules\Financing\Repositories\FinancingApplicationRepositoryInterface;
+use Sanf\Core\Modules\Financing\Repositories\FinancingCategoryRepositoryInterface;
 use Sanf\Core\Modules\Financing\Repositories\FinancingFacilityRepositoryInterface;
 use Sanf\Core\Modules\Financing\Repositories\FinancingMethodRepositoryInterface;
 use Sanf\Core\Modules\Financing\Repositories\FinancingPrerequisiteRepositoryInterface;
 use Sanf\Core\Modules\Financing\Specifications\EloquentFinancingApplicationSpecificationFactory;
+use Sanf\Core\Modules\Financing\Specifications\EloquentFinancingCategorySpecificationFactory;
 use Sanf\Core\Modules\Financing\Specifications\EloquentFinancingFacilitySpecificationFactory;
 use Sanf\Core\Modules\Financing\Specifications\EloquentFinancingMethodSpecificationFactory;
 use Sanf\Core\Modules\Financing\Specifications\EloquentFinancingPrerequisiteSpecificationFactory;
 use Sanf\Core\Modules\Financing\Specifications\FinancingApplicationSpecificationFactoryInterface;
+use Sanf\Core\Modules\Financing\Specifications\FinancingCategorySpecificationFactoryInterface;
 use Sanf\Core\Modules\Financing\Specifications\FinancingFacilitySpecificationFactoryInterface;
 use Sanf\Core\Modules\Financing\Specifications\FinancingMethodSpecificationFactoryInterface;
 use Sanf\Core\Modules\Financing\Specifications\FinancingPrerequisiteSpecificationFactoryInterface;
@@ -170,6 +174,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(FrequentlyAskQuestionRepositoryInterface::class, EloquentFrequentlyAskQuestionRepository::class);
         $this->app->bind(StaticContentRepositoryInterface::class, EloquentStaticContentRepository::class);
         $this->app->bind(UserAuthLogRepositoryInterface::class, EloquentUserAuthLogRepository::class);
+        $this->app->bind(FinancingCategoryRepositoryInterface::class, EloquentFinancingCategoryRepository::class);
 
         $this->app->bind(SurveyEntityFactoryInterface::class, EloquentSurveyFactoryEntity::class);
 
@@ -194,6 +199,7 @@ class CoreServiceProvider extends ServiceProvider
             UserAuthLogSpecificationFactoryInterface::class,
             EloquentUserAuthLogSpecificationFactory::class
         );
+        $this->app->bind(FinancingCategorySpecificationFactoryInterface::class, EloquentFinancingCategorySpecificationFactory::class);
     }
 
     protected function registerViews()

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Sanf\Api\Modules\Financing\Controllers;
 
 use Carbon\Carbon;
@@ -8,6 +7,7 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use NbsPhp\Core\Controllers\RestApiController;
+use NbsPhp\Core\Dto\BrowseRequestDto;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
 use Sanf\Api\Modules\Financing\Transformers\FinancingListTransformer;
 use Sanf\Api\Modules\Financing\Transformers\FinancingPrerequisiteTransformer;
@@ -20,6 +20,7 @@ use Sanf\Core\Modules\Financing\Dto\ListFinancingPrerequisiteRequestDto;
 use Sanf\Core\Modules\Financing\Dto\PdfFinancingSimulationRequestDto;
 use Sanf\Core\Modules\Financing\Dto\SendEmailFinancingSimulationDto;
 use Sanf\Core\Modules\Financing\Dto\SimulationCalculationRequestDto;
+use Sanf\Core\Modules\Financing\Services\BrowseFinancingCategoryService;
 use Sanf\Core\Modules\Financing\Services\GetPdfFinancingSimulationService;
 use Sanf\Core\Modules\Financing\Services\ListFinancingFacilityService;
 use Sanf\Core\Modules\Financing\Services\ListFinancingMethodByFacilityService;
@@ -141,46 +142,28 @@ class FinancingController extends RestApiController
             );
 
             // Execute download service
-            return $this->streamDownload(function () use ($downloadFinancingService, $dtoDownload) {
+            return $this->streamDownload(
+                function () use ($downloadFinancingService, $dtoDownload) {
                 echo $downloadFinancingService->execute($dtoDownload);
-            }
-                , 'SANFIND-Simulasi' . date('Y-m-d-H-i-s') . '.pdf'
+            },
+                'SANFIND-Simulasi' . date('Y-m-d-H-i-s') . '.pdf'
             );
         }
 
         return fractal($simulationResult, new FinancingSimulationTransformer());
     }
 
-    public function browseCategories(Request $request)
+    public function browseCategories(Request $request, BrowseFinancingCategoryService $service)
     {
         $input = $this->validate($request, [
+            'keyword' => ['nullable', 'string', 'max:255'],
             'skip' => ['nullable', 'integer'],
             'limit' => ['nullable', 'integer'],
             'sort_by' => ['nullable', 'string', Rule::in(['oldest', 'latest',])],
         ]);
 
-        $data = [];
-        for ($index = 1; $index <= 10; $index++) {
-            $data[] = (object)[
-                'xid' => $index,
-                'title' => 'Buldozer',
-                'image_url' => 'https://via.placeholder.com/400x400.png?text=Image',
-                'description' => "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-                'button_label' => 'Lorem Ipsum',
-                'created_at' => Carbon::now(),
-            ];
-        }
-
-        $result = (object) [
-            'data' => $data,
-            'paginate'=> (object) [
-                'total' => 10,
-                'count' => count($data),
-                'skip' => 0,
-                'limit' => 10,
-                'sort_by' => 'latest',
-            ]
-        ];
+        $dto = new BrowseRequestDto($input);
+        $result = $service->execute($dto);
 
         return fractal($result->data, new GetFinancingCategoryTransformer())
             ->paginateWith(new LazyPaginatorAdapter($result->paginate));
