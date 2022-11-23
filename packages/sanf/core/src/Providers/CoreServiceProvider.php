@@ -98,7 +98,9 @@ use Sanf\Core\Modules\User\Repositories\RestProfileRepository;
 use Sanf\Core\Modules\User\Repositories\UserAuthLogRepositoryInterface;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Core\Modules\User\Specifications\EloquentUserAuthLogSpecificationFactory;
+use Sanf\Core\Modules\User\Specifications\EloquentUserAuthSpecificationFactory;
 use Sanf\Core\Modules\User\Specifications\UserAuthLogSpecificationFactoryInterface;
+use Sanf\Core\Modules\User\Specifications\UserAuthSpecificationFactoryInterface;
 
 class CoreServiceProvider extends ServiceProvider
 {
@@ -200,6 +202,7 @@ class CoreServiceProvider extends ServiceProvider
             EloquentUserAuthLogSpecificationFactory::class
         );
         $this->app->bind(FinancingCategorySpecificationFactoryInterface::class, EloquentFinancingCategorySpecificationFactory::class);
+        $this->app->bind(UserAuthSpecificationFactoryInterface::class, EloquentUserAuthSpecificationFactory::class);
     }
 
     protected function registerViews()
