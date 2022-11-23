@@ -2,7 +2,6 @@
 
 namespace Sanf\Core\Modules\User\Repositories;
 
-
 use NbsPhp\Core\Repositories\AbstractEloquentRepository;
 use Sanf\Core\Modules\User\AuthModel;
 
@@ -13,6 +12,13 @@ class EloquentUserRepository extends AbstractEloquentRepository implements UserR
     public function __construct(AuthModel $model)
     {
         $this->model = $model;
+    }
+
+    public function query($specification)
+    {
+        $records = $specification->buildQuery($this->model)->get();
+
+        return $this->stripEloquentModel($records);
     }
 
     public function findById($id)
