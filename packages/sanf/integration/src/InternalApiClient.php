@@ -1222,4 +1222,15 @@ class InternalApiClient
 
         return $response->json();
     }
+
+    public function browseFinancingApplication(string $email, string $profileId)
+    {
+        $response = Request::route('financing-applications.browse', $this->client)
+            ->queryParams([
+                'email' => $email,
+                'profileid' => $profileId,
+            ])->send();
+
+        return $response->json();
+    }
 }

@@ -14,12 +14,12 @@ class FinancingApplicationSimpleTransformer extends TransformerAbstract
             'xid' => $item->xid,
             'application_code' => $item->application_code,
             'status' => [
-                'id' => $item->status->id,
-                'name' => $item->status->name,
+                'id' => $item->status_id,
+                'name' => $item->status_name,
             ],
-            'financing_object_count' => count($item->objects),
-            'financing_facility_name' => optional($item->facility)->name,
-            'financing_method_name' => optional($item->method)->name,
+            'financing_object_count' => $item->financing_object_count,
+            'financing_facility_name' => $item->financing_facility_name,
+            'financing_method_name' => $item->financing_method_name,
             'created_at' => unix_timestamp($item->created_at),
         ];
     }

@@ -1,14 +1,37 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Financing\Services;
 
-
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Financing\Dto\BrowseFinancingApplicationDto;
+use Sanf\Core\Modules\Financing\Enums\FinancingStatusEnum;
+use Sanf\Core\Modules\Financing\Repositories\FinancingApplicationRepositoryInterface;
+use Sanf\Core\Modules\Financing\Specifications\FinancingApplicationSpecificationFactoryInterface;
+use Sanf\Core\Modules\User\AuthModel;
+use Sanf\Integration\InternalApiClient;
 
-class BrowseFinancingApplicationByUserService extends FinancingByUserService implements ApplicationServiceInterface
+class BrowseFinancingApplicationByUserService implements ApplicationServiceInterface
 {
+    protected FinancingApplicationRepositoryInterface $financingApplicationRepository;
+    protected FinancingApplicationSpecificationFactoryInterface $financingSpecificationFactory;
+    protected AuthModel $userRepository;
+    protected InternalApiClient $client;
+
+    public function __construct(
+        FinancingApplicationRepositoryInterface $financingApplicationRepository,
+        FinancingApplicationSpecificationFactoryInterface $financingSpecificationFactory,
+        AuthModel $userRepository,
+        InternalApiClient $client
+    ) {
+        $this->financingSpecificationFactory = $financingSpecificationFactory;
+        $this->userRepository = $userRepository;
+        $this->client = $client;
+        $this->financingApplicationRepository = $financingApplicationRepository;
+    }
+
     /**
      * @param BrowseFinancingApplicationDto $dto
      * @return object
@@ -16,19 +39,71 @@ class BrowseFinancingApplicationByUserService extends FinancingByUserService imp
      */
     public function execute($dto = null)
     {
-        $this->findUserOrFail($dto->userId);
-        $data = $this->financingApplicationRepository->query(
-            $this->financingSpecificationFactory->paginateByUser($dto->userId, $dto->xid, $dto->skip, $dto->limit, $dto->sortBy, $dto->keyword)
+        $user = $this->userRepository->newQuery()->find($dto->userId);
+        if (!$user) {
+            throw new UserNotFoundException();
+        }
+        try {
+            $result = $this->client->browseFinancingApplication($user->username, $dto->xid);
+            $coreData = array_map(function ($data) {
+                return (object)[
+                    'xid' => $data['XID'],
+                    'application_code' => $data['APPLICATION_CODE'],
+                    'status_id' => (new FinancingStatusEnum($data['STATUS_NAME']))->getStatusId(),
+                    'status_name' => $data['STATUS_NAME'],
+                    'financing_object_count' => $data['COUNT'],
+                    'financing_facility_name' => $data['FACILITY_NAME'] ?? null,
+                    'financing_method_name' => $data['METHOD_NAME'] ?? null,
+                    'created_at' => Carbon::parse($data['CREATED_AT']),
+                ];
+            }, $result);
+        } catch (\Exception $e) {
+            Log::warning("Core Exception");
+            $coreData = [];
+        }
+
+        $result = $this->financingApplicationRepository->query(
+            $this->financingSpecificationFactory->paginateByUser(
+                $dto->userId,
+                $dto->xid,
+                $dto->skip,
+                $dto->limit,
+                $dto->sortBy,
+                $dto->keyword
+            )
         );
+        $internalData = array_map(function ($data) {
+            return (object)[
+                'xid' => $data->xid,
+                'application_code' => $data->application_code,
+                'status_id' => $data->status->id,
+                'status_name' => $data->status->name,
+                'financing_object_count' => count($data->objects),
+                'financing_facility_name' => optional($data->facility)->name,
+                'financing_method_name' => optional($data->method)->name,
+                'created_at' => $data->created_at,
+            ];
+        }, $result);
+
         $total = $this->financingApplicationRepository->size(
-            $this->financingSpecificationFactory->paginateByUser($dto->userId, $dto->xid, null, null, null, $dto->keyword)
+            $this->financingSpecificationFactory->paginateByUser(
+                $dto->userId,
+                $dto->xid,
+                null,
+                null,
+                null,
+                $dto->keyword
+            )
         );
 
+        $mergeData = collect($coreData)->merge($internalData)->sortByDesc('created_at');
+
+        $totalCoreData = count($coreData);
         return (object)[
-            'data' => $data,
+            'data' => $mergeData,
             'paginate' => (object)[
-                'total' => (int)$total,
-                'count' => collect($data)->count(),
+                'total' => (int)$total + $totalCoreData,
+                'count' => count($mergeData) + $totalCoreData,
                 'skip' => (int)$dto->skip,
                 'limit' => (int)$dto->limit,
                 'sort_by' => $dto->sortBy,
