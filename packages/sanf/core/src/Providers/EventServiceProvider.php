@@ -21,6 +21,8 @@ use Sanf\Core\Modules\Insurance\Events\InsuranceClaimSubmissionAddedEvent;
 use Sanf\Core\Modules\Insurance\Listeners\SendEmailNewInsuranceClaimSubmissionListener;
 use Sanf\Core\Modules\Invoice\Events\InvoiceCollectionSubmissionAddedEvent;
 use Sanf\Core\Modules\Invoice\Listeners\SendEmailNewInvoiceCollectionSubmissionListener;
+use Sanf\Core\Modules\Notification\Events\NotifiedUserByExternalEvent;
+use Sanf\Core\Modules\Notification\Listeners\SendPushNotificationByExternalListener;
 use Sanf\Core\Modules\Plafond\Events\PlafondIncreaseRequestedEvent;
 use Sanf\Core\Modules\Plafond\Events\PlafondRequestedEvent;
 use Sanf\Core\Modules\Plafond\Listeners\SendEmailRequestIncreasePlafondListener;
@@ -89,6 +91,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         ProjectRejectedEvent::class => [
             SendNotificationRejectProjectListener::class
+        ],
+        NotifiedUserByExternalEvent::class => [
+            SendPushNotificationByExternalListener::class
         ],
     ];
 }
