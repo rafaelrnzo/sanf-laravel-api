@@ -1,11 +1,11 @@
 <?php
 
-
 namespace Sanf\Core\Modules\User;
 
-
+use Carbon\Carbon;
 use NbsPhp\Core\Models\UserOAuthModel;
 use NbsPhp\Core\Models\UserStatusModel;
+use Sanf\Core\Modules\User\Enums\UserAuthLogStatusEnum;
 
 class AuthModel extends \NbsPhp\Core\Models\AuthModel
 {
@@ -67,5 +67,10 @@ class AuthModel extends \NbsPhp\Core\Models\AuthModel
     public function oauth()
     {
         return $this->hasOne(UserOAuthModel::class, 'user_id');
+    }
+
+    public function deactivateLogs()
+    {
+        return $this->hasMany(UserAuthLogModel::class, 'user_id', 'id');
     }
 }
