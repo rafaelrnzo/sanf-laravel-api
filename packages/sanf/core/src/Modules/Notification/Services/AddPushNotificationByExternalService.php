@@ -2,7 +2,6 @@
 
 namespace Sanf\Core\Modules\Notification\Services;
 
-
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Firebase\Auth\Token\Exception\InvalidToken;
@@ -74,6 +73,7 @@ final class AddPushNotificationByExternalService implements ApplicationServiceIn
             }
             throw $exception;
         }
+
         foreach (array_unique($fcmTokens) as $fcmToken) {
             try {
                 $this->pushNotificationService->sendToDevice($fcmToken, $data);
