@@ -1,11 +1,10 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Financing\Services;
-
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Financing\Dto\SimulationCalculationResultDto;
+use Sanf\Core\Modules\Financing\Enums\FinancingMethodEnum;
 use Sanf\Core\Modules\Financing\Exceptions\FinancingGeneralException;
 use Sanf\Core\Modules\Financing\Repositories\FinancingApplicationRepositoryInterface;
 use Sanf\Core\Modules\Financing\Repositories\FinancingFacilityRepositoryInterface;
@@ -49,6 +48,14 @@ class SimulationCalculationService extends FinancingService implements Applicati
 
         // Calculation
         $calc = ($R + ($R / ($R1 - 1))) * ($dto->financing_amount - $dto->down_payment_amount);
+        $isAnjak = in_array($financing_method->id, [
+            FinancingMethodEnum::ANJAK_PIUTANG_PEMBERIAN,
+            FinancingMethodEnum::ANJAK_PIUTANG_TANPA_PEMBERIAN,
+        ]);
+        if ($isAnjak) {
+            // formula = (total invoice-nilai retensi) - ((total invoice - nilai retensi)* % rate anjak piutang)
+            $calc = ($dto->financing_amount - $dto->down_payment_amount) - (($dto->financing_amount - $dto->down_payment_amount) * $financing_method->interest_rate);
+        }
 
         // Formatting calculation
         $installment_per_month = number_format($calc, 2, '.', '');

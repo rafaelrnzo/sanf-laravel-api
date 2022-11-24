@@ -31,7 +31,7 @@ class GetPdfFinancingSimulationService extends FinancingByUserService implements
                 'uang_muka' => 'Rp. ' . number_format($dto->down_payment_amount, 0, ',', '.'),
                 'persen_dp' => $dto->down_payment_percentage . '%',
                 'tenor' => $dto->tenor_in_month . ' Bulan',
-                'angsuran_perbulan' => 'Rp. ' . number_format($dto->installment_per_month, 3, ',', '.'),
+                'angsuran_perbulan' => 'Rp. ' . number_format($dto->installment_per_month, 0, ',', '.'),
                 'suku_bunga' => $dto->interest_rate_percentage . '%'
             ],
             'closingSentence' => 'Hasil perhitungan ini bersifat tidak mengikat',
