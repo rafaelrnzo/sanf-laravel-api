@@ -1227,7 +1227,7 @@ class InternalApiClient
     {
         $response = Request::route('financing-applications.browse', $this->client)
             ->queryParams([
-                'email' => $email,
+                'userid' => $email,
                 'profileid' => $profileId,
             ])->send();
 

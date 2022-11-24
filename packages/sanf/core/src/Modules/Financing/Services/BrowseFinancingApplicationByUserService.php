@@ -54,9 +54,9 @@ class BrowseFinancingApplicationByUserService implements ApplicationServiceInter
                     'financing_object_count' => $data['COUNT'],
                     'financing_facility_name' => $data['FACILITY_NAME'] ?? null,
                     'financing_method_name' => $data['METHOD_NAME'] ?? null,
-                    'created_at' => Carbon::parse($data['CREATED_AT']),
+                    'created_at' => Carbon::parse($data['CRATED_AT']),
                 ];
-            }, $result);
+            }, $result['data']);
         } catch (\Exception $e) {
             Log::warning("Core Exception");
             $coreData = [];
