@@ -36,7 +36,7 @@ class EloquentPaginateFinancingMethodSpecification
             })->when($this->limit, function ($query) {
                 return $query->limit($this->limit);
             })->when($this->sort_by, function ($query) {
-                return $query->orderBy('created_at', $this->sort_by);
+                return $query->orderBy('priority', $this->sort_by);
             });
         return $query;
     }
