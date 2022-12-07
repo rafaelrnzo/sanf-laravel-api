@@ -1,11 +1,11 @@
 <?php
 
-
 namespace NbsPhp\Core\Response;
 
-
 use Exception;
+use GuzzleHttp\Exception\ServerException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Arr;
 use NbsPhp\Core\Exceptions\ApiException;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +23,7 @@ class JsonResponseMapper implements ResponseMapperInterface
 
         $content = $decodedContent ?? $response->getContent();
 
-        if($response instanceof JsonResponse && (isset($content['success']) && $content['success'] == false)) {
+        if ($response instanceof JsonResponse && (isset($content['success']) && $content['success'] == false)) {
             return $response;
         }
 
@@ -108,11 +108,18 @@ class JsonResponseMapper implements ResponseMapperInterface
         $error['message'] = $errorMapping['message'] ?? __('Internal Server Error');
 
         if ($exception instanceof ApiException) {
-            if($exception->getData() != null){
+            if ($exception->getData() != null) {
                 $error['data'] = $exception->getData();
             }
             $error['code'] = $errorMapping['code'] ?? $exception->getCode();
             $error['message'] = $errorMapping['message'] ?? $exception->getMessage();
+        }
+
+        if ($exception instanceof ServerException) {
+            $error['code'] = $errorMapping['code'] ?? $exception->getCode();
+            if ($error['code'] == HttpResponse::HTTP_INTERNAL_SERVER_ERROR || $error['code'] == HttpResponse::HTTP_BAD_GATEWAY) {
+                $error['message'] = "Maaf, aplikasi sedang mengalami gangguan integrasi. Mohon hubungi CS";
+            }
         }
 
         //prevent debug leak on production env
