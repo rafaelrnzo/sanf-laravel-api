@@ -40,10 +40,10 @@ class SummaryBillContractService extends UserService implements ApplicationServi
         $response = $this->internalApiClient->getContractDetail($dto->profile_xid, $dto->contract_no);
         $data = $response->data[$response->count - 1];
         $metadata = (object)[
-            'total_amount' => $data->TOTAL_PEMBIAYAAN ?? '0',
-            'total_outstanding_amount' => $data->TAGIHAN_SISA ?? '0',
-            'total_paid_amount' => $data->TERBAYAR ?? '0',
-            'total_penalty_amount' => $data->TOTAL_DENDA ?? '0',
+            'total_amount' => $data->TOTAL_PEMBIAYAAN ?? 0,
+            'total_penalty_amount' => $data->TOTAL_DENDA ?? 0,
+            'total_paid_amount' => $data->TERBAYAR ?? 0,
+            'total_outstanding_amount' => $data->TAGIHAN_SISA ?? 0,
         ];
 
         try {
@@ -73,6 +73,7 @@ class SummaryBillContractService extends UserService implements ApplicationServi
                 'bill_amount' => $item->TAGIHAN ?? 0,
                 'penalty_amount' => $item->DENDA_PENALTY ?? 0,
                 'currency_type' => $item->CURR_ID ?? null,
+                'installment_index' => $item->ANG_KE ?? null
             ];
         });
 
