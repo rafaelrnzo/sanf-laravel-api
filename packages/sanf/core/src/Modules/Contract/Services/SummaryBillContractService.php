@@ -44,6 +44,8 @@ class SummaryBillContractService extends UserService implements ApplicationServi
             'total_penalty_amount' => $data->TOTAL_DENDA ?? 0,
             'total_paid_amount' => $data->TERBAYAR ?? 0,
             'total_outstanding_amount' => $data->TAGIHAN_SISA ?? 0,
+            'total_invoice_amount' => ($data->INSTALL_AMT ?? 0) + ($data->TOTAL_DENDA ?? 0),
+            'total_installment_amount' => $data->INSTALL_AMT ?? 0,
         ];
 
         try {

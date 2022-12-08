@@ -119,6 +119,8 @@ final class ContractFinancingUnitByUserController extends RestApiController
                 'total_outstanding_amount' => $result->metadata->total_outstanding_amount,
                 'total_paid_amount' => $result->metadata->total_paid_amount,
                 'total_penalty_amount' => $result->metadata->total_penalty_amount,
+                'total_invoice_amount' => $result->metadata->total_invoice_amount,
+                'total_installment_amount' => $result->metadata->total_installment_amount,
             ]);
     }
 }
