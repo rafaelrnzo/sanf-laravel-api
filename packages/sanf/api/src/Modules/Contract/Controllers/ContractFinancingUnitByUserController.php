@@ -115,12 +115,12 @@ final class ContractFinancingUnitByUserController extends RestApiController
         return fractal($result->data, SummaryBillContractTransformer::class)
             ->paginateWith(new LazyPaginatorAdapter($result->paginate))
             ->addMeta([
-                'total_amount' => $result->metadata->total_amount,
-                'total_outstanding_amount' => $result->metadata->total_outstanding_amount,
-                'total_paid_amount' => $result->metadata->total_paid_amount,
-                'total_penalty_amount' => $result->metadata->total_penalty_amount,
-                'total_invoice_amount' => $result->metadata->total_invoice_amount,
-                'total_installment_amount' => $result->metadata->total_installment_amount,
+                'total_amount' => (string)$result->metadata->total_amount,
+                'total_outstanding_amount' => (string)$result->metadata->total_outstanding_amount,
+                'total_paid_amount' => (string)$result->metadata->total_paid_amount,
+                'total_penalty_amount' => (string)$result->metadata->total_penalty_amount,
+                'total_invoice_amount' => (string)$result->metadata->total_invoice_amount,
+                'total_installment_amount' => (string)$result->metadata->total_installment_amount,
             ]);
     }
 }
