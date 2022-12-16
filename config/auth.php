@@ -29,7 +29,9 @@ return [
     'views' => [
         'reset-password' => 'core::auth.reset-password',
         'verify-email' => 'core::layouts.email-verified',
-        'user-activation' => 'core::layouts.activation',
+        'user-activation' => 'core::auth.user-activation',
+        'user-activated' => 'core::layouts.activation',
+        'password-set' => 'core::layouts.password-set',
     ],
 
     'features' => [
@@ -315,8 +317,15 @@ return [
             [
                 'method' => 'get',
                 'uri' => "pages/activation",
-                'name' => 'user.activate',
+                'name' => 'user.activate-page',
                 'action' => "{$namespace}AuthController@userActivationPage",
+                'middleware' => ['http-logger'],
+            ],
+            [
+                'method' => 'post',
+                'uri' => "/pages/activation",
+                'name' => 'user.activate-from-web',
+                'action' => "Sanf\Api\Modules\User\Controllers\AuthController@userActivationByWeb",
                 'middleware' => ['http-logger'],
             ],
             [

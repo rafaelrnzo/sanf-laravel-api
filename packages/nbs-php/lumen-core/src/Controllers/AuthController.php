@@ -6,14 +6,17 @@ namespace NbsPhp\Core\Controllers;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use NbsPhp\Core\Dto\AppLoginRequestDto;
 use NbsPhp\Core\Dto\DeviceInfoRequestDto;
 use NbsPhp\Core\Dto\LoginRequestDto;
 use NbsPhp\Core\Dto\RegisterRequestDto;
 use NbsPhp\Core\Dto\UpdateSessionRequestDto;
 use NbsPhp\Core\Enum\DevicePlatform;
+use NbsPhp\Core\Exceptions\ApiException;
 use NbsPhp\Core\Exceptions\UnauthorizedException;
 use NbsPhp\Core\Exceptions\UserActivationFailedException;
+use NbsPhp\Core\Exceptions\UserAlreadyActivatedException;
 use NbsPhp\Core\Exceptions\VerifyEmailFailedException;
 use NbsPhp\Core\Jwt\JWTHelper;
 use NbsPhp\Core\Services\ActivateUserServiceInterface;
@@ -25,6 +28,7 @@ use NbsPhp\Core\Services\RegisterByEmailServiceInterface;
 use NbsPhp\Core\Services\SendEmailActivationService;
 use NbsPhp\Core\Services\SendEmailVerificationService;
 use NbsPhp\Core\Services\UpdateSessionService;
+use NbsPhp\Core\Services\ValidateUserActivatedService;
 use NbsPhp\Core\Services\VerifyEmailServiceInterface;
 
 class AuthController extends RestApiController
@@ -283,9 +287,60 @@ class AuthController extends RestApiController
         return $this->responseOk();
     }
 
-    public function userActivationPage()
+    public function userActivationPage(Request $request, ValidateUserActivatedService $service)
     {
-        return view(config('auth.views.user-activation'));
+        try {
+            $jwt = $this->extractActivationToken($request);
+            $dto = (object)[
+                'userId' => $jwt->sub,
+                'token' => $jwt->token,
+            ];
+            $user = $service->execute($dto);
+            return view(config('auth.views.user-activation'))->with([
+                    'token' => $request->token,
+                    'email' => $user->username,
+                    'error' => $request->session()->get('error'),
+                ]
+            );
+        } catch (UserAlreadyActivatedException $exception) {
+            return view(config('auth.views.user-activated'));
+        } catch (ApiException $exception) {
+            report($exception);
+            if ($request->expectsJson()) {
+                throw $exception;
+            }
+            return view(config('auth.views.user-activation'))->with(
+                ['token' => $request->token, 'error' => $exception->getMessage()]
+            )->withErrors(['error' => $exception->getMessage()]);
+        }
+    }
+
+    public function userActivationByWeb(Request $request, ActivateUserServiceInterface $service)
+    {
+        try {
+            if ($request->has('password_confirmation')) {
+                $this->validate($request, ['password' => 'confirmed']);
+            }
+            $input = $this->validate($request, [
+                'password' => config('auth.input_validations.password.rule', ['required'])
+            ], config('auth.input_validations.password.messages'));
+            $jwt = $this->extractActivationToken($request);
+            $dto = (object)[
+                'userId' => $jwt->sub,
+                'token' => $jwt->token,
+                'password' => $input['password']
+            ];
+            $service->execute($dto);
+        } catch (ValidationException $exception) {
+            return redirect_with_session()
+                ->route(extract_route_name($request), ['token' => $request->token])
+                ->with(['error' => extract_validation_message($exception)]);
+        } catch (ApiException $exception) {
+            return redirect_with_session()
+                ->route(extract_route_name($request), ['token' => $request->token])
+                ->with(['error' => $exception->getMessage()]);
+        }
+        return redirect()->route('user.activate-page', ['token' => $request->token]);
     }
 
     public function userActivationByApp(Request $request, ActivateUserServiceInterface $service)

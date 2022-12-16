@@ -5,6 +5,7 @@ use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\File;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 if (!function_exists('nano_id')) {
     /**
@@ -148,14 +149,14 @@ if (!function_exists('unix_timestamp')) {
 }
 
 
-if (! function_exists('redirect_with_session')) {
+if (!function_exists('redirect_with_session')) {
     /**
      * Get an instance of the redirector.
      *
-     * @param  string|null  $to
-     * @param  int  $status
-     * @param  array  $headers
-     * @param  bool|null  $secure
+     * @param string|null $to
+     * @param int $status
+     * @param array $headers
+     * @param bool|null $secure
      * @return \Laravel\Lumen\Http\Redirector|\Illuminate\Http\RedirectResponse
      */
     function redirect_with_session($to = null, $status = 302, $headers = [], $secure = null)
@@ -183,5 +184,23 @@ if (!function_exists('date_localized')) {
         return optional(Carbon::make($dateTime))
             ->setTimezone(new \DateTimeZone($timezone))
             ->formatLocalized($format);
+    }
+}
+
+if (!function_exists('extract_validation_message')) {
+    function extract_validation_message(ValidationException $exception)
+    {
+        $errors = $exception->getResponse()->original;
+        return collect(array_dot($errors))->first();
+    }
+}
+
+if (!function_exists('extract_route_name')) {
+    function extract_route_name(\Illuminate\Http\Request $request)
+    {
+        $methodName = $request->getMethod();
+        $pathInfo = $request->getPathInfo();
+        return app()->router->getRoutes()[$methodName . $pathInfo]['action']['as'];
+
     }
 }

@@ -97,7 +97,7 @@ trait ResetsPasswords
             }
 
             return redirect_with_session()->route('password.request', ['token' => $request->token])
-                ->with(['error' => $this->parseValidationMessage($exception)]);
+                ->with(['error' => extract_validation_message($exception)]);
         }
         catch (\Exception $exception) {
             report($exception);
@@ -107,11 +107,6 @@ trait ResetsPasswords
             return redirect_with_session()->route('password.request', ['token' => $request->token])
                 ->with(['error' => $exception->getMessage()]);
         }
-    }
-
-    protected function parseValidationMessage(ValidationException $exception){
-        $errors = $exception->getResponse()->original;
-        return collect(array_dot($errors))->first();
     }
 
     /**

@@ -51,7 +51,7 @@ class UserActivationNotification extends Notification
             return "{$userActivationUrl}?email={$email}&token={$jwtToken}";
         }
 
-        return route('user.activate', [
+        return route('user.activate-page', [
             'email' => $email,
             'token' => $jwtToken,
         ]);
