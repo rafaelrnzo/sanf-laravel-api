@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use NbsPhp\Core\Exceptions\ResetPasswordFailedException;
 use NbsPhp\Core\Jwt\JWTHelper;
@@ -43,10 +44,19 @@ trait ResetsPasswords
      */
     public function showResetForm(Request $request)
     {
-        $request = $this->getRequest($request);
-        return view('auth.passwords.reset')->with(
-            ['token' => $request->token, 'email' => $request->email]
-        );
+        try {
+            return view(config('auth.views.reset-password'))->with(
+                ['token' => $request->token, 'error' => $request->session()->get('error')]
+            );
+        } catch (\Exception $exception) {
+            report($exception);
+            if ($request->expectsJson()) {
+                throw $exception;
+            }
+            return view(config('auth.views.reset-password'))->with(
+                ['token' => $request->token, 'error' => $exception->getMessage()]
+            )->withErrors(['error' => $exception->getMessage()]);
+        }
     }
 
     /**
@@ -57,25 +67,51 @@ trait ResetsPasswords
      */
     public function reset(Request $request)
     {
-        $request = $this->getRequest($request);
+        try {
+            $this->validate($request, $this->rules(), $this->validationErrorMessages());
 
-        $this->validate($request, $this->rules(), $this->validationErrorMessages());
+            //to handle validation from web pages, see reset-password.blade.php
+            if ($request->has('password_confirmation')) {
+                $this->validate($request, ['password' => 'confirmed']);
+            }
 
-        // Here we will attempt to reset the user's password. If it is successful we
-        // will update the password on an actual user model and persist it to the
-        // database. Otherwise we will parse the error and return the response.
-        $response = $this->broker()->reset(
-            $this->credentials($request), function ($user, $password) {
-            $this->resetPassword($user, $password);
+            // Here we will attempt to reset the user's password. If it is successful we
+            // will update the password on an actual user model and persist it to the
+            // database. Otherwise we will parse the error and return the response.
+            $response = $this->broker()->reset(
+                $this->credentials($this->getRequest($request)), function ($user, $password) {
+                $this->resetPassword($user, $password);
+            }
+            );
+
+            // If the password was successfully reset, we will redirect the user back to
+            // the application's home authenticated view. If there is an error we can
+            // redirect them back to where they came from with their error message.
+            return $response == Password::PASSWORD_RESET
+                ? $this->sendResetResponse($request, $response)
+                : $this->sendResetFailedResponse($request, $response);
+        } catch (ValidationException $exception) {
+            report($exception);
+            if ($request->expectsJson()) {
+                throw $exception;
+            }
+
+            return redirect_with_session()->route('password.request', ['token' => $request->token])
+                ->with(['error' => $this->parseValidationMessage($exception)]);
         }
-        );
+        catch (\Exception $exception) {
+            report($exception);
+            if ($request->expectsJson()) {
+                throw $exception;
+            }
+            return redirect_with_session()->route('password.request', ['token' => $request->token])
+                ->with(['error' => $exception->getMessage()]);
+        }
+    }
 
-        // If the password was successfully reset, we will redirect the user back to
-        // the application's home authenticated view. If there is an error we can
-        // redirect them back to where they came from with their error message.
-        return $response == Password::PASSWORD_RESET
-            ? $this->sendResetResponse($request, $response)
-            : $this->sendResetFailedResponse($request, $response);
+    protected function parseValidationMessage(ValidationException $exception){
+        $errors = $exception->getResponse()->original;
+        return collect(array_dot($errors))->first();
     }
 
     /**
@@ -152,7 +188,11 @@ trait ResetsPasswords
      */
     protected function sendResetResponse(Request $request, $response)
     {
-        return $this->responseOk();
+        if ($request->expectsJson()) {
+            return $this->responseOk();
+        }
+
+        return view('core::layouts.message')->with(['message' => 'Password Berhasil Dibuat']);
     }
 
     /**
@@ -206,7 +246,7 @@ trait ResetsPasswords
         $jwtToken = $request->token ?? str_replace('Bearer ', '', $request->header('X-Reset-Password-Token'));
         $decodedToken = (new JWTHelper())->setToken($jwtToken)->getDecoded();
         if (is_null($decodedToken)) {
-            throw new ResetPasswordFailedException('Reset Token Invalid');
+            throw new ResetPasswordFailedException(trans(Password::INVALID_TOKEN));
         }
         return $decodedToken;
     }

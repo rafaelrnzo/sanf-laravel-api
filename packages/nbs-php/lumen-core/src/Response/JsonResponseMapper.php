@@ -5,6 +5,7 @@ namespace NbsPhp\Core\Response;
 use Exception;
 use GuzzleHttp\Exception\ServerException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Arr;
 use NbsPhp\Core\Exceptions\ApiException;
@@ -19,6 +20,10 @@ class JsonResponseMapper implements ResponseMapperInterface
      */
     public function successResponse(Response $response)
     {
+        if($response instanceof RedirectResponse){
+            return $response;
+        }
+
         $decodedContent = json_decode($response->getContent(), true);
 
         $content = $decodedContent ?? $response->getContent();

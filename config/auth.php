@@ -27,8 +27,7 @@ return [
     ],
 
     'views' => [
-//        'reset-password' => 'core::auth.reset-password',
-        'reset-password' => 'core::pages.install-mobile-app',
+        'reset-password' => 'core::auth.reset-password',
         'verify-email' => 'core::layouts.email-verified',
         'user-activation' => 'core::layouts.activation',
     ],
@@ -83,7 +82,7 @@ return [
         'reset_password' => [
             'rules' => [
                 'token' => 'required',
-                'password' => $passwordValidationRule
+                'password' => $passwordValidationRule,
             ],
             'messages' => [
                 'password.regex' => $passwordValidationMessage
@@ -254,7 +253,7 @@ return [
                 'method' => 'get',
                 'uri' => "pages/reset-password",
                 'name' => 'password.request',
-                'action' => "{$namespace}ForgotPasswordController@showLinkRequestForm",
+                'action' => "{$namespace}ResetPasswordController@showResetForm",
                 'middleware' => ['http-logger'],
             ],
             [

@@ -1,6 +1,9 @@
 <?php
 
+use Illuminate\Routing\Redirector;
 use NbsPhp\Core\Exceptions\Handler;
+use NbsPhp\Core\Response\JsonResponseMapper;
+use NbsPhp\Core\Response\ResponseMapperInterface;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -37,6 +40,7 @@ $app->withEloquent();
 | your own bindings here if you like or you can make another file.
 |
 */
+$app->bind(ResponseMapperInterface::class, JsonResponseMapper::class);
 
 $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
@@ -60,6 +64,7 @@ $app->singleton(
 */
 // TODO MOVE TO CORE
 $app->configure('app');
+$app->configure('session');
 $app->configure('jwt');
 $app->configure('auth');
 $app->configure('database');
@@ -87,9 +92,30 @@ $app->configure('tinker');
 |
 */
 
-// $app->middleware([
-//     App\Http\Middleware\ExampleMiddleware::class
-// ]);
+ $app->middleware([
+     \Illuminate\Session\Middleware\StartSession::class,
+ ]);
+
+$app->singleton(Illuminate\Session\SessionManager::class, function () use ($app) {
+    return $app->loadComponent('session', Illuminate\Session\SessionServiceProvider::class, 'session');
+});
+
+$app->singleton('session.store', function () use ($app) {
+    return $app->loadComponent('session', Illuminate\Session\SessionServiceProvider::class, 'session.store');
+});
+
+$app->singleton('redirectSession', function ($app) {
+    $redirector = new \NbsPhp\Core\SessionRedirector($app);
+
+    // If the session is set on the application instance, we'll inject it into
+    // the redirector instance. This allows the redirect responses to allow
+    // for the quite convenient "with" methods that flash to the session.
+    if (isset($app['session.store'])) {
+        $redirector->setSession($app['session.store']);
+    }
+
+    return $redirector;
+});
 
 // $app->routeMiddleware([
 //     'auth' => App\Http\Middleware\Authenticate::class,
