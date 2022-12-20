@@ -98,8 +98,7 @@ trait ResetsPasswords
 
             return redirect_with_session()->route('password.request', ['token' => $request->token])
                 ->with(['error' => extract_validation_message($exception)]);
-        }
-        catch (\Exception $exception) {
+        } catch (\Exception $exception) {
             report($exception);
             if ($request->expectsJson()) {
                 throw $exception;
@@ -186,8 +185,7 @@ trait ResetsPasswords
         if ($request->expectsJson()) {
             return $this->responseOk();
         }
-
-        return view('core::layouts.message')->with(['message' => 'Password Berhasil Dibuat']);
+        return view(config('auth.views.password-set'));
     }
 
     /**

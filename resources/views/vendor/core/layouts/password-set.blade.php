@@ -25,7 +25,7 @@
                                 <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                                     <tr>
                                         <td>
-                                            <p style="color: #232227" class="text-lg">Password Berhasil Dibuat</p>
+                                            <p style="color: #232227" class="text-xl4"><b>Password Berhasil Dibuat</b></p>
                                         </td>
                                     </tr>
                                 </table>
@@ -35,8 +35,16 @@
                                         <td>
                                             <blockquote>
                                                 <p class="text-lg">
-                                                    Silakan install aplikasi mobile app SANFIND untuk melanjutkan proses aktivasi
+                                                    Password baru Anda berhasil dibuat, silakan buka aplikasi <b style="color: #192F7C">SANFIND</b> melalui perangkat smartphone Anda kemudian Login menggunakan akun dan password baru Anda.
                                                 </p>
+                                            </blockquote>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <blockquote>
+                                                <p class="text-lg">
+                                                    Jika Anda tidak memiliki aplikasi <b style="color: #192F7C">SANFIND</b> atau sudah uninstall aplikasi silakan download terlebih dahulu melalui Play Store atau App Store.                                                </p>
                                             </blockquote>
                                         </td>
                                     </tr>

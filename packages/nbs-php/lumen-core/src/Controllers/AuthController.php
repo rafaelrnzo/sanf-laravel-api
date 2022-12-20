@@ -303,7 +303,7 @@ class AuthController extends RestApiController
                 ]
             );
         } catch (UserAlreadyActivatedException $exception) {
-            return view(config('auth.views.user-activated'));
+            return view(config('auth.views.password-set'));
         } catch (ApiException $exception) {
             report($exception);
             if ($request->expectsJson()) {
@@ -364,7 +364,7 @@ class AuthController extends RestApiController
         $jwtToken = $request->token ?? str_replace('Bearer ', '', $request->header('X-Activation-Token'));
         $decodedToken = (new JWTHelper())->setToken($jwtToken)->getDecoded();
         if (is_null($decodedToken)) {
-            throw new UserActivationFailedException('Activation Token Invalid');
+            throw new UserActivationFailedException('Activation Token Invalid, Please Request Again');
         }
         return $decodedToken;
     }
