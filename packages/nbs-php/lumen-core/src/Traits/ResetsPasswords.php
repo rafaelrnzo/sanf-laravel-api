@@ -68,6 +68,7 @@ trait ResetsPasswords
     public function reset(Request $request)
     {
         try {
+            $request = $this->getRequest($request);
             $this->validate($request, $this->rules(), $this->validationErrorMessages());
 
             //to handle validation from web pages, see reset-password.blade.php
@@ -79,7 +80,7 @@ trait ResetsPasswords
             // will update the password on an actual user model and persist it to the
             // database. Otherwise we will parse the error and return the response.
             $response = $this->broker()->reset(
-                $this->credentials($this->getRequest($request)), function ($user, $password) {
+                $this->credentials($request), function ($user, $password) {
                 $this->resetPassword($user, $password);
             }
             );
@@ -96,14 +97,15 @@ trait ResetsPasswords
                 throw $exception;
             }
 
-            return redirect_with_session()->route('password.request', ['token' => $request->token])
+            return redirect_with_session()->route('password.request', ['token' => $request->jwtToken ?? $request->token])
                 ->with(['error' => extract_validation_message($exception)]);
         } catch (\Exception $exception) {
             report($exception);
             if ($request->expectsJson()) {
                 throw $exception;
             }
-            return redirect_with_session()->route('password.request', ['token' => $request->token])
+
+            return redirect_with_session()->route('password.request', ['token' => $request->jwtToken ?? $request->token])
                 ->with(['error' => $exception->getMessage()]);
         }
     }
@@ -223,13 +225,13 @@ trait ResetsPasswords
     /**
      * replace request with jwt payload
      *
-     * @return Request
      */
     public function getRequest(Request $request)
     {
-        $decodedToken = $this->extractToken($request);
+        [$decodedToken, $jwtToken] = $this->extractToken($request);
         $request['username'] = $decodedToken->email;
         $request['token'] = $decodedToken->token;
+        $request['jwtToken'] = $jwtToken;
         return $request;
     }
 
@@ -241,6 +243,6 @@ trait ResetsPasswords
         if (is_null($decodedToken)) {
             throw new ResetPasswordFailedException(trans(Password::INVALID_TOKEN));
         }
-        return $decodedToken;
+        return [$decodedToken, $jwtToken];
     }
 }
