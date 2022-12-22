@@ -1,5 +1,21 @@
 @extends('core::layouts.master')
 
+@section('script')
+    <script type="text/javascript">
+        function togglePassword(i) {
+            var thisFor = i.getAttribute("for");
+
+            if (i.innerHTML == "visibility") {
+                i.innerHTML = "visibility_off";
+                document.getElementById(thisFor).type = "text";
+            } else {
+                i.innerHTML = "visibility";
+                document.getElementById(thisFor).type = "password";
+            }
+        }
+    </script>
+@endsection
+
 @section('content')
     <div class="wrapper">
         <div class="header">
@@ -47,8 +63,12 @@
             <div class="form-group">
                 <div class="input-label">Password Baru</div>
                 <div class="input-icons-container">
-                    <i class="material-symbols-outlined input-icons"> visibility </i>
+                    <i class="material-symbols-outlined input-icons"
+                        onclick="togglePassword(this)"
+                        for="password"
+                    >visibility</i>
                     <input
+                        id="password"
                         type="password"
                         class="form-control custom-rounded"
                         style="height: 54px"
@@ -65,8 +85,12 @@
             <div class="form-group">
                 <div class="input-label">Ketik Ulang Password Baru</div>
                 <div class="input-icons-container">
-                    <i class="material-symbols-outlined input-icons"> visibility </i>
+                    <i class="material-symbols-outlined input-icons"
+                        onclick="togglePassword(this)"
+                        for="password_confirmation"
+                    >visibility</i>
                     <input
+                        id="password_confirmation"
                         type="password"
                         class="form-control custom-rounded"
                         style="height: 54px"
@@ -82,7 +106,7 @@
 
             <button
                 type="submit"
-                style="margin-top: 24px; margin-bottom: 12px; float: right"
+                style="margin-top: 24px; margin-bottom: 12px; width: 100%;"
                 class="btn btn-main btn-rounded"
             >
                 Reset Password

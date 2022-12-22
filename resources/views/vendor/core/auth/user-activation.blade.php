@@ -1,5 +1,21 @@
 @extends('core::layouts.master')
 
+@section('script')
+    <script>
+        function togglePassword(i) {
+            var thisFor = i.getAttribute("for");
+
+            if (i.innerHTML == "visibility") {
+                i.innerHTML = "visibility_off";
+                document.getElementById(thisFor).type = "text";
+            } else {
+                i.innerHTML = "visibility";
+                document.getElementById(thisFor).type = "password";
+            }
+        }
+    </script>
+@endsection
+
 @section('content')
     <div class="wrapper">
         <div class="header">
@@ -44,7 +60,7 @@
             <input type="hidden" name="token" value="{{ $token ?? '' }}">
 
             <div class="form-group">
-                <div class="input-label">Email Bisnis</div>
+
                 <input
                     type="text"
                     style="height: 54px"
@@ -56,11 +72,15 @@
             <div class="form-group">
                 <div class="input-label">Password</div>
                 <div class="input-icons-container">
-                    <i class="material-symbols-outlined input-icons"> visibility </i>
+                    <i class="material-symbols-outlined input-icons"
+                       onclick="togglePassword(this)"
+                       for="password"
+                    >visibility</i>
                     <input
                         type="password"
                         style="height: 54px"
                         class="form-control login-field custom-rounded"
+                        id="password"
                         name="password"
                         placeholder="password"
                         aria-label="Password Baru"
@@ -73,11 +93,15 @@
             <div class="form-group">
                 <div class="input-label">Ketik Ulang Password</div>
                 <div class="input-icons-container">
-                    <i class="material-symbols-outlined input-icons"> visibility </i>
+                    <i class="material-symbols-outlined input-icons"
+                       onclick="togglePassword(this)"
+                       for="password_confirmation"
+                    >visibility</i>
                     <input
                         type="password"
                         style="height: 54px"
                         class="form-control login-field custom-rounded"
+                        id="password_confirmation"
                         name="password_confirmation"
                         placeholder="password"
                         aria-label="Ketik Ulang Password Baru"
@@ -87,7 +111,7 @@
                 </div>
             </div>
 
-            <button type="submit" style="margin-top: 24px; margin-bottom: 12px; float: right"
+            <button type="submit" style="margin-top: 24px; margin-bottom: 12px; width: 100%;"
                     class="btn btn-main btn-rounded"
             >Reset Password
             </button>
