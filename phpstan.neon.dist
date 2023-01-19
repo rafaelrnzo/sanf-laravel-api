@@ -1,0 +1,22 @@
+includes:
+    - vendor/phpstan/phpstan/conf/bleedingEdge.neon
+
+parameters:
+    level: 5
+    paths:
+        - packages/sanf
+    earlyTerminatingFunctionCalls:
+        - abort
+        - dd
+        - ddd
+    excludePaths:
+        - *.blade.php
+    bootstrapFiles:
+        - phpstan-bootstrap.php
+    ignoreErrors:
+        - '#Access to an undefined property [a-zA-Z0-9\\_]+#'
+        - '#Access to undefined constant.*(MODIFIED_BY)#'
+        - '#Static call to instance method .*Enum.*#'
+        - '#Call to an undefined static method .*Models.*#'
+        - '#Call to an undefined static method Illuminate.*#'
+        - '#Call to an undefined method Illuminate.*#'
