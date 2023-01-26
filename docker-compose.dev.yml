@@ -1,0 +1,23 @@
+version: '2.4'
+
+services:
+  api:
+    cpus: 5.0
+    mem_limit: 192M
+    mem_reservation: 128M
+    image: cr.nbs.dev/sanf/core/api:latest
+    container_name: d-sanfind-api
+    ports:
+      - ${APP_PORT:-8000}:80
+    restart: unless-stopped
+    env_file:
+      - .env
+  worker:
+    cpus: 5.0
+    mem_limit: 192M
+    mem_reservation: 128M
+    image: cr.nbs.dev/sanf/core/worker:latest
+    container_name: d-sanfind-worker
+    restart: unless-stopped
+    env_file:
+      - .env
