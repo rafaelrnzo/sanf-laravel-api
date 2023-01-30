@@ -22,7 +22,7 @@ COPY --from=cr.nbs.dev/sanf/core/vendor:latest /var/www/app/vendor /var/www/app/
 
 WORKDIR /var/www/app
 
-RUN composer global require phpstan/phpstan:"$PHPSTAN_VERSION" --prefer-dist \
-    && composer global require friendsofphp/php-cs-fixer:"$PHP_CS_FIXER_VERSION" --prefer-dist \
-    && composer global require phpmd/phpmd:"$PHP_MESS_DETECTOR" --prefer-dist \
+RUN composer require phpstan/phpstan:"$PHPSTAN_VERSION" --prefer-dist --dev \
+    && composer require friendsofphp/php-cs-fixer:"$PHP_CS_FIXER_VERSION" --prefer-dist --dev \
+    && composer require phpmd/phpmd:"$PHP_MESS_DETECTOR" --prefer-dist --dev \
 	&& composer clear-cache
