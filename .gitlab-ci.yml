@@ -4,25 +4,7 @@ stages:
   - build
   - deploy
 
-base-php-7.4:
-  stage: base
-  environment:
-    name: development
-  image: docker:stable
-  script:
-    - docker build -t $CI_REGISTRY_IMAGE/base:latest -f ./deployments/v2/php-7.4/runtime/Dockerfile .
-    - echo ${CI_REGISTRY_PASSWORD} | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
-    - docker push ${CI_REGISTRY_IMAGE}/base:latest
-    - docker rmi ${CI_REGISTRY_IMAGE}/base:latest
-  only:
-    refs:
-      - develop
-    changes:
-      - "deployments/v2/php-7.4/runtime/**/*"
-  tags:
-    - docker-runner
-
-base-lint:
+base:lint:
   stage: base
   environment:
     name: development
@@ -40,7 +22,25 @@ base-lint:
   tags:
     - docker-runner
 
-base-vendor:
+base:php-7.4:
+  stage: base
+  environment:
+    name: development
+  image: docker:stable
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE/base:latest -f ./deployments/v2/php-7.4/runtime/Dockerfile .
+    - echo ${CI_REGISTRY_PASSWORD} | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
+    - docker push ${CI_REGISTRY_IMAGE}/base:latest
+    - docker rmi ${CI_REGISTRY_IMAGE}/base:latest
+  only:
+    refs:
+      - develop
+    changes:
+      - "deployments/v2/php-7.4/runtime/**/*"
+  tags:
+    - docker-runner
+
+base:vendor:
   stage: base
   environment:
     name: development
@@ -60,13 +60,13 @@ base-vendor:
   tags:
     - docker-runner
 
-lint-php:
+lint:code:
   stage: lint
   environment:
     name: development
   image: $CI_REGISTRY_IMAGE/lint:latest
   needs:
-    - job: base-lint
+    - job: base:lint
       optional: true
   script:
     - composer install --ignore-platform-reqs
@@ -87,15 +87,15 @@ lint-php:
     - docker-runner
   allow_failure: true
 
-build-api:
+build:api:
   stage: build
   environment:
     name: development
   image: nbsdev/docker-builder:20
   needs:
-    - job: base-vendor
+    - job: base:vendor
       optional: true
-    - job: base-php-7.4
+    - job: base:php-7.4
       optional: true
   script:
     - cp $ASSET_LINKS_FILE $CI_PROJECT_DIR/public/.well-known/assetlinks.json
@@ -110,15 +110,15 @@ build-api:
   tags:
     - docker-runner
 
-build-worker:
+build:worker:
   stage: build
   environment:
     name: development
   image: nbsdev/docker-builder:20
   needs:
-    - job: base-vendor
+    - job: base:vendor
       optional: true
-    - job: base-php-7.4
+    - job: base:php-7.4
       optional: true
   script:
     - cp $FIREBASE_SA_FILE $CI_PROJECT_DIR/config/firebase-keys/firebase.json
@@ -131,17 +131,15 @@ build-worker:
   tags:
     - docker-runner
 
-deploy-dev:
+deploy:dev:
   stage: deploy
   environment:
     name: development
   image: docker:stable
-  before_script:
-    - cd $CI_PROJECT_DIR
   needs:
-    - job: build-api
+    - job: build:api
       optional: true
-    - job: build-worker
+    - job: build:worker
       optional: true
   script:
     - cp $ENV_FILE ./.env
