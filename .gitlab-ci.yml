@@ -4,26 +4,6 @@ stages:
   - build
   - deploy
 
-base-vendor:
-  stage: base
-  environment:
-    name: development
-  image: docker:stable
-  script:
-    - docker build -t $CI_REGISTRY_IMAGE/vendor:latest -f ./deployments/v2/vendor/Dockerfile .
-    - echo ${CI_REGISTRY_PASSWORD} | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
-    - docker push ${CI_REGISTRY_IMAGE}/vendor:latest
-    - docker rmi ${CI_REGISTRY_IMAGE}/vendor:latest
-  only:
-    refs:
-      - develop
-    changes:
-      - "deployments/v2/vendor/**/*"
-      - "composer.json"
-      - "composer.lock"
-  tags:
-    - docker-runner
-
 base-php-7.4:
   stage: base
   environment:
@@ -60,6 +40,26 @@ base-lint:
   tags:
     - docker-runner
 
+base-vendor:
+  stage: base
+  environment:
+    name: development
+  image: docker:stable
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE/vendor:latest -f ./deployments/v2/vendor/Dockerfile .
+    - echo ${CI_REGISTRY_PASSWORD} | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
+    - docker push ${CI_REGISTRY_IMAGE}/vendor:latest
+    - docker rmi ${CI_REGISTRY_IMAGE}/vendor:latest
+  only:
+    refs:
+      - develop
+    changes:
+      - "deployments/v2/vendor/**/*"
+      - "composer.json"
+      - "composer.lock"
+  tags:
+    - docker-runner
+
 lint-php:
   stage: lint
   environment:
@@ -67,9 +67,8 @@ lint-php:
   image: $CI_REGISTRY_IMAGE/lint:latest
   needs:
     - base-lint
-  before_script:
-    - composer install --ignore-platform-reqs
   script:
+    - composer install --ignore-platform-reqs
     - phpstan analyse -c phpstan.neon.dist --no-progress --error-format=junit > phpstan.xml
   artifacts:
     when: on_failure
@@ -119,7 +118,7 @@ build-worker:
   script:
     - cp $FIREBASE_SA_FILE $CI_PROJECT_DIR/config/firebase-keys/firebase.json
     - echo ${CI_REGISTRY_PASSWORD} | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
-    - docker build -t $CI_REGISTRY_IMAGE/worker:latest -f ./deployments/worker/dev/Dockerfile .
+    - docker build -t $CI_REGISTRY_IMAGE/worker:latest -f ./deployments/v2/app/worker/Dockerfile .
     - docker push ${CI_REGISTRY_IMAGE}/worker:latest
     - docker rmi ${CI_REGISTRY_IMAGE}/worker:latest
   only:
