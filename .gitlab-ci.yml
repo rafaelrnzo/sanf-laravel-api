@@ -66,7 +66,8 @@ lint-php:
     name: development
   image: $CI_REGISTRY_IMAGE/lint:latest
   needs:
-    - base-lint
+    - job: base-lint
+      optional: true
   script:
     - composer install --ignore-platform-reqs
     - phpstan analyse -c phpstan.neon.dist --no-progress --error-format=junit > phpstan.xml
@@ -92,8 +93,10 @@ build-api:
     name: development
   image: nbsdev/docker-builder:20
   needs:
-    - base-vendor
-    - base-php-7.4
+    - job: base-vendor
+      optional: true
+    - job: base-php-7.4
+      optional: true
   script:
     - cp $ASSET_LINKS_FILE $CI_PROJECT_DIR/public/.well-known/assetlinks.json
     - cp $APPLE_SITE_ASSOCIATION_FILE $CI_PROJECT_DIR/public/.well-known/apple-site-association
@@ -113,8 +116,10 @@ build-worker:
     name: development
   image: nbsdev/docker-builder:20
   needs:
-    - base-vendor
-    - base-php-7.4
+    - job: base-vendor
+      optional: true
+    - job: base-php-7.4
+      optional: true
   script:
     - cp $FIREBASE_SA_FILE $CI_PROJECT_DIR/config/firebase-keys/firebase.json
     - echo ${CI_REGISTRY_PASSWORD} | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
@@ -131,6 +136,11 @@ deploy-dev:
   image: docker:stable
   before_script:
     - cd $CI_PROJECT_DIR
+  needs:
+    - job: build-api
+      optional: true
+    - job: build-worker
+      optional: true
   script:
     - cp $ENV_FILE ./.env
     - echo ${CI_REGISTRY_PASSWORD} | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
