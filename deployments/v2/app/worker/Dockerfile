@@ -1,6 +1,6 @@
 FROM cr.nbs.dev/sanf/core/runtime:latest as app
 
-COPY --chown=nobody . /var/www/app
+COPY --chown=www-data:www-data . /var/www/app
 
 WORKDIR /var/www/app
 

@@ -17,14 +17,11 @@ ARG PHPSTAN_VERSION="*"
 ARG PHP_CS_FIXER_VERSION="*"
 ARG PHP_MESS_DETECTOR="*"
 
-COPY --chown=www-data:www-data . /var/www/app
-COPY --from=cr.nbs.dev/sanf/core/vendor:latest /var/www/app/vendor /var/www/app/vendor
-
-WORKDIR /var/www/app
-
 RUN composer global require phpstan/phpstan:"$PHPSTAN_VERSION" --prefer-dist \
     && composer global require friendsofphp/php-cs-fixer:"$PHP_CS_FIXER_VERSION" --prefer-dist \
     && composer global require phpmd/phpmd:"$PHP_MESS_DETECTOR" --prefer-dist \
 	&& composer clear-cache
 
-RUN composer install --ignore-platform-reqs
+VOLUME ["/var/app"]
+
+WORKDIR /var/app
