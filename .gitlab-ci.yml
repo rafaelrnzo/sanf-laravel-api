@@ -133,6 +133,8 @@ build-worker:
 
 deploy-dev:
   stage: deploy
+  environment:
+    name: development
   image: docker:stable
   before_script:
     - cd $CI_PROJECT_DIR
