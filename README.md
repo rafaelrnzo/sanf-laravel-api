@@ -116,11 +116,11 @@ Example Using docker
 ```shell
 # api
 docker build -f deployments/api/Dockerfile -t sanf/api .
-docker run -d --name sanf-api -v "$(pwd)":/var/www -p 4006:8080 sanf/api
+sudo docker run -d --name sanf-api -v "$(pwd)":/var/www -p 80:8080 --restart unless-stopped sanf/api
 
 # worker
 docker build -f deployments/worker/Dockerfile -t sanf/worker .
-docker run -d --name sanf-worker -v "$(pwd)":/var/www sanf/worker
+docker run -d --name sanf-worker -v "$(pwd)":/var/www  --restart unless-stopped sanf/worker
 
 ```
 
