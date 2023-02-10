@@ -129,7 +129,7 @@ final class RestProfileEntity implements ProfileEntityInterface
 
     public function getSubdistrictName()
     {
-        return $this->attributes['NEGARA'];
+        return $this->attributes['KELURAHAN'];
     }
 
     public function getPostcode()
