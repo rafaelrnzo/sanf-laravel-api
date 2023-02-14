@@ -21,15 +21,15 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth']], function () {
 Route::group(['prefix' => 'v1', 'middleware' => ['auth', 'pic']], function () {
     Route::post('users/financing-applications/company', ['as' => 'financing-applications.company.create', 'uses' => 'Financing\Controllers\FinancingApplicationByUserController@postAddByCompanyProfile']);
     Route::post('users/survey-submissions', ['as' => 'users.survey-submissions.add', 'uses' => 'Survey\Controllers\SurveyByUserController@add']);
-    Route::put('users/profiles/{xid}/company', ['as' => 'users.profiles.company.update', 'uses' => 'User\Controllers\ProfileController@putUpdateCompanyProfile']);
+    Route::post('users/profiles/{xid}/company/update', ['as' => 'users.profiles.company.update', 'uses' => 'User\Controllers\ProfileController@putUpdateCompanyProfile']);
     Route::post('users/profiles/{xid}/plafonds', ['as' => 'users.plafonds.create', 'uses' => 'Plafond\Controllers\PlafondController@postAddByUserProfile']);
     Route::post('users/profiles/{xid}/plafonds/increase', ['as' => 'users.plafonds.increase', 'uses' => 'Plafond\Controllers\PlafondController@postIncreaseByUserProfile']);
     Route::post('users/profiles/{xid}/contracts/{contract_no}/financing-units/{serial_no}/location-submissions', ['as' => 'users.contracts-financing-unit-location-submissions.add', 'uses' => 'Contract\Controllers\FinancingUnitLocationSubmissionByUserController@postAdd']);
     Route::post('users/profiles/{xid}/insurance-claim-submissions', ['as' => 'users.insurance-claim-submissions.add', 'uses' => 'Insurance\Controllers\InsuranceClaimSubmissionByUserController@postAdd']);
     Route::post('users/profiles/{xid}/invoice-collection-submissions', ['as' => 'users.invoice-collection-submissions.add', 'uses' => 'Invoice\Controllers\InvoiceCollectionSubmissionByUserController@postAdd']);
     Route::post('users/profiles/{xid}/prepayment-submissions', ['as' => 'users.prepayment-submissions.add', 'uses' => 'Prepayment\Controllers\PrepaymentSubmissionByUserController@postAdd']);
-    Route::put('users/profiles/{xid}/shareholders/{no}', ['as' => 'users.shareholders.update', 'uses' => 'Shareholder\ShareholderController@putUpdate']);
-    Route::delete('users/profiles/{xid}/shareholders/{no}', ['as' => 'users.shareholders.delete', 'uses' => 'Shareholder\ShareholderController@delete']);
+    Route::post('users/profiles/{xid}/shareholders/{no}/update', ['as' => 'users.shareholders.update', 'uses' => 'Shareholder\ShareholderController@putUpdate']);
+    Route::post('users/profiles/{xid}/shareholders/{no}/delete', ['as' => 'users.shareholders.delete', 'uses' => 'Shareholder\ShareholderController@delete']);
     Route::post('users/profiles/{xid}/shareholders', ['as' => 'users.shareholders.create', 'uses' => 'Shareholder\ShareholderController@postCreate']);
 });
 
@@ -53,7 +53,7 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
 
     Route::post('users/register-with-contract', ['as' => 'users.register-with-contract', 'uses' => 'User\Controllers\ProfileController@postRegisterWithContract']);
     Route::get('users/profiles', ['as' => 'users.profiles.list', 'uses' => 'User\Controllers\ProfileController@getList']);
-    Route::put('users/profiles/{xid}', ['as' => 'users.profiles.update', 'uses' => 'User\Controllers\ProfileController@putUpdatePersonalProfile']);
+    Route::post('users/profiles/{xid}/update', ['as' => 'users.profiles.update', 'uses' => 'User\Controllers\ProfileController@putUpdatePersonalProfile']);
     Route::get('users/profiles/{xid}', ['as' => 'users.profiles.detail', 'uses' => 'User\Controllers\ProfileController@getDetail']);
     Route::post('users/profile/{xid}/assets', ['as' => 'financing.assets', 'uses' => 'User\Controllers\ProfileAssetController@postUpload']);
 
@@ -90,8 +90,8 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::get('users/projects', ['as' => 'users.projects.list', 'uses' => 'Project\ProjectController@getListByUser']);
     Route::post('users/projects', ['as' => 'users.projects.list', 'uses' => 'Project\ProjectController@postCreateByUser']);
     Route::get('users/projects/{xid}', ['as' => 'users.projects.detail', 'uses' => 'Project\ProjectController@getDetailByUser']);
-    Route::put('users/projects/{xid}', ['as' => 'users.projects.update', 'uses' => 'Project\ProjectController@putUpdateByUser']);
-    Route::delete('users/projects/{xid}', ['as' => 'users.projects.delete', 'uses' => 'Project\ProjectController@deleteByUser']);
+    Route::post('users/projects/{xid}/update', ['as' => 'users.projects.update', 'uses' => 'Project\ProjectController@putUpdateByUser']);
+    Route::post('users/projects/{xid}/delete', ['as' => 'users.projects.delete', 'uses' => 'Project\ProjectController@deleteByUser']);
     Route::post('users/projects/{xid}/publish', ['as' => 'users.projects.publish', 'uses' => 'Project\ProjectController@postPublishByUser']);
     Route::post('users/projects/{xid}/unpublish', ['as' => 'users.projects.unpublish', 'uses' => 'Project\ProjectController@postUnpublishByUser']);
 
@@ -101,8 +101,8 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::get('users/commodities', ['as' => 'users.commodities.list', 'uses' => 'Commodity\CommodityController@getListByUser']);
     Route::post('users/commodities', ['as' => 'users.commodities.list', 'uses' => 'Commodity\CommodityController@postCreateByUser']);
     Route::get('users/commodities/{xid}', ['as' => 'users.commodities.detail', 'uses' => 'Commodity\CommodityController@getDetailByUser']);
-    Route::put('users/commodities/{xid}', ['as' => 'users.commodities.update', 'uses' => 'Commodity\CommodityController@putUpdateByUser']);
-    Route::delete('users/commodities/{xid}', ['as' => 'users.commodities.delete', 'uses' => 'Commodity\CommodityController@deleteByUser']);
+    Route::post('users/commodities/{xid}/update', ['as' => 'users.commodities.update', 'uses' => 'Commodity\CommodityController@putUpdateByUser']);
+    Route::post('users/commodities/{xid}/delete', ['as' => 'users.commodities.delete', 'uses' => 'Commodity\CommodityController@deleteByUser']);
     Route::post('users/commodities/{xid}/publish', ['as' => 'users.commodities.publish', 'uses' => 'Commodity\CommodityController@postPublishByUser']);
     Route::post('users/commodities/{xid}/unpublish', ['as' => 'users.commodities.unpublish', 'uses' => 'Commodity\CommodityController@postUnpublishByUser']);
 
@@ -172,7 +172,7 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
 
     # NOTIFICATION
     Route::get('users/notifications', ['as' => 'users.notifications', 'uses' => 'Notification\NotificationByUserController@getBrowse']);
-    Route::patch('users/notifications/read', ['as' => 'users.notifications.read', 'uses' => 'Notification\NotificationByUserController@patchMarkAsRead']);
+    Route::post('users/notifications/read/update', ['as' => 'users.notifications.read', 'uses' => 'Notification\NotificationByUserController@patchMarkAsRead']);
 
     # Survey
     Route::get('users/surveys', ['as' => 'users.surveys.browse', 'uses' => 'Survey\Controllers\SurveyByUserController@browse']);
@@ -182,7 +182,7 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     # PIN
     Route::post('users/add-pin', ['as' => 'users.pin.add', 'uses' => 'User\Controllers\AuthPinController@postAdd']);
     Route::post('users/check-pin', ['as' => 'users.pin.check', 'uses' => 'User\Controllers\AuthPinController@postCheck']);
-    Route::put('users/update-pin', ['as' => 'users.pin.update', 'uses' => 'User\Controllers\AuthPinController@postUpdate']);
+    Route::post('users/update-pin/update', ['as' => 'users.pin.update', 'uses' => 'User\Controllers\AuthPinController@postUpdate']);
     Route::post('users/request-forgot-pin', ['as' => 'users.pin.request-forgot', 'uses' => 'User\Controllers\AuthPinController@postRequestForgot']);
     Route::post('users/reset-pin', ['as' => 'users.pin.reset', 'uses' => 'User\Controllers\AuthPinController@postReset']);
 
