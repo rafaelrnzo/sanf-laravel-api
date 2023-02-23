@@ -109,14 +109,14 @@ final class ESignUserDocumentCompleteService implements ApplicationServiceInterf
 
         // upload file;
         $path = config('image-path.document_tekenaja');
-        $document->document_name = 'test aja';
-        $filename = str_slug(strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $document->document_name)))) ?? $document->document_id;
-        $filename .= '.pdf'; // TODO refactor this
-        Storage::put($path . "{$filename}", file_get_contents($result['data']));
+        $documentName = $document->document_name ?? $document->document_id;
+        $slugDocumentName = str_slug(strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $documentName))));
+        $formattedDocumentName = "final-{$slugDocumentName}.pdf";
+        Storage::put($path . "{$formattedDocumentName}", file_get_contents($result['data']));
 
         // if image doesnt exist
-        $exist = Storage::exists("{$path}{$filename}");
-        throw_if(!$exist, new FileNotFoundException("{$path}{$filename}"));
+        $exist = Storage::exists("{$path}{$formattedDocumentName}");
+        throw_if(!$exist, new FileNotFoundException("{$path}{$formattedDocumentName}"));
 
         // update e-sign document assignee status
         foreach ($documentsAssignee as $documentAssignee) {
@@ -130,10 +130,10 @@ final class ESignUserDocumentCompleteService implements ApplicationServiceInterf
         $document = $this->eSignRepository->updateDocument($document->id, [
             'version' => $document->version + 1,
             'document_file' => [
-                'file_name' => $filename,
+                'file_name' => $formattedDocumentName,
                 'directory' => $path,
-                'path' => "{$path}{$filename}",
-                'mime_type' => Storage::getMimeType("{$path}{$filename}")
+                'path' => "{$path}{$formattedDocumentName}",
+                'mime_type' => Storage::getMimeType("{$path}{$formattedDocumentName}")
             ],
             'status_id' => ESignContractStatusEnum::COMPLETED,
             'updated_at' => Carbon::now(),
@@ -152,7 +152,7 @@ final class ESignUserDocumentCompleteService implements ApplicationServiceInterf
         // update core
         // TODO create self service of send notification using event service
         $this->client->updateESignDocumentStatus($document->document_id);
-        $this->client->updateESignDocumentFile($document->document_id, $document->document_name, $document->document_file->path);
+        $this->client->updateESignDocumentFile($document->document_id, $formattedDocumentName, $document->document_file->path);
 
         $documentName = $document->document_name;
         // send notification
