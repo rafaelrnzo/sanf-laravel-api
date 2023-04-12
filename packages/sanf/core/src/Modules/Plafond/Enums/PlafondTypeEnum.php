@@ -8,4 +8,5 @@ class PlafondTypeEnum extends Enum
 {
     public const UNIT = '001';
     public const SPAREPART = '002';
+    public const FACTORING = '003';
 }

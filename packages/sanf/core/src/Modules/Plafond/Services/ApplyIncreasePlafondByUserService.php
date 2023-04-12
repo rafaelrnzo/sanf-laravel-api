@@ -23,12 +23,26 @@ final class ApplyIncreasePlafondByUserService extends PlafondByUserService imple
         if (is_null($plafond)) {
             throw new PlafondInvalidException('Plafond Not Found');
         }
+
+        switch ($dto->type) {
+            case PlafondTypeEnum::UNIT:
+                $plafondType = __('Unit');
+                break;
+            case PlafondTypeEnum::SPAREPART:
+                $plafondType = __('Sparepart');
+                break;
+            case PlafondTypeEnum::FACTORING:
+            default:
+                $plafondType = __('Factoring');
+                break;
+        }
+
         $plafondRequest = (object)[
             'currentBalance' => $plafond->getCurrentBalance(),
             'addedBalance' => $dto->amount - $plafond->getCurrentBalance(),
             'submittedBalance' => $dto->amount,
             'createdAt' => Carbon::now(),
-            'type' => ($dto->typeId == PlafondTypeEnum::UNIT) ? 'Unit' : 'Sparepart',
+            'type' => $plafondType,
         ];
         event(new PlafondIncreaseRequestedEvent($plafondRequest, $dto->profile));
     }
