@@ -11,11 +11,13 @@ use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
 use Sanf\Api\Modules\Contract\Transformers\BrowseHistoryRequestedDocumentTransformer;
 use Sanf\Api\Modules\Contract\Transformers\BrowseRequestedDocumentTransformer;
 use Sanf\Core\Modules\Contract\Dto\ListRequestedDocumentDto;
+use Sanf\Core\Modules\Contract\Dto\UploadRequestedDocumentDto;
 use Sanf\Core\Modules\Contract\Enums\DocumentTypeEnum;
 
 final class UploadDocumentRequestByUserController extends RestApiController
 {
     //TODO remove after +1 release version
+    // TODO move into document domain
     public function getList(
         Guard $auth,
         Request $request,
@@ -58,5 +60,28 @@ final class UploadDocumentRequestByUserController extends RestApiController
 
         return fractal($result, BrowseHistoryRequestedDocumentTransformer::class)
             ->serializeWith(new ArraySerializer());
+    }
+
+    public function postUpload(
+        Guard $auth,
+        $xid,
+        $request_id,
+        $document_id,
+        Request $request
+    ) {
+        $input = $this->validate($request, [
+            'origin' => 'required|string|max:255',
+            'filename' => 'required|string|max:255',
+        ]);
+
+        $dto = new UploadRequestedDocumentDto(
+            $input + [
+                'profile_xid' => $xid,
+                'request_id' => $request_id,
+                'document_id' => $document_id,
+            ]
+        );
+
+        return $this->responseOk();
     }
 }
