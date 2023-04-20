@@ -16,7 +16,7 @@ base:lint:
     - docker rmi ${CI_REGISTRY_IMAGE}/lint:latest
   only:
     refs:
-      - $REFERENCE_BRANCH
+      - feat/sprint-1
     changes:
       - "deployments/v2/php-7.4/lint/**/*"
   tags:
@@ -34,7 +34,7 @@ base:php-7.4:
     - docker rmi ${CI_REGISTRY_IMAGE}/base:latest
   only:
     refs:
-      - $REFERENCE_BRANCH
+      - feat/sprint-1
     changes:
       - "deployments/v2/php-7.4/runtime/**/*"
   tags:
@@ -52,7 +52,7 @@ base:vendor:
     - docker rmi ${CI_REGISTRY_IMAGE}/vendor:latest
   only:
     refs:
-      - $REFERENCE_BRANCH
+      - feat/sprint-1
     changes:
       - "deployments/v2/vendor/**/*"
       - "composer.json"
@@ -106,7 +106,7 @@ build:api:
     - docker push ${CI_REGISTRY_IMAGE}/api:latest
     - docker rmi ${CI_REGISTRY_IMAGE}/api:latest
   only:
-    - $REFERENCE_BRANCH
+    - feat/sprint-1
   tags:
     - docker-runner
 
@@ -127,7 +127,7 @@ build:worker:
     - docker push ${CI_REGISTRY_IMAGE}/worker:latest
     - docker rmi ${CI_REGISTRY_IMAGE}/worker:latest
   only:
-    - $REFERENCE_BRANCH
+    - feat/sprint-1
   tags:
     - docker-runner
 
@@ -147,6 +147,6 @@ deploy:dev:
     - docker-compose -f docker-compose.dev.yml pull
     - docker-compose -f docker-compose.dev.yml up --build --force-recreate -d
   only:
-    - $REFERENCE_BRANCH
+    - feat/sprint-1
   tags:
     - sanfind-api-runner
