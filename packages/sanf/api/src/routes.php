@@ -150,7 +150,7 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::get('users/profiles/{xid}/contracts/{contract_no}/post-dated-cheques', ['as' => 'users.contracts-pdc.read', 'uses' => 'Contract\Controllers\PostDatedChequeByUserController@getPDC']);
     Route::get('users/profiles/{xid}/contracts-financing-unit', ['as' => 'users.contracts-financing-object.browse', 'uses' => 'Contract\Controllers\FinancingUnitLocationSubmissionByUserController@getContract']);
     Route::get('users/profiles/{xid}/contracts/{contract_no}/financing-unit-location-submissions', ['as' => 'users.contracts-financing-unit-location-submissions.read', 'uses' => 'Contract\Controllers\FinancingUnitLocationSubmissionByUserController@getFinancingUnitLocation']);
-    Route::get('users/profiles/{xid}/contracts', ['as' => 'users.contracts.browse', 'uses' => 'Contract\Controllers\ContractFinancingUnitByUserController@getList']);
+    Route::get('users/profiles/{xid}/contracts', ['as' => 'users.contracts.browse', 'uses' => 'Contract\Controllers\ContractFinancingUnitByUserController@getListOldest']); //TODO remove after +1 release version
     Route::get('users/profiles/{xid}/contracts/{contract_no}', ['as' => 'users.contracts.read', 'uses' => 'Contract\Controllers\ContractFinancingUnitByUserController@getDetail']);
     Route::get('users/profiles/{xid}/contracts/{contract_no}/financing-units', ['as' => 'users.contracts-financing-object.browse', 'uses' => 'Contract\Controllers\ContractFinancingUnitByUserController@getFinancingUnit']);
     Route::get('users/profiles/{xid}/contracts/{contract_no}/penalties', ['as' => 'users.contracts.penalties', 'uses' => 'Contract\Controllers\ContractFinancingUnitByUserController@getPenalties']);
@@ -187,4 +187,8 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::post('users/reset-pin', ['as' => 'users.pin.reset', 'uses' => 'User\Controllers\AuthPinController@postReset']);
 
     Route::post('users/request-deactivation', ['as' => 'users.deactivate', 'uses' => 'User\Controllers\AuthUserControllerByUser@postDeactivate']);
+});
+
+Route::group(['prefix' => 'v2', 'middleware' => 'auth'], function () {
+    Route::get('users/profiles/{xid}/contracts', ['as' => 'v2.users.contracts.browse', 'uses' => 'Contract\Controllers\ContractFinancingUnitByUserController@getList']);
 });

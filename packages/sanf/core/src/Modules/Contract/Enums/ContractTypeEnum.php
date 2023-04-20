@@ -8,6 +8,7 @@ use MyCLabs\Enum\Enum;
 class ContractTypeEnum extends Enum
 {
     const ACTIVE = 'active';
+    const OVERDUE = 'overdue';
     const SETTLED = 'settled';
 
     const ACTIVE_LABEL = 'AKTIF';

@@ -17,4 +17,7 @@ class ListContractDto extends DataTransferObject
     public int $limit = 10;
 
     public string $sort_by = 'earliest';
+
+    public ?string $contract_status;
+    public ?int $tz_offset;
 }

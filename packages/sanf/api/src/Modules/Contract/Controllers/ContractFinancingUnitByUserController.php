@@ -17,16 +17,18 @@ use Sanf\Core\Modules\Contract\Dto\SummaryBillContractDto;
 use Sanf\Core\Modules\Contract\Enums\ContractTypeEnum;
 use Sanf\Core\Modules\Contract\Services\GetContractDetailService;
 use Sanf\Core\Modules\Contract\Services\GetFinancingUnitContractService;
+use Sanf\Core\Modules\Contract\Services\ListContractOldestService;
 use Sanf\Core\Modules\Contract\Services\ListContractService;
 use Sanf\Core\Modules\Contract\Services\SummaryBillContractService;
 
 final class ContractFinancingUnitByUserController extends RestApiController
 {
-    public function getList(
+    //TODO remove after +1 release version
+    public function getListOldest(
         Guard $auth,
         Request $request,
         $xid,
-        ListContractService $service
+        ListContractOldestService $service
     ) {
         $input = $this->validate($request, [
             'contract_type' => ['nullable', 'in:active,settled'],
@@ -38,6 +40,40 @@ final class ContractFinancingUnitByUserController extends RestApiController
         $dto = new ListContractDto($input + ['profile_xid' => $xid]);
         $dto->sort_by = Str::title($dto->sort_by);
         $dto->user_id = $auth->id();
+
+        switch ($input['contract_type']) {
+            case ContractTypeEnum::SETTLED:
+                $dto->contract_type = ContractTypeEnum::SETTLED_LABEL;
+                break;
+            case ContractTypeEnum::ACTIVE_LABEL:
+            default:
+                $dto->contract_type = ContractTypeEnum::ACTIVE_LABEL;
+                break;
+        }
+
+        $result = $service->execute($dto);
+
+        return fractal($result->data, ListContractTransformer::class)
+            ->paginateWith(new LazyPaginatorAdapter($result->paginate));
+    }
+    public function getList(
+        Guard $auth,
+        Request $request,
+        $xid,
+        ListContractService $service
+    ) {
+        $input = $this->validate($request, [
+            'contract_type' => ['nullable', 'in:active,settled,overdue'],
+            'skip' => ['nullable', 'integer', 'max:2147483647'],
+            'limit' => ['nullable', 'integer', 'max:2147483647'],
+            'sort_by' => ['nullable', 'in:earliest,latest'],
+            'tz_offset' => ['nullable', 'integer'],
+        ]);
+
+        $dto = new ListContractDto($input + ['profile_xid' => $xid]);
+        $dto->sort_by = Str::title($dto->sort_by);
+        $dto->user_id = $auth->id();
+        $dto->contract_status = $input['contract_type'];
 
         switch ($input['contract_type']) {
             case ContractTypeEnum::SETTLED:
