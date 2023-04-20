@@ -187,6 +187,9 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::post('users/reset-pin', ['as' => 'users.pin.reset', 'uses' => 'User\Controllers\AuthPinController@postReset']);
 
     Route::post('users/request-deactivation', ['as' => 'users.deactivate', 'uses' => 'User\Controllers\AuthUserControllerByUser@postDeactivate']);
+
+    // REQUEST DOCUMENT UPLOAD
+    Route::get('users/profiles/{xid}/requests-document', ['as' => 'v1.users.request-document.browse', 'uses' => 'Contract\Controllers\UploadDocumentRequestByUserController@getList']);
 });
 
 Route::group(['prefix' => 'v2', 'middleware' => 'auth'], function () {
