@@ -84,4 +84,17 @@ final class UploadDocumentRequestByUserController extends RestApiController
 
         return $this->responseOk();
     }
+
+    public function postSubmit(
+        Guard $auth,
+        $xid,
+        $request_id
+    ) {
+        $dto = (object)[
+            'profile_xid' => $xid,
+            'request_id' => $request_id
+        ];
+
+        return $this->responseOk();
+    }
 }

@@ -191,7 +191,8 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     // REQUEST DOCUMENT UPLOAD
     Route::get('users/profiles/{xid}/requests-document', ['as' => 'v1.users.request-document.browse', 'uses' => 'Contract\Controllers\UploadDocumentRequestByUserController@getList']);
     Route::get('users/profiles/{xid}/requests-document/{request_id}', ['as' => 'v1.users.request-document-history.browse', 'uses' => 'Contract\Controllers\UploadDocumentRequestByUserController@getHistory']);
-    Route::post('users/profiles/{xid}/requests-document/{request_id}/documents/{document_id}', ['as' => 'v1.users.request-document-history.browse', 'uses' => 'Contract\Controllers\UploadDocumentRequestByUserController@postUpload']);
+    Route::post('users/profiles/{xid}/requests-document/{request_id}/documents/submit', ['as' => 'v1.users.request-document-history.submit', 'uses' => 'Contract\Controllers\UploadDocumentRequestByUserController@postSubmit']);
+    Route::post('users/profiles/{xid}/requests-document/{request_id}/documents/{document_id}', ['as' => 'v1.users.request-document-history.upload', 'uses' => 'Contract\Controllers\UploadDocumentRequestByUserController@postUpload']);
 });
 
 Route::group(['prefix' => 'v2', 'middleware' => 'auth'], function () {
