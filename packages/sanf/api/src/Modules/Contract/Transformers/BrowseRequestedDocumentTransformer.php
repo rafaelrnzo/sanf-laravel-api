@@ -5,7 +5,7 @@ namespace Sanf\Api\Modules\Contract\Transformers;
 use League\Fractal\Serializer\ArraySerializer;
 use League\Fractal\TransformerAbstract;
 
-class ListRequestedDocumentTransformer extends TransformerAbstract
+class BrowseRequestedDocumentTransformer extends TransformerAbstract
 {
     public function transform($dto)
     {

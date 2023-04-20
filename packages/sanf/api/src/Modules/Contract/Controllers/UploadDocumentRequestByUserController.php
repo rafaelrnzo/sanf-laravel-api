@@ -5,9 +5,11 @@ namespace Sanf\Api\Modules\Contract\Controllers;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use League\Fractal\Serializer\ArraySerializer;
 use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
-use Sanf\Api\Modules\Contract\Transformers\ListRequestedDocumentTransformer;
+use Sanf\Api\Modules\Contract\Transformers\BrowseHistoryRequestedDocumentTransformer;
+use Sanf\Api\Modules\Contract\Transformers\BrowseRequestedDocumentTransformer;
 use Sanf\Core\Modules\Contract\Dto\ListRequestedDocumentDto;
 use Sanf\Core\Modules\Contract\Enums\DocumentTypeEnum;
 
@@ -39,7 +41,22 @@ final class UploadDocumentRequestByUserController extends RestApiController
             ]
         ];
 
-        return fractal($result->data, ListRequestedDocumentTransformer::class)
+        return fractal($result->data, BrowseRequestedDocumentTransformer::class)
             ->paginateWith(new LazyPaginatorAdapter($result->paginate));
+    }
+
+    public function getHistory(
+        Guard $auth,
+        $xid,
+        $request_id
+    ) {
+        $dto = (object)[
+            'xid' => $xid,
+            'request_id' => $request_id,
+        ];
+        $result = json_decode('[{"upload_at":"01-01-2023","filename":"ktp_new.jpeg"}]');
+
+        return fractal($result, BrowseHistoryRequestedDocumentTransformer::class)
+            ->serializeWith(new ArraySerializer());
     }
 }
