@@ -17,13 +17,13 @@ class ListContractTransformer extends TransformerAbstract
             'currency_type' => (string)$item->currency_type,
         ];
 
-        if (!is_null($item->payment_due_at)) {
+        if (!is_null(optional($item)->payment_due_at)) {
             $response += [
                 'payment_due_at' => $item->payment_due_at,
             ];
         }
 
-        if (!is_null($item->days)) {
+        if (!is_null(optional($item)->days)) {
             $response += [
                 'days' => $item->days,
             ];
