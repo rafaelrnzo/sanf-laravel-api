@@ -2,8 +2,8 @@
 
 namespace Sanf\Api\Modules\Contract\Transformers;
 
-use League\Fractal\Serializer\ArraySerializer;
 use League\Fractal\TransformerAbstract;
+use Spatie\Fractalistic\ArraySerializer;
 
 class BrowseRequestedDocumentTransformer extends TransformerAbstract
 {
@@ -16,7 +16,7 @@ class BrowseRequestedDocumentTransformer extends TransformerAbstract
             'total_document' => $dto->total_document,
             'total_uploaded_document' => $dto->total_uploaded_document,
             'documents' => fractal($dto->documents, new ListItemRequestedDocumentTransformer())->serializeWith(
-                new ArraySerializer()
+                ArraySerializer::class
             ),
         ];
     }
