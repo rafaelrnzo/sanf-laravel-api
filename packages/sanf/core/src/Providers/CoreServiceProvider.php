@@ -73,6 +73,10 @@ use Sanf\Core\Modules\Project\Specifications\EloquentProjectSpecificationFactory
 use Sanf\Core\Modules\Project\Specifications\ProjectSpecificationFactoryInterface;
 use Sanf\Core\Modules\Promo\EloquentPromoRepository;
 use Sanf\Core\Modules\Promo\PromoRepositoryInterface;
+use Sanf\Core\Modules\RequestedDocument\Repositories\EloquentRequestedDocumentRepository;
+use Sanf\Core\Modules\RequestedDocument\Repositories\RequestedDocumentRepositoryInterface;
+use Sanf\Core\Modules\RequestedDocument\Specifications\EloquentRequestedDocumentSpecification;
+use Sanf\Core\Modules\RequestedDocument\Specifications\RequestedDocumentSpecificationInterface;
 use Sanf\Core\Modules\Setting\Repositories\EloquentFrequentlyAskQuestionRepository;
 use Sanf\Core\Modules\Setting\Repositories\EloquentOnBoardingRepository;
 use Sanf\Core\Modules\Setting\Repositories\EloquentStaticContentRepository;
@@ -179,6 +183,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(FinancingCategoryRepositoryInterface::class, EloquentFinancingCategoryRepository::class);
 
         $this->app->bind(SurveyEntityFactoryInterface::class, EloquentSurveyFactoryEntity::class);
+        $this->app->bind(RequestedDocumentRepositoryInterface::class, EloquentRequestedDocumentRepository::class);
 
         //SPECIFICATION FACTORY
         $this->app->bind(ProjectSpecificationFactoryInterface::class, EloquentProjectSpecificationFactory::class);
@@ -203,6 +208,7 @@ class CoreServiceProvider extends ServiceProvider
         );
         $this->app->bind(FinancingCategorySpecificationFactoryInterface::class, EloquentFinancingCategorySpecificationFactory::class);
         $this->app->bind(UserAuthSpecificationFactoryInterface::class, EloquentUserAuthSpecificationFactory::class);
+        $this->app->bind(RequestedDocumentSpecificationInterface::class, EloquentRequestedDocumentSpecification::class);
     }
 
     protected function registerViews()

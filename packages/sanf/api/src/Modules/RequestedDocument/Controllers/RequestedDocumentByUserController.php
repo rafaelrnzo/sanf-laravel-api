@@ -1,27 +1,33 @@
 <?php
 
-namespace Sanf\Api\Modules\Contract\Controllers;
+namespace Sanf\Api\Modules\RequestedDocument\Controllers;
 
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use League\Fractal\Serializer\ArraySerializer;
 use NbsPhp\Core\Controllers\RestApiController;
+use NbsPhp\Core\Database\TransactionalSessionInterface;
+use NbsPhp\Core\Services\TransactionalApplicationService;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
-use Sanf\Api\Modules\Contract\Transformers\BrowseHistoryRequestedDocumentTransformer;
-use Sanf\Api\Modules\Contract\Transformers\BrowseRequestedDocumentTransformer;
-use Sanf\Core\Modules\Contract\Dto\ListRequestedDocumentDto;
-use Sanf\Core\Modules\Contract\Dto\UploadRequestedDocumentDto;
-use Sanf\Core\Modules\Contract\Enums\DocumentTypeEnum;
+use Sanf\Api\Modules\RequestedDocument\Transformers\BrowseHistoryRequestedDocumentTransformer;
+use Sanf\Api\Modules\RequestedDocument\Transformers\BrowseRequestedDocumentTransformer;
+use Sanf\Core\Modules\RequestedDocument\Dtos\ListRequestedDocumentDto;
+use Sanf\Core\Modules\RequestedDocument\Dtos\UploadRequestedDocumentDto;
+use Sanf\Core\Modules\RequestedDocument\Enums\DocumentTypeEnum;
+use Sanf\Core\Modules\RequestedDocument\Enums\RequestedDocumentStatusEnum;
+use Sanf\Core\Modules\RequestedDocument\Services\BrowseRequestedDocumentService;
 
-final class UploadDocumentRequestByUserController extends RestApiController
+final class RequestedDocumentByUserController extends RestApiController
 {
     //TODO remove after +1 release version
     // TODO move into document domain
     public function getList(
         Guard $auth,
         Request $request,
-        $xid
+        $xid,
+        TransactionalSessionInterface $transactionalSession,
+        BrowseRequestedDocumentService $service
     ) {
         $input = $this->validate($request, [
             'document_type' => ['nullable', Rule::in(DocumentTypeEnum::ALL)],
@@ -29,19 +35,18 @@ final class UploadDocumentRequestByUserController extends RestApiController
             'limit' => ['nullable', 'integer', 'max:2147483647'],
             'sort_by' => ['nullable', 'in:earliest,latest'],
             'keyword' => ['nullable', 'string', 'max:255'],
+            'status' => ['required', Rule::in(RequestedDocumentStatusEnum::ALL)],
         ]);
 
-        $dto = new ListRequestedDocumentDto($input + ['profile_xid' => $xid]);
-        $result = (object)[
-            'data' => json_decode('[{"request_no":123123,"request_date":"12 March 2023","contract_no":123123,"total_document":4,"total_uploaded_document":0,"documents":[{"id":"gsuhJMtRdE9E-ryfRb-dn","title":"Foto Ktp","is_uploaded":false},{"id":"vxKZo35315kp6koT9ocZK","title":"NPWP Perusahaan","is_uploaded":true}]}]'),
-            'paginate' => (object)[
-                'total' => 0,
-                'count' => 0,
-                'skip' => (int)$dto->skip,
-                'limit' => (int)$dto->limit,
-                'sortBy' => $dto->sort_by,
+        $dto = new ListRequestedDocumentDto(
+            $input + [
+                'user_id' => $auth->id(),
+                'profile_xid' => $xid,
             ]
-        ];
+        );
+
+        $transactionalService = new TransactionalApplicationService($service, $transactionalSession);
+        $result = $transactionalService->execute($dto);
 
         return fractal($result->data, BrowseRequestedDocumentTransformer::class)
             ->paginateWith(new LazyPaginatorAdapter($result->paginate));

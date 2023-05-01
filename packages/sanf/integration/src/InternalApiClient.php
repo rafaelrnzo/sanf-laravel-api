@@ -1233,4 +1233,20 @@ class InternalApiClient
 
         return $response->json();
     }
+
+    public function browseRequestedUploadDocuments(object $arguments)
+    {
+        $response = Request::route('request-document.browse', $this->client)
+            ->queryParams([
+                'cust_id' => $arguments->profile_xid,
+                'doc_type' => $arguments->document_type ?? null,
+                'skip' => $arguments->skip ?? self::DEFAULT_SKIP,
+                'limit' => $arguments->limit ?? self::DEFAULT_LIMIT,
+                'order' => $arguments->order ?? self::DEFAULT_ORDER,
+                'keyword' => $arguments->keyword ?? null,
+            ])
+            ->send();
+
+        return $response->json(false);
+    }
 }

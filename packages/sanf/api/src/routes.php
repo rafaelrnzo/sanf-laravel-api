@@ -189,10 +189,10 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::post('users/request-deactivation', ['as' => 'users.deactivate', 'uses' => 'User\Controllers\AuthUserControllerByUser@postDeactivate']);
 
     // REQUEST DOCUMENT UPLOAD
-    Route::get('users/profiles/{xid}/requests-document', ['as' => 'v1.users.request-document.browse', 'uses' => 'Contract\Controllers\UploadDocumentRequestByUserController@getList']);
-    Route::get('users/profiles/{xid}/requests-document/{request_id}', ['as' => 'v1.users.request-document-history.browse', 'uses' => 'Contract\Controllers\UploadDocumentRequestByUserController@getHistory']);
-    Route::post('users/profiles/{xid}/requests-document/{request_id}/documents/submit', ['as' => 'v1.users.request-document-history.submit', 'uses' => 'Contract\Controllers\UploadDocumentRequestByUserController@postSubmit']);
-    Route::post('users/profiles/{xid}/requests-document/{request_id}/documents/{document_id}', ['as' => 'v1.users.request-document-history.upload', 'uses' => 'Contract\Controllers\UploadDocumentRequestByUserController@postUpload']);
+    Route::get('users/profiles/{xid}/requests-document', ['as' => 'v1.users.request-document.browse', 'uses' => 'RequestedDocument\Controllers\RequestedDocumentByUserController@getList']);
+    Route::get('users/profiles/{xid}/requests-document/{request_id}', ['as' => 'v1.users.request-document-history.browse', 'uses' => 'RequestedDocument\Controllers\RequestedDocumentByUserController@getHistory']);
+    Route::post('users/profiles/{xid}/requests-document/{request_id}/documents/submit', ['as' => 'v1.users.request-document-history.submit', 'uses' => 'RequestedDocument\Controllers\RequestedDocumentByUserController@postSubmit']);
+    Route::post('users/profiles/{xid}/requests-document/{request_id}/documents/{document_id}', ['as' => 'v1.users.request-document-history.upload', 'uses' => 'RequestedDocument\Controllers\RequestedDocumentByUserController@postUpload']);
 });
 
 Route::group(['prefix' => 'v2', 'middleware' => 'auth'], function () {

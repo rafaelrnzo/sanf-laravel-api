@@ -1,16 +1,17 @@
 <?php
 
-namespace Sanf\Core\Modules\Contract\Dto;
+namespace Sanf\Core\Modules\RequestedDocument\Dtos;
 
 use Spatie\DataTransferObject\DataTransferObject;
 
 class ListRequestedDocumentDto extends DataTransferObject
 {
-    public ?string $user_id;
+    public ?int $user_id;
 
     public string $profile_xid;
 
     public ?int $document_type;
+    public ?int $status;
 
     public int $skip = 0;
 
