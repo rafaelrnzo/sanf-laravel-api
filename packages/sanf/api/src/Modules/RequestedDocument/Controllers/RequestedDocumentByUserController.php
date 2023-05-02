@@ -16,8 +16,10 @@ use Sanf\Core\Modules\RequestedDocument\Dtos\ListRequestedDocumentDto;
 use Sanf\Core\Modules\RequestedDocument\Dtos\UploadRequestedDocumentDto;
 use Sanf\Core\Modules\RequestedDocument\Enums\DocumentTypeEnum;
 use Sanf\Core\Modules\RequestedDocument\Enums\RequestedDocumentStatusEnum;
+use Sanf\Core\Modules\RequestedDocument\Exceptions\SyncRequestedDocumentException;
 use Sanf\Core\Modules\RequestedDocument\Services\BrowseRequestedDocumentService;
 use Sanf\Core\Modules\RequestedDocument\Services\BrowseUploadRequestedDocumentService;
+use Sanf\Core\Modules\RequestedDocument\Services\SubmitRequestedDocumentService;
 use Sanf\Core\Modules\RequestedDocument\Services\UploadRequestedDocumentService;
 
 final class RequestedDocumentByUserController extends RestApiController
@@ -80,6 +82,7 @@ final class RequestedDocumentByUserController extends RestApiController
         $document_id,
         Guard $auth,
         Request $request,
+        TransactionalSessionInterface $transactionalSession,
         UploadRequestedDocumentService $service
     ) {
         $input = $this->validate($request, [
@@ -97,20 +100,31 @@ final class RequestedDocumentByUserController extends RestApiController
             ]
         );
 
-        $service->execute($dto);
+        $transactionalService = new TransactionalApplicationService($service, $transactionalSession);
+        $transactionalService->execute($dto);
 
         return $this->responseOk();
     }
 
     public function postSubmit(
-        Guard $auth,
         $xid,
-        $request_id
+        $request_id,
+        Guard $auth,
+        TransactionalSessionInterface $transactionalSession,
+        SubmitRequestedDocumentService $service
     ) {
         $dto = (object)[
+            'user_id' => $auth->id(),
             'profile_xid' => $xid,
             'request_id' => $request_id
         ];
+
+        $transactionalService = new TransactionalApplicationService($service, $transactionalSession);
+        $result = $transactionalService->execute($dto);
+
+        if (!$result) {
+            throw new SyncRequestedDocumentException();
+        }
 
         return $this->responseOk();
     }

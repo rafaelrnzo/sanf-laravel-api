@@ -1263,4 +1263,18 @@ class InternalApiClient
 
         return $response->json(false);
     }
+
+    public function submitRequestedUploadDocument(object $arguments)
+    {
+        $response = Request::route('request-document.submit', $this->client)
+            ->json([
+                'req_no' => $arguments->request_no,
+                'doc_id' => $arguments->document_id,
+                'path_name' => $arguments->path,
+                'filename' => $arguments->origin,
+                'date_upd' => $arguments->uploaded_at,
+            ])->send();
+
+        return $response->json();
+    }
 }
