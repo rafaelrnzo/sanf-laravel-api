@@ -30,4 +30,13 @@ class EloquentRequestedDocumentRepository extends AbstractEloquentRepository imp
     {
         return $this->model->newQuery()->forceCreate($request);
     }
+
+    public function findByRequestNo(string $request_no, int $user_id)
+    {
+        return $this->model->newQuery()
+            ->whereNull('deleted_at')
+            ->where('user_id', '=', $user_id)
+            ->where('request_no', '=', $request_no)
+            ->first();
+    }
 }

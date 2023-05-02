@@ -10,4 +10,6 @@ interface RequestedDocumentRepositoryInterface
     public function count($specification): int;
 
     public function create(array $request);
+
+    public function findByRequestNo(string $request_no, int $user_id);
 }

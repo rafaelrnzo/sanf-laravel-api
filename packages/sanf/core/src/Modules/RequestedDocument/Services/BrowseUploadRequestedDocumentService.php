@@ -57,7 +57,7 @@ class BrowseUploadRequestedDocumentService implements ApplicationServiceInterfac
 
         $dataDbMapping = array_map(function ($item) {
             return [
-                'filename' => $item['document_file']->filename,
+                'filename' => $item['document_file']->origin,
                 'upload_at' => Carbon::make($item['created_at']),
             ];
         }, $dataDb->toArray());

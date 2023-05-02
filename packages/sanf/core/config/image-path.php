@@ -12,4 +12,5 @@ return [
     'identity_tekenaja' => 'tekenaja/identity/',
     'document_tekenaja' => 'tekenaja/document/',
     'on-board' => 'on-board/',
+    'requested-document' => 'requested-document/',
 ];

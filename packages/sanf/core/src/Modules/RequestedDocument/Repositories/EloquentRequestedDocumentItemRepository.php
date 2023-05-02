@@ -16,6 +16,11 @@ class EloquentRequestedDocumentItemRepository extends AbstractEloquentRepository
         $this->model = $model;
     }
 
+    public function create(array $request)
+    {
+        return $this->model->newQuery()->forceCreate($request);
+    }
+
     public function getByDocumentNoAndId(string $user_id, string $request_no, string $document_id)
     {
         return $this->model->newQuery()

@@ -18,6 +18,7 @@ use Sanf\Core\Modules\RequestedDocument\Enums\DocumentTypeEnum;
 use Sanf\Core\Modules\RequestedDocument\Enums\RequestedDocumentStatusEnum;
 use Sanf\Core\Modules\RequestedDocument\Services\BrowseRequestedDocumentService;
 use Sanf\Core\Modules\RequestedDocument\Services\BrowseUploadRequestedDocumentService;
+use Sanf\Core\Modules\RequestedDocument\Services\UploadRequestedDocumentService;
 
 final class RequestedDocumentByUserController extends RestApiController
 {
@@ -74,24 +75,29 @@ final class RequestedDocumentByUserController extends RestApiController
     }
 
     public function postUpload(
-        Guard $auth,
         $xid,
         $request_id,
         $document_id,
-        Request $request
+        Guard $auth,
+        Request $request,
+        UploadRequestedDocumentService $service
     ) {
         $input = $this->validate($request, [
+            'document_name' => 'required|string|max:255',
             'origin' => 'required|string|max:255',
             'filename' => 'required|string|max:255',
         ]);
 
         $dto = new UploadRequestedDocumentDto(
             $input + [
+                'user_id' => $auth->id(),
                 'profile_xid' => $xid,
                 'request_id' => $request_id,
                 'document_id' => $document_id,
             ]
         );
+
+        $service->execute($dto);
 
         return $this->responseOk();
     }
