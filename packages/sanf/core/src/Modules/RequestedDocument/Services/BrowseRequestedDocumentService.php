@@ -44,19 +44,19 @@ class BrowseRequestedDocumentService implements ApplicationServiceInterface
         $this->getUser($dto);
 
         $dataFromCore = null;
-        if ($dto->status === RequestedDocumentStatusEnum::REQUESTED) {
+        if ($dto->status == RequestedDocumentStatusEnum::REQUESTED) {
             $dataFromCore = $this->coreService->execute($dto);
             $this->emptyPage($dto, $dataFromCore->data);
         }
 
         $dataFromDb = $this->dbService->execute($dto);
 
-        $data = null;
-        if ($dto->status === RequestedDocumentStatusEnum::SUBMITTED) {
+        $data = [];
+        if ($dto->status == RequestedDocumentStatusEnum::SUBMITTED) {
             $data = $dataFromDb->data;
         }
 
-        if ($dto->status === RequestedDocumentStatusEnum::REQUESTED) {
+        if ($dto->status == RequestedDocumentStatusEnum::REQUESTED) {
             $data = array_map(function ($requestedDocumentCore) use ($dto, $dataFromDb) {
                 $requestedDocumentDb = $this->getExistingRequestedDocument($dataFromDb, $requestedDocumentCore);
                 $requestedDocumentDb = $this->storeIfDoesntExist(
@@ -102,9 +102,9 @@ class BrowseRequestedDocumentService implements ApplicationServiceInterface
      * @param ?array $data
      * @return void | object
      */
-    private function emptyPage(ListRequestedDocumentDto $dto, ?array $data)
+    private function emptyPage(ListRequestedDocumentDto $dto, array $data)
     {
-        if (!$data) {
+        if (empty($data)) {
             return;
         }
 

@@ -10,8 +10,8 @@ class ListRequestedDocumentDto extends DataTransferObject
 
     public string $profile_xid;
 
-    public ?int $document_type;
-    public ?int $status;
+    public ?string $document_type;
+    public ?string $status;
 
     public int $skip = 0;
 
