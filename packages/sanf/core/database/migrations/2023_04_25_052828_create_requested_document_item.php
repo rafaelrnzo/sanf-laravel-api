@@ -19,6 +19,7 @@ class CreateRequestedDocumentItem extends Migration
             $table->string('document_id');
             $table->string('document_name');
             $table->json('document_file');
+            $table->boolean('is_submitted');
             $table->timestamps();
             $table->softDeletes();
         });
