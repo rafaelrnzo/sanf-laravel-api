@@ -63,7 +63,7 @@ class InternalApiClient
          * }
          */
         $response = Request::route('customer.find-by-email', $this->client)
-            ->pathParams(['email' => $email])
+            ->json(['email' => $email])
             ->send();
         return $response->json();
     }
