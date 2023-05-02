@@ -34,10 +34,12 @@ class AssetFileController extends RestApiController
         $types = [
             '1' => 'image/png,image/jpeg,image/jpg,image/svg',
             '2' => 'image/png,image/jpeg,image/jpg',
+            '3' => 'image/png,image/jpeg,image/jpg,image/tiff,application/pdf',
         ];
         $maxSizes = [
             '1' => 5000,
             '2' => 1000,
+            '3' => 15000,
         ];
         $keys = array_keys($types);
         $string = implode(',', $keys);
@@ -45,14 +47,13 @@ class AssetFileController extends RestApiController
         $rules = [
             'file' => [
                 'required',
-                'image',
+                'file',
                 "mimetypes:{$types[$request->get('asset_type')]}",
                 "max:{$maxSizes[$request->get('asset_type')]}"
             ],
             'asset_type' => [
                 'required',
                 "in:{$string}",
-                'max:16'
             ]
         ];
 
