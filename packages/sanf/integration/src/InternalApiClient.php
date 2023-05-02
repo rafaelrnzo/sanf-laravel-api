@@ -1234,7 +1234,7 @@ class InternalApiClient
         return $response->json();
     }
 
-    public function browseRequestedUploadDocuments(object $arguments)
+    public function browseRequestedDocuments(object $arguments)
     {
         $response = Request::route('request-document.browse', $this->client)
             ->queryParams([
@@ -1244,6 +1244,20 @@ class InternalApiClient
                 'limit' => $arguments->limit ?? self::DEFAULT_LIMIT,
                 'order' => $arguments->order ?? self::DEFAULT_ORDER,
                 'keyword' => $arguments->keyword ?? null,
+            ])
+            ->send();
+
+        return $response->json(false);
+    }
+
+    public function browseRequestedUploadDocuments(object $arguments)
+    {
+        $response = Request::route('request-uploaded-document.browse', $this->client)
+            ->queryParams([
+                'cust_id' => $arguments->profile_xid,
+                'skip' => $arguments->skip ?? self::DEFAULT_SKIP,
+                'limit' => $arguments->limit ?? self::DEFAULT_LIMIT,
+                'order' => $arguments->order ?? self::DEFAULT_ORDER,
             ])
             ->send();
 

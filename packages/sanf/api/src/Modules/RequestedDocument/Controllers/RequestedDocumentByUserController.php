@@ -17,6 +17,7 @@ use Sanf\Core\Modules\RequestedDocument\Dtos\UploadRequestedDocumentDto;
 use Sanf\Core\Modules\RequestedDocument\Enums\DocumentTypeEnum;
 use Sanf\Core\Modules\RequestedDocument\Enums\RequestedDocumentStatusEnum;
 use Sanf\Core\Modules\RequestedDocument\Services\BrowseRequestedDocumentService;
+use Sanf\Core\Modules\RequestedDocument\Services\BrowseUploadRequestedDocumentService;
 
 final class RequestedDocumentByUserController extends RestApiController
 {
@@ -53,15 +54,20 @@ final class RequestedDocumentByUserController extends RestApiController
     }
 
     public function getHistory(
+        string $xid,
+        string $request_id,
+        string $document_id,
         Guard $auth,
-        $xid,
-        $request_id
+        BrowseUploadRequestedDocumentService $service
     ) {
         $dto = (object)[
-            'xid' => $xid,
+            'user_id' => $auth->id(),
+            'profile_xid' => $xid,
             'request_id' => $request_id,
+            'document_id' => $document_id
         ];
-        $result = json_decode('[{"upload_at":"01-01-2023","filename":"ktp_new.jpeg"}]');
+
+        $result = $service->execute($dto);
 
         return fractal($result, BrowseHistoryRequestedDocumentTransformer::class)
             ->serializeWith(new ArraySerializer());

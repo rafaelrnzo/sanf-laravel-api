@@ -30,7 +30,7 @@ class BrowseRequestedDocumentFromCoreService implements ApplicationServiceInterf
     public function execute($dto = null)
     {
         try {
-            $response = $this->internalApiClient->browseRequestedUploadDocuments($dto);
+            $response = $this->internalApiClient->browseRequestedDocuments($dto);
         } catch (SanfInternalApiDataNotFoundException $exception) {
             return (object)[
                 'data' => [],

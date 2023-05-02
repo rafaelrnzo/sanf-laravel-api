@@ -72,4 +72,5 @@ Route::group(config('sanf-internal.url'), [InternalApiProcessor::class], functio
 
     // request unggah dokumen
     Route::get('request-document.browse', '/upload/listdoc');
+    Route::get('request-uploaded-document.browse', '/upload/riwayatdoc');
 });
