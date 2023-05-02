@@ -8,4 +8,6 @@ interface RequestedDocumentItemRepositoryInterface
     public function getByDocumentNoAndId(string $user_id, string $request_no, string $document_id);
 
     public function create(array $request);
+
+    public function update(int $id, array $request);
 }

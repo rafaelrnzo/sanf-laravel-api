@@ -11,5 +11,9 @@ interface RequestedDocumentRepositoryInterface
 
     public function create(array $request);
 
+    public function update(int $id, array $request);
+
     public function findByRequestNo(string $request_no, int $user_id);
+
+    public function incrementTotalUploaded(int $id);
 }

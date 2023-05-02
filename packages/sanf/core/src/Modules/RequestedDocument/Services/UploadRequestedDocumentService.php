@@ -8,7 +8,7 @@ use NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\RequestedDocument\Dtos\UploadRequestedDocumentDto;
-use Sanf\Core\Modules\RequestedDocument\Exceptions\RequestedDocumentNotFound;
+use Sanf\Core\Modules\RequestedDocument\Exceptions\RequestedDocumentNotFoundException;
 use Sanf\Core\Modules\RequestedDocument\Repositories\RequestedDocumentItemRepositoryInterface;
 use Sanf\Core\Modules\RequestedDocument\Repositories\RequestedDocumentRepositoryInterface;
 use Sanf\Core\Modules\User\AuthModel;
@@ -36,7 +36,7 @@ class UploadRequestedDocumentService implements ApplicationServiceInterface
      * @throws GuzzleException
      * @throws EndpointNotDefinedException
      * @throws UserNotFoundException
-     * @throws RequestedDocumentNotFound
+     * @throws RequestedDocumentNotFoundException
      */
     public function execute($dto = null)
     {
@@ -59,8 +59,11 @@ class UploadRequestedDocumentService implements ApplicationServiceInterface
                 'path' => $dir . $dto->filename,
                 'mime_type' => $metadata['mimetype'],
                 'size' => $metadata['size'],
-            ]
+            ],
+            'is_submitted' => false,
         ]);
+
+        $this->eloquentRequestedDocRepository->incrementTotalUploaded($requestedDocument->id);
 
         return true;
     }
@@ -79,8 +82,9 @@ class UploadRequestedDocumentService implements ApplicationServiceInterface
     {
         $requestedDocument = $this->eloquentRequestedDocRepository->findByRequestNo($request_id, $user_id);
         if (!$requestedDocument) {
-            throw new RequestedDocumentNotFound();
+            throw new RequestedDocumentNotFoundException();
         }
+
         return $requestedDocument;
     }
 
@@ -91,7 +95,6 @@ class UploadRequestedDocumentService implements ApplicationServiceInterface
             Storage::move($tempDir . $filename, $dir . $filename);
         }
 
-        $metadata = Storage::getMetaData($dir . $filename);
-        return array($dir, $dir . $filename, $metadata);
+        return Storage::getMetaData($dir . $filename);
     }
 }

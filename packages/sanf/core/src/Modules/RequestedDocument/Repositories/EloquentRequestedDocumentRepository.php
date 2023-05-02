@@ -31,12 +31,31 @@ class EloquentRequestedDocumentRepository extends AbstractEloquentRepository imp
         return $this->model->newQuery()->forceCreate($request);
     }
 
+    public function update(int $id, array $request)
+    {
+        return $this->model->newQuery()
+            ->where('id', '=', $id)
+            ->update($request);
+    }
+
     public function findByRequestNo(string $request_no, int $user_id)
     {
         return $this->model->newQuery()
+            ->with([
+                'items' => function ($query) {
+                    return $query->whereNull('deleted_at');
+                }
+            ])
             ->whereNull('deleted_at')
             ->where('user_id', '=', $user_id)
             ->where('request_no', '=', $request_no)
             ->first();
+    }
+
+    public function incrementTotalUploaded(int $id)
+    {
+        return $this->model->newQuery()
+            ->where('id', '=', $id)
+            ->increment('total_uploaded');
     }
 }

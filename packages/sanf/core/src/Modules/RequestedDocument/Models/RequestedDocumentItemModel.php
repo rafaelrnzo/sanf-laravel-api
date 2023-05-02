@@ -15,6 +15,7 @@ class RequestedDocumentItemModel extends AbstractModel
         'document_name',
         'document_file',
         'deleted_at',
+        'is_submitted',
     ];
 
     protected $casts = [
