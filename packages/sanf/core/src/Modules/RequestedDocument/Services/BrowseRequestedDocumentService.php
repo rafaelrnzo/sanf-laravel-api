@@ -68,7 +68,7 @@ class BrowseRequestedDocumentService implements ApplicationServiceInterface
                 $requestedDocumentCore->total_uploaded_document = $requestedDocumentDb->total_uploaded;
                 $requestedDocumentCore->documents = $this->getExistingRequestedDocumentItem(
                     $requestedDocumentCore->documents,
-                    $requestedDocumentDb->documents
+                    $requestedDocumentDb->documents ?? []
                 );
 
                 return $requestedDocumentCore;
