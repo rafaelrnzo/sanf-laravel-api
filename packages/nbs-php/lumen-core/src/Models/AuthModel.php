@@ -43,6 +43,7 @@ class AuthModel extends AbstractModel implements
         'username',
         'password',
         'status_id',
+        'email_verified_at',
         'last_login_at',
         'entity_type_id',
         'deleted_at',

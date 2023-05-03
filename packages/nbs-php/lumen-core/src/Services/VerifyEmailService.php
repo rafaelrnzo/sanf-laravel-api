@@ -30,12 +30,12 @@ class VerifyEmailService implements VerifyEmailServiceInterface
             throw new NotFoundHttpException();
         }
 
-        if ($user instanceof NeedSetupPasswordInterface && $user->needActivation()) {
-            $user->markUserActivated();
-        }
-
         if (!hash_equals((string)$dto->token, sha1($user->getEmailForVerification()))) {
             throw new UnauthorizedException();
+        }
+
+        if ($user instanceof NeedSetupPasswordInterface && $user->needActivation()) {
+            $user->markUserActivated();
         }
 
         if (is_null($user->email_verified_at)) {
