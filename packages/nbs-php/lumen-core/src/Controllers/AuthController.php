@@ -4,6 +4,7 @@
 namespace NbsPhp\Core\Controllers;
 
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -225,9 +226,10 @@ class AuthController extends RestApiController
         } catch (\Exception $e) {
             report($e);
             $message = $e->getMessage();
-            if ($e instanceof ClientException) {
+            if ($e instanceof ClientException || $e instanceof ServerException) {
                 $message = __('Terjadi Kesalahan, Harap Hubungi Administrator');
             }
+            return view('core::layouts.message', ['message' => $message]);
         }
 
         return view(config('auth.views.verify-email'), ['message' => $message]);
