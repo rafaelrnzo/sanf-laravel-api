@@ -10,7 +10,7 @@ class ListContractTransformer extends TransformerAbstract
     public function transform($item)
     {
         $response = [
-            'contract_at' => ($item->contract_at) ? Carbon::parse($item->contract_at)->format('Y-m-d') : null,
+            'contract_at' => ($item->contract_at) ? Carbon::make($item->contract_at)->format('Y-m-d') : null,
             'contract_no' => (string)$item->contract_no,
             'financing_type' => fractal($item->financing_type, FinancingContractTypeTransformer::class),
             'total_amount' => (string)$item->total_amount,
@@ -19,7 +19,7 @@ class ListContractTransformer extends TransformerAbstract
 
         if (!is_null(optional($item)->payment_due_at)) {
             $response += [
-                'payment_due_at' => $item->payment_due_at,
+                'payment_due_at' => ($item->payment_due_at) ? Carbon::make($item->payment_due_at)->format('Y-m-d') : null,
             ];
         }
 
