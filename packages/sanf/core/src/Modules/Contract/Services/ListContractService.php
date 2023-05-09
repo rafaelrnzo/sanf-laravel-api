@@ -84,7 +84,7 @@ class ListContractService extends UserService implements ApplicationServiceInter
         }
     }
 
-    private function countDiffDays(string $overdueDate, CarbonImmutable $todayWithTz, int $timezoneOffset = 0): int
+    private function countDiffDays(string $overdueDate, CarbonImmutable $todayWithTz, ?int $timezoneOffset = 0): int
     {
         $overdueTimestampWithTz = CarbonImmutable::make($overdueDate)->timestamp + $timezoneOffset;
         $overdueWithTz = CarbonImmutable::parse($overdueTimestampWithTz);
