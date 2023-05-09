@@ -89,9 +89,9 @@ class ListContractService extends UserService implements ApplicationServiceInter
         $overdueTimestampWithTz = CarbonImmutable::make($overdueDate)->timestamp + $timezoneOffset;
         $overdueWithTz = CarbonImmutable::parse($overdueTimestampWithTz);
         $diffTime = $todayWithTz->startOfDay()->diff($overdueWithTz->startOfDay());
-        $diffDays = $diffTime->days;
+        $diffDays = (int)-"{$diffTime->days}";
         if ($diffTime->invert) {
-            $diffDays = (int)"-{$diffTime->days}";
+            $diffDays = (int)"{$diffTime->days}";
         }
         return $diffDays;
     }
