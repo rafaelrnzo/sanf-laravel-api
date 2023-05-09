@@ -6,7 +6,7 @@ interface RequestedDocumentSpecificationInterface
 {
     public function paginate(
         string $userId,
-        int $statusId,
+        ?int $statusId,
         ?int $typeId,
         ?string $keyword = null,
         ?string $sortBy = null,
