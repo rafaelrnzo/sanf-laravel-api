@@ -13,7 +13,6 @@ use Sanf\Integration\InternalApiClient;
 
 class BrowseRequestedDocumentFromCoreService implements ApplicationServiceInterface
 {
-
     private InternalApiClient $internalApiClient;
 
     public function __construct(InternalApiClient $internalApiClient)
@@ -30,7 +29,27 @@ class BrowseRequestedDocumentFromCoreService implements ApplicationServiceInterf
     public function execute($dto = null)
     {
         try {
-            $response = $this->internalApiClient->browseRequestedDocuments($dto);
+            switch ($dto->document_type) {
+                case DocumentTypeEnum::CONTRACT:
+                    $type = DocumentTypeEnum::CONTRACT_LABEL;
+                    break;
+                case DocumentTypeEnum::SUBMISSION:
+                    $type = DocumentTypeEnum::SUBMISSION_LABEL;
+                    break;
+                case DocumentTypeEnum::PERSONAL:
+                    $type = DocumentTypeEnum::PERSONAL_LABEL;
+                    break;
+            }
+            $arguments = (object)[
+                'profile_xid' => $dto->profile_xid,
+                'document_type' => $type ?? null,
+                'skip' => $dto->skip,
+                'limit' => $dto->limit,
+                'order' => ucwords($dto->sort_by),
+                'keyword' => $dto->keyword,
+            ];
+
+            $response = $this->internalApiClient->browseRequestedDocuments($arguments);
         } catch (SanfInternalApiDataNotFoundException $exception) {
             return (object)[
                 'data' => [],
