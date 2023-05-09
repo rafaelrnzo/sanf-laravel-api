@@ -18,7 +18,7 @@ final class ApplyNewPlafondByUserService extends PlafondByUserService implements
     public function execute($dto = null)
     {
         $this->repository->submitApplication($dto->profileXid, $dto->typeId, $dto->amount);
-        switch ($dto->type) {
+        switch ($dto->typeId) {
             case PlafondTypeEnum::UNIT:
                 $plafondType = __('Unit');
                 break;

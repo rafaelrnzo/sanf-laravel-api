@@ -24,7 +24,7 @@ final class ApplyIncreasePlafondByUserService extends PlafondByUserService imple
             throw new PlafondInvalidException('Plafond Not Found');
         }
 
-        switch ($dto->type) {
+        switch ($dto->typeId) {
             case PlafondTypeEnum::UNIT:
                 $plafondType = __('Unit');
                 break;
