@@ -65,6 +65,7 @@ class BrowseRequestedDocumentFromDbService implements ApplicationServiceInterfac
                 'documents' => $this->mapRequestedItemDocs($data->items),
                 'total_document' => $data->total_item,
                 'total_uploaded' => $data->total_uploaded,
+                'status' => $data->status,
             ];
         }, $records);
     }

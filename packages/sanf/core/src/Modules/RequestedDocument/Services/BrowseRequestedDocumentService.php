@@ -34,7 +34,6 @@ class BrowseRequestedDocumentService implements ApplicationServiceInterface
     /**
      * @param ListRequestedDocumentDto $dto
      * @return object
-     * @throws BindingResolutionException
      * @throws UserNotFoundException
      * @throws GuzzleException
      * @throws EndpointNotDefinedException
@@ -42,40 +41,26 @@ class BrowseRequestedDocumentService implements ApplicationServiceInterface
     public function execute($dto = null)
     {
         $this->getUser($dto);
-
+        $status = $dto->status;
         $dataFromCore = null;
-        if ($dto->status == RequestedDocumentStatusEnum::REQUESTED) {
-            $dataFromCore = $this->coreService->execute($dto);
-
-            $dto->status = null;
-            $dataFromDb = $this->dbService->execute($dto);
-
-            $this->emptyPage($dto, $dataFromCore->data);
-        }
-
         $data = [];
-        if ($dto->status == RequestedDocumentStatusEnum::SUBMITTED) {
+
+        if ($status == RequestedDocumentStatusEnum::SUBMITTED) {
             $dataFromDb = $this->dbService->execute($dto);
             $data = $dataFromDb->data;
         }
 
-        if ($dto->status == RequestedDocumentStatusEnum::REQUESTED) {
-            $data = array_map(function ($requestedDocumentCore) use ($dto, $dataFromDb) {
-                $requestedDocumentDb = $this->getExistingRequestedDocument($dataFromDb, $requestedDocumentCore);
-                $requestedDocumentDb = $this->storeIfDoesntExist(
-                    $dto->user_id,
-                    $requestedDocumentCore,
-                    $requestedDocumentDb
-                );
+        if ($status == RequestedDocumentStatusEnum::REQUESTED) {
+            $dataFromCore = $this->coreService->execute($dto);
+            $this->emptyPage($dto, $dataFromCore->data);
 
-                $requestedDocumentCore->total_uploaded_document = $requestedDocumentDb->total_uploaded;
-                $requestedDocumentCore->documents = $this->getExistingRequestedDocumentItem(
-                    $requestedDocumentCore->documents,
-                    $requestedDocumentDb->documents ?? []
-                );
+            $dto->status = null;
+            $dataFromDb = $this->dbService->execute($dto);
 
-                return $requestedDocumentCore;
-            }, $dataFromCore->data ?? []);
+            $data = $this->responseMapping($dataFromDb, $dataFromCore, $dto);
+            $data = array_filter($data, function ($requestedDocumentCore) {
+                return $requestedDocumentCore->status === RequestedDocumentStatusEnum::REQUESTED;
+            });
         }
 
         $this->emptyPage($dto, $data);
@@ -127,6 +112,31 @@ class BrowseRequestedDocumentService implements ApplicationServiceInterface
                 'sortBy' => $dto->sort_by,
             ]
         ];
+    }
+
+    private function responseMapping(object $dataFromDb, object $dataFromCore, ListRequestedDocumentDto $dto): array
+    {
+        return array_map(
+            function ($requestedDocumentCore) use ($dto, $dataFromDb) {
+                $requestedDocumentDb = $this->getExistingRequestedDocument($dataFromDb, $requestedDocumentCore);
+
+                $requestedDocumentDb = $this->storeIfDoesntExist(
+                    $dto->user_id,
+                    $requestedDocumentCore,
+                    $requestedDocumentDb
+                );
+
+                $requestedDocumentCore->total_uploaded_document = $requestedDocumentDb->total_uploaded;
+                $requestedDocumentCore->status = $requestedDocumentDb->status;
+                $requestedDocumentCore->documents = $this->getExistingRequestedDocumentItem(
+                    $requestedDocumentCore->documents,
+                    $requestedDocumentDb->documents ?? []
+                );
+
+                return $requestedDocumentCore;
+            },
+            $dataFromCore->data ?? []
+        );
     }
 
     /**
