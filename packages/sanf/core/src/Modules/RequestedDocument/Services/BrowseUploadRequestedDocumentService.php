@@ -65,6 +65,12 @@ class BrowseUploadRequestedDocumentService implements ApplicationServiceInterfac
         $data = array_merge($dataCoreMapping, $dataDbMapping);
 
         // TODO remove laravel collection
-        return collect($data)->sortBy('upload_at')->toArray();
+        switch ($dto->sort_by) {
+            case 'oldest':
+                return collect($data)->sortBy('upload_at')->toArray();
+            case 'earliest':
+            default:
+                return collect($data)->sortByDesc('upload_at')->toArray();
+        }
     }
 }

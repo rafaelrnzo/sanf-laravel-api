@@ -60,14 +60,20 @@ final class RequestedDocumentByUserController extends RestApiController
         string $xid,
         string $request_id,
         string $document_id,
+        Request $request,
         Guard $auth,
         BrowseUploadRequestedDocumentService $service
     ) {
+        $input = $this->validate($request, [
+            'sort_by' => ['nullable', 'in:earliest,oldest'],
+        ]);
+
         $dto = (object)[
             'user_id' => $auth->id(),
             'profile_xid' => $xid,
             'request_id' => $request_id,
-            'document_id' => $document_id
+            'document_id' => $document_id,
+            'sort_by' => $input['sort_by'] ?? null,
         ];
 
         $result = $service->execute($dto);
