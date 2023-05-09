@@ -46,13 +46,16 @@ class BrowseRequestedDocumentService implements ApplicationServiceInterface
         $dataFromCore = null;
         if ($dto->status == RequestedDocumentStatusEnum::REQUESTED) {
             $dataFromCore = $this->coreService->execute($dto);
+
+            $dto->status = null;
+            $dataFromDb = $this->dbService->execute($dto);
+
             $this->emptyPage($dto, $dataFromCore->data);
         }
 
-        $dataFromDb = $this->dbService->execute($dto);
-
         $data = [];
         if ($dto->status == RequestedDocumentStatusEnum::SUBMITTED) {
+            $dataFromDb = $this->dbService->execute($dto);
             $data = $dataFromDb->data;
         }
 
@@ -76,6 +79,12 @@ class BrowseRequestedDocumentService implements ApplicationServiceInterface
         }
 
         $this->emptyPage($dto, $data);
+
+        if ($dto->document_type) {
+            $data = array_filter($data, function ($item) use ($dto) {
+                return $item->document_type == $dto->document_type;
+            });
+        }
 
         return (object)[
             'data' => $data,

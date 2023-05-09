@@ -8,7 +8,7 @@ use Sanf\Core\Modules\RequestedDocument\Models\RequestedDocumentModel;
 class EloquentPaginateByUserAndStatusSpecification
 {
     private string $userId;
-    private int $statusId;
+    private ?int $statusId;
     private ?int $typeId;
     private ?string $keyword;
     private ?string $sortBy;
@@ -18,7 +18,7 @@ class EloquentPaginateByUserAndStatusSpecification
 
     /**
      * @param string $userId
-     * @param int $statusId
+     * @param int|null $statusId
      * @param int|null $typeId
      * @param string|null $keyword
      * @param string|null $sortBy
@@ -28,7 +28,7 @@ class EloquentPaginateByUserAndStatusSpecification
      */
     public function __construct(
         string $userId,
-        int $statusId,
+        ?int $statusId,
         ?int $typeId,
         ?string $keyword,
         ?string $sortBy,
@@ -81,7 +81,9 @@ class EloquentPaginateByUserAndStatusSpecification
             ])
             ->whereNull('deleted_at')
             ->where('user_id', '=', $this->userId)
-            ->where('status', '=', $this->statusId)
+            ->when($this->statusId, function ($query) {
+                return $query->where('status', '=', $this->statusId);
+            })
             ->when($this->typeId, function ($query) {
                 return $query->where('type', '=', $this->typeId);
             })

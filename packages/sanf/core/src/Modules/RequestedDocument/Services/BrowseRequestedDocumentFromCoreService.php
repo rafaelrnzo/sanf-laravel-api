@@ -38,8 +38,16 @@ class BrowseRequestedDocumentFromCoreService implements ApplicationServiceInterf
             ];
         }
 
+        $data = $this->mapRequestedDocs($response);
+
+        if ($dto->document_type) {
+            $data = array_filter($data, function ($item) use ($dto) {
+                return $item->document_type == $dto->document_type;
+            });
+        }
+
         return (object)[
-            'data' => $this->mapRequestedDocs($response),
+            'data' => $data,
             'total' => $response->total,
         ];
     }
