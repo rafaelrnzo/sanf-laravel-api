@@ -37,7 +37,7 @@ final class RequestedDocumentByUserController extends RestApiController
             'document_type' => ['nullable', Rule::in(DocumentTypeEnum::ALL)],
             'skip' => ['nullable', 'integer', 'max:2147483647'],
             'limit' => ['nullable', 'integer', 'max:2147483647'],
-            'sort_by' => ['nullable', 'in:earliest,latest'],
+            'sort_by' => ['nullable', 'in:earliest,oldest'],
             'keyword' => ['nullable', 'string', 'max:255'],
             'status' => ['required', Rule::in(RequestedDocumentStatusEnum::ALL)],
         ]);
