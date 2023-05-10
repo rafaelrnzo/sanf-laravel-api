@@ -126,7 +126,7 @@ class BrowseRequestedDocumentService implements ApplicationServiceInterface
                     $requestedDocumentDb
                 );
 
-                $requestedDocumentCore->total_uploaded_document = $requestedDocumentDb->total_uploaded;
+                $requestedDocumentCore->total_uploaded = $requestedDocumentDb->total_uploaded;
                 $requestedDocumentCore->status = $requestedDocumentDb->status;
                 $requestedDocumentCore->documents = $this->getExistingRequestedDocumentItem(
                     $requestedDocumentCore->documents,

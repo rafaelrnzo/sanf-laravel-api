@@ -14,7 +14,7 @@ class BrowseRequestedDocumentTransformer extends TransformerAbstract
             'request_date' => ($dto->request_at)->format('d F Y'),
             'document_no' => $dto->document_no,
             'total_document' => $dto->total_document,
-            'total_uploaded_document' => $dto->total_uploaded_document ?? 0,
+            'total_uploaded_document' => $dto->total_uploaded ?? 0,
             'documents' => fractal($dto->documents, new ListItemRequestedDocumentTransformer())->serializeWith(
                 ArraySerializer::class
             ),
