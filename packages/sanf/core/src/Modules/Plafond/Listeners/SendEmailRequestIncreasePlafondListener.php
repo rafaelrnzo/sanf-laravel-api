@@ -38,6 +38,7 @@ class SendEmailRequestIncreasePlafondListener
             'Nama Customer' => ($profile->typeId === ProfileType::PERSONAL) ? $profile->fullName : null,
             'Nama PIC' => ($profile->typeId === ProfileType::COMPANY) ? $profile->picName : null,
             'Nama Perusahaan' => $profile->fullName,
+            'Customer ID' => $plafondRequest->profileXid,
             'Nilai Plafon Saat Ini' => 'Rp. ' . number_format($plafondRequest->currentBalance, 0, ',', '.'),
             'Nilai Plafon Tambahan' => 'Rp. ' . number_format($plafondRequest->addedBalance, 0, ',', '.'),
             '<p style="color: #232227;">

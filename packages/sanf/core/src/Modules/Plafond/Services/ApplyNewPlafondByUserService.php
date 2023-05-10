@@ -31,6 +31,7 @@ final class ApplyNewPlafondByUserService extends PlafondByUserService implements
                 break;
         }
         $plafondRequest = (object)[
+            'profileXid' => $dto->profileXid,
             'amount' => $dto->amount,
             'createdAt' => Carbon::now(),
             'type' => $plafondType,

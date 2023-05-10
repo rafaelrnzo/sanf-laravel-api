@@ -37,6 +37,7 @@ class SendEmailRequestNewPlafondListener
             'Nama Customer' => ($profile->typeId === ProfileType::PERSONAL) ? $profile->fullName : null,
             'Nama PIC' => ($profile->typeId === ProfileType::COMPANY) ? $profile->picName : null,
             'Nama Perusahaan' => $profile->fullName,
+            'Customer ID' => $plafondRequest->profileXid,
             'Nilai Pengajuan Plafon' => 'Rp. ' . number_format($plafondRequest->amount, 0, ',', '.'),
         ];
 

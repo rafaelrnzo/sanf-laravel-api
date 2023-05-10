@@ -38,6 +38,7 @@ final class ApplyIncreasePlafondByUserService extends PlafondByUserService imple
         }
 
         $plafondRequest = (object)[
+            'profileXid' => $dto->profileXid,
             'currentBalance' => $plafond->getCurrentBalance(),
             'addedBalance' => $dto->amount - $plafond->getCurrentBalance(),
             'submittedBalance' => $dto->amount,
