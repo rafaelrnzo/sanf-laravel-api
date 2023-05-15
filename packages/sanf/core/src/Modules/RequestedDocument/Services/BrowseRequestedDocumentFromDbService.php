@@ -9,7 +9,6 @@ use Sanf\Core\Modules\RequestedDocument\Specifications\RequestedDocumentSpecific
 
 class BrowseRequestedDocumentFromDbService implements ApplicationServiceInterface
 {
-
     private RequestedDocumentRepositoryInterface $requestedDocumentEloquentRepository;
     private RequestedDocumentSpecificationInterface $requestedDocumentEloquentSpecification;
 
@@ -23,24 +22,32 @@ class BrowseRequestedDocumentFromDbService implements ApplicationServiceInterfac
 
     public function execute($dto = null)
     {
+        $userId = (string)$dto->user_id;
+        $status = ($dto->status) ? (int)$dto->status : null;
+        $documentType = ($dto->document_type) ? (int)$dto->document_type : null;
+        $keyword = ($dto->keyword) ? (string)$dto->keyword : null;
+        $sortBy = ($dto->sort_by) ? (string)$dto->sort_by : null;
+        $skip = ($dto->skip) ? (int)$dto->skip : null;
+        $limit = ($dto->limit) ? (int)$dto->limit : null;
+
         $records = $this->requestedDocumentEloquentRepository->query(
             $this->requestedDocumentEloquentSpecification->paginate(
-                $dto->user_id,
-                $dto->status,
-                $dto->document_type,
-                $dto->keyword,
-                $dto->sort_by,
-                $dto->skip,
-                $dto->limit,
+                $userId,
+                $status,
+                $documentType,
+                $keyword,
+                $sortBy,
+                $skip,
+                $limit,
                 null
             )
         );
         $totalRecord = $this->requestedDocumentEloquentRepository->count(
             $this->requestedDocumentEloquentSpecification->paginate(
-                $dto->user_id,
-                $dto->status,
-                $dto->document_type,
-                $dto->keyword,
+                $userId,
+                $status,
+                $documentType,
+                $keyword,
                 null,
                 null,
                 null,
