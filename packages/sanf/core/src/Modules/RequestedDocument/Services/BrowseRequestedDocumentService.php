@@ -71,6 +71,15 @@ class BrowseRequestedDocumentService implements ApplicationServiceInterface
             });
         }
 
+        switch ($dto->sort_by) {
+            case 'oldest':
+                $data = collect($data)->sortBy('request_no');
+                break;
+            case 'earliest':
+            default:
+                $data = collect($data)->sortByDesc('request_no');
+        }
+
         return (object)[
             'data' => $data,
             'paginate' => (object)[
