@@ -54,13 +54,19 @@ class BrowseRequestedDocumentService implements ApplicationServiceInterface
             $dataFromCore = $this->coreService->execute($dto);
             $this->emptyPage($dto, $dataFromCore->data);
 
-            $dto->status = null;
-            $dataFromDb = $this->dbService->execute($dto);
+            $argument = $dto->toArray();
+            $argument['status'] = null;
+            $argument['keyword'] = null;
 
-            $data = $this->responseMapping($dataFromDb, $dataFromCore, $dto);
-            $data = array_filter($data, function ($requestedDocumentCore) {
-                return $requestedDocumentCore->status === RequestedDocumentStatusEnum::REQUESTED;
-            });
+            $dataFromDb = $this->dbService->execute((object)$argument);
+
+            $dataMapper = $this->responseMapping($dataFromDb, $dataFromCore, $dto);
+
+            $argument['status'] = RequestedDocumentStatusEnum::REQUESTED;
+            $argument['keyword'] = $dto->keyword;
+
+            $dataFromDb = $this->dbService->execute((object)$argument);
+            $data = $dataFromDb->data;
         }
 
         $this->emptyPage($dto, $data);
