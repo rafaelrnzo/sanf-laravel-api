@@ -68,6 +68,7 @@ class BrowseUploadRequestedDocumentService implements ApplicationServiceInterfac
         switch ($dto->sort_by) {
             case 'oldest':
                 return collect($data)->sortBy('upload_at')->toArray();
+                break;
             case 'earliest':
             default:
                 return collect($data)->sortByDesc('upload_at')->toArray();
