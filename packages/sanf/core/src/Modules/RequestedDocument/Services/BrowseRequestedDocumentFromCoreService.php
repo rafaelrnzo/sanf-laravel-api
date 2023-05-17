@@ -40,12 +40,18 @@ class BrowseRequestedDocumentFromCoreService implements ApplicationServiceInterf
                     $type = DocumentTypeEnum::PERSONAL_LABEL;
                     break;
             }
+
+            $sortBy = $dto->sort_by;
+            if ($sortBy === 'oldest') {
+                $sortBy = 'latest';
+            }
+
             $arguments = (object)[
                 'profile_xid' => $dto->profile_xid,
                 //'document_type' => $type ?? null, TODO please fix filter document type at sanf core api
                 'skip' => $dto->skip,
                 'limit' => $dto->limit,
-                'order' => ucwords($dto->sort_by),
+                'order' => ucwords($sortBy),
                 'keyword' => $dto->keyword,
             ];
 
