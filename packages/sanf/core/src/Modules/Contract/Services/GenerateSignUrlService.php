@@ -6,23 +6,22 @@ use Carbon\Carbon;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Exceptions\ESignDocumentNotFoundException;
-use Sanf\Core\Modules\Contract\Exceptions\ESignUserNotRegisteredException;
 use Sanf\Core\Modules\Contract\Repositories\ESignRepositoryInterface;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Integration\Enums\TekenAjaApiResponseErrorCodeEnum;
 use Sanf\Integration\Exceptions\TekenAjaExternalApiException;
 use Sanf\Integration\Exceptions\TekenAjaInvalidParameterRegistrationException;
-use Sanf\Integration\TekenAjaInternalApiClient;
+use Sanf\Integration\Modules\TekenAja\TekenAjaApiClient;
 
 final class GenerateSignUrlService implements ApplicationServiceInterface
 {
     protected AuthModel $userRepository;
     protected ESignRepositoryInterface $eSignRepository;
-    protected TekenAjaInternalApiClient $client;
+    protected TekenAjaApiClient $client;
 
     public function __construct(
         AuthModel $userRepository,
-        TekenAjaInternalApiClient $client,
+        TekenAjaApiClient $client,
         ESignRepositoryInterface $eSignRepository
     ) {
         $this->userRepository = $userRepository;

@@ -1,9 +1,9 @@
 <?php
 
 use NbsPhp\ApiWrapper\Api\Route;
-use Sanf\Integration\TekenAjaInternalApiProcessor;
+use Sanf\Integration\Modules\TekenAja\TekenAjaApiProcessor;
 
-Route::group(config('tekenaja-internal.url'), [TekenAjaInternalApiProcessor::class], function () {
+Route::group(config('tekenaja-internal.url'), [TekenAjaApiProcessor::class], function () {
     Route::get('location.province', '/v2/data/province');
     Route::get('location.district', '/v2/data/district');
     Route::get('location.subdistrict', '/v2/data/subdistrict');

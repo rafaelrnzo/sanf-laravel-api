@@ -7,15 +7,15 @@ use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Dto\BrowseSubDistrictDto;
 use Sanf\Core\Modules\User\AuthModel;
-use Sanf\Integration\TekenAjaInternalApiClient;
+use Sanf\Integration\Modules\TekenAja\TekenAjaApiClient;
 
 final class BrowseSubDistrictService implements ApplicationServiceInterface
 {
     protected AuthModel $userRepository;
-    protected TekenAjaInternalApiClient $client;
+    protected TekenAjaApiClient $client;
 
     public function __construct(
-        TekenAjaInternalApiClient $client,
+        TekenAjaApiClient $client,
         AuthModel $userRepository
     ) {
         $this->userRepository = $userRepository;

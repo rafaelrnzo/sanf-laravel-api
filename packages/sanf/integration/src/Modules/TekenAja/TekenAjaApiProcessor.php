@@ -1,6 +1,6 @@
 <?php
 
-namespace Sanf\Integration;
+namespace Sanf\Integration\Modules\TekenAja;
 
 use GuzzleHttp\Exception\ServerException;
 use NbsPhp\ApiWrapper\Api\Processor;
@@ -9,7 +9,7 @@ use NbsPhp\ApiWrapper\Api\Response;
 use Sanf\Integration\Exceptions\TekenAjaExternalApiDataNotFoundException;
 use Sanf\Integration\Exceptions\TekenAjaExternalApiException;
 
-class TekenAjaInternalApiProcessor extends Processor
+class TekenAjaApiProcessor extends Processor
 {
     public static function handle(Request $request, callable $next): Response
     {

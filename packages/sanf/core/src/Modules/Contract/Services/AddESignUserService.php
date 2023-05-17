@@ -14,18 +14,18 @@ use Sanf\Integration\Enums\TekenAjaApiResponseErrorCodeEnum;
 use Sanf\Integration\Exceptions\TekenAjaExternalApiException;
 use Sanf\Integration\Exceptions\TekenAjaInvalidParameterRegistrationException;
 use Sanf\Integration\Exceptions\TekenAjaSubmitRegistrationHasLimitException;
-use Sanf\Integration\TekenAjaInternalApiClient;
+use Sanf\Integration\Modules\TekenAja\TekenAjaApiClient;
 
 final class AddESignUserService implements ApplicationServiceInterface
 {
     protected AuthModel $userRepository;
     protected ESignRepositoryInterface $eSignRepository;
-    protected TekenAjaInternalApiClient $client;
+    protected TekenAjaApiClient $client;
 
     public function __construct(
         ESignRepositoryInterface $eSignRepository,
         AuthModel $userRepository,
-        TekenAjaInternalApiClient $client
+        TekenAjaApiClient $client
     ) {
         $this->eSignRepository = $eSignRepository;
         $this->userRepository = $userRepository;

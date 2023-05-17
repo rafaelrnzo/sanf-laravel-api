@@ -1,16 +1,11 @@
 <?php
 
+namespace Sanf\Integration\Modules\TekenAja;
 
-namespace Sanf\Integration;
-
-
-use GuzzleHttp\Exception\GuzzleException;
-use NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException;
 use NbsPhp\ApiWrapper\Api\Request;
-use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
-use stdClass;
 
-class TekenAjaInternalApiClient {
+class TekenAjaApiClient
+{
     const DEFAULT_SKIP = 0;
     const DEFAULT_LIMIT = 2147483647;
     const DEFAULT_ORDER = 'Latest';

@@ -9,15 +9,15 @@ use Sanf\Integration\Enums\TekenAjaApiResponseErrorCodeEnum;
 use Sanf\Integration\Exceptions\TekenAjaExternalApiException;
 use Sanf\Integration\Exceptions\TekenAjaInvalidParameterRegistrationException;
 use Sanf\Integration\Exceptions\TekenAjaRegisterCheckException;
-use Sanf\Integration\TekenAjaInternalApiClient;
+use Sanf\Integration\Modules\TekenAja\TekenAjaApiClient;
 
 final class GetESignUserCheckService implements ApplicationServiceInterface
 {
     protected AuthModel $userRepository;
-    protected TekenAjaInternalApiClient $client;
+    protected TekenAjaApiClient $client;
 
     public function __construct(
-        TekenAjaInternalApiClient $client,
+        TekenAjaApiClient $client,
         AuthModel $userRepository
     ) {
         $this->userRepository = $userRepository;

@@ -5,20 +5,17 @@ namespace Sanf\Core\Modules\Contract\Services;
 use Carbon\Carbon;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\Contract\Dto\BrowseESignDocumentDto;
 use Sanf\Core\Modules\Contract\Dto\BrowseProvinceDto;
-use Sanf\Core\Modules\Contract\Dtos\BrowseProcessFinancingUnitLocationSubmissionByUserRequestDto;
-use Sanf\Core\Modules\Contract\Enums\ESignContractStatusEnum;
 use Sanf\Core\Modules\User\AuthModel;
-use Sanf\Integration\TekenAjaInternalApiClient;
+use Sanf\Integration\Modules\TekenAja\TekenAjaApiClient;
 
 final class BrowseProvinceService implements ApplicationServiceInterface
 {
     protected AuthModel $userRepository;
-    protected TekenAjaInternalApiClient $client;
+    protected TekenAjaApiClient $client;
 
     public function __construct(
-        TekenAjaInternalApiClient $client,
+        TekenAjaApiClient $client,
         AuthModel $userRepository
     ) {
         $this->userRepository = $userRepository;
