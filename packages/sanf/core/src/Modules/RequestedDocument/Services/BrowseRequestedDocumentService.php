@@ -60,13 +60,16 @@ class BrowseRequestedDocumentService implements ApplicationServiceInterface
 
             $dataFromDb = $this->dbService->execute((object)$argument);
 
-            $dataMapper = $this->responseMapping($dataFromDb, $dataFromCore, $dto);
+            $getOrCreateData = $this->getOrCreateData($dataFromDb, $dataFromCore, $dto);
 
             $argument['status'] = RequestedDocumentStatusEnum::REQUESTED;
             $argument['keyword'] = $dto->keyword;
 
             $dataFromDb = $this->dbService->execute((object)$argument);
-            $data = $dataFromDb->data;
+
+            foreach ($dataFromDb->data as $dataDb) {
+                $data[] = $this->requestDocumentAppendItem($dataDb, $dataFromCore);
+            }
         }
 
         $this->emptyPage($dto, $data);
@@ -129,23 +132,16 @@ class BrowseRequestedDocumentService implements ApplicationServiceInterface
         ];
     }
 
-    private function responseMapping(object $dataFromDb, object $dataFromCore, ListRequestedDocumentDto $dto): array
+    private function getOrCreateData(object $dataFromDb, object $dataFromCore, ListRequestedDocumentDto $dto): array
     {
         return array_map(
             function ($requestedDocumentCore) use ($dto, $dataFromDb) {
                 $requestedDocumentDb = $this->getExistingRequestedDocument($dataFromDb, $requestedDocumentCore);
 
-                $requestedDocumentDb = $this->storeIfDoesntExist(
+                $this->storeIfDoesntExist(
                     $dto->user_id,
                     $requestedDocumentCore,
                     $requestedDocumentDb
-                );
-
-                $requestedDocumentCore->total_uploaded = $requestedDocumentDb->total_uploaded;
-                $requestedDocumentCore->status = $requestedDocumentDb->status;
-                $requestedDocumentCore->documents = $this->getExistingRequestedDocumentItem(
-                    $requestedDocumentCore->documents,
-                    $requestedDocumentDb->documents ?? []
                 );
 
                 return $requestedDocumentCore;
@@ -197,10 +193,28 @@ class BrowseRequestedDocumentService implements ApplicationServiceInterface
         ]);
     }
 
-    private function getExistingRequestedDocumentItem(
-        array $requestedDocumentItemCore,
-        array $requestedDocumentItemDb
-    ): array {
+    private function requestDocumentAppendItem($dataDb, object $dataFromCore): object
+    {
+        $documents = $dataDb->documents;
+
+        $requestDocumentFromCore = null;
+        foreach ($dataFromCore->data as $dataCore) {
+            if ($dataCore->request_no === $dataDb->request_no) {
+                $requestDocumentFromCore = $dataCore;
+            }
+        }
+
+        if (is_null($documents)) {
+            $documents = $requestDocumentFromCore->documents;
+        }
+
+        $dataDb->documents = $this->getExistingRequestedDocumentItem($requestDocumentFromCore->documents, $documents);
+
+        return $dataDb;
+    }
+
+    private function getExistingRequestedDocumentItem(array $requestedDocumentItemCore, array $requestedDocumentItemDb): array
+    {
         return array_map(function ($documentItem) use ($requestedDocumentItemDb) {
             foreach ($requestedDocumentItemDb as $documentItemDb) {
                 if ($documentItemDb->id === $documentItem->id) {
