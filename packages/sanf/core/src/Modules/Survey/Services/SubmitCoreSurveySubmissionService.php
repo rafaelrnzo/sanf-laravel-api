@@ -4,13 +4,13 @@ namespace Sanf\Core\Modules\Survey\Services;
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Survey\Entities\SurveyEntity;
-use Sanf\Integration\InternalApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class SubmitCoreSurveySubmissionService implements ApplicationServiceInterface
 {
-    protected InternalApiClient $internalApiClient;
+    protected SanfCoreApiClient $internalApiClient;
 
-    public function __construct(InternalApiClient $internalApiClient)
+    public function __construct(SanfCoreApiClient $internalApiClient)
     {
         $this->internalApiClient = $internalApiClient;
     }

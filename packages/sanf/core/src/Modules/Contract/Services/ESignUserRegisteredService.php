@@ -15,7 +15,7 @@ use Sanf\Core\Modules\Contract\Repositories\ESignRepositoryInterface;
 use Sanf\Core\Modules\Notification\Exceptions\NotificationInvalidException;
 use Sanf\Core\Modules\Notification\NotificationTypeEnum;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
-use Sanf\Integration\InternalApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 final class ESignUserRegisteredService implements ApplicationServiceInterface
 {
@@ -23,14 +23,14 @@ final class ESignUserRegisteredService implements ApplicationServiceInterface
     protected UserRepositoryInterface $userRepository;
     protected UserNotificationRepositoryInterface $userNotificationRepository;
     protected PushNotificationServiceInterface $pushNotificationService;
-    protected InternalApiClient $client;
+    protected SanfCoreApiClient $client;
 
     public function __construct(
         ESignRepositoryInterface $eSignRepository,
         UserRepositoryInterface $userRepository,
         UserNotificationRepositoryInterface $userNotificationRepository,
         PushNotificationServiceInterface $pushNotificationService,
-        InternalApiClient $client
+        SanfCoreApiClient $client
     ) {
         $this->eSignRepository = $eSignRepository;
         $this->userNotificationRepository = $userNotificationRepository;

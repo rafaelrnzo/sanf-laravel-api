@@ -2,7 +2,7 @@
 
 namespace Sanf\Core\Modules\User\Services;
 
-use Sanf\Integration\InternalApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 use function collect;
 
 class GetListTitleService
@@ -10,7 +10,7 @@ class GetListTitleService
 
     protected $integrationListTitle;
 
-    public function __construct(InternalApiClient $integrationListTitle)
+    public function __construct(SanfCoreApiClient $integrationListTitle)
     {
         $this->integrationListTitle = $integrationListTitle;
     }

@@ -6,15 +6,15 @@ namespace Sanf\Core\Modules\User\Services;
 
 use Illuminate\Support\Facades\Log;
 use Sanf\Integration\Exceptions\SanfInternalApiException;
-use Sanf\Integration\InternalApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 use function collect;
 
 class GetListShareholderService
 {
 
-    protected InternalApiClient $client;
+    protected SanfCoreApiClient $client;
 
-    public function __construct(InternalApiClient $client)
+    public function __construct(SanfCoreApiClient $client)
     {
 
         $this->client = $client;

@@ -10,14 +10,14 @@ use Sanf\Core\Modules\Contract\Dto\AccountReceivableContractDto;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Core\Modules\User\Services\UserService;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
-use Sanf\Integration\InternalApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class ListAccountReceivableContractService extends UserService implements ApplicationServiceInterface
 {
 
-    protected InternalApiClient $internalApiClient;
+    protected SanfCoreApiClient $internalApiClient;
 
-    public function __construct(AuthModel $userRepository, InternalApiClient $internalApiClient)
+    public function __construct(AuthModel $userRepository, SanfCoreApiClient $internalApiClient)
     {
         parent::__construct($userRepository);
         $this->internalApiClient = $internalApiClient;

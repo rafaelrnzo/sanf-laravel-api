@@ -2,7 +2,6 @@
 
 namespace Sanf\Core\Modules\Insurance\Services;
 
-
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Insurance\Dtos\BrowseFinancingUnitByUserResponseDto;
 use Sanf\Core\Modules\Insurance\Enums\InsuranceClaimSubmissionStatusEnum;
@@ -10,20 +9,20 @@ use Sanf\Core\Modules\Insurance\Repositories\InsuranceClaimSubmissionRepositoryI
 use Sanf\Core\Modules\Insurance\Specifications\InsuranceClaimSubmissionSpecificationFactoryInterface;
 use Sanf\Core\Modules\Invoice\Dtos\BrowseFinancingUnitByUserRequestDto;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
-use Sanf\Integration\InternalApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 final class BrowseAvailableFinancingUnitByUserService implements ApplicationServiceInterface
 {
-    protected InternalApiClient $apiClient;
+    protected SanfCoreApiClient $apiClient;
     protected InsuranceClaimSubmissionRepositoryInterface $insuranceClaimSubmissionRepository;
     protected InsuranceClaimSubmissionSpecificationFactoryInterface $specificationFactory;
 
     /**
      * BrowseContractByUserService constructor.
-     * @param InternalApiClient $apiClient
+     * @param SanfCoreApiClient $apiClient
      */
     public function __construct(
-        InternalApiClient $apiClient,
+        SanfCoreApiClient $apiClient,
         InsuranceClaimSubmissionRepositoryInterface $insuranceClaimSubmissionRepository,
         InsuranceClaimSubmissionSpecificationFactoryInterface $specificationFactory
     ) {
@@ -76,7 +75,8 @@ final class BrowseAvailableFinancingUnitByUserService implements ApplicationServ
                 $this->specificationFactory->whereBySerialNoAndUserAndStatus(
                     $datum->serialNo,
                     $dto->userId,
-                    InsuranceClaimSubmissionStatusEnum::NOT_ELIGIBLE_FOR_SUBMISSION)
+                    InsuranceClaimSubmissionStatusEnum::NOT_ELIGIBLE_FOR_SUBMISSION
+                )
             );
         });
 

@@ -8,7 +8,7 @@ use NbsPhp\Core\Enum\UserStatus;
 use NbsPhp\Core\Services\RegisterByGoogleServiceInterface;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Core\Modules\User\Enums\ProfileType;
-use Sanf\Integration\InternalApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class RegisterInternalByGoogleService implements RegisterByGoogleServiceInterface
 {
@@ -23,7 +23,7 @@ class RegisterInternalByGoogleService implements RegisterByGoogleServiceInterfac
      * @param $jwt
      */
     //TODO USE REPOSITORY
-    public function __construct(RegisterByGoogleServiceInterface $service, AuthModel $repository, InternalApiClient $internalApiClient)
+    public function __construct(RegisterByGoogleServiceInterface $service, AuthModel $repository, SanfCoreApiClient $internalApiClient)
     {
         $this->service = $service;
         $this->repository = $repository;

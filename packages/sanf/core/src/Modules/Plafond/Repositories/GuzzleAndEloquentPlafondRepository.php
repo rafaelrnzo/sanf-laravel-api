@@ -2,23 +2,22 @@
 
 namespace Sanf\Core\Modules\Plafond\Repositories;
 
-
 use Sanf\Core\Modules\Plafond\Entities\PlafondEntityFactory;
 use Sanf\Core\Modules\Plafond\Entities\PlafondEntityHistoryFactory;
 use Sanf\Core\Modules\Plafond\Entities\PlafondEntityInterface;
 use Sanf\Core\Modules\Plafond\Models\PlafondTypeModel;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
-use Sanf\Integration\InternalApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class GuzzleAndEloquentPlafondRepository implements PlafondRepositoryInterface
 {
-    protected InternalApiClient $client;
+    protected SanfCoreApiClient $client;
     protected PlafondEntityFactory $factory;
     protected PlafondEntityHistoryFactory $historyFactory;
     protected PlafondTypeModel $plafondTypeModel;
 
     public function __construct(
-        InternalApiClient $client,
+        SanfCoreApiClient $client,
         PlafondEntityFactory $factory,
         PlafondEntityHistoryFactory $historyFactory,
         PlafondTypeModel $plafondTypeModel

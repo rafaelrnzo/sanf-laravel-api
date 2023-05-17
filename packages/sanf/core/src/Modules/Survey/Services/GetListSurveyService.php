@@ -12,25 +12,25 @@ use Sanf\Core\Modules\Survey\Specifications\SurveySpecificationFactoryInterface;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Core\Modules\User\Services\UserService;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
-use Sanf\Integration\InternalApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class GetListSurveyService extends UserService implements ApplicationServiceInterface
 {
     /**
-     * @var InternalApiClient
+     * @var SanfCoreApiClient
      */
-    protected InternalApiClient $internalApiClient;
+    protected SanfCoreApiClient $internalApiClient;
     private SurveyRepositoryInterface $surveyRepository;
     private SurveySpecificationFactoryInterface $specificationFactory;
 
 
     /**
      * @param AuthModel $userRepository
-     * @param InternalApiClient $internalApiClient
+     * @param SanfCoreApiClient $internalApiClient
      */
     public function __construct(
         AuthModel $userRepository,
-        InternalApiClient $internalApiClient,
+        SanfCoreApiClient $internalApiClient,
         SurveyRepositoryInterface $surveyRepository,
         SurveySpecificationFactoryInterface $specificationFactory
     ) {
@@ -93,7 +93,6 @@ class GetListSurveyService extends UserService implements ApplicationServiceInte
                     return !$item->is_submitted;
                 });
             }
-
         } catch (SanfInternalApiDataNotFoundException $exception) {
             return (object)[
                 'data' => [],

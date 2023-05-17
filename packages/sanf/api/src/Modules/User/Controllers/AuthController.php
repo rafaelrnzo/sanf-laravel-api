@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Api\Modules\User\Controllers;
-
 
 use Illuminate\Http\Request;
 use NbsPhp\Core\Database\IlluminateSession;
@@ -16,7 +14,7 @@ use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Core\Modules\User\Services\ActivateUserAndRegisterInternalService;
 use Sanf\Core\Modules\User\Services\ValidateUserAccountDeletionService;
 use Sanf\Core\Modules\User\Services\VerifyEmailAndRegisterInternalService;
-use Sanf\Integration\InternalApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class AuthController extends \NbsPhp\Core\Controllers\AuthController
 {
@@ -27,9 +25,9 @@ class AuthController extends \NbsPhp\Core\Controllers\AuthController
 
     public function __construct(
         AuthModel $userRepository,
-        InternalApiClient $internalApiClient,
-        IlluminateSession $transactionalSession)
-    {
+        SanfCoreApiClient $internalApiClient,
+        IlluminateSession $transactionalSession
+    ) {
         $this->userRepository = $userRepository;
         $this->internalApiClient = $internalApiClient;
         $this->transactionalSession = $transactionalSession;
@@ -66,34 +64,40 @@ class AuthController extends \NbsPhp\Core\Controllers\AuthController
 
     public function userActivationByApp(Request $request, ActivateUserServiceInterface $service)
     {
-        return parent::userActivationByApp($request,
+        return parent::userActivationByApp(
+            $request,
             new ActivateUserAndRegisterInternalService(
                 $service,
                 $this->userRepository,
                 $this->internalApiClient,
                 $this->transactionalSession,
-            ));
+            )
+        );
     }
 
     public function verifyEmailByApp(Request $request, VerifyEmailServiceInterface $service)
     {
-        return parent::verifyEmailByApp($request,
+        return parent::verifyEmailByApp(
+            $request,
             new VerifyEmailAndRegisterInternalService(
                 $service,
                 $this->userRepository,
                 $this->internalApiClient,
                 $this->transactionalSession,
-            ));
+            )
+        );
     }
 
     public function verifyEmailPage(Request $request, VerifyEmailServiceInterface $service)
     {
-        return parent::verifyEmailPage($request,
+        return parent::verifyEmailPage(
+            $request,
             new VerifyEmailAndRegisterInternalService(
                 $service,
                 $this->userRepository,
                 $this->internalApiClient,
                 $this->transactionalSession,
-            ));
+            )
+        );
     }
 }

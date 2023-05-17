@@ -2,7 +2,7 @@
 
 namespace Sanf\Core\Modules\User\Services;
 
-use Sanf\Integration\InternalApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 use function collect;
 
 class GetListPositionService
@@ -10,7 +10,7 @@ class GetListPositionService
 
     protected $integrationListPosition;
 
-    public function __construct(InternalApiClient $integrationListPosition)
+    public function __construct(SanfCoreApiClient $integrationListPosition)
     {
         $this->listPosition = $integrationListPosition;
     }

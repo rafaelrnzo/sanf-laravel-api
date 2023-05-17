@@ -11,21 +11,21 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Core\Modules\User\Services\UserService;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
-use Sanf\Integration\InternalApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class GetDetailSurveyByUserService extends UserService implements ApplicationServiceInterface
 {
     /**
-     * @var InternalApiClient
+     * @var SanfCoreApiClient
      */
-    protected InternalApiClient $internalApiClient;
+    protected SanfCoreApiClient $internalApiClient;
 
 
     /**
      * @param AuthModel $userRepository
-     * @param InternalApiClient $internalApiClient
+     * @param SanfCoreApiClient $internalApiClient
      */
-    public function __construct(AuthModel $userRepository, InternalApiClient $internalApiClient)
+    public function __construct(AuthModel $userRepository, SanfCoreApiClient $internalApiClient)
     {
         parent::__construct($userRepository);
         $this->internalApiClient = $internalApiClient;

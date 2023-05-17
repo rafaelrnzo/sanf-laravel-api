@@ -4,14 +4,14 @@
 namespace Sanf\Core\Modules\User\Services;
 
 
-use Sanf\Integration\InternalApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class DeleteShareholderService
 {
 
-    protected InternalApiClient $client;
+    protected SanfCoreApiClient $client;
 
-    public function __construct(InternalApiClient $client)
+    public function __construct(SanfCoreApiClient $client)
     {
 
         $this->client = $client;

@@ -10,18 +10,18 @@ use Sanf\Core\Modules\Contract\Enums\ESignContractStatusEnum;
 use Sanf\Core\Modules\Contract\Exceptions\ESignDocumentNotFoundException;
 use Sanf\Core\Modules\Contract\Repositories\ESignRepositoryInterface;
 use Sanf\Core\Modules\User\AuthModel;
-use Sanf\Integration\InternalApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 final class UpdateESignDocumentStatusService implements ApplicationServiceInterface
 {
     protected AuthModel $userRepository;
     protected ESignRepositoryInterface $eSignRepository;
-    protected InternalApiClient $client;
+    protected SanfCoreApiClient $client;
 
     public function __construct(
         ESignRepositoryInterface $eSignRepository,
         AuthModel $userRepository,
-        InternalApiClient $client
+        SanfCoreApiClient $client
     ) {
         $this->eSignRepository = $eSignRepository;
         $this->userRepository = $userRepository;

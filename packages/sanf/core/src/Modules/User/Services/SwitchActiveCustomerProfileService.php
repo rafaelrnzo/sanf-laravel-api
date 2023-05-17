@@ -8,7 +8,7 @@ use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Models\AuthModel;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\User\Enums\ProfileType;
-use Sanf\Integration\InternalApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 use function collect;
 
 /**
@@ -25,7 +25,7 @@ class SwitchActiveCustomerProfileService implements ApplicationServiceInterface
      * GetProfileService constructor.
      * @param $repository
      */
-    public function __construct(AuthModel $repository, InternalApiClient $internalApiClient) //TODO REPOSITORY
+    public function __construct(AuthModel $repository, SanfCoreApiClient $internalApiClient) //TODO REPOSITORY
     {
         $this->repository = $repository;
         $this->internalApiClient = $internalApiClient;

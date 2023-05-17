@@ -8,7 +8,7 @@ use NbsPhp\Core\Enum\UserStatus;
 use NbsPhp\Core\Services\RegisterByAppleServiceInterface;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Core\Modules\User\Enums\ProfileType;
-use Sanf\Integration\InternalApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class RegisterInternalByAppleService implements RegisterByAppleServiceInterface
 {
@@ -23,7 +23,7 @@ class RegisterInternalByAppleService implements RegisterByAppleServiceInterface
      * @param $jwt
      */
     //TODO USE REPOSITORY
-    public function __construct(RegisterByAppleServiceInterface $service, AuthModel $repository, InternalApiClient $internalApiClient)
+    public function __construct(RegisterByAppleServiceInterface $service, AuthModel $repository, SanfCoreApiClient $internalApiClient)
     {
         $this->service = $service;
         $this->repository = $repository;

@@ -14,9 +14,9 @@ class IntegrationServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        ApiWrapper::load(__DIR__ . '/sanf-routes.php');
-        ApiWrapper::load(__DIR__ . '/tekenaja-routes.php');
+        ApiWrapper::load(__DIR__ . '/Modules/SanfCore/sanf-routes.php');
         ApiWrapper::load(__DIR__ . '/Modules/TekenAja/tekenaja-routes.php');
+        ApiWrapper::load(__DIR__ . '/Modules/Scanina/scanina-routes.php');
     }
 
     /**

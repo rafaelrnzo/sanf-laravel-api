@@ -3,14 +3,14 @@
 namespace Sanf\Core\Modules\Financing\Services;
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Integration\InternalApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class GetBrandListService implements ApplicationServiceInterface
 {
 
-    private InternalApiClient $client;
+    private SanfCoreApiClient $client;
 
-    public function __construct(InternalApiClient $client)
+    public function __construct(SanfCoreApiClient $client)
     {
         $this->client = $client;
     }

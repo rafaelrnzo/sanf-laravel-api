@@ -11,20 +11,20 @@ use Sanf\Core\Modules\Financing\Enums\FinancingStatusEnum;
 use Sanf\Core\Modules\Financing\Repositories\FinancingApplicationRepositoryInterface;
 use Sanf\Core\Modules\Financing\Specifications\FinancingApplicationSpecificationFactoryInterface;
 use Sanf\Core\Modules\User\AuthModel;
-use Sanf\Integration\InternalApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class BrowseFinancingApplicationByUserService implements ApplicationServiceInterface
 {
     protected FinancingApplicationRepositoryInterface $financingApplicationRepository;
     protected FinancingApplicationSpecificationFactoryInterface $financingSpecificationFactory;
     protected AuthModel $userRepository;
-    protected InternalApiClient $client;
+    protected SanfCoreApiClient $client;
 
     public function __construct(
         FinancingApplicationRepositoryInterface $financingApplicationRepository,
         FinancingApplicationSpecificationFactoryInterface $financingSpecificationFactory,
         AuthModel $userRepository,
-        InternalApiClient $client
+        SanfCoreApiClient $client
     ) {
         $this->financingSpecificationFactory = $financingSpecificationFactory;
         $this->userRepository = $userRepository;

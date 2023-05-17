@@ -9,14 +9,14 @@ use NbsPhp\Core\Exceptions\ForbiddenException;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\User\AuthModel;
-use Sanf\Integration\InternalApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class GetDetailCustomerProfileByUserService implements ApplicationServiceInterface
 {
     protected $repository;
     protected $internalApiClient;
 
-    public function __construct(AuthModel $repository, InternalApiClient $internalApiClient) //TODO REPOSITORY
+    public function __construct(AuthModel $repository, SanfCoreApiClient $internalApiClient) //TODO REPOSITORY
     {
         $this->repository = $repository;
         $this->internalApiClient = $internalApiClient;

@@ -5,13 +5,13 @@ namespace Sanf\Core\Modules\Staff;
 
 
 use Sanf\Core\Modules\User\AuthModel;
-use Sanf\Integration\InternalApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class StaffService
 {
     protected AuthModel $userRepository;
     protected StaffRepositoryInterface $staffRepository;
-    protected InternalApiClient $internalApiClient;
+    protected SanfCoreApiClient $internalApiClient;
 
     /**
      * ActivateCompanyStaffService constructor.
@@ -20,7 +20,7 @@ class StaffService
     public function __construct(
         AuthModel $userRepository,
         StaffRepositoryInterface $staffRepository,
-        InternalApiClient $internalApiClient
+        SanfCoreApiClient $internalApiClient
     ) {
         $this->userRepository = $userRepository;
         $this->staffRepository = $staffRepository;

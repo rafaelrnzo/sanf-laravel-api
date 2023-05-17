@@ -6,15 +6,15 @@ use Sanf\Core\Modules\User\Entities\ProfileEntityInterface;
 use Sanf\Core\Modules\User\Entities\RestProfileEntityFactory;
 use Sanf\Core\Modules\User\Enums\ProfileType;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
-use Sanf\Integration\InternalApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class RestProfileRepository implements ProfileRepositoryInterface
 {
-    protected InternalApiClient $client;
+    protected SanfCoreApiClient $client;
     protected RestProfileEntityFactory $factory;
 
     public function __construct(
-        InternalApiClient $client,
+        SanfCoreApiClient $client,
         RestProfileEntityFactory $factory
     ) {
         $this->client = $client;
@@ -55,7 +55,6 @@ class RestProfileRepository implements ProfileRepositoryInterface
                 return null;
             }
             return $this->factory->make($profile);
-
         } catch (SanfInternalApiDataNotFoundException $exception) {
             return null;
         }

@@ -5,19 +5,19 @@ namespace Sanf\Core\Modules\Contract\Services;
 use Sanf\Core\Modules\Contract\Repositories\FinancingUnitLocationSubmissionRepositoryInterface;
 use Sanf\Core\Modules\Contract\Specifications\FinancingUnitLocationSubmissionSpecificationFactoryInterface;
 use Sanf\Core\Modules\User\AuthModel;
-use Sanf\Integration\InternalApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class FinancingUnitLocationSubmissionByUserService
 {
     protected FinancingUnitLocationSubmissionRepositoryInterface $repository;
     protected AuthModel $userRepository;
-    protected InternalApiClient $internalApiClient;
+    protected SanfCoreApiClient $internalApiClient;
 
     protected FinancingUnitLocationSubmissionSpecificationFactoryInterface $specificationFactory;
 
     public function __construct(
         FinancingUnitLocationSubmissionRepositoryInterface $repository,
-        InternalApiClient $internalApiClient,
+        SanfCoreApiClient $internalApiClient,
         AuthModel $userRepository,
         FinancingUnitLocationSubmissionSpecificationFactoryInterface $specificationFactory
     ) {

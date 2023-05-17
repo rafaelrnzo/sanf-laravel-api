@@ -9,7 +9,7 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Core\Modules\User\ContractOwnerNotFoundException;
 use Sanf\Core\Modules\User\Enums\EntityType;
-use Sanf\Integration\InternalApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 use function bcrypt;
 use function collect;
 
@@ -22,7 +22,7 @@ class RegisterAsContractOwnerService implements ApplicationServiceInterface
      * VerifyEmailService constructor.
      * @param $repository
      */
-    public function __construct(AuthModel $repository, InternalApiClient $internalApiClient) //TODO USE REPOSITORY
+    public function __construct(AuthModel $repository, SanfCoreApiClient $internalApiClient) //TODO USE REPOSITORY
     {
         $this->repository = $repository;
         $this->internalApiClient = $internalApiClient;

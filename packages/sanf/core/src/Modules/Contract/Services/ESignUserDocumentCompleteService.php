@@ -23,7 +23,7 @@ use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Integration\Enums\TekenAjaApiResponseErrorCodeEnum;
 use Sanf\Integration\Exceptions\TekenAjaDocumentException;
 use Sanf\Integration\Exceptions\TekenAjaExternalApiException;
-use Sanf\Integration\InternalApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 use Sanf\Integration\Modules\TekenAja\TekenAjaApiClient;
 use Throwable;
 
@@ -34,7 +34,7 @@ final class ESignUserDocumentCompleteService implements ApplicationServiceInterf
     protected UserRepositoryInterface $userRepository;
     protected UserNotificationRepositoryInterface $userNotificationRepository;
     protected PushNotificationServiceInterface $pushNotificationService;
-    protected InternalApiClient $client;
+    protected SanfCoreApiClient $client;
     protected TekenAjaApiClient $tekenAjaClient;
 
     public function __construct(
@@ -43,7 +43,7 @@ final class ESignUserDocumentCompleteService implements ApplicationServiceInterf
         UserRepositoryInterface $userRepository,
         UserNotificationRepositoryInterface $userNotificationRepository,
         PushNotificationServiceInterface $pushNotificationService,
-        InternalApiClient $client,
+        SanfCoreApiClient $client,
         TekenAjaApiClient $tekenAjaClient
     ) {
         $this->eSignRepository = $eSignRepository;

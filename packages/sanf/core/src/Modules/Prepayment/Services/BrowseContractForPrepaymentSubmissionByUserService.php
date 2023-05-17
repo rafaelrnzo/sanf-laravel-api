@@ -9,20 +9,20 @@ use Sanf\Core\Modules\Prepayment\Dtos\BrowseContractByUserResponseDto;
 use Sanf\Core\Modules\Prepayment\Repositories\PrepaymentSubmissionRepositoryInterface;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
-use Sanf\Integration\InternalApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 final class BrowseContractForPrepaymentSubmissionByUserService extends PrepaymentSubmissionByUserService implements ApplicationServiceInterface
 {
-    protected InternalApiClient $apiClient;
+    protected SanfCoreApiClient $apiClient;
 
     /**
      * BrowseContractForPrepaymentSubmissionByUserService constructor.
-     * @param InternalApiClient $apiClient
+     * @param SanfCoreApiClient $apiClient
      */
     public function __construct(
         PrepaymentSubmissionRepositoryInterface $repository,
         UserRepositoryInterface $userRepository,
-        InternalApiClient $apiClient
+        SanfCoreApiClient $apiClient
     ) {
         parent::__construct($repository, $userRepository);
         $this->apiClient = $apiClient;

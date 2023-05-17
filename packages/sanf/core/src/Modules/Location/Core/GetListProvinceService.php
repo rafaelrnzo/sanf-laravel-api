@@ -4,14 +4,14 @@
 namespace Sanf\Core\Modules\Location\Core;
 
 
-use Sanf\Integration\InternalApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class GetListProvinceService
 {
 
-    protected InternalApiClient $client;
+    protected SanfCoreApiClient $client;
 
-    public function __construct(InternalApiClient $client)
+    public function __construct(SanfCoreApiClient $client)
     {
         $this->client = $client;
     }

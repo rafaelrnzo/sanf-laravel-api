@@ -9,17 +9,17 @@ use Sanf\Core\Modules\Prepayment\Dtos\AddPrepaymentSimulationByUserRequestDto;
 use Sanf\Core\Modules\Prepayment\Dtos\AddPrepaymentSimulationByUserResponseDto;
 use Sanf\Core\Modules\Prepayment\Exceptions\PrepaymentSimulationNotFoundException;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
-use Sanf\Integration\InternalApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 final class AddPrepaymentSimulationByUserService implements ApplicationServiceInterface
 {
-    protected InternalApiClient $apiClient;
+    protected SanfCoreApiClient $apiClient;
 
     /**
      * BrowseContractByUserService constructor.
-     * @param InternalApiClient $apiClient
+     * @param SanfCoreApiClient $apiClient
      */
-    public function __construct(InternalApiClient $apiClient)
+    public function __construct(SanfCoreApiClient $apiClient)
     {
         $this->apiClient = $apiClient;
     }

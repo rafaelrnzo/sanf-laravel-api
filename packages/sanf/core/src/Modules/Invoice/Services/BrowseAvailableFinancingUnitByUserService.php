@@ -11,27 +11,27 @@ use Sanf\Core\Modules\Invoice\Repositories\InvoiceCollectionSubmissionRepository
 use Sanf\Core\Modules\Invoice\Specifications\InvoiceCollectionSubmissionSpecificationFactoryInterface;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
-use Sanf\Integration\InternalApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 final class BrowseAvailableFinancingUnitByUserService implements ApplicationServiceInterface
 {
     protected InvoiceCollectionSubmissionRepositoryInterface $invoiceCollectionSubmissionRepository;
     protected UserRepositoryInterface $userRepository;
     protected InvoiceCollectionSubmissionSpecificationFactoryInterface $specificationFactory;
-    protected InternalApiClient $apiClient;
+    protected SanfCoreApiClient $apiClient;
 
     /**
      * BrowseAvailableFinancingUnitByUserService constructor.
      * @param InvoiceCollectionSubmissionRepositoryInterface $invoiceCollectionSubmissionRepository
      * @param UserRepositoryInterface $userRepository
      * @param InvoiceCollectionSubmissionSpecificationFactoryInterface $specificationFactory
-     * @param InternalApiClient $apiClient
+     * @param SanfCoreApiClient $apiClient
      */
     public function __construct(
         InvoiceCollectionSubmissionRepositoryInterface $invoiceCollectionSubmissionRepository,
         UserRepositoryInterface $userRepository,
         InvoiceCollectionSubmissionSpecificationFactoryInterface $specificationFactory,
-        InternalApiClient $apiClient
+        SanfCoreApiClient $apiClient
     ) {
         $this->invoiceCollectionSubmissionRepository = $invoiceCollectionSubmissionRepository;
         $this->userRepository = $userRepository;

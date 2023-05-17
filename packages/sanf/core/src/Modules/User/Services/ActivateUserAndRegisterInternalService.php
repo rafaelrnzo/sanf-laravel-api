@@ -1,14 +1,12 @@
 <?php
 
-
 namespace Sanf\Core\Modules\User\Services;
-
 
 use NbsPhp\Core\Database\TransactionalSessionInterface;
 use NbsPhp\Core\Services\ActivateUserServiceInterface;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Core\Modules\User\Enums\ProfileType;
-use Sanf\Integration\InternalApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class ActivateUserAndRegisterInternalService implements ActivateUserServiceInterface
 {
@@ -28,7 +26,7 @@ class ActivateUserAndRegisterInternalService implements ActivateUserServiceInter
     public function __construct(
         ActivateUserServiceInterface $service,
         AuthModel $repository,
-        InternalApiClient $internalApiClient,
+        SanfCoreApiClient $internalApiClient,
         TransactionalSessionInterface $transactionalSession
     ) {
         $this->service = $service;

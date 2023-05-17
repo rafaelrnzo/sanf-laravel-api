@@ -7,14 +7,14 @@ use NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\User\AuthModel;
-use Sanf\Integration\InternalApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class GetUserMetadataContractService extends UserService implements ApplicationServiceInterface
 {
 
-    protected InternalApiClient $internalApiClient;
+    protected SanfCoreApiClient $internalApiClient;
 
-    public function __construct(AuthModel $userRepository, InternalApiClient $internalApiClient)
+    public function __construct(AuthModel $userRepository, SanfCoreApiClient $internalApiClient)
     {
         parent::__construct($userRepository);
         $this->internalApiClient = $internalApiClient;

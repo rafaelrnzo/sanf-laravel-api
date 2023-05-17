@@ -1,14 +1,12 @@
 <?php
 
-
 namespace Sanf\Core\Modules\User\Services;
-
 
 use NbsPhp\Core\Database\TransactionalSessionInterface;
 use NbsPhp\Core\Services\VerifyEmailServiceInterface;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Core\Modules\User\Enums\ProfileType;
-use Sanf\Integration\InternalApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class VerifyEmailAndRegisterInternalService implements VerifyEmailServiceInterface
 {
@@ -28,7 +26,7 @@ class VerifyEmailAndRegisterInternalService implements VerifyEmailServiceInterfa
     public function __construct(
         VerifyEmailServiceInterface $service,
         AuthModel $repository,
-        InternalApiClient $internalApiClient,
+        SanfCoreApiClient $internalApiClient,
         TransactionalSessionInterface $transactionalSession
     ) {
         $this->service = $service;

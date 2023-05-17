@@ -13,20 +13,20 @@ use Sanf\Core\Modules\Contract\Repositories\ESignRepositoryInterface;
 use Sanf\Core\Modules\Contract\Specifications\ESignDocumentSpecificationFactoryInterface;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
-use Sanf\Integration\InternalApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 final class BrowseESignDocumentService implements ApplicationServiceInterface
 {
     protected AuthModel $userRepository;
     protected ESignRepositoryInterface $eSignRepository;
     protected ESignDocumentSpecificationFactoryInterface $eSignDocumentSpecificationFactory;
-    protected InternalApiClient $client;
+    protected SanfCoreApiClient $client;
 
     public function __construct(
         AuthModel $userRepository,
         ESignRepositoryInterface $eSignRepository,
         ESignDocumentSpecificationFactoryInterface $eSignDocumentSpecificationFactory,
-        InternalApiClient $client
+        SanfCoreApiClient $client
     ) {
         $this->userRepository = $userRepository;
         $this->eSignRepository = $eSignRepository;

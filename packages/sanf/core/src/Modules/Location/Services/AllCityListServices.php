@@ -6,14 +6,14 @@ use GuzzleHttp\Exception\GuzzleException;
 use NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Location\ListCityDto;
-use Sanf\Integration\InternalApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class AllCityListServices implements ApplicationServiceInterface
 {
 
-    protected InternalApiClient $internalApiClient;
+    protected SanfCoreApiClient $internalApiClient;
 
-    public function __construct(InternalApiClient $internalApiClient)
+    public function __construct(SanfCoreApiClient $internalApiClient)
     {
         $this->internalApiClient = $internalApiClient;
     }

@@ -9,7 +9,7 @@ use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Models\AuthModel;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Integration\Exceptions\SanfInternalApiException;
-use Sanf\Integration\InternalApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 use function collect;
 
 class GetListCustomerProfileService implements ApplicationServiceInterface
@@ -17,7 +17,7 @@ class GetListCustomerProfileService implements ApplicationServiceInterface
     protected $repository;
     protected $internalApiClient;
 
-    public function __construct(AuthModel $repository, InternalApiClient $internalApiClient) //TODO REPOSITORY
+    public function __construct(AuthModel $repository, SanfCoreApiClient $internalApiClient) //TODO REPOSITORY
     {
         $this->repository = $repository;
         $this->internalApiClient = $internalApiClient;
