@@ -38,5 +38,6 @@ class IntegrationServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/sanf-internal.php', 'sanf-internal');
         $this->mergeConfigFrom(__DIR__ . '/../config/tekenaja-internal.php', 'tekenaja-internal');
+        $this->mergeConfigFrom(__DIR__ . '/../config/scanina-api.php', 'scanina-api');
     }
 }

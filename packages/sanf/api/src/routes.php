@@ -198,3 +198,32 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
 Route::group(['prefix' => 'v2', 'middleware' => 'auth'], function () {
     Route::get('users/profiles/{xid}/contracts', ['as' => 'v2.users.contracts.browse', 'uses' => 'Contract\Controllers\ContractFinancingUnitByUserController@getList']);
 });
+
+// SCANINA INTEGRATION
+Route::group(['prefix' => 'v1', 'middleware' => ['auth']], function () {
+    Route::post('users/profiles/{xid}/scanina-account', ['as' => 'scanina.user.check', 'uses' => \Scanina\Controllers\User\GetUserAccountController::class]);
+    Route::post('users/profiles/{xid}/scanina-account/resend', ['as' => 'scanina.user.check', 'uses' => \Scanina\Controllers\User\ResendUserMailVerificationController::class]);
+    Route::post('users/profiles/{xid}/scanina-account/register', ['as' => 'scanina.user.register', 'uses' => \Scanina\Controllers\User\RegisterScaninaUserController::class]);
+    Route::post('users/profiles/{xid}/scanina/products/buys/{product_xid}', ['as' => 'scanina.user.product.buy.chart', 'uses' => \Scanina\Controllers\User\AddBuyCartByUserController::class]);
+
+    Route::post('scanina/products/buys', ['as' => 'scanina.product.buy.store', 'uses' => \Scanina\Controllers\Product\BrowseProductBuyController::class]);
+    Route::get('scanina/products/buys', ['as' => 'scanina.product.buy.browse', 'uses' => \Scanina\Controllers\Product\BrowseProductBuyController::class]);
+    Route::get('scanina/products/buys/categories', ['as' => 'scanina.product.buy.category.browse', 'uses' => \Scanina\Controllers\Product\BrowseProductBuyCategoryController::class]);
+    Route::get('scanina/products/buys/brands', ['as' => 'scanina.product.buy.brand.browse', 'uses' => \Scanina\Controllers\Product\BrowseProductBuyBrandController::class]);
+    Route::get('scanina/products/buys/types', ['as' => 'scanina.product.buy.type.browse', 'uses' => \Scanina\Controllers\Product\BrowseProductBuyTypeController::class]);
+    Route::get('scanina/products/buys/models', ['as' => 'scanina.product.buy.model.browse', 'uses' => \Scanina\Controllers\Product\BrowseProductBuyModelController::class]);
+    Route::get('scanina/products/buys/{xid}', ['as' => 'scanina.product.buy.read', 'uses' => \Scanina\Controllers\Product\ReadProductBuyController::class]);
+    Route::get('scanina/products/rents', ['as' => 'scanina.product.rent.browse', 'uses' => \Scanina\Controllers\Product\BrowseProductRentController::class]);
+    Route::get('scanina/products/rents/categories', ['as' => 'scanina.product.rent.category.browse', 'uses' => \Scanina\Controllers\Product\BrowseProductRentCategoryController::class]);
+    Route::get('scanina/products/rents/brands', ['as' => 'scanina.product.rent.brand.browse', 'uses' => \Scanina\Controllers\Product\BrowseProductRentBrandController::class]);
+    Route::get('scanina/products/rents/types', ['as' => 'scanina.product.rent.type.browse', 'uses' => \Scanina\Controllers\Product\BrowseProductRentTypeController::class]);
+    Route::get('scanina/products/rents/models', ['as' => 'scanina.product.rent.model.browse', 'uses' => \Scanina\Controllers\Product\BrowseProductRentModelController::class]);
+    Route::get('scanina/products/rents/{xid}', ['as' => 'scanina.product.rent.read', 'uses' => \Scanina\Controllers\Product\ReadProductRentController::class]);
+    Route::get('scanina/products/spare-parts', ['as' => 'scanina.product.spare-part.browse', 'uses' => \Scanina\Controllers\Product\BrowseProductSparePartController::class]);
+    Route::get('scanina/products/spare-parts/categories', ['as' => 'scanina.product.spare-part.category.browse', 'uses' => \Scanina\Controllers\Product\BrowseProductSparePartCategoryController::class]);
+    Route::get('scanina/products/spare-parts/brands', ['as' => 'scanina.product.spare-part.brand.browse', 'uses' => \Scanina\Controllers\Product\BrowseProductSparePartBrandController::class]);
+    Route::get('scanina/products/spare-parts/{xid}', ['as' => 'scanina.product.spare-part.read', 'uses' => \Scanina\Controllers\Product\ReadProductSparePartController::class]);
+    Route::get('scanina/products/services', ['as' => 'scanina.product.service.browse', 'uses' => \Scanina\Controllers\Product\BrowseProductServiceController::class]);
+    Route::get('scanina/products/services/categories', ['as' => 'scanina.product.service.category.browse', 'uses' => \Scanina\Controllers\Product\BrowseProductServiceCategoryController::class]);
+    Route::get('scanina/products/services/{xid}', ['as' => 'scanina.product.service.read', 'uses' => \Scanina\Controllers\Product\ReadProductServiceController::class]);
+});

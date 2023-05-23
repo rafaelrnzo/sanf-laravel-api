@@ -1,0 +1,29 @@
+<?php
+
+namespace Sanf\Api\Modules\Scanina\Transformers;
+
+use League\Fractal\TransformerAbstract;
+
+class BrowseProductServiceResponseTransformer extends TransformerAbstract
+{
+    public function transform($dto): array
+    {
+        $originPrice = (float)optional($dto)->priceBefore;
+        $cutPrice = (float)optional($dto)->price;
+        $discount = (($originPrice - $cutPrice) / $originPrice) * 100;
+
+        return [
+            'xid' => $dto->xid ?? $dto->id,
+            'name' => (string)optional($dto)->name,
+            'image_url' => (string)optional($dto)->imageFiles->path,
+            'country' => (string)optional($dto)->country, //TODO get from scanina api
+            'city' => (string)optional($dto)->locationName,
+            'district' => (string)optional($dto)->district,
+            'price' => $originPrice,
+            'discount' => $discount,
+            'price_cut' => $cutPrice,
+            'rating' => (float)optional($dto)->rating,
+            'sold' => (int)optional($dto)->sold,
+        ];
+    }
+}

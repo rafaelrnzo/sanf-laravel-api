@@ -1,0 +1,45 @@
+<?php
+
+namespace Sanf\Core\Modules\Scanina\Specifications;
+
+use Sanf\Core\Modules\Scanina\Dtos\BrowseProductFilterRequestDto;
+use Sanf\Core\Modules\Scanina\Dtos\ScaninaProductFilterDto;
+use Sanf\Core\Modules\Scanina\Enums\ScaninaProductTypeEnum;
+use Sanf\Integration\Modules\Scanina\ScaninaApiClient;
+
+class GuzzleGetFilterBrandSpecification
+{
+    private BrowseProductFilterRequestDto $parameter;
+
+    /**
+     * @param BrowseProductFilterRequestDto $parameter
+     */
+    public function __construct(BrowseProductFilterRequestDto $parameter)
+    {
+        $this->parameter = $parameter;
+    }
+
+    public function send(ScaninaApiClient $client)
+    {
+
+        $queryParam = $this->parameter->toArray();
+        switch ($queryParam['type']) {
+            case ScaninaProductTypeEnum::SPARE_PART:
+                $type = 'spare-part';
+                break;
+            case ScaninaProductTypeEnum::SERVICE:
+                $type = 'service';
+                break;
+            case ScaninaProductTypeEnum::RENT:
+                $type = 'rent';
+                break;
+            case ScaninaProductTypeEnum::BUY:
+                $type = 'buy';
+        }
+
+        $queryParam['type'] = $type;
+        unset($queryParam['userId']);
+
+        return $client->getFilterBrand(new ScaninaProductFilterDto($queryParam));
+    }
+}
