@@ -4,7 +4,7 @@ use NbsPhp\ApiWrapper\Api\Route;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiProcessor;
 
 Route::group(config('sanf-internal.url'), [SanfCoreApiProcessor::class], function () {
-    Route::get('customer.find-by-email', 'Login/{email}');
+    Route::post('customer.find-by-email', '/Login');
     Route::get('customer.find-by-id', '/Login/customer/{id}');
     Route::get('customer.find-by-email-and-npwp', '/customer/profil/{email}/{npwp}');
     Route::post('customer.register', '/Customer/registernewuser');
@@ -69,4 +69,10 @@ Route::group(config('sanf-internal.url'), [SanfCoreApiProcessor::class], functio
     Route::post('e-sign.document.update-file', '/esign/download');
 
     Route::get('financing-applications.browse', '/Pengajuan/StatusPengajuan');
+
+    // request unggah dokumen
+    Route::get('request-document.browse', '/upload/listdoc');
+    Route::get('request-uploaded-document.browse', '/upload/riwayatdoc');
+    Route::post('request-document.submit', '/upload/submitdoc');
+
 });

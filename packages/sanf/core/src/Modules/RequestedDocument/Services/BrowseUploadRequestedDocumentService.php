@@ -8,16 +8,16 @@ use NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\RequestedDocument\Repositories\RequestedDocumentItemRepositoryInterface;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
-use Sanf\Integration\InternalApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class BrowseUploadRequestedDocumentService implements ApplicationServiceInterface
 {
 
-    private InternalApiClient $internalApiClient;
+    private SanfCoreApiClient $internalApiClient;
     private RequestedDocumentItemRepositoryInterface $eloquentRequestedDocItemRepository;
 
     public function __construct(
-        InternalApiClient $internalApiClient,
+        SanfCoreApiClient $internalApiClient,
         RequestedDocumentItemRepositoryInterface $eloquentRequestedDocItemRepository
     ) {
         $this->internalApiClient = $internalApiClient;

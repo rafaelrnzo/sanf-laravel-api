@@ -4,11 +4,9 @@ namespace Sanf\Core\Modules\RequestedDocument\Services;
 
 use Carbon\Carbon;
 use GuzzleHttp\Exception\GuzzleException;
-use Illuminate\Support\Facades\Storage;
 use NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\RequestedDocument\Dtos\UploadRequestedDocumentDto;
 use Sanf\Core\Modules\RequestedDocument\Enums\RequestedDocumentStatusEnum;
 use Sanf\Core\Modules\RequestedDocument\Exceptions\RequestedDocumentNotFoundException;
 use Sanf\Core\Modules\RequestedDocument\Exceptions\SubmitRequestedDocumentNotCompleteException;
@@ -16,7 +14,7 @@ use Sanf\Core\Modules\RequestedDocument\Repositories\RequestedDocumentItemReposi
 use Sanf\Core\Modules\RequestedDocument\Repositories\RequestedDocumentRepositoryInterface;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Integration\Exceptions\SanfInternalApiException;
-use Sanf\Integration\InternalApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class SubmitRequestedDocumentService implements ApplicationServiceInterface
 {
@@ -24,13 +22,13 @@ class SubmitRequestedDocumentService implements ApplicationServiceInterface
     private AuthModel $userRepository;
     private RequestedDocumentRepositoryInterface $eloquentRequestedDocRepository;
     private RequestedDocumentItemRepositoryInterface $eloquentRequestedDocItemRepository;
-    private InternalApiClient $internalApiClient;
+    private SanfCoreApiClient $internalApiClient;
 
     public function __construct(
         AuthModel $userRepository,
         RequestedDocumentRepositoryInterface $eloquentRequestedDocRepository,
         RequestedDocumentItemRepositoryInterface $eloquentRequestedDocItemRepository,
-        InternalApiClient $internalApiClient
+        SanfCoreApiClient $internalApiClient
     ) {
         $this->userRepository = $userRepository;
         $this->eloquentRequestedDocRepository = $eloquentRequestedDocRepository;

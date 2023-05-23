@@ -10,9 +10,9 @@ use stdClass;
 
 class SanfCoreApiClient
 {
-    const DEFAULT_SKIP = 0;
-    const DEFAULT_LIMIT = 2147483647;
-    const DEFAULT_ORDER = 'Latest';
+    public const DEFAULT_SKIP = 0;
+    public const DEFAULT_LIMIT = 2147483647;
+    public const DEFAULT_ORDER = 'Latest';
 
     protected $client;
 
@@ -61,7 +61,7 @@ class SanfCoreApiClient
          * }
          */
         $response = Request::route('customer.find-by-email', $this->client)
-            ->pathParams(['email' => $email])
+            ->json(['email' => $email])
             ->send();
         return $response->json();
     }
@@ -1227,6 +1227,50 @@ class SanfCoreApiClient
             ->queryParams([
                 'userid' => $email,
                 'profileid' => $profileId,
+            ])->send();
+
+        return $response->json();
+    }
+
+    public function browseRequestedDocuments(object $arguments)
+    {
+        $response = Request::route('request-document.browse', $this->client)
+            ->queryParams([
+                'cust_id' => $arguments->profile_xid,
+                'doc_type' => $arguments->document_type ?? null,
+                'skip' => $arguments->skip ?? self::DEFAULT_SKIP,
+                'limit' => $arguments->limit ?? self::DEFAULT_LIMIT,
+                'order' => $arguments->order ?? self::DEFAULT_ORDER,
+                'keyword' => $arguments->keyword ?? null,
+            ])
+            ->send();
+
+        return $response->json(false);
+    }
+
+    public function browseRequestedUploadDocuments(object $arguments)
+    {
+        $response = Request::route('request-uploaded-document.browse', $this->client)
+            ->queryParams([
+                'cust_id' => $arguments->profile_xid,
+                'skip' => $arguments->skip ?? self::DEFAULT_SKIP,
+                'limit' => $arguments->limit ?? self::DEFAULT_LIMIT,
+                'order' => $arguments->order ?? self::DEFAULT_ORDER,
+            ])
+            ->send();
+
+        return $response->json(false);
+    }
+
+    public function submitRequestedUploadDocument(object $arguments)
+    {
+        $response = Request::route('request-document.submit', $this->client)
+            ->json([
+                'req_no' => $arguments->request_no,
+                'doc_id' => $arguments->document_id,
+                'path_name' => $arguments->path,
+                'filename' => $arguments->origin,
+                'date_upd' => $arguments->uploaded_at,
             ])->send();
 
         return $response->json();

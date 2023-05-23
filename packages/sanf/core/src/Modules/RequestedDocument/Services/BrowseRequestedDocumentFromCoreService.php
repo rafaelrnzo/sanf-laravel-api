@@ -9,13 +9,13 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\RequestedDocument\Dtos\ListRequestedDocumentDto;
 use Sanf\Core\Modules\RequestedDocument\Enums\DocumentTypeEnum;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
-use Sanf\Integration\InternalApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class BrowseRequestedDocumentFromCoreService implements ApplicationServiceInterface
 {
-    private InternalApiClient $internalApiClient;
+    private SanfCoreApiClient $internalApiClient;
 
-    public function __construct(InternalApiClient $internalApiClient)
+    public function __construct(SanfCoreApiClient $internalApiClient)
     {
         $this->internalApiClient = $internalApiClient;
     }
