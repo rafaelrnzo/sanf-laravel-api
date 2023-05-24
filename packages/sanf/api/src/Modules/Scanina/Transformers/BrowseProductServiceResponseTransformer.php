@@ -3,11 +3,14 @@
 namespace Sanf\Api\Modules\Scanina\Transformers;
 
 use League\Fractal\TransformerAbstract;
+use Sanf\Core\Modules\Scanina\Dtos\BrowseProductServiceResponseDto;
 
 class BrowseProductServiceResponseTransformer extends TransformerAbstract
 {
     public function transform($dto): array
     {
+        /** @var BrowseProductServiceResponseDto $dto */
+
         $originPrice = (float)optional($dto)->priceBefore;
         $cutPrice = (float)optional($dto)->price;
         $discount = (($originPrice - $cutPrice) > 0) ? (($originPrice - $cutPrice) / $originPrice) * 100 : 0;

@@ -10,6 +10,7 @@ class BrowseProductBuyResponseTransformer extends TransformerAbstract
     public function transform($dto): array
     {
         /** @var BrowseProductBuyResponseDto $dto */
+
         $originPrice = (float)optional($dto)->priceBefore;
         $cutPrice = (float)optional($dto)->price;
         $discount = (($originPrice - $cutPrice) > 0) ? (($originPrice - $cutPrice) / $originPrice) * 100 : 0;

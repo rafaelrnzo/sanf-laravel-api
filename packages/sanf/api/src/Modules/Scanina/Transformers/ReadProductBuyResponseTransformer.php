@@ -3,12 +3,15 @@
 namespace Sanf\Api\Modules\Scanina\Transformers;
 
 use League\Fractal\TransformerAbstract;
+use Sanf\Core\Modules\Scanina\Dtos\ReadProductBuyResponseDto;
 use Spatie\Fractalistic\ArraySerializer;
 
 class ReadProductBuyResponseTransformer extends TransformerAbstract
 {
     public function transform($dto): array
     {
+        /** @var ReadProductBuyResponseDto $dto */
+
         $originPrice = (float)optional($dto)->priceBefore;
         $cutPrice = (float)optional($dto)->price;
         $discount = (($originPrice - $cutPrice) / $originPrice) * 100;
