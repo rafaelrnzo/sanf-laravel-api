@@ -4,7 +4,7 @@ namespace Sanf\Core\Modules\Scanina\Dtos;
 
 use Spatie\DataTransferObject\FlexibleDataTransferObject;
 
-class ProductServiceResponseDto extends FlexibleDataTransferObject
+class BrowseProductServiceResponseDto extends FlexibleDataTransferObject
 {
 
     public ?int $id;

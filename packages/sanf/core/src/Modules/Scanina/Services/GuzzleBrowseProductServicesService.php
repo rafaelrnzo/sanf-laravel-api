@@ -4,7 +4,7 @@ namespace Sanf\Core\Modules\Scanina\Services;
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Scanina\Dtos\BrowseProductServiceRequestDto;
-use Sanf\Core\Modules\Scanina\Dtos\ProductServiceResponseDto;
+use Sanf\Core\Modules\Scanina\Dtos\BrowseProductServiceResponseDto;
 use Sanf\Core\Modules\Scanina\Repositories\ScaninaProductRepositoryInterface;
 use Sanf\Core\Modules\Scanina\Specifications\ScaninaProductSpecificationInterface;
 
@@ -31,7 +31,7 @@ class GuzzleBrowseProductServicesService implements ApplicationServiceInterface
         );
 
         $responseProductService = array_map(function ($buyItem) {
-            return new ProductServiceResponseDto((array)$buyItem);
+            return new BrowseProductServiceResponseDto((array)$buyItem);
         }, $response->data->rows);
 
         return (object)[
