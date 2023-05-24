@@ -7,10 +7,11 @@ use Spatie\DataTransferObject\FlexibleDataTransferObject;
 class BrowseProductFilterTypeResponseDto extends FlexibleDataTransferObject
 {
 
-    public ?string $id;
-    public ?string $brandId;
+    public ?int $id;
+    public ?string $xid;
+    public ?int $brandId;
     public ?string $name;
-    public ?string $isActive;
-    public ?string $createdAt;
-    public ?string $updatedAt;
+    public ?bool $isActive;
+    public ?int $createdAt;
+    public ?int $updatedAt;
 }

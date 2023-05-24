@@ -165,13 +165,11 @@ class ScaninaApiClient
 
     public function getFilterType(ScaninaProductFilterDto $arguments)
     {
-//        $response = Request::route("integration.scanina.product.{$arguments->type}.type.browse", $this->client)
-//            ->queryParams($arguments->toArray())
-//            ->send();
-//
-//        return $response->json();
+        $response = Request::route("scanina.product.{$arguments->type}.type.browse", $this->client)
+            ->queryParams($arguments->toArray())
+            ->send();
 
-        return json_decode('{"success": true, "code": "200", "message": "OK", "data": {"rows": [{"id": "1", "brandId": "1", "name": "type 1", "isActive": "true", "createdAt": "1683601805", "updatedAt": "1683601805"}], "metadata": {"total": 1, "count": 1, "skip": 0, "limit": 10, "sort_by": "latest"}}}');
+        return $response->json(false);
     }
 
     public function getFilterModel(ScaninaProductFilterDto $arguments)
