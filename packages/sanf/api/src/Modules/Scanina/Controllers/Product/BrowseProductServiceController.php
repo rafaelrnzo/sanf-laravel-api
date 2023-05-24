@@ -4,10 +4,12 @@ namespace Sanf\Api\Modules\Scanina\Controllers\Product;
 
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
 use Sanf\Api\Modules\Scanina\Transformers\BrowseProductServiceResponseTransformer;
 use Sanf\Core\Modules\Scanina\Dtos\BrowseProductServiceRequestDto;
+use Sanf\Core\Modules\Scanina\Enums\ScaninaProductSortByEnum;
 use Sanf\Core\Modules\Scanina\Services\GuzzleBrowseProductServicesService;
 
 class BrowseProductServiceController extends RestApiController
@@ -17,7 +19,7 @@ class BrowseProductServiceController extends RestApiController
         $queryParam = $this->validate($request, [
             'skip' => 'nullable|integer|max:2147483647',
             'limit' => 'nullable|integer|max:2147483647',
-            'sort_by' => 'nullable|string|in:oldest,latest',
+            'sort_by' => ['nullable', 'string', Rule::in(ScaninaProductSortByEnum::ALL)],
             'keyword' => 'nullable|string|max:255',
             'category_id' => 'nullable|integer',
             'rating' => 'nullable|int|in:1,2,3,4,5',

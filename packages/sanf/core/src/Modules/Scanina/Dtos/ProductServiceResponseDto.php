@@ -7,28 +7,28 @@ use Spatie\DataTransferObject\FlexibleDataTransferObject;
 class ProductServiceResponseDto extends FlexibleDataTransferObject
 {
 
-    public ?string $id;
+    public ?int $id;
     public ?string $xid;
-    public ?string $shopId;
+    public ?int $shopId;
     public ?string $shopName;
-    public ?string $merchantId;
+    public ?int $merchantId;
     public ?string $merchantName;
     public ?string $name;
     public ?string $slugName;
     public ?string $description;
-    public ?object $imageFiles;
-    public ?string $priceBefore;
-    public ?string $price;
-    public ?string $year;
-    public ?string $catalogId;
+    public ?array $imageFiles;
+    public ?int $priceBefore;
+    public ?int $price;
+    public ?int $year;
+    public ?int $catalogId;
     public ?string $catalogName;
     public ?object $unitMeasurement;
-    public ?string $locationId;
+    public ?int $locationId;
     public ?string $locationName;
-    public ?string $stock;
+    public ?int $stock;
     public ?string $rating;
-    public ?string $reviewCount;
-    public ?string $itemSoldCount;
-    public ?string $createdAt;
-    public ?string $updatedAt;
+    public ?int $reviewCount;
+    public ?int $itemSoldCount;
+    public ?int $createdAt;
+    public ?int $updatedAt;
 }

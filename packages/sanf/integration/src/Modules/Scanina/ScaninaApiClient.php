@@ -45,13 +45,11 @@ class ScaninaApiClient
 
     public function getService(ScaninaProductServiceFilterDto $arguments)
     {
-//        $response = Request::route('integration.scanina.product.service.browse', $this->client)
-//            ->queryParams($arguments->toArray())
-//            ->send();
-//
-//        return $response->json();
+        $response = Request::route('scanina.product.service.browse', $this->client)
+            ->queryParams($arguments->toArray())
+            ->send();
 
-        return json_decode('{"success":true,"code":"200","message":"OK","data":{"rows":[{"xid":"HNS1231","shopId":"1","merchantId":"1","name":"Maintenance 300","nameSlug":"maintenance-300","description":"lorem ipsum","imageFiles":{"imageName":"HzZxHWtZO0e16H5tLABQpuGr27dCrGAj3GFKL8jS.jpg","path":"https://minio.nbs.co.id/dev-scan-web-bucket/product/ocXutXa43HfvkdmI6oH5RB6U5jMUavxTs58dJ8l9.jpg?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=usr_scan_web%2F20230509%2F%2Fs3%2Faws4_request&X-Amz-Date=20230509T030458Z&X-Amz-SignedHeaders=host&X-Amz-Expires=1800&X-Amz-Signature=c15ea2e2291b8c0ca53880f71b69d6cecbb1bf566f85212b2d201532fe2ac139"},"priceBefore":"200000000","price":"100000000","year":"2019","catalogId":"1","catalogName":"maintenance","stock":"1","rating":"3","reviewCount":"10","itemSoldCount":"12","createdAt":"1683601805","updatedAt":"1683601805"}],"metadata":{"total":1,"count":1,"skip":0,"limit":10,"sort_by":"latest"}}}');
+        return $response->json(false);
     }
 
     public function getSparePart(ScaninaProductSparePartFilterDto $arguments)
