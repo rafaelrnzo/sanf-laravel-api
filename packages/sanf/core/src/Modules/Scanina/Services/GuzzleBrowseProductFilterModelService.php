@@ -37,8 +37,8 @@ class GuzzleBrowseProductFilterModelService implements ApplicationServiceInterfa
         return (object)[
             'data' => $responseProductFilterModel,
             'paginate' => (object)[
-                'total' => 0,
-                'count' => 0,
+                'total' => $response->data->metadata->total ?? 0,
+                'count' => $response->data->metadata->count ?? 0,
                 'skip' => $dto->skip,
                 'limit' => $dto->limit,
                 'sort_by' => $dto->sortBy,
