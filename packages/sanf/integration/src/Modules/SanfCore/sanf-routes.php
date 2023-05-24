@@ -3,7 +3,7 @@
 use NbsPhp\ApiWrapper\Api\Route;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiProcessor;
 
-Route::group(config('sanf-internal.url'), [SanfCoreApiProcessor::class], function () {
+Route::group(config('sanf-api.url'), [SanfCoreApiProcessor::class], function () {
     Route::post('customer.find-by-email', '/Login');
     Route::get('customer.find-by-id', '/Login/customer/{id}');
     Route::get('customer.find-by-email-and-npwp', '/customer/profil/{email}/{npwp}');

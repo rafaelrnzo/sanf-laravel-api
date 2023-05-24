@@ -14,7 +14,7 @@ class SanfCoreApiProcessor extends Processor
     public static function handle(Request $request, callable $next): Response
     {
 
-        $request->headers(['Client-id' => config('sanf-internal.client_id')]);
+        $request->headers(['Client-id' => config('sanf-api.client_id')]);
         $request->headers(['X-Request-ID' => app('request')->header('X-Request-ID')]);
         try {
             $response = $next($request);

@@ -55,7 +55,7 @@ final class AddESignUserService implements ApplicationServiceInterface
         // get existing user
         $userRegistration = $this->eSignRepository->findUserByEmail($dto->email);
         if ($userRegistration) {
-            if ($userRegistration->total_submit_registration >= config('tekenaja-internal.max_total_submit')) {
+            if ($userRegistration->total_submit_registration >= config('tekenaja-api.max_total_submit')) {
                 throw new TekenAjaSubmitRegistrationHasLimitException();
             }
 

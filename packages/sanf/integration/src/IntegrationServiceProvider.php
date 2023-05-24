@@ -36,8 +36,8 @@ class IntegrationServiceProvider extends ServiceProvider
      */
     protected function registerConfigs()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/sanf-internal.php', 'sanf-internal');
-        $this->mergeConfigFrom(__DIR__ . '/../config/tekenaja-internal.php', 'tekenaja-internal');
+        $this->mergeConfigFrom(__DIR__ . '/../config/sanf-api.php', 'sanf-api');
+        $this->mergeConfigFrom(__DIR__ . '/../config/tekenaja-api.php', 'tekenaja-api');
         $this->mergeConfigFrom(__DIR__ . '/../config/scanina-api.php', 'scanina-api');
     }
 }
