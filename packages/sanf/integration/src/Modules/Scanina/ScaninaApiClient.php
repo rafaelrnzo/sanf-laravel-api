@@ -147,13 +147,11 @@ class ScaninaApiClient
 
     public function getFilterCategory(ScaninaProductFilterDto $arguments)
     {
-//        $response = Request::route("integration.scanina.product.{$arguments->type}.category.browse", $this->client)
-//            ->queryParams($arguments->toArray())
-//            ->send();
-//
-//        return $response->json();
+        $response = Request::route("scanina.product.{$arguments->type}.category.browse", $this->client)
+            ->queryParams($arguments->toArray())
+            ->send();
 
-        return json_decode('{"success":true,"code":"200","message":"OK","data":{"rows":[{"id":"1","parent_id":"1","level":"1","name":"Wheel Loader","slugName":"wheel-loader","isRentActive":"false","topCategory":"false","unitTypeId":"1","unitTypeName":"Kilo meter","isActive":"true","createdAt":"1683601805","updatedAt":"1683601805"}],"metadata":{"total":1,"count":1,"skip":0,"limit":10,"sort_by":"latest"}}}');
+        return $response->json(false);
     }
 
     public function getFilterBrand(ScaninaProductFilterDto $arguments)

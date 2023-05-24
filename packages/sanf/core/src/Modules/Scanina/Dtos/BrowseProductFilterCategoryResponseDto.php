@@ -7,16 +7,17 @@ use Spatie\DataTransferObject\FlexibleDataTransferObject;
 class BrowseProductFilterCategoryResponseDto extends FlexibleDataTransferObject
 {
 
-    public ?string $id;
-    public ?string $parent_id;
-    public ?string $level;
+    public ?int $id;
+    public ?string $xid;
+    public ?int $parent_id;
+    public ?int $level;
     public ?string $name;
     public ?string $slugName;
-    public ?string $isRentActive;
-    public ?string $topCategory;
-    public ?string $unitTypeId;
+    public ?bool $isRentActive;
+    public ?bool $topCategory;
+    public ?int $unitTypeId;
     public ?string $unitTypeName;
-    public ?string $isActive;
-    public ?string $createdAt;
-    public ?string $updatedAt;
+    public ?bool $isActive;
+    public ?int $createdAt;
+    public ?int $updatedAt;
 }
