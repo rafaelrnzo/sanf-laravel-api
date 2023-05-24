@@ -13,7 +13,7 @@ class TekenAjaApiProcessor extends Processor
 {
     public static function handle(Request $request, callable $next): Response
     {
-        $request->headers(['Apikey' => config('tekenaja-internal.client_id')]);
+        $request->headers(['Apikey' => config('tekenaja-api.client_id')]);
         $request->headers(['X-Request-ID' => app('request')->header('X-Request-ID')]);
         try {
             $response = $next($request);
