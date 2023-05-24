@@ -6,14 +6,16 @@ use Spatie\DataTransferObject\FlexibleDataTransferObject;
 
 class ScaninaFilterDataTransferObject extends FlexibleDataTransferObject
 {
-
     public function __construct(array $parameters = [])
     {
         $validators = $this->getFieldValidators();
         $item = [];
         foreach ($parameters as $key => $value) {
-            $item[$key] = $value;
+            if (is_null($value)) {
+                continue;
+            }
 
+            $item[$key] = $value;
             $field = $validators[$key];
             $typeData = $field->allowedTypes[0] ?? null;
             if ($typeData) {

@@ -2,6 +2,7 @@
 
 namespace Sanf\Integration\Modules\Scanina;
 
+use NbsPhp\ApiWrapper\Api\Request;
 use Sanf\Core\Modules\Scanina\Dtos\AddToCartRequestDto;
 use Sanf\Core\Modules\Scanina\Dtos\ScaninaProductBuyFilterDto;
 use Sanf\Core\Modules\Scanina\Dtos\ScaninaProductFilterDto;
@@ -24,15 +25,17 @@ class ScaninaApiClient
         $this->client = app(\GuzzleHttp\Client::class);
     }
 
+    /**
+     * sample response
+     * {"success":true,"code":"200","message":"OK","data":{"rows":[{"id":40,"shopId":1,"shopName":"Scanina","merchantId":1,"merchantName":"Scanina","serialNumber":"NS2342","name":"YUASA NS40 Bulldozer","slugName":"yuasa-ns40-bulldozer","description":"Ada banyak aki yang dijual bebas dipasaran seperti ACDelco, Amaron, Delkor, Dryfit, G-Force, Global, Rocket dan sebagainya. Namun ada beberapa aki yang biasanya paling banyak digunakan oleh konsumen karena kualitasnya seperti aki GS dan Yuasa.","imageFiles":[{"imageName":"ocXutXa43HfvkdmI6oH5RB6U5jMUavxTs58dJ8l9.jpg","path":"https://minio.nbs.co.id/dev-scan-web-bucket/product/ocXutXa43HfvkdmI6oH5RB6U5jMUavxTs58dJ8l9.jpg?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=usr_scan_web%2F20230524%2F%2Fs3%2Faws4_request&X-Amz-Date=20230524T031004Z&X-Amz-SignedHeaders=host&X-Amz-Expires=1800&X-Amz-Signature=298849fa500fbe856ed8bc489a7c6dba041591ff2eaf330012cf9eb1e71f518a"}],"priceBefore":1500000,"price":1350000,"year":2023,"catalogId":38,"catalogName":"YUASA NS40 Bulldozer","unitMeasurement":{"rate":"20","measurement":"Kilo meter"},"locationId":1003171,"locationName":"Jakarta Selatan","conditionType_id":1,"conditionType_name":"New","stock":50,"rating":"5","isQualified":true,"isAssurance":true,"latitude":"-6.26149270","longitude":"106.81059980","createdAt":1683273357,"updatedAt":1684138872}],"metadata":{"total":14,"count":10,"skip":0,"limit":10,"sortBy":"latest"}}}
+     */
     public function getBuy(ScaninaProductBuyFilterDto $arguments)
     {
-//        $response = Request::route('integration.scanina.product.buy.browse', $this->client)
-//            ->queryParams($arguments->toArray())
-//            ->send();
-//
-//        return $response->json();
+        $response = Request::route('scanina.product.buy.browse', $this->client)
+            ->queryParams($arguments->toArray())
+            ->send();
 
-        return json_decode('{"success":true,"code":"200","message":"OK","data":{"rows":[{"id":"1","shopId":"1","shopName":"scan","merchantId":"1","merchantName":"Scanina","serialNumber":"BY-SJJNM-122","name":"Bomang Type 1","slugName":"bomang-type-a1","description":"huge truck","imageFiles":{"imageName":"HzZxHWtZO0e16H5tLABQpuGr27dCrGAj3GFKL8jS.jpg","path":"https://minio.nbs.co.id/dev-scan-web-bucket/product/ocXutXa43HfvkdmI6oH5RB6U5jMUavxTs58dJ8l9.jpg?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=usr_scan_web%2F20230509%2F%2Fs3%2Faws4_request&X-Amz-Date=20230509T030458Z&X-Amz-SignedHeaders=host&X-Amz-Expires=1800&X-Amz-Signature=c15ea2e2291b8c0ca53880f71b69d6cecbb1bf566f85212b2d201532fe2ac139"},"priceBefore":"200000000","price":"100000000","year":"2019","catalogId":"1","catalogName":"truck","unitMeasurement":{"rate":12399,"measurement":"kilometer"},"locationId":"1002171","locationName":"Batam","conditionTypeId":"1","conditionTypeName":"New","stock":"1","rating":"3","isQualified":"true","isAssurance":"true","latitude":"-6.30064100","longitude":"106.81409500","createdAt":"1683601805","updatedAt":"1683601805"}],"metadata":{"total":1,"count":1,"skip":0,"limit":10,"sort_by":"latest"}}}');
+        return $response->json(false);
     }
 
     public function getRent(ScaninaProductRentFilterDto $arguments)

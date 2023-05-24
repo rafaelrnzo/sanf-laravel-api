@@ -10,6 +10,7 @@ use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
 use Sanf\Api\Modules\Scanina\Transformers\BrowseProductBuyResponseTransformer;
 use Sanf\Core\Modules\Scanina\Dtos\BrowseProductBuyRequestDto;
 use Sanf\Core\Modules\Scanina\Enums\ScaninaProductConditionEnum;
+use Sanf\Core\Modules\Scanina\Enums\ScaninaProductSortByEnum;
 use Sanf\Core\Modules\Scanina\Enums\ScaninaProductStatusEnum;
 use Sanf\Core\Modules\Scanina\Services\GuzzleBrowseProductBuyService;
 
@@ -20,7 +21,7 @@ class BrowseProductBuyController extends RestApiController
         $queryParam = $this->validate($request, [
             'skip' => 'nullable|integer|max:2147483647',
             'limit' => 'nullable|integer|max:2147483647',
-            'sort_by' => 'nullable|string|in:oldest,latest',
+            'sort_by' => ['nullable', 'string', Rule::in(ScaninaProductSortByEnum::ALL)],
             'keyword' => 'nullable|string|max:255',
             'location_id' => 'nullable|string',
             'category_id' => 'nullable|integer',
