@@ -14,7 +14,7 @@ class ReadProductBuyResponseTransformer extends TransformerAbstract
 
         $originPrice = (float)optional($dto)->priceBefore;
         $cutPrice = (float)optional($dto)->price;
-        $discount = (($originPrice - $cutPrice) / $originPrice) * 100;
+        $discount = (($originPrice - $cutPrice) > 0) ? (($originPrice - $cutPrice) / $originPrice) * 100 : 0;
 
         $imagesFiles = array_map(function ($files) {
             return $files->path;
@@ -39,7 +39,7 @@ class ReadProductBuyResponseTransformer extends TransformerAbstract
             'provider' => (string)optional($dto)->provider,
             'serial_number' => (string)optional($dto)->serialNumber,
             'item_number' => (string)optional($dto)->itemNumber,
-            'specifications' => fractal($dto->specifications, BrowseProductSpecificationResponseTransformer::class)
+            'specifications' => fractal($dto->subSpecifications, BrowseProductSubSpecificationResponseTransformer::class)
                 ->serializeWith(new ArraySerializer()),
         ];
     }

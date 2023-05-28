@@ -5,6 +5,7 @@ use Sanf\Integration\Modules\Scanina\ScaninaApiProcessor;
 
 Route::group(config('scanina-api.url'), [ScaninaApiProcessor::class], function () {
     Route::get('scanina.product.buy.browse', '/v1/buy/list-products');
+    Route::get('scanina.product.buy.read', '/v1/buy/detail-product/{xid}');
     Route::get('scanina.product.buy.category.browse', '/v1/buy/list-categories');
     Route::get('scanina.product.buy.brand.browse', '/v1/buy/list-brand');
     Route::get('scanina.product.buy.type.browse', '/v1/buy/list-types');

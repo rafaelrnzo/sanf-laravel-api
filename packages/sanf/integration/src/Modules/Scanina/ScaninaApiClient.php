@@ -63,15 +63,13 @@ class ScaninaApiClient
 
     public function readBuy(string $xid)
     {
-//        $response = Request::route('integration.scanina.product.buy.read', $this->client)
-//            ->pathParams([
-//                'xid' => $xid,
-//            ])
-//            ->send();
-//
-//        return $response->json();
+        $response = Request::route('scanina.product.buy.read', $this->client)
+            ->pathParams([
+                'xid' => $xid,
+            ])
+            ->send();
 
-        return json_decode('{"success":true,"code":"200","message":"OK","data":{"id":"1","shopId":"1","shopName":"scan","merchantId":"1","merchantName":"scanina","serialNumber":"BY-SJJNM-122","name":"Bomang Type 1","nameSlug":"bomang-type-a1","description":"huge truck","imageFiles":[{"imageName":"HzZxHWtZO0e16H5tLABQpuGr27dCrGAj3GFKL8jS.jpg","path":"https://minio.nbs.co.id/dev-scan-web-bucket/product/ocXutXa43HfvkdmI6oH5RB6U5jMUavxTs58dJ8l9.jpg?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=usr_scan_web%2F20230509%2F%2Fs3%2Faws4_request&X-Amz-Date=20230509T030458Z&X-Amz-SignedHeaders=host&X-Amz-Expires=1800&X-Amz-Signature=c15ea2e2291b8c0ca53880f71b69d6cecbb1bf566f85212b2d201532fe2ac139"}],"videoFile":[{"fileName":"HzZxHWtZO0e16H5tLABQpuGr27dCrGAj3GFKL8jS.jpg","path":"https://minio.nbs.co.id/dev-scan-web-bucket/product/ocXutXa43HfvkdmI6oH5RB6U5jMUavxTs58dJ8l9.jpg?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=usr_scan_web%2F20230509%2F%2Fs3%2Faws4_request&X-Amz-Date=20230509T030458Z&X-Amz-SignedHeaders=host&X-Amz-Expires=1800&X-Amz-Signature=c15ea2e2291b8c0ca53880f71b69d6cecbb1bf566f85212b2d201532fe2ac139"}],"documentationFile":[{"fileName":"test.pdf","path":"https:/minio.nbs.co.id/dev"}],"priceBefore":"200000000","price":"100000000","year":"2019","catalogId":"1","catalogName":"truck","locationId":"1002171","locationName":"Batam","conditionTypeId":"1","conditionTypeName":"New","unitMeasurement":{"rate":12399,"measurement":"kilometer"},"stock":"1","rating":"3","viewCount":"38","lastSeen":"123123233","isQualified":"true","isAssurance":"true","latitude":"-6.30064100","longitude":"106.81409500","createdAt":"1683601805","updatedAt":"1683601805","review":{"total":10,"withImages":5,"customerSatisfied":[{"label":"Engine Perfomance","count":1},{"label":"Delivery Accuracy","count":1}],"customerUnstatisfied":[{"label":"Operator Perfomance","count":1},{"label":"Ability Accuracy","count":1}],"ratingProgress":{"0":10,"1":0,"2":0,"3":0,"4":0,"5":0}}}}');
+        return $response->json(false);
     }
 
     public function readRent(string $xid)
@@ -89,18 +87,14 @@ class ScaninaApiClient
 
     public function getSpecification(string $xid, int $type)
     {
-//        $response = Request::route('integration.scanina.product.specification.browse', $this->client)
-//            ->queryParams([
-//                'sellTypeId' => $type
-//            ])
-//            ->pathParams([
-//                'xid' => $xid,
-//            ])
-//            ->send();
-//
-//        return $response->json();
+        $response = Request::route('scanina.product.specification.browse', $this->client)
+            ->queryParams([
+                'sellTypeId' => $type,
+                'id' => $xid,
+            ])
+            ->send();
 
-        return json_decode('{"success":true,"code":"200","message":"OK","data":{"rows":[{"id":12,"name":"fuel","specificationColumn":[{"id":7,"name":"combust","value":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas nibh turpis, rhoncus nec enim sed, egestas lobortis ante."},{"id":8,"name":"electric","value":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas nibh turpis, rhoncus nec enim sed,"}],"subSpecification":[]},{"id":13,"name":"cabin","specificationColumn":[{"id":9,"name":"electric","value":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas nibh turpis, rhoncus nec enim sed,"}],"subSpecification":[]},{"id":14,"name":"engine","specificationColumn":[{"id":10,"name":"machine v8","value":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas nibh turpis, rhoncus nec enim sed,"}],"subSpecification":[]}]}}');
+        return $response->json(false);
     }
 
     public function readSparePart(string $xid)
