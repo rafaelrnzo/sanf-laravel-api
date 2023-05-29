@@ -206,6 +206,7 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth']], function () {
     Route::post('users/profiles/{xid}/scanina-account/register', ['as' => 'scanina.user.register', 'uses' => \Scanina\Controllers\User\RegisterScaninaUserController::class]);
     Route::post('users/profiles/{xid}/scanina/products/buys/{product_xid}', ['as' => 'scanina.user.product.buy.chart', 'uses' => \Scanina\Controllers\User\AddBuyCartByUserController::class]);
 
+    Route::get('scanina/cities', ['as' => 'scanina.cities.browse', 'uses' => \Scanina\Controllers\Region\BrowseCityController::class]);
     Route::post('scanina/products/buys', ['as' => 'scanina.product.buy.store', 'uses' => \Scanina\Controllers\Product\BrowseProductBuyController::class]);
     Route::get('scanina/products/buys', ['as' => 'scanina.product.buy.browse', 'uses' => \Scanina\Controllers\Product\BrowseProductBuyController::class]);
     Route::get('scanina/products/buys/categories', ['as' => 'scanina.product.buy.category.browse', 'uses' => \Scanina\Controllers\Product\BrowseProductBuyCategoryController::class]);

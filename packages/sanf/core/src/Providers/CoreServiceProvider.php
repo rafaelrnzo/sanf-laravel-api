@@ -79,12 +79,16 @@ use Sanf\Core\Modules\RequestedDocument\Repositories\RequestedDocumentItemReposi
 use Sanf\Core\Modules\RequestedDocument\Repositories\RequestedDocumentRepositoryInterface;
 use Sanf\Core\Modules\RequestedDocument\Specifications\EloquentRequestedDocumentSpecification;
 use Sanf\Core\Modules\RequestedDocument\Specifications\RequestedDocumentSpecificationInterface;use Sanf\Core\Modules\Scanina\Repositories\GuzzleScaninaProductRepository;
+use Sanf\Core\Modules\Scanina\Repositories\GuzzleScaninaRegionRepository;
 use Sanf\Core\Modules\Scanina\Repositories\GuzzleScaninaUserRepository;
 use Sanf\Core\Modules\Scanina\Repositories\ScaninaProductRepositoryInterface;
+use Sanf\Core\Modules\Scanina\Repositories\ScaninaRegionRepositoryInterface;
 use Sanf\Core\Modules\Scanina\Repositories\ScaninaUserRepositoryInterface;
 use Sanf\Core\Modules\Scanina\Specifications\GuzzleScaninaProductSpecification;
+use Sanf\Core\Modules\Scanina\Specifications\GuzzleScaninaRegionSpecification;
 use Sanf\Core\Modules\Scanina\Specifications\GuzzleScaninaUserSpecification;
 use Sanf\Core\Modules\Scanina\Specifications\ScaninaProductSpecificationInterface;
+use Sanf\Core\Modules\Scanina\Specifications\ScaninaRegionSpecificationInterface;
 use Sanf\Core\Modules\Scanina\Specifications\ScaninaUserSpecificationInterface;
 use Sanf\Core\Modules\Setting\Repositories\EloquentFrequentlyAskQuestionRepository;
 use Sanf\Core\Modules\Setting\Repositories\EloquentOnBoardingRepository;
@@ -192,6 +196,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(FinancingCategoryRepositoryInterface::class, EloquentFinancingCategoryRepository::class);
         $this->app->bind(ScaninaProductRepositoryInterface::class, GuzzleScaninaProductRepository::class);
         $this->app->bind(ScaninaUserRepositoryInterface::class, GuzzleScaninaUserRepository::class);
+        $this->app->bind(ScaninaRegionRepositoryInterface::class, GuzzleScaninaRegionRepository::class);
 
         $this->app->bind(SurveyEntityFactoryInterface::class, EloquentSurveyFactoryEntity::class);
         $this->app->bind(RequestedDocumentRepositoryInterface::class, EloquentRequestedDocumentRepository::class);
@@ -223,6 +228,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(RequestedDocumentSpecificationInterface::class, EloquentRequestedDocumentSpecification::class);
         $this->app->bind(ScaninaProductSpecificationInterface::class, GuzzleScaninaProductSpecification::class);
         $this->app->bind(ScaninaUserSpecificationInterface::class, GuzzleScaninaUserSpecification::class);
+        $this->app->bind(ScaninaRegionSpecificationInterface::class, GuzzleScaninaRegionSpecification::class);
     }
 
     protected function registerViews()

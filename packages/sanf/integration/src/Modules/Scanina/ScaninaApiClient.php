@@ -218,4 +218,13 @@ class ScaninaApiClient
 
         return json_decode('{"success": true, "code": "200", "message": "OK"}');
     }
+
+    public function getCity(object $arguments)
+    {
+        $response = Request::route('scanina.city.browse', $this->client)
+            ->queryParams((array)$arguments)
+            ->send();
+
+        return $response->json(false);
+    }
 }
