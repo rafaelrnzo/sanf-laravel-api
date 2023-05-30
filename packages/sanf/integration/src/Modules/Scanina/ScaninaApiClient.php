@@ -210,6 +210,15 @@ class ScaninaApiClient
         return json_decode('{"success": true, "code": "200", "message": "OK"}');
     }
 
+    public function getCountry(object $arguments)
+    {
+        $response = Request::route('scanina.country.browse', $this->client)
+            ->queryParams((array)$arguments)
+            ->send();
+
+        return $response->json(false);
+    }
+
     public function getCity(object $arguments)
     {
         $response = Request::route('scanina.city.browse', $this->client)

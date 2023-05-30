@@ -33,5 +33,6 @@ Route::group(config('scanina-api.url'), [ScaninaApiProcessor::class], function (
 
     Route::get('scanina.product.customer-review.browse', '/v1/review');
 
-    Route::get('scanina.city.browse', '/v1/list-cities');
+    Route::get('scanina.country.browse', '/v1/country');
+    Route::get('scanina.city.browse', '/v1/city');
 });

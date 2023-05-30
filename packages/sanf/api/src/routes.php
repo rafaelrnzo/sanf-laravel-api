@@ -217,6 +217,7 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth']], function () {
     Route::post('users/profiles/{xid}/scanina/products/services/{product_xid}', ['as' => 'scanina.user.product.service.cart', 'uses' => \Scanina\Controllers\User\AddServiceCartByUserController::class]);
     Route::get('users/profiles/{xid}/scanina/products/services/{product_xid}', ['as' => 'scanina.user.product.service.read', 'uses' => \Scanina\Controllers\User\ReadServiceCartByUserController::class]);
 
+    Route::get('scanina/countries', ['as' => 'scanina.country.browse', 'uses' => \Scanina\Controllers\Region\BrowseCountryController::class]);
     Route::get('scanina/cities', ['as' => 'scanina.cities.browse', 'uses' => \Scanina\Controllers\Region\BrowseCityController::class]);
     Route::post('scanina/products/buys', ['as' => 'scanina.product.buy.store', 'uses' => \Scanina\Controllers\Product\BrowseProductBuyController::class]);
     Route::get('scanina/products/buys', ['as' => 'scanina.product.buy.browse', 'uses' => \Scanina\Controllers\Product\BrowseProductBuyController::class]);

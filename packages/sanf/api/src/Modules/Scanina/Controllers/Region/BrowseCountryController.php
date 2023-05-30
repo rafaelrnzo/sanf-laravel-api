@@ -8,10 +8,11 @@ use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
 use Sanf\Api\Modules\Scanina\Transformers\BrowseRegionResponseTransformer;
 use Sanf\Core\Modules\Scanina\Services\GuzzleBrowseCityService;
+use Sanf\Core\Modules\Scanina\Services\GuzzleBrowseCountryService;
 
-class BrowseCityController extends RestApiController
+class BrowseCountryController extends RestApiController
 {
-    public function __invoke(Request $request, Guard $userAuth, GuzzleBrowseCityService $service)
+    public function __invoke(Request $request, Guard $userAuth, GuzzleBrowseCountryService $service)
     {
         $queryParam = $this->validate($request, [
             'skip' => 'nullable|integer|max:2147483647',

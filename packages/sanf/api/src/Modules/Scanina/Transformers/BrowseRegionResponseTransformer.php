@@ -5,7 +5,7 @@ namespace Sanf\Api\Modules\Scanina\Transformers;
 use League\Fractal\TransformerAbstract;
 use Sanf\Core\Modules\Scanina\Dtos\BrowseProductBuyResponseDto;
 
-class BrowseCityResponseTransformer extends TransformerAbstract
+class BrowseRegionResponseTransformer extends TransformerAbstract
 {
     public function transform($dto): array
     {
