@@ -227,4 +227,13 @@ class ScaninaApiClient
 
         return $response->json(false);
     }
+
+    public function getBusinessSector(object $arguments)
+    {
+        $response = Request::route('scanina.business-sector.browse', $this->client)
+            ->queryParams((array)$arguments)
+            ->send();
+
+        return $response->json(false);
+    }
 }

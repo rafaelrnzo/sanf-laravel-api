@@ -35,4 +35,5 @@ Route::group(config('scanina-api.url'), [ScaninaApiProcessor::class], function (
 
     Route::get('scanina.country.browse', '/v1/country');
     Route::get('scanina.city.browse', '/v1/city');
+    Route::get('scanina.business-sector.browse', '/v1/business-sector');
 });

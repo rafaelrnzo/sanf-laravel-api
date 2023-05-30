@@ -22,4 +22,13 @@ class GuzzleScaninaRegionSpecification implements ScaninaRegionSpecificationInte
     {
         return new GuzzleGetCitySpecification($parameter);
     }
+
+    /**
+     * @param $parameter
+     * @return GuzzleGetBusinessSectorSpecification
+     */
+    public function getBusinessSector($parameter): GuzzleGetBusinessSectorSpecification
+    {
+        return new GuzzleGetBusinessSectorSpecification($parameter);
+    }
 }
