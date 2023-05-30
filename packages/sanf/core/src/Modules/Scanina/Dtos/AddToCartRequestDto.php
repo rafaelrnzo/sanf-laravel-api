@@ -9,5 +9,7 @@ class AddToCartRequestDto extends ScaninaRequestDataTransferObject
     public string $productId;
     public ?int $rentStartDate;
     public ?int $rentEndDate;
+    public ?int $quantity;
     public ?int $serviceDate;
+    public ?string $notes;
 }

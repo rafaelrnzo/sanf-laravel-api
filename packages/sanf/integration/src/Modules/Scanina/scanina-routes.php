@@ -4,6 +4,8 @@ use NbsPhp\ApiWrapper\Api\Route;
 use Sanf\Integration\Modules\Scanina\ScaninaApiProcessor;
 
 Route::group(config('scanina-api.url'), [ScaninaApiProcessor::class], function () {
+    Route::post('scanina.user.account.add-cart', '/v1/submit-request');
+
     Route::get('scanina.product.buy.browse', '/v1/product/buy');
     Route::get('scanina.product.buy.read', '/v1/product/buy/{xid}');
     Route::get('scanina.product.buy.category.browse', '/v1/category/buy');
@@ -18,6 +20,7 @@ Route::group(config('scanina-api.url'), [ScaninaApiProcessor::class], function (
     Route::get('scanina.product.rent.type.browse', '/v1/type/rental');
     Route::get('scanina.product.rent.model.browse', '/v1/model/rental');
 
+    Route::get('scanina.product.specification.browse', '/v1/product/specification');
 
     Route::get('scanina.product.service.browse', '/v1/product/service');
     Route::get('scanina.product.service.read', '/v1/product/service/{xid}');

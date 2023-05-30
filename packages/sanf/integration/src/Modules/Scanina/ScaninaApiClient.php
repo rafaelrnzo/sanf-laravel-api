@@ -192,13 +192,11 @@ class ScaninaApiClient
 
     public function addToCart(AddToCartRequestDto $dto)
     {
-//        $response = Request::route("integration.scanina.user.account.register", $this->client)
-//            ->json($dto->toArray())
-//            ->send();
-//
-//        return $response->json();
+        $response = Request::route("scanina.user.account.add-cart", $this->client)
+            ->json($dto->toArray())
+            ->send();
 
-        return json_decode('{"success": true, "code": "200", "message": "OK", "data": {"productId": "1", "proudctName": "Catterpilar Bomang 2", "type": 1}}');
+        return $response->json(false);
     }
 
     public function resendEmail(string $email)

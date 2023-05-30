@@ -5,11 +5,11 @@ namespace Sanf\Core\Modules\Scanina\Services;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Models\AuthModel;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Api\Modules\Scanina\Events\ProductBuyAddToCartEvent;
+use Sanf\Api\Modules\Scanina\Events\ProductRentAddToCartEvent;
 use Sanf\Core\Modules\Scanina\Dtos\AddToCartRequestDto;
 use Sanf\Core\Modules\Scanina\Dtos\BrowseProductSpecificationResponseDto;
 use Sanf\Core\Modules\Scanina\Dtos\BrowseProductSubSpecificationResponseDto;
-use Sanf\Core\Modules\Scanina\Dtos\ReadProductBuyResponseDto;
+use Sanf\Core\Modules\Scanina\Dtos\ReadProductRentResponseDto;
 use Sanf\Core\Modules\Scanina\Enums\ScaninaProductTypeEnum;
 use Sanf\Core\Modules\Scanina\Repositories\ProductCartRepositoryInterface;
 use Sanf\Core\Modules\Scanina\Repositories\ScaninaProductRepositoryInterface;
@@ -18,7 +18,7 @@ use Sanf\Core\Modules\Scanina\Specifications\ScaninaProductSpecificationInterfac
 use Sanf\Core\Modules\Scanina\Specifications\ScaninaUserSpecificationInterface;
 use Sanf\Core\Modules\User\Repositories\ProfileRepositoryInterface;
 
-class GuzzleAddToCartBuyService implements ApplicationServiceInterface
+class GuzzleAddToCartRentService implements ApplicationServiceInterface
 {
     private ScaninaUserRepositoryInterface $repository;
     private ScaninaUserSpecificationInterface $specification;
@@ -58,12 +58,14 @@ class GuzzleAddToCartBuyService implements ApplicationServiceInterface
             throw new UserNotFoundException('');
         }
 
-        $productBuyResponse = $this->getProduct($dto->productXid);
+        $productRentResponse = $this->getProduct($dto->productXid);
 
         $requestBodyDto = new AddToCartRequestDto([
             'email' => $profile->getEmail(),
-            'typeId' => ScaninaProductTypeEnum::BUY,
+            'typeId' => ScaninaProductTypeEnum::RENT,
             'productId' => $dto->productXid,
+            'rentStartDate' => $dto->startedAt,
+            'rentEndDate' => $dto->endedAt,
         ]);
 
         $this->repository->post(
@@ -73,34 +75,36 @@ class GuzzleAddToCartBuyService implements ApplicationServiceInterface
         $cart = $this->productCartRepository->create([
             'xid' => nano_id(),
             'profile_xid' => $dto->xid,
-            'type_id' => ScaninaProductTypeEnum::BUY,
+            'type_id' => ScaninaProductTypeEnum::RENT,
             'snapshot_request_body' => $requestBodyDto,
-            'snapshot_response_body' => $productBuyResponse,
+            'snapshot_response_body' => $productRentResponse,
         ]);
 
-        $productBuyResponse->createdAt = $cart->created_at->timestamp;
+        $productRentResponse->createdAt = $cart->created_at->timestamp;
+        $productRentResponse->startDateAvailable = $dto->startedAt;
+        $productRentResponse->endDateAvailable = $dto->endedAt;
 
-        event(new ProductBuyAddToCartEvent($productBuyResponse, $profile));
+        event(new ProductRentAddToCartEvent($productRentResponse, $profile));
 
         return true;
     }
 
     /**
      * @param string $xid
-     * @return ReadProductBuyResponseDto
+     * @return ReadProductRentResponseDto
      */
-    private function getProduct(string $xid): ReadProductBuyResponseDto
+    private function getProduct(string $xid): ReadProductRentResponseDto
     {
-        $productBuyResponse = $this->productRepository->get(
-            $this->productSpecification->readBuy($xid)
+        $productRentResponse = $this->productRepository->get(
+            $this->productSpecification->readRent($xid)
         );
 
-        $data = (array)$productBuyResponse->data;
+        $data = (array)$productRentResponse->data;
         unset($data['review']);
-        $productBuyResponseDto = new ReadProductBuyResponseDto((array)$productBuyResponse->data);
+        $productRentResponseDto = new ReadProductRentResponseDto((array)$productRentResponse->data);
 
         $productBuySpecificationResponse = $this->productRepository->get(
-            $this->productSpecification->getSpecification($xid, ScaninaProductTypeEnum::BUY)
+            $this->productSpecification->getSpecification($xid, ScaninaProductTypeEnum::RENT)
         );
 
         $specifications = array_map(function ($specification) {
@@ -117,8 +121,8 @@ class GuzzleAddToCartBuyService implements ApplicationServiceInterface
                 $subSpecifications[] = $subSpecification;
             }
         }
-        $productBuyResponseDto->subSpecifications = $subSpecifications;
+        $productRentResponseDto->subSpecifications = $subSpecifications;
 
-        return $productBuyResponseDto;
+        return $productRentResponseDto;
     }
 }

@@ -204,7 +204,14 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth']], function () {
     Route::post('users/profiles/{xid}/scanina-account', ['as' => 'scanina.user.check', 'uses' => \Scanina\Controllers\User\GetUserAccountController::class]);
     Route::post('users/profiles/{xid}/scanina-account/resend', ['as' => 'scanina.user.check', 'uses' => \Scanina\Controllers\User\ResendUserMailVerificationController::class]);
     Route::post('users/profiles/{xid}/scanina-account/register', ['as' => 'scanina.user.register', 'uses' => \Scanina\Controllers\User\RegisterScaninaUserController::class]);
-    Route::post('users/profiles/{xid}/scanina/products/buys/{product_xid}', ['as' => 'scanina.user.product.buy.chart', 'uses' => \Scanina\Controllers\User\AddBuyCartByUserController::class]);
+    Route::get('users/profiles/{xid}/scanina/products/buys', ['as' => 'scanina.user.product.buy.browse', 'uses' => \Scanina\Controllers\User\BrowseBuyCartByUserController::class]);
+    Route::get('users/profiles/{xid}/scanina/products/rents', ['as' => 'scanina.user.product.rent.browse', 'uses' => \Scanina\Controllers\User\BrowseRentCartByUserController::class]);
+    Route::get('users/profiles/{xid}/scanina/products/spare-parts', ['as' => 'scanina.user.product.spare-part.browse', 'uses' => \Scanina\Controllers\User\BrowseSparePartCartByUserController::class]);
+    Route::get('users/profiles/{xid}/scanina/products/services', ['as' => 'scanina.user.product.service.browse', 'uses' => \Scanina\Controllers\User\BrowseServiceCartByUserController::class]);
+    Route::post('users/profiles/{xid}/scanina/products/buys/{product_xid}', ['as' => 'scanina.user.product.buy.cart', 'uses' => \Scanina\Controllers\User\AddBuyCartByUserController::class]);
+    Route::post('users/profiles/{xid}/scanina/products/rents/{product_xid}', ['as' => 'scanina.user.product.rent.cart', 'uses' => \Scanina\Controllers\User\AddRentCartByUserController::class]);
+    Route::post('users/profiles/{xid}/scanina/products/spare-parts/{product_xid}', ['as' => 'scanina.user.product.spare-part.cart', 'uses' => \Scanina\Controllers\User\AddSparePartCartByUserController::class]);
+    Route::post('users/profiles/{xid}/scanina/products/services/{product_xid}', ['as' => 'scanina.user.product.service.cart', 'uses' => \Scanina\Controllers\User\AddServiceCartByUserController::class]);
 
     Route::get('scanina/cities', ['as' => 'scanina.cities.browse', 'uses' => \Scanina\Controllers\Region\BrowseCityController::class]);
     Route::post('scanina/products/buys', ['as' => 'scanina.product.buy.store', 'uses' => \Scanina\Controllers\Product\BrowseProductBuyController::class]);

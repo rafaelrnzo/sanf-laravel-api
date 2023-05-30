@@ -5,11 +5,9 @@ namespace Sanf\Core\Modules\Scanina\Services;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Models\AuthModel;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Api\Modules\Scanina\Events\ProductBuyAddToCartEvent;
+use Sanf\Api\Modules\Scanina\Events\ProductServiceAddToCartEvent;
 use Sanf\Core\Modules\Scanina\Dtos\AddToCartRequestDto;
-use Sanf\Core\Modules\Scanina\Dtos\BrowseProductSpecificationResponseDto;
-use Sanf\Core\Modules\Scanina\Dtos\BrowseProductSubSpecificationResponseDto;
-use Sanf\Core\Modules\Scanina\Dtos\ReadProductBuyResponseDto;
+use Sanf\Core\Modules\Scanina\Dtos\ReadProductServiceResponseDto;
 use Sanf\Core\Modules\Scanina\Enums\ScaninaProductTypeEnum;
 use Sanf\Core\Modules\Scanina\Repositories\ProductCartRepositoryInterface;
 use Sanf\Core\Modules\Scanina\Repositories\ScaninaProductRepositoryInterface;
@@ -18,7 +16,7 @@ use Sanf\Core\Modules\Scanina\Specifications\ScaninaProductSpecificationInterfac
 use Sanf\Core\Modules\Scanina\Specifications\ScaninaUserSpecificationInterface;
 use Sanf\Core\Modules\User\Repositories\ProfileRepositoryInterface;
 
-class GuzzleAddToCartBuyService implements ApplicationServiceInterface
+class GuzzleAddToCartServicesService implements ApplicationServiceInterface
 {
     private ScaninaUserRepositoryInterface $repository;
     private ScaninaUserSpecificationInterface $specification;
@@ -58,11 +56,13 @@ class GuzzleAddToCartBuyService implements ApplicationServiceInterface
             throw new UserNotFoundException('');
         }
 
-        $productBuyResponse = $this->getProduct($dto->productXid);
+        $productServiceResponse = $this->getProduct($dto->productXid);
 
         $requestBodyDto = new AddToCartRequestDto([
             'email' => $profile->getEmail(),
             'typeId' => ScaninaProductTypeEnum::BUY,
+            'serviceDate' => $dto->servicedAt,
+            'notes' => $dto->notes,
             'productId' => $dto->productXid,
         ]);
 
@@ -75,50 +75,31 @@ class GuzzleAddToCartBuyService implements ApplicationServiceInterface
             'profile_xid' => $dto->xid,
             'type_id' => ScaninaProductTypeEnum::BUY,
             'snapshot_request_body' => $requestBodyDto,
-            'snapshot_response_body' => $productBuyResponse,
+            'snapshot_response_body' => $productServiceResponse,
         ]);
 
-        $productBuyResponse->createdAt = $cart->created_at->timestamp;
+        $productServiceResponse->createdAt = $cart->created_at->timestamp;
 
-        event(new ProductBuyAddToCartEvent($productBuyResponse, $profile));
+        event(new ProductServiceAddToCartEvent($productServiceResponse, $profile));
 
         return true;
     }
 
     /**
      * @param string $xid
-     * @return ReadProductBuyResponseDto
+     * @return ReadProductServiceResponseDto
      */
-    private function getProduct(string $xid): ReadProductBuyResponseDto
+    private function getProduct(string $xid): ReadProductServiceResponseDto
     {
-        $productBuyResponse = $this->productRepository->get(
-            $this->productSpecification->readBuy($xid)
+        $productServiceResponse = $this->productRepository->get(
+            $this->productSpecification->readService($xid)
         );
 
-        $data = (array)$productBuyResponse->data;
+        $data = (array)$productServiceResponse->data;
         unset($data['review']);
-        $productBuyResponseDto = new ReadProductBuyResponseDto((array)$productBuyResponse->data);
+        $productServiceResponseDto = new ReadProductServiceResponseDto((array)$productServiceResponse->data);
+        $productServiceResponseDto->customerReviews = [];
 
-        $productBuySpecificationResponse = $this->productRepository->get(
-            $this->productSpecification->getSpecification($xid, ScaninaProductTypeEnum::BUY)
-        );
-
-        $specifications = array_map(function ($specification) {
-            $specification->subSpecification = array_map(function ($subSpecification) {
-                return new BrowseProductSubSpecificationResponseDto((array)$subSpecification);
-            }, $specification->subSpecification);
-
-            return new BrowseProductSpecificationResponseDto((array)$specification);
-        }, $productBuySpecificationResponse->data->rows);
-
-        $subSpecifications = [];
-        foreach ($specifications as $specification) {
-            foreach ($specification->subSpecification as $subSpecification) {
-                $subSpecifications[] = $subSpecification;
-            }
-        }
-        $productBuyResponseDto->subSpecifications = $subSpecifications;
-
-        return $productBuyResponseDto;
+        return $productServiceResponseDto;
     }
 }

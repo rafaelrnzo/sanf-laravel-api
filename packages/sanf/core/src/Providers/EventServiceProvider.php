@@ -4,6 +4,10 @@ namespace Sanf\Core\Providers;
 
 use Illuminate\Auth\Events\Login;
 use Laravel\Lumen\Providers\EventServiceProvider as ServiceProvider;
+use Sanf\Api\Modules\Scanina\Events\ProductBuyAddToCartEvent;
+use Sanf\Api\Modules\Scanina\Events\ProductRentAddToCartEvent;
+use Sanf\Api\Modules\Scanina\Events\ProductServiceAddToCartEvent;
+use Sanf\Api\Modules\Scanina\Events\ProductSparePartAddToCartEvent;
 use Sanf\Core\Modules\Commodity\Events\CommodityApprovedEvent;
 use Sanf\Core\Modules\Commodity\Events\CommodityCreatedEvent;
 use Sanf\Core\Modules\Commodity\Events\CommodityRejectedEvent;
@@ -36,6 +40,10 @@ use Sanf\Core\Modules\Project\Events\ProjectUpdatedEvent;
 use Sanf\Core\Modules\Project\Listeners\SendEmailRequestApprovalProjectListener;
 use Sanf\Core\Modules\Project\Listeners\SendNotificationApprovalProjectListener;
 use Sanf\Core\Modules\Project\Listeners\SendNotificationRejectProjectListener;
+use Sanf\Core\Modules\Scanina\Listeners\SendEmailProductBuyAddToCartListener;
+use Sanf\Core\Modules\Scanina\Listeners\SendEmailProductRentAddToCartListener;
+use Sanf\Core\Modules\Scanina\Listeners\SendEmailProductServiceAddToCartListener;
+use Sanf\Core\Modules\Scanina\Listeners\SendEmailProductSparePartAddToCartListener;
 use Sanf\Core\Modules\User\Listeners\LogSuccessfulLoginListener;
 
 class EventServiceProvider extends ServiceProvider
@@ -94,6 +102,18 @@ class EventServiceProvider extends ServiceProvider
         ],
         NotifiedUserByExternalEvent::class => [
             SendPushNotificationByExternalListener::class
+        ],
+        ProductBuyAddToCartEvent::class => [
+            SendEmailProductBuyAddToCartListener::class
+        ],
+        ProductRentAddToCartEvent::class => [
+            SendEmailProductRentAddToCartListener::class
+        ],
+        ProductSparePartAddToCartEvent::class => [
+            SendEmailProductSparePartAddToCartListener::class
+        ],
+        ProductServiceAddToCartEvent::class => [
+            SendEmailProductServiceAddToCartListener::class
         ],
     ];
 }

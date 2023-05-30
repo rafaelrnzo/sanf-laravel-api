@@ -7,21 +7,28 @@ use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Database\TransactionalSessionInterface;
 use NbsPhp\Core\Services\TransactionalApplicationService;
-use Sanf\Core\Modules\Scanina\Services\GuzzleAddToCartBuyService;
+use Sanf\Core\Modules\Scanina\Services\GuzzleAddToCartServicesService;
 
-class AddBuyCartByUserController extends RestApiController
+class AddServiceCartByUserController extends RestApiController
 {
     public function __invoke(
         string $xid,
         string $product_xid,
         Request $request,
         Guard $userAuth,
-        GuzzleAddToCartBuyService $service,
+        GuzzleAddToCartServicesService $service,
         TransactionalSessionInterface $transactionalSession
     ) {
+        $input = $this->validate($request, [
+            'service_at' => 'required|integer',
+            'notes' => 'nullable|string|max:255'
+        ]);
+
         $addToCartRequestBody = (object)[
             'userId' => $userAuth->id(),
             'xid' => $xid,
+            'servicedAt' => $input['service_at'],
+            'notes' => $input['notes'],
             'productXid' => $product_xid,
         ];
 

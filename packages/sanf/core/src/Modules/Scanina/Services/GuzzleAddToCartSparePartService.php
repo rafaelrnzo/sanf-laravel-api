@@ -5,11 +5,9 @@ namespace Sanf\Core\Modules\Scanina\Services;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Models\AuthModel;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Api\Modules\Scanina\Events\ProductBuyAddToCartEvent;
+use Sanf\Api\Modules\Scanina\Events\ProductSparePartAddToCartEvent;
 use Sanf\Core\Modules\Scanina\Dtos\AddToCartRequestDto;
-use Sanf\Core\Modules\Scanina\Dtos\BrowseProductSpecificationResponseDto;
-use Sanf\Core\Modules\Scanina\Dtos\BrowseProductSubSpecificationResponseDto;
-use Sanf\Core\Modules\Scanina\Dtos\ReadProductBuyResponseDto;
+use Sanf\Core\Modules\Scanina\Dtos\ReadProductSparePartResponseDto;
 use Sanf\Core\Modules\Scanina\Enums\ScaninaProductTypeEnum;
 use Sanf\Core\Modules\Scanina\Repositories\ProductCartRepositoryInterface;
 use Sanf\Core\Modules\Scanina\Repositories\ScaninaProductRepositoryInterface;
@@ -18,7 +16,7 @@ use Sanf\Core\Modules\Scanina\Specifications\ScaninaProductSpecificationInterfac
 use Sanf\Core\Modules\Scanina\Specifications\ScaninaUserSpecificationInterface;
 use Sanf\Core\Modules\User\Repositories\ProfileRepositoryInterface;
 
-class GuzzleAddToCartBuyService implements ApplicationServiceInterface
+class GuzzleAddToCartSparePartService implements ApplicationServiceInterface
 {
     private ScaninaUserRepositoryInterface $repository;
     private ScaninaUserSpecificationInterface $specification;
@@ -58,12 +56,13 @@ class GuzzleAddToCartBuyService implements ApplicationServiceInterface
             throw new UserNotFoundException('');
         }
 
-        $productBuyResponse = $this->getProduct($dto->productXid);
+        $productSparePartResponse = $this->getProduct($dto->productXid);
 
         $requestBodyDto = new AddToCartRequestDto([
             'email' => $profile->getEmail(),
-            'typeId' => ScaninaProductTypeEnum::BUY,
+            'typeId' => ScaninaProductTypeEnum::RENT,
             'productId' => $dto->productXid,
+            'quantity' => $dto->quantity,
         ]);
 
         $this->repository->post(
@@ -73,52 +72,34 @@ class GuzzleAddToCartBuyService implements ApplicationServiceInterface
         $cart = $this->productCartRepository->create([
             'xid' => nano_id(),
             'profile_xid' => $dto->xid,
-            'type_id' => ScaninaProductTypeEnum::BUY,
+            'type_id' => ScaninaProductTypeEnum::SPARE_PART,
             'snapshot_request_body' => $requestBodyDto,
-            'snapshot_response_body' => $productBuyResponse,
+            'snapshot_response_body' => $productSparePartResponse,
         ]);
 
-        $productBuyResponse->createdAt = $cart->created_at->timestamp;
+        $productSparePartResponse->createdAt = $cart->created_at->timestamp;
+        $productSparePartResponse->quantity = $dto->quantity;
 
-        event(new ProductBuyAddToCartEvent($productBuyResponse, $profile));
+        event(new ProductSparePartAddToCartEvent($productSparePartResponse, $profile));
 
         return true;
     }
 
     /**
      * @param string $xid
-     * @return ReadProductBuyResponseDto
+     * @return ReadProductSparePartResponseDto
      */
-    private function getProduct(string $xid): ReadProductBuyResponseDto
+    private function getProduct(string $xid): ReadProductSparePartResponseDto
     {
-        $productBuyResponse = $this->productRepository->get(
-            $this->productSpecification->readBuy($xid)
+        $productSparePartResponse = $this->productRepository->get(
+            $this->productSpecification->readSparePart($xid)
         );
 
-        $data = (array)$productBuyResponse->data;
+        $data = (array)$productSparePartResponse->data;
         unset($data['review']);
-        $productBuyResponseDto = new ReadProductBuyResponseDto((array)$productBuyResponse->data);
+        $productSparePartResponseDto = new ReadProductSparePartResponseDto((array)$productSparePartResponse->data);
+        $productSparePartResponseDto->customerReviews = [];
 
-        $productBuySpecificationResponse = $this->productRepository->get(
-            $this->productSpecification->getSpecification($xid, ScaninaProductTypeEnum::BUY)
-        );
-
-        $specifications = array_map(function ($specification) {
-            $specification->subSpecification = array_map(function ($subSpecification) {
-                return new BrowseProductSubSpecificationResponseDto((array)$subSpecification);
-            }, $specification->subSpecification);
-
-            return new BrowseProductSpecificationResponseDto((array)$specification);
-        }, $productBuySpecificationResponse->data->rows);
-
-        $subSpecifications = [];
-        foreach ($specifications as $specification) {
-            foreach ($specification->subSpecification as $subSpecification) {
-                $subSpecifications[] = $subSpecification;
-            }
-        }
-        $productBuyResponseDto->subSpecifications = $subSpecifications;
-
-        return $productBuyResponseDto;
+        return $productSparePartResponseDto;
     }
 }
