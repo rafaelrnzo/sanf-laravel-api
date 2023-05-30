@@ -30,7 +30,7 @@ class ReadProductBuyResponseDto extends FlexibleDataTransferObject
     public ?string $locationName;
     public ?int $conditionTypeId;
     public ?string $conditionTypeName;
-    public ?string $itemNumber;
+    public ?int $itemNumber;
     public ?int $stock;
     public ?string $rating;
     public ?bool $isQualified;
