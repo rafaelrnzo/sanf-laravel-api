@@ -28,7 +28,7 @@ class AddServiceCartByUserController extends RestApiController
             'userId' => $userAuth->id(),
             'xid' => $xid,
             'servicedAt' => $input['service_at'],
-            'notes' => $input['notes'],
+            'notes' => $input['notes'] ?? null,
             'productXid' => $product_xid,
         ];
 

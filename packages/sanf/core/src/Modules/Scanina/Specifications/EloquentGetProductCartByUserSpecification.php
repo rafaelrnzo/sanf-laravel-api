@@ -3,10 +3,7 @@
 namespace Sanf\Core\Modules\Scanina\Specifications;
 
 use Carbon\Carbon;
-use Sanf\Core\Modules\Scanina\Dtos\BrowseProductBuyRequestDto;
-use Sanf\Core\Modules\Scanina\Dtos\ScaninaProductBuyFilterDto;
 use Sanf\Core\Modules\Scanina\Models\ScaninaProductCartModel;
-use Sanf\Integration\Modules\Scanina\ScaninaApiClient;
 
 class EloquentGetProductCartByUserSpecification
 {
@@ -22,7 +19,13 @@ class EloquentGetProductCartByUserSpecification
 
     public function buildQuery(ScaninaProductCartModel $model)
     {
-        switch ($this->parameter->sortBy) {
+        $keyword = $this->parameter->keyword ?? null;
+        $skip = $this->parameter->skip ?? null;
+        $limit = $this->parameter->limit ?? null;
+        $timestamp = $this->parameter->timestamp ?? null;
+        $sortBy = $this->parameter->sortBy ?? null;
+
+        switch ($sortBy) {
             case 'earliest':
             case 'oldest':
                 $orderBy = 'created_at';
@@ -37,14 +40,16 @@ class EloquentGetProductCartByUserSpecification
 
         return $model->newQuery()
             ->orderBy($orderBy, $orderDirection)
-            ->when($this->parameter->keyword, function ($query) {
-                return $query->where('snapshot_response_body->name', "ILIKE", '%' . $this->parameter->keyword . '%');
-            })->when($this->parameter->skip, function ($query) {
-                return $query->skip($this->parameter->skip);
-            })->when($this->parameter->limit, function ($query) {
-                return $query->limit($this->parameter->limit);
-            })->when($this->parameter->timestamp, function ($query) {
-                return $query->where('created_at', '>', Carbon::createFromTimestamp($this->parameter->timestamp));
+            ->where('profile_xid', '=', $this->parameter->profileXid)
+            ->where('type_id', '=', $this->parameter->productType)
+            ->when($keyword, function ($query) use ($keyword) {
+                return $query->where('snapshot_response_body->name', "ILIKE", '%' . $keyword . '%');
+            })->when($skip, function ($query) use ($skip) {
+                return $query->skip($skip);
+            })->when($limit, function ($query) use ($limit) {
+                return $query->limit($limit);
+            })->when($timestamp, function ($query) use ($timestamp) {
+                return $query->where('created_at', '>', Carbon::createFromTimestamp($timestamp));
             });
     }
 }

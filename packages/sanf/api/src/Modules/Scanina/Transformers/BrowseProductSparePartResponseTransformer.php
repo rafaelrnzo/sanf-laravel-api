@@ -33,5 +33,11 @@ class BrowseProductSparePartResponseTransformer extends TransformerAbstract
             'total_review' => (int)optional($dto)->reviewCount,
             'sold' => (int)optional($dto)->sold,
         ];
+
+        if (optional($dto)->quantity) {
+            $response['quantity'] = optional($dto)->quantity;
+        }
+
+        return $response;
     }
 }

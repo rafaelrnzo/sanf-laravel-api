@@ -45,5 +45,15 @@ class BrowseProductRentResponseTransformer extends TransformerAbstract
             'price_cut' => $cutPrice,
             'availability' => $availability
         ];
+
+        if (optional($dto)->startDate) {
+            $response['start_rent_at'] = optional($dto)->startDate;
+        }
+
+        if (optional($dto)->endDate) {
+            $response['end_rent_at'] = optional($dto)->endDate;
+        }
+
+        return $response;
     }
 }

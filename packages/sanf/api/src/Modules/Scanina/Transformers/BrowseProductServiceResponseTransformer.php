@@ -33,5 +33,12 @@ class BrowseProductServiceResponseTransformer extends TransformerAbstract
             'total_review' => (int)optional($dto)->reviewCount,
             'sold' => (int)optional($dto)->sold,
         ];
+
+        if (optional($dto)->servicedAt || optional($dto)->notes) {
+            $response['start_service_at'] = optional($dto)->servicedAt;
+            $response['notes'] = optional($dto)->notes;
+        }
+
+        return $response;
     }
 }
