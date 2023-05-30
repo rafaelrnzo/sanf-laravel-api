@@ -30,6 +30,7 @@ class BrowseProductSparePartResponseTransformer extends TransformerAbstract
             'discount' => $discount,
             'price_cut' => $cutPrice,
             'rating' => (float)optional($dto)->rating,
+            'total_review' => (int)optional($dto)->reviewCount,
             'sold' => (int)optional($dto)->sold,
         ];
     }
