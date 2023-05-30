@@ -17,12 +17,12 @@ class BrowseProductBuyResponseTransformer extends TransformerAbstract
 
         $imagesFiles = array_map(function ($files) {
             return $files->path;
-        }, $dto->imageFiles);
+        }, $dto->imageFiles ?? []);
 
         return [
             'xid' => $dto->xid ?? $dto->id,
             'name' => (string)optional($dto)->name,
-            'image_url' => $imagesFiles[0] ?: null,
+            'image_url' => $imagesFiles[0] ?? null,
             'country' => (string)optional($dto)->country, //TODO get from scanina api
             'city' => (string)optional($dto)->locationName,
             'district' => (string)optional($dto)->district,

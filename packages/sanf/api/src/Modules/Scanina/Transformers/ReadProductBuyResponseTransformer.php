@@ -18,7 +18,7 @@ class ReadProductBuyResponseTransformer extends TransformerAbstract
 
         $imagesFiles = array_map(function ($files) {
             return $files->path;
-        }, $dto->imageFiles);
+        }, $dto->imageFiles ?? []);
 
         return [
             'xid' => $dto->xid ?? $dto->id,
