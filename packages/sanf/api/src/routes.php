@@ -235,7 +235,10 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth']], function () {
     Route::get('scanina/products/spare-parts/categories', ['as' => 'scanina.product.spare-part.category.browse', 'uses' => \Scanina\Controllers\Product\BrowseProductSparePartCategoryController::class]);
     Route::get('scanina/products/spare-parts/brands', ['as' => 'scanina.product.spare-part.brand.browse', 'uses' => \Scanina\Controllers\Product\BrowseProductSparePartBrandController::class]);
     Route::get('scanina/products/spare-parts/{xid}', ['as' => 'scanina.product.spare-part.read', 'uses' => \Scanina\Controllers\Product\ReadProductSparePartController::class]);
+    Route::get('scanina/products/spare-parts/{xid}/reviews', ['as' => 'scanina.product.spare-part.review.browse', 'uses' => \Scanina\Controllers\Product\BrowseReviewProductSparePartController::class]);
     Route::get('scanina/products/services', ['as' => 'scanina.product.service.browse', 'uses' => \Scanina\Controllers\Product\BrowseProductServiceController::class]);
     Route::get('scanina/products/services/categories', ['as' => 'scanina.product.service.category.browse', 'uses' => \Scanina\Controllers\Product\BrowseProductServiceCategoryController::class]);
     Route::get('scanina/products/services/{xid}', ['as' => 'scanina.product.service.read', 'uses' => \Scanina\Controllers\Product\ReadProductServiceController::class]);
+    Route::get('scanina/products/services/{xid}/reviews', ['as' => 'scanina.product.service.review.browse', 'uses' => \Scanina\Controllers\Product\BrowseReviewProductServiceController::class]);
+
 });

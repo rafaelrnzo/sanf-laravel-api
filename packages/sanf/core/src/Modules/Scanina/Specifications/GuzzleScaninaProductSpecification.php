@@ -93,12 +93,12 @@ class GuzzleScaninaProductSpecification implements ScaninaProductSpecificationIn
     }
 
     /**
-     * @param string $xid
+     * @param object $dto
      * @return GuzzleGetCustomerReviewSpecification
      */
-    public function getCustomerReview(string $xid, int $type): GuzzleGetCustomerReviewSpecification
+    public function getCustomerReview($parameter): GuzzleGetCustomerReviewSpecification
     {
-        return new GuzzleGetCustomerReviewSpecification($xid, $type);
+        return new GuzzleGetCustomerReviewSpecification($parameter);
     }
 
     /**

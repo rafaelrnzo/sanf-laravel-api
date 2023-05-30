@@ -3,9 +3,7 @@
 namespace Sanf\Core\Modules\Scanina\Services;
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\Scanina\Dtos\BrowseProductCustomerReviewDto;
 use Sanf\Core\Modules\Scanina\Dtos\ReadProductSparePartResponseDto;
-use Sanf\Core\Modules\Scanina\Enums\ScaninaProductTypeEnum;
 use Sanf\Core\Modules\Scanina\Repositories\ScaninaProductRepositoryInterface;
 use Sanf\Core\Modules\Scanina\Specifications\ScaninaProductSpecificationInterface;
 

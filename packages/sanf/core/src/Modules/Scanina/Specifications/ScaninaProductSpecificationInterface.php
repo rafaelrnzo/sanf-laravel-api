@@ -13,7 +13,7 @@ interface ScaninaProductSpecificationInterface
     public function readSparePart(string $xid);
     public function readService(string $xid);
     public function getSpecification(string $xid, int $type);
-    public function getCustomerReview(string $xid, int $type);
+    public function getCustomerReview($parameter);
     public function getFilterCategory($parameter);
     public function getFilterBrand($parameter);
     public function getFilterType($parameter);

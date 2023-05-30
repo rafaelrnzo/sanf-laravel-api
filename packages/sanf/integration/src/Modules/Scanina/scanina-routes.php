@@ -31,6 +31,7 @@ Route::group(config('scanina-api.url'), [ScaninaApiProcessor::class], function (
     Route::get('scanina.product.spare-part.category.browse', '/v1/category/spare-part');
     Route::get('scanina.product.spare-part.brand.browse', '/v1/brand/spare-part');
 
+    Route::get('scanina.product.customer-review.browse', '/v1/review');
 
     Route::get('scanina.city.browse', '/v1/list-cities');
 });

@@ -117,15 +117,15 @@ class ScaninaApiClient
         return $response->json(false);
     }
 
-    public function getCustomerReview(string $xid, int $type)
+    public function getCustomerReview($arguments)
     {
         $response = Request::route('scanina.product.customer-review.browse', $this->client)
             ->queryParams([
-                'productXid' => $xid,
-                'sellTypeId' => $type,
-                'skip' => 0,
-                'limit' => 10,
-                'sort_by' => 'latest',
+                'productXid' => $arguments->productXid,
+                'sellTypeId' => $arguments->type,
+                'skip' => $arguments->skip,
+                'limit' => $arguments->limit,
+                'sort_by' => $arguments->sortBy,
             ])
             ->send();
 

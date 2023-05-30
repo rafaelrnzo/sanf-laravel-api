@@ -5,6 +5,7 @@ namespace Sanf\Core\Modules\Scanina\Dtos;
 class BrowseProductFilterRequestDto extends ScaninaRequestDataTransferObject
 {
     public int $userId;
+    public ?string $productXid;
     public int $type;
     public ?int $skip;
     public ?int $limit;

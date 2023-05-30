@@ -6,20 +6,18 @@ use Sanf\Integration\Modules\Scanina\ScaninaApiClient;
 
 class GuzzleGetCustomerReviewSpecification
 {
-    private string $xid;
-    private int $type;
+    private object $parameter;
 
     /**
      * @param string $xid
      */
-    public function __construct(string $xid, int $type)
+    public function __construct(object $parameter)
     {
-        $this->xid = $xid;
-        $this->type = $type;
+        $this->parameter = $parameter;
     }
 
     public function send(ScaninaApiClient $client)
     {
-        return $client->getCustomerReview($this->xid, $this->type);
+        return $client->getCustomerReview($this->parameter);
     }
 }
