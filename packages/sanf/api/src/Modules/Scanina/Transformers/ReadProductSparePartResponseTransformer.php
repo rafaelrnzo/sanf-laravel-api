@@ -38,7 +38,7 @@ class ReadProductSparePartResponseTransformer extends TransformerAbstract
             'price_cut' => $cutPrice,
             'provider' => (string)optional($dto)->provider,
             'serial_number' => (string)optional($dto)->serialNumber,
-            'item_number' => (int)optional($dto)->itemNumber,
+            'item_number' => (string)optional($dto)->itemNumber,
             'category' => (string)optional($dto)->category,
             'weight' => (float)optional($dto)->weight . "kg",
             'dimension' => "{$length}cm x {$width}cm x {$height}cm",

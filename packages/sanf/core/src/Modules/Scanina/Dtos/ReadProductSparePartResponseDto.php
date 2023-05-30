@@ -27,7 +27,7 @@ class ReadProductSparePartResponseDto extends FlexibleDataTransferObject
     public ?string $catalogName;
     public ?int $locationId;
     public ?string $locationName;
-    public ?int $itemNumber;
+    public ?string $itemNumber;
     public ?string $weight;
     public ?string $length;
     public ?string $width;
