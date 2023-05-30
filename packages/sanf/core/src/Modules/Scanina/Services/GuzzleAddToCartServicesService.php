@@ -73,7 +73,7 @@ class GuzzleAddToCartServicesService implements ApplicationServiceInterface
         $cart = $this->productCartRepository->create([
             'xid' => nano_id(),
             'profile_xid' => $dto->xid,
-            'type_id' => ScaninaProductTypeEnum::BUY,
+            'type_id' => ScaninaProductTypeEnum::SERVICE,
             'snapshot_request_body' => $requestBodyDto,
             'snapshot_response_body' => $productServiceResponse,
         ]);
