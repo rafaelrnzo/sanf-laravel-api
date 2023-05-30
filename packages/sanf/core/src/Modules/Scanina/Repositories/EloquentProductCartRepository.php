@@ -31,4 +31,9 @@ class EloquentProductCartRepository extends AbstractEloquentRepository implement
     {
         return $this->model->newQuery()->forceCreate($request);
     }
+
+    public function findByXid(string $xid)
+    {
+        return $this->model->newQuery()->where('xid', '=', $xid)->first();
+    }
 }
