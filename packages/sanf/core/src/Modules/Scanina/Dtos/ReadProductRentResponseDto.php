@@ -7,11 +7,11 @@ use Spatie\DataTransferObject\FlexibleDataTransferObject;
 class ReadProductRentResponseDto extends FlexibleDataTransferObject
 {
 
-    public ?string $id;
+    public ?int $id;
     public ?string $xid;
-    public ?string $shopId;
+    public ?int $shopId;
     public ?string $shopName;
-    public ?string $merchantId;
+    public ?int $merchantId;
     public ?string $merchantName;
     public ?string $serialNumber;
     public ?string $name;
@@ -23,28 +23,28 @@ class ReadProductRentResponseDto extends FlexibleDataTransferObject
     public ?string $hourPrice;
     public ?string $startDateAvailable;
     public ?string $endDateAvailable;
-    public ?string $priceBefore;
-    public ?string $price;
-    public ?string $year;
-    public ?string $catalogId;
+    public ?int $priceBefore;
+    public ?int $price;
+    public ?int $year;
+    public ?int $catalogId;
     public ?string $catalogName;
     public ?object $unitMeasurement;
-    public ?string $locationId;
+    public ?int $locationId;
     public ?string $locationName;
-    public ?string $conditionTypeId;
+    public ?int $conditionTypeId;
     public ?string $conditionTypeName;
     public ?string $itemNumber;
-    public ?string $stock;
+    public ?int $stock;
     public ?string $rating;
-    public ?string $viewCount;
+    public ?int $viewCount;
     public ?string $lastSeen;
-    public ?string $isQualified;
-    public ?string $isAssurance;
+    public ?bool $isQualified;
+    public ?bool $isAssurance;
     public ?string $latitude;
     public ?string $longitude;
-    public ?string $createdAt;
-    public ?string $updatedAt;
+    public ?int $createdAt;
+    public ?int $updatedAt;
     public ?object $reviews;
-    public ?array $technicalDetail;
-    public ?array $specifications;
+    public ?array $technicalDetails;
+    public ?array $subSpecifications;
 }

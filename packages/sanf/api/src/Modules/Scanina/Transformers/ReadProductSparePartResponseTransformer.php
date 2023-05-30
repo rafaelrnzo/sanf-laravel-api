@@ -14,11 +14,11 @@ class ReadProductSparePartResponseTransformer extends TransformerAbstract
 
         $originPrice = (float)optional($dto)->priceBefore;
         $cutPrice = (float)optional($dto)->price;
-        $discount = (($originPrice - $cutPrice) / $originPrice) * 100;
+        $discount = (($originPrice - $cutPrice) > 0) ? (($originPrice - $cutPrice) / $originPrice) * 100 : 0;
 
         $imagesFiles = array_map(function ($files) {
             return $files->path;
-        }, $dto->imageFiles);
+        }, $dto->imageFile);
 
         $length = (float)optional($dto)->length;
         $width = (float)optional($dto)->width;
@@ -39,11 +39,9 @@ class ReadProductSparePartResponseTransformer extends TransformerAbstract
             'provider' => (string)optional($dto)->provider,
             'serial_number' => (string)optional($dto)->serialNumber,
             'item_number' => (string)optional($dto)->itemNumber,
-            "category" => (string)optional($dto)->category,
-            "weight" => (float)optional($dto)->weight . "kg",
-            "dimension" => "{$length}cm x {$width}cm x {$height}cm",
-            'customer_reviews' => fractal($dto->customerReviews, BrowseProductCustomerReviewResponseTransformer::class)
-                ->serializeWith(new ArraySerializer()),
+            'category' => (string)optional($dto)->category,
+            'weight' => (float)optional($dto)->weight . "kg",
+            'dimension' => "{$length}cm x {$width}cm x {$height}cm",
         ];
     }
 }

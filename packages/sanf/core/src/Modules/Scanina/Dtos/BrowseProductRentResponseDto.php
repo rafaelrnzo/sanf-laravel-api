@@ -31,7 +31,7 @@ class BrowseProductRentResponseDto extends FlexibleDataTransferObject
     public ?object $unitMeasurement;
     public ?int $locationId;
     public ?string $locationName;
-    public ?string $conditionTypeId;
+    public ?int $conditionTypeId;
     public ?string $conditionTypeName;
     public ?int $stock;
     public ?string $rating;

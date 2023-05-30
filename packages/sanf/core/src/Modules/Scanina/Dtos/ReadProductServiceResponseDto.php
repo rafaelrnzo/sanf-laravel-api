@@ -7,11 +7,11 @@ use Spatie\DataTransferObject\FlexibleDataTransferObject;
 class ReadProductServiceResponseDto extends FlexibleDataTransferObject
 {
 
-    public ?string $id;
+    public ?int $id;
     public ?string $xid;
-    public ?string $shopId;
+    public ?int $shopId;
     public ?string $shopName;
-    public ?string $merchantId;
+    public ?int $merchantId;
     public ?string $merchantName;
     public ?string $serialNumber;
     public ?string $name;
@@ -20,20 +20,20 @@ class ReadProductServiceResponseDto extends FlexibleDataTransferObject
     public ?array $imageFiles;
     public ?object $videoFile;
     public ?object $documentationFile;
-    public ?string $priceBefore;
-    public ?string $price;
-    public ?string $year;
-    public ?string $catalogId;
+    public ?int $priceBefore;
+    public ?int $price;
+    public ?int $year;
+    public ?int $catalogId;
     public ?string $catalogName;
-    public ?string $locationId;
+    public ?int $locationId;
     public ?string $locationName;
-    public ?string $stock;
+    public ?int $stock;
     public ?string $rating;
-    public ?string $viewCount;
-    public ?string $reviewCount;
-    public ?string $itemSoldCount;
+    public ?int $viewCount;
+    public ?int $reviewCount;
+    public ?int $itemSoldCount;
     public ?string $lastSeen;
-    public ?string $createdAt;
-    public ?string $updatedAt;
+    public ?int $createdAt;
+    public ?int $updatedAt;
     public ?array $customerReviews;
 }

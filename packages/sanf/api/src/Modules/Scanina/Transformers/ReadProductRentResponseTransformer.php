@@ -14,7 +14,7 @@ class ReadProductRentResponseTransformer extends TransformerAbstract
 
         $originPrice = (float)optional($dto)->priceBefore;
         $cutPrice = (float)optional($dto)->price;
-        $discount = (($originPrice - $cutPrice) / $originPrice) * 100;
+        $discount = (($originPrice - $cutPrice) > 0) ? (($originPrice - $cutPrice) / $originPrice) * 100 : 0;
 
         $imagesFiles = array_map(function ($files) {
             return $files->path;
@@ -35,14 +35,14 @@ class ReadProductRentResponseTransformer extends TransformerAbstract
             'provider' => (string)optional($dto)->provider,
             'serial_number' => (string)optional($dto)->serialNumber,
             'item_number' => (string)optional($dto)->itemNumber,
-            'properties' => fractal($dto->technicalDetail, BrowseProductRentPropertiesResponseTransformer::class)
+            'properties' => fractal($dto->technicalDetails, BrowseProductRentPropertiesResponseTransformer::class)
                 ->serializeWith(new ArraySerializer()),
             'monthly_rate_amount' => (float)optional($dto)->monthPrice,
             'daily_rate_amount' => (float)optional($dto)->dayPrice,
             'hourly_rate_amount' => (int)optional($dto)->hourPrice,
             'start_available_at' => (int)optional($dto)->startDateAvailable,
             'end_available_at' => (float)optional($dto)->endDateAvailable,
-            'specifications' => fractal($dto->specifications, BrowseProductSpecificationResponseTransformer::class)
+            'specifications' => fractal($dto->subSpecifications, BrowseProductSubSpecificationResponseTransformer::class)
                 ->serializeWith(new ArraySerializer()),
         ];
     }

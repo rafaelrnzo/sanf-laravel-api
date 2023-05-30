@@ -37,7 +37,7 @@ class GuzzleReadProductServicesService implements ApplicationServiceInterface
         );
 
         $customerReviews = array_map(function ($review) {
-            return new BrowseProductCustomerReviewDto((array)$review->userData);
+            return new BrowseProductCustomerReviewDto((array)$review);
         }, $productCustomerReviewResponse->data->rows);
         $productServiceResponseDto->customerReviews = $customerReviews;
 

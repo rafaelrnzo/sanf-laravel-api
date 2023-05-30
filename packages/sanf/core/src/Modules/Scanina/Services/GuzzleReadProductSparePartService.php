@@ -31,15 +31,7 @@ class GuzzleReadProductSparePartService implements ApplicationServiceInterface
         $data = (array)$productSparePartResponse->data;
         unset($data['reviews']);
         $productSparePartResponseDto =  new ReadProductSparePartResponseDto((array)$productSparePartResponse->data);
-
-        $productCustomerReviewResponse = $this->repository->get(
-            $this->specification->getCustomerReview($dto->xid, ScaninaProductTypeEnum::SPARE_PART)
-        );
-
-        $customerReviews = array_map(function ($review) {
-            return new BrowseProductCustomerReviewDto((array)$review->userData);
-        }, $productCustomerReviewResponse->data->rows);
-        $productSparePartResponseDto->customerReviews = $customerReviews;
+        $productSparePartResponseDto->customerReviews = [];
 
         return $productSparePartResponseDto;
     }

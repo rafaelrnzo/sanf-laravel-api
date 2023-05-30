@@ -4,6 +4,7 @@ namespace Sanf\Core\Modules\Scanina\Services;
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Scanina\Dtos\BrowseProductSpecificationResponseDto;
+use Sanf\Core\Modules\Scanina\Dtos\BrowseProductSubSpecificationResponseDto;
 use Sanf\Core\Modules\Scanina\Dtos\ReadProductRentResponseDto;
 use Sanf\Core\Modules\Scanina\Dtos\ReadProductReviewDto;
 use Sanf\Core\Modules\Scanina\Enums\ScaninaProductTypeEnum;
@@ -40,9 +41,21 @@ class GuzzleReadProductRentService implements ApplicationServiceInterface
             $this->specification->getSpecification($dto->xid, ScaninaProductTypeEnum::RENT)
         );
 
-        $productRentResponseDto->specifications = array_map(function ($specification) {
+        $specifications = array_map(function ($specification) {
+            $specification->subSpecification = array_map(function ($subSpecification) {
+                return new BrowseProductSubSpecificationResponseDto((array)$subSpecification);
+            }, $specification->subSpecification);
+
             return new BrowseProductSpecificationResponseDto((array)$specification);
         }, $productRentSpecificationResponse->data->rows);
+
+        $subSpecifications = [];
+        foreach ($specifications as $specification) {
+            foreach ($specification->subSpecification as $subSpecification) {
+                $subSpecifications[] = $subSpecification;
+            }
+        }
+        $productRentResponseDto->subSpecifications = $subSpecifications;
 
         return $productRentResponseDto;
     }
