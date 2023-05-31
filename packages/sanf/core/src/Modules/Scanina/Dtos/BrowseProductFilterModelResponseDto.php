@@ -8,6 +8,7 @@ class BrowseProductFilterModelResponseDto extends FlexibleDataTransferObject
 {
 
     public ?int $id;
+    public ?string $xid;
     public ?int $typeId;
     public ?string $name;
     public ?bool $isActive;
