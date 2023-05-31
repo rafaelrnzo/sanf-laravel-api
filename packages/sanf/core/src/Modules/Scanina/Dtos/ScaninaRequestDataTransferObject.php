@@ -14,6 +14,10 @@ class ScaninaRequestDataTransferObject extends FlexibleDataTransferObject
         $camelCasedParameters = [];
         foreach ($parameters as $key => $value) {
             $camelCaseKey = Str::camel($key);
+            if (!isset($validators[$camelCaseKey])) {
+                continue;
+            }
+
             $camelCasedParameters[$camelCaseKey] = $value;
 
             $field = $validators[$camelCaseKey];
