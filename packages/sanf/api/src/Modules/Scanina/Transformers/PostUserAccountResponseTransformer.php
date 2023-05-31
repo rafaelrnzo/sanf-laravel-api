@@ -10,7 +10,7 @@ class PostUserAccountResponseTransformer extends TransformerAbstract
     {
         $user = optional($dto->user);
         return [
-            'isRegistered' => (bool)optional($dto)->isRegistred,
+            'isRegistered' => (bool)optional($dto)->isRegistered,
             'isVerified' => !empty($user) && !empty($user->emailVerifiedAt),
         ];
     }

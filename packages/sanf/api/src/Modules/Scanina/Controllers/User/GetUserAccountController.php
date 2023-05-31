@@ -13,10 +13,6 @@ class GetUserAccountController extends RestApiController
 {
     public function __invoke(string $xid, Request $request, Guard $userAuth, GuzzleUserAccountService $service)
     {
-        $requestBody = $this->validate($request, [
-            'email' => 'required|email',
-        ]);
-
         $requestBodyDto = (object)[
             'userId' => $userAuth->id(),
             'xid' => $xid,

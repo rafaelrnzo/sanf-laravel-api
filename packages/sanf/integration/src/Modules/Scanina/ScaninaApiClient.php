@@ -170,13 +170,11 @@ class ScaninaApiClient
 
     public function getAccount(string $email)
     {
-//        $response = Request::route("integration.scanina.user.account.check", $this->client)
-//            ->json(['email' => $email])
-//            ->send();
-//
-//        return $response->json();
+        $response = Request::route("scanina.user.account.check", $this->client)
+            ->json(['email' => $email])
+            ->send();
 
-        return json_decode('{"success":true,"code":"200","message":"OK","data":{"isRegistred":"true","user":{"email":"test@mail.com","fullName":"test user","typeId":"1","typeIdName":"personal","emailVerifiedAt":"1683601805","createdAt":"1683601805","updatedAt":"t1683601805"}}}');
+        return $response->json(false);
     }
 
     public function register(ScaninaUserRegisterRequestDto $dto)

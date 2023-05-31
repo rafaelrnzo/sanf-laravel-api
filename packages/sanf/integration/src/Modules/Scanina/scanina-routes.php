@@ -4,6 +4,7 @@ use NbsPhp\ApiWrapper\Api\Route;
 use Sanf\Integration\Modules\Scanina\ScaninaApiProcessor;
 
 Route::group(config('scanina-api.url'), [ScaninaApiProcessor::class], function () {
+    Route::post('scanina.user.account.check', '/v1/check-status');
     Route::post('scanina.user.account.add-cart', '/v1/submit-request');
 
     Route::get('scanina.product.buy.browse', '/v1/product/buy');
