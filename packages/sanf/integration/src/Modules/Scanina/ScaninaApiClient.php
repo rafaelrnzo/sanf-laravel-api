@@ -199,13 +199,11 @@ class ScaninaApiClient
 
     public function resendEmail(string $email)
     {
-//        $response = Request::route("integration.scanina.user.account.check", $this->client)
-//            ->json(['email' => $email])
-//            ->send();
-//
-//        return $response->json();
+        $response = Request::route("scanina.user.account.resend-mail", $this->client)
+            ->json(['email' => $email])
+            ->send();
 
-        return json_decode('{"success": true, "code": "200", "message": "OK"}');
+        return $response->json(false);
     }
 
     public function getCountry(object $arguments)
