@@ -63,14 +63,14 @@ class GuzzleUserRegisterService implements ApplicationServiceInterface
         $requestBody = new ScaninaUserRegisterRequestDto([
             'accountTypeId' => $profile->getTypeId() == ProfileType::PERSONAL ? self::PERSONAL : self::COMPANY,
             'email' => $user->username,
-            'fullName' => $dto->fullName,
+            'fullName' => $dto->name,
             'phoneNumber' => $dto->msisdn,
             'picName' => $pic[0]['PIC_NAME'] ?? null,
-            'picPhoneNumber' => $pic[0]['NO_HP'] ?? null,
-            'position' => '',
-            'countryId' => '62',
-            'cityId' => $dto->cityId,
-            'businessSectorId' => 'Other',
+            'picPhoneNumber' => $dto->phoneNumber,
+            'position' => $dto->position,
+            'countryId' => $dto->countryId,
+            'cityId' => $dto->cityId ?? $dto->cityName,
+            'businessSectorId' => $dto->businessSectorId,
             'password' => $dto->password,
         ]);
 

@@ -15,9 +15,16 @@ class RegisterScaninaUserController extends RestApiController
     public function __invoke(string $xid, Request $request, Guard $userAuth, GuzzleUserRegisterService $service)
     {
         $requestBody = $this->validate($request, [
-            'full_name' => 'required|string|max:255',
+            'is_pic' => 'required|bool',
+            'name' => 'required|string|max:255|regex:/^[0-9a-zA-Z-_\h]+$/',
             'msisdn' => 'required|max:13|regex:/^[0-9]+$/',
-            'city_id' => 'required|string',
+            'phone_number' => 'required_if:is_pic,true|max:13|regex:/^[0-9]+$/',
+            'position' => 'required_if:is_pic,true|string|max:255|regex:/^[0-9a-zA-Z-_\h]+$/',
+            'business_sector_id' => 'required_if:is_pic,true|string|max:255|regex:/^[0-9a-zA-Z-_\h]+$/',
+            'country_id' => 'required|integer',
+            'country_name' => 'required|string|max:255|regex:/^[0-9a-zA-Z-_\h]+$/',
+            'city_id' => 'nullable|integer',
+            'city_name' => 'required|string|max:255|regex:/^[0-9a-zA-Z-_\h]+$/',
             'password' => ['required', 'min:10', 'regex:/^(?=.*\d)(?=.*[a-zA-Z])/']
         ]);
 

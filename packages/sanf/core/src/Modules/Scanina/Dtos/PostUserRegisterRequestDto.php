@@ -6,8 +6,14 @@ class PostUserRegisterRequestDto extends ScaninaRequestDataTransferObject
 {
     public int $userId;
     public string $xid;
-    public string $fullName;
+    public string $name;
     public string $msisdn;
-    public string $cityId;
+    public string $phoneNumber;
+    public string $position;
+    public string $businessSectorId;
+    public int $countryId;
+    public string $countryName;
+    public ?int $cityId;
+    public string $cityName;
     public string $password;
 }
