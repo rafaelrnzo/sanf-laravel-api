@@ -5,6 +5,7 @@ use Sanf\Integration\Modules\Scanina\ScaninaApiProcessor;
 
 Route::group(config('scanina-api.url'), [ScaninaApiProcessor::class], function () {
     Route::post('scanina.user.account.check', '/v1/check-status');
+    Route::post('scanina.user.account.register', '/v1/register');
     Route::post('scanina.user.account.resend-mail', '/v1/account-verfication');
     Route::post('scanina.user.account.add-cart', '/v1/submit-request');
 

@@ -72,7 +72,14 @@ class GuzzleUserRegisterService implements ApplicationServiceInterface
             'cityId' => $dto->cityId ?? $dto->cityName,
             'businessSectorId' => $dto->businessSectorId,
             'password' => $dto->password,
+            'passwordConfirmation' => $dto->passwordConfirmation,
         ]);
+
+        if ($profile->getTypeId() == ProfileType::PERSONAL) {
+            $requestBody->picName = null;
+            $requestBody->picPhoneNumber = null;
+            $requestBody->position = null;
+        }
 
         $response = $this->scaninaRepository->post(
             $this->specification->register($requestBody)

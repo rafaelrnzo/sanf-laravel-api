@@ -20,12 +20,13 @@ class RegisterScaninaUserController extends RestApiController
             'msisdn' => 'required|max:13|regex:/^[0-9]+$/',
             'phone_number' => 'required_if:is_pic,true|max:13|regex:/^[0-9]+$/',
             'position' => 'required_if:is_pic,true|string|max:255|regex:/^[0-9a-zA-Z-_\h]+$/',
-            'business_sector_id' => 'required_if:is_pic,true|string|max:255|regex:/^[0-9a-zA-Z-_\h]+$/',
+            'business_sector_id' => 'required_if:is_pic,true|integer',
             'country_id' => 'required|integer',
             'country_name' => 'required|string|max:255|regex:/^[0-9a-zA-Z-_\h]+$/',
             'city_id' => 'nullable|integer',
             'city_name' => 'required|string|max:255|regex:/^[0-9a-zA-Z-_\h]+$/',
-            'password' => ['required', 'min:10', 'regex:/^(?=.*\d)(?=.*[a-zA-Z])/']
+            'password' => 'required|confirmed|regex:/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*#?&]).+$/',
+            'password_confirmation' => 'required'
         ]);
 
         $registerRequestBody = new PostUserRegisterRequestDto(

@@ -179,19 +179,31 @@ class ScaninaApiClient
 
     public function register(ScaninaUserRegisterRequestDto $dto)
     {
-//        $response = Request::route("integration.scanina.user.account.register", $this->client)
-//            ->json($dto->toArray())
-//            ->send();
-//
-//        return $response->json();
+        $bodyRequest = array_filter($dto->toArray(), function ($value) {
+            return !is_null($value);
+        });
 
-        return json_decode('{"success":true,"code":"200","message":"OK","data":{"isRegistred":"true","user":{"email":"test@mail.com","fullName":"test user","typeId":"1","typeIdName":"personal","emailVerifiedAt":"1683601805","createdAt":"1683601805","updatedAt":"t1683601805"}}}');
+        $response = Request::route("scanina.user.account.register", $this->client)
+            ->headers([
+                'Content-Type' => 'application/x-www-form-urlencoded',
+            ])
+            ->formParams($bodyRequest)
+            ->send();
+
+        return $response->json(false);
     }
 
     public function addToCart(AddToCartRequestDto $dto)
     {
+        $bodyRequest = array_filter($dto->toArray(), function ($value) {
+            return !is_null($value);
+        });
+
         $response = Request::route("scanina.user.account.add-cart", $this->client)
-            ->json($dto->toArray())
+            ->headers([
+                'Content-Type' => 'application/x-www-form-urlencoded',
+            ])
+            ->formParams($bodyRequest)
             ->send();
 
         return $response->json(false);
