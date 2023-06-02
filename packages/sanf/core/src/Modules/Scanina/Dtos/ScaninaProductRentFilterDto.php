@@ -9,9 +9,9 @@ class ScaninaProductRentFilterDto extends ScaninaFilterDataTransferObject
     public ?string $sortBy;
     public ?string $keyword;
     public ?string $locationId;
-    public ?int $categoryId;
-    public ?int $brandId;
-    public ?int $modelId;
+    public ?string $categoryXid;
+    public ?string $brandXid;
+    public ?string $modelXid;
     public ?string $startRentalDate;
     public ?string $endRentalDate;
     public ?bool $assurance;
@@ -22,5 +22,5 @@ class ScaninaProductRentFilterDto extends ScaninaFilterDataTransferObject
     public ?int $maxPrice;
     public ?int $minHourMeter;
     public ?int $condition;
-    public ?int $merchantId;
+    public ?string $merchantXid;
 }

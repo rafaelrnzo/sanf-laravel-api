@@ -9,10 +9,10 @@ class BrowseProductRentRequestDto extends ScaninaRequestDataTransferObject
     public ?int $limit;
     public ?string $sortBy = 'latest';
     public ?string $keyword;
-    public ?string $locationId;
-    public ?int $categoryId;
-    public ?int $brandId;
-    public ?int $modelId;
+    public ?string $locationXid;
+    public ?string $categoryXid;
+    public ?string $brandXid;
+    public ?string $modelXid;
     public ?string $startDate;
     public ?string $endDate;
     public ?bool $hasAssurance;
@@ -23,5 +23,5 @@ class BrowseProductRentRequestDto extends ScaninaRequestDataTransferObject
     public ?float $maxPrice;
     public ?int $minHourMeter;
     public ?int $condition;
-    public ?int $merchantId;
+    public ?string $merchantXid;
 }

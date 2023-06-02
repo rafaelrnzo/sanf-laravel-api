@@ -9,10 +9,10 @@ class BrowseProductSparePartRequestDto extends ScaninaRequestDataTransferObject
     public ?int $limit;
     public ?string $sortBy = 'latest';
     public ?string $keyword;
-    public ?int $categoryId;
-    public ?int $brandId;
+    public ?string $categoryXid;
+    public ?string $brandXid;
     public ?int $rating;
     public ?float $minPrice;
     public ?float $maxPrice;
-    public ?int $merchantId;
+    public ?string $merchantXid;
 }

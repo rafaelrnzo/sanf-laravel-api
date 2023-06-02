@@ -9,9 +9,9 @@ class BrowseProductServiceRequestDto extends ScaninaRequestDataTransferObject
     public ?int $limit;
     public ?string $sortBy = 'latest';
     public ?string $keyword;
-    public ?int $categoryId;
+    public ?string $categoryXid;
     public ?int $rating;
     public ?float $minPrice;
     public ?float $maxPrice;
-    public ?int $merchantId;
+    public ?string $merchantXid;
 }

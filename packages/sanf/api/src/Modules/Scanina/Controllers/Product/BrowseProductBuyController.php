@@ -24,10 +24,10 @@ class BrowseProductBuyController extends RestApiController
             'sort_by' => ['nullable', 'string', Rule::in(ScaninaProductSortByEnum::ALL)],
             'keyword' => 'nullable|string|max:255',
             'location_id' => 'nullable|string',
-            'category_id' => 'nullable|integer',
-            'brand_id' => 'nullable|integer',
-            'type_id' => 'nullable|integer',
-            'model_id' => 'nullable|integer',
+            'category_id' => 'nullable|string',
+            'brand_id' => 'nullable|string',
+            'type_id' => 'nullable|string',
+            'model_id' => 'nullable|string',
             'min_year' => 'nullable|integer|max:2147483647',
             'max_year' => 'nullable|integer|max:2147483647',
             'has_assurance' => 'nullable|boolean',
@@ -39,7 +39,7 @@ class BrowseProductBuyController extends RestApiController
             'min_hour_meter' => 'nullable|integer',
             'max_hour_meter' => 'nullable|integer',
             'condition' => ['nullable', 'integer', Rule::in(ScaninaProductConditionEnum::ALL)],
-            'merchant_id' => 'nullable|integer',
+            'merchant_id' => 'nullable|string',
         ]);
 
         $productBuyRequestDto = new BrowseProductBuyRequestDto(
@@ -47,6 +47,12 @@ class BrowseProductBuyController extends RestApiController
                 'user_id' => $userAuth->id(),
             ]
         );
+        $productBuyRequestDto->locationXid = $queryParam['location_id'] ?? null;
+        $productBuyRequestDto->categoryXid = $queryParam['category_id'] ?? null;
+        $productBuyRequestDto->brandXid = $queryParam['brand_id'] ?? null;
+        $productBuyRequestDto->typeXid = $queryParam['type_id'] ?? null;
+        $productBuyRequestDto->modelXid = $queryParam['model_id'] ?? null;
+        $productBuyRequestDto->merchantXid = $queryParam['merchant_id'] ?? null;
 
         $result = $service->execute($productBuyRequestDto);
 

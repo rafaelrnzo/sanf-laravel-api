@@ -8,11 +8,11 @@ class ScaninaProductBuyFilterDto extends ScaninaFilterDataTransferObject
     public ?int $limit;
     public ?string $sortBy;
     public ?string $keyword;
-    public ?string $locationId;
-    public ?int $categoryId;
-    public ?int $brandId;
-    public ?int $typeId;
-    public ?int $modelId;
+    public ?string $locationXid;
+    public ?string $categoryXid;
+    public ?string $brandXid;
+    public ?string $typeXid;
+    public ?string $modelXid;
     public ?int $minYear;
     public ?int $maxYear;
     public ?bool $assurance;
@@ -24,5 +24,5 @@ class ScaninaProductBuyFilterDto extends ScaninaFilterDataTransferObject
     public ?int $minHourMeter;
     public ?int $maxHourMeter;
     public ?int $condition;
-    public ?int $merchantId;
+    public ?string $merchantXid;
 }

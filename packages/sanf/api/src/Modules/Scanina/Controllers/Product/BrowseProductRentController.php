@@ -24,9 +24,9 @@ class BrowseProductRentController extends RestApiController
             'sort_by' => ['nullable', 'string', Rule::in(ScaninaProductSortByEnum::ALL)],
             'keyword' => 'nullable|string|max:255',
             'location_id' => 'nullable|string',
-            'category_id' => 'nullable|integer',
-            'brand_id' => 'nullable|integer',
-            'model_id' => 'nullable|integer',
+            'category_id' => 'nullable|string',
+            'brand_id' => 'nullable|string',
+            'model_id' => 'nullable|string',
             'start_date' => 'nullable|date_format:Y-m-d',
             'end_date' => 'nullable|date_format:Y-m-d',
             'has_assurance' => 'nullable|boolean',
@@ -37,7 +37,7 @@ class BrowseProductRentController extends RestApiController
             'max_price' => 'nullable|numeric|max:999999999999999.9999',
             'min_hour_meter' => 'nullable|integer',
             'condition' => ['nullable', 'integer', Rule::in(ScaninaProductConditionEnum::ALL)],
-            'merchant_id' => 'nullable|integer',
+            'merchant_id' => 'nullable|string',
         ]);
 
         $productRentRequestDto = new BrowseProductRentRequestDto(
@@ -45,6 +45,10 @@ class BrowseProductRentController extends RestApiController
                 'user_id' => $userAuth->id(),
             ]
         );
+        $productRentRequestDto->locationXid = $queryParam['location_id'] ?? null;
+        $productRentRequestDto->categoryXid = $queryParam['category_id'] ?? null;
+        $productRentRequestDto->brandXid = $queryParam['brand_id'] ?? null;
+        $productRentRequestDto->merchantXid = $queryParam['merchant_id'] ?? null;
 
         $result = $service->execute($productRentRequestDto);
 

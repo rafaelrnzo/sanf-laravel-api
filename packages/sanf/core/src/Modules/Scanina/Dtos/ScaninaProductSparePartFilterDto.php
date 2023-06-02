@@ -8,10 +8,10 @@ class ScaninaProductSparePartFilterDto extends ScaninaFilterDataTransferObject
     public ?int $limit;
     public ?string $sortBy;
     public ?string $keyword;
-    public ?int $categoryId;
-    public ?int $brandId;
+    public ?string $categoryXid;
+    public ?string $brandXid;
     public ?int $rating;
     public ?int $minPrice;
     public ?int $maxPrice;
-    public ?int $merchantId;
+    public ?string $merchantXid;
 }
