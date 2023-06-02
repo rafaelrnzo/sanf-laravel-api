@@ -31,4 +31,13 @@ class GuzzleScaninaRegionSpecification implements ScaninaRegionSpecificationInte
     {
         return new GuzzleGetBusinessSectorSpecification($parameter);
     }
+
+    /**
+     * @param $parameter
+     * @return GuzzleGetMerchantSpecification
+     */
+    public function getMerchant($parameter): GuzzleGetMerchantSpecification
+    {
+        return new GuzzleGetMerchantSpecification($parameter);
+    }
 }

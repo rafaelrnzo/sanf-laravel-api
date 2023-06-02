@@ -220,6 +220,7 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth']], function () {
     Route::get('scanina/countries', ['as' => 'scanina.country.browse', 'uses' => \Scanina\Controllers\Region\BrowseCountryController::class]);
     Route::get('scanina/cities', ['as' => 'scanina.cities.browse', 'uses' => \Scanina\Controllers\Region\BrowseCityController::class]);
     Route::get('scanina/business-sectors', ['as' => 'scanina.business-sector.browse', 'uses' => \Scanina\Controllers\Region\BrowseBusinessSectorController::class]);
+    Route::get('scanina/merchants', ['as' => 'scanina.merchant.browse', 'uses' => \Scanina\Controllers\Region\BrowseMerchantController::class]);
     Route::post('scanina/products/buys', ['as' => 'scanina.product.buy.store', 'uses' => \Scanina\Controllers\Product\BrowseProductBuyController::class]);
     Route::get('scanina/products/buys', ['as' => 'scanina.product.buy.browse', 'uses' => \Scanina\Controllers\Product\BrowseProductBuyController::class]);
     Route::get('scanina/products/buys/categories', ['as' => 'scanina.product.buy.category.browse', 'uses' => \Scanina\Controllers\Product\BrowseProductBuyCategoryController::class]);

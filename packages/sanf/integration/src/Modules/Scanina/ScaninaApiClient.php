@@ -244,4 +244,13 @@ class ScaninaApiClient
 
         return $response->json(false);
     }
+
+    public function getMerchant(object $arguments)
+    {
+        $response = Request::route('scanina.merchant.browse', $this->client)
+            ->queryParams((array)$arguments)
+            ->send();
+
+        return $response->json(false);
+    }
 }
