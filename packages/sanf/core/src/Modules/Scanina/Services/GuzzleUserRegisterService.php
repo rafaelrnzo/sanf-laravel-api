@@ -7,6 +7,7 @@ use NbsPhp\Core\Models\AuthModel;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Scanina\Dtos\PostUserRegisterRequestDto;
 use Sanf\Core\Modules\Scanina\Dtos\ScaninaUserRegisterRequestDto;
+use Sanf\Core\Modules\Scanina\Models\ScaninaUserRegistrationModel;
 use Sanf\Core\Modules\Scanina\Repositories\ScaninaUserRepositoryInterface;
 use Sanf\Core\Modules\Scanina\Specifications\ScaninaUserSpecificationInterface;
 use Sanf\Core\Modules\User\Enums\ProfileType;
@@ -84,6 +85,19 @@ class GuzzleUserRegisterService implements ApplicationServiceInterface
         $response = $this->scaninaRepository->post(
             $this->specification->register($requestBody)
         );
+
+        $requestBodyDto = $requestBody->toArray();
+        unset($requestBodyDto['password']);
+        unset($requestBodyDto['passwordConfirmation']);
+
+        // TODO use eloquent repository
+        ScaninaUserRegistrationModel::query()->forceCreate([
+            'xid' => nano_id(),
+            'profile_xid' => $dto->xid,
+            'email' => $user->username,
+            'snapshot_request_body' => $requestBodyDto,
+            'snapshot_response_body' => $response->data,
+        ]);
 
         return $response->data;
     }
