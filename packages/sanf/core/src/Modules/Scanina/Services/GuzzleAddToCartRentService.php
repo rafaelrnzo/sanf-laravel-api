@@ -62,8 +62,8 @@ class GuzzleAddToCartRentService implements ApplicationServiceInterface
 
         $requestBodyDto = new AddToCartRequestDto([
             'email' => $profile->getEmail(),
-            'typeId' => ScaninaProductTypeEnum::RENT,
-            'productId' => $dto->productXid,
+            'type' => ScaninaProductTypeEnum::RENT,
+            'productXid' => $dto->productXid,
             'rentStartDate' => $dto->startedAt,
             'rentEndDate' => $dto->endedAt,
         ]);

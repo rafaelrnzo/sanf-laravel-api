@@ -60,10 +60,10 @@ class GuzzleAddToCartServicesService implements ApplicationServiceInterface
 
         $requestBodyDto = new AddToCartRequestDto([
             'email' => $profile->getEmail(),
-            'typeId' => ScaninaProductTypeEnum::BUY,
+            'type' => ScaninaProductTypeEnum::BUY,
             'serviceDate' => $dto->servicedAt,
             'note' => $dto->notes,
-            'productId' => $dto->productXid,
+            'productXid' => $dto->productXid,
         ]);
 
         $this->repository->post(
