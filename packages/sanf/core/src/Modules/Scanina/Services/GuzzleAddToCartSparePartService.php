@@ -61,6 +61,7 @@ class GuzzleAddToCartSparePartService implements ApplicationServiceInterface
         $requestBodyDto = new AddToCartRequestDto([
             'email' => $profile->getEmail(),
             'type' => ScaninaProductTypeEnum::RENT,
+            'type' => ScaninaProductTypeEnum::SPARE_PART,
             'productXid' => $dto->productXid,
             'quantity' => $dto->quantity,
         ]);
