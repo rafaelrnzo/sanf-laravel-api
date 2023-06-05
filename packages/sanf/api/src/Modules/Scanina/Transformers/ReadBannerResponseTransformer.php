@@ -9,7 +9,7 @@ class ReadBannerResponseTransformer extends TransformerAbstract
     public function transform($dto): array
     {
         return [
-            'image_url' => file_get_temp_url($dto->filename, $dto->directory),
+            'image_url' => $dto->image_url,
         ];
     }
 }

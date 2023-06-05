@@ -31,6 +31,14 @@ class PromoSanfSeeder extends Seeder
             ];
         }
 
+        $data[] = [
+            'xid' => 'sanf-scanina',
+            'image_url' => 'https://via.placeholder.com/800x600.png',
+            'link_url' => 'https://via.placeholder.com/800x600.png',
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+        ];
+
         DB::table('promo_sanf')->insertOrIgnore($data);
     }
 }

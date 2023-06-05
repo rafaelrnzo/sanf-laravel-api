@@ -45,6 +45,7 @@ class EloquentPromoRepository implements PromoRepositoryInterface
             ->when($dto->timestamp, function ($query) use ($dto) {
                 return $query->where('promo_sanf.created_at', '>', Carbon::createFromTimestamp($dto->timestamp));
             })
+            ->where('xid', '!=', PromoModel::SANF_SCANINA)
             ->get();
 
         return [
@@ -52,5 +53,13 @@ class EloquentPromoRepository implements PromoRepositoryInterface
             'count' => $lists->count(),
             'lists' => $lists,
         ];
+    }
+
+    public function findByXid(string $xid)
+    {
+        return $this->model
+            ->newQuery()
+            ->where('xid', '=', $xid)
+            ->first();
     }
 }
