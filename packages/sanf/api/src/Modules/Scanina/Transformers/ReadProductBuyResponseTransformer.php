@@ -38,7 +38,7 @@ class ReadProductBuyResponseTransformer extends TransformerAbstract
             'price_cut' => $cutPrice,
             'provider' => (string)optional($dto)->provider,
             'serial_number' => (string)optional($dto)->serialNumber,
-            'item_number' => (int)optional($dto)->itemNumber,
+            'item_number' => (string)optional($dto)->itemNumber,
             'specifications' => fractal($dto->subSpecifications, BrowseProductSubSpecificationResponseTransformer::class)
                 ->serializeWith(new ArraySerializer()),
         ];

@@ -34,7 +34,7 @@ class ReadProductRentResponseTransformer extends TransformerAbstract
             'price_cut' => $cutPrice,
             'provider' => (string)optional($dto)->provider,
             'serial_number' => (string)optional($dto)->serialNumber,
-            'item_number' => (int)optional($dto)->itemNumber,
+            'item_number' => (string)optional($dto)->itemNumber,
             'properties' => fractal($dto->technicalDetails, BrowseProductRentPropertiesResponseTransformer::class)
                 ->serializeWith(new ArraySerializer()),
             'monthly_rate_amount' => (float)optional($dto)->monthPrice,
