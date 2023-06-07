@@ -2,12 +2,14 @@
 
 namespace Sanf\Core\Modules\Scanina\Services;
 
+use Exception;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Scanina\Dtos\BrowseProductBuyResponseDto;
 use Sanf\Core\Modules\Scanina\Dtos\BrowseProductSpecificationResponseDto;
 use Sanf\Core\Modules\Scanina\Dtos\BrowseProductSubSpecificationResponseDto;
 use Sanf\Core\Modules\Scanina\Dtos\ReadProductBuyResponseDto;
 use Sanf\Core\Modules\Scanina\Enums\ScaninaProductTypeEnum;
+use Sanf\Core\Modules\Scanina\Exceptions\ScaninaProductNotFoundException;
 use Sanf\Core\Modules\Scanina\Repositories\ProductCartRepositoryInterface;
 use Sanf\Core\Modules\Scanina\Repositories\ScaninaProductRepositoryInterface;
 use Sanf\Core\Modules\Scanina\Specifications\ProductCartSpecificationInterface;
@@ -81,9 +83,16 @@ class BrowseBuyCartByUserService implements ApplicationServiceInterface
         foreach ($records as $model) {
             $product =  new BrowseProductBuyResponseDto((array)$model->snapshot_response_body);
 
-            $productBuyResponse = $this->productRepository->get(
-                $this->productSpecification->readBuy($product->xid)
-            );
+            try {
+                $productBuyResponse = $this->productRepository->get(
+                    $this->productSpecification->readBuy($product->xid)
+                );
+            } catch (Exception $exception) {
+                if ($exception instanceof ScaninaProductNotFoundException) {
+                    continue;
+                }
+                throw $exception;
+            }
 
             $data = (array)$productBuyResponse->data;
             unset($data['review']);

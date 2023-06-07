@@ -2,12 +2,14 @@
 
 namespace Sanf\Core\Modules\Scanina\Services;
 
+use Exception;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Scanina\Dtos\BrowseProductRentResponseDto;
 use Sanf\Core\Modules\Scanina\Dtos\BrowseProductSpecificationResponseDto;
 use Sanf\Core\Modules\Scanina\Dtos\BrowseProductSubSpecificationResponseDto;
 use Sanf\Core\Modules\Scanina\Dtos\ReadProductRentResponseDto;
 use Sanf\Core\Modules\Scanina\Enums\ScaninaProductTypeEnum;
+use Sanf\Core\Modules\Scanina\Exceptions\ScaninaProductNotFoundException;
 use Sanf\Core\Modules\Scanina\Repositories\ProductCartRepositoryInterface;
 use Sanf\Core\Modules\Scanina\Repositories\ScaninaProductRepositoryInterface;
 use Sanf\Core\Modules\Scanina\Specifications\ProductCartSpecificationInterface;
@@ -81,9 +83,17 @@ class BrowseRentCartByUserService implements ApplicationServiceInterface
         foreach ($records as $model) {
             $product =  new BrowseProductRentResponseDto((array)$model->snapshot_response_body);
 
-            $productRentResponse = $this->productRepository->get(
-                $this->productSpecification->readRent($product->xid)
-            );
+            try {
+                $productRentResponse = $this->productRepository->get(
+                    $this->productSpecification->readRent($product->xid)
+                );
+            } catch (Exception $exception) {
+                if ($exception instanceof ScaninaProductNotFoundException) {
+                    continue;
+                }
+                throw $exception;
+            }
+
             $data = (array)$productRentResponse->data;
             unset($data['review']);
             $productRentResponseDto = new ReadProductRentResponseDto($data);
