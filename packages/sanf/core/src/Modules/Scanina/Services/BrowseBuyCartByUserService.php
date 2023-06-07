@@ -82,7 +82,7 @@ class BrowseBuyCartByUserService implements ApplicationServiceInterface
             $product =  new BrowseProductBuyResponseDto((array)$model->snapshot_response_body);
 
             $productBuyResponse = $this->productRepository->get(
-                $this->productSpecification->readBuy(1)
+                $this->productSpecification->readBuy($product->xid)
             );
 
             $data = (array)$productBuyResponse->data;
