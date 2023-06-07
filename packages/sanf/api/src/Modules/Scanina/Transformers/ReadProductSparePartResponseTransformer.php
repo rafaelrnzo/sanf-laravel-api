@@ -18,7 +18,7 @@ class ReadProductSparePartResponseTransformer extends TransformerAbstract
 
         $imagesFiles = array_map(function ($files) {
             return $files->path;
-        }, $dto->imageFile ?? []);
+        }, $dto->imageFiles ?? []);
 
         $length = (float)optional($dto)->length;
         $width = (float)optional($dto)->width;

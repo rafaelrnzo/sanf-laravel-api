@@ -31,11 +31,9 @@ class GuzzleReadProductRentService implements ApplicationServiceInterface
         );
 
         $data = (array)$productRentResponse->data;
-        unset($data['reviews']);
-        $productRentResponseDto =  new ReadProductRentResponseDto((array)$productRentResponse->data);
+        unset($data['review']);
 
-        $reviews = (array)optional($productRentResponse->data)->reviews;
-        $productRentResponseDto->reviews = new ReadProductReviewDto($reviews);
+        $productRentResponseDto =  new ReadProductRentResponseDto($data);
 
         $productRentSpecificationResponse = $this->repository->get(
             $this->specification->getSpecification($dto->xid, ScaninaProductTypeEnum::RENT)

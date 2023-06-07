@@ -4,22 +4,32 @@ namespace Sanf\Core\Modules\Scanina\Services;
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Scanina\Dtos\BrowseProductRentResponseDto;
+use Sanf\Core\Modules\Scanina\Dtos\BrowseProductSparepartResponseDto;
+use Sanf\Core\Modules\Scanina\Dtos\ReadProductSparePartResponseDto;
 use Sanf\Core\Modules\Scanina\Enums\ScaninaProductTypeEnum;
 use Sanf\Core\Modules\Scanina\Repositories\ProductCartRepositoryInterface;
+use Sanf\Core\Modules\Scanina\Repositories\ScaninaProductRepositoryInterface;
 use Sanf\Core\Modules\Scanina\Specifications\ProductCartSpecificationInterface;
+use Sanf\Core\Modules\Scanina\Specifications\ScaninaProductSpecificationInterface;
 
 class BrowseSparePartCartByUserService implements ApplicationServiceInterface
 {
 
     private ProductCartRepositoryInterface $repository;
     private ProductCartSpecificationInterface $specification;
+    private ScaninaProductRepositoryInterface $productRepository;
+    private ScaninaProductSpecificationInterface $productSpecification;
 
     public function __construct(
         ProductCartRepositoryInterface $repository,
-        ProductCartSpecificationInterface $specification
+        ProductCartSpecificationInterface $specification,
+        ScaninaProductRepositoryInterface $productRepository,
+        ScaninaProductSpecificationInterface $productSpecification
     ) {
         $this->repository = $repository;
         $this->specification = $specification;
+        $this->productRepository = $productRepository;
+        $this->productSpecification = $productSpecification;
     }
 
     public function execute($dto = null)
@@ -50,17 +60,10 @@ class BrowseSparePartCartByUserService implements ApplicationServiceInterface
             $this->specification->listByUser($dto)
         );
 
-        $responseProductRent = array_map(function ($record) {
-            $product =  new BrowseProductRentResponseDto((array)$record->snapshot_response_body);
-            $product->id = $record->id;
-            $product->xid = $record->xid;
-            $product->quantity = $record->snapshot_request_body->quantity;
-
-            return $product;
-        }, $records);
+        $responseProductSparePart = $this->syncWithApi($records);
 
         return (object)[
-            'data' => $responseProductRent,
+            'data' => $responseProductSparePart,
             'paginate' => (object)[
                 'total' => $size,
                 'count' => count($records),
@@ -69,5 +72,29 @@ class BrowseSparePartCartByUserService implements ApplicationServiceInterface
                 'sort_by' => $dto->sortBy,
             ],
         ];
+    }
+
+    private function syncWithApi(array $records): array
+    {
+        $responses = [];
+        foreach ($records as $model) {
+            $product =  new BrowseProductSparePartResponseDto((array)$model->snapshot_response_body);
+
+            $productSparePartResponse = $this->productRepository->get(
+                $this->productSpecification->readSparePart($product->xid)
+            );
+
+            $data = (array)$productSparePartResponse->data;
+            unset($data['reviews']);
+            $productSparePartResponseDto =  new ReadProductSparePartResponseDto($data);
+            $productSparePartResponseDto->id = $model->id;
+            $productSparePartResponseDto->xid = $model->xid;
+            $productSparePartResponseDto->quantity = $model->snapshot_request_body->quantity;
+            $productSparePartResponseDto->customerReviews = [];
+
+            $responses[] = $productSparePartResponseDto;
+        }
+
+        return $responses;
     }
 }

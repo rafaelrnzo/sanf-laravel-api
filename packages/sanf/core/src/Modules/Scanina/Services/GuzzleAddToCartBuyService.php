@@ -97,7 +97,7 @@ class GuzzleAddToCartBuyService implements ApplicationServiceInterface
 
         $data = (array)$productBuyResponse->data;
         unset($data['review']);
-        $productBuyResponseDto = new ReadProductBuyResponseDto((array)$productBuyResponse->data);
+        $productBuyResponseDto = new ReadProductBuyResponseDto($data);
 
         $productBuySpecificationResponse = $this->productRepository->get(
             $this->productSpecification->getSpecification($xid, ScaninaProductTypeEnum::BUY)

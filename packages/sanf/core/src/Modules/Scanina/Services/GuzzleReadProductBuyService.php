@@ -32,10 +32,7 @@ class GuzzleReadProductBuyService implements ApplicationServiceInterface
 
         $data = (array)$productBuyResponse->data;
         unset($data['review']);
-        $productBuyResponseDto =  new ReadProductBuyResponseDto((array)$productBuyResponse->data);
-
-        $reviews = (array)optional($productBuyResponse->data)->review;
-        $productBuyResponseDto->review = new ReadProductReviewDto($reviews);
+        $productBuyResponseDto =  new ReadProductBuyResponseDto($data);
 
         $productBuySpecificationResponse = $this->repository->get(
             $this->specification->getSpecification($dto->xid, ScaninaProductTypeEnum::BUY)

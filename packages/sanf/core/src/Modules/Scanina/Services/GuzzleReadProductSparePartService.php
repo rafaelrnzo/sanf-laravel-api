@@ -27,8 +27,7 @@ class GuzzleReadProductSparePartService implements ApplicationServiceInterface
         );
 
         $data = (array)$productSparePartResponse->data;
-        unset($data['reviews']);
-        $productSparePartResponseDto =  new ReadProductSparePartResponseDto((array)$productSparePartResponse->data);
+        $productSparePartResponseDto =  new ReadProductSparePartResponseDto($data);
         $productSparePartResponseDto->customerReviews = [];
 
         return $productSparePartResponseDto;

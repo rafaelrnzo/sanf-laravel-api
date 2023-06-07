@@ -101,7 +101,7 @@ class GuzzleAddToCartRentService implements ApplicationServiceInterface
 
         $data = (array)$productRentResponse->data;
         unset($data['review']);
-        $productRentResponseDto = new ReadProductRentResponseDto((array)$productRentResponse->data);
+        $productRentResponseDto = new ReadProductRentResponseDto($data);
 
         $productBuySpecificationResponse = $this->productRepository->get(
             $this->productSpecification->getSpecification($xid, ScaninaProductTypeEnum::RENT)
