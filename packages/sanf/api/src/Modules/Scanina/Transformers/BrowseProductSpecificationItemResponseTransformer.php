@@ -8,20 +8,12 @@ class BrowseProductSpecificationItemResponseTransformer extends TransformerAbstr
 {
     public function transform($dto): array
     {
-        $imagesFiles = array_map(function ($files) {
-            return $files->path;
-        }, $dto->image);
-
-        $videosFiles = array_map(function ($files) {
-            return $files->path;
-        }, $dto->video);
-
         return [
             'name' => (string)optional($dto)->name,
-            'description' => (string)optional($dto)->value,
+            'description' => (string)optional($dto)->description,
             'rating' => (float)optional($dto)->rating,
-            'images_file' => (array)optional($dto)->imagesFiles,
-            'videos_file' => (array)optional($dto)->videosFiles,
+            'images_file' => (array)optional($dto->image)->path,
+            'videos_file' => (array)optional($dto->video)->path,
         ];
     }
 }
