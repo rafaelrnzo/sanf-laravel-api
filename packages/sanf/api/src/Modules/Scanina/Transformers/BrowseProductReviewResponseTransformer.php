@@ -10,6 +10,7 @@ class BrowseProductReviewResponseTransformer extends TransformerAbstract
     {
         return [
             'name' => (string)optional($dto->userSnapshot)->fullName,
+            'location' => (string)optional($dto->userSnapshot)->location,
             'rating' => (float)optional($dto)->rating,
             'good_review' => (array)optional($dto)->statisfiedWith,
             'bad_review' => (array)optional($dto)->unsatisfiedWith,
