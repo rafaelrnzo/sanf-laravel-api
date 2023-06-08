@@ -6,7 +6,6 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Scanina\Dtos\BrowseProductSpecificationResponseDto;
 use Sanf\Core\Modules\Scanina\Dtos\BrowseProductSubSpecificationResponseDto;
 use Sanf\Core\Modules\Scanina\Dtos\ReadProductRentResponseDto;
-use Sanf\Core\Modules\Scanina\Dtos\ReadProductReviewDto;
 use Sanf\Core\Modules\Scanina\Enums\ScaninaProductTypeEnum;
 use Sanf\Core\Modules\Scanina\Repositories\ScaninaProductRepositoryInterface;
 use Sanf\Core\Modules\Scanina\Specifications\ScaninaProductSpecificationInterface;
@@ -33,7 +32,7 @@ class GuzzleReadProductRentService implements ApplicationServiceInterface
         $data = (array)$productRentResponse->data;
         unset($data['review']);
 
-        $productRentResponseDto =  new ReadProductRentResponseDto($data);
+        $productRentResponseDto = new ReadProductRentResponseDto($data);
 
         $productRentSpecificationResponse = $this->repository->get(
             $this->specification->getSpecification($dto->xid, ScaninaProductTypeEnum::RENT)
@@ -48,9 +47,15 @@ class GuzzleReadProductRentService implements ApplicationServiceInterface
         }, $productRentSpecificationResponse->data->rows);
 
         $subSpecifications = [];
-        foreach ($specifications as $specification) {
-            foreach ($specification->subSpecification as $subSpecification) {
-                $subSpecifications[] = $subSpecification;
+        foreach ($specifications as $index => $specification) {
+            $subSpecifications[$index] = (object)[
+                'name' => $specification->name,
+                'subSpecificationColumn' => [],
+            ];
+            if (!is_null($specification->subSpecification)) {
+                foreach ($specification->subSpecification as $subSpecification) {
+                    $subSpecifications[$index] = $subSpecification;
+                }
             }
         }
         $productRentResponseDto->subSpecifications = $subSpecifications;
