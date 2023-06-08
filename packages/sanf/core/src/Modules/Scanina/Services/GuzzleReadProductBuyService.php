@@ -49,7 +49,7 @@ class GuzzleReadProductBuyService implements ApplicationServiceInterface
         foreach ($specifications as $index => $specification) {
             $subSpecifications[$index] = (object)[
                 'name' => $specification->name,
-                'subSpecificationColumn' => [],
+                'subSpecificationColumn' => $specification->specificationColumn ?? [],
             ];
             if (!is_null($specification->subSpecification)) {
                 foreach ($specification->subSpecification as $subSpecification) {
