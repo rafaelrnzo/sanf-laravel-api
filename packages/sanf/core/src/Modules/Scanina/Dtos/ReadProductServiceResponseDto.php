@@ -26,7 +26,7 @@ class ReadProductServiceResponseDto extends FlexibleDataTransferObject
     public ?int $catalogId;
     public ?string $catalogName;
     public ?int $locationId;
-    public ?string $locationName;
+    public ?string $location;
     public ?int $stock;
     public ?string $rating;
     public ?int $viewCount;

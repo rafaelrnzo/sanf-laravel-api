@@ -29,9 +29,7 @@ class ReadProductSparePartResponseTransformer extends TransformerAbstract
             'name' => (string)optional($dto)->name,
             'description' => (string)optional($dto)->description,
             'images_url' => (array)$imagesFiles,
-            'country' => (string)optional($dto)->country, //TODO get from scanina api
-            'city' => (string)optional($dto)->locationName,
-            'district' => (string)optional($dto)->district,
+            'location' => (string)optional($dto)->location,
             'year' => (int)optional($dto)->year,
             'price' => $originPrice,
             'discount' => $discount,

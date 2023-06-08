@@ -24,7 +24,7 @@ class BrowseProductSparepartResponseDto extends FlexibleDataTransferObject
     public ?string $catalogName;
     public ?object $unitMeasurement;
     public ?int $locationId;
-    public ?string $locationName;
+    public ?string $location;
     public ?int $stock;
     public ?string $rating;
     public ?int $reviewCount;

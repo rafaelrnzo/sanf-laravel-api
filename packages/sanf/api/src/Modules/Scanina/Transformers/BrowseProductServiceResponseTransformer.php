@@ -23,9 +23,7 @@ class BrowseProductServiceResponseTransformer extends TransformerAbstract
             'xid' => $dto->xid ?? $dto->id,
             'name' => (string)optional($dto)->name,
             'image_url' => $imagesFiles[0] ?? null,
-            'country' => (string)optional($dto)->country, //TODO get from scanina api
-            'city' => (string)optional($dto)->locationName,
-            'district' => (string)optional($dto)->district,
+            'location' => (string)optional($dto)->location,
             'price' => $originPrice,
             'discount' => $discount,
             'price_cut' => $cutPrice,

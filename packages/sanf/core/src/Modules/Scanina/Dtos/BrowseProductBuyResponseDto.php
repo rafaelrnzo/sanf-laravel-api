@@ -25,7 +25,7 @@ class BrowseProductBuyResponseDto extends FlexibleDataTransferObject
     public ?string $catalogName;
     public ?object $unitMeasurement;
     public ?int $locationId;
-    public ?string $locationName;
+    public ?string $location;
     public ?int $conditionTypeId;
     public ?string $conditionTypeName;
     public ?int $stock;
