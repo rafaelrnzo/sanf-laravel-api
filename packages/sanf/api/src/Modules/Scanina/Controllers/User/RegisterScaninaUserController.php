@@ -25,9 +25,11 @@ class RegisterScaninaUserController extends RestApiController
             'country_name' => 'required|string|max:255|regex:/^[0-9a-zA-Z-_\h]+$/',
             'city_id' => 'nullable|integer',
             'city_name' => 'required|string|max:255|regex:/^[0-9a-zA-Z-_\h]+$/',
-            'password' => 'required|confirmed|regex:/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*#?&]).+$/',
+            'password' => 'required|confirmed|regex:/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[_@$!%*#?&-]).+$/',
             'password_confirmation' => 'required'
-        ]);
+        ],[
+            'password.regex' => 'Password must consist of at least one upper and lower case letter, one number, and one special character',
+        ], []);
 
         $registerRequestBody = new PostUserRegisterRequestDto(
             $requestBody + [
