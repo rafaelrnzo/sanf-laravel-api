@@ -34,7 +34,7 @@ class ReadProductBuyResponseTransformer extends TransformerAbstract
             'price' => $originPrice,
             'discount' => $discount,
             'price_cut' => $cutPrice,
-            'provider' => (string)optional($dto)->provider,
+            'provider' => (string)optional($dto)->merchantName,
             'serial_number' => (string)optional($dto)->serialNumber,
             'item_number' => (string)optional($dto)->itemNumber,
             'specifications' => fractal($dto->subSpecifications, BrowseProductSubSpecificationResponseTransformer::class)

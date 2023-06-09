@@ -30,7 +30,7 @@ class ReadProductRentResponseTransformer extends TransformerAbstract
             'price' => $originPrice,
             'discount' => $discount,
             'price_cut' => $cutPrice,
-            'provider' => (string)optional($dto)->provider,
+            'provider' => (string)optional($dto)->merchantName,
             'serial_number' => (string)optional($dto)->serialNumber,
             'item_number' => (string)optional($dto)->itemNumber,
             'properties' => fractal($dto->technicalDetails, BrowseProductRentPropertiesResponseTransformer::class)
