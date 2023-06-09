@@ -11,4 +11,5 @@ class BrowseProductFilterRequestDto extends ScaninaRequestDataTransferObject
     public ?int $limit;
     public ?string $sortBy = 'latest';
     public ?string $keyword;
+    public ?bool $isOnlyTopCategory;
 }

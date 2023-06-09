@@ -9,7 +9,7 @@ class BrowseProductFilterCategoryResponseDto extends FlexibleDataTransferObject
 
     public ?int $id;
     public ?string $xid;
-    public ?int $parent_id;
+    public ?int $parentId;
     public ?int $level;
     public ?string $name;
     public ?string $slugName;
@@ -20,4 +20,5 @@ class BrowseProductFilterCategoryResponseDto extends FlexibleDataTransferObject
     public ?bool $isActive;
     public ?int $createdAt;
     public ?int $updatedAt;
+    public ?string $iconUrl;
 }

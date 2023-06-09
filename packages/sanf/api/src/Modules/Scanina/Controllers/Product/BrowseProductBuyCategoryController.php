@@ -20,6 +20,7 @@ class BrowseProductBuyCategoryController extends RestApiController
             'limit' => 'nullable|integer|max:2147483647',
             'sort_by' => 'nullable|string|in:oldest,latest',
             'keyword' => 'nullable|string|max:255',
+            'is_only_top_category' => 'nullable|bool'
         ]);
 
         $productFilterCategoryRequestDto = new BrowseProductFilterRequestDto(

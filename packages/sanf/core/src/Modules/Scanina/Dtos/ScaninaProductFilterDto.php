@@ -9,4 +9,5 @@ class ScaninaProductFilterDto extends ScaninaRequestDataTransferObject
     public ?int $limit;
     public ?string $sortBy;
     public ?string $keyword;
+    public ?bool $isOnlyTopCategory;
 }
