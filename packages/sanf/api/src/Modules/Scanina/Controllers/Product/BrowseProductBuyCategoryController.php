@@ -18,7 +18,7 @@ class BrowseProductBuyCategoryController extends RestApiController
         $queryParam = $this->validate($request, [
             'skip' => 'nullable|integer|max:2147483647',
             'limit' => 'nullable|integer|max:2147483647',
-            'sort_by' => 'nullable|string|in:oldest,latest',
+            'sort_by' => 'nullable|string|in:oldest,latest,sort',
             'keyword' => 'nullable|string|max:255',
             'is_only_top_category' => 'nullable|bool'
         ]);
