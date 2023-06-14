@@ -8,7 +8,7 @@ class BrowseProductReviewResponseDto extends FlexibleDataTransferObject
 {
     public ?int $id;
     public ?object $userSnapshot;
-    public ?object $images;
+    public ?array $images;
     public ?array $statisfiedWith;
     public ?array $unsatisfiedWith;
     public ?int $rating;

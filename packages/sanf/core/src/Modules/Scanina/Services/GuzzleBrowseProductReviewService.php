@@ -31,9 +31,7 @@ class GuzzleBrowseProductReviewService implements ApplicationServiceInterface
         );
 
         $reviews = array_map(function ($review) {
-            $array = (array)$review;
-            $array['images'] = (object)$review->images;
-            return new BrowseProductReviewResponseDto($array);
+            return new BrowseProductReviewResponseDto((array)$review);
         }, $response->data->rows);
 
         return (object)[
