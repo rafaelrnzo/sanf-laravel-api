@@ -146,6 +146,8 @@ deploy:dev:
     - echo ${CI_REGISTRY_PASSWORD} | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
     - docker-compose -f docker-compose.dev.yml pull
     - docker-compose -f docker-compose.dev.yml up --build --force-recreate -d
+  after_script:
+    - docker rmi $(docker images -f "dangling=true" -q) || true
   only:
     - feat/sprint-2
   tags:
