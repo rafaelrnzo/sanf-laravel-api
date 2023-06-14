@@ -21,8 +21,8 @@ class ReadProductRentResponseDto extends FlexibleDataTransferObject
     public ?string $monthPrice;
     public ?string $dayPrice;
     public ?string $hourPrice;
-    public ?string $startDateAvailable;
-    public ?string $endDateAvailable;
+    public ?string $rentStartDate;
+    public ?string $rentEndDate;
     public ?int $priceBefore;
     public ?int $price;
     public ?int $year;

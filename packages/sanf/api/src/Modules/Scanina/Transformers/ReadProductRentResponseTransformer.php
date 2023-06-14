@@ -2,6 +2,7 @@
 
 namespace Sanf\Api\Modules\Scanina\Transformers;
 
+use Carbon\Carbon;
 use League\Fractal\TransformerAbstract;
 use Sanf\Core\Modules\Scanina\Dtos\ReadProductRentResponseDto;
 use Spatie\Fractalistic\ArraySerializer;
@@ -38,8 +39,8 @@ class ReadProductRentResponseTransformer extends TransformerAbstract
             'monthly_rate_amount' => (float)optional($dto)->monthPrice,
             'daily_rate_amount' => (float)optional($dto)->dayPrice,
             'hourly_rate_amount' => (int)optional($dto)->hourPrice,
-            'start_available_at' => (int)optional($dto)->startDateAvailable,
-            'end_available_at' => (float)optional($dto)->endDateAvailable,
+            'start_available_at' => ($dto->rentStartDate) ? Carbon::parse($dto->rentStartDate)->timestamp : null,
+            'end_available_at' => ($dto->rentEndDate) ? Carbon::parse($dto->rentEndDate)->timestamp : null,
             'specifications' => fractal($dto->subSpecifications, BrowseProductSubSpecificationResponseTransformer::class)
                 ->serializeWith(new ArraySerializer()),
         ];
