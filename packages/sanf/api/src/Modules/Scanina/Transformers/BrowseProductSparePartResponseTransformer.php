@@ -30,6 +30,7 @@ class BrowseProductSparePartResponseTransformer extends TransformerAbstract
             'rating' => (float)optional($dto)->rating,
             'total_review' => (int)optional($dto)->reviewCount,
             'sold' => (int)optional($dto)->sold,
+            'stock' => (int)optional($dto)->stock,
         ];
 
         if (optional($dto)->quantity) {

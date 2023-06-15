@@ -41,7 +41,8 @@ class BrowseProductRentResponseTransformer extends TransformerAbstract
             'price' => $originPrice,
             'discount' => $discount,
             'price_cut' => $cutPrice,
-            'availability' => $availability
+            'availability' => $availability,
+            'stock' => (int)optional($dto)->stock,
         ];
 
         if (optional($dto)->startDate) {

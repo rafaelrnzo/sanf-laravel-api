@@ -43,6 +43,7 @@ class ReadProductRentResponseTransformer extends TransformerAbstract
             'end_available_at' => ($dto->rentEndDate) ? Carbon::parse($dto->rentEndDate)->timestamp : null,
             'specifications' => fractal($dto->subSpecifications, BrowseProductSubSpecificationResponseTransformer::class)
                 ->serializeWith(new ArraySerializer()),
+            'stock' => (int)optional($dto)->stock,
         ];
     }
 }

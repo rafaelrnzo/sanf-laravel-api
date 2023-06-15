@@ -39,6 +39,7 @@ class ReadProductBuyResponseTransformer extends TransformerAbstract
             'item_number' => (string)optional($dto)->itemNumber,
             'specifications' => fractal($dto->subSpecifications, BrowseProductSubSpecificationResponseTransformer::class)
                 ->serializeWith(new ArraySerializer()),
+            'stock' => (int)optional($dto)->stock,
         ];
     }
 }

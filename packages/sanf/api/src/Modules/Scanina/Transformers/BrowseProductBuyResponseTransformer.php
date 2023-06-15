@@ -32,6 +32,7 @@ class BrowseProductBuyResponseTransformer extends TransformerAbstract
             'price' => $originPrice,
             'discount' => $discount,
             'price_cut' => $cutPrice,
+            'stock' => (int)optional($dto)->stock,
         ];
     }
 }

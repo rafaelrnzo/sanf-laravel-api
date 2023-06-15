@@ -40,6 +40,7 @@ class ReadProductSparePartResponseTransformer extends TransformerAbstract
             'category' => (string)optional($dto)->category,
             'weight' => (float)optional($dto)->weight . "kg",
             'dimension' => "{$length}cm x {$width}cm x {$height}cm",
+            'stock' => (int)optional($dto)->stock,
         ];
     }
 }
