@@ -21,7 +21,6 @@ class SendEmailProductRentAddToCartListener
         $createdAt = Carbon::parse($request->createdAt);
         $startedAt = Carbon::parse($request->startDateAvailable);
         $endedAt = Carbon::parse($request->endDateAvailable);
-        $unit = title_case($request->unitMeasurement->measurement);
 
         // Send array data into email for the content
         $data = [
@@ -37,7 +36,6 @@ class SendEmailProductRentAddToCartListener
                 'Item Number' => $request->itemNumber,
                 'Serial Number' => $request->serialNumber,
                 'Tahun' => $request->year,
-                $unit => $request->unitMeasurement->rate,
                 'Pemilik Kendaraan' => $request->provider ?? 'Scanina',
             ],
         ];
