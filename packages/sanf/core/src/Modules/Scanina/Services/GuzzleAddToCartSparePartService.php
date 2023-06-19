@@ -9,6 +9,7 @@ use Sanf\Api\Modules\Scanina\Events\ProductSparePartAddToCartEvent;
 use Sanf\Core\Modules\Scanina\Dtos\AddToCartRequestDto;
 use Sanf\Core\Modules\Scanina\Dtos\ReadProductSparePartResponseDto;
 use Sanf\Core\Modules\Scanina\Enums\ScaninaProductTypeEnum;
+use Sanf\Core\Modules\Scanina\Exceptions\ScaninaProductInvalidRequestException;
 use Sanf\Core\Modules\Scanina\Repositories\ProductCartRepositoryInterface;
 use Sanf\Core\Modules\Scanina\Repositories\ScaninaProductRepositoryInterface;
 use Sanf\Core\Modules\Scanina\Repositories\ScaninaUserRepositoryInterface;
@@ -58,9 +59,12 @@ class GuzzleAddToCartSparePartService implements ApplicationServiceInterface
 
         $productSparePartResponse = $this->getProduct($dto->productXid);
 
+        if (is_null($productSparePartResponse->stock) || $productSparePartResponse->stock === 0 || $productSparePartResponse->stock < $dto->quantity) {
+            throw new ScaninaProductInvalidRequestException("Product out of stock");
+        }
+
         $requestBodyDto = new AddToCartRequestDto([
             'email' => $profile->getEmail(),
-            'type' => ScaninaProductTypeEnum::RENT,
             'type' => ScaninaProductTypeEnum::SPARE_PART,
             'productXid' => $dto->productXid,
             'quantity' => $dto->quantity,

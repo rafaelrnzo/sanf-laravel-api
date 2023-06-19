@@ -11,6 +11,7 @@ use Sanf\Core\Modules\Scanina\Dtos\BrowseProductSpecificationResponseDto;
 use Sanf\Core\Modules\Scanina\Dtos\BrowseProductSubSpecificationResponseDto;
 use Sanf\Core\Modules\Scanina\Dtos\ReadProductBuyResponseDto;
 use Sanf\Core\Modules\Scanina\Enums\ScaninaProductTypeEnum;
+use Sanf\Core\Modules\Scanina\Exceptions\ScaninaProductInvalidRequestException;
 use Sanf\Core\Modules\Scanina\Repositories\ProductCartRepositoryInterface;
 use Sanf\Core\Modules\Scanina\Repositories\ScaninaProductRepositoryInterface;
 use Sanf\Core\Modules\Scanina\Repositories\ScaninaUserRepositoryInterface;
@@ -59,6 +60,10 @@ class GuzzleAddToCartBuyService implements ApplicationServiceInterface
         }
 
         $productBuyResponse = $this->getProduct($dto->productXid);
+
+        if (is_null($productBuyResponse->stock) || $productBuyResponse->stock === 0) {
+            throw new ScaninaProductInvalidRequestException("Product out of stock");
+        }
 
         $requestBodyDto = new AddToCartRequestDto([
             'email' => $profile->getEmail(),

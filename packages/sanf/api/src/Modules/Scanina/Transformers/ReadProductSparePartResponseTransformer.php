@@ -4,7 +4,6 @@ namespace Sanf\Api\Modules\Scanina\Transformers;
 
 use League\Fractal\TransformerAbstract;
 use Sanf\Core\Modules\Scanina\Dtos\ReadProductSparePartResponseDto;
-use Spatie\Fractalistic\ArraySerializer;
 
 class ReadProductSparePartResponseTransformer extends TransformerAbstract
 {
