@@ -2,6 +2,7 @@
 
 namespace Sanf\Core\Modules\Scanina\Services;
 
+use Carbon\Carbon;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Models\AuthModel;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
@@ -63,6 +64,25 @@ class GuzzleAddToCartRentService implements ApplicationServiceInterface
 
         if (is_null($productRentResponse->stock) || $productRentResponse->stock === 0) {
             throw new ScaninaProductInvalidRequestException("Product out of stock");
+        }
+
+        // TODO using UTC format
+        $startedAt = Carbon::parse($dto->startedAt / 1000)
+            ->timezone('Asia/Jakarta')
+            ->format('Y-m-d');
+        $endedAt = Carbon::parse($dto->endedAt / 1000)
+            ->timezone('Asia/Jakarta')
+            ->format('Y-m-d');
+
+        if ($startedAt > $endedAt) {
+            throw new ScaninaProductInvalidRequestException("Invalid request date");
+        }
+        if ($startedAt < $productRentResponse->rentStartDate || $endedAt > $productRentResponse->rentEndDate) {
+            throw new ScaninaProductInvalidRequestException("Invalid request date");
+        }
+
+        if ($startedAt > $productRentResponse->rentEndDate || $endedAt < $productRentResponse->rentStartDate) {
+            throw new ScaninaProductInvalidRequestException("Invalid request date");
         }
 
         $requestBodyDto = new AddToCartRequestDto([
