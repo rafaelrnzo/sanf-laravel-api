@@ -66,21 +66,6 @@ class GuzzleAddToCartRentService implements ApplicationServiceInterface
             throw new ScaninaProductInvalidRequestException("Product out of stock");
         }
 
-        // TODO using UTC format
-        $startedAt = Carbon::parse($dto->startedAt / 1000)->format('Y-m-d');
-        $endedAt = Carbon::parse($dto->endedAt / 1000)->format('Y-m-d');
-
-        if ($startedAt > $endedAt) {
-            throw new ScaninaProductInvalidRequestException("Invalid request date");
-        }
-        if ($startedAt < $productRentResponse->rentStartDate || $endedAt > $productRentResponse->rentEndDate) {
-            throw new ScaninaProductInvalidRequestException("Invalid request date");
-        }
-
-        if ($startedAt > $productRentResponse->rentEndDate || $endedAt < $productRentResponse->rentStartDate) {
-            throw new ScaninaProductInvalidRequestException("Invalid request date");
-        }
-
         $requestBodyDto = new AddToCartRequestDto([
             'email' => $profile->getEmail(),
             'type' => ScaninaProductTypeEnum::RENT,
