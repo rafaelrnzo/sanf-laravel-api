@@ -7,47 +7,37 @@ use Sanf\Core\Modules\Scanina\Dtos\BrowseProductSpecificationResponseDto;
 use Sanf\Core\Modules\Scanina\Dtos\BrowseProductSubSpecificationResponseDto;
 use Sanf\Core\Modules\Scanina\Dtos\ReadProductBuyResponseDto;
 use Sanf\Core\Modules\Scanina\Enums\ScaninaProductTypeEnum;
-use Sanf\Core\Modules\Scanina\Exceptions\ScaninaProductNotFoundException;
-use Sanf\Core\Modules\Scanina\Repositories\ProductCartRepositoryInterface;
 use Sanf\Core\Modules\Scanina\Repositories\ScaninaProductRepositoryInterface;
 use Sanf\Core\Modules\Scanina\Specifications\ScaninaProductSpecificationInterface;
 
 class ReadBuyCartByUserService implements ApplicationServiceInterface
 {
-    private ProductCartRepositoryInterface $repository;
     private ScaninaProductRepositoryInterface $productRepository;
     private ScaninaProductSpecificationInterface $productSpecification;
 
     public function __construct(
-        ProductCartRepositoryInterface $repository,
         ScaninaProductRepositoryInterface $productRepository,
         ScaninaProductSpecificationInterface $productSpecification
     ) {
-        $this->repository = $repository;
         $this->productRepository = $productRepository;
         $this->productSpecification = $productSpecification;
     }
 
     public function execute($dto = null)
     {
-        $productBuyRecord = $this->repository->findByXid($dto->productXid);
-        if (is_null($productBuyRecord)) {
-            throw new ScaninaProductNotFoundException();
-        }
-
         $productBuyResponse = $this->productRepository->get(
-            $this->productSpecification->readBuy($productBuyRecord->snapshot_response_body->xid)
+            $this->productSpecification->readBuy($dto->productXid)
         );
 
         $data = (array)$productBuyResponse->data;
         unset($data['review']);
 
         $productBuyResponseDto = new ReadProductBuyResponseDto($data);
-        $productBuyResponseDto->xid = $productBuyRecord->xid;
+        $productBuyResponseDto->xid = $dto->productXid;
 
         $productBuySpecificationResponse = $this->productRepository->get(
             $this->productSpecification->getSpecification(
-                $productBuyRecord->snapshot_response_body->xid,
+                $dto->productXid,
                 ScaninaProductTypeEnum::BUY
             )
         );

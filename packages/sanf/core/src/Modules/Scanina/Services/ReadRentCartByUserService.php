@@ -7,47 +7,37 @@ use Sanf\Core\Modules\Scanina\Dtos\BrowseProductSpecificationResponseDto;
 use Sanf\Core\Modules\Scanina\Dtos\BrowseProductSubSpecificationResponseDto;
 use Sanf\Core\Modules\Scanina\Dtos\ReadProductRentResponseDto;
 use Sanf\Core\Modules\Scanina\Enums\ScaninaProductTypeEnum;
-use Sanf\Core\Modules\Scanina\Exceptions\ScaninaProductNotFoundException;
-use Sanf\Core\Modules\Scanina\Repositories\ProductCartRepositoryInterface;
 use Sanf\Core\Modules\Scanina\Repositories\ScaninaProductRepositoryInterface;
 use Sanf\Core\Modules\Scanina\Specifications\ScaninaProductSpecificationInterface;
 
 class ReadRentCartByUserService implements ApplicationServiceInterface
 {
-    private ProductCartRepositoryInterface $repository;
     private ScaninaProductRepositoryInterface $productRepository;
     private ScaninaProductSpecificationInterface $productSpecification;
 
     public function __construct(
-        ProductCartRepositoryInterface $repository,
         ScaninaProductRepositoryInterface $productRepository,
         ScaninaProductSpecificationInterface $productSpecification
     ) {
-        $this->repository = $repository;
         $this->productRepository = $productRepository;
         $this->productSpecification = $productSpecification;
     }
 
     public function execute($dto = null)
     {
-        $productRentRecord = $this->repository->findByXid($dto->productXid);
-        if (is_null($productRentRecord)) {
-            throw new ScaninaProductNotFoundException();
-        }
-
         $productRentResponse = $this->productRepository->get(
-            $this->productSpecification->readRent($productRentRecord->snapshot_response_body->xid)
+            $this->productSpecification->readRent($dto->productXid)
         );
 
         $data = (array)$productRentResponse->data;
         unset($data['review']);
 
         $productRentResponseDto = new ReadProductRentResponseDto($data);
-        $productRentResponseDto->xid = $productRentRecord->xid;
+        $productRentResponseDto->xid = $dto->productXid;
 
         $productRentSpecificationResponse = $this->productRepository->get(
             $this->productSpecification->getSpecification(
-                $productRentRecord->snapshot_response_body->xid,
+                $dto->productXid,
                 ScaninaProductTypeEnum::RENT
             )
         );
