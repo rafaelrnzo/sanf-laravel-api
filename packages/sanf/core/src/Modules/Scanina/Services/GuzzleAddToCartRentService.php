@@ -67,12 +67,8 @@ class GuzzleAddToCartRentService implements ApplicationServiceInterface
         }
 
         // TODO using UTC format
-        $startedAt = Carbon::parse($dto->startedAt / 1000)
-            ->timezone('Asia/Jakarta')
-            ->format('Y-m-d');
-        $endedAt = Carbon::parse($dto->endedAt / 1000)
-            ->timezone('Asia/Jakarta')
-            ->format('Y-m-d');
+        $startedAt = Carbon::parse($dto->startedAt / 1000)->format('Y-m-d');
+        $endedAt = Carbon::parse($dto->endedAt / 1000)->format('Y-m-d');
 
         if ($startedAt > $endedAt) {
             throw new ScaninaProductInvalidRequestException("Invalid request date");
