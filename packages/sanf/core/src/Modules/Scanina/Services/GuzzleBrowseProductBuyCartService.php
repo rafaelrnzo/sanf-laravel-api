@@ -3,76 +3,71 @@
 namespace Sanf\Core\Modules\Scanina\Services;
 
 use Exception;
+use NbsPhp\Core\Exceptions\UserNotFoundException;
+use NbsPhp\Core\Models\AuthModel;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\Scanina\Dtos\BrowseProductBuyResponseDto;
 use Sanf\Core\Modules\Scanina\Dtos\BrowseProductSpecificationResponseDto;
 use Sanf\Core\Modules\Scanina\Dtos\BrowseProductSubSpecificationResponseDto;
 use Sanf\Core\Modules\Scanina\Dtos\ReadProductBuyResponseDto;
 use Sanf\Core\Modules\Scanina\Enums\ScaninaProductTypeEnum;
 use Sanf\Core\Modules\Scanina\Exceptions\ScaninaProductNotFoundException;
-use Sanf\Core\Modules\Scanina\Repositories\ProductCartRepositoryInterface;
 use Sanf\Core\Modules\Scanina\Repositories\ScaninaProductRepositoryInterface;
-use Sanf\Core\Modules\Scanina\Specifications\ProductCartSpecificationInterface;
 use Sanf\Core\Modules\Scanina\Specifications\ScaninaProductSpecificationInterface;
+use Sanf\Core\Modules\User\Repositories\ProfileRepositoryInterface;
 
-class BrowseBuyCartByUserService implements ApplicationServiceInterface
+class GuzzleBrowseProductBuyCartService implements ApplicationServiceInterface
 {
 
-    private ProductCartRepositoryInterface $repository;
-    private ProductCartSpecificationInterface $specification;
+    private AuthModel $userRepository;
+    private ProfileRepositoryInterface $profileRepository;
     private ScaninaProductRepositoryInterface $productRepository;
     private ScaninaProductSpecificationInterface $productSpecification;
 
     public function __construct(
-        ProductCartRepositoryInterface $repository,
-        ProductCartSpecificationInterface $specification,
+        AuthModel $userRepository,
+        ProfileRepositoryInterface $profileRepository,
         ScaninaProductRepositoryInterface $productRepository,
         ScaninaProductSpecificationInterface $productSpecification
     ) {
-        $this->repository = $repository;
-        $this->specification = $specification;
+        $this->userRepository = $userRepository;
+        $this->profileRepository = $profileRepository;
         $this->productRepository = $productRepository;
         $this->productSpecification = $productSpecification;
     }
 
     public function execute($dto = null)
     {
-        $paramSize = (object)[
-            'profileXid' => $dto->profileXid,
-            'productType' => ScaninaProductTypeEnum::BUY
-        ];
-        $size = $this->repository->size(
-            $this->specification->listByUser($paramSize)
-        );
-
-        if ($size === 0) {
-            return (object)[
-                'data' => [],
-                'paginate' => (object)[
-                    'total' => 0,
-                    'count' => 0,
-                    'skip' => $dto->skip,
-                    'limit' => $dto->limit,
-                    'sort_by' => $dto->sortBy,
-                ],
-            ];
+        $user = $this->userRepository->findOrFail($dto->userId);
+        if (!$user) {
+            throw new UserNotFoundException();
         }
 
-        $dto->productType = ScaninaProductTypeEnum::BUY;
-        $records = $this->repository->query(
-            $this->specification->listByUser($dto)
+        $profile = $this->profileRepository->findById($dto->profileXid);
+        if (is_null($profile)) {
+            throw new UserNotFoundException('');
+        }
+
+        $response = $this->productRepository->get(
+            $this->productSpecification->getCart($profile->getEmail(), 'buy') //TODO use const value
         );
+
+        $records = [];
+        foreach ($response->data as $merchant) {
+            foreach ($merchant->products as $product) {
+                $records[] = $product;
+            }
+        }
 
         $responseProductBuy = $this->syncWithApi($records);
 
         return (object)[
             'data' => $responseProductBuy,
             'paginate' => (object)[
-                'total' => $size,
-                'count' => count($records),
-                'skip' => $dto->skip,
-                'limit' => $dto->limit,
-                'sort_by' => $dto->sortBy,
+                'total' => 0,
+                'count' => 0,
+                'skip' => null,
+                'limit' => null,
+                'sort_by' => null,
             ],
         ];
     }
@@ -80,9 +75,7 @@ class BrowseBuyCartByUserService implements ApplicationServiceInterface
     private function syncWithApi(array $records): array
     {
         $responses = [];
-        foreach ($records as $model) {
-            $product =  new BrowseProductBuyResponseDto((array)$model->snapshot_response_body);
-
+        foreach ($records as $product) {
             try {
                 $productBuyResponse = $this->productRepository->get(
                     $this->productSpecification->readBuy($product->xid)
@@ -97,8 +90,8 @@ class BrowseBuyCartByUserService implements ApplicationServiceInterface
             $data = (array)$productBuyResponse->data;
             unset($data['review']);
             $productBuyResponseDto = new ReadProductBuyResponseDto($data);
-            $productBuyResponseDto->id = $model->id;
-            $productBuyResponseDto->xid = $model->xid;
+            $productBuyResponseDto->xid = $product->xid;
+            $productBuyResponseDto->quantity = $product->quantity;
 
             $productBuySpecificationResponse = $this->productRepository->get(
                 $this->productSpecification->getSpecification($product->xid, ScaninaProductTypeEnum::BUY)

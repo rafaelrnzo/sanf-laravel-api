@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
 use Sanf\Api\Modules\Scanina\Transformers\BrowseProductRentResponseTransformer;
-use Sanf\Core\Modules\Scanina\Services\BrowseRentCartByUserService;
+use Sanf\Core\Modules\Scanina\Services\GuzzleBrowseProductRentCartService;
 
 class BrowseRentCartByUserController extends RestApiController
 {
@@ -15,7 +15,7 @@ class BrowseRentCartByUserController extends RestApiController
         string $xid,
         Request $request,
         Guard $userAuth,
-        BrowseRentCartByUserService $service
+        GuzzleBrowseProductRentCartService $service
     ) {
         $queryParam = $this->validate($request, [
             'skip' => 'nullable|integer|max:2147483647',

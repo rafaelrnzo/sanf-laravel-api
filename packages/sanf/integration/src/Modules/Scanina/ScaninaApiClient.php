@@ -253,4 +253,15 @@ class ScaninaApiClient
 
         return $response->json(false);
     }
+
+    public function getCart(string $email, string $module)
+    {
+        $response = Request::route("scanina.product.{$module}.cart.browse", $this->client)
+            ->queryParams([
+                'email' => $email,
+            ])
+            ->send();
+
+        return $response->json(false);
+    }
 }

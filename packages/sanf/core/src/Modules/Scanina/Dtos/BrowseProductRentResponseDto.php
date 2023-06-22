@@ -41,4 +41,5 @@ class BrowseProductRentResponseDto extends FlexibleDataTransferObject
     public ?string $longitude;
     public ?int $createdAt;
     public ?int $updatedAt;
+    public ?int $quantity;
 }

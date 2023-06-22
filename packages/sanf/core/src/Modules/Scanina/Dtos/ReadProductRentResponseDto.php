@@ -47,4 +47,5 @@ class ReadProductRentResponseDto extends FlexibleDataTransferObject
     public ?object $reviews;
     public ?array $technicalDetails;
     public ?array $subSpecifications;
+    public ?int $quantity;
 }

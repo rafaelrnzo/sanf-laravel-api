@@ -136,4 +136,14 @@ class GuzzleScaninaProductSpecification implements ScaninaProductSpecificationIn
     {
         return new GuzzleGetFilterModelSpecification($parameter);
     }
+
+    /**
+     * @param string $email
+     * @param string $module
+     * @return GuzzleGetCartSpecification
+     */
+    public function getCart(string $email, string $module): GuzzleGetCartSpecification
+    {
+        return new GuzzleGetCartSpecification($email, $module);
+    }
 }

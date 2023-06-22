@@ -45,4 +45,5 @@ class ReadProductSparePartResponseDto extends FlexibleDataTransferObject
     public ?int $createdAt;
     public ?int $updatedAt;
     public ?array $customerReviews;
+    public ?int $quantity;
 }

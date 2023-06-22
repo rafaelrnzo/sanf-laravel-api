@@ -89,8 +89,8 @@ class GuzzleAddToCartRentService implements ApplicationServiceInterface
             'email' => $profile->getEmail(),
             'type' => ScaninaProductTypeEnum::RENT,
             'productXid' => $dto->productXid,
-            'rentStartDate' => $dto->startedAt,
-            'rentEndDate' => $dto->endedAt,
+            'rentStartDate' => $dto->startedAt / 1000,
+            'rentEndDate' => $dto->endedAt / 1000,
         ]);
 
         $this->repository->post(

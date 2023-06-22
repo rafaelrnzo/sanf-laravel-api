@@ -19,7 +19,7 @@ class BrowseProductBuyResponseTransformer extends TransformerAbstract
             return $files->path;
         }, $dto->imageFiles ?? []);
 
-        return [
+        $response = [
             'xid' => $dto->xid ?? $dto->id,
             'name' => (string)optional($dto)->name,
             'image_url' => $imagesFiles[0] ?? null,
@@ -34,5 +34,11 @@ class BrowseProductBuyResponseTransformer extends TransformerAbstract
             'price_cut' => $cutPrice,
             'stock' => (int)optional($dto)->stock,
         ];
+
+        if (optional($dto)->quantity) {
+            $response['quantity'] = optional($dto)->quantity;
+        }
+
+        return $response;
     }
 }

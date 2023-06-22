@@ -31,4 +31,5 @@ class BrowseProductSparepartResponseDto extends FlexibleDataTransferObject
     public ?int $itemSoldCount;
     public ?int $createdAt;
     public ?int $updatedAt;
+    public ?int $quantity;
 }

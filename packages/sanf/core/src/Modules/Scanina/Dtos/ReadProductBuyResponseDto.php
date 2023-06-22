@@ -41,4 +41,5 @@ class ReadProductBuyResponseDto extends FlexibleDataTransferObject
     public ?int $updatedAt;
     public ?object $review;
     public ?array $subSpecifications;
+    public ?int $quantity;
 }

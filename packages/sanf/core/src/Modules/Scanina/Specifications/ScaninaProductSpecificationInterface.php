@@ -18,4 +18,5 @@ interface ScaninaProductSpecificationInterface
     public function getFilterBrand($parameter);
     public function getFilterType($parameter);
     public function getFilterModel($parameter);
+    public function getCart(string $email, string $module);
 }

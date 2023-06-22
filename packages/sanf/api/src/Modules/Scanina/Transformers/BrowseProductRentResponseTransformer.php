@@ -53,6 +53,10 @@ class BrowseProductRentResponseTransformer extends TransformerAbstract
             $response['end_rent_at'] = optional($dto)->endDate;
         }
 
+        if (optional($dto)->quantity) {
+            $response['quantity'] = optional($dto)->quantity;
+        }
+
         return $response;
     }
 }

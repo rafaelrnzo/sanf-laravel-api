@@ -9,7 +9,7 @@ use NbsPhp\Core\Database\TransactionalSessionInterface;
 use NbsPhp\Core\Services\TransactionalApplicationService;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
 use Sanf\Api\Modules\Scanina\Transformers\BrowseProductBuyResponseTransformer;
-use Sanf\Core\Modules\Scanina\Services\BrowseBuyCartByUserService;
+use Sanf\Core\Modules\Scanina\Services\GuzzleBrowseProductBuyCartService;
 use Sanf\Core\Modules\Scanina\Services\GuzzleAddToCartBuyService;
 
 class BrowseBuyCartByUserController extends RestApiController
@@ -18,7 +18,7 @@ class BrowseBuyCartByUserController extends RestApiController
         string $xid,
         Request $request,
         Guard $userAuth,
-        BrowseBuyCartByUserService $service
+        GuzzleBrowseProductBuyCartService $service
     ) {
         $queryParam = $this->validate($request, [
             'skip' => 'nullable|integer|max:2147483647',
