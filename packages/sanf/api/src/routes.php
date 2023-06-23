@@ -124,7 +124,7 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::post('users/financing-applications/personal', ['as' => 'financing-applications.personal.create', 'uses' => 'Financing\Controllers\FinancingApplicationByUserController@postAddByPersonalProfile']);
 
     # PLAFOND
-    Route::get('plafond-types', ['as' => 'plafond-types', 'uses' => 'Plafond\Controllers\PlafondController@getBrowseTypes']);
+    Route::get('plafond-types', ['as' => 'plafond-types', 'uses' => 'Plafond\Controllers\PlafondController@getBrowseTypesOldest']);
     Route::get('users/profiles/{xid}/plafonds', ['as' => 'users.plafonds.list', 'uses' => 'Plafond\Controllers\PlafondController@getBrowseByUserProfile']);
     Route::get('users/profiles/{xid}/plafonds/histories', ['as' => 'users.plafonds.histories.list', 'uses' => 'Plafond\Controllers\PlafondController@getBrowseHistoryByUserProfile']);
     Route::get('users/profiles/{xid}/plafonds/types/{typeId}', ['as' => 'users.plafonds.detail-by-type', 'uses' => 'Plafond\Controllers\PlafondController@getReadByUserProfileAndType']);
@@ -196,6 +196,8 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
 });
 
 Route::group(['prefix' => 'v2', 'middleware' => 'auth'], function () {
+    //TODO remove after +1 release version
+    Route::get('plafond-types', ['as' => 'v2.plafond-types', 'uses' => 'Plafond\Controllers\PlafondController@getBrowseTypes']);
     Route::get('users/profiles/{xid}/contracts', ['as' => 'v2.users.contracts.browse', 'uses' => 'Contract\Controllers\ContractFinancingUnitByUserController@getList']);
 });
 

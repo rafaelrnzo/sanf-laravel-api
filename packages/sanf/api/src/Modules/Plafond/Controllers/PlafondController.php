@@ -14,6 +14,7 @@ use Sanf\Core\Modules\Plafond\Dtos\AddPlafondRequestDto;
 use Sanf\Core\Modules\Plafond\Dtos\BrowsePlafondByProfileRequestDto;
 use Sanf\Core\Modules\Plafond\Dtos\BrowsePlafondHistoryByUserRequestDto;
 use Sanf\Core\Modules\Plafond\Dtos\ReadPlafondByProfileAndTypeRequestDto;
+use Sanf\Core\Modules\Plafond\Enums\PlafondTypeEnum;
 use Sanf\Core\Modules\Plafond\Services\ApplyIncreasePlafondByUserService;
 use Sanf\Core\Modules\Plafond\Services\ApplyNewPlafondByUserService;
 use Sanf\Core\Modules\Plafond\Services\BrowsePlafondByUserService;
@@ -24,6 +25,24 @@ use Sanf\Core\Modules\User\Services\GetDetailCustomerProfileByUserService;
 
 class PlafondController extends RestApiController
 {
+    public function getBrowseTypesOldest(ListPlafondTypeService $service)
+    {
+        // TODO refactor this static pagination filter
+        $dto = (object)[
+            'limit' => 10,
+            'skip' => 0,
+            'sort_by' => 'default',
+        ];
+        $result = $service->execute($dto);
+        $filter = $result->data->filter(function ($model, $key) {
+            return $model->id !== PlafondTypeEnum::FACTORING;
+        });
+        $result->data = $filter->all();
+
+        return fractal($result->data, PlafondTypeListTransformer::class)
+            ->paginateWith(new LazyPaginatorAdapter($result->paginate));
+    }
+
     public function getBrowseTypes(ListPlafondTypeService $service)
     {
         // TODO refactor this static pagination filter
