@@ -16,15 +16,15 @@ class BrowseProductRentResponseTransformer extends TransformerAbstract
         $discount = (($originPrice - $cutPrice) > 0) ? (($originPrice - $cutPrice) / $originPrice) * 100 : 0;
         $availability = [];
 
-        if ($dto->monthPrice) {
+        if ($dto->monthPrice && $dto->monthPrice > 0) {
             $availability[] = 'monthly';
         }
 
-        if ($dto->dayPrice) {
+        if ($dto->dayPrice && $dto->dayPrice > 0) {
             $availability[] = 'daily';
         }
 
-        if ($dto->hourPrice) {
+        if ($dto->hourPrice && $dto->hourPrice > 0) {
             $availability[] = 'hourly';
         }
 
