@@ -18,32 +18,30 @@ class BrowseProductRentResponseTransformer extends TransformerAbstract
 
         if ($dto->monthPrice && $dto->monthPrice > 0) {
             $availability[] = 'monthly';
-
-            if ($originPrice <= 0) {
+            if ((float)optional($dto)->priceBefore <= 0) {
                 $originPrice = (float)optional($dto)->monthPrice;
             }
-
-            if ($cutPrice <= 0) {
+            if ((float)optional($dto)->price <= 0) {
                 $cutPrice = (float)optional($dto)->monthPrice;
             }
         }
 
         if ($dto->dayPrice && $dto->dayPrice > 0) {
             $availability[] = 'daily';
-            if ($originPrice <= 0) {
+            if ((float)optional($dto)->priceBefore <= 0) {
                 $originPrice = (float)optional($dto)->dayPrice;
             }
-            if ($cutPrice <= 0) {
+            if ((float)optional($dto)->price <= 0) {
                 $cutPrice = (float)optional($dto)->dayPrice;
             }
         }
 
         if ($dto->hourPrice && $dto->hourPrice > 0) {
             $availability[] = 'hourly';
-            if ($originPrice <= 0) {
+            if ((float)optional($dto)->priceBefore <= 0) {
                 $originPrice = (float)optional($dto)->hourPrice;
             }
-            if ($cutPrice <= 0) {
+            if ((float)optional($dto)->price <= 0) {
                 $cutPrice = (float)optional($dto)->hourPrice;
             }
         }
