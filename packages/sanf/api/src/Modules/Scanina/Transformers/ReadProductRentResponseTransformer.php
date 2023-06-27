@@ -17,6 +17,33 @@ class ReadProductRentResponseTransformer extends TransformerAbstract
         $cutPrice = (float)optional($dto)->price;
         $discount = (($originPrice - $cutPrice) > 0) ? (($originPrice - $cutPrice) / $originPrice) * 100 : 0;
 
+        if ($dto->monthPrice && $dto->monthPrice > 0) {
+            if ((float)optional($dto)->priceBefore <= 0) {
+                $originPrice = (float)optional($dto)->monthPrice;
+            }
+            if ((float)optional($dto)->price <= 0) {
+                $cutPrice = (float)optional($dto)->monthPrice;
+            }
+        }
+
+        if ($dto->dayPrice && $dto->dayPrice > 0) {
+            if ((float)optional($dto)->priceBefore <= 0) {
+                $originPrice = (float)optional($dto)->dayPrice;
+            }
+            if ((float)optional($dto)->price <= 0) {
+                $cutPrice = (float)optional($dto)->dayPrice;
+            }
+        }
+
+        if ($dto->hourPrice && $dto->hourPrice > 0) {
+            if ((float)optional($dto)->priceBefore <= 0) {
+                $originPrice = (float)optional($dto)->hourPrice;
+            }
+            if ((float)optional($dto)->price <= 0) {
+                $cutPrice = (float)optional($dto)->hourPrice;
+            }
+        }
+
         $imagesFiles = array_map(function ($files) {
             return $files->path;
         }, $dto->imageFiles ?? []);
