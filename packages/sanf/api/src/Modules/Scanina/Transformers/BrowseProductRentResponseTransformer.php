@@ -18,20 +18,34 @@ class BrowseProductRentResponseTransformer extends TransformerAbstract
 
         if ($dto->monthPrice && $dto->monthPrice > 0) {
             $availability[] = 'monthly';
-            $originPrice = (float)optional($dto)->monthPrice;
-            $cutPrice = (float)optional($dto)->monthPrice;
+
+            if ($originPrice <= 0) {
+                $originPrice = (float)optional($dto)->monthPrice;
+            }
+
+            if ($cutPrice <= 0) {
+                $cutPrice = (float)optional($dto)->monthPrice;
+            }
         }
 
         if ($dto->dayPrice && $dto->dayPrice > 0) {
             $availability[] = 'daily';
-            $originPrice = (float)optional($dto)->dayPrice;
-            $cutPrice = (float)optional($dto)->dayPrice;
+            if ($originPrice <= 0) {
+                $originPrice = (float)optional($dto)->dayPrice;
+            }
+            if ($cutPrice <= 0) {
+                $cutPrice = (float)optional($dto)->dayPrice;
+            }
         }
 
         if ($dto->hourPrice && $dto->hourPrice > 0) {
             $availability[] = 'hourly';
-            $originPrice = (float)optional($dto)->hourPrice;
-            $cutPrice = (float)optional($dto)->hourPrice;
+            if ($originPrice <= 0) {
+                $originPrice = (float)optional($dto)->hourPrice;
+            }
+            if ($cutPrice <= 0) {
+                $cutPrice = (float)optional($dto)->hourPrice;
+            }
         }
 
         $imagesFiles = array_map(function ($files) {
