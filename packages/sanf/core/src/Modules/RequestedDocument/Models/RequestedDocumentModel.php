@@ -11,6 +11,7 @@ class RequestedDocumentModel extends AbstractModel
     protected $fillable = [
         'xid',
         'user_id',
+        'profile_xid',
         'request_no',
         'request_at',
         'document_no',

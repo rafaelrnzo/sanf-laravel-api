@@ -141,6 +141,7 @@ class BrowseRequestedDocumentService implements ApplicationServiceInterface
 
                 $this->storeIfDoesntExist(
                     $dto->user_id,
+                    $dto->profile_xid,
                     $requestedDocumentCore,
                     $requestedDocumentDb
                 );
@@ -175,12 +176,18 @@ class BrowseRequestedDocumentService implements ApplicationServiceInterface
      * @return object
      * @throws BindingResolutionException
      */
-    private function storeIfDoesntExist(int $userId, object $requestedDocument, ?object $requestedDocumentDb): object
+    private function storeIfDoesntExist(int $userId, string $profileXid, object $requestedDocument, ?object $requestedDocumentDb): object
     {
         if ($requestedDocumentDb) {
             if ($requestedDocumentDb->total_document !== $requestedDocument->total_document) {
                 $this->requestedDocumentEloquentRepository->update($requestedDocumentDb->id, [
                     'total_item' => $requestedDocument->total_document,
+                    'updated_at' => Carbon::now(),
+                ]);
+            }
+            if (!$requestedDocumentDb->profile_xid) {
+                $this->requestedDocumentEloquentRepository->update($requestedDocumentDb->id, [
+                    'profile_xid' => $profileXid,
                     'updated_at' => Carbon::now(),
                 ]);
             }
@@ -190,6 +197,7 @@ class BrowseRequestedDocumentService implements ApplicationServiceInterface
         return $this->requestedDocumentEloquentRepository->create([
             'xid' => nano_id(),
             'user_id' => $userId,
+            'profile_xid' => $profileXid,
             'request_no' => $requestedDocument->request_no,
             'request_at' => $requestedDocument->request_at,
             'document_no' => $requestedDocument->document_no,

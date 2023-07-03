@@ -66,6 +66,7 @@ class BrowseRequestedDocumentFromDbService implements ApplicationServiceInterfac
         return array_map(function ($data) {
             return (object)[
                 'id' => $data->id,
+                'profile_xid' => $data->profile_xid,
                 'request_no' => $data->request_no,
                 'request_at' => Carbon::parse($data->request_at),
                 'document_no' => $data->document_no,
