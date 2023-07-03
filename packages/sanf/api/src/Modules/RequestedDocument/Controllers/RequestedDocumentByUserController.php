@@ -77,6 +77,9 @@ final class RequestedDocumentByUserController extends RestApiController
         ];
 
         $result = $service->execute($dto);
+        if (empty($result)) {
+            return [];
+        }
 
         return fractal($result, BrowseHistoryRequestedDocumentTransformer::class)
             ->serializeWith(new ArraySerializer());
