@@ -69,7 +69,12 @@ class BrowseRequestedDocumentService implements ApplicationServiceInterface
             $dataFromDb = $this->dbService->execute((object)$argument);
 
             foreach ($dataFromDb->data as $dataDb) {
-                $data[] = $this->requestDocumentAppendItem($dataDb, $dataFromCore);
+                $append = $this->requestDocumentAppendItem($dataDb, $dataFromCore);
+                if (is_null($append)) {
+                    continue;
+                }
+
+                $data[] = $append;
             }
         }
 
@@ -208,7 +213,12 @@ class BrowseRequestedDocumentService implements ApplicationServiceInterface
         ]);
     }
 
-    private function requestDocumentAppendItem($dataDb, object $dataFromCore): object
+    /**
+     * @param $dataDb
+     * @param object $dataFromCore
+     * @return null|object
+     */
+    private function requestDocumentAppendItem($dataDb, object $dataFromCore)
     {
         $documents = $dataDb->documents;
 
@@ -217,6 +227,10 @@ class BrowseRequestedDocumentService implements ApplicationServiceInterface
             if ($dataCore->request_no === $dataDb->request_no) {
                 $requestDocumentFromCore = $dataCore;
             }
+        }
+
+        if (is_null($requestDocumentFromCore)) {
+            return null;
         }
 
         if (is_null($documents)) {
