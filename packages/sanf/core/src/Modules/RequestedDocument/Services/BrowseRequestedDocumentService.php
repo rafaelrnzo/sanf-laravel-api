@@ -2,6 +2,7 @@
 
 namespace Sanf\Core\Modules\RequestedDocument\Services;
 
+use Carbon\Carbon;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException;
@@ -177,6 +178,12 @@ class BrowseRequestedDocumentService implements ApplicationServiceInterface
     private function storeIfDoesntExist(int $userId, object $requestedDocument, ?object $requestedDocumentDb): object
     {
         if ($requestedDocumentDb) {
+            if ($requestedDocumentDb->total_document !== $requestedDocument->total_document) {
+                $this->requestedDocumentEloquentRepository->update($requestedDocumentDb->id, [
+                    'total_item' => $requestedDocument->total_document,
+                    'updated_at' => Carbon::now(),
+                ]);
+            }
             return $requestedDocumentDb;
         }
 
