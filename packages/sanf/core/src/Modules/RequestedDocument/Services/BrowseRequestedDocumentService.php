@@ -213,8 +213,10 @@ class BrowseRequestedDocumentService implements ApplicationServiceInterface
         return $dataDb;
     }
 
-    private function getExistingRequestedDocumentItem(array $requestedDocumentItemCore, array $requestedDocumentItemDb): array
-    {
+    private function getExistingRequestedDocumentItem(
+        array $requestedDocumentItemCore,
+        array $requestedDocumentItemDb
+    ): array {
         return array_map(function ($documentItem) use ($requestedDocumentItemDb) {
             foreach ($requestedDocumentItemDb as $documentItemDb) {
                 if ($documentItemDb->id === $documentItem->id) {
