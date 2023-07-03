@@ -7,7 +7,7 @@ use Sanf\Core\Modules\RequestedDocument\Models\RequestedDocumentModel;
 
 class EloquentPaginateByUserAndStatusSpecification
 {
-    private string $userId;
+    private string $profileXid;
     private ?int $statusId;
     private ?int $typeId;
     private ?string $keyword;
@@ -17,7 +17,7 @@ class EloquentPaginateByUserAndStatusSpecification
     private ?int $timestamp;
 
     /**
-     * @param string $userId
+     * @param string $profileXid
      * @param int|null $statusId
      * @param int|null $typeId
      * @param string|null $keyword
@@ -27,7 +27,7 @@ class EloquentPaginateByUserAndStatusSpecification
      * @param int|null $timestamp
      */
     public function __construct(
-        string $userId,
+        string $profileXid,
         ?int $statusId,
         ?int $typeId,
         ?string $keyword,
@@ -36,7 +36,7 @@ class EloquentPaginateByUserAndStatusSpecification
         ?int $limit,
         ?int $timestamp
     ) {
-        $this->userId = $userId;
+        $this->profileXid = $profileXid;
         $this->statusId = $statusId;
         $this->typeId = $typeId;
         $this->keyword = $keyword;
@@ -81,7 +81,7 @@ class EloquentPaginateByUserAndStatusSpecification
                 }
             ])
             ->whereNull('deleted_at')
-            ->where('user_id', '=', $this->userId)
+            ->where('profile_xid', '=', $this->profileXid)
             ->when($this->statusId, function ($query) {
                 return $query->where('status', '=', $this->statusId);
             })

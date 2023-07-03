@@ -22,7 +22,7 @@ class BrowseRequestedDocumentFromDbService implements ApplicationServiceInterfac
 
     public function execute($dto = null)
     {
-        $userId = (string)$dto->user_id;
+        $profileXid = (string)$dto->profile_xid;
         $status = ($dto->status) ? (int)$dto->status : null;
         $documentType = ($dto->document_type) ? (int)$dto->document_type : null;
         $keyword = ($dto->keyword) ? (string)$dto->keyword : null;
@@ -32,7 +32,7 @@ class BrowseRequestedDocumentFromDbService implements ApplicationServiceInterfac
 
         $records = $this->requestedDocumentEloquentRepository->query(
             $this->requestedDocumentEloquentSpecification->paginate(
-                $userId,
+                $profileXid,
                 $status,
                 $documentType,
                 $keyword,
@@ -44,7 +44,7 @@ class BrowseRequestedDocumentFromDbService implements ApplicationServiceInterfac
         );
         $totalRecord = $this->requestedDocumentEloquentRepository->count(
             $this->requestedDocumentEloquentSpecification->paginate(
-                $userId,
+                $profileXid,
                 $status,
                 $documentType,
                 $keyword,

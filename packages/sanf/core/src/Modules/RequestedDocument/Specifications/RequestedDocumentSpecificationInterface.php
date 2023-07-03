@@ -5,7 +5,7 @@ namespace Sanf\Core\Modules\RequestedDocument\Specifications;
 interface RequestedDocumentSpecificationInterface
 {
     public function paginate(
-        string $userId,
+        string $profileXid,
         ?int $statusId,
         ?int $typeId,
         ?string $keyword = null,
