@@ -39,6 +39,7 @@ class EloquentRequestedDocumentItemRepository extends AbstractEloquentRepository
             ->where('requested_document.user_id', $user_id)
             ->where('requested_document.request_no', $request_no)
             ->where('requested_document_item.document_id', $document_id)
+            ->whereNotNull('requested_document_item.document_file')
             ->whereNull('requested_document_item.deleted_at')
             ->get();
     }
