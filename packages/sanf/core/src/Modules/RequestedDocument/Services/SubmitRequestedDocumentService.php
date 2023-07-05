@@ -46,8 +46,8 @@ class SubmitRequestedDocumentService implements ApplicationServiceInterface
      */
     public function execute($dto = null)
     {
-        $user = $this->getUser($dto->user_id);
-        $requestedDocument = $this->getRequestedDocument($dto->request_id, $user->id);
+        $this->getUser($dto->user_id);
+        $requestedDocument = $this->getRequestedDocument($dto->request_id, $dto->profile_xid);
         if ($requestedDocument->total_item !== $requestedDocument->total_uploaded) {
             throw new SubmitRequestedDocumentNotCompleteException();
         }
@@ -108,9 +108,9 @@ class SubmitRequestedDocumentService implements ApplicationServiceInterface
         return $user;
     }
 
-    private function getRequestedDocument(string $request_id, string $user_id)
+    private function getRequestedDocument(string $request_id, string $profile_xid)
     {
-        $requestedDocument = $this->eloquentRequestedDocRepository->findByRequestNo($request_id, $user_id);
+        $requestedDocument = $this->eloquentRequestedDocRepository->findByRequestNo($request_id, $profile_xid);
         if (!$requestedDocument) {
             throw new RequestedDocumentNotFoundException();
         }

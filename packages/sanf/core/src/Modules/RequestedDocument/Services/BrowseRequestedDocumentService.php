@@ -10,6 +10,7 @@ use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\RequestedDocument\Dtos\ListRequestedDocumentDto;
 use Sanf\Core\Modules\RequestedDocument\Enums\RequestedDocumentStatusEnum;
+use Sanf\Core\Modules\RequestedDocument\Repositories\RequestedDocumentItemRepositoryInterface;
 use Sanf\Core\Modules\RequestedDocument\Repositories\RequestedDocumentRepositoryInterface;
 use Sanf\Core\Modules\User\AuthModel;
 
@@ -19,17 +20,20 @@ class BrowseRequestedDocumentService implements ApplicationServiceInterface
     private BrowseRequestedDocumentFromCoreService $coreService;
     private BrowseRequestedDocumentFromDbService $dbService;
     private RequestedDocumentRepositoryInterface $requestedDocumentEloquentRepository;
+    private RequestedDocumentItemRepositoryInterface $requestedDocItemEloquentRepository;
 
     public function __construct(
         AuthModel $userRepository,
         BrowseRequestedDocumentFromCoreService $coreService,
         BrowseRequestedDocumentFromDbService $dbService,
-        RequestedDocumentRepositoryInterface $requestedDocumentEloquentRepository
+        RequestedDocumentRepositoryInterface $requestedDocumentEloquentRepository,
+        RequestedDocumentItemRepositoryInterface $requestedDocItemEloquentRepository
     ) {
         $this->userRepository = $userRepository;
         $this->coreService = $coreService;
         $this->dbService = $dbService;
         $this->requestedDocumentEloquentRepository = $requestedDocumentEloquentRepository;
+        $this->requestedDocItemEloquentRepository = $requestedDocItemEloquentRepository;
     }
 
     /**
@@ -196,10 +200,26 @@ class BrowseRequestedDocumentService implements ApplicationServiceInterface
                     'updated_at' => Carbon::now(),
                 ]);
             }
+            if (count($requestedDocumentDb->documents) !== count($requestedDocument->documents)) {
+                $existingId = array_pluck($requestedDocumentDb->documents, 'id');
+                foreach ($requestedDocument->documents as $document) {
+                    if (in_array($document->id, $existingId)) {
+                        continue;
+                    }
+                    $this->requestedDocItemEloquentRepository->create([
+                        'requested_document_id' => $requestedDocumentDb->id,
+                        'document_id' => $document->id,
+                        'document_name' => $document->title,
+                        'document_file' => null,
+                        'is_submitted' => false,
+                    ]);
+                }
+            }
+
             return $requestedDocumentDb;
         }
 
-        return $this->requestedDocumentEloquentRepository->create([
+        $requestedDocumentDb = $this->requestedDocumentEloquentRepository->create([
             'xid' => nano_id(),
             'user_id' => $userId,
             'profile_xid' => $profileXid,
@@ -211,6 +231,18 @@ class BrowseRequestedDocumentService implements ApplicationServiceInterface
             'total_uploaded' => 0,
             'status' => RequestedDocumentStatusEnum::REQUESTED,
         ]);
+
+        foreach ($requestedDocument->documents as $document) {
+            $this->requestedDocItemEloquentRepository->create([
+                'requested_document_id' => $requestedDocumentDb->id,
+                'document_id' => $document->id,
+                'document_name' => $document->title,
+                'document_file' => null,
+                'is_submitted' => false,
+            ]);
+        }
+
+        return $requestedDocumentDb;
     }
 
     /**

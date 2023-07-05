@@ -13,7 +13,7 @@ interface RequestedDocumentRepositoryInterface
 
     public function update(int $id, array $request);
 
-    public function findByRequestNo(string $request_no, int $user_id);
+    public function findByRequestNo(string $request_no, string $profile_xid);
 
     public function incrementTotalUploaded(int $id);
 }

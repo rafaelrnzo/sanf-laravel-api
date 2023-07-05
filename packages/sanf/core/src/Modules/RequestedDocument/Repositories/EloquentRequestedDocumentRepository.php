@@ -38,7 +38,7 @@ class EloquentRequestedDocumentRepository extends AbstractEloquentRepository imp
             ->update($request);
     }
 
-    public function findByRequestNo(string $request_no, int $user_id)
+    public function findByRequestNo(string $request_no, string $profile_xid)
     {
         return $this->model->newQuery()
             ->with([
@@ -47,7 +47,7 @@ class EloquentRequestedDocumentRepository extends AbstractEloquentRepository imp
                 }
             ])
             ->whereNull('deleted_at')
-            ->where('user_id', '=', $user_id)
+            ->where('profile_xid', '=', $profile_xid)
             ->where('request_no', '=', $request_no)
             ->first();
     }

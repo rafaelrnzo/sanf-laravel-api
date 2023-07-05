@@ -103,13 +103,13 @@ class BrowseRequestedDocumentFromCoreService implements ApplicationServiceInterf
         }, $response->data);
     }
 
-    private function mapRequestedItemDocs($response): array
+    private function mapRequestedItemDocs(array $response): array
     {
         return array_map(function ($data) {
             return (object)[
                 'id' => $data->DOC_ID ?? null,
                 'title' => $data->DOC_NAME ?? null,
-                'is_uploaded' => false
+                'is_uploaded' => false,
             ];
         }, $response);
     }

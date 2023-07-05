@@ -19,6 +19,7 @@ use Sanf\Core\Modules\RequestedDocument\Enums\RequestedDocumentStatusEnum;
 use Sanf\Core\Modules\RequestedDocument\Exceptions\SyncRequestedDocumentException;
 use Sanf\Core\Modules\RequestedDocument\Services\BrowseRequestedDocumentService;
 use Sanf\Core\Modules\RequestedDocument\Services\BrowseUploadRequestedDocumentService;
+use Sanf\Core\Modules\RequestedDocument\Services\ReadUploadRequestedDocumentService;
 use Sanf\Core\Modules\RequestedDocument\Services\SubmitRequestedDocumentService;
 use Sanf\Core\Modules\RequestedDocument\Services\UploadRequestedDocumentService;
 
@@ -136,5 +137,24 @@ final class RequestedDocumentByUserController extends RestApiController
         }
 
         return $this->responseOk();
+    }
+
+    public function getRead(
+        string $xid,
+        string $request_id,
+        Guard $auth,
+        ReadUploadRequestedDocumentService $service
+    ) {
+
+        $dto = (object)[
+            'user_id' => $auth->id(),
+            'profile_xid' => $xid,
+            'request_id' => $request_id,
+        ];
+
+        $result = $service->execute($dto);
+
+        return fractal($result, BrowseRequestedDocumentTransformer::class)
+            ->serializeWith(new ArraySerializer());
     }
 }
