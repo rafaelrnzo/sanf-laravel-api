@@ -42,16 +42,14 @@ class UploadRequestedDocumentService implements ApplicationServiceInterface
     {
         $this->getUser($dto->user_id);
         $requestedDocument = $this->getRequestedDocument($dto->request_id, $dto->profile_xid);
+        $requestedDocumentItem = $this->getRequestedDocumentItem($requestedDocument->id, $dto->document_id);
 
         $tempDir = config('image-path.temp');
         $dir = config('image-path.requested-document');
 
         $metadata = $this->moveFile($dto->filename, $dir, $tempDir);
 
-        $this->eloquentRequestedDocItemRepository->create([
-            'requested_document_id' => $requestedDocument->id,
-            'document_id' => $dto->document_id,
-            'document_name' => $dto->document_name,
+        $this->eloquentRequestedDocItemRepository->update($requestedDocumentItem->id, [
             'document_file' => [
                 'origin' => $dto->origin,
                 'file_name' => $dto->filename,
@@ -60,7 +58,6 @@ class UploadRequestedDocumentService implements ApplicationServiceInterface
                 'mime_type' => $metadata['mimetype'],
                 'size' => $metadata['size'],
             ],
-            'is_submitted' => false,
         ]);
 
         $this->eloquentRequestedDocRepository->incrementTotalUploaded($requestedDocument->id);
@@ -86,6 +83,20 @@ class UploadRequestedDocumentService implements ApplicationServiceInterface
         }
 
         return $requestedDocument;
+    }
+
+    private function getRequestedDocumentItem(string $requestDocId, string $documentNo)
+    {
+        $requestedDocumentItem = $this->eloquentRequestedDocItemRepository->findByRequestIdAndDocNo(
+            $requestDocId,
+            $documentNo
+        );
+
+        if (!$requestedDocumentItem) {
+            throw new RequestedDocumentNotFoundException();
+        }
+
+        return $requestedDocumentItem;
     }
 
     private function moveFile(string $filename, string $dir, string $tempDir): array

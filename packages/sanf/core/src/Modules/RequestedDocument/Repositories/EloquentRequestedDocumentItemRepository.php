@@ -21,6 +21,15 @@ class EloquentRequestedDocumentItemRepository extends AbstractEloquentRepository
         return $this->model->newQuery()->forceCreate($request);
     }
 
+    public function findByRequestIdAndDocNo(string $requestDocId, string $documentNo)
+    {
+        return $this->model->newQuery()
+            ->whereNull('deleted_at')
+            ->where('requested_document_id', '=', $requestDocId)
+            ->where('document_id', '=', $documentNo)
+            ->first();
+    }
+
     public function update(int $id, array $request)
     {
         return $this->model->newQuery()

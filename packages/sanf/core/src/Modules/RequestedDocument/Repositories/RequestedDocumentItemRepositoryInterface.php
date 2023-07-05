@@ -9,5 +9,7 @@ interface RequestedDocumentItemRepositoryInterface
 
     public function create(array $request);
 
+    public function findByRequestIdAndDocNo(string $requestDocId, string $documentNo);
+
     public function update(int $id, array $request);
 }
