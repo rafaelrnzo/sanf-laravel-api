@@ -21,6 +21,7 @@ RUN docker-php-ext-configure intl \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install pdo pdo_pgsql mbstring opcache gd zip intl \
     && pecl install apcu \
+    && pecl install excimer \
     && docker-php-ext-enable apcu
 
 ENV COMPOSER_HOME /composer
