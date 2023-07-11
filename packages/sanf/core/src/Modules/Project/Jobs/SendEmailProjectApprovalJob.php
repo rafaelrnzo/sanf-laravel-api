@@ -47,8 +47,9 @@ class SendEmailProjectApprovalJob implements ShouldQueue
                 [__('Reject Project'), route('projects.reject', ['xid' => $this->project->xid])]
             ]);
 
+        $ccMails = explode(',', config('sanf-mobile.mail_to.it_helpdesk'));
         return Mail::to($this->emailRecipients)
-            ->cc(config('sanf-mobile.mail_to.it_helpdesk'))
+            ->cc($ccMails)
             ->send($projectApprovalMail);
     }
 }

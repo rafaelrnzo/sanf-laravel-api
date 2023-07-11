@@ -54,8 +54,9 @@ class SendEmailNewRequestPlafondForAdminJob implements ShouldQueue
                 ['joinToIndex' => 1, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08);">'],
             ]);
 
+        $ccMails = explode(',', config('sanf-mobile.mail_to.it_helpdesk'));
         return Mail::to($this->emailRecipients)
-            ->cc(config('sanf-mobile.mail_to.it_helpdesk'))
+            ->cc($ccMails)
             ->send($mailable);
     }
 }

@@ -56,8 +56,9 @@ class SendEmailFinancingUnitLocationJob implements ShouldQueue
                 ],
             ]);
 
+        $ccMails = explode(',', config('sanf-mobile.mail_to.it_helpdesk'));
         return Mail::to($this->recipient)
-            ->cc(config('sanf-mobile.mail_to.it_helpdesk'))
+            ->cc($ccMails)
             ->send($simulationEmail);
     }
 }

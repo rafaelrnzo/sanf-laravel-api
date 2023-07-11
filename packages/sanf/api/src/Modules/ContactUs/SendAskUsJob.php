@@ -47,8 +47,9 @@ class SendAskUsJob implements ShouldQueue
 
         $askUsEmail->from($this->email['email'], $this->email['name']);
 
+        $ccMails = explode(',', config('sanf-mobile.mail_to.it_helpdesk'));
         Mail::to($this->emailRecipients)
-            ->cc(config('sanf-mobile.mail_to.it_helpdesk'))
+            ->cc($ccMails)
             ->send($askUsEmail);
     }
 }

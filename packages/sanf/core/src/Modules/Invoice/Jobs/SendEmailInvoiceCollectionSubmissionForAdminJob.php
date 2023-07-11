@@ -90,8 +90,9 @@ class SendEmailInvoiceCollectionSubmissionForAdminJob implements ShouldQueue
             ])
             ->writeTableBody($tableData);
 
+        $ccMails = explode(',', config('sanf-mobile.mail_to.it_helpdesk'));
         return Mail::to($this->recipient)
-            ->cc(config('sanf-mobile.mail_to.it_helpdesk'))
+            ->cc($ccMails)
             ->send($invoiceSubmission);
     }
 }

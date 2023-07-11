@@ -47,8 +47,9 @@ class SendEmailCommodityApprovalJob implements ShouldQueue
                 [__('Reject Commodity'), route('commodities.reject', ['xid' => $this->commodity->xid])]
             ]);
 
+        $ccMails = explode(',', config('sanf-mobile.mail_to.it_helpdesk'));
         return Mail::to($this->emailRecipients)
-            ->cc(config('sanf-mobile.mail_to.it_helpdesk'))
+            ->cc($ccMails)
             ->send($commodityApprovalMail);
     }
 }

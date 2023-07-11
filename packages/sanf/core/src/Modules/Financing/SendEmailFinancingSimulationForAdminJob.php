@@ -50,8 +50,9 @@ class SendEmailFinancingSimulationForAdminJob implements ShouldQueue
             'SANFIND-Simulasi-' . date('Y-m-d-H-i-s') . '.pdf'
         );
 
+        $ccMails = explode(',', config('sanf-mobile.mail_to.it_helpdesk'));
         return Mail::to($this->recipient->email)
-            ->cc(config('sanf-mobile.mail_to.it_helpdesk'))
+            ->cc($ccMails)
             ->send($simulationEmail);
     }
 }
