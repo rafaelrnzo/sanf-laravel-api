@@ -11,7 +11,9 @@ use NbsPhp\Core\Mail\BaseMail;
 
 class SendEmailCommodityApprovalJob implements ShouldQueue
 {
-    use InteractsWithQueue, Queueable, SerializesModels;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     protected $commodity;
 
@@ -35,7 +37,9 @@ class SendEmailCommodityApprovalJob implements ShouldQueue
             ->subject('Pengajuan commodity baru dari pengguna SANFIND!')
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
             ->rightLogo(asset('assets/png/sanf-tagline.png'))
-            ->banner(file_get_url(optional($this->commodity->image_file)->path) ?? asset('assets/png/email-verification.png'))
+            ->banner(
+                file_get_url(optional($this->commodity->image_file)->path) ?? asset('assets/png/email-verification.png')
+            )
             ->line($this->commodity->title)
             ->line($this->commodity->description)
             ->actionApproval([
@@ -43,6 +47,8 @@ class SendEmailCommodityApprovalJob implements ShouldQueue
                 [__('Reject Commodity'), route('commodities.reject', ['xid' => $this->commodity->xid])]
             ]);
 
-        return Mail::to($this->emailRecipients)->send($commodityApprovalMail);
+        return Mail::to($this->emailRecipients)
+            ->cc(config('sanf-mobile.mail_to.it_helpdesk'))
+            ->send($commodityApprovalMail);
     }
 }

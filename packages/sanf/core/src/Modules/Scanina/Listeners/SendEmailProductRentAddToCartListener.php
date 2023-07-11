@@ -8,10 +8,6 @@ use Sanf\Api\Modules\Scanina\Jobs\SendEmailProductAddToCartForUserJob;
 
 class SendEmailProductRentAddToCartListener
 {
-    public function __construct()
-    {
-        //
-    }
 
     public function handle($event)
     {
@@ -23,15 +19,16 @@ class SendEmailProductRentAddToCartListener
         $endedAt = Carbon::parse($request->endDateAvailable);
 
         // Send array data into email for the content
+        $dateFormat = '%d %B %Y';
         $data = [
             'fullName' => $profile->getFullName(),
             'content' => [
-                'Tanggal Pengajuan' => date_localized($createdAt, '%d %B %Y'),
+                'Tanggal Pengajuan' => date_localized($createdAt, "{$dateFormat}"),
                 'Kategori' => 'Rental',
                 'Nama Kendaraan' => $request->name,
                 'Jumlah' => 1,
-                'Tanggal Mulai Sewa' => date_localized($startedAt, '%d %B %Y'),
-                'Tanggal Selesai Sewa' => date_localized($endedAt, '%d %B %Y'),
+                'Tanggal Mulai Sewa' => date_localized($startedAt, $dateFormat),
+                'Tanggal Selesai Sewa' => date_localized($endedAt, $dateFormat),
                 'Harga' => 'Rp. ' . number_format($request->price, 0, ',', '.'),
                 'Item Number' => $request->itemNumber,
                 'Serial Number' => $request->serialNumber,
@@ -44,7 +41,9 @@ class SendEmailProductRentAddToCartListener
             return $value !== null;
         });
 
-        $recipients = explode(',', config('scanina-api.recipient'));
+        $sanfMailAdmin = explode(',', config('sanf-mobile.mail_to.marketing'));
+        $scaninaMailAdmin = explode(',', config('scanina-api.recipient'));
+        $recipients = array_merge($sanfMailAdmin, $scaninaMailAdmin);
 
         dispatch(new SendEmailProductAddToCartForUserJob($data, [$profile->getEmail()]));
         dispatch(new SendEmailProductAddToCartForAdminJob($data, $recipients));

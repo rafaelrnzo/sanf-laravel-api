@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Plafond;
 
 use Illuminate\Bus\Queueable;
@@ -9,11 +8,12 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 use Sanf\Core\Mail\MailLayout2Columns;
-use Sanf\Core\Modules\User\Enums\ProfileType;
 
 class SendEmailNewRequestPlafondForAdminJob implements ShouldQueue
 {
-    use InteractsWithQueue, Queueable, SerializesModels;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     protected $data;
 
@@ -54,6 +54,8 @@ class SendEmailNewRequestPlafondForAdminJob implements ShouldQueue
                 ['joinToIndex' => 1, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08);">'],
             ]);
 
-        return Mail::to($this->emailRecipients)->send($mailable);
+        return Mail::to($this->emailRecipients)
+            ->cc(config('sanf-mobile.mail_to.it_helpdesk'))
+            ->send($mailable);
     }
 }

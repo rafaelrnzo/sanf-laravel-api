@@ -1,15 +1,12 @@
 <?php
 
-
 namespace Sanf\Api\Modules\ContactUs;
-
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Response\JsonResponseMapper;
 use Sanf\Core\Modules\ContactUs\AskUsSubmitService;
-
 
 class AskUsSubmitController extends RestApiController
 {
@@ -24,23 +21,23 @@ class AskUsSubmitController extends RestApiController
 
     public function process(Request $request, JsonResponseMapper $response)
     {
-
         // validate request;
         $property = $this->validating($request);
 
-        if (isset($request['images']))
+        if (isset($request['images'])) {
             $property += ['images' => $request['images']];
+        }
 
         // set up dto;
         $dto = new AskUsSubmitRequestDto($property);
 
-        //TODO USE DECORATOR
+        // TODO USE DECORATOR
         $result = DB::transaction(function () use ($dto) {
             return $this->service->execute($dto);
         });
 
-        if($result){
-            $recipients = explode(',', config('sanf-mobile.mail_to_admin'));
+        if ($result) {
+            $recipients = explode(',', config('sanf-mobile.mail_to.customer_service'));
             dispatch(new SendAskUsJob($result, $recipients));
         }
 

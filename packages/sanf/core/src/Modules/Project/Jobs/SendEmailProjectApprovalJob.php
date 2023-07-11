@@ -11,7 +11,9 @@ use NbsPhp\Core\Mail\BaseMail;
 
 class SendEmailProjectApprovalJob implements ShouldQueue
 {
-    use InteractsWithQueue, Queueable, SerializesModels;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     protected $project;
 
@@ -35,7 +37,9 @@ class SendEmailProjectApprovalJob implements ShouldQueue
             ->subject('Pengajuan project baru dari pengguna SANFIND!')
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
             ->rightLogo(asset('assets/png/sanf-tagline.png'))
-            ->banner(file_get_url(optional($this->project->image_file)->path) ?? asset('assets/png/email-verification.png'))
+            ->banner(
+                file_get_url(optional($this->project->image_file)->path) ?? asset('assets/png/email-verification.png')
+            )
             ->line($this->project->title)
             ->line($this->project->description)
             ->actionApproval([
@@ -43,6 +47,8 @@ class SendEmailProjectApprovalJob implements ShouldQueue
                 [__('Reject Project'), route('projects.reject', ['xid' => $this->project->xid])]
             ]);
 
-        return Mail::to($this->emailRecipients)->send($projectApprovalMail);
+        return Mail::to($this->emailRecipients)
+            ->cc(config('sanf-mobile.mail_to.it_helpdesk'))
+            ->send($projectApprovalMail);
     }
 }

@@ -51,6 +51,8 @@ class SendEmailProductAddToCartForAdminJob implements ShouldQueue
                 [__('Laporkan email ini'), $reportUrl]
             );
 
-        return Mail::to($this->recipient)->send($mailable);
+        return Mail::to($this->recipient)
+            ->cc(config('sanf-mobile.mail_to.it_helpdesk'))
+            ->send($mailable);
     }
 }

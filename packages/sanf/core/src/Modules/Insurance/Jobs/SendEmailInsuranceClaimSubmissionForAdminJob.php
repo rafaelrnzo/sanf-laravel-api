@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Insurance\Jobs;
 
 use Illuminate\Bus\Queueable;
@@ -11,10 +10,12 @@ use Illuminate\Support\Facades\Mail;
 use Sanf\Core\Mail\MailLayout2Columns;
 use Sanf\Core\Modules\User\Entities\ProfileEntityInterface;
 
-
 class SendEmailInsuranceClaimSubmissionForAdminJob implements ShouldQueue
 {
-    use InteractsWithQueue, Queueable, SerializesModels;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
+
     protected $data;
     protected $recipient;
 
@@ -46,27 +47,33 @@ class SendEmailInsuranceClaimSubmissionForAdminJob implements ShouldQueue
             'No Telepon PIC' => $profile->getPhoneNumber(),
             'Email PIC' => $profile->getEmail(),
         ];
-        $mailable = (new MailLayout2Columns)
+        $mailable = (new MailLayout2Columns())
             ->subject('Pengajuan Klaim Asuransi ' . $this->data->user->full_name)
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
             ->rightLogo(asset('assets/png/sanf-tagline.png'))
             ->banner(asset('assets/png/email-verification.png'))
             ->greeting(__('Halo Admin SANFIND!'))
-            ->line(__('Pengguna atas nama <strong>“' . $this->data->user->full_name . '”</strong> telah mengajukan klaim asuransi, berikut kami lampirkan detailnya'
-            ))
+            ->line(
+                __(
+                    'Pengguna atas nama <strong>“' . $this->data->user->full_name . '”</strong> telah mengajukan klaim asuransi, berikut kami lampirkan detailnya'
+                )
+            )
             ->writeContent($data)
             ->generateSeparator([
                 ['joinToIndex' => 1, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08); margin: 5px 0;">'],
-                ['joinToIndex' => 2, 'html' => '<p style="color: #232227; font-size: 14px;"><strong>Detail Klaim Asuransi</strong></p>'],
+                [
+                    'joinToIndex' => 2,
+                    'html' => '<p style="color: #232227; font-size: 14px;"><strong>Detail Klaim Asuransi</strong></p>'
+                ],
                 ['joinToIndex' => 7, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08); margin: 5px 0;">'],
             ]);
 
-        foreach ($this->data->image_files as $imageFile){
+        foreach ($this->data->image_files as $imageFile) {
             $mailable->attachFromStorage($imageFile->path);
         }
 
-        $recipients = explode(',', config('sanf-mobile.mail_to_admin'));
-
-        return Mail::to($recipients)->send($mailable);
+        return Mail::to($this->recipient)
+            ->cc(config('sanf-mobile.mail_to.it_helpdesk'))
+            ->send($mailable);
     }
 }

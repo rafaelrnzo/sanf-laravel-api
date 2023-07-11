@@ -11,7 +11,9 @@ use Sanf\Core\Mail\BaseMailV2;
 
 class SendAskUsJob implements ShouldQueue
 {
-    use InteractsWithQueue, Queueable, SerializesModels;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     protected $email;
     protected $emailRecipients;
@@ -30,8 +32,7 @@ class SendAskUsJob implements ShouldQueue
 
     public function handle()
     {
-
-        $askUsEmail = (new BaseMailV2)
+        $askUsEmail = (new BaseMailV2())
             ->subject('Kritik dan saran dari pengguna SANFIND!')
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
             ->rightLogo(asset('assets/png/sanf-tagline.png'))
@@ -39,7 +40,6 @@ class SendAskUsJob implements ShouldQueue
             ->writeInto($this->email);
 
         if (is_array($this->email['images'])) {
-
             foreach ($this->email['images'] as $val) {
                 $askUsEmail->attach(public_path($val['path']));
             }
@@ -47,6 +47,8 @@ class SendAskUsJob implements ShouldQueue
 
         $askUsEmail->from($this->email['email'], $this->email['name']);
 
-        Mail::to($this->emailRecipients)->send($askUsEmail);
+        Mail::to($this->emailRecipients)
+            ->cc(config('sanf-mobile.mail_to.it_helpdesk'))
+            ->send($askUsEmail);
     }
 }

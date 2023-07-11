@@ -8,15 +8,6 @@ use Sanf\Core\Modules\User\Enums\ProfileType;
 
 class SendEmailRequestNewPlafondListener
 {
-    /**
-     * Create the event listener.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
 
     /**
      * Handle the event.
@@ -45,7 +36,7 @@ class SendEmailRequestNewPlafondListener
             return $value !== null;
         });
 
-        $recipients = explode(',', config('sanf-mobile.mail_to_admin'));
+        $recipients = explode(',', config('sanf-mobile.mail_to.marketing'));
 
         dispatch(new SendEmailNewRequestPlafondForUserJob($data, [$profile->email]));
         dispatch(new SendEmailNewRequestPlafondForAdminJob($data, $recipients));

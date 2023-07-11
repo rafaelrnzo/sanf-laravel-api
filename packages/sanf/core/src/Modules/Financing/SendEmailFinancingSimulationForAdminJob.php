@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Financing;
 
 use Illuminate\Bus\Queueable;
@@ -11,10 +10,11 @@ use Illuminate\Support\Facades\Mail;
 use NbsPhp\Core\Mail\BaseMail;
 use Sanf\Core\Modules\Financing\Services\GetPdfFinancingSimulationService;
 
-
 class SendEmailFinancingSimulationForAdminJob implements ShouldQueue
 {
-    use InteractsWithQueue, Queueable, SerializesModels;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     protected $data;
     protected $recipient;
@@ -50,6 +50,8 @@ class SendEmailFinancingSimulationForAdminJob implements ShouldQueue
             'SANFIND-Simulasi-' . date('Y-m-d-H-i-s') . '.pdf'
         );
 
-        return Mail::to($this->recipient->email)->send($simulationEmail);
+        return Mail::to($this->recipient->email)
+            ->cc(config('sanf-mobile.mail_to.it_helpdesk'))
+            ->send($simulationEmail);
     }
 }

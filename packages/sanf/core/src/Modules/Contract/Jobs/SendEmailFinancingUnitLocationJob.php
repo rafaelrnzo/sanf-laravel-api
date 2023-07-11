@@ -11,7 +11,10 @@ use Sanf\Core\Mail\MailLayout2Columns;
 
 class SendEmailFinancingUnitLocationJob implements ShouldQueue
 {
-    use InteractsWithQueue, Queueable, SerializesModels;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
+
     protected $data;
     protected $recipient;
 
@@ -35,19 +38,26 @@ class SendEmailFinancingUnitLocationJob implements ShouldQueue
             ->rightLogo(asset('assets/png/sanf-tagline.png'))
             ->banner(asset('assets/png/email-verification.png'))
             ->greeting(__('Halo Admin SANFIND!'))
-            ->line(__(
-                '<blockquote style="margin: 0 0;font-size: 16px; line-height: 150%;">
-                    Pengguna atas nama <strong>"'. $this->data['full_name'] . '"</strong> telah mengajukan perubahan untuk lokasi untuk salah satu unit pembiayaan, berikut lampiran detail perubahannya.
+            ->line(
+                __(
+                    '<blockquote style="margin: 0 0;font-size: 16px; line-height: 150%;">
+                    Pengguna atas nama <strong>"' . $this->data['full_name'] . '"</strong> telah mengajukan perubahan untuk lokasi untuk salah satu unit pembiayaan, berikut lampiran detail perubahannya.
                 </blockquote>
-            '))
+            '
+                )
+            )
             ->writeContent($this->data['content'])
             ->generateSeparator([
                 ['joinToIndex' => 1, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08); margin: 5px 0;">'],
                 ['joinToIndex' => 5, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08); margin: 5px 0;">'],
-                ['joinToIndex' => 6, 'html' => '<p style="color: #232227; font-size: 14px;"><strong>Perubahan Lokasi</strong></p>'],
+                [
+                    'joinToIndex' => 6,
+                    'html' => '<p style="color: #232227; font-size: 14px;"><strong>Perubahan Lokasi</strong></p>'
+                ],
             ]);
 
-        return Mail::to($this->recipient)->send($simulationEmail);
+        return Mail::to($this->recipient)
+            ->cc(config('sanf-mobile.mail_to.it_helpdesk'))
+            ->send($simulationEmail);
     }
-
 }

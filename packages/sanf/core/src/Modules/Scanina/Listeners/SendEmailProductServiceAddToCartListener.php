@@ -8,10 +8,6 @@ use Sanf\Api\Modules\Scanina\Jobs\SendEmailProductAddToCartForUserJob;
 
 class SendEmailProductServiceAddToCartListener
 {
-    public function __construct()
-    {
-        //
-    }
 
     public function handle($event)
     {
@@ -35,7 +31,9 @@ class SendEmailProductServiceAddToCartListener
             return $value !== null;
         });
 
-        $recipients = explode(',', config('scanina-api.recipient'));
+        $sanfMailAdmin = explode(',', config('sanf-mobile.mail_to.marketing'));
+        $scaninaMailAdmin = explode(',', config('scanina-api.recipient'));
+        $recipients = array_merge($sanfMailAdmin, $scaninaMailAdmin);
 
         dispatch(new SendEmailProductAddToCartForUserJob($data, [$profile->getEmail()]));
         dispatch(new SendEmailProductAddToCartForAdminJob($data, $recipients));

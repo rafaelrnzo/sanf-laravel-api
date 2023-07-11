@@ -21,7 +21,17 @@ class SendEmailFinancingSimulationService extends FinancingByUserService impleme
         $user = $this->findUserOrFail($dto->user_id);
 
         // Execute job
-        dispatch(new SendEmailFinancingSimulationForUserJob($dto, (object)['name' => $user->full_name, 'email' => $user->username]));
-        dispatch(new SendEmailFinancingSimulationForAdminJob($dto, (object)['name' => $user->full_name, 'email' => explode(',', config('sanf-mobile.mail_to_admin'))]));
+        dispatch(
+            new SendEmailFinancingSimulationForUserJob(
+                $dto,
+                (object)['name' => $user->full_name, 'email' => $user->username]
+            )
+        );
+        dispatch(
+            new SendEmailFinancingSimulationForAdminJob(
+                $dto,
+                (object)['name' => $user->full_name, 'email' => explode(',', config('sanf-mobile.mail_to.marketing'))]
+            )
+        );
     }
 }

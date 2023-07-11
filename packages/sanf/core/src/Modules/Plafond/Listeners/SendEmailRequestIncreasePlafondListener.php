@@ -2,22 +2,12 @@
 
 namespace Sanf\Core\Modules\Plafond\Listeners;
 
-
 use Sanf\Core\Modules\Plafond\SendEmailRequestIncreasePlafondForAdminJob;
 use Sanf\Core\Modules\Plafond\SendEmailRequestIncreasePlafondForUserJob;
 use Sanf\Core\Modules\User\Enums\ProfileType;
 
 class SendEmailRequestIncreasePlafondListener
 {
-    /**
-     * Create the event listener.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
 
     /**
      * Handle the event.
@@ -50,7 +40,7 @@ class SendEmailRequestIncreasePlafondListener
             return $value !== null;
         });
 
-        $recipients = explode(',', config('sanf-mobile.mail_to_admin'));
+        $recipients = explode(',', config('sanf-mobile.mail_to.marketing'));
 
         dispatch(new SendEmailRequestIncreasePlafondForUserJob($data, [$profile->email]));
         dispatch(new SendEmailRequestIncreasePlafondForAdminJob($data, $recipients));

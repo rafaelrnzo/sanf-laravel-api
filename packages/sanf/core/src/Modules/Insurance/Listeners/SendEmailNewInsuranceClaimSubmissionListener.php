@@ -27,7 +27,7 @@ class SendEmailNewInsuranceClaimSubmissionListener
     public function handle($event)
     {
         $insuranceClaimSubmission = $event->insuranceClaimSubmission;
-        $adminRecipients = explode(',', config('sanf-mobile.mail_to_admin'));
+        $adminRecipients = explode(',', config('sanf-mobile.mail_to.service'));
         $userRecipient = (object)[
             'email' => $insuranceClaimSubmission->user->username,
             'fullName' => $insuranceClaimSubmission->user->full_name

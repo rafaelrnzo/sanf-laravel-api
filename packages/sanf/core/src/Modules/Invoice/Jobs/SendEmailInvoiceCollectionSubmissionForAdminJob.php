@@ -8,8 +8,6 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 use Sanf\Core\Mail\MailLayout2Columns;
-use Sanf\Core\Modules\Invoice\Dtos\GetPdfPrepaymentSimulationRequestDto;
-use Sanf\Core\Modules\Invoice\Services\GetPdfPrepaymentSimulationService;
 
 class SendEmailInvoiceCollectionSubmissionForAdminJob implements ShouldQueue
 {
@@ -55,17 +53,22 @@ class SendEmailInvoiceCollectionSubmissionForAdminJob implements ShouldQueue
             ->rightLogo(asset('assets/png/sanf-tagline.png'))
             ->banner(asset('assets/png/email-verification.png'))
             ->greeting(__('Halo Admin SANFIND'))
-            ->line(__(
-                '
+            ->line(
+                __(
+                    '
                 <p>
                     Pengguna atas nama <strong>“' . $this->data[0]->user->full_name . '”</strong> telah mengajukan pengambilan invoice,
                     berikut kami lampirkan detailnya
                 </p>'
-            ))
+                )
+            )
             ->writeContent($data)
             ->generateSeparator([
                 ['joinToIndex' => 2, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08); margin: 5px 0;">'],
-                ['joinToIndex' => 3, 'html' => '<p style="color: #232227; font-size: 14px;"><strong>Daftar Pengembalian Invoice</strong><p>'],
+                [
+                    'joinToIndex' => 3,
+                    'html' => '<p style="color: #232227; font-size: 14px;"><strong>Daftar Pengembalian Invoice</strong><p>'
+                ],
             ])
             ->writeTableHead([
                 [
@@ -87,8 +90,8 @@ class SendEmailInvoiceCollectionSubmissionForAdminJob implements ShouldQueue
             ])
             ->writeTableBody($tableData);
 
-        $recipients = explode(',', config('sanf-mobile.mail_to_admin'));
-
-        return Mail::to($recipients)->send($invoiceSubmission);
+        return Mail::to($this->recipient)
+            ->cc(config('sanf-mobile.mail_to.it_helpdesk'))
+            ->send($invoiceSubmission);
     }
 }
