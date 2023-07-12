@@ -56,7 +56,7 @@
         }
 
         body {
-            font-family: Montserrat;
+            font-family: Montserrat, sans-serif;
         }
 
         header img, footer img {
@@ -175,10 +175,10 @@
 <body>
 <header>
     @if(isset($content->imageHeader))
-    <div class="w-100 item">
-        <img alt="{{ $content->heading }}" class='img-fluid w-100' id="myImg" onclick="preview(this)"
-             src="{{ $content->imageHeader }}">
-    </div>
+        <div class="w-100 item">
+            <img alt="{{ $content->heading }}" class='img-fluid w-100' id="myImg" onclick="preview(this)"
+                 src="{{ $content->imageHeader }}">
+        </div>
     @endif
     <div class="container text-center mt-4 mb-4">
         <h5 class="font-weight-bold">{{ $content->heading }}</h5>
@@ -196,7 +196,7 @@
     @endif
 </footer>
 <div id="myModal" class="modal" onclick="this.style.display='none'">
-    <img class="modal-content" id="img01">
+    <img src="" alt="image" class="modal-content" id="img01">
 </div>
 
 
