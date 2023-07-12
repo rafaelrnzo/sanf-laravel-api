@@ -52,7 +52,7 @@ final class BrowseSubDistrictService implements ApplicationServiceInterface
                     return stristr($item->name, $value);
                 });
             })
-            ->when(($dto->sort_by == false), function ($collection, $value) {
+            ->when(!$dto->sort_by, function ($collection) {
                 return $collection->sortBy(function ($item) {
                     return $item->name;
                 });
@@ -71,7 +71,7 @@ final class BrowseSubDistrictService implements ApplicationServiceInterface
         return (object)[
             'data' => $data,
             'paginate' => (object)[
-                'total' => $response->total ?? $data->count(),
+                'total' => $data->count(),
                 'count' => $data->count() ?? 0,
                 'skip' => $dto->skip ?? 0,
                 'limit' => $dto->limit ?? null,
