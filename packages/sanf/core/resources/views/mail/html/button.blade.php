@@ -8,7 +8,7 @@
         <td height="15"></td>
     </tr>
     <tr>
-        <td align="center"><a class="action-button" href="{{ $url }}" target="_blank">{!! $slot !!}</a></td>
+        <td align="center"><a class="action-button" href="{{ $url }}" target="_blank" rel="noopener noreferrer">{!! $slot !!}</a></td>
     </tr>
     <tr>
         <td height="15"></td>
