@@ -320,7 +320,7 @@ class JWTHelper
     {
         $this->decoded = null;
 
-        $tokenId = md5(uniqid());
+        $tokenId = hash('sha256', uniqid());
         $issuedAt = time();
         $notBefore = $issuedAt;
         $expire = $notBefore + ($expireInSeconds ?? $this->expire_after);
@@ -344,7 +344,7 @@ class JWTHelper
     {
         $this->decoded = null;
 
-        $tokenId = md5(uniqid());
+        $tokenId = hash('sha256', uniqid());
         $issuedAt = time();
         $notBefore = $issuedAt;
         $expire = $notBefore + ($expireInSeconds ?? $this->expire_after);

@@ -30,7 +30,7 @@ class VerifyEmailService implements VerifyEmailServiceInterface
             throw new NotFoundHttpException();
         }
 
-        if (!hash_equals((string)$dto->token, sha1($user->getEmailForVerification()))) {
+        if (!hash_equals((string)$dto->token, hash('sha256', $user->getEmailForVerification()))) {
             throw new UnauthorizedException();
         }
 

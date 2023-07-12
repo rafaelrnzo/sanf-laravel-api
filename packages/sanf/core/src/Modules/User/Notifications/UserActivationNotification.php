@@ -23,7 +23,7 @@ class UserActivationNotification extends Notification
         $adminMail = config('sanf-mobile.mail_to_admin');
         $reportUrl = "mailto:{$adminMail}?subject=Laporan Aktivasi Akun";
 
-        return (new BaseMail)
+        return (new BaseMail())
             ->subject('Aktivasi akun SANFIND Anda!')
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
             ->rightLogo(asset('assets/png/sanf-tagline.png'))
@@ -32,7 +32,9 @@ class UserActivationNotification extends Notification
             ->line(__('Mohon verifikasi email Anda dengan mengklik tombol di bawah ini'))
             ->action(__('Verifikasi Email'), $verificationUrl)
             ->lineWithUrl(
-                __('Kami menerima permintaan pembuatan akun SANFIND yang memakai email Anda. Jika Anda merasa tidak membuat request tersebut mohon abaikan email ini atau anda dapat'),
+                __(
+                    'Kami menerima permintaan pembuatan akun SANFIND yang memakai email Anda. Jika Anda merasa tidak membuat request tersebut mohon abaikan email ini atau anda dapat'
+                ),
                 [__('laporkan email ini'), $reportUrl]
             )
             ->to($notifiable->getEmailForPasswordReset(), $fullName);
@@ -41,12 +43,19 @@ class UserActivationNotification extends Notification
     protected function activationUrl($notifiable)
     {
         $agent = new Agent();
-        $userActivationUrl = ($agent->isiPhone() || $agent->isiOS() || $agent->isiPad()) ? config('auth.urls.user_activation_ios') : config('auth.urls.user_activation');
+        $userActivationUrl = ($agent->isiPhone() || $agent->isiOS() || $agent->isiPad()) ? config(
+            'auth.urls.user_activation_ios'
+        ) : config('auth.urls.user_activation');
         $email = $notifiable->getEmailForVerification();
+
         //TODO CONFIGURABLE TOKEN DURATION
         $tokenDuration = 60 * 60; //1 hours
-        $token = sha1($email);
-        $jwtToken = (new \NbsPhp\Core\Jwt\JWTHelper())->newVerifyEmailToken($notifiable->getKey(), $token, $tokenDuration);
+        $token = hash('sha256', $email);
+        $jwtToken = (new \NbsPhp\Core\Jwt\JWTHelper())->newVerifyEmailToken(
+            $notifiable->getKey(),
+            $token,
+            $tokenDuration
+        );
         if ($userActivationUrl !== '' || $userActivationUrl !== null) {
             return "{$userActivationUrl}?email={$email}&token={$jwtToken}";
         }

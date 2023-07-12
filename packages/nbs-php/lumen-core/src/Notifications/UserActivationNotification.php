@@ -34,10 +34,12 @@ class UserActivationNotification extends Notification
     protected function activationUrl($notifiable)
     {
         $agent = new Agent();
-        $userActivationUrl = ($agent->isiPhone() || $agent->isiOS() || $agent->isiPad()) ? config('auth.urls.user_activation_ios') : config('auth.urls.user_activation') ;
+        $userActivationUrl = ($agent->isiPhone() || $agent->isiOS() || $agent->isiPad()) ? config(
+            'auth.urls.user_activation_ios'
+        ) : config('auth.urls.user_activation');
 
         $id = $notifiable->getKey();
-        $token = sha1($notifiable->getEmailForVerification());
+        $token = hash('sha256', $notifiable->getEmailForVerification());
         if ($userActivationUrl !== '' || $userActivationUrl !== null) {
             return "{$userActivationUrl}?id={$id}&token={$token}";
         }

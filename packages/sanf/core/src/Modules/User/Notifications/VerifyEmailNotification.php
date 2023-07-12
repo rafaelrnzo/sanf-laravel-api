@@ -31,7 +31,9 @@ class VerifyEmailNotification extends Notification
             ->line(__('Mohon verifikasi email Anda dengan mengklik tombol di bawah ini'))
             ->action(__('Verifikasi Email'), $verificationUrl)
             ->lineWithUrl(
-                __('Kami menerima permintaan pembuatan akun SANFIND yang memakai email Anda. Jika Anda merasa tidak membuat request tersebut mohon abaikan email ini atau anda dapat'),
+                __(
+                    'Kami menerima permintaan pembuatan akun SANFIND yang memakai email Anda. Jika Anda merasa tidak membuat request tersebut mohon abaikan email ini atau anda dapat'
+                ),
                 [__('laporkan email ini'), $reportUrl]
             )
             ->to($notifiable->getEmailForVerification(), $fullName);
@@ -40,11 +42,18 @@ class VerifyEmailNotification extends Notification
     protected function verificationUrl($notifiable)
     {
         $agent = new Agent();
-        $emailVerifyUrl = ($agent->isiPhone() || $agent->isiOS() || $agent->isiPad()) ? config('auth.urls.email_verify_ios') : config('auth.urls.email_verify') ;
+        $emailVerifyUrl = ($agent->isiPhone() || $agent->isiOS() || $agent->isiPad()) ? config(
+            'auth.urls.email_verify_ios'
+        ) : config('auth.urls.email_verify');
+
         //TODO CONFIGURABLE TOKEN DURATION
         $tokenDuration = 60 * 60; //1 hours
-        $token = sha1($notifiable->getEmailForVerification());
-        $jwtToken = (new \NbsPhp\Core\Jwt\JWTHelper())->newVerifyEmailToken($notifiable->getKey(), $token, $tokenDuration);
+        $token = hash('sha256', $notifiable->getEmailForVerification());
+        $jwtToken = (new \NbsPhp\Core\Jwt\JWTHelper())->newVerifyEmailToken(
+            $notifiable->getKey(),
+            $token,
+            $tokenDuration
+        );
         if ($emailVerifyUrl !== '' || $emailVerifyUrl !== null) {
             return "{$emailVerifyUrl}?token={$jwtToken}";
         }

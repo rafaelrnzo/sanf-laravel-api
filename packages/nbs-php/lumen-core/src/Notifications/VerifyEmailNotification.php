@@ -34,10 +34,12 @@ class VerifyEmailNotification extends Notification
     protected function verificationUrl($notifiable)
     {
         $agent = new Agent();
-        $emailVerifyUrl = ($agent->isiPhone() || $agent->isiOS() || $agent->isiPad()) ? config('auth.urls.email_verify_ios') : config('auth.urls.email_verify') ;
+        $emailVerifyUrl = ($agent->isiPhone() || $agent->isiOS() || $agent->isiPad()) ? config(
+            'auth.urls.email_verify_ios'
+        ) : config('auth.urls.email_verify');
 
         $id = $notifiable->getKey();
-        $token = sha1($notifiable->getEmailForVerification());
+        $token = hash('sha256', $notifiable->getEmailForVerification());
         if ($emailVerifyUrl !== '' || $emailVerifyUrl !== null) {
             return "{$emailVerifyUrl}?id={$id}&token={$token}";
         }
