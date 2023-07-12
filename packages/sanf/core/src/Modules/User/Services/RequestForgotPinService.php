@@ -34,15 +34,17 @@ class RequestForgotPinService implements ApplicationServiceInterface
             throw new PasswordDoesntMatchException();
         }
 
+        // TODO set code length into dynamic variable
         $user->update([
-            'reset_pin_code' => rand(pow(10, 4 - 1), pow(10, 4) - 1), //TODO set code length into dynamic variable
+            'reset_pin_code' => random_int(pow(10, 4 - 1), pow(10, 4) - 1),
             'reset_pin_expired_at' => Carbon::now()->addDays(),
             'updated_at' => Carbon::now(),
         ]);
 
+        // TODO use transformer
         return (object)[
             'reset_pin_code' => $user->reset_pin_code,
             'reset_pin_expired_at' => $user->reset_pin_expired_at,
-        ]; // TODO use transformer
+        ];
     }
 }
