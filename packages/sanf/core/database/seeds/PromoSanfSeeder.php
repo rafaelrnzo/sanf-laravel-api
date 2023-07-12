@@ -14,8 +14,8 @@ class PromoSanfSeeder extends Seeder
     {
         $data[] = [
             'xid' => nano_id(),
-            'image_url' => 'http://apps.sanfinance.com/img/testing/pic1.jpg',
-            'link_url' => 'http://apps.sanfinance.com/info/promo',
+            'image_url' => 'https://apps.sanfinance.com/img/testing/pic1.jpg',
+            'link_url' => 'https://apps.sanfinance.com/info/promo',
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),
         ];
@@ -25,7 +25,7 @@ class PromoSanfSeeder extends Seeder
             $data[] = [
                 'xid' => nano_id(),
                 'image_url' => file_get_url($image),
-                'link_url' => 'http://apps.sanfinance.com/info/promo',
+                'link_url' => 'https://apps.sanfinance.com/info/promo',
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ];

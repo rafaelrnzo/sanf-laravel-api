@@ -14,7 +14,7 @@ class PromoAstraSeeder extends Seeder
     {
         $data[] = [
             'xid' => nano_id(),
-            'image_url' => 'http://apps.sanfinance.com/img/testing/pic1.jpg',
+            'image_url' => 'https://apps.sanfinance.com/img/testing/pic1.jpg',
             'web_url' => 'https://www.astralife.co.id/',
             'android_url' => null,
             'ios_url' => null,

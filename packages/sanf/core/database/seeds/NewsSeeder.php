@@ -17,8 +17,8 @@ class NewsSeeder extends Seeder
         $data[] = [
             'xid' => nano_id(),
             'title' => "Promo menarik 2021",
-            'image_url' => 'http://apps.sanfinance.com/img/testing/pic1.jpg',
-            'link_url' => 'http://apps.sanfinance.com/info/news',
+            'image_url' => 'https://apps.sanfinance.com/img/testing/pic1.jpg',
+            'link_url' => 'https://apps.sanfinance.com/info/news',
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),
         ];
@@ -28,7 +28,7 @@ class NewsSeeder extends Seeder
                 'xid' => nano_id(),
                 'title' => $faker->sentence(5),
                 'image_url' => file_get_url("news-{$index}.png"),
-                'link_url' => 'http://apps.sanfinance.com/info/news',
+                'link_url' => 'https://apps.sanfinance.com/info/news',
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ];
