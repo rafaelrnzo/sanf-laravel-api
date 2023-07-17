@@ -29,7 +29,7 @@ class BrowseProductServiceResponseTransformer extends TransformerAbstract
             'price_cut' => $cutPrice,
             'rating' => (float)optional($dto)->rating,
             'total_review' => (int)optional($dto)->reviewCount,
-            'sold' => (int)optional($dto)->sold,
+            'sold' => (int)optional($dto)->itemSoldCount,
         ];
 
         if (optional($dto)->servicedAt || optional($dto)->notes) {

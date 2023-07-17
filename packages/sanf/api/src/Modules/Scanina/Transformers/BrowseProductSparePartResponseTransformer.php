@@ -29,12 +29,16 @@ class BrowseProductSparePartResponseTransformer extends TransformerAbstract
             'price_cut' => $cutPrice,
             'rating' => (float)optional($dto)->rating,
             'total_review' => (int)optional($dto)->reviewCount,
-            'sold' => (int)optional($dto)->sold,
+            'sold' => (int)optional($dto)->itemSoldCount,
             'stock' => (int)optional($dto)->stock,
         ];
 
         if (optional($dto)->quantity) {
             $response['quantity'] = optional($dto)->quantity;
+        }
+
+        if (optional($dto)->itemNumber) {
+            $response['item_number'] = optional($dto)->itemNumber;
         }
 
         return $response;
