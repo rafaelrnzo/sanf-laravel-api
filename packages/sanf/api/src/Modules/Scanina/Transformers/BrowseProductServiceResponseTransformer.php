@@ -36,6 +36,9 @@ class BrowseProductServiceResponseTransformer extends TransformerAbstract
             $response['start_service_at'] = optional($dto)->servicedAt;
             $response['notes'] = optional($dto)->notes;
         }
+        if (optional($dto)->quantity) {
+            $response['quantity'] = optional($dto)->quantity;
+        }
 
         return $response;
     }

@@ -85,10 +85,11 @@ class GuzzleBrowseProductServiceCartService implements ApplicationServiceInterfa
 
             $data = (array)$productServiceResponse->data;
             unset($data['reviews']);
-            $productServiceResponseDto =  new ReadProductServiceResponseDto($data);
+            $productServiceResponseDto = new ReadProductServiceResponseDto($data);
             $productServiceResponseDto->xid = $product->xid;
             $productServiceResponseDto->servicedAt = $product->scheduleDate;
             $productServiceResponseDto->notes = optional($product)->notes;
+            $productServiceResponseDto->quantity = optional($product)->quantity;
             $productServiceResponseDto->customerReviews = [];
 
             $responses[] = $productServiceResponseDto;
