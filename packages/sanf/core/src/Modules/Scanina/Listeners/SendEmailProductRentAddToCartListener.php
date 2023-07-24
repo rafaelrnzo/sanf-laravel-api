@@ -23,8 +23,11 @@ class SendEmailProductRentAddToCartListener
         $data = [
             'fullName' => $profile->getFullName(),
             'content' => [
+                'Customer ID' => $profile->getCustomerId(),
                 'Tanggal Pengajuan' => date_localized($createdAt, "{$dateFormat}"),
                 'Kategori' => 'Rental',
+                'Email' => $profile->getEmail(),
+                'No Telp' => $profile->getPhoneNumber(),
                 'Nama Kendaraan' => $request->name,
                 'Jumlah' => 1,
                 'Tanggal Mulai Sewa' => date_localized($startedAt, $dateFormat),

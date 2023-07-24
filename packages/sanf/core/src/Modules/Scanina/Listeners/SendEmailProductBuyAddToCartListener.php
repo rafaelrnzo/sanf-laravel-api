@@ -21,8 +21,11 @@ class SendEmailProductBuyAddToCartListener
         $data = [
             'fullName' => $profile->getFullName(),
             'content' => [
+                'Customer ID' => $profile->getCustomerId(),
                 'Tanggal Pengajuan' => date_localized($createdAt, '%d %B %Y'),
                 'Kategori' => 'Buy',
+                'Email' => $profile->getEmail(),
+                'No Telp' => $profile->getPhoneNumber(),
                 'Nama Kendaraan' => $request->name,
                 'Jumlah' => 1,
                 'Harga' => 'Rp. ' . number_format($request->price, 0, ',', '.'),

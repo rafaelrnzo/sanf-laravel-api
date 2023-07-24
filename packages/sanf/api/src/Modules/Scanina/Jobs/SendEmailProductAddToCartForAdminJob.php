@@ -36,14 +36,14 @@ class SendEmailProductAddToCartForAdminJob implements ShouldQueue
         $reportUrl = "mailto:{$adminMail}?subject=Laporan Pengajuan Pembiayaan Kendaraan Scanina.com";
 
         $mailable = (new MailLayout2Columns())
-            ->subject('Pengajuan Pembiayaan Kendaraan Scanina.com ' . $this->data['fullName'])
+            ->subject('Transaksi pengajuan di Scanina.com atas nama ' . $this->data['fullName'])
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
             ->rightLogo(asset('assets/png/sanf-tagline.png'))
             ->banner(asset('assets/png/email-verification.png'))
             ->greeting(__('Halo Admin Scanina.com!'))
             ->line(
                 __(
-                    'Pengguna atas SANFIND atas nama <strong>“' . $this->data['fullName'] . '”</strong> telah mengajukan pengajuan pembiayaan kendaraan dengan detail sebagai berikut'
+                    'Pengguna SANFIND atas nama <strong>“' . $this->data['fullName'] . '”</strong> telah menambahkan transaksi kedalam keranjang scanina.com dengan detail sebagai berikut'
                 )
             )
             ->writeContent($this->data['content'])

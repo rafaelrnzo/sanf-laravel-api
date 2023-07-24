@@ -20,8 +20,11 @@ class SendEmailProductSparePartAddToCartListener
         $data = [
             'fullName' => $profile->getFullName(),
             'content' => [
+                'Customer ID' => $profile->getCustomerId(),
                 'Tanggal Pengajuan' => date_localized($createdAt, '%d %B %Y'),
                 'Kategori' => 'Spare Parts',
+                'Email' => $profile->getEmail(),
+                'No Telp' => $profile->getPhoneNumber(),
                 'Nama Kendaraan' => $request->name,
                 'Jumlah' => $request->quantity,
                 'Harga' => 'Rp. ' . number_format($request->price, 0, ',', '.'),
