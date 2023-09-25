@@ -38,7 +38,6 @@ class SendEmailProductServiceAddToCartListener
         $scaninaMailAdmin = explode(',', config('scanina-api.recipient'));
         $recipients = array_merge($sanfMailAdmin, $scaninaMailAdmin);
 
-        dispatch(new SendEmailProductAddToCartForUserJob($data, [$profile->getEmail()]));
         dispatch(new SendEmailProductAddToCartForAdminJob($data, $recipients));
     }
 }
