@@ -33,5 +33,6 @@ class MyProfileDto extends CamelCaseDataTransferObject
     public ?string $address;
     public ?string $businessSince;
     public bool $isPic;
+    public bool $hasPassword;
     public bool $hasPin;
 }
