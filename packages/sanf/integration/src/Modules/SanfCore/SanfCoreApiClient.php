@@ -139,7 +139,7 @@ class SanfCoreApiClient
      * @throws EndpointNotDefinedException
      * @throws GuzzleException
      */
-    public function registerPersonal($name, $email, $landlineNumber, $phoneNumber)
+    public function registerPersonal($name, $email, $landlineNumber = null, $phoneNumber = null)
     {
         $response = Request::route('customer.register', $this->client)
             ->json([

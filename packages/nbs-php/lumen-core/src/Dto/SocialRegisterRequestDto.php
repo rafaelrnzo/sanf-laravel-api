@@ -14,9 +14,9 @@ class SocialRegisterRequestDto extends DataTransferObject
 
     public ?string $landlineNumber;
 
-    public string $phoneNumber;
+    public ?string $phoneNumber;
 
-    public string $password;
+    public ?string $password;
 
     public string $providerToken;
 

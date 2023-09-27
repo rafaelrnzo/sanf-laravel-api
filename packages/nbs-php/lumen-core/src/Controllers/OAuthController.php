@@ -119,10 +119,7 @@ class OAuthController extends RestApiController
             'auth_token' => ['required', 'string',],
             'full_name' => ['required', 'string',],
             'email' => ['required', 'email',],
-            'password' => config('auth.input_validations.password.rule', ['required']),
-            'landline_number' => ['string', 'nullable', 'min:10',],
-            'phone_number' => ['required', 'min:10',],
-        ], config('auth.input_validations.password.messages'));
+        ]);
 
         $validated += $this->validateDeviceInformation($request, 'device.');
 
@@ -136,9 +133,6 @@ class OAuthController extends RestApiController
             'providerToken' => $input['auth_token'],
             'fullName' => $input['full_name'],
             'email' => $input['email'],
-            'landlineNumber' => $input['landline_number'] ?? null,
-            'phoneNumber' => $input['phone_number'],
-            'password' => $input['password'],
             'device' => new DeviceInfoRequestDto([
                 'deviceId' => $input['device']['device_id'],
                 'devicePlatformId' => $input['device']['device_platform_id'],

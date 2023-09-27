@@ -61,8 +61,6 @@ class RegisterByGoogleService implements RegisterByGoogleServiceInterface
                     'username' => $email,
                     'landline_number' => $dto->landlineNumber,
                     'phone_number' => $dto->phoneNumber,
-                    'password' => bcrypt($dto->password),
-                    'password_updated_at' => Carbon::now(),
                     'status_id' => UserStatus::ACTIVE,
                     'email_verified_at' => $isEmailVerified ? Carbon::now() : null,
                     'entity_type_id' => EntityType::ADMIN, //TODO CONFIGURABLE

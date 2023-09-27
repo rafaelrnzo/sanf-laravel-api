@@ -8,6 +8,7 @@ use NbsPhp\Core\Enum\UserStatus;
 use NbsPhp\Core\Services\RegisterByGoogleServiceInterface;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Core\Modules\User\Enums\ProfileType;
+use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class RegisterInternalByGoogleService implements RegisterByGoogleServiceInterface
@@ -38,20 +39,27 @@ class RegisterInternalByGoogleService implements RegisterByGoogleServiceInterfac
             return json_decode(json_encode($user));
         }
 
-        $token = optional($user)->token;
+        $userCoreAccount = null;
         try {
-            $this->internalApiClient->registerPersonal(
-                $dto->fullName,
-                $dto->email,
-                $dto->landlineNumber,
-                $dto->phoneNumber,
-            );
-        } catch (\Exception $exception) {
+            $userCoreAccount = $this->internalApiClient->findCustomerByEmail($dto->email);
+        } catch (SanfInternalApiDataNotFoundException $exception) {
             report($exception);
         }
 
-        $profiles = $this->internalApiClient->findCustomerByEmail($dto->email);
-        $profile = (collect($profiles['data'])->where('ID_IDENTITY', ProfileType::PERSONAL)->first());
+        if (is_null($userCoreAccount)) {
+            try {
+                $this->internalApiClient->registerPersonal(
+                    $dto->fullName,
+                    $dto->email,
+                    $dto->landlineNumber,
+                    $dto->phoneNumber,
+                );
+            } catch (\Exception $exception) {
+                report($exception);
+            }
+        }
+
+        $profile = (collect($userCoreAccount['data'])->where('ID_IDENTITY', ProfileType::PERSONAL)->first());
         $customerId = $profile['CUST_ID_SANF'];
 
         /** @var AuthModel $user */
@@ -61,7 +69,8 @@ class RegisterInternalByGoogleService implements RegisterByGoogleServiceInterfac
             'xid' => $customerId,
             'personal_xid' => $customerId,
         ]);
-        $user->token = $token;
+
+        $user->token =  optional($user)->token;
 
         //TODO DTO
         return json_decode(json_encode($user));
