@@ -23,6 +23,7 @@ use NbsPhp\Core\Jwt\JWTHelper;
 use NbsPhp\Core\Services\ActivateUserServiceInterface;
 use NbsPhp\Core\Services\AppLoginService;
 use NbsPhp\Core\Services\ChangePasswordService;
+use NbsPhp\Core\Services\CreatePasswordService;
 use NbsPhp\Core\Services\LoginWithEmailAndPasswordService;
 use NbsPhp\Core\Services\LogoutService;
 use NbsPhp\Core\Services\RegisterByEmailServiceInterface;
@@ -369,6 +370,20 @@ class AuthController extends RestApiController
             throw new UserActivationFailedException('Activation Token Invalid, Please Request Again');
         }
         return $decodedToken;
+    }
+
+    public function createPassword(Request $request, Guard $auth, CreatePasswordService $service)
+    {
+        $input = $this->validate($request, [
+            'password' => config('auth.input_validations.password.rule', ['required']),
+        ]);
+
+        $dto = (object)[
+            'userId' => $auth->id(),
+            'password' => $input['password'],
+        ];
+        $service->execute($dto);
+        return $this->responseOk();
     }
 
     public function changePassword(Request $request, Guard $auth, ChangePasswordService $service)

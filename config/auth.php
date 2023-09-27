@@ -267,6 +267,13 @@ return [
             ],
             [
                 'method' => 'post',
+                'uri' => "{$routePrefix}/password",
+                'name' => 'password.create',
+                'action' => "{$namespace}AuthController@createPassword",
+                'middleware' => ['auth', 'http-logger'],
+            ],
+            [
+                'method' => 'post',
                 'uri' => "{$routePrefix}/change-password/update",
                 'name' => 'password.change',
                 'action' => "{$namespace}AuthController@changePassword",
