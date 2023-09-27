@@ -6,6 +6,7 @@ use NbsPhp\Core\Database\TransactionalSessionInterface;
 use NbsPhp\Core\Services\VerifyEmailServiceInterface;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Core\Modules\User\Enums\ProfileType;
+use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class VerifyEmailAndRegisterInternalService implements VerifyEmailServiceInterface
@@ -40,9 +41,15 @@ class VerifyEmailAndRegisterInternalService implements VerifyEmailServiceInterfa
     {
         $operation = function () use ($dto) {
             $user = $this->service->execute($dto);
-            $profiles = $this->internalApiClient->findCustomerByEmail($user->username);
 
-            if (is_null($profiles['data'])) {
+            $userCoreAccount = null;
+            try {
+                $userCoreAccount = $this->internalApiClient->findCustomerByEmail($dto->email);
+            } catch (SanfInternalApiDataNotFoundException $e) {
+                report($e);
+            }
+
+            if (is_null($userCoreAccount)) {
                 $this->internalApiClient->registerPersonal(
                     $user->full_name,
                     $user->username,
@@ -50,10 +57,10 @@ class VerifyEmailAndRegisterInternalService implements VerifyEmailServiceInterfa
                     $user->phone_number,
                 );
 
-                $profiles = $this->internalApiClient->findCustomerByEmail($user->username);
+                $userCoreAccount = $this->internalApiClient->findCustomerByEmail($user->username);
             }
 
-            $profile = (collect($profiles['data'])->where('ID_IDENTITY', ProfileType::PERSONAL)->first());
+            $profile = (collect($userCoreAccount['data'])->where('ID_IDENTITY', ProfileType::PERSONAL)->first());
             $customerId = $profile['CUST_ID_SANF'];
 
             /** @var AuthModel $user */
