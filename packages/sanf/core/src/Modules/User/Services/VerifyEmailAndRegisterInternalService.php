@@ -44,7 +44,7 @@ class VerifyEmailAndRegisterInternalService implements VerifyEmailServiceInterfa
 
             $userCoreAccount = null;
             try {
-                $userCoreAccount = $this->internalApiClient->findCustomerByEmail($dto->email);
+                $userCoreAccount = $this->internalApiClient->findCustomerByEmail($user->username);
             } catch (SanfInternalApiDataNotFoundException $e) {
                 report($e);
             }
