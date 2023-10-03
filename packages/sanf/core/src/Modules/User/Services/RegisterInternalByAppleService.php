@@ -47,16 +47,13 @@ class RegisterInternalByAppleService implements RegisterByAppleServiceInterface
         }
 
         if (is_null($userCoreAccount)) {
-            try {
-                $this->internalApiClient->registerPersonal(
-                    $dto->fullName,
-                    $dto->email,
-                    $dto->landlineNumber,
-                    $dto->phoneNumber,
-                );
-            } catch (\Exception $exception) {
-                report($exception);
-            }
+            $this->internalApiClient->registerPersonal(
+                $dto->fullName,
+                $dto->email,
+                $dto->landlineNumber,
+                $dto->phoneNumber,
+            );
+            $userCoreAccount = $this->internalApiClient->findCustomerByEmail($dto->email);
         }
 
         $profile = (collect($userCoreAccount['data'])->where('ID_IDENTITY', ProfileType::PERSONAL)->first());
