@@ -19,7 +19,7 @@ sonarqube:
   rules:
     - if: $CI_SERVER_HOST == "code.nbs.dev" && ($CI_COMMIT_BRANCH == "develop" || $CI_COMMIT_BRANCH == "testing" || $CI_COMMIT_BRANCH =~ /^release\/.+/ || $CI_COMMIT_BRANCH == "master")
   tags:
-    - docker-runner
+    - nbs--docker-runner-xl
 
 base:lint:
   stage: base
@@ -37,7 +37,7 @@ base:lint:
     changes:
       - "deployments/v2/php-7.4/lint/**/*"
   tags:
-    - docker-runner
+    - nbs--docker-runner-xl
 
 base:php-7.4:
   stage: base
@@ -55,7 +55,7 @@ base:php-7.4:
     changes:
       - "deployments/v2/php-7.4/runtime/**/*"
   tags:
-    - docker-runner
+    - nbs--docker-runner-xl
 
 base:vendor:
   stage: base
@@ -75,7 +75,7 @@ base:vendor:
       - "composer.json"
       - "composer.lock"
   tags:
-    - docker-runner
+    - nbs--docker-runner-xl
 
 lint:code:
   stage: lint
@@ -101,7 +101,7 @@ lint:code:
     changes:
       - "packages/sanf/**/*"
   tags:
-    - docker-runner
+    - nbs--docker-runner-xl
   allow_failure: true
 
 build:api:
@@ -125,7 +125,7 @@ build:api:
   only:
     - develop
   tags:
-    - docker-runner
+    - nbs--docker-runner-xl
 
 build:worker:
   stage: build
@@ -146,7 +146,7 @@ build:worker:
   only:
     - develop
   tags:
-    - docker-runner
+    - nbs--docker-runner-xl
 
 deploy:dev:
   stage: deploy
