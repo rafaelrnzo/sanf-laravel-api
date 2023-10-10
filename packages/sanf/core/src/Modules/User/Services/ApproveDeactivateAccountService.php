@@ -66,7 +66,10 @@ class ApproveDeactivateAccountService implements ApplicationServiceInterface
             'updated_at' => Carbon::now(),
             'deleted_at' => Carbon::now(),
         ]);
-        $user->oauth->delete();
+
+        if ($user->oauth) {
+            $user->oauth->delete();
+        }
 
         dispatch(new SendApprovalRequestDeletionAccountNotification(['name' => $user->full_name,], $user->username));
 
