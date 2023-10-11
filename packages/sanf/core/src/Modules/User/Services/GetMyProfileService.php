@@ -48,7 +48,7 @@ class GetMyProfileService implements ApplicationServiceInterface
 
         $profile = $this->correctionIsPic($profile, $user);
         $result = $profile->toArray();
-        $result['hasPassword'] = isset($user->password);
+        $result['hasPassword'] = isset($user->password_updated_at) || isset($user->password);
         $result['hasPin'] = isset($user->pin);
 
         return new MyProfileDto($result);

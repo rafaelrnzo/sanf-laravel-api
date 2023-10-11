@@ -19,7 +19,7 @@ class LoginTransformer extends TransformerAbstract
                 'email' => $item->username,
                 'type_name' => ProfileType::PERSONAL()->getTranslation(),
                 'type_id' => ProfileType::PERSONAL(),
-                'has_password' => isset($item->password_updated_at),
+                'has_password' => isset($item->password_updated_at) || $item->hasPassword,
                 'has_pin' => isset($item->pin_updated_at),
             ]
         ];

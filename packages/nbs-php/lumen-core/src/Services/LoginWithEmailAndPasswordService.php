@@ -101,6 +101,7 @@ class LoginWithEmailAndPasswordService implements ApplicationServiceInterface
             'accessExpiredAt' => $accessTokenExpiredAt,
             'refreshToken' => $refreshToken,
             'refreshExpiredAt' => $refreshTokenExpiredAt,
+            'hasPassword' => isset($user->password),
         ])));
     }
 }

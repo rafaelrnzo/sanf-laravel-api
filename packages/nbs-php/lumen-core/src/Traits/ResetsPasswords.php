@@ -2,6 +2,7 @@
 
 namespace NbsPhp\Core\Traits;
 
+use Carbon\Carbon;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Contracts\Auth\PasswordBroker;
 use Illuminate\Contracts\Auth\StatefulGuard;
@@ -155,6 +156,7 @@ trait ResetsPasswords
         $this->setUserPassword($user, $password);
 
         $user->setRememberToken(Str::random(60));
+        $user->password_updated_at = Carbon::now();
 
         $user->save();
 
