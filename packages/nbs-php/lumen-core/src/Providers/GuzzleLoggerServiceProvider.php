@@ -6,6 +6,7 @@ use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Promise\PromiseInterface;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Lumen\Application;
 use NbsPhp\Core\Jobs\LogApiRequestToDatabaseJob;
@@ -78,18 +79,26 @@ class GuzzleLoggerServiceProvider extends ServiceProvider
                 }));
             }
             if ($isEnabled && $logDriver == self::DRIVER_DATABASE) {
+
+                //TODO SERVICE AND REPO
+                try{
+                    $userId = Auth::id();
+                } catch (\Exception $exception) {
+                    $userId = null;
+                }
                 $handlerStack->push(
-                    Middleware::tap(null, function (RequestInterface $request, array $options, PromiseInterface $promise) {
+                    Middleware::tap(null, function (RequestInterface $request, array $options, PromiseInterface $promise) use ($userId) {
                         $requestBody = $request->getBody();
                         $requestBody->rewind();  // need to rewind stream to be able read request content again
                         $requestContent = json_decode($requestBody, true);
-                        $promise->then(function (ResponseInterface $response) use ($request, $requestContent) {
+                        $promise->then(function (ResponseInterface $response) use ($request, $requestContent, $userId) {
                             $responseContent = json_decode($response->getBody(), true);
                             return dispatch(new LogApiRequestToDatabaseJob(
                                 $request,
                                 $requestContent,
                                 $response,
                                 $responseContent,
+                                $userId,
                             ));
                         });
                     })

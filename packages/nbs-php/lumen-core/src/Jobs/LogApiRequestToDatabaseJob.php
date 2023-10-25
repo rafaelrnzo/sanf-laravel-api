@@ -14,6 +14,7 @@ class LogApiRequestToDatabaseJob extends AbstractJob
     protected $requestBody;
     protected ResponseInterface $response;
     protected $responseBody;
+    protected $userId;
 
     /**
      * LogApiRequestToDatabaseJob constructor.
@@ -22,12 +23,13 @@ class LogApiRequestToDatabaseJob extends AbstractJob
      * @param ResponseInterface $response
      * @param $responseBody
      */
-    public function __construct(RequestInterface $request, $requestBody, ResponseInterface $response, $responseBody)
+    public function __construct(RequestInterface $request, $requestBody, ResponseInterface $response, $responseBody, $userId = null)
     {
         $this->request = $request;
         $this->requestBody = $requestBody;
         $this->response = $response;
         $this->responseBody = $responseBody;
+        $this->userId = $userId;
     }
 
 
@@ -39,14 +41,8 @@ class LogApiRequestToDatabaseJob extends AbstractJob
     public function handle()
     {
         $censoredKeys = config('guzzle-logger.censor.bad-keys');
-        //TODO SERVICE AND REPO
-        try{
-            $userId = Auth::id();
-        } catch (\Exception $exception) {
-            $userId = null;
-        }
         ApiRequestLogModel::create([
-            'user_id' => $userId,
+            'user_id' => $this->userId,
             'request_id' => optional($this->request->getHeader('X-Request-ID'))[0],
             'status_code' => $this->response->getStatusCode(),
             'host' => ($this->request->getUri()->getPort()) ? "{$this->request->getUri()->getHost()}:{$this->request->getUri()->getPort()}" : $this->request->getUri()->getHost(),
