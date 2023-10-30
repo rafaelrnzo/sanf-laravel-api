@@ -158,6 +158,7 @@ class OAuthController extends RestApiController
         $input = $this->validateRegister($request);
         $dto = $this->newSocialRegisterDto($input);
         $user = $service->execute($dto);
+        $user->hasPassword = isset($user->password_updated_at);
 
         if (is_null(optional($user)->token)) {
             return $this->responseOk(
