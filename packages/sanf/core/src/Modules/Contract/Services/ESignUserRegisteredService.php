@@ -5,6 +5,7 @@ namespace Sanf\Core\Modules\Contract\Services;
 use Carbon\Carbon;
 use Firebase\Auth\Token\Exception\InvalidToken;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Log;
 use Kreait\Firebase\Exception\MessagingException;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
@@ -41,19 +42,25 @@ final class ESignUserRegisteredService implements ApplicationServiceInterface
 
     /**
      * @param null $dto
-     * @return object
+     * @return object|null
      */
-    public function execute($dto = null): object
+    public function execute($dto = null): ?object
     {
         // get user base on email
         $eSignUser = $this->eSignRepository->findUserByEmail($dto->email);
         if (!$eSignUser) {
-            throw new UserNotFoundException();
+            $notFoundException = new UserNotFoundException();
+            Log::warning("{$notFoundException->getCode()} {$notFoundException->getMessage()} at e-sign repository");
         }
 
         $user = $this->userRepository->findByEmail($dto->email);
         if (!$user) {
-            throw new UserNotFoundException();
+            $notFoundException = new UserNotFoundException();
+            Log::warning("{$notFoundException->getCode()} {$notFoundException->getMessage()} at user repository table");
+        }
+
+        if (!$eSignUser && !$user) {
+            return null;
         }
 
         // update status into complete state

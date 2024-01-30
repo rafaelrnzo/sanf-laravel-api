@@ -3,6 +3,7 @@
 namespace Sanf\Core\Modules\Contract\Services;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Enums\ESignContractStatusEnum;
@@ -29,17 +30,19 @@ final class ESignUserDocumentSignedService implements ApplicationServiceInterfac
      * @throws ESignDocumentNotFoundException
      * @throws UserNotFoundException
      */
-    public function execute($dto = null): object
+    public function execute($dto = null): ?object
     {
         // get user base on email
         $eSignUser = $this->eSignRepository->findUserByEmail($dto->email);
         if (!$eSignUser) {
-            throw new UserNotFoundException();
+            $notFoundException = new UserNotFoundException();
+            Log::warning("{$notFoundException->getCode()} {$notFoundException->getMessage()} at e-sign repository");
         }
 
-        $user = $this->userRepository->findById($eSignUser->user_id);
+        $user = $this->userRepository->findByEmail($dto->email);
         if (!$user) {
-            throw new UserNotFoundException();
+            $notFoundException = new UserNotFoundException();
+            Log::warning("{$notFoundException->getCode()} {$notFoundException->getMessage()} at user repository table");
         }
 
         // update e-sign document status
@@ -48,15 +51,19 @@ final class ESignUserDocumentSignedService implements ApplicationServiceInterfac
             throw new ESignDocumentNotFoundException();
         }
 
-        $documentAssignee = $this->eSignRepository->findDocumentAssigneeByDocId($eSignUser->user_id, $dto->documentId);
-        if (!$documentAssignee) {
-            throw new ESignDocumentNotFoundException();
+        if ($eSignUser) {
+            $documentAssignee = $this->eSignRepository->findDocumentAssigneeByDocId(
+                $eSignUser->user_id,
+                $dto->documentId
+            );
+            if (!$documentAssignee) {
+                throw new ESignDocumentNotFoundException();
+            }
+            $this->eSignRepository->updateDocumentAssignee($documentAssignee->id, [
+                'status_id' => ESignContractStatusEnum::DONE,
+                'updated_at' => Carbon::now(),
+            ]);
         }
-
-        $this->eSignRepository->updateDocumentAssignee($documentAssignee->id, [
-            'status_id' => ESignContractStatusEnum::DONE,
-            'updated_at' => Carbon::now(),
-        ]);
 
         $this->eSignRepository->updateDocument($document->id, [
             'version' => $document->version + 1,
@@ -64,18 +71,18 @@ final class ESignUserDocumentSignedService implements ApplicationServiceInterfac
             'updated_at' => Carbon::now(),
             'modified_by' => [
                 'source_by' => 'TekenAja',
-                'user_id' => $user->id,
-                'username' => $user->username,
-                'full_name' => $user->full_name,
-                'xid' => $user->xid,
-                'personal_xid' => $user->personal_xid,
+                'user_id' => $user->id ?? null,
+                'username' => $user->username ?? $dto->email,
+                'full_name' => $user->full_name ?? null,
+                'xid' => $user->xid ?? null,
+                'personal_xid' => $user->personal_xid ?? null,
             ],
         ]);
-        $document->email = $documentAssignee->email;
+        $document->email = $documentAssignee->email ?? $dto->email;
         $document->signs = [
             (object)[
-                'email' => $documentAssignee->email,
-                'document_sign_url' => $documentAssignee->document_sign_url
+                'email' => $documentAssignee->email ?? $dto->email,
+                'document_sign_url' => $documentAssignee->document_sign_url ?? null
             ]
         ];
 

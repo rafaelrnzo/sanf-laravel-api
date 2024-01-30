@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Firebase\Auth\Token\Exception\InvalidToken;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Kreait\Firebase\Exception\MessagingException;
 use League\Flysystem\FileNotFoundException;
@@ -68,14 +69,18 @@ final class ESignUserDocumentCompleteService implements ApplicationServiceInterf
     public function execute($dto = null): object
     {
         // get user base on email
-        $eSignUser = $this->eSignRepository->findUserByEmail($dto->signers[0]['email']);
+        $firstEmail = $dto->signers[0]['email'];
+
+        $eSignUser = $this->eSignRepository->findUserByEmail($firstEmail);
         if (!$eSignUser) {
-            throw new UserNotFoundException();
+            $notFoundException = new UserNotFoundException();
+            Log::warning("{$notFoundException->getCode()} {$notFoundException->getMessage()} at e-sign repository");
         }
 
-        $user = $this->userRepository->findById($eSignUser->user_id);
+        $user = $this->userRepository->findByEmail($firstEmail);
         if (!$user) {
-            throw new UserNotFoundException();
+            $notFoundException = new UserNotFoundException();
+            Log::warning("{$notFoundException->getCode()} {$notFoundException->getMessage()} at user repository table");
         }
 
         // update e-sign document status
@@ -87,19 +92,6 @@ final class ESignUserDocumentCompleteService implements ApplicationServiceInterf
         $documentsAssignee = $this->eSignRepository->documentAssigneeQuery(
             $this->eSignDocumentAssigneeSpecificaton->paginateDocumentAssigneeByDocId($document->document_id, null)
         );
-
-        // define user's sign
-        $signs = [];
-        foreach ($documentsAssignee as $documentAssignee) {
-            $user = $this->userRepository->findById($documentAssignee->user_id);
-            if (!$user) {
-                throw new UserNotFoundException();
-            }
-            $signs[] = (object) [
-                'full_name' => $user->full_name,
-                'email' => $user->username,
-            ];
-        }
 
         // download e-sign file
         $result = $this->tekenAjaClient->download($document->document_id);
@@ -139,15 +131,13 @@ final class ESignUserDocumentCompleteService implements ApplicationServiceInterf
             'updated_at' => Carbon::now(),
             'modified_by' => [
                 'source_by' => 'TekenAja',
-                'user_id' => $user->id,
-                'username' => $user->username,
-                'full_name' => $user->full_name,
-                'xid' => $user->xid,
-                'personal_xid' => $user->personal_xid,
+                'user_id' => $user->id ?? null,
+                'username' => $user->username ?? $firstEmail,
+                'full_name' => $user->full_name ?? null,
+                'xid' => $user->xid ?? null,
+                'personal_xid' => $user->personal_xid ?? null,
             ]
         ]);
-
-        $document->signs = $signs;
 
         // update core
         // TODO create self service of send notification using event service
@@ -159,20 +149,24 @@ final class ESignUserDocumentCompleteService implements ApplicationServiceInterf
         // TODO create self service of send notification using event service
         $fcmTokens = [];
         $usersId = [];
+        $signs = [];
+
         foreach ($dto->signers as $signer) {
-            $eSignUser = $this->eSignRepository->findUserByEmail($signer['email']);
-            if (!$eSignUser) {
-                throw new UserNotFoundException();
+            $user = $this->userRepository->findByEmail($signer['email']);
+
+            if ($user) {
+                $fcmTokens = array_merge($this->userNotificationRepository->getFcmTokens($user->id), $fcmTokens);
+                $usersId[] = $user->id;
             }
 
-            $user = $this->userRepository->findById($eSignUser->user_id);
-            if (!$user) {
-                throw new UserNotFoundException();
-            }
-
-            $fcmTokens = array_merge($this->userNotificationRepository->getFcmTokens($user->id), $fcmTokens);
-            $usersId[] = $user->id;
+            $signs[] = (object) [
+                'full_name' => $user->full_name ?? null,
+                'email' => $user->username ?? $signer['email'],
+            ];
         }
+
+        $document->signs = $signs;
+
         $data = [
             'xid' => nano_id(),
             'title' => __('Tanda Tangan Dokumen Kontrak Selesai'),
