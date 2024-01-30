@@ -18,7 +18,7 @@ class ReadProductSparePartResponseDto extends FlexibleDataTransferObject
     public ?string $slugName;
     public ?string $description;
     public ?array $imageFiles;
-    public ?object $videoFile;
+    public ?array $videoFile;
     public ?object $documentationFile;
     public ?int $priceBefore;
     public ?int $price;
