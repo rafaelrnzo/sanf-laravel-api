@@ -1,0 +1,4 @@
+# reference https://developers.google.com/search/docs/advanced/robots/create-robots-txt?hl=id
+
+User-agent: *
+Disallow: /

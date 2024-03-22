@@ -1,36 +1,67 @@
-version: '3'
+version: '3.9'
+
+networks:
+    local-sanf-net:
+        driver: bridge
+
+volumes:
+    local-sanf-net:
+        driver: local
 
 services:
   api:
-    image: sanf/core
-    container_name: sanf-api
+    image: ${CI_REGISTRY_IMAGE:-cr.nbs.dev/sanf/core/api}:local
+    container_name: local-sanf-api
     build:
       context: './'
-      dockerfile: './deployments/api/Dockerfile'
+      dockerfile: './deployments/local/app/api/Dockerfile'
     ports:
-      - ${APP_PORT:-8000}:8080
-    volumes:
-      - '.:/var/www:cached'
+      - ${APP_PORT:-8080}:80
     networks:
-      - sanf-net
-    restart: unless-stopped
+      - local-sanf-net
+    env_file:
+      - .env
+    restart: 'no'
+    volumes:
+      - '.:/var/www/app:cached'
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 192M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
 
   worker:
-    image: sanf/worker
-    container_name: sanf-worker
+    image: ${CI_REGISTRY_IMAGE:-cr.nbs.dev/sanf/core/worker}:local
+    container_name: local-sanf-worker
     build:
       context: './'
-      dockerfile: './deployments/worker/Dockerfile'
-    volumes:
-      - '.:/var/www:cached'
+      dockerfile: './deployments/local/app/worker/Dockerfile'
     networks:
-      - sanf-net
-    restart: unless-stopped
+      - local-sanf-net
+    env_file:
+      - .env
+    restart: 'no'
+    volumes:
+      - '.:/var/www/app:cached'
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 192M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
 
-networks:
-  sanf-net:
-    driver: bridge
-
-volumes:
-  sanf-net:
-    driver: local
