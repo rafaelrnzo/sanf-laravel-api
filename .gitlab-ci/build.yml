@@ -1,0 +1,104 @@
+stages:
+  - build
+
+lib:build:
+  stage: build
+  image: docker:stable
+  script:
+    - docker build -f ./deployments/development/php-7.4/lib/Dockerfile --pull -t ${CI_REGISTRY_IMAGE}/lib:latest .
+    - echo ${CI_REGISTRY_PASSWORD} | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
+    - docker push $CI_REGISTRY_IMAGE/lib:latest
+  after_script:
+    - docker rmi $(docker images -f "dangling=true" -q) || true
+  environment:
+    name: development
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "develop"
+      changes:
+        - "deployments/development/php-7.4/lib/Dockerfile"
+        - "database/migrations/*"
+        - "composer.json"
+        - "composer.lock"
+  tags:
+    - nbs--docker-runner-xl
+
+runtime:build:
+  stage: build
+  image: docker:stable
+  script:
+    - docker build -f ./deployments/development/php-7.4/base/Dockerfile --pull -t ${CI_REGISTRY_IMAGE}/base:latest .
+    - echo ${CI_REGISTRY_PASSWORD} | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
+    - docker push ${CI_REGISTRY_IMAGE}/base:latest
+  after_script:
+    - docker rmi $(docker images -f "dangling=true" -q) || true
+  environment:
+    name: development
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "develop"
+      changes:
+        - "deployments/development/php-7.4/base/Dockerfile"
+  tags:
+    - nbs--docker-runner-xl
+
+app:dev:build:
+  stage: build
+  image: nbsdev/docker-builder:20
+  needs:
+    - job: runtime:build
+      optional: true
+    - job: lib:build
+      optional: true
+  before_script:
+    - docker rmi $(docker images -f "dangling=true" -q) || true
+  script:
+    - cp $ENV_FILE .env
+    - cp $ASSET_LINKS_FILE ${CI_PROJECT_DIR}/public/.well-known/assetlinks.json
+    - cp $APPLE_SITE_ASSOCIATION_FILE ${CI_PROJECT_DIR}/public/.well-known/apple-site-association
+    - cp $FIREBASE_SA_FILE ${CI_PROJECT_DIR}/config/firebase-keys/firebase.json
+    - echo "APP_VERSION=${CI_COMMIT_SHORT_SHA}" >> .env
+    - echo "APP_BUILD_SIGNATURE=${CI_COMMIT_SHA}" >> .env
+    - echo ${CI_REGISTRY_PASSWORD} | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
+    - docker build -f ./deployments/development/app/api/Dockerfile --build-arg CI_REGISTRY_IMAGE=${CI_REGISTRY_IMAGE} --pull -t ${CI_REGISTRY_IMAGE}/api:latest .
+    - docker push ${CI_REGISTRY_IMAGE}/api:latest
+    - docker rmi ${CI_REGISTRY_IMAGE}/api:latest
+  after_script:
+    - docker rmi $(docker images -f "dangling=true" -q) || true
+  environment:
+    name: development
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "develop"
+  tags:
+    - nbs--docker-runner-xl
+
+worker:dev:build:
+  stage: build
+  image: nbsdev/docker-builder:20
+  needs:
+    - job: runtime:build
+      optional: true
+    - job: lib:build
+      optional: true
+  before_script:
+    - docker rmi $(docker images -f "dangling=true" -q) || true
+  script:
+    - cp $ENV_FILE .env
+    - cp $FIREBASE_SA_FILE ${CI_PROJECT_DIR}/config/firebase-keys/firebase.json
+    - echo "APP_VERSION=${CI_COMMIT_SHORT_SHA}" >> .env
+    - echo "APP_BUILD_SIGNATURE=${CI_COMMIT_SHA}" >> .env
+    - echo ${CI_REGISTRY_PASSWORD} | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
+    - docker build -f ./deployments/development/app/worker/Dockerfile --build-arg CI_REGISTRY_IMAGE=${CI_REGISTRY_IMAGE} --pull -t ${CI_REGISTRY_IMAGE}/worker:latest .
+    - docker push ${CI_REGISTRY_IMAGE}/worker:latest
+    - docker rmi ${CI_REGISTRY_IMAGE}/worker:latest
+  after_script:
+    - docker rmi $(docker images -f "dangling=true" -q) || true
+  environment:
+    name: development
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "develop"
+  tags:
+    - nbs--docker-runner-xl
+

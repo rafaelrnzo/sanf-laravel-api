@@ -1,0 +1,27 @@
+stages:
+  - deploy
+
+development:deploy:
+  stage: deploy
+  image:
+    name: cr.nbs.dev/dt/kubectl:1.22.7
+    entrypoint: [ "" ]
+  needs:
+    - job: app:dev:build
+  script:
+    - kubectl
+      --kubeconfig="/dev/null"
+      --server=${K8S_SERVER}
+      --certificate-authority=${K8S_SERVER_CERT_FILE}
+      --token=${K8S_TOKEN}
+      --namespace=${K8S_NAMESPACE}
+      rollout
+      restart
+      deployments/api
+  allow_failure: false
+  environment:
+    name: development
+  rules:
+    - if: $CI_COMMIT_BRANCH == "develop"
+  tags:
+    - nbs--docker-runner-xl
