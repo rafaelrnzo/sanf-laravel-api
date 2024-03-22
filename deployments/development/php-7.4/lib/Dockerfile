@@ -11,8 +11,8 @@ RUN echo "memory_limit=-1" > $PHP_CONF_DIR/99_memory-limit.ini \
     && apk add git \
     && rm -rf /var/cache/apk/* /var/tmp/* /tmp/*
 
-COPY packages/sanf/core/database /var/www/app/packages/sanf/core/database
 COPY database /var/www/app/database
+COPY packages/sanf/core/database /var/www/app/packages/sanf/core/database
 COPY composer.json /var/www/app/composer.json
 COPY composer.lock /var/www/app/composer.lock
 
@@ -29,3 +29,5 @@ RUN composer install \
     --prefer-dist \
     --ignore-platform-req=ext-intl \
     --ignore-platform-req=ext-zip
+
+RUN composer clear-cache

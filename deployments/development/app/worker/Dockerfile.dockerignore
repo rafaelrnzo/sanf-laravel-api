@@ -1,0 +1,7 @@
+.git/
+.k8s/
+deployments/development/assets
+deployments/development/php-8.1
+deployments/production/
+deployments/local/
+
