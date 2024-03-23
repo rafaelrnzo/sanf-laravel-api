@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Commodity\Services;
-
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Commodity\Dto\PaginateUserCommodityDto;
@@ -38,13 +36,13 @@ class GetListCommodityByUserService extends CommodityByUserService implements Ap
             $this->specificationFactory->paginateByUser($dto->userId, null, null, null, $dto->timestamp, $dto->keyword)
         );
 
-        return (object)[
+        return (object) [
             'data' => $data,
-            'paginate' => (object)[
-                'total' => (int)$total,
+            'paginate' => (object) [
+                'total' => (int) $total,
                 'count' => collect($data)->count(),
-                'skip' => (int)$dto->skip,
-                'limit' => (int)$dto->limit,
+                'skip' => (int) $dto->skip,
+                'limit' => (int) $dto->limit,
                 'sort_by' => $dto->sortBy,
             ],
         ];

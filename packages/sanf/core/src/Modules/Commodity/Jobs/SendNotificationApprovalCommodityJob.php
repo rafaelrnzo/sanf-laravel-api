@@ -25,7 +25,6 @@ class SendNotificationApprovalCommodityJob implements ShouldQueue
      *
      * @return void
      */
-
     public function __construct($commodity, $user)
     {
         $this->commodity = $commodity;

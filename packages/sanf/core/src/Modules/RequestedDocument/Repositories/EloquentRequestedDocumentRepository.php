@@ -7,7 +7,6 @@ use Sanf\Core\Modules\RequestedDocument\Models\RequestedDocumentModel;
 
 class EloquentRequestedDocumentRepository extends AbstractEloquentRepository implements RequestedDocumentRepositoryInterface
 {
-
     private RequestedDocumentModel $model;
 
     public function __construct(RequestedDocumentModel $model)
@@ -18,6 +17,7 @@ class EloquentRequestedDocumentRepository extends AbstractEloquentRepository imp
     public function query($specification)
     {
         $models = $specification->buildQuery($this->model)->get();
+
         return $this->stripEloquentModel($models);
     }
 
@@ -44,7 +44,7 @@ class EloquentRequestedDocumentRepository extends AbstractEloquentRepository imp
             ->with([
                 'items' => function ($query) {
                     return $query->whereNull('deleted_at');
-                }
+                },
             ])
             ->whereNull('deleted_at')
             ->where('profile_xid', '=', $profile_xid)

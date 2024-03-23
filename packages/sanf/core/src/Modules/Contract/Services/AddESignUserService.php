@@ -76,18 +76,18 @@ final class AddESignUserService implements ApplicationServiceInterface
         // hit endpoint registration by tekenAja
         // TODO use self service like registration tekenAja service
         $result = $this->client->addRegisterUser([
-            ['name' => 'email', 'contents' => $userRegistration->email,],
-            ['name' => 'name', 'contents' => $userRegistration->full_name,],
-            ['name' => 'gender', 'contents' => (string)$userRegistration->gender,],
-            ['name' => 'dob', 'contents' => $userRegistration->dob,],
-            ['name' => 'pob', 'contents' => $userRegistration->pob,],
-            ['name' => 'nik', 'contents' => $userRegistration->nik,],
-            ['name' => 'mobile', 'contents' => $userRegistration->msisdn,],
-            ['name' => 'province', 'contents' => $userRegistration->province_id,],
-            ['name' => 'district', 'contents' => $userRegistration->district_id,],
-            ['name' => 'sub_district', 'contents' => $userRegistration->sub_district_id,],
-            ['name' => 'address', 'contents' => $userRegistration->address,],
-            ['name' => 'zip_code', 'contents' => $userRegistration->postal_code,],
+            ['name' => 'email', 'contents' => $userRegistration->email],
+            ['name' => 'name', 'contents' => $userRegistration->full_name],
+            ['name' => 'gender', 'contents' => (string) $userRegistration->gender],
+            ['name' => 'dob', 'contents' => $userRegistration->dob],
+            ['name' => 'pob', 'contents' => $userRegistration->pob],
+            ['name' => 'nik', 'contents' => $userRegistration->nik],
+            ['name' => 'mobile', 'contents' => $userRegistration->msisdn],
+            ['name' => 'province', 'contents' => $userRegistration->province_id],
+            ['name' => 'district', 'contents' => $userRegistration->district_id],
+            ['name' => 'sub_district', 'contents' => $userRegistration->sub_district_id],
+            ['name' => 'address', 'contents' => $userRegistration->address],
+            ['name' => 'zip_code', 'contents' => $userRegistration->postal_code],
             [
                 'name' => 'ktp_photo',
                 'contents' => file_get_contents(file_get_temp_url($userRegistration->identity_file->path)),
@@ -152,7 +152,7 @@ final class AddESignUserService implements ApplicationServiceInterface
             'file_name' => $file,
             'directory' => $path,
             'path' => "{$path}{$file}",
-            'mime_type' => Storage::getMimeType("{$path}{$file}")
+            'mime_type' => Storage::getMimeType("{$path}{$file}"),
         ];
     }
 

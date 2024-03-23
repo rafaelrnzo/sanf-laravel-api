@@ -24,7 +24,6 @@ class SendNotificationApprovalProjectJob implements ShouldQueue
      *
      * @return void
      */
-
     public function __construct($project, $user)
     {
         $this->project = $project;
@@ -41,7 +40,7 @@ class SendNotificationApprovalProjectJob implements ShouldQueue
             'title' => __('Pengajuan Proyek Anda di SETUJUI'),
             'subtitle' => __('Info Proyek Anda'),
             'screen' => 'my_project',
-            'body' => __("Selamat Proyek anda yang berjudul :title telah dipublish", ['title' => $this->project->title]),
+            'body' => __('Selamat Proyek anda yang berjudul :title telah dipublish', ['title' => $this->project->title]),
             'published_at' => Carbon::now()->timestamp,
         ]);
 

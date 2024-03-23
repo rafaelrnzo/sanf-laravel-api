@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\User\Services;
-
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Staff\ValidateEligibleProfileByStaffService;
@@ -26,7 +24,7 @@ class GetListEligibleCustomerProfileService implements ApplicationServiceInterfa
     public function execute($dto = null)// email, userId
     {
         $customerProfiles = $this->customerProfileService->execute($dto);
-        $validatedProfiles = $this->validateEligibleProfileByStaffService->execute((object)[
+        $validatedProfiles = $this->validateEligibleProfileByStaffService->execute((object) [
             'customerProfiles' => $customerProfiles,
             'userId' => $dto->userId,
         ]);

@@ -2,7 +2,6 @@
 
 namespace Sanf\Core\Modules\Insurance\Services;
 
-
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Insurance\Dtos\BrowseInsuranceClaimSubmissionByUserRequestDto;
 use Sanf\Core\Modules\Insurance\Dtos\BrowseInsuranceClaimSubmissionByUserResponseDto;
@@ -29,8 +28,7 @@ final class BrowseInsuranceClaimSubmissionByUserService extends InsuranceClaimSu
      * @param BrowseInsuranceClaimSubmissionByUserRequestDto $dto
      * @return BrowseInsuranceClaimSubmissionByUserResponseDto
      */
-    public
-    function execute($dto = null)
+    public function execute($dto = null)
     {
         $result = $this->repository->query(
             $this->specificationFactory->paginateByUserAndProfile($dto->userId, $dto->profileXid, $dto->keyword, $dto->statusId, $dto->sortBy, $dto->skip, $dto->limit)
@@ -40,7 +38,7 @@ final class BrowseInsuranceClaimSubmissionByUserService extends InsuranceClaimSu
         );
 
         $data = array_map(function ($item) {
-            return (object)[
+            return (object) [
                 'id' => $item->id,
                 'xid' => $item->xid,
                 'status' => $item->status,
@@ -56,12 +54,12 @@ final class BrowseInsuranceClaimSubmissionByUserService extends InsuranceClaimSu
         return new BrowseInsuranceClaimSubmissionByUserResponseDto([
             'data' => $data,
             'paginate' => [
-                'total' => (int)$total,
+                'total' => (int) $total,
                 'count' => count($data),
-                'skip' => (int)$dto->skip,
-                'limit' => (int)$dto->limit,
+                'skip' => (int) $dto->skip,
+                'limit' => (int) $dto->limit,
                 'sortBy' => $dto->sortBy,
-            ]
+            ],
         ]);
     }
 }

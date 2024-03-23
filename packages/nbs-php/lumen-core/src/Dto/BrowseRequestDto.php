@@ -1,8 +1,6 @@
 <?php
 
-
 namespace NbsPhp\Core\Dto;
-
 
 class BrowseRequestDto extends CamelCaseDataTransferObject
 {

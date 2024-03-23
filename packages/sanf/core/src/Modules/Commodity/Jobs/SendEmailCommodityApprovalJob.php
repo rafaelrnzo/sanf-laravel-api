@@ -24,7 +24,6 @@ class SendEmailCommodityApprovalJob implements ShouldQueue
      *
      * @return void
      */
-
     public function __construct($commodity, $emailRecipients)
     {
         $this->commodity = $commodity;
@@ -44,10 +43,11 @@ class SendEmailCommodityApprovalJob implements ShouldQueue
             ->line($this->commodity->description)
             ->actionApproval([
                 [__('Approve Commodity'), route('commodities.approve', ['xid' => $this->commodity->xid])],
-                [__('Reject Commodity'), route('commodities.reject', ['xid' => $this->commodity->xid])]
+                [__('Reject Commodity'), route('commodities.reject', ['xid' => $this->commodity->xid])],
             ]);
 
         $ccMails = explode(',', config('sanf-mobile.mail_to.it_helpdesk'));
+
         return Mail::to($this->emailRecipients)
             ->cc($ccMails)
             ->send($commodityApprovalMail);

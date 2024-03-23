@@ -2,7 +2,6 @@
 
 namespace Sanf\Core\Modules\User\Repositories;
 
-
 use Sanf\Core\Modules\User\Entities\ProfileEntityInterface;
 
 interface ProfileRepositoryInterface

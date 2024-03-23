@@ -13,6 +13,6 @@ class UserAuthLogModel extends AbstractModel
     ];
 
     protected $casts = [
-        'created_by'
+        'created_by',
     ];
 }

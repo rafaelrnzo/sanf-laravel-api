@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Financing\Specifications;
-
 
 use Sanf\Core\Modules\Financing\Models\FinancingFacilityModel;
 
@@ -39,7 +37,7 @@ class EloquentPaginateFinancingFacilitySpecification
             })->when($this->sort_by, function ($query) {
                 return $query->orderBy('created_at', $this->sort_by);
             });
+
         return $query;
     }
-
 }

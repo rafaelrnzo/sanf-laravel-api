@@ -11,6 +11,6 @@ class PrepaymentSubmissionHistoryModel extends AbstractModel
     protected $table = 'prepayment_submission_history';
 
     protected $casts = [
-        'created_by' => 'object'
+        'created_by' => 'object',
     ];
 }

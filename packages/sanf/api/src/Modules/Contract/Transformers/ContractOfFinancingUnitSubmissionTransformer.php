@@ -10,7 +10,7 @@ class ContractOfFinancingUnitSubmissionTransformer extends TransformerAbstract
     public function transform($item)
     {
         return [
-            'contract_no' => (string)$item->contract_no,
+            'contract_no' => (string) $item->contract_no,
             'created_at' => ($item->created_at) ? Carbon::parse($item->created_at)->unix() : null,
         ];
     }

@@ -4,7 +4,6 @@ namespace Sanf\Core\Modules\RequestedDocument\Specifications;
 
 class EloquentRequestedDocumentSpecification implements RequestedDocumentSpecificationInterface
 {
-
     public function paginate(
         string $profileXid,
         ?int $statusId,

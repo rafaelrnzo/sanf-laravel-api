@@ -1,8 +1,6 @@
 <?php
 
-
 namespace NbsPhp\Core\Services;
-
 
 use NbsPhp\Core\Database\TransactionalSessionInterface;
 
@@ -21,7 +19,7 @@ class TransactionalApplicationService implements ApplicationServiceInterface
 
     public function execute($dto = null)
     {
-        $operation = function() use($dto) {
+        $operation = function () use ($dto) {
             return $this->service->execute($dto);
         };
 

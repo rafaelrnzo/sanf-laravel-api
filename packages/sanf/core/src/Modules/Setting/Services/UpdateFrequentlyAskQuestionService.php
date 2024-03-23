@@ -35,7 +35,7 @@ class UpdateFrequentlyAskQuestionService implements ApplicationServiceInterface
             'title' => $dto->title ?? $existingFaq->title,
             'description' => $dto->description ?? $existingFaq->description,
             'is_popular' => $dto->isPopular ?? $existingFaq->isPopular,
-            'order' => (double) $dto->order ?? $existingFaq->order,
+            'order' => (float) $dto->order ?? $existingFaq->order,
         ]);
 
         return true;

@@ -29,7 +29,7 @@ class ReadRentCartByUserService implements ApplicationServiceInterface
             $this->productSpecification->readRent($dto->productXid)
         );
 
-        $data = (array)$productRentResponse->data;
+        $data = (array) $productRentResponse->data;
         unset($data['review']);
 
         $productRentResponseDto = new ReadProductRentResponseDto($data);
@@ -44,15 +44,15 @@ class ReadRentCartByUserService implements ApplicationServiceInterface
 
         $specifications = array_map(function ($specification) {
             $specification->subSpecification = array_map(function ($subSpecification) {
-                return new BrowseProductSubSpecificationResponseDto((array)$subSpecification);
+                return new BrowseProductSubSpecificationResponseDto((array) $subSpecification);
             }, $specification->subSpecification);
 
-            return new BrowseProductSpecificationResponseDto((array)$specification);
+            return new BrowseProductSpecificationResponseDto((array) $specification);
         }, $productRentSpecificationResponse->data->rows);
 
         $subSpecifications = [];
         foreach ($specifications as $index => $specification) {
-            $subSpecifications[$index] = (object)[
+            $subSpecifications[$index] = (object) [
                 'name' => $specification->name,
                 'subSpecificationColumn' => $specification->specificationColumn ?? [],
             ];

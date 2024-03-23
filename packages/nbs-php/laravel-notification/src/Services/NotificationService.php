@@ -1,8 +1,6 @@
 <?php
 
-
 namespace NbsPhp\Notification\Services;
-
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -25,6 +23,7 @@ class NotificationService
     public function notificationCount($userId, $metadataKeys = ['unread_count'])
     {
         $unreadCount = $this->userRepository->getMetadata($userId, $metadataKeys);
+
         return json_decode(json_encode([
             'unread_count' => optional($unreadCount)->value,
         ]));
@@ -38,6 +37,7 @@ class NotificationService
         $types = $groups[$groupKey] ?? null;
         $lastId = $input['last_id'] ?? null;
         $limit = $input['limit'] ?? 20;
+
         return $this->notificationRepository->getNotificationsByUserIdAndTypes($userId, $lastId, $limit, $types, false);
     }
 
@@ -48,7 +48,7 @@ class NotificationService
      */
     public function markNotificationAsRead($userId, $input)
     {
-        $notificationIds = $input["ids"] ?? [];
+        $notificationIds = $input['ids'] ?? [];
         //TODO LOAD SOMEWHERE
         $metadata = [];
         foreach (config('notifications.types') as $type) {
@@ -88,11 +88,11 @@ class NotificationService
      * @param int $maxTry
      * @throws \Exception
      */
-    protected function optimisticUpdateMetadataUnreadCount($userId, $metadataKey, $notificationTypes = null,  $tryCount = 0, $maxTry = 10)
+    protected function optimisticUpdateMetadataUnreadCount($userId, $metadataKey, $notificationTypes = null, $tryCount = 0, $maxTry = 10)
     {
         $tryCount++;
         if ($tryCount >= $maxTry) {
-            throw new \Exception("Notification: failed to update metadata, optimistic locking max try reached");
+            throw new \Exception('Notification: failed to update metadata, optimistic locking max try reached');
         }
         if(is_null($notificationTypes)){
             $unreadCount = $this->notificationRepository->getUserNotificationUnreadCount($userId);

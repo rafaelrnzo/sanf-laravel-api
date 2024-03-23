@@ -21,12 +21,14 @@ class EloquentFinancingUnitLocationSubmissionRepository extends AbstractEloquent
     public function findById($id)
     {
         $model = $this->model->newQuery()->with(['user', 'status'])->find($id);
+
         return $this->stripEloquentModel($model);
     }
 
     public function findByXid($xid)
     {
         $model = $this->model->newQuery()->where('xid', $xid)->with(['user', 'status'])->first();
+
         return $this->stripEloquentModel($model);
     }
 
@@ -36,6 +38,7 @@ class EloquentFinancingUnitLocationSubmissionRepository extends AbstractEloquent
             'user_id' => $userId,
             'contract_no' =>$contractNo,
         ])->with(['user', 'status'])->first();
+
         return $this->stripEloquentModel($model);
     }
 
@@ -44,14 +47,16 @@ class EloquentFinancingUnitLocationSubmissionRepository extends AbstractEloquent
         $model = $this->model->newQuery()->where([
             'user_id' => $userId,
             'contract_no' =>$contractNo,
-            'serial_no' => $serialNo
+            'serial_no' => $serialNo,
         ])->with(['user', 'status'])->first();
+
         return $this->stripEloquentModel($model);
     }
 
     public function query($specification)
     {
         $models = $specification->buildQuery($this->model)->get();
+
         return $this->stripEloquentModel($models);
     }
 
@@ -62,16 +67,19 @@ class EloquentFinancingUnitLocationSubmissionRepository extends AbstractEloquent
             $this->historyModel->newQuery()->forceCreate([
                 'submission_id' => $model->id,
                 'status_id' => $model->status_id,
-                'created_by' => new \stdClass() //TODO SNAPSHOT
+                'created_by' => new \stdClass(), //TODO SNAPSHOT
             ]);
+
             return $model;
         });
+
         return $this->stripEloquentModel($model);
     }
 
     public function update($fields)
     {
         $model = $this->model->newQuery()->where('id', $fields['id'])->update($fields);
+
         return $this->stripEloquentModel($model);
     }
 
@@ -85,6 +93,7 @@ class EloquentFinancingUnitLocationSubmissionRepository extends AbstractEloquent
         if (!is_null($specification)) {
             return $specification->buildQuery($this->model)->count();
         }
+
         return $this->model->newQuery()->select('id')->count();
     }
 }

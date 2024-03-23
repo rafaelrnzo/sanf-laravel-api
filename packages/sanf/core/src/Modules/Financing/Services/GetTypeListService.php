@@ -7,7 +7,6 @@ use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class GetTypeListService implements ApplicationServiceInterface
 {
-
     private SanfCoreApiClient $client;
 
     public function __construct(SanfCoreApiClient $client)
@@ -22,18 +21,18 @@ class GetTypeListService implements ApplicationServiceInterface
     {
         $data = $this->client->getTypes($dto->brand_id);
 
-        return (object)[
+        return (object) [
             'data' => collect($data['data'])
                 ->map(function ($item) {
-                    return (object)[
-                        "brand_id" => $item['BRAND_ID'] ?? null,
-                        "type_id" => $item['TYPE_ID'] ?? null,
-                        "type_name" => $item['TYPE_NAME'] ?? null,
+                    return (object) [
+                        'brand_id' => $item['BRAND_ID'] ?? null,
+                        'type_id' => $item['TYPE_ID'] ?? null,
+                        'type_name' => $item['TYPE_NAME'] ?? null,
                     ];
                 }),
-            'paginate' => (object)[
-                'total' => (int)($data['total'] ?? 0),
-                'count' => (int)($data['count'] ?? 0),
+            'paginate' => (object) [
+                'total' => (int) ($data['total'] ?? 0),
+                'count' => (int) ($data['count'] ?? 0),
                 'skip' => null,
                 'limit' => null,
                 'sort_by' => null,

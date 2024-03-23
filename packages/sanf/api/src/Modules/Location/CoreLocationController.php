@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Sanf\Api\Modules\Location;
 
 use Illuminate\Http\Request;
@@ -24,7 +23,6 @@ use Spatie\Fractalistic\ArraySerializer;
 
 class CoreLocationController extends RestApiController
 {
-
     public function provinces(GetListProvinceService $service)
     {
         $result = $service->execute();
@@ -32,8 +30,10 @@ class CoreLocationController extends RestApiController
         return fractal($result, ProvinceListTransformer::class)->serializeWith(new ArraySerializer());
     }
 
-    public function cities(GetListCityService $service,
-                                              $province_id)
+    public function cities(
+        GetListCityService $service,
+        $province_id
+    )
     {
         $dto = new GetListCityDto([
             'province_id' => $province_id,
@@ -43,9 +43,11 @@ class CoreLocationController extends RestApiController
         return fractal($result, CityListTransformer::class)->serializeWith(new ArraySerializer());
     }
 
-    public function districts(GetListDistrictService $service,
-                                                     $province_id,
-                                                     $city_id)
+    public function districts(
+        GetListDistrictService $service,
+        $province_id,
+        $city_id
+    )
     {
         $dto = new GetListDistrictDto([
             'province_id' => $province_id,
@@ -56,10 +58,12 @@ class CoreLocationController extends RestApiController
         return fractal($result, DistrictListTransformer::class)->serializeWith(new ArraySerializer());
     }
 
-    public function subDistricts(GetListSubDistrictService $service,
-                                                           $province_id,
-                                                           $city_id,
-                                                           $district_name)
+    public function subDistricts(
+        GetListSubDistrictService $service,
+        $province_id,
+        $city_id,
+        $district_name
+    )
     {
         $dto = new GetListSubDistrictDto([
             'province_id' => $province_id,

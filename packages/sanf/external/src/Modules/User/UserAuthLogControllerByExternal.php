@@ -23,8 +23,8 @@ class UserAuthLogControllerByExternal extends RestApiController
             'keyboard' => 'nullable|string|max:255',
             'limit' => 'nullable|integer',
             'skip' => 'nullable|integer',
-            'sort_by' => ['nullable', Rule::in(['asc', 'desc',])],
-            'status_id' => ['nullable', Rule::in(UserAuthLogStatusEnum::ALL)]
+            'sort_by' => ['nullable', Rule::in(['asc', 'desc'])],
+            'status_id' => ['nullable', Rule::in(UserAuthLogStatusEnum::ALL)],
         ]);
 
         $dto = new BrowseRequestDto($input);
@@ -49,7 +49,7 @@ class UserAuthLogControllerByExternal extends RestApiController
         ]);
 
         $transactionalService = new TransactionalApplicationService($service, $transactionalSession);
-        $transactionalService->execute((object)array_merge($input, ['xid' => $xid,]));
+        $transactionalService->execute((object) array_merge($input, ['xid' => $xid]));
 
         return $this->responseOk();
     }
@@ -68,7 +68,7 @@ class UserAuthLogControllerByExternal extends RestApiController
         ]);
 
         $transactionalService = new TransactionalApplicationService($service, $transactionalSession);
-        $transactionalService->execute((object)array_merge($input, ['xid' => $xid,]));
+        $transactionalService->execute((object) array_merge($input, ['xid' => $xid]));
 
         return $this->responseOk();
     }

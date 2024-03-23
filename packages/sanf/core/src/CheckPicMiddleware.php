@@ -21,7 +21,6 @@ class CheckPicMiddleware
         $this->profileRepository = $profileRepository;
     }
 
-
     /**
      * Handle an incoming request.
      *
@@ -40,6 +39,7 @@ class CheckPicMiddleware
         if (!$isPic) {
             throw new ForbiddenException('Non PIC not Authorized');
         }
+
         return $next($request);
     }
 

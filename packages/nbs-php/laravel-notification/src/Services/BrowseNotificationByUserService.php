@@ -2,7 +2,6 @@
 
 namespace NbsPhp\Notification\Services;
 
-
 use Carbon\CarbonImmutable;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use NbsPhp\Notification\Dtos\BrowseNotificationByUserRequestDto;
@@ -31,7 +30,7 @@ final class BrowseNotificationByUserService extends NotificationService implemen
         );
 
         $data = array_map(function ($item) {
-            return (object)[
+            return (object) [
                 'xid' => $item->xid,
                 'type' => $item->type,
                 'userId' => $item->user_id,
@@ -45,12 +44,12 @@ final class BrowseNotificationByUserService extends NotificationService implemen
         return new BrowseNotificationByUserResponseDto([
             'data' => $data,
             'paginate' => [
-                'total' => (int)$total,
+                'total' => (int) $total,
                 'count' => count($data),
-                'skip' => (int)$dto->skip,
-                'limit' => (int)$dto->limit,
+                'skip' => (int) $dto->skip,
+                'limit' => (int) $dto->limit,
                 'sortBy' => $dto->sortBy,
-            ]
+            ],
         ]);
     }
 }

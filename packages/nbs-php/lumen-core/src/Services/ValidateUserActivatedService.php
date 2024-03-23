@@ -1,8 +1,6 @@
 <?php
 
-
 namespace NbsPhp\Core\Services;
-
 
 use NbsPhp\Core\Exceptions\UserActivationFailedException;
 use NbsPhp\Core\Exceptions\UserAlreadyActivatedException;
@@ -34,12 +32,13 @@ class ValidateUserActivatedService implements ActivateUserServiceInterface
         if (!$user) {
             throw new UserActivationFailedException('user activation: not found');
         }
-        if (!hash_equals((string)$dto->token, hash('sha256', $user->getEmailForActivation()))) {
+        if (!hash_equals((string) $dto->token, hash('sha256', $user->getEmailForActivation()))) {
             throw new UserActivationFailedException('user activation: invalid token');
         }
         if (!$user->needActivation()) {
             throw new UserAlreadyActivatedException('user activation: already activated');
         }
+
         return $user;
     }
 }

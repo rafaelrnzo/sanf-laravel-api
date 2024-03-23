@@ -2,7 +2,6 @@
 
 namespace Sanf\Core\Modules\Insurance\Repositories;
 
-
 use Illuminate\Support\Facades\DB;
 use NbsPhp\Core\Repositories\AbstractEloquentRepository;
 use Sanf\Core\Modules\Insurance\Models\InsuranceClaimSubmissionHistoryModel;
@@ -22,18 +21,21 @@ class EloquentInsuranceClaimSubmissionRepository extends AbstractEloquentReposit
     public function findById($id)
     {
         $model = $this->model->newQuery()->with(['status'])->find($id);
+
         return $this->stripEloquentModel($model);
     }
 
     public function findByXid($xid)
     {
         $model = $this->model->newQuery()->where('xid', $xid)->with(['status'])->first();
+
         return $this->stripEloquentModel($model);
     }
 
     public function query($specification)
     {
         $models = $specification->buildQuery($this->model)->get();
+
         return $this->stripEloquentModel($models);
     }
 
@@ -44,16 +46,19 @@ class EloquentInsuranceClaimSubmissionRepository extends AbstractEloquentReposit
             $this->historyModel->newQuery()->forceCreate([
                 'submission_id' => $model->id,
                 'status_id' => $model->status_id,
-                'created_by' => new \stdClass() //TODO SNAPSHOT
+                'created_by' => new \stdClass(), //TODO SNAPSHOT
             ]);
+
             return $model;
         });
+
         return $this->stripEloquentModel($model);
     }
 
     public function update($fields)
     {
         $model = $this->model->newQuery()->where('id', $fields['id'])->update($fields);
+
         return $this->stripEloquentModel($model);
     }
 
@@ -67,6 +72,7 @@ class EloquentInsuranceClaimSubmissionRepository extends AbstractEloquentReposit
         if (!is_null($specification)) {
             return $specification->buildQuery($this->model)->count();
         }
+
         return $this->model->newQuery()->select('id')->count();
     }
 }

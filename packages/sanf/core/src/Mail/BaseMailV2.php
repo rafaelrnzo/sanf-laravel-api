@@ -10,20 +10,18 @@ class BaseMailV2 extends BaseMail
      * The Markdown template for the message (if applicable).
      *
      * @var string
-    **/
-
+     **/
     public $markdown = 'mail::ask-us';
 
     /**
      * Content template for the message (if applicable).
      *
      * @var string
-    **/
-
+     **/
     public $topic;
-    
+
     public $title;
-    
+
     public $message;
 
     public $name;
@@ -47,7 +45,7 @@ class BaseMailV2 extends BaseMail
 
         return $this;
     }
-    
+
     public function toArray()
     {
         return [
@@ -64,7 +62,7 @@ class BaseMailV2 extends BaseMail
     }
 
     /**
-     * Build the message
+     * Build the message.
      * @todo handle this method if use third party email provider
      */
     public function build()

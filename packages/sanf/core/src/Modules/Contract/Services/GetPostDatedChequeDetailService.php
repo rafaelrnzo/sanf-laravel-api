@@ -46,34 +46,34 @@ class GetPostDatedChequeDetailService extends UserService implements Application
             );
 
             $data = collect($response->data)->map(function ($item) {
-                return (object)[
+                return (object) [
                     'pdc_no' => $item->PDC_NO ?? null,
                     'amount' => $item->PDC_AMT ?? 0,
                     'currency_type' => $item->CURR_ID ?? null,
                     'submitted_date' => $item->PDC_DUE_DT ?? null,
                     'pdc_type' => $item->PDC_TYPE ?? null,
-                    'status' => (object)[
+                    'status' => (object) [
                         'id' => $item->STATUS_ID ?? null,
                         'name' => $item->STATUS ?? null,
-                    ]
+                    ],
                 ];
             });
         } catch (SanfInternalApiDataNotFoundException $exception) {
-            return (object)[
+            return (object) [
                 'data' => [],
-                'paginate' => (object)[
+                'paginate' => (object) [
                     'total' => 0,
                     'count' => 0,
-                    'skip' => (int)$dto->skip,
-                    'limit' => (int)$dto->limit,
+                    'skip' => (int) $dto->skip,
+                    'limit' => (int) $dto->limit,
                     'sortBy' => $dto->sort_by,
-                ]
+                ],
             ];
         }
 
-        return (object)[
+        return (object) [
             'data' => $data,
-            'paginate' => (object)[
+            'paginate' => (object) [
                 'total' => $response->total ?? $response->count,
                 'count' => $response->count ?? 0,
                 'skip' => $dto->skip,

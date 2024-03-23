@@ -21,7 +21,7 @@ class AuthSeeder extends Seeder
                 'updated_at' => date('Y-m-d H:i:s'),
             ],
         ]);
-        DB::table(config('auth.table_names.user_auth'))->insertOrIgnore([ [
+        DB::table(config('auth.table_names.user_auth'))->insertOrIgnore([[
             'id' => '1',
             'full_name' => $faker->name,
             'username' => 'user@user.com',

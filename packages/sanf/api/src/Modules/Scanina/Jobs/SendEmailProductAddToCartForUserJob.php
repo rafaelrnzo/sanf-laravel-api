@@ -23,7 +23,6 @@ class SendEmailProductAddToCartForUserJob implements ShouldQueue
      *
      * @return void
      */
-
     public function __construct(array $data, array $recipient)
     {
         $this->data = $data;

@@ -22,7 +22,6 @@ class SendRejectRequestDeletionAccountNotification implements ShouldQueue
      *
      * @return void
      */
-
     public function __construct($data, $emailRecipients)
     {
         $this->data = $data;
@@ -39,10 +38,10 @@ class SendRejectRequestDeletionAccountNotification implements ShouldQueue
             ->rightLogo(asset('assets/png/sanf-tagline.png'))
             ->banner(asset('assets/png/email-verification.png'))
             ->greeting("Halo <span class='text-bold'>{$this->data['name']}</span>")
-            ->line("Permintaan penghapusan akun SANFIND berhasil ditolak.")
+            ->line('Permintaan penghapusan akun SANFIND berhasil ditolak.')
             ->line("Catatan: {$this->data['notes']}")
             ->lineWithUrl(
-                __("Jika Anda merasa tidak membuat request tersebut mohon abaikan email ini atau anda dapat"),
+                __('Jika Anda merasa tidak membuat request tersebut mohon abaikan email ini atau anda dapat'),
                 [__('laporkan email ini'), $reportUrl]
             );
 

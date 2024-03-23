@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Financing\Services;
 
 use Sanf\Core\Modules\Financing\Repositories\FinancingApplicationRepositoryInterface;

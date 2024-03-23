@@ -2,7 +2,6 @@
 
 namespace Sanf\Core\Modules\Invoice\Services;
 
-
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Invoice\Dtos\BrowseFinancingUnitByUserRequestDto;
 use Sanf\Core\Modules\Invoice\Dtos\BrowseFinancingUnitByUserResponseDto;
@@ -60,15 +59,15 @@ final class BrowseAvailableFinancingUnitByUserService implements ApplicationServ
                 'paginate' => [
                     'total' => 0,
                     'count' => 0,
-                    'skip' => (int)$dto->skip,
-                    'limit' => (int)$dto->limit,
+                    'skip' => (int) $dto->skip,
+                    'limit' => (int) $dto->limit,
                     'sortBy' => $dto->sortBy,
-                ]
+                ],
             ]);
         }
 
         $data = array_map(function ($item) {
-            return (object)[
+            return (object) [
                 'contractNo' => $item->AGREE_NO,
                 'serialNo' => $item->SERIAL_NO,
                 'brandTypeModel' => $item->BTM,
@@ -89,12 +88,12 @@ final class BrowseAvailableFinancingUnitByUserService implements ApplicationServ
         return new BrowseFinancingUnitByUserResponseDto([
             'data' => $data,
             'paginate' => [
-                'total' => (int)($result->total ?? $result->count),
+                'total' => (int) ($result->total ?? $result->count),
                 'count' => count($data),
-                'skip' => (int)$dto->skip,
-                'limit' => (int)$dto->limit,
+                'skip' => (int) $dto->skip,
+                'limit' => (int) $dto->limit,
                 'sortBy' => $dto->sortBy,
-            ]
+            ],
         ]);
     }
 }

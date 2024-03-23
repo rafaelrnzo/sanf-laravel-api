@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
 use Sanf\Api\Modules\Scanina\Transformers\BrowseRegionResponseTransformer;
-use Sanf\Core\Modules\Scanina\Services\GuzzleBrowseCityService;
 use Sanf\Core\Modules\Scanina\Services\GuzzleBrowseCountryService;
 
 class BrowseCountryController extends RestApiController
@@ -21,7 +20,7 @@ class BrowseCountryController extends RestApiController
             'keyword' => 'nullable|string|max:255',
         ]);
 
-        $dto = (object)[
+        $dto = (object) [
             'skip' => $queryParam['skip'] ?? 0,
             'limit' => $queryParam['limit'] ?? 10,
             'sortBy' => $queryParam['sort_by'] ?? 'latest',

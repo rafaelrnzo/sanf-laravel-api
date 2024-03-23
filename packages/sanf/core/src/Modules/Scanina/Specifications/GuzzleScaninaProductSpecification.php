@@ -10,7 +10,6 @@ use Sanf\Core\Modules\Scanina\Dtos\BrowseProductSparePartRequestDto;
 
 class GuzzleScaninaProductSpecification implements ScaninaProductSpecificationInterface
 {
-
     /**
      * @param BrowseProductBuyRequestDto $parameter
      * @return GuzzleGetBuySpecification

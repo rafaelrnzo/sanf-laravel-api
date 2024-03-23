@@ -2,7 +2,6 @@
 
 namespace Sanf\Core\Modules\Prepayment\Services;
 
-
 use Carbon\CarbonImmutable;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Prepayment\Dtos\AddPrepaymentSimulationByUserRequestDto;
@@ -34,12 +33,12 @@ final class AddPrepaymentSimulationByUserService implements ApplicationServiceIn
             $result = $this->apiClient->getPrepaymentDetail($dto->contractNo, $dto->prepaymentDate);
             $prepayment = $result->data;
             $items = array_map(function ($item) {
-                return (object)[
+                return (object) [
                     'description' => $item->DESCRIPTION,
                     'amount' => $item->JUMLAH,
                 ];
             }, $prepayment->ITEM);
-            $data = (object)[
+            $data = (object) [
                 'contractNo' => $prepayment->NO_KONTRAK,
                 'totalPrepayment' => $prepayment->TOTAL_PAYMENT,
                 'prepaymentDate' => CarbonImmutable::createFromFormat('dmY', $prepayment->TGL_PREPAY),
@@ -49,6 +48,7 @@ final class AddPrepaymentSimulationByUserService implements ApplicationServiceIn
         } catch (SanfInternalApiDataNotFoundException $exception) {
             throw new PrepaymentSimulationNotFoundException();
         }
+
         return new AddPrepaymentSimulationByUserResponseDto([
             'contractNo' => $data->contractNo,
             'prepaymentDate' => $data->prepaymentDate,

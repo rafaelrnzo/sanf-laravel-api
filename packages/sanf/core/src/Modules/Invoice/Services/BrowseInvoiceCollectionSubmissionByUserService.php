@@ -2,7 +2,6 @@
 
 namespace Sanf\Core\Modules\Invoice\Services;
 
-
 use Carbon\CarbonImmutable;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Invoice\Dtos\BrowseInvoiceCollectionSubmissionByUserRequestDto;
@@ -38,7 +37,7 @@ final class BrowseInvoiceCollectionSubmissionByUserService extends InvoiceCollec
         );
 
         $data = array_map(function ($item) {
-            return (object)[
+            return (object) [
                 'id' => $item->id,
                 'xid' => $item->xid,
                 'status' => $item->status,
@@ -55,12 +54,12 @@ final class BrowseInvoiceCollectionSubmissionByUserService extends InvoiceCollec
         return new BrowseInvoiceCollectionSubmissionByUserResponseDto([
             'data' => $data,
             'paginate' => [
-                'total' => (int)$total,
+                'total' => (int) $total,
                 'count' => count($data),
-                'skip' => (int)$dto->skip,
-                'limit' => (int)$dto->limit,
+                'skip' => (int) $dto->skip,
+                'limit' => (int) $dto->limit,
                 'sortBy' => $dto->sortBy,
-            ]
+            ],
         ]);
     }
 }

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace NbsPhp\Core\Dto;
-
 
 use Spatie\DataTransferObject\DataTransferObject;
 

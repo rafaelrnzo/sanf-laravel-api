@@ -32,10 +32,11 @@ final class PrepaymentSubmissionByUserController extends RestApiController
         $dto = new AddPrepaymentSubmissionByUserRequestDto([
                 'profileXid' => $xid,
                 'userId' => $auth->id(),
-                'prepaymentSimulation' => $prepaymentSimulation
+                'prepaymentSimulation' => $prepaymentSimulation,
             ]);
 
         $submissionService->execute($dto);
+
         return $this->responseOk();
     }
 }

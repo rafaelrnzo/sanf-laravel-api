@@ -14,7 +14,6 @@ use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class ListContractOldestService extends UserService implements ApplicationServiceInterface
 {
-
     protected SanfCoreApiClient $internalApiClient;
 
     public function __construct(AuthModel $userRepository, SanfCoreApiClient $internalApiClient)
@@ -46,10 +45,10 @@ class ListContractOldestService extends UserService implements ApplicationServic
                 $dto->sort_by,
             );
             $data = collect($response->data)->map(function ($item) {
-                return (object)[
+                return (object) [
                     'contract_at' => $item->TGL_KONTRAK ?? null,
                     'contract_no' => $item->NO_KONTRAK ?? null,
-                    'financing_type' => (object)[
+                    'financing_type' => (object) [
                         'id' => null,
                         'name' => $item->JENIS_PEMBIAYAAN ?? null,
                     ],
@@ -58,21 +57,21 @@ class ListContractOldestService extends UserService implements ApplicationServic
                 ];
             });
         } catch (SanfInternalApiDataNotFoundException $exception) {
-            return (object)[
+            return (object) [
                 'data' => [],
-                'paginate' => (object)[
+                'paginate' => (object) [
                     'total' => 0,
                     'count' => 0,
-                    'skip' => (int)$dto->skip,
-                    'limit' => (int)$dto->limit,
+                    'skip' => (int) $dto->skip,
+                    'limit' => (int) $dto->limit,
                     'sortBy' => $dto->sort_by,
-                ]
+                ],
             ];
         }
 
-        return (object)[
+        return (object) [
             'data' => $data,
-            'paginate' => (object)[
+            'paginate' => (object) [
                 'total' => $response->total ?? $response->count,
                 'count' => $response->count ?? 0,
                 'skip' => $dto->skip,

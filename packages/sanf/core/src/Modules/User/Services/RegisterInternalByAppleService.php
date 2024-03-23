@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\User\Services;
-
 
 use NbsPhp\Core\Enum\UserStatus;
 use NbsPhp\Core\Services\RegisterByAppleServiceInterface;
@@ -30,7 +28,6 @@ class RegisterInternalByAppleService implements RegisterByAppleServiceInterface
         $this->repository = $repository;
         $this->internalApiClient = $internalApiClient;
     }
-
 
     public function execute($dto = null)
     {
@@ -64,7 +61,7 @@ class RegisterInternalByAppleService implements RegisterByAppleServiceInterface
         $user->update([
             'profile_type' => ProfileType::PERSONAL,
             'xid' => $customerId,
-            'personal_xid' => $customerId
+            'personal_xid' => $customerId,
         ]);
         $user->token = optional($user)->token;
 

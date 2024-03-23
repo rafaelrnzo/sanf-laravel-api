@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Api\Modules\Location\Dto;
-
 
 use Spatie\DataTransferObject\DataTransferObject;
 

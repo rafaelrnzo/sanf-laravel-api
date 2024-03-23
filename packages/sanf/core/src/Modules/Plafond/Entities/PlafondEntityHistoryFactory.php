@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Plafond\Entities;
-
 
 final class PlafondEntityHistoryFactory
 {

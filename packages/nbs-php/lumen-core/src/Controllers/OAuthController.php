@@ -1,6 +1,5 @@
 <?php
 
-
 namespace NbsPhp\Core\Controllers;
 
 use Illuminate\Http\Request;
@@ -26,7 +25,7 @@ class OAuthController extends RestApiController
     protected function validateLogin(Request $request): array
     {
         $validated = $this->validate($request, [
-            'auth_token' => ['required', 'string']
+            'auth_token' => ['required', 'string'],
         ]);
 
         $validated += $this->validateDeviceInformation($request, 'device.');
@@ -37,28 +36,28 @@ class OAuthController extends RestApiController
     protected function validateDeviceInformation(Request $request, $prefix = null): array
     {
         $validated = $this->validate($request, [
-            $prefix . "device_id" => ['required', 'string',],
-            $prefix . "device_platform_id" => ['required', 'integer',],
-            $prefix . "notification_token" => ['nullable', 'string',],
-            $prefix . "notification_channel_id" => ['nullable', 'integer',],
-            $prefix . "metadata" => ['nullable',],
-            $prefix . "metadata.manufacturer" => ['nullable', 'string',],
-            $prefix . "metadata.model" => ['nullable', 'string',],
-            $prefix . "metadata.user_agent" => ['nullable', 'string',],
+            $prefix . 'device_id' => ['required', 'string'],
+            $prefix . 'device_platform_id' => ['required', 'integer'],
+            $prefix . 'notification_token' => ['nullable', 'string'],
+            $prefix . 'notification_channel_id' => ['nullable', 'integer'],
+            $prefix . 'metadata' => ['nullable'],
+            $prefix . 'metadata.manufacturer' => ['nullable', 'string'],
+            $prefix . 'metadata.model' => ['nullable', 'string'],
+            $prefix . 'metadata.user_agent' => ['nullable', 'string'],
         ]);
 
-        if (in_array((int)$request->input('device.device_platform_id'), [DevicePlatform::ANDROID, DevicePlatform::IOS])) {
+        if (in_array((int) $request->input('device.device_platform_id'), [DevicePlatform::ANDROID, DevicePlatform::IOS])) {
             $validated += $this->validate($request, [
-                $prefix . 'notification_token' => ['required', 'string',],
-                $prefix . 'notification_channel_id' => ['required', 'integer',],
-                $prefix . 'metadata' => ['required',],
-                $prefix . 'metadata.manufacturer' => ['required', 'string',],
-                $prefix . 'metadata.model' => ['required', 'string',],
+                $prefix . 'notification_token' => ['required', 'string'],
+                $prefix . 'notification_channel_id' => ['required', 'integer'],
+                $prefix . 'metadata' => ['required'],
+                $prefix . 'metadata.manufacturer' => ['required', 'string'],
+                $prefix . 'metadata.model' => ['required', 'string'],
             ]);
-        } else if ((int)$request->input('device.device_platform_id') === DevicePlatform::WEB) {
+        } elseif ((int) $request->input('device.device_platform_id') === DevicePlatform::WEB) {
             $validated += $this->validate($request, [
-                $prefix . 'metadata' => ['required',],
-                $prefix . 'metadata.user_agent' => ['required', 'string',],
+                $prefix . 'metadata' => ['required'],
+                $prefix . 'metadata.user_agent' => ['required', 'string'],
             ]);
         }
 
@@ -74,8 +73,8 @@ class OAuthController extends RestApiController
                 'devicePlatformId' => $input['device']['device_platform_id'],
                 'notificationToken' => $input['device']['notification_token'],
                 'notificationChannelId' => $input['device']['notification_channel_id'],
-                'metadata' => $input['device']['metadata']
-            ])
+                'metadata' => $input['device']['metadata'],
+            ]),
         ]);
     }
 
@@ -116,16 +115,15 @@ class OAuthController extends RestApiController
     protected function validateRegister(Request $request): array
     {
         $validated = $this->validate($request, [
-            'auth_token' => ['required', 'string',],
-            'full_name' => ['required', 'string',],
-            'email' => ['required', 'email',],
+            'auth_token' => ['required', 'string'],
+            'full_name' => ['required', 'string'],
+            'email' => ['required', 'email'],
         ]);
 
         $validated += $this->validateDeviceInformation($request, 'device.');
 
         return $validated;
     }
-
 
     protected function newSocialRegisterDto($input)
     {
@@ -138,8 +136,8 @@ class OAuthController extends RestApiController
                 'devicePlatformId' => $input['device']['device_platform_id'],
                 'notificationToken' => $input['device']['notification_token'],
                 'notificationChannelId' => $input['device']['notification_channel_id'],
-                'metadata' => $input['device']['metadata']
-            ])
+                'metadata' => $input['device']['metadata'],
+            ]),
         ]);
     }
 

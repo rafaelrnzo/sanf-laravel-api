@@ -27,7 +27,7 @@ class DeleteTest extends TestCase
     public function testDestroy()
     {
         $data = [
-            'id' => 1
+            'id' => 1,
         ];
         $resource = new JsonPlaceholderPost($data);
         $resource->destroy();

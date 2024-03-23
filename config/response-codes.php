@@ -5,22 +5,22 @@ use Illuminate\Http\Response;
 return [
     \Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException::class => [
         'status' => Response::HTTP_METHOD_NOT_ALLOWED,
-        'code' => (string)Response::HTTP_METHOD_NOT_ALLOWED,
+        'code' => (string) Response::HTTP_METHOD_NOT_ALLOWED,
         'message' => __('Method not allowed'),
     ],
     \Illuminate\Validation\ValidationException::class => [
         'status' => Response::HTTP_UNPROCESSABLE_ENTITY,
-        'code' => (string)Response::HTTP_UNPROCESSABLE_ENTITY,
+        'code' => (string) Response::HTTP_UNPROCESSABLE_ENTITY,
         'message' => __('The given data was invalid'),
     ],
     \Illuminate\Database\Eloquent\ModelNotFoundException::class => [
         'status' => Response::HTTP_NOT_FOUND,
-        'code' => (string)Response::HTTP_NOT_FOUND,
+        'code' => (string) Response::HTTP_NOT_FOUND,
         'message' => __('Data Not Found'),
     ],
     \Symfony\Component\HttpKernel\Exception\NotFoundHttpException::class => [
         'status' => Response::HTTP_NOT_FOUND,
-        'code' => (string)Response::HTTP_NOT_FOUND,
+        'code' => (string) Response::HTTP_NOT_FOUND,
         'message' => __('Route Not Found'),
     ],
     \NbsPhp\Core\Exceptions\InvalidCredentialException::class => [

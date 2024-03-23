@@ -1,8 +1,6 @@
 <?php
 
-
 namespace NbsPhp\Core\Services;
-
 
 use NbsPhp\Core\Jwt\JWTHelper;
 
@@ -25,10 +23,9 @@ class AppLoginService implements ApplicationServiceInterface
         $accessTokenExpiredAt = $this->jwt->getDecodedAppToken()->exp;
 
         //TODO DTO
-        return (object)[
+        return (object) [
             'accessToken' => $token,
             'accessExpiredAt' => $accessTokenExpiredAt,
         ];
     }
-
 }

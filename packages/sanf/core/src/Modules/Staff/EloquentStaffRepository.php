@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Staff;
-
 
 use NbsPhp\Core\Repositories\AbstractEloquentRepository;
 use NbsPhp\Core\SpecificationInterface;
@@ -22,6 +20,7 @@ class EloquentStaffRepository extends AbstractEloquentRepository implements Staf
             ->with('user.status')
             ->where('company_xid', $companyXid)
             ->get();
+
         return $this->stripEloquentModel($model);
     }
 
@@ -30,6 +29,7 @@ class EloquentStaffRepository extends AbstractEloquentRepository implements Staf
         $model = $this->model->newQuery()
             ->where('user_id', $userId)
             ->get();
+
         return $this->stripEloquentModel($model);
     }
 
@@ -40,12 +40,14 @@ class EloquentStaffRepository extends AbstractEloquentRepository implements Staf
             ->where('company_xid', $companyXid)
             ->where('user_id', $userId)
             ->first();
+
         return $this->stripEloquentModel($model);
     }
 
     public function add($fields)
     {
         $model = $this->model->newQuery()->forceCreate($fields);
+
         return $this->stripEloquentModel($model);
     }
 

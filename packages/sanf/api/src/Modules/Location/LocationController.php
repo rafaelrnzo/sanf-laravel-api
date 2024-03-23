@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Sanf\Api\Modules\Location;
 
 use Illuminate\Http\Request;
@@ -14,7 +13,6 @@ use Sanf\Core\Modules\Location\LocationEnum;
 
 class LocationController extends RestApiController
 {
-
     public function getList(Request $request, GetListLocationService $service)
     {
         $this->validate($request, [

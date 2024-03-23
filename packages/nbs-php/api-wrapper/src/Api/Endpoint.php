@@ -53,7 +53,7 @@ class Endpoint
      * @param string $baseUrl
      * @return $this
      */
-    public function baseUrl(string $baseUrl): Endpoint
+    public function baseUrl(string $baseUrl): self
     {
         $this->baseUrl = rtrim($baseUrl, '/');
 
@@ -66,7 +66,7 @@ class Endpoint
      * @param array|string $processors
      * @return $this
      */
-    public function processor($processors): Endpoint
+    public function processor($processors): self
     {
         $this->processors = array_unique(array_merge($this->processors, (array) $processors));
 

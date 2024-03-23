@@ -6,7 +6,6 @@ use Spatie\DataTransferObject\FlexibleDataTransferObject;
 
 class BrowseProductFilterTypeResponseDto extends FlexibleDataTransferObject
 {
-
     public ?int $id;
     public ?string $xid;
     public ?int $brandId;

@@ -8,5 +8,5 @@ class InvalidRequestDeletionAccountException extends ApiException
 {
     protected $code = 'E_ADEL_1';
 
-    protected $message = "Invalid Delete Account Request";
+    protected $message = 'Invalid Delete Account Request';
 }

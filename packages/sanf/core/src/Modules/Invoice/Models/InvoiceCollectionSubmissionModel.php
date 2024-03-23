@@ -2,7 +2,6 @@
 
 namespace Sanf\Core\Modules\Invoice\Models;
 
-
 use NbsPhp\Core\Models\AbstractModel;
 
 class InvoiceCollectionSubmissionModel extends AbstractModel

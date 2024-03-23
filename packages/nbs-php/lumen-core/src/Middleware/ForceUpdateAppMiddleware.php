@@ -35,7 +35,7 @@ class ForceUpdateAppMiddleware
                 'success' => false,
                 'code' => 'APP001',
                 'message' => 'Please Update Application',
-                'timestamp' => date('Y-m-d H:i:s')
+                'timestamp' => date('Y-m-d H:i:s'),
             ], 400);
         }
 
@@ -49,7 +49,7 @@ class ForceUpdateAppMiddleware
             && config('client-versions.android.minimum_version_number') > $this->request->header('X-App-Version-Number')
         ) {
             return true;
-        } else if ($this->agent->isiOS()
+        } elseif ($this->agent->isiOS()
             && config('client-versions.ios.minimum_version_number') > $this->request->header('X-App-Version-Number')
         ) {
             return true;

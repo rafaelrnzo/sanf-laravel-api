@@ -6,7 +6,6 @@ use Sanf\Integration\Modules\Scanina\ScaninaApiClient;
 
 class GuzzleScaninaProductRepository implements ScaninaProductRepositoryInterface
 {
-
     private ScaninaApiClient $client;
 
     public function __construct(ScaninaApiClient $client)

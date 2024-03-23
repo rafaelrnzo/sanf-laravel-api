@@ -1,12 +1,9 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Location;
-
 
 class LocationRequestDto
 {
-
     public $level;
 
     public $parent_id = null;

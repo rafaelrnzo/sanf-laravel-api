@@ -3,9 +3,9 @@
 /** @var Factory $factory */
 
 use Carbon\Carbon;
-use Sanf\Core\Modules\Branch\BranchModel as Branch;
 use Faker\Generator as Faker;
 use Illuminate\Database\Eloquent\Factory;
+use Sanf\Core\Modules\Branch\BranchModel as Branch;
 
 /*
 |--------------------------------------------------------------------------

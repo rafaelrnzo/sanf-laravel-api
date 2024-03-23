@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Staff;
-
 
 use NbsPhp\Core\Enum\UserStatus;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
@@ -28,7 +26,8 @@ class GetListInvitedCompanyStaffService extends StaffService implements Applicat
                     return optional($activeStaff->user)->username === $email;
                 })->first();
                 $status = optional(optional($activeStaff)->user)->status;
-                return (object)[
+
+                return (object) [
                     'no' => $item['SR_NO'] ?? '',
                     'name' => ucwords(strtolower($item['CUST_NAME'] ?? '')),
                     'email' => $email,
@@ -38,13 +37,13 @@ class GetListInvitedCompanyStaffService extends StaffService implements Applicat
                 return !is_null($item->status) && $item->status->id != UserStatus::NEED_ACTIVATION;
             });
 
-        return (object)[
+        return (object) [
             'data' => $data,
-            'paginate' => (object)[
-                'total' => (int)$data->count(),
-                'count' => (int)$data->count(),
-                'skip' => (int)($dto->skip ?? null),
-                'limit' => (int)($dto->limit ?? null),
+            'paginate' => (object) [
+                'total' => (int) $data->count(),
+                'count' => (int) $data->count(),
+                'skip' => (int) ($dto->skip ?? null),
+                'limit' => (int) ($dto->limit ?? null),
                 'sort_by' => $dto->sort_by ?? null,
             ],
         ];

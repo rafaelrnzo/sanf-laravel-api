@@ -1,8 +1,6 @@
 <?php
 
-
 namespace NbsPhp\Core\Services;
-
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
@@ -23,6 +21,7 @@ class ChangePasswordService implements ApplicationServiceInterface
         }
         $user->password = bcrypt($dto->newPassword);
         $user->password_updated_at = Carbon::now();
+
         return $user->save();
     }
 }

@@ -5,8 +5,7 @@ namespace Sanf\Core\Modules\User\Enums;
 use MyCLabs\Enum\Enum;
 
 /**
- * Class EntityType
- * @package Sanf\Core\Modules\User
+ * Class EntityType.
  */
 class UserAuthLogStatusEnum extends Enum
 {

@@ -4,11 +4,9 @@ namespace Sanf\Core\Modules\Scanina\Listeners;
 
 use Carbon\Carbon;
 use Sanf\Api\Modules\Scanina\Jobs\SendEmailProductAddToCartForAdminJob;
-use Sanf\Api\Modules\Scanina\Jobs\SendEmailProductAddToCartForUserJob;
 
 class SendEmailProductServiceAddToCartListener
 {
-
     public function handle($event)
     {
         $request = $event->request;

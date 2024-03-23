@@ -1,4 +1,5 @@
 <?php
+
 return [
     'enabled' => env('HTTP_LOGGER', false),
     /*TODO IMPROVE CUSTOM DRIVER
@@ -11,7 +12,7 @@ return [
             'password',
             'password_confirmation',
             'auth_token',
-            'notification_token'
+            'notification_token',
         ],
         /*TODO IMPROVE CENSORING VALUE
         'bad-values' => []

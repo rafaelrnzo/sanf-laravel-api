@@ -4,7 +4,6 @@ namespace NbsPhp\Core\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use NbsPhp\Core\Models\Model;
 
 /**
  * @property int           $id

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Commodity\Services;
-
 
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\FileNotFoundException;
@@ -38,7 +36,7 @@ class UpdateCommodityByUserService extends CommodityByUserService implements App
                 $imageFile = [
                     'file_name' => $dto->imageFile,
                     'directory' => $metadata['dirname'] ?? $newPath,
-                    'path' => $metadata["path"],
+                    'path' => $metadata['path'],
                     'mime_type' => $metadata['mimetype'] ?? Storage::getMimeType("{$newPath}{$dto->imageFile}"),
                     'timestamp' => $metadata['timestamp'],
                     'size' => $metadata['size'],

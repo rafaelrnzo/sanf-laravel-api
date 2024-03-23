@@ -10,7 +10,7 @@ class BrowseBusinessSectorResponseTransformer extends TransformerAbstract
     {
         return [
             'xid' => $dto->xid ?? $dto->id,
-            'name' => (string)optional($dto)->name,
+            'name' => (string) optional($dto)->name,
         ];
     }
 }

@@ -40,6 +40,7 @@ class EloquentPaginateUserActiveSpecification
         }
 
         $keyword = $this->keyword;
+
         return $userAuth->newQuery()
             ->select([
                 'user_auth.id',

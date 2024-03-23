@@ -1,6 +1,5 @@
 <?php
 
-
 namespace NbsPhp\Notification\Transformers;
 
 use Carbon\Carbon;
@@ -15,7 +14,7 @@ class NotificationTransformer extends TransformerAbstract
             'type' => $item->type,
             'data' => $item->data,
             'read_at' => optional(Carbon::make($item->read_at))->timestamp,
-            'created_at' => (int)Carbon::make($item->created_at)->timestamp
+            'created_at' => (int) Carbon::make($item->created_at)->timestamp,
         ];
     }
 }

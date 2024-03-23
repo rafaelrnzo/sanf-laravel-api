@@ -45,9 +45,10 @@ final class InsuranceClaimSubmissionByUserController extends RestApiController
         $dto = new ReadInsuranceClaimSubmissionByUserRequestDto([
             'profileXid' => $xid,
             'xid' => $submissionXid,
-            'userId' => $auth->id()
+            'userId' => $auth->id(),
         ]);
         $result = $service->execute($dto);
+
         return fractal($result, new MyInsuranceClaimSubmissionTransformer());
     }
 
@@ -69,9 +70,10 @@ final class InsuranceClaimSubmissionByUserController extends RestApiController
         $input['incident_date'] = CarbonImmutable::make($input['incident_date']);
         $dto = new AddInsuranceClaimSubmissionByUserRequestDto($input + [
                 'profileXid' => $xid,
-                'userId' => $auth->id()
+                'userId' => $auth->id(),
             ]);
         $service->execute($dto);
+
         return $this->responseOk();
     }
 }

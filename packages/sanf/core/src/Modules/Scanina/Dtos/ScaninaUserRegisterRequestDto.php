@@ -4,7 +4,6 @@ namespace Sanf\Core\Modules\Scanina\Dtos;
 
 class ScaninaUserRegisterRequestDto extends ScaninaFilterDataTransferObject
 {
-
     public int $accountTypeId;
     public string $email;
     public string $fullName;

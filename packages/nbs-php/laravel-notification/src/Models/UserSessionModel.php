@@ -2,7 +2,6 @@
 
 namespace NbsPhp\Notification\Models;
 
-
 use NbsPhp\Core\Models\AbstractModel;
 
 class UserSessionModel extends AbstractModel
@@ -24,6 +23,6 @@ class UserSessionModel extends AbstractModel
     ];
 
     protected $dates = [
-        'expired_at'
+        'expired_at',
     ];
 }

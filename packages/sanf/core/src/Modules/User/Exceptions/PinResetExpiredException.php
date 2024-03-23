@@ -8,5 +8,5 @@ class PinResetExpiredException extends ApiException
 {
     protected $code = 'E_PIN_5';
 
-    protected $message = "Reset Pin Code Was Expired";
+    protected $message = 'Reset Pin Code Was Expired';
 }

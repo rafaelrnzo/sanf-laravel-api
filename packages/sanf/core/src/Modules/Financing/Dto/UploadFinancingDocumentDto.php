@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Financing\Dto;
 
 use Illuminate\Http\UploadedFile;

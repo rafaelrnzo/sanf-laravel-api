@@ -23,8 +23,8 @@ class FinancingObjectController extends RestApiController
 
     public function getTypes($brand_id, GetTypeListService $service)
     {
-        $dto = (object)[
-            'brand_id' => $brand_id
+        $dto = (object) [
+            'brand_id' => $brand_id,
         ];
 
         $result = $service->execute($dto);
@@ -35,7 +35,7 @@ class FinancingObjectController extends RestApiController
 
     public function getModels($brand_id, $type_id, GetModelListService $service)
     {
-        $dto = (object)[
+        $dto = (object) [
             'brand_id' => $brand_id,
             'type_id' => $type_id,
         ];
@@ -48,30 +48,30 @@ class FinancingObjectController extends RestApiController
     public function getTNC()
     {
         $data = [
-            (object)[
+            (object) [
                 'name' => 'is_confirm_first',
-                'description' => 'Seluruh data, informasi, dan/atau dokumen yang kami berikan adalah benar dan merupakan dokumen terbaru yang masih berlaku. *'
+                'description' => 'Seluruh data, informasi, dan/atau dokumen yang kami berikan adalah benar dan merupakan dokumen terbaru yang masih berlaku. *',
             ],
-            (object)[
+            (object) [
                 'name' => 'is_confirm_second',
-                'description' => 'Seluruh data dan/atau informasi pribadi yang diberikan dapat dipergunakan dan diinformasikan kepada karyawan, vendor, afiliasi, instansi yang berwenang dan/atau pihak-pihak lainnya yang terkait dengan SANFIND dan/atau afiliasinya sesuai dengan peraturan perundang-undangan yang berlaku. *'
+                'description' => 'Seluruh data dan/atau informasi pribadi yang diberikan dapat dipergunakan dan diinformasikan kepada karyawan, vendor, afiliasi, instansi yang berwenang dan/atau pihak-pihak lainnya yang terkait dengan SANFIND dan/atau afiliasinya sesuai dengan peraturan perundang-undangan yang berlaku. *',
             ],
-            (object)[
+            (object) [
                 'name' => 'is_confirm_third',
-                'description' => 'Seluruh data dan/atau informasi pribadi yang diberikan dapat dipergunakan dan diinformasikan kepada karyawan, vendor, afiliasi, instansi yang berwenang dan/atau pihak-pihak lainnya yang terkait dengan SANFIND dan/atau afiliasinya sesuai dengan peraturan perundang-undangan yang berlaku. *'
+                'description' => 'Seluruh data dan/atau informasi pribadi yang diberikan dapat dipergunakan dan diinformasikan kepada karyawan, vendor, afiliasi, instansi yang berwenang dan/atau pihak-pihak lainnya yang terkait dengan SANFIND dan/atau afiliasinya sesuai dengan peraturan perundang-undangan yang berlaku. *',
             ],
-            (object)[
+            (object) [
                 'name' => 'is_confirm_fourth',
-                'description' => 'Melalui formulir ini, kami memberikan data dan/atau informasi di atas kepada SANFIND dan untuk itu kami memberi kuasa kepada SANFIND untuk melakukan tindakan - tindakan lebih lanjut sehubungan dengan hal tersebut serta kami menyatakan bahwa kami akan mematuhi seluruh ketentuan peraturan perundang-undangan yang berlaku. *'
+                'description' => 'Melalui formulir ini, kami memberikan data dan/atau informasi di atas kepada SANFIND dan untuk itu kami memberi kuasa kepada SANFIND untuk melakukan tindakan - tindakan lebih lanjut sehubungan dengan hal tersebut serta kami menyatakan bahwa kami akan mematuhi seluruh ketentuan peraturan perundang-undangan yang berlaku. *',
             ],
-            (object)[
+            (object) [
                 'name' => 'is_receive_offer',
-                'description' => 'Kami bersedia untuk mendapatkan penawaran dan/atau informasi produk dari SANFIND melalui alamat, telepon, faximile, dan/atau email yang kami cantumkan bersama dengan Formulir Data Customer ini.'
-            ]
+                'description' => 'Kami bersedia untuk mendapatkan penawaran dan/atau informasi produk dari SANFIND melalui alamat, telepon, faximile, dan/atau email yang kami cantumkan bersama dengan Formulir Data Customer ini.',
+            ],
         ];
 
         return $this->responseOk('Success', [
-            'tnc' => $data
+            'tnc' => $data,
         ]);
     }
 }

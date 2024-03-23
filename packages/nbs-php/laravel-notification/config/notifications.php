@@ -1,11 +1,12 @@
 <?php
+
 return [
     'table_name' => 'notification',
 
     'routes' => [
         'prefix' => $routePrefix = 'v1/users',
 
-        'namespace' => $namespace = "NbsPhp\\Notifications\\Controllers\\",
+        'namespace' => $namespace = 'NbsPhp\\Notifications\\Controllers\\',
 
         'list' => [
             [
@@ -26,45 +27,45 @@ return [
                 'name' => 'notification.unsubscribe-topic',
                 'action' => "{$namespace}FcmController@putUpdate",
                 'middleware' => [],
-            ]
+            ],
         ],
     ],
 
-    "default_icon" => "logos/logo.png",
+    'default_icon' => 'logos/logo.png',
 
     // for now unsupported by fcm topic, because fcm topic cannot be handled same as email and database
     // possibility using rules engine for more dynamic and complex target searching
-    "targets" => [
-        "user" => [
-            "type" => "entity"
+    'targets' => [
+        'user' => [
+            'type' => 'entity',
         ],
-        "{foo.user_id}" => [
-            "type" => "resource_owner"
+        '{foo.user_id}' => [
+            'type' => 'resource_owner',
         ],
-        "foo.create" => [
-            "type" => "permission"
+        'foo.create' => [
+            'type' => 'permission',
         ],
     ],
-    "providers" => [
-        "database" => [
-            "driver" => "database",
-            "repository" => \NbsPhp\Notification\Repositories\EloquentUserNotificationRepository::class
+    'providers' => [
+        'database' => [
+            'driver' => 'database',
+            'repository' => \NbsPhp\Notification\Repositories\EloquentUserNotificationRepository::class,
         ],
-        "pushnotification" => [
-            "driver" => "fcm",
-            "service" => \NbsPhp\Notification\Services\FcmService::class
+        'pushnotification' => [
+            'driver' => 'fcm',
+            'service' => \NbsPhp\Notification\Services\FcmService::class,
         ],
-        "email" => [
-            "driver" => "email",
-            "mailable" => \NbsPhp\Core\Mail\BaseMail::class
-        ]
+        'email' => [
+            'driver' => 'email',
+            'mailable' => \NbsPhp\Core\Mail\BaseMail::class,
+        ],
     ],
-    "groups" => [
-        "group_name" => [
-            "notification_type"
-        ]
+    'groups' => [
+        'group_name' => [
+            'notification_type',
+        ],
     ],
-    "types" => [
+    'types' => [
 //        FooAddedEvent::class => [
 //            'data' => [
 //                'id' => '{pretreatmentFeedback.id}',

@@ -8,7 +8,6 @@ use Sanf\Core\Modules\Commodity\Jobs\SendEmailCommodityApprovalJob;
 
 class SendEmailRequestApprovalCommodityListener
 {
-
     /**
      * Handle the event.
      *

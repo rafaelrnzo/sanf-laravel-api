@@ -6,12 +6,9 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Promo\PromoModel;
 use Sanf\Core\Modules\Promo\PromoRepositoryInterface;
-use Sanf\Core\Modules\Scanina\Repositories\ScaninaRegionRepositoryInterface;
-use Sanf\Core\Modules\Scanina\Specifications\ScaninaRegionSpecificationInterface;
 
 class GetScaninaBannerService implements ApplicationServiceInterface
 {
-
     private PromoRepositoryInterface $repository;
 
     public function __construct(

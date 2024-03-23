@@ -60,7 +60,7 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
             }
 
             $mapping = array_map(function ($item) {
-                return (object)[
+                return (object) [
                     'documentName' => $item['FILENAME'] ?? null,
                     'documentId' => $item['DOC_ID_TEKENAJA'] ?? null,
                     'expiredAt' => isset($item['EXPIRATION_DATE']) ? Carbon::createFromFormat('d/m/Y', $item['EXPIRATION_DATE'])->endOfDay() : null,
@@ -75,9 +75,10 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
                 $this->eSignDocumentSpecificationFactory->paginateDocumentAssigneeByUserId($user->id, null)
             );
 
-            $data = array_map(function ($item) use ($dto, $user){
+            $data = array_map(function ($item) use ($dto, $user) {
                 $file = is_string($item->document_file) ? json_decode($item->document_file) : $item->document_file;
-                return (object)[
+
+                return (object) [
                     'xid' => $item->xid,
                     'documentName' => $item->document_name,
                     'documentId' => $item->document_id,
@@ -128,7 +129,8 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
 
             $data = array_map(function ($item) use ($dto, $user) {
                 $file = is_string($item->document_file) ? json_decode($item->document_file) : $item->document_file;
-                return (object)[
+
+                return (object) [
                     'xid' => $item->xid,
                     'documentName' => $item->document_name,
                     'documentId' => $item->document_id,
@@ -156,9 +158,9 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
             return $item;
         });
 
-        return (object)[
+        return (object) [
             'data' => $data,
-            'paginate' => (object)[
+            'paginate' => (object) [
                 'total' => $total,
                 'count' => count($data),
                 'skip' => $dto->skip ?? 0,

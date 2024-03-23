@@ -2,7 +2,6 @@
 
 namespace Sanf\Core\Modules\Insurance\Listeners;
 
-
 use Sanf\Core\Modules\Insurance\Jobs\SendEmailInsuranceClaimSubmissionForAdminJob;
 use Sanf\Core\Modules\Insurance\Jobs\SendEmailInsuranceClaimSubmissionForUserJob;
 
@@ -28,9 +27,9 @@ class SendEmailNewInsuranceClaimSubmissionListener
     {
         $insuranceClaimSubmission = $event->insuranceClaimSubmission;
         $adminRecipients = explode(',', config('sanf-mobile.mail_to.service'));
-        $userRecipient = (object)[
+        $userRecipient = (object) [
             'email' => $insuranceClaimSubmission->user->username,
-            'fullName' => $insuranceClaimSubmission->user->full_name
+            'fullName' => $insuranceClaimSubmission->user->full_name,
         ];
         dispatch(new SendEmailInsuranceClaimSubmissionForUserJob($insuranceClaimSubmission, $userRecipient));
         dispatch(new SendEmailInsuranceClaimSubmissionForAdminJob($insuranceClaimSubmission, $adminRecipients));

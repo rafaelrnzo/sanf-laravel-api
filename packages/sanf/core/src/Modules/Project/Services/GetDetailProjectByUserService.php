@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Project\Services;
-
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Project\Exceptions\GeneralProjectException;
@@ -16,6 +14,7 @@ class GetDetailProjectByUserService extends ProjectByUserService implements Appl
         if (is_null($project) || $project->user_id != $user->id) {
             throw new GeneralProjectException('Project Not Found');
         }
+
         return $project;
     }
 }

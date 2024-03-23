@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Financing\Services;
-
 
 use Carbon\CarbonImmutable;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
@@ -57,6 +55,7 @@ class FinancingByUserService extends FinancingService
         if ($count >= 999999) {
             throw new FinancingApplicationLimitExceedException();
         }
-        return "{$month}{$year}" . str_pad((string)$count++, $width, '0', STR_PAD_LEFT);
+
+        return "{$month}{$year}" . str_pad((string) $count++, $width, '0', STR_PAD_LEFT);
     }
 }

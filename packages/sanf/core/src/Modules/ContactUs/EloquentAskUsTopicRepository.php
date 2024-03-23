@@ -1,15 +1,12 @@
 <?php
 
-
 namespace Sanf\Core\Modules\ContactUs;
-
 
 use NbsPhp\Core\Repositories\AbstractEloquentRepository;
 
 class EloquentAskUsTopicRepository extends AbstractEloquentRepository implements AskUsTopicRepositoryInterface
 {
-
-    /** @var AskUsTopicModel $model */
+    /** @var AskUsTopicModel */
     protected $model;
 
     public function __construct(AskUsTopicModel $model)
@@ -23,7 +20,7 @@ class EloquentAskUsTopicRepository extends AbstractEloquentRepository implements
             ->newQuery()
             ->select([
                 'id',
-                'name'
+                'name',
             ])
             ->limit($limit)
             ->offset($offset)

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Financing\Exceptions;
-
 
 use NbsPhp\Core\Exceptions\ApiException;
 

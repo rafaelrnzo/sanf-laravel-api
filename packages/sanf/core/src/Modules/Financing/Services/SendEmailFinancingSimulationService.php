@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Financing\Services;
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
@@ -24,13 +23,13 @@ class SendEmailFinancingSimulationService extends FinancingByUserService impleme
         dispatch(
             new SendEmailFinancingSimulationForUserJob(
                 $dto,
-                (object)['name' => $user->full_name, 'email' => $user->username]
+                (object) ['name' => $user->full_name, 'email' => $user->username]
             )
         );
         dispatch(
             new SendEmailFinancingSimulationForAdminJob(
                 $dto,
-                (object)['name' => $user->full_name, 'email' => explode(',', config('sanf-mobile.mail_to.marketing'))]
+                (object) ['name' => $user->full_name, 'email' => explode(',', config('sanf-mobile.mail_to.marketing'))]
             )
         );
     }

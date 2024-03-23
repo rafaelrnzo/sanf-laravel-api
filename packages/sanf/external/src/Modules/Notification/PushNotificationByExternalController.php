@@ -5,10 +5,8 @@ namespace Sanf\External\Modules\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use NbsPhp\Core\Controllers\RestApiController;
-use Sanf\Core\Modules\Notification\Dtos\AddPushNotificationByExternalRequestDto;
 use Sanf\Core\Modules\Notification\Dtos\SendPushNotificationByExternalRequestDto;
 use Sanf\Core\Modules\Notification\NotificationTypeEnum;
-use Sanf\Core\Modules\Notification\Services\AddPushNotificationByExternalService;
 use Sanf\Core\Modules\Notification\Services\SendPushNotificationByExternalService;
 
 class PushNotificationByExternalController extends RestApiController
@@ -31,6 +29,7 @@ class PushNotificationByExternalController extends RestApiController
         $input['type'] = new NotificationTypeEnum($input['type']);
         $dto = new SendPushNotificationByExternalRequestDto($input);
         $service->execute($dto);
+
         return $this->responseOk();
     }
 }

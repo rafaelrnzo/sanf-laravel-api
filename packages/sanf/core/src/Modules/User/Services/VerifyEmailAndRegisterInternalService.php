@@ -36,7 +36,6 @@ class VerifyEmailAndRegisterInternalService implements VerifyEmailServiceInterfa
         $this->transactionalSession = $transactionalSession;
     }
 
-
     public function execute($dto = null)
     {
         $operation = function () use ($dto) {

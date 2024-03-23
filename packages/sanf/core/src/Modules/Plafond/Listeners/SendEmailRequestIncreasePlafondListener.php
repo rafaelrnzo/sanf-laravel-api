@@ -8,7 +8,6 @@ use Sanf\Core\Modules\User\Enums\ProfileType;
 
 class SendEmailRequestIncreasePlafondListener
 {
-
     /**
      * Handle the event.
      *

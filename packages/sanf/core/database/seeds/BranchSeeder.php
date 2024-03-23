@@ -21,7 +21,7 @@ class BranchSeeder extends Seeder
                 'email' => 'layanan.konsumen@sanf.co.id',
                 'latitude' => -6.299086543708178,
                 'longitude' => 106.83208399756622,
-                'modified_by' => json_encode(json_decode('{}'))
+                'modified_by' => json_encode(json_decode('{}')),
             ], [
                 'name' => 'DKI Jakarta',
                 'address' => '18 Office Park Lantai 23, Jl. T.B. Simatupang No. 18 Jakarta 12520',
@@ -30,7 +30,7 @@ class BranchSeeder extends Seeder
                 'email' => 'layanan.konsumen@sanf.co.id',
                 'latitude' => -6.299086543708178,
                 'longitude' => 106.83208399756622,
-                'modified_by' => json_encode(json_decode('{}'))
+                'modified_by' => json_encode(json_decode('{}')),
             ], [
                 'name' => 'Surabaya',
                 'address' => 'Gedung Kompas Gramedia, Lantai 1, Jl. Raya Jemursari 64, Surabaya 60237',
@@ -39,7 +39,7 @@ class BranchSeeder extends Seeder
                 'email' => null,
                 'latitude' => -7.323891605155826,
                 'longitude' => 112.74131972676257,
-                'modified_by' => json_encode(json_decode('{}'))
+                'modified_by' => json_encode(json_decode('{}')),
             ], [
                 'name' => '​Medan',
                 'address' => 'PT. United Tractors Cabang Medan, Lantai 2, Jl. Sisingamangaraja Km 10, Medan 20148',
@@ -48,7 +48,7 @@ class BranchSeeder extends Seeder
                 'email' => null,
                 'latitude' => 3.5325097497045808,
                 'longitude' => 98.73223920567898,
-                'modified_by' => json_encode(json_decode('{}'))
+                'modified_by' => json_encode(json_decode('{}')),
             ], [
                 'name' => 'Pekanbaru',
                 'address' => 'Komp. Perkantoran Grand Sudirman Blok A7, Jl. Parit Indah / Datuk Setiamaharaja, Pekanbaru 28282',
@@ -57,7 +57,7 @@ class BranchSeeder extends Seeder
                 'email' => null,
                 'latitude' => 0.48303073912162636,
                 'longitude' => 101.4589986500251,
-                'modified_by' => json_encode(json_decode('{}'))
+                'modified_by' => json_encode(json_decode('{}')),
             ], [
                 'name' => 'Palembang',
                 'address' => 'Sudirman City Centre Lantai 6, Jl. Jendral Sudirman No. 57, Palembang 30125',
@@ -66,7 +66,7 @@ class BranchSeeder extends Seeder
                 'email' => null,
                 'latitude' => -2.9773617917901474,
                 'longitude' => 104.75576815533317,
-                'modified_by' => json_encode(json_decode('{}'))
+                'modified_by' => json_encode(json_decode('{}')),
             ], [
                 'name' => 'Jambi',
                 'address' => 'Jl.  Hayam Wuruk RT. 34 No. 45, ​Jelutung, Jambi 36136',
@@ -75,7 +75,7 @@ class BranchSeeder extends Seeder
                 'email' => null,
                 'latitude' => -1.603919651029534,
                 'longitude' => 103.61703186785408,
-                'modified_by' => json_encode(json_decode('{}'))
+                'modified_by' => json_encode(json_decode('{}')),
             ], [
                 'name' => 'Pontianak',
                 'address' => 'Komp. Ruko A. Yani Mega Mall Blok C, Jl. Ahmad Yani No. 12 A, Pontianak 78122',
@@ -84,7 +84,7 @@ class BranchSeeder extends Seeder
                 'email' => null,
                 'latitude' => -0.05105856359497117,
                 'longitude' => 109.35309328304585,
-                'modified_by' => json_encode(json_decode('{}'))
+                'modified_by' => json_encode(json_decode('{}')),
             ], [
                 'name' => '​Banjarmasin',
                 'address' => 'Gedung UTP, Jl. Ahmad Yani KM. 11,3 Kel. Mekar Raya Kec. Kertak Manyar, Kab. Banjar, Banjarmasin',
@@ -93,7 +93,7 @@ class BranchSeeder extends Seeder
                 'email' => null,
                 'latitude' => -3.2178205181715125,
                 'longitude' => 114.98278042221851,
-                'modified_by' => json_encode(json_decode('{}'))
+                'modified_by' => json_encode(json_decode('{}')),
             ], [
                 'name' => 'Balikpapan',
                 'address' => 'Komplek Ruko Little China Blok AB 6 No. 3, Balikpapan Baru, Balikpapan',
@@ -102,7 +102,7 @@ class BranchSeeder extends Seeder
                 'email' => null,
                 'latitude' => -1.2376914197800686,
                 'longitude' => 116.85324956359595,
-                'modified_by' => json_encode(json_decode('{}'))
+                'modified_by' => json_encode(json_decode('{}')),
             ], [
                 'name' => '​Samarinda',
                 'address' => 'Hotel Bumi Senyiur, Lantai Dasar Jl. P. Diponegoro No. 17 - 19, Samarinda 75111',
@@ -111,7 +111,7 @@ class BranchSeeder extends Seeder
                 'email' => null,
                 'latitude' => -0.4990959751997597,
                 'longitude' => 117.14976055933614,
-                'modified_by' => json_encode(json_decode('{}'))
+                'modified_by' => json_encode(json_decode('{}')),
             ], [
                 'name' => 'Makassar',
                 'address' => 'Hotel Claro Jl. Andi Pangeran Pettarani No. 3, Makassar 90222',
@@ -120,7 +120,7 @@ class BranchSeeder extends Seeder
                 'email' => 'alpian@sanf.co.id',
                 'latitude' => -5.169267136682174,
                 'longitude' => 119.4336980384817,
-                'modified_by' => json_encode(json_decode('{}'))
+                'modified_by' => json_encode(json_decode('{}')),
             ],
         ];
 

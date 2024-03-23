@@ -15,6 +15,6 @@ class OnBoardingModel extends AbstractModel
     ];
 
     protected $casts = [
-        'image_file' => 'object'
+        'image_file' => 'object',
     ];
 }

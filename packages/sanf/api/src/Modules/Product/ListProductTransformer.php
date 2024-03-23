@@ -1,14 +1,11 @@
 <?php
 
-
 namespace Sanf\Api\Modules\Product;
-
 
 use League\Fractal\TransformerAbstract;
 
 class ListProductTransformer extends TransformerAbstract
 {
-
     public function transform($dto)
     {
         $image = is_string($dto->image) ? json_decode($dto->image) : $dto->image;
@@ -18,7 +15,7 @@ class ListProductTransformer extends TransformerAbstract
             'title' => $dto->title,
             'description' => $dto->description,
             'financing_method_id' => $dto->financing_method_id ?? null,
-            'image_url' => file_get_temp_url($image->path)
+            'image_url' => file_get_temp_url($image->path),
         ];
     }
 }

@@ -7,7 +7,6 @@ use Sanf\Core\Modules\Plafond\Repositories\PlafondTypeRepositoryInterface;
 
 final class ListPlafondTypeService implements ApplicationServiceInterface
 {
-
     private PlafondTypeRepositoryInterface $repository;
 
     public function __construct(PlafondTypeRepositoryInterface $repository)
@@ -19,13 +18,13 @@ final class ListPlafondTypeService implements ApplicationServiceInterface
     {
         $data = $this->repository->types($dto);
 
-        return (object)[
+        return (object) [
             'data' => $data['lists'],
-            'paginate' => (object)[
-                'total' => (int)$data['total'],
-                'count' => (int)$data['count'],
-                'skip' => (int)$dto->skip,
-                'limit' => (int)$dto->limit,
+            'paginate' => (object) [
+                'total' => (int) $data['total'],
+                'count' => (int) $data['count'],
+                'skip' => (int) $dto->skip,
+                'limit' => (int) $dto->limit,
                 'sort_by' => $dto->sort_by,
             ],
         ];

@@ -130,7 +130,7 @@ class BaseMail extends Mailable
     }
 
     /**
-     * Set logo
+     * Set logo.
      *
      * @param $logo
      *
@@ -158,7 +158,7 @@ class BaseMail extends Mailable
     }
 
     /**
-     * Set banner
+     * Set banner.
      *
      * @param $banner
      *
@@ -246,7 +246,6 @@ class BaseMail extends Mailable
      *
      * @return $this
      */
-
     public function lineWithUrl($text, $textWithUrl = [])
     {
         $this->inTextActionUrl[] = [$text, $textWithUrl];
@@ -280,7 +279,7 @@ class BaseMail extends Mailable
     }
 
     /**
-     * Build the message
+     * Build the message.
      * @todo handle this method if use third party email provider
      */
     public function build()

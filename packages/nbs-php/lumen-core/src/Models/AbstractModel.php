@@ -23,7 +23,6 @@ abstract class AbstractModel extends Eloquent
      * @param mixed $value
      * @return \Illuminate\Support\Carbon
      */
-
     protected function asDateTime($value)
     {
         // If this value is already a Carbon instance, we shall just return it as is.

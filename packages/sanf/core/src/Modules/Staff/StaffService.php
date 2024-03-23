@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Staff;
-
 
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;

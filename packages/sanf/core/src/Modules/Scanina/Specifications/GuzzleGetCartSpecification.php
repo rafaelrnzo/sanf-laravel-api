@@ -2,8 +2,6 @@
 
 namespace Sanf\Core\Modules\Scanina\Specifications;
 
-use Sanf\Core\Modules\Scanina\Dtos\BrowseProductBuyRequestDto;
-use Sanf\Core\Modules\Scanina\Dtos\ScaninaProductBuyFilterDto;
 use Sanf\Integration\Modules\Scanina\ScaninaApiClient;
 
 class GuzzleGetCartSpecification

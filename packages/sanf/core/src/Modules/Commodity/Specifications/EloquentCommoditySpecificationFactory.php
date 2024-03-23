@@ -1,12 +1,9 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Commodity\Specifications;
-
 
 class EloquentCommoditySpecificationFactory implements CommoditySpecificationFactoryInterface
 {
-
     public function paginate(?int $skip, ?int $limit, ?string $sortBy, ?int $timestamp, ?string $keyword)
     {
         return new EloquentPaginateCommoditySpecification($skip, $limit, $sortBy, $timestamp, $keyword);
@@ -26,6 +23,4 @@ class EloquentCommoditySpecificationFactory implements CommoditySpecificationFac
     {
         return new EloquentAllOwnedCommodityByStatusSpecification($userId, $statuses);
     }
-
-
 }

@@ -15,7 +15,7 @@ use NbsPhp\ApiWrapper\Resource\Operations\Get;
 use NbsPhp\ApiWrapper\Resource\Operations\Update;
 
 /**
- * Class JsonPlaceholderPost
+ * Class JsonPlaceholderPost.
  * @property string id
  * @property string userId
  * @property string title

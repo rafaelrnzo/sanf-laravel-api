@@ -2,7 +2,6 @@
 
 namespace Sanf\Core\Modules\Setting\Services;
 
-use Carbon\Carbon;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Setting\Repositories\StaticContentRepositoryInterface;
 

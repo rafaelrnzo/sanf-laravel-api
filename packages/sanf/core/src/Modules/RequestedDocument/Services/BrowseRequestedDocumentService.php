@@ -63,14 +63,14 @@ class BrowseRequestedDocumentService implements ApplicationServiceInterface
             $argument['status'] = null;
             $argument['keyword'] = null;
 
-            $dataFromDb = $this->dbService->execute((object)$argument);
+            $dataFromDb = $this->dbService->execute((object) $argument);
 
             $getOrCreateData = $this->getOrCreateData($dataFromDb, $dataFromCore, $dto);
 
             $argument['status'] = RequestedDocumentStatusEnum::REQUESTED;
             $argument['keyword'] = $dto->keyword;
 
-            $dataFromDb = $this->dbService->execute((object)$argument);
+            $dataFromDb = $this->dbService->execute((object) $argument);
 
             foreach ($dataFromDb->data as $dataDb) {
                 $append = $this->requestDocumentAppendItem($dataDb, $dataFromCore);
@@ -99,9 +99,9 @@ class BrowseRequestedDocumentService implements ApplicationServiceInterface
                 $data = collect($data)->sortByDesc('request_no');
         }
 
-        return (object)[
+        return (object) [
             'data' => $data,
-            'paginate' => (object)[
+            'paginate' => (object) [
                 'total' => $dataFromCore->total ?? $dataFromDb->total,
                 'count' => count($data) ?? 0,
                 'skip' => $dto->skip,
@@ -130,15 +130,15 @@ class BrowseRequestedDocumentService implements ApplicationServiceInterface
             return;
         }
 
-        return (object)[
+        return (object) [
             'data' => [],
-            'paginate' => (object)[
+            'paginate' => (object) [
                 'total' => 0,
                 'count' => 0,
-                'skip' => (int)$dto->skip,
-                'limit' => (int)$dto->limit,
+                'skip' => (int) $dto->skip,
+                'limit' => (int) $dto->limit,
                 'sortBy' => $dto->sort_by,
-            ]
+            ],
         ];
     }
 
@@ -175,6 +175,7 @@ class BrowseRequestedDocumentService implements ApplicationServiceInterface
             }
             $requestedDocumentDb = $model;
         }
+
         return $requestedDocumentDb;
     }
 
@@ -284,6 +285,7 @@ class BrowseRequestedDocumentService implements ApplicationServiceInterface
                     $documentItem->is_uploaded = $documentItemDb->is_uploaded;
                 }
             }
+
             return $documentItem;
         }, $requestedDocumentItemCore);
     }

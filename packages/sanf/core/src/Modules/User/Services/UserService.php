@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\User\Services;
-
 
 use Sanf\Core\Modules\User\AuthModel;
 
@@ -18,5 +16,4 @@ class UserService
     {
         $this->userRepository = $userRepository;
     }
-
 }

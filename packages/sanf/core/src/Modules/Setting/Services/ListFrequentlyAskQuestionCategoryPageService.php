@@ -3,7 +3,6 @@
 namespace Sanf\Core\Modules\Setting\Services;
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\Faq\Repositories\FaqCategoryRepositoryInterface;
 use Sanf\Core\Modules\Setting\Repositories\FrequentlyAskQuestionRepositoryInterface;
 use Sanf\Core\Modules\Setting\Specifications\FrequentlyAskQuestionSpecificationFactoryInterface;
 

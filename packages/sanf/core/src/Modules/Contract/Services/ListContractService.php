@@ -17,7 +17,6 @@ use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class ListContractService extends UserService implements ApplicationServiceInterface
 {
-
     protected SanfCoreApiClient $internalApiClient;
 
     public function __construct(AuthModel $userRepository, SanfCoreApiClient $internalApiClient)
@@ -46,15 +45,15 @@ class ListContractService extends UserService implements ApplicationServiceInter
                 $dto->sort_by,
             );
         } catch (SanfInternalApiDataNotFoundException $exception) {
-            return (object)[
+            return (object) [
                 'data' => [],
-                'paginate' => (object)[
+                'paginate' => (object) [
                     'total' => 0,
                     'count' => 0,
-                    'skip' => (int)$dto->skip,
-                    'limit' => (int)$dto->limit,
+                    'skip' => (int) $dto->skip,
+                    'limit' => (int) $dto->limit,
                     'sortBy' => $dto->sort_by,
-                ]
+                ],
             ];
         }
 
@@ -64,9 +63,9 @@ class ListContractService extends UserService implements ApplicationServiceInter
         $data = $this->mappingResponse($response, $todayWithTz, $timezoneOffset);
         $filterData = $this->filterDataByContractStatus($dto, $data);
 
-        return (object)[
+        return (object) [
             'data' => $filterData,
-            'paginate' => (object)[
+            'paginate' => (object) [
                 'total' => $response->total ?? $response->count,
                 'count' => count($filterData) ?? 0,
                 'skip' => $dto->skip,
@@ -89,10 +88,11 @@ class ListContractService extends UserService implements ApplicationServiceInter
         $overdueTimestampWithTz = CarbonImmutable::make($overdueDate)->timestamp + $timezoneOffset;
         $overdueWithTz = CarbonImmutable::parse($overdueTimestampWithTz);
         $diffTime = $todayWithTz->startOfDay()->diff($overdueWithTz->startOfDay());
-        $diffDays = (int)-"{$diffTime->days}";
+        $diffDays = (int) -"{$diffTime->days}";
         if ($diffTime->invert) {
-            $diffDays = (int)"{$diffTime->days}";
+            $diffDays = (int) "{$diffTime->days}";
         }
+
         return $diffDays;
     }
 
@@ -103,15 +103,15 @@ class ListContractService extends UserService implements ApplicationServiceInter
     ): array {
         return array_map(function ($item) use ($todayWithTz, $timezoneOffset) {
             if (is_null($item->TGL_TENGGAT_PEMBAYARAN)) {
-                throw new SanfInternalApiException("TGL TENGGAT PEMBAYARAN got null value");
+                throw new SanfInternalApiException('TGL TENGGAT PEMBAYARAN got null value');
             }
 
             $totalDiffDays = $this->countDiffDays($item->TGL_TENGGAT_PEMBAYARAN, $todayWithTz, $timezoneOffset);
 
-            return (object)[
+            return (object) [
                 'contract_at' => $item->TGL_KONTRAK ?? null,
                 'contract_no' => $item->NO_KONTRAK ?? null,
-                'financing_type' => (object)[
+                'financing_type' => (object) [
                     'id' => null,
                     'name' => $item->JENIS_PEMBIAYAAN ?? null,
                 ],
@@ -131,10 +131,10 @@ class ListContractService extends UserService implements ApplicationServiceInter
 
         return array_filter($data, function ($response) use ($dto) {
             if ($dto->contract_status === ContractTypeEnum::OVERDUE) {
-                return ($response->days > 0);
+                return $response->days > 0;
             }
 
-            return ($response->days <= 0);
+            return $response->days <= 0;
         });
     }
 }

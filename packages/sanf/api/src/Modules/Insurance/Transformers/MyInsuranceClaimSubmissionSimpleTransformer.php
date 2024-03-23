@@ -16,7 +16,7 @@ final class MyInsuranceClaimSubmissionSimpleTransformer extends TransformerAbstr
             'year' => $dto->year,
             'status' => fractal($dto->status, new InsuranceClaimSubmissionStatusTransformer()),
             'created_at' => unix_timestamp($dto->createdAt),
-            'updated_at' => unix_timestamp($dto->updatedAt)
+            'updated_at' => unix_timestamp($dto->updatedAt),
         ];
     }
 }

@@ -35,6 +35,7 @@ class EloquentBrowseUserAuthLogByExternalSpecification
         }
 
         $keyword = $this->keyword;
+
         return $model->newQuery()
             ->select([
                 'user_auth_log.id',

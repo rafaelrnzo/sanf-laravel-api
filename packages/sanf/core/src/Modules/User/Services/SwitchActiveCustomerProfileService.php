@@ -1,19 +1,16 @@
 <?php
 
-
 namespace Sanf\Core\Modules\User\Services;
 
-
+use function collect;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Models\AuthModel;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\User\Enums\ProfileType;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
-use function collect;
 
 /**
- * Class SwitchActiveCustomerProfileService
- * @package Sanf\Core\Modules\User\Services
+ * Class SwitchActiveCustomerProfileService.
  * @deprecated Active Profile Not Persisted On Backend Anymore
  */
 class SwitchActiveCustomerProfileService implements ApplicationServiceInterface

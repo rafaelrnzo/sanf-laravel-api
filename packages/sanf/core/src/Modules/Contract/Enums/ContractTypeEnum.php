@@ -4,7 +4,6 @@ namespace Sanf\Core\Modules\Contract\Enums;
 
 use MyCLabs\Enum\Enum;
 
-
 class ContractTypeEnum extends Enum
 {
     const ACTIVE = 'active';

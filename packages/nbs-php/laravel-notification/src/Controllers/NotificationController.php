@@ -1,8 +1,6 @@
 <?php
 
-
 namespace NbsPhp\Notification\Controllers;
-
 
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
@@ -25,18 +23,20 @@ class NotificationController extends RestApiController
     public function metadata(Guard $auth)
     {
         $metadata = $this->service->notificationCount($auth->id());
+
         return fractal($metadata, new MetadataNotificationTransformer);
     }
 
     public function markAsRead(Guard $auth, Request $request)
     {
         $input = $this->validate($request, [
-            'ids' => 'nullable'
+            'ids' => 'nullable',
         ]);
         //WRAP TRANSACTION
         DB::transaction(function () use ($auth, $input) {
             $this->service->markNotificationAsRead($auth->id(), $input);
         });
+
         return $this->responseOk();
     }
 
@@ -45,12 +45,12 @@ class NotificationController extends RestApiController
         $input = $this->validate($request, [
             'last_id' => 'string',
             'limit' => 'numeric',
-            'group' => 'string'
+            'group' => 'string',
         ]);
         $notifications = $this->service->getUnreadUserNotifications($auth->id(), $input);
+
         return fractal($notifications, new NotificationTransformer);
     }
-
 
     public function index(Request $request, Guard $auth)
     {

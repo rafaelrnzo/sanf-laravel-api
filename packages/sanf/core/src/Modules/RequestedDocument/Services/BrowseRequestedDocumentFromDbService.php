@@ -22,13 +22,13 @@ class BrowseRequestedDocumentFromDbService implements ApplicationServiceInterfac
 
     public function execute($dto = null)
     {
-        $profileXid = (string)$dto->profile_xid;
-        $status = ($dto->status) ? (int)$dto->status : null;
-        $documentType = ($dto->document_type) ? (int)$dto->document_type : null;
-        $keyword = ($dto->keyword) ? (string)$dto->keyword : null;
-        $sortBy = ($dto->sort_by) ? (string)$dto->sort_by : null;
-        $skip = ($dto->skip) ? (int)$dto->skip : null;
-        $limit = ($dto->limit) ? (int)$dto->limit : null;
+        $profileXid = (string) $dto->profile_xid;
+        $status = ($dto->status) ? (int) $dto->status : null;
+        $documentType = ($dto->document_type) ? (int) $dto->document_type : null;
+        $keyword = ($dto->keyword) ? (string) $dto->keyword : null;
+        $sortBy = ($dto->sort_by) ? (string) $dto->sort_by : null;
+        $skip = ($dto->skip) ? (int) $dto->skip : null;
+        $limit = ($dto->limit) ? (int) $dto->limit : null;
 
         $records = $this->requestedDocumentEloquentRepository->query(
             $this->requestedDocumentEloquentSpecification->paginate(
@@ -55,7 +55,7 @@ class BrowseRequestedDocumentFromDbService implements ApplicationServiceInterfac
             )
         );
 
-        return (object)[
+        return (object) [
             'data' => $this->mapRequestedDocs($records),
             'total' => $totalRecord,
         ];
@@ -64,7 +64,7 @@ class BrowseRequestedDocumentFromDbService implements ApplicationServiceInterfac
     private function mapRequestedDocs($records): array
     {
         return array_map(function ($data) {
-            return (object)[
+            return (object) [
                 'id' => $data->id,
                 'profile_xid' => $data->profile_xid,
                 'request_no' => $data->request_no,
@@ -82,10 +82,10 @@ class BrowseRequestedDocumentFromDbService implements ApplicationServiceInterfac
     private function mapRequestedItemDocs($response): array
     {
         return array_map(function ($data) {
-            return (object)[
+            return (object) [
                 'id' => $data->document_id,
                 'title' => $data->document_name,
-                'is_uploaded' => !is_null($data->document_file)
+                'is_uploaded' => !is_null($data->document_file),
             ];
         }, $response);
     }

@@ -11,10 +11,10 @@ class ListContractTransformer extends TransformerAbstract
     {
         $response = [
             'contract_at' => ($item->contract_at) ? Carbon::make($item->contract_at)->format('Y-m-d') : null,
-            'contract_no' => (string)$item->contract_no,
+            'contract_no' => (string) $item->contract_no,
             'financing_type' => fractal($item->financing_type, FinancingContractTypeTransformer::class),
-            'total_amount' => (string)$item->total_amount,
-            'currency_type' => (string)$item->currency_type,
+            'total_amount' => (string) $item->total_amount,
+            'currency_type' => (string) $item->currency_type,
         ];
 
         if (!is_null(optional($item)->payment_due_at)) {

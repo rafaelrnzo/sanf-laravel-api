@@ -62,7 +62,7 @@ final class EloquentPaginateInsuranceClaimSubmissionByUserAndProfileSpecificatio
             ->when($this->statusId, function ($query) {
                 return $query->where('status_id', $this->statusId);
             })->when($this->keyword, function ($query) {
-                return $query->where('contract_no', "ILIKE", '%' . $this->keyword . '%');
+                return $query->where('contract_no', 'ILIKE', '%' . $this->keyword . '%');
             })->when($this->skip, function ($query) {
                 return $query->skip($this->skip);
             })->when($this->limit, function ($query) {

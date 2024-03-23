@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Api\Modules\Branch;
-
 
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
@@ -28,8 +26,8 @@ class ListBranchController extends RestApiController
 
         // set property;
         $property = [];
-        if (isset($inputs['limit'])) $property += ['limit' => (int)$inputs['limit']];
-        if (isset($inputs['offset'])) $property += ['offset' => (int)$inputs['offset']];
+        if (isset($inputs['limit'])) $property += ['limit' => (int) $inputs['limit']];
+        if (isset($inputs['offset'])) $property += ['offset' => (int) $inputs['offset']];
 
         // set up dto;
         $dto = new ListBranchRequestDto($property);
@@ -41,12 +39,11 @@ class ListBranchController extends RestApiController
         return fractal($result, new DetailBranchTransformer())->serializeWith(new ArraySerializer());
     }
 
-
     private function validating(Request $request)
     {
         $rules = [
-            'limit' => ['nullable','integer',],
-            'offset' => ['nullable','integer',],
+            'limit' => ['nullable', 'integer'],
+            'offset' => ['nullable', 'integer'],
         ];
 
         return $this->validate($request, $rules);

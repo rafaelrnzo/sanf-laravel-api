@@ -22,7 +22,7 @@ final class FinancingUnitByUserController extends RestApiController
         ]);
         $dto = new BrowseFinancingUnitByUserRequestDto($input + [
                 'profileXid' => $xid,
-                'userId' => $auth->id()
+                'userId' => $auth->id(),
             ]);
         $result = $service->execute($dto);
 

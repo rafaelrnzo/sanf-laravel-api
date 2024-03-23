@@ -2,7 +2,6 @@
 
 namespace NbsPhp\Core\Transformers;
 
-
 use League\Fractal\Pagination\PaginatorInterface;
 
 class LazyPaginatorAdapter implements PaginatorInterface

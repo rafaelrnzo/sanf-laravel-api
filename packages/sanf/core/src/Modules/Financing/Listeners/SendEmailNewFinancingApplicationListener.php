@@ -2,7 +2,6 @@
 
 namespace Sanf\Core\Modules\Financing\Listeners;
 
-
 use Sanf\Core\Modules\Financing\SendEmailFinancingApplicationForAdminJob;
 use Sanf\Core\Modules\Financing\SendEmailFinancingApplicationForUserJob;
 use Sanf\Core\Modules\User\Enums\ProfileType;
@@ -39,7 +38,7 @@ class SendEmailNewFinancingApplicationListener
                 'Nama Perusahaan' => $profile->fullName,
                 'Email PIC' => $profile->email,
                 'Jenis Fasilitas Pembiayaan' => optional($financingApplication->facility)->name,
-                'Cara Pembayaran' => optional($financingApplication->method)->name
+                'Cara Pembayaran' => optional($financingApplication->method)->name,
             ];
         } elseif ($profile->typeId == ProfileType::PERSONAL) {
             $data = [
@@ -48,7 +47,7 @@ class SendEmailNewFinancingApplicationListener
                 'Nama' => $profile->fullName,
                 'Email' => $profile->email,
                 'Jenis Fasilitas Pembiayaan' => optional($event->financingApplication->facility)->name,
-                'Cara Pembayaran' => optional($event->financingApplication->method)->name
+                'Cara Pembayaran' => optional($event->financingApplication->method)->name,
             ];
         } else {
             throw new \Exception('Invalid Profile Type');

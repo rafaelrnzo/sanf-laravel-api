@@ -2,7 +2,6 @@
 
 namespace Sanf\Core\Modules\Insurance\Repositories;
 
-
 interface InsuranceClaimSubmissionRepositoryInterface
 {
     public function findById($id);

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Invoice\Jobs;
 
 use Illuminate\Bus\Queueable;
@@ -9,9 +8,6 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 use Sanf\Core\Mail\MailLayout2Columns;
-use Sanf\Core\Modules\Invoice\Dtos\GetPdfPrepaymentSimulationRequestDto;
-use Sanf\Core\Modules\Invoice\Services\GetPdfPrepaymentSimulationService;
-
 
 class SendEmailInvoiceCollectionSubmissionForUserJob implements ShouldQueue
 {
@@ -25,7 +21,6 @@ class SendEmailInvoiceCollectionSubmissionForUserJob implements ShouldQueue
      *
      * @return void
      */
-
     public function __construct($data, $recipient)
     {
         $this->data = $data;
@@ -36,7 +31,7 @@ class SendEmailInvoiceCollectionSubmissionForUserJob implements ShouldQueue
     {
         $data = [
             'Tanggal Pengajuan' => date_localized($this->data[0]->created_at, '%d %B %Y'),
-            'Tanggal Pengambilan' => date_localized($this->data[0]->pickup_date, '%d %B %Y')
+            'Tanggal Pengambilan' => date_localized($this->data[0]->pickup_date, '%d %B %Y'),
         ];
 
         $tableData = [];
@@ -45,7 +40,7 @@ class SendEmailInvoiceCollectionSubmissionForUserJob implements ShouldQueue
                 'contract_number' => $datum->contract_no,
                 'model' => $datum->brand_type_model,
                 'serial_number' => $datum->serial_no,
-                'year' => $datum->year
+                'year' => $datum->year,
             ];
         }
 
@@ -78,16 +73,16 @@ class SendEmailInvoiceCollectionSubmissionForUserJob implements ShouldQueue
                 ],
                 [
                     'targetData' => 'model',
-                    'label' => 'Model'
+                    'label' => 'Model',
                 ],
                 [
                     'targetData' => 'serial_number',
-                    'label' => 'Serial Number'
+                    'label' => 'Serial Number',
                 ],
                 [
                     'targetData' => 'year',
-                    'label' => 'Tahun'
-                ]
+                    'label' => 'Tahun',
+                ],
             ])
             ->writeTableBody($tableData)
             ->line(

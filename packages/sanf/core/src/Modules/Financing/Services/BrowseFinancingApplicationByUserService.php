@@ -46,7 +46,7 @@ class BrowseFinancingApplicationByUserService implements ApplicationServiceInter
         try {
             $result = $this->client->browseFinancingApplication($user->username, $dto->xid);
             $coreData = array_map(function ($data) {
-                return (object)[
+                return (object) [
                     'xid' => $data['XID'],
                     'application_code' => $data['APPLICATION_CODE'],
                     'status_id' => (new FinancingStatusEnum($data['STATUS_NAME']))->getStatusId(),
@@ -58,7 +58,7 @@ class BrowseFinancingApplicationByUserService implements ApplicationServiceInter
                 ];
             }, $result['data']);
         } catch (\Exception $e) {
-            Log::warning("Core Exception");
+            Log::warning('Core Exception');
             $coreData = [];
         }
 
@@ -73,7 +73,7 @@ class BrowseFinancingApplicationByUserService implements ApplicationServiceInter
             )
         );
         $internalData = array_map(function ($data) {
-            return (object)[
+            return (object) [
                 'xid' => $data->xid,
                 'application_code' => $data->application_code,
                 'status_id' => $data->status->id,
@@ -99,13 +99,14 @@ class BrowseFinancingApplicationByUserService implements ApplicationServiceInter
         $mergeData = collect($coreData)->merge($internalData)->sortByDesc('created_at');
 
         $totalCoreData = count($coreData);
-        return (object)[
+
+        return (object) [
             'data' => $mergeData,
-            'paginate' => (object)[
-                'total' => (int)$total + $totalCoreData,
+            'paginate' => (object) [
+                'total' => (int) $total + $totalCoreData,
                 'count' => count($mergeData) + $totalCoreData,
-                'skip' => (int)$dto->skip,
-                'limit' => (int)$dto->limit,
+                'skip' => (int) $dto->skip,
+                'limit' => (int) $dto->limit,
                 'sort_by' => $dto->sortBy,
             ],
         ];

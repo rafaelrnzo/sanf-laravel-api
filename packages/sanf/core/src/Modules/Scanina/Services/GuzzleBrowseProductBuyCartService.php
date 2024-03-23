@@ -17,7 +17,6 @@ use Sanf\Core\Modules\User\Repositories\ProfileRepositoryInterface;
 
 class GuzzleBrowseProductBuyCartService implements ApplicationServiceInterface
 {
-
     private AuthModel $userRepository;
     private ProfileRepositoryInterface $profileRepository;
     private ScaninaProductRepositoryInterface $productRepository;
@@ -60,9 +59,9 @@ class GuzzleBrowseProductBuyCartService implements ApplicationServiceInterface
 
         $responseProductBuy = $this->syncWithApi($records);
 
-        return (object)[
+        return (object) [
             'data' => $responseProductBuy,
-            'paginate' => (object)[
+            'paginate' => (object) [
                 'total' => 0,
                 'count' => 0,
                 'skip' => null,
@@ -87,7 +86,7 @@ class GuzzleBrowseProductBuyCartService implements ApplicationServiceInterface
                 throw $exception;
             }
 
-            $data = (array)$productBuyResponse->data;
+            $data = (array) $productBuyResponse->data;
             unset($data['review']);
             $productBuyResponseDto = new ReadProductBuyResponseDto($data);
             $productBuyResponseDto->xid = $product->xid;
@@ -99,10 +98,10 @@ class GuzzleBrowseProductBuyCartService implements ApplicationServiceInterface
 
             $specifications = array_map(function ($specification) {
                 $specification->subSpecification = array_map(function ($subSpecification) {
-                    return new BrowseProductSubSpecificationResponseDto((array)$subSpecification);
+                    return new BrowseProductSubSpecificationResponseDto((array) $subSpecification);
                 }, $specification->subSpecification);
 
-                return new BrowseProductSpecificationResponseDto((array)$specification);
+                return new BrowseProductSpecificationResponseDto((array) $specification);
             }, $productBuySpecificationResponse->data->rows);
 
             $subSpecifications = [];

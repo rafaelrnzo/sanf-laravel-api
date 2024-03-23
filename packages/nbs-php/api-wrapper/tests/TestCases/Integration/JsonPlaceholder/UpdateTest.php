@@ -21,7 +21,7 @@ class UpdateTest extends TestCase
     public function testUpdate()
     {
         $data = [
-            'title' => 'Inferno'
+            'title' => 'Inferno',
         ];
         $response = JsonPlaceholderPost::update(1, $data);
 
@@ -32,10 +32,10 @@ class UpdateTest extends TestCase
     public function testUpdateAttributes()
     {
         $data = [
-            'title' => 'inferno'
+            'title' => 'inferno',
         ];
         $resource = new JsonPlaceholderPost([
-            'id' => 1
+            'id' => 1,
         ]);
         $response = $resource->updateAttributes($data);
 
@@ -48,7 +48,7 @@ class UpdateTest extends TestCase
     {
         $newTitle = 'Inferno';
         $resource = new JsonPlaceholderPost([
-            'id' => 1
+            'id' => 1,
         ]);
         $resource->title = $newTitle;
         $response = $resource->saveChanges();

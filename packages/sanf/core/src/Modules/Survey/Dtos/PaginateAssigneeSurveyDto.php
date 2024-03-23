@@ -6,6 +6,5 @@ use NbsPhp\Core\Dto\CamelCaseDataTransferObject;
 
 class PaginateAssigneeSurveyDto extends CamelCaseDataTransferObject
 {
-
     public int $userId;
 }

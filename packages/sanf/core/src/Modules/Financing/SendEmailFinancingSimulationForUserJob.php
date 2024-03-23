@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Financing;
 
 use Illuminate\Bus\Queueable;
@@ -10,7 +9,6 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 use NbsPhp\Core\Mail\BaseMail;
 use Sanf\Core\Modules\Financing\Services\GetPdfFinancingSimulationService;
-
 
 class SendEmailFinancingSimulationForUserJob implements ShouldQueue
 {
@@ -23,7 +21,6 @@ class SendEmailFinancingSimulationForUserJob implements ShouldQueue
      *
      * @return void
      */
-
     public function __construct($data, $recipient)
     {
         $this->data = $data;
@@ -45,7 +42,8 @@ class SendEmailFinancingSimulationForUserJob implements ShouldQueue
                 <blockquote style="margin: 0 3em;font-size: 16px; line-height: 150%;">
                     Berikut kami lampirkan hasil perhitungan simulasi pengajuan pembiayaan anda
                 </blockquote>
-            '))
+            '
+            ))
             ->line(
                 __('Email ini dibuat secara otomatis mohon tidak membalas email ini, jika terdapat keluhan silahkan hubungi Sanf Customer Service')
             )

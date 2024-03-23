@@ -54,9 +54,10 @@ final class InvoiceCollectionSubmissionByUserController extends RestApiControlle
             'pickupDate' => CarbonImmutable::createFromFormat('Y-m-d', $input['pickup_date']),
             'financing_units' => $financingUnits,
             'profileXid' => $xid,
-            'userId' => $auth->id()
+            'userId' => $auth->id(),
         ]);
         $service->execute($dto);
+
         return $this->responseOk();
     }
 }

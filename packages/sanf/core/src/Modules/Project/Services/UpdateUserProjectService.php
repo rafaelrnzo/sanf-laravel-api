@@ -45,7 +45,7 @@ class UpdateUserProjectService extends ProjectByUserService implements Applicati
                 $imageFile = [
                     'file_name' => $dto->imageFile,
                     'directory' => $metadata['dirname'] ?? $newPath,
-                    'path' => $metadata["path"],
+                    'path' => $metadata['path'],
                     'mime_type' => $metadata['mimetype'] ?? Storage::getMimeType("{$newPath}{$dto->imageFile}"),
                     'timestamp' => $metadata['timestamp'],
                     'size' => $metadata['size'],
@@ -72,7 +72,7 @@ class UpdateUserProjectService extends ProjectByUserService implements Applicati
 //            'modified_by' => //TODO USER SNAPSHOT
             'city_name' => $dto->locationMetadata['city_name'],
             'province_name' => $dto->locationMetadata['province_name'],
-            'image_path' => $imageFile['path']
+            'image_path' => $imageFile['path'],
         ]);
 
         event(new ProjectUpdatedEvent($project, $updatedProject));

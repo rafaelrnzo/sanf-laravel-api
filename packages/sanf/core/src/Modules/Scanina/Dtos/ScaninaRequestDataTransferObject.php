@@ -7,7 +7,6 @@ use Spatie\DataTransferObject\FlexibleDataTransferObject;
 
 class ScaninaRequestDataTransferObject extends FlexibleDataTransferObject
 {
-
     public function __construct(array $parameters = [])
     {
         $validators = $this->getFieldValidators();

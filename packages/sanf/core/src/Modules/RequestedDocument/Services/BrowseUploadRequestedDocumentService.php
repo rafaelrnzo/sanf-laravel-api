@@ -12,7 +12,6 @@ use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class BrowseUploadRequestedDocumentService implements ApplicationServiceInterface
 {
-
     private SanfCoreApiClient $internalApiClient;
     private RequestedDocumentItemRepositoryInterface $eloquentRequestedDocItemRepository;
 

@@ -23,7 +23,6 @@ class SendEmailFinancingUnitLocationJob implements ShouldQueue
      *
      * @return void
      */
-
     public function __construct($data, $recipient)
     {
         $this->data = $data;
@@ -52,11 +51,12 @@ class SendEmailFinancingUnitLocationJob implements ShouldQueue
                 ['joinToIndex' => 5, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08); margin: 5px 0;">'],
                 [
                     'joinToIndex' => 6,
-                    'html' => '<p style="color: #232227; font-size: 14px;"><strong>Perubahan Lokasi</strong></p>'
+                    'html' => '<p style="color: #232227; font-size: 14px;"><strong>Perubahan Lokasi</strong></p>',
                 ],
             ]);
 
         $ccMails = explode(',', config('sanf-mobile.mail_to.it_helpdesk'));
+
         return Mail::to($this->recipient)
             ->cc($ccMails)
             ->send($simulationEmail);

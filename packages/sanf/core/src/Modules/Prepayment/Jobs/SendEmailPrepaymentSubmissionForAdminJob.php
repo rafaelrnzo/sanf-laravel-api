@@ -25,7 +25,6 @@ class SendEmailPrepaymentSubmissionForAdminJob implements ShouldQueue
      *
      * @return void
      */
-
     public function __construct($data, $recipient)
     {
         $this->data = $data;
@@ -66,6 +65,7 @@ class SendEmailPrepaymentSubmissionForAdminJob implements ShouldQueue
         );
 
         $ccMails = explode(',', config('sanf-mobile.mail_to.it_helpdesk'));
+
         return Mail::to($this->recipient)
             ->cc($ccMails)
             ->send($prepayment);

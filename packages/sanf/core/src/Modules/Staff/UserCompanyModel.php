@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Staff;
-
 
 use NbsPhp\Core\Models\AbstractModel;
 use Sanf\Core\Modules\User\AuthModel;

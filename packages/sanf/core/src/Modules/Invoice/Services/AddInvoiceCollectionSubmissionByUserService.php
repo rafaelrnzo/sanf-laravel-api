@@ -42,7 +42,7 @@ final class AddInvoiceCollectionSubmissionByUserService extends InvoiceCollectio
         }
 
         return new AddInvoiceCollectionSubmissionByUserResponseDto([
-            'submissions' => $entities
+            'submissions' => $entities,
         ]);
     }
 }

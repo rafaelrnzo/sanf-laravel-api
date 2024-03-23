@@ -40,6 +40,7 @@ class HealthCheckController extends Controller
     {
         $results = collect($this->healthService->health())->reduce(function ($current, $resource) {
             $current[$resource->abbreviation] = $resource->isHealthy();
+
             return $current;
         });
         $status = 200;
@@ -99,7 +100,7 @@ class HealthCheckController extends Controller
     {
         $this->healthService->setAction('panel');
 
-        return response((string)view(config('health.views.panel'))->with('laravel', ['health' => config('health')]));
+        return response((string) view(config('health.views.panel'))->with('laravel', ['health' => config('health')]));
     }
 
     public function assetAppJs()

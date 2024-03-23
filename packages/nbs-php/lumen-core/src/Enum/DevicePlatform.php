@@ -1,14 +1,11 @@
 <?php
 
-
 namespace NbsPhp\Core\Enum;
-
 
 use MyCLabs\Enum\Enum;
 
 /**
- * Class DevicePlatform
- * @package NbsPhp\Core\Enum
+ * Class DevicePlatform.
  */
 class DevicePlatform extends Enum
 {

@@ -3,14 +3,13 @@
 namespace Sanf\Core\Modules\Scanina\Services;
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\Scanina\Dtos\BrowseProductReviewResponseDto;
 use Sanf\Core\Modules\Scanina\Dtos\BrowseProductFilterRequestDto;
+use Sanf\Core\Modules\Scanina\Dtos\BrowseProductReviewResponseDto;
 use Sanf\Core\Modules\Scanina\Repositories\ScaninaProductRepositoryInterface;
 use Sanf\Core\Modules\Scanina\Specifications\ScaninaProductSpecificationInterface;
 
 class GuzzleBrowseProductReviewService implements ApplicationServiceInterface
 {
-
     private ScaninaProductRepositoryInterface $repository;
     private ScaninaProductSpecificationInterface $specification;
 
@@ -25,18 +24,17 @@ class GuzzleBrowseProductReviewService implements ApplicationServiceInterface
     public function execute($dto = null)
     {
         /** @var BrowseProductFilterRequestDto $dto */
-
         $response = $this->repository->get(
             $this->specification->getCustomerReview($dto)
         );
 
         $reviews = array_map(function ($review) {
-            return new BrowseProductReviewResponseDto((array)$review);
+            return new BrowseProductReviewResponseDto((array) $review);
         }, $response->data->rows);
 
-        return (object)[
+        return (object) [
             'data' => $reviews,
-            'paginate' => (object)[
+            'paginate' => (object) [
                 'total' => $response->data->metadata->total ?? 0,
                 'count' => $response->data->metadata->count ?? 0,
                 'skip' => $dto->skip,

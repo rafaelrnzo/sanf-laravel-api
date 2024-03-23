@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Project\Listeners;
 
 use Sanf\Core\Modules\Project\Jobs\SendNotificationRejectProjectJob;

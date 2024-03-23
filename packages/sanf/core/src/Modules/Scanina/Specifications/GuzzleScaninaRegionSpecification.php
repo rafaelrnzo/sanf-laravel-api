@@ -4,7 +4,6 @@ namespace Sanf\Core\Modules\Scanina\Specifications;
 
 class GuzzleScaninaRegionSpecification implements ScaninaRegionSpecificationInterface
 {
-
     /**
      * @param $parameter
      * @return GuzzleGetCountrySpecification

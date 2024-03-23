@@ -1,6 +1,5 @@
 <?php
 
-
 namespace NbsPhp\Core\Controllers;
 
 use GuzzleHttp\Exception\ClientException;
@@ -46,7 +45,7 @@ class AuthController extends RestApiController
     {
         $dto = new AppLoginRequestDto([
             'clientId' => $request->getUser(),
-            'clientSecret' => $request->getPassword()
+            'clientSecret' => $request->getPassword(),
         ]);
         $app = $service->execute($dto);
 
@@ -60,29 +59,29 @@ class AuthController extends RestApiController
     protected function validateDeviceInformation(Request $request, $prefix = null): array
     {
         $validated = $this->validate($request, [
-            $prefix . "device_id" => ['required', 'string',],
-            $prefix . "device_platform_id" => ['required', 'integer',],
-            $prefix . "notification_token" => ['nullable', 'string',],
-            $prefix . "notification_channel_id" => ['nullable', 'integer',],
-            $prefix . "metadata" => ['nullable',],
-            $prefix . "metadata.manufacturer" => ['nullable', 'string',],
-            $prefix . "metadata.model" => ['nullable', 'string',],
-            $prefix . "metadata.user_agent" => ['nullable', 'string',],
+            $prefix . 'device_id' => ['required', 'string'],
+            $prefix . 'device_platform_id' => ['required', 'integer'],
+            $prefix . 'notification_token' => ['nullable', 'string'],
+            $prefix . 'notification_channel_id' => ['nullable', 'integer'],
+            $prefix . 'metadata' => ['nullable'],
+            $prefix . 'metadata.manufacturer' => ['nullable', 'string'],
+            $prefix . 'metadata.model' => ['nullable', 'string'],
+            $prefix . 'metadata.user_agent' => ['nullable', 'string'],
         ]);
 
-        $devicePlatformId = (int)$request->input('device.device_platform_id');
+        $devicePlatformId = (int) $request->input('device.device_platform_id');
         if (in_array($devicePlatformId, [DevicePlatform::ANDROID, DevicePlatform::IOS])) {
             $validated += $this->validate($request, [
-                $prefix . 'notification_token' => ['required', 'string',],
-                $prefix . 'notification_channel_id' => ['required', 'integer',],
-                $prefix . 'metadata' => ['required',],
-                $prefix . 'metadata.manufacturer' => ['required', 'string',],
-                $prefix . 'metadata.model' => ['required', 'string',],
+                $prefix . 'notification_token' => ['required', 'string'],
+                $prefix . 'notification_channel_id' => ['required', 'integer'],
+                $prefix . 'metadata' => ['required'],
+                $prefix . 'metadata.manufacturer' => ['required', 'string'],
+                $prefix . 'metadata.model' => ['required', 'string'],
             ]);
-        } else if ($devicePlatformId === DevicePlatform::WEB) {
+        } elseif ($devicePlatformId === DevicePlatform::WEB) {
             $validated += $this->validate($request, [
-                $prefix . 'metadata' => ['required',],
-                $prefix . 'metadata.user_agent' => ['required', 'string',],
+                $prefix . 'metadata' => ['required'],
+                $prefix . 'metadata.user_agent' => ['required', 'string'],
             ]);
         }
 
@@ -92,11 +91,11 @@ class AuthController extends RestApiController
     protected function validateRegister(Request $request): array
     {
         $validated = $this->validate($request, [
-            'full_name' => ['required', 'string',],
-            'email' => ['required', 'email',],
+            'full_name' => ['required', 'string'],
+            'email' => ['required', 'email'],
             'password' => config('auth.input_validations.password.rule', ['required']),
-            'landline_number' => ['string', 'nullable', 'min:10',],
-            'phone_number' => ['required', 'min:10',],
+            'landline_number' => ['string', 'nullable', 'min:10'],
+            'phone_number' => ['required', 'min:10'],
         ], config('auth.input_validations.password.messages'));
 
         $validated += $this->validateDeviceInformation($request, 'device.');
@@ -125,7 +124,7 @@ class AuthController extends RestApiController
     {
         $validated = $this->validate($request, [
             'username' => ['required', 'email', 'max:255'],
-            'password' => ['required', 'string']
+            'password' => ['required', 'string'],
         ]);
 
         $validated += $this->validateDeviceInformation($request, 'device.');
@@ -144,8 +143,8 @@ class AuthController extends RestApiController
                 'devicePlatformId' => $input['device']['device_platform_id'],
                 'notificationToken' => $input['device']['notification_token'],
                 'notificationChannelId' => $input['device']['notification_channel_id'],
-                'metadata' => $input['device']['metadata']
-            ])
+                'metadata' => $input['device']['metadata'],
+            ]),
         ]);
         $user = $service->execute($dto);
 
@@ -163,6 +162,7 @@ class AuthController extends RestApiController
     public function logout(Request $request, LogoutService $service)
     {
         $result = $service->execute(null);
+
         return fractal($result, config('auth.transformers.logout'));
     }
 
@@ -200,8 +200,8 @@ class AuthController extends RestApiController
                 'devicePlatformId' => $input['device_platform_id'] ?? null,
                 'notificationToken' => $input['notification_token'] ?? null,
                 'notificationChannelId' => $input['notification_channel_id'],
-                'metadata' => $input['metadata']
-            ])
+                'metadata' => $input['metadata'],
+            ]),
         ]);
 
         $user = $service->execute($dto);
@@ -218,9 +218,9 @@ class AuthController extends RestApiController
     {
         try {
             $jwt = $this->extractVerifyEmailToken($request);
-            $dto = (object)[
+            $dto = (object) [
                 'userId' => $jwt->sub,
-                'token' => $jwt->token
+                'token' => $jwt->token,
             ];
             $service->execute($dto);
             $message = __('Email berhasil diaktivasi');
@@ -230,6 +230,7 @@ class AuthController extends RestApiController
             if ($e instanceof ClientException || $e instanceof ServerException) {
                 $message = __('Terjadi Kesalahan, Harap Hubungi Administrator');
             }
+
             return view('core::layouts.message', ['message' => $message]);
         }
 
@@ -239,11 +240,12 @@ class AuthController extends RestApiController
     public function verifyEmailByApp(Request $request, VerifyEmailServiceInterface $service)
     {
         $jwt = $this->extractVerifyEmailToken($request);
-        $dto = (object)[
+        $dto = (object) [
             'userId' => $jwt->sub,
-            'token' => $jwt->token
+            'token' => $jwt->token,
         ];
         $service->execute($dto);
+
         return $this->responseOk();
     }
 
@@ -255,15 +257,16 @@ class AuthController extends RestApiController
         if (is_null($decodedToken)) {
             throw new VerifyEmailFailedException('Verify Token Invalid');
         }
+
         return $decodedToken;
     }
 
     public function requestEmailVerification(Request $request, SendEmailVerificationService $service)
     {
         $this->validate($request, [
-            'email' => ['required', 'email']
+            'email' => ['required', 'email'],
         ]);
-        $dto = (object)[
+        $dto = (object) [
             'email' => $request->input('email'),
         ];
         try {
@@ -271,15 +274,16 @@ class AuthController extends RestApiController
         } catch (VerifyEmailFailedException $exception) {
             // ignore error if email not found
         }
+
         return $this->responseOk();
     }
 
     public function requestActivation(Request $request, SendEmailActivationService $service)
     {
         $this->validate($request, [
-            'email' => ['required', 'email']
+            'email' => ['required', 'email'],
         ]);
-        $dto = (object)[
+        $dto = (object) [
             'email' => $request->input('email'),
         ];
         try {
@@ -287,6 +291,7 @@ class AuthController extends RestApiController
         } catch (UserActivationFailedException $exception) {
             // ignore error if email not found
         }
+
         return $this->responseOk();
     }
 
@@ -294,12 +299,14 @@ class AuthController extends RestApiController
     {
         try {
             $jwt = $this->extractActivationToken($request);
-            $dto = (object)[
+            $dto = (object) [
                 'userId' => $jwt->sub,
                 'token' => $jwt->token,
             ];
             $user = $service->execute($dto);
-            return view(config('auth.views.user-activation'))->with([
+
+            return view(config('auth.views.user-activation'))->with(
+                [
                     'token' => $request->token,
                     'email' => $user->username,
                     'error' => $request->session()->get('error'),
@@ -312,6 +319,7 @@ class AuthController extends RestApiController
             if ($request->expectsJson()) {
                 throw $exception;
             }
+
             return view(config('auth.views.user-activation'))->with(
                 ['token' => $request->token, 'error' => $exception->getMessage()]
             )->withErrors(['error' => $exception->getMessage()]);
@@ -325,13 +333,13 @@ class AuthController extends RestApiController
                 $this->validate($request, ['password' => 'confirmed']);
             }
             $input = $this->validate($request, [
-                'password' => config('auth.input_validations.password.rule', ['required'])
+                'password' => config('auth.input_validations.password.rule', ['required']),
             ], config('auth.input_validations.password.messages'));
             $jwt = $this->extractActivationToken($request);
-            $dto = (object)[
+            $dto = (object) [
                 'userId' => $jwt->sub,
                 'token' => $jwt->token,
-                'password' => $input['password']
+                'password' => $input['password'],
             ];
             $service->execute($dto);
         } catch (ValidationException $exception) {
@@ -343,21 +351,23 @@ class AuthController extends RestApiController
                 ->route(extract_route_name($request), ['token' => $request->token])
                 ->with(['error' => $exception->getMessage()]);
         }
+
         return redirect()->route('user.activate-page', ['token' => $request->token]);
     }
 
     public function userActivationByApp(Request $request, ActivateUserServiceInterface $service)
     {
         $input = $this->validate($request, [
-            'password' => config('auth.input_validations.password.rule', ['required'])
+            'password' => config('auth.input_validations.password.rule', ['required']),
         ], config('auth.input_validations.password.messages'));
         $jwt = $this->extractActivationToken($request);
-        $dto = (object)[
+        $dto = (object) [
             'userId' => $jwt->sub,
             'token' => $jwt->token,
-            'password' => $input['password']
+            'password' => $input['password'],
         ];
         $service->execute($dto);
+
         return $this->responseOk();
     }
 
@@ -369,6 +379,7 @@ class AuthController extends RestApiController
         if (is_null($decodedToken)) {
             throw new UserActivationFailedException('Activation Token Invalid, Please Request Again');
         }
+
         return $decodedToken;
     }
 
@@ -378,11 +389,12 @@ class AuthController extends RestApiController
             'password' => config('auth.input_validations.password.rule', ['required']),
         ]);
 
-        $dto = (object)[
+        $dto = (object) [
             'userId' => $auth->id(),
             'password' => $input['password'],
         ];
         $service->execute($dto);
+
         return $this->responseOk();
     }
 
@@ -393,12 +405,13 @@ class AuthController extends RestApiController
             'new_password' => config('auth.input_validations.password.rule', ['required']),
         ]);
 
-        $dto = (object)[
+        $dto = (object) [
             'userId' => $auth->id(),
             'currentPassword' => $input['current_password'],
             'newPassword' => $input['new_password'],
         ];
         $service->execute($dto);
+
         return $this->responseOk();
     }
 }

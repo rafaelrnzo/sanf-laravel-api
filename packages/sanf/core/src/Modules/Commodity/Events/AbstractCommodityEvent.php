@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Commodity\Events;
-
 
 use NbsPhp\Core\Event;
 

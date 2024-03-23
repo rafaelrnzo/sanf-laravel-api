@@ -1,14 +1,11 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Commodity;
-
 
 use MyCLabs\Enum\Enum;
 
 /**
- * Class CommodityStatus
- * @package NbsPhp\Core\Enum
+ * Class CommodityStatus.
  */
 class CommodityStatus extends Enum
 {

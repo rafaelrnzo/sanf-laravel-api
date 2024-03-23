@@ -85,6 +85,7 @@ trait SendsPasswordResetEmails
         if (config('auth.features.strict-reset-password')) {
             throw new ResetPasswordFailedException(trans($response));
         }
+
         return $this->responseOk();
     }
 

@@ -72,7 +72,7 @@ class JWTGuard implements Guard
         // If we've already retrieved the user for the current request we can just
         // return it back immediately. We do not want to fetch the user data on
         // every call to this method because that would be tremendously slow.
-        if (! is_null($this->user)) {
+        if (!is_null($this->user)) {
             return $this->user;
         }
 
@@ -125,7 +125,7 @@ class JWTGuard implements Guard
     public function getTokenForRequest()
     {
         if (!$this->jwt->isHealthy() && $this->request->headers->has('Authorization')) {
-            [$jwt_token] = sscanf( $this->request->headers->get('Authorization'), 'Bearer %s');
+            [$jwt_token] = sscanf($this->request->headers->get('Authorization'), 'Bearer %s');
 
             if (is_null($jwt_token)) {
                 throw new UnauthorizedException;
@@ -138,15 +138,14 @@ class JWTGuard implements Guard
     }
 
     /**
-        * Get the JWT payload for the current request.
-        *
-        * @return object
-        */
+     * Get the JWT payload for the current request.
+     *
+     * @return object
+     */
     public function getPayloadForRequest()
     {
         return $this->jwt->getDecoded();
     }
-
 
     /**
      * Generate new token by ID.
@@ -170,7 +169,6 @@ class JWTGuard implements Guard
         return $this->jwt->isHealthy();
     }
 
-
     /**
      * Attempt to authenticate the user using the given credentials and return the token.
      *
@@ -185,6 +183,7 @@ class JWTGuard implements Guard
         if (!is_null($user) && $this->hasValidCredentials($user, $credentials)) {
           return $this->login($user);
         }
+
         return false;
     }
 
@@ -205,6 +204,7 @@ class JWTGuard implements Guard
         //TODO SET USER SESSION IN HERE
         $this->setUser($user);
         event(new Login($this->name, $user, false));
+
         return $this->generateTokenFromUser();
     }
 

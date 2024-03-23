@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\User\Services;
-
 
 use NbsPhp\Core\Enum\UserStatus;
 use NbsPhp\Core\Models\NeedSetupPasswordInterface;
@@ -22,6 +20,7 @@ class InviteOrGetUserService extends UserService implements ApplicationServiceIn
             if ($user instanceof NeedSetupPasswordInterface && $user->needActivation()) {
                 $user->sendUserActivationNotification();
             }
+
             return $user;
         }
 

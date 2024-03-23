@@ -5,7 +5,6 @@ namespace NbsPhp\Core\Middleware;
 use Closure;
 use Illuminate\Contracts\Auth\Factory as Auth;
 use NbsPhp\Core\Exceptions\UnauthorizedException;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class AuthenticateMiddleware
 {

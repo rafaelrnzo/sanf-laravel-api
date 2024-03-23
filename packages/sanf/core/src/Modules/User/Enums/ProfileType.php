@@ -1,15 +1,12 @@
 <?php
 
-
 namespace Sanf\Core\Modules\User\Enums;
 
-
-use MyCLabs\Enum\Enum;
 use function __;
+use MyCLabs\Enum\Enum;
 
 /**
- * Class ProfileType
- * @package Sanf\Core\Modules\User
+ * Class ProfileType.
  */
 class ProfileType extends Enum
 {
@@ -18,6 +15,6 @@ class ProfileType extends Enum
 
     public function getTranslation()
     {
-        return __('core::constant.profile-type.'.$this->getKey());
+        return __('core::constant.profile-type.' . $this->getKey());
     }
 }

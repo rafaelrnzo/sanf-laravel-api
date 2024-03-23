@@ -6,9 +6,9 @@ return [
         'version_string' => 'X-App-Version-String',
     ],
     'android' => [
-        'minimum_version_number' => env('ANDROID_MIN_VER_NUM',0)
+        'minimum_version_number' => env('ANDROID_MIN_VER_NUM', 0),
     ],
     'ios' => [
-        'minimum_version_number' => env('IOS_MIN_VER_NUM',0)
-    ]
+        'minimum_version_number' => env('IOS_MIN_VER_NUM', 0),
+    ],
 ];

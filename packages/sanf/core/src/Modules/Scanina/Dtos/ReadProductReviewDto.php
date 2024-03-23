@@ -6,7 +6,6 @@ use Spatie\DataTransferObject\FlexibleDataTransferObject;
 
 class ReadProductReviewDto extends FlexibleDataTransferObject
 {
-
     public ?int $total;
     public ?int $withImages;
     public ?array $customerSatisfied;

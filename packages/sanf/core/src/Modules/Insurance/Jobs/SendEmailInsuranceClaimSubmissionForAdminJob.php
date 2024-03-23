@@ -24,7 +24,6 @@ class SendEmailInsuranceClaimSubmissionForAdminJob implements ShouldQueue
      *
      * @return void
      */
-
     public function __construct($data, $recipient)
     {
         $this->data = $data;
@@ -63,7 +62,7 @@ class SendEmailInsuranceClaimSubmissionForAdminJob implements ShouldQueue
                 ['joinToIndex' => 1, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08); margin: 5px 0;">'],
                 [
                     'joinToIndex' => 2,
-                    'html' => '<p style="color: #232227; font-size: 14px;"><strong>Detail Klaim Asuransi</strong></p>'
+                    'html' => '<p style="color: #232227; font-size: 14px;"><strong>Detail Klaim Asuransi</strong></p>',
                 ],
                 ['joinToIndex' => 7, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08); margin: 5px 0;">'],
             ]);
@@ -73,6 +72,7 @@ class SendEmailInsuranceClaimSubmissionForAdminJob implements ShouldQueue
         }
 
         $ccMails = explode(',', config('sanf-mobile.mail_to.it_helpdesk'));
+
         return Mail::to($this->recipient)
             ->cc($ccMails)
             ->send($mailable);

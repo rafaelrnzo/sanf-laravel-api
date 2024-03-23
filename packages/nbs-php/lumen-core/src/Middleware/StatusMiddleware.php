@@ -25,6 +25,7 @@ class StatusMiddleware
     protected function logout()
     {
         auth()->logout();
+
         return abort(401);
     }
 }

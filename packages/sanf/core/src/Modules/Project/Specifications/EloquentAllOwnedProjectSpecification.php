@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Project\Specifications;
-
 
 use Sanf\Core\Modules\Project\Models\ProjectModel;
 

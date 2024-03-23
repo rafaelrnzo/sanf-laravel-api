@@ -18,6 +18,7 @@ class NotificationServiceProvider extends ServiceProvider
             $this->registerPublishing($filesystem);
         }
     }
+
     public function register()
     {
         $this->app->bind(PushNotificationServiceInterface::class, FcmService::class);

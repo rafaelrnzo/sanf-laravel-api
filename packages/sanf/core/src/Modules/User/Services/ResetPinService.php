@@ -6,9 +6,9 @@ use Carbon\Carbon;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\User\AuthModel;
+use Sanf\Core\Modules\User\Exceptions\PinResetCodeNotMatchException;
 use Sanf\Core\Modules\User\Exceptions\PinResetExpiredException;
 use Sanf\Core\Modules\User\Exceptions\PinResetInvalidException;
-use Sanf\Core\Modules\User\Exceptions\PinResetCodeNotMatchException;
 
 class ResetPinService implements ApplicationServiceInterface
 {

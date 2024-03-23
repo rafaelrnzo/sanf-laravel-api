@@ -36,7 +36,7 @@ return [
 
     'features' => [
         'strict-reset-password' => false,
-        'app-url' => ''
+        'app-url' => '',
     ],
 
     'table_names' => [
@@ -62,24 +62,24 @@ return [
         'password' => [
             'rule' => $passwordValidationRule = ['required', 'min:8', 'regex:/^(?=.*\d)(?=.*[a-zA-Z])/'],
             'messages' => $passwordValidationMessage = [
-                'regex' => 'Password must be alphanumeric'
+                'regex' => 'Password must be alphanumeric',
             ],
         ],
 
         'login' => [
             'rules' => [
                 'username' => 'required',
-                'password' => 'required'
+                'password' => 'required',
             ],
-            'messages' => []
+            'messages' => [],
         ],
         'change_password' => [
             'rules' => [
-                'password' => $passwordValidationRule
+                'password' => $passwordValidationRule,
             ],
             'messages' => [
-                'password.regex' => $passwordValidationMessage
-            ]
+                'password.regex' => $passwordValidationMessage,
+            ],
         ],
         'reset_password' => [
             'rules' => [
@@ -87,9 +87,9 @@ return [
                 'password' => $passwordValidationRule,
             ],
             'messages' => [
-                'password.regex' => $passwordValidationMessage
-            ]
-        ]
+                'password.regex' => $passwordValidationMessage,
+            ],
+        ],
     ],
 
     /*
@@ -128,7 +128,7 @@ return [
     'guards' => [
         'api' => [
             'driver' => 'jwt-auth',
-            'provider' => 'mobile-user-provider'
+            'provider' => 'mobile-user-provider',
         ],
 //        'external' => [
 //            'driver' => 'basic-auth',
@@ -206,12 +206,12 @@ return [
     'routes' => [
         'prefix' => $routePrefix = 'v1/users',
 
-        'namespace' => $namespace = "NbsPhp\\Core\\Controllers\\",
+        'namespace' => $namespace = 'NbsPhp\\Core\\Controllers\\',
 
         'list' => [
             [
                 'method' => 'post',
-                'uri' => "v1/auth/user-app",
+                'uri' => 'v1/auth/user-app',
                 'name' => 'auth.user-app',
                 'action' => "{$namespace}AuthController@loginApp",
                 'middleware' => ['basic-auth-config:mobile-client-user-provider'],
@@ -253,7 +253,7 @@ return [
             ],
             [
                 'method' => 'get',
-                'uri' => "pages/reset-password",
+                'uri' => 'pages/reset-password',
                 'name' => 'password.request',
                 'action' => "{$namespace}ResetPasswordController@showResetForm",
                 'middleware' => ['http-logger'],
@@ -302,7 +302,7 @@ return [
             ],
             [
                 'method' => 'get',
-                'uri' => "pages/verify-email",
+                'uri' => 'pages/verify-email',
                 'name' => 'email.verify',
                 'action' => "Sanf\Api\Modules\User\Controllers\AuthController@verifyEmailPage",
                 'middleware' => ['http-logger'],
@@ -323,14 +323,14 @@ return [
             ],
             [
                 'method' => 'get',
-                'uri' => "pages/activation",
+                'uri' => 'pages/activation',
                 'name' => 'user.activate-page',
                 'action' => "{$namespace}AuthController@userActivationPage",
                 'middleware' => ['http-logger'],
             ],
             [
                 'method' => 'post',
-                'uri' => "/pages/activation",
+                'uri' => '/pages/activation',
                 'name' => 'user.activate-from-web',
                 'action' => "Sanf\Api\Modules\User\Controllers\AuthController@userActivationByWeb",
                 'middleware' => ['http-logger'],

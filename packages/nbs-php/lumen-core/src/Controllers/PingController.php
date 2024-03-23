@@ -1,8 +1,6 @@
 <?php
 
-
 namespace NbsPhp\Core\Controllers;
-
 
 use PragmaRX\Health\Service;
 use PragmaRX\Health\Support\Resource;
@@ -29,16 +27,16 @@ class PingController extends RestApiController
     {
         $this->healthService->setAction('resource');
         try {
-            /** @var Resource $uptimeCheker */
+            /** @var resource $uptimeCheker */
             $uptimeCheker = $this->healthService->resource('serveruptime');
             $uptime = $uptimeCheker->checker->check()->errorMessage;
         } catch (\Exception $exception) {
             $uptime = null;
         }
-        /** @var Resource $dbChecker */
+        /** @var resource $dbChecker */
         $dbChecker = $this->healthService->resource('database');
         if (!$dbChecker->isHealthy()) {
-            throw new \Exception("Could not query to DB");
+            throw new \Exception('Could not query to DB');
         }
         $response = [
             'version' => '',
@@ -46,6 +44,7 @@ class PingController extends RestApiController
             'timestamp' => '',
             'server_uptime' => $uptime,
         ];
+
         return $this->responseOk('OK', array_filter($response));
     }
 }

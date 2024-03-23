@@ -14,7 +14,6 @@ use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class SummaryBillContractService extends UserService implements ApplicationServiceInterface
 {
-
     protected SanfCoreApiClient $internalApiClient;
 
     public function __construct(AuthModel $userRepository, SanfCoreApiClient $internalApiClient)
@@ -39,7 +38,7 @@ class SummaryBillContractService extends UserService implements ApplicationServi
 
         $response = $this->internalApiClient->getContractDetail($dto->profile_xid, $dto->contract_no);
         $data = $response->data[$response->count - 1];
-        $metadata = (object)[
+        $metadata = (object) [
             'total_amount' => $data->TOTAL_PEMBIAYAAN ?? 0,
             'total_penalty_amount' => $data->TOTAL_DENDA ?? 0,
             'total_paid_amount' => $data->TERBAYAR ?? 0,
@@ -57,32 +56,32 @@ class SummaryBillContractService extends UserService implements ApplicationServi
                 $dto->sort_by
             );
         } catch (SanfInternalApiDataNotFoundException $exception) {
-            return (object)[
+            return (object) [
                 'data' => [],
-                'paginate' => (object)[
+                'paginate' => (object) [
                     'total' => 0,
                     'count' => 0,
-                    'skip' => (int)$dto->skip,
-                    'limit' => (int)$dto->limit,
+                    'skip' => (int) $dto->skip,
+                    'limit' => (int) $dto->limit,
                     'sortBy' => $dto->sort_by,
-                ]
+                ],
             ];
         }
 
         $data = collect($response->data)->map(function ($item) {
-            return (object)[
+            return (object) [
                 'due_at' => $item->TGL_JATUHTEMPO ?? null,
                 'bill_amount' => $item->TAGIHAN ?? 0,
                 'penalty_amount' => $item->DENDA_PENALTY ?? 0,
                 'currency_type' => $item->CURR_ID ?? null,
-                'installment_index' => $item->ANG_KE ?? null
+                'installment_index' => $item->ANG_KE ?? null,
             ];
         });
 
-        return (object)[
+        return (object) [
             'data' => $data,
             'metadata' => $metadata,
-            'paginate' => (object)[
+            'paginate' => (object) [
                 'total' => $response->total ?? $response->count,
                 'count' => $response->count ?? 0,
                 'skip' => $dto->skip,

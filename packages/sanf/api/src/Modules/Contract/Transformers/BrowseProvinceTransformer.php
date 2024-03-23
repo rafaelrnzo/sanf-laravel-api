@@ -2,7 +2,6 @@
 
 namespace Sanf\Api\Modules\Contract\Transformers;
 
-use Carbon\Carbon;
 use League\Fractal\TransformerAbstract;
 
 class BrowseProvinceTransformer extends TransformerAbstract

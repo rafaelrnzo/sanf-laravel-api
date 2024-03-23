@@ -28,7 +28,7 @@ class PlafondController extends RestApiController
     public function getBrowseTypesOldest(ListPlafondTypeService $service)
     {
         // TODO refactor this static pagination filter
-        $dto = (object)[
+        $dto = (object) [
             'limit' => 10,
             'skip' => 0,
             'sort_by' => 'default',
@@ -46,7 +46,7 @@ class PlafondController extends RestApiController
     public function getBrowseTypes(ListPlafondTypeService $service)
     {
         // TODO refactor this static pagination filter
-        $dto = (object)[
+        $dto = (object) [
             'limit' => 10,
             'skip' => 0,
             'sort_by' => 'default',
@@ -95,6 +95,7 @@ class PlafondController extends RestApiController
             'profileXid' => $xid,
         ]);
         $result = $service->execute($dto);
+
         return fractal($result, new PlafondTransformer());
     }
 
@@ -109,16 +110,17 @@ class PlafondController extends RestApiController
             'type_id' => ['required', 'string', 'max:255'],
             'amount' => ['required', 'string', 'max:255'],
         ]);
-        $profile = $profileService->execute((object)[
+        $profile = $profileService->execute((object) [
             'userId' => $auth->id(),
-            'customerId' => $xid
+            'customerId' => $xid,
         ]);
         $dto = new AddPlafondRequestDto($input + [
                 'profileXid' => $xid,
                 'profile' => $profile,
-                'userId' => $auth->id()
+                'userId' => $auth->id(),
             ]);
         $plafondService->execute($dto);
+
         return $this->responseOk();
     }
 
@@ -133,16 +135,17 @@ class PlafondController extends RestApiController
             'type_id' => ['required', 'string', 'max:255'],
             'amount' => ['required', 'string', 'max:255'],
         ]);
-        $profile = $profileService->execute((object)[
+        $profile = $profileService->execute((object) [
             'userId' => $auth->id(),
-            'customerId' => $xid
+            'customerId' => $xid,
         ]);
         $dto = new AddPlafondRequestDto($input + [
                 'profileXid' => $xid,
                 'profile' => $profile,
-                'userId' => $auth->id()
+                'userId' => $auth->id(),
             ]);
         $plafondService->execute($dto);
+
         return $this->responseOk();
     }
 }

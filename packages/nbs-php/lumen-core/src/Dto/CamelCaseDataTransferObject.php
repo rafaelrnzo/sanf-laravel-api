@@ -1,6 +1,5 @@
 <?php
 
-
 namespace NbsPhp\Core\Dto;
 
 use Illuminate\Support\Str;

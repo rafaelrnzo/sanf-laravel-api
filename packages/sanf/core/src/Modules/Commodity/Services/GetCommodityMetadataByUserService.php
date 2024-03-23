@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Commodity\Services;
-
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Commodity\CommodityStatus;
@@ -35,9 +33,9 @@ class GetCommodityMetadataByUserService extends CommodityByUserService implement
             $this->specificationFactory->getAllOwned($user->id)
         );
 
-        return (object)[
+        return (object) [
             'publishedCount' => $publishedCount,
-            'totalCount' => $totalCount
+            'totalCount' => $totalCount,
         ];
     }
 }

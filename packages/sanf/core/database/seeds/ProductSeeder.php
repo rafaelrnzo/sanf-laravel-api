@@ -27,13 +27,13 @@ class ProductSeeder extends Seeder
                 'description' => '<p>Bisnis terhambat karena dana macet? Yuk cairkan dana dengan cepat bersama SANFIND! Nikmati kemudahan pencairan dana cepat dengan atau tanpa jaminan dari SANFIND!</p><p></p><p>SANFIND memberikan kemudahan pencairan dana secara cepat dan fleksibel, dengan kemudahan persyaratan bahkan tanpa jaminan. Ditambah lagi, tenor dapat disesuaikan dengan kemampuan usaha Anda loh. Segera ajukan pencairan dana mu ke SANFIND!</p>',
             ], [
                 'title' => 'Anjak Piutang Tanpa Jaminan',
-                'description' => '<p>Bisnis terhambat karena dana macet? Yuk cairkan dana dengan cepat bersama SANFIND! Nikmati kemudahan pencairan dana cepat dengan atau tanpa jaminan dari SANFIND!</p><p>SANFIND memberikan kemudahan pencairan dana secara cepat dan fleksibel, dengan kemudahan persyaratan bahkan tanpa jaminan. Ditambah lagi, tenor dapat disesuaikan dengan kemampuan usaha Anda loh. Segera ajukan pencairan dana mu ke SANFIND!</p>'
+                'description' => '<p>Bisnis terhambat karena dana macet? Yuk cairkan dana dengan cepat bersama SANFIND! Nikmati kemudahan pencairan dana cepat dengan atau tanpa jaminan dari SANFIND!</p><p>SANFIND memberikan kemudahan pencairan dana secara cepat dan fleksibel, dengan kemudahan persyaratan bahkan tanpa jaminan. Ditambah lagi, tenor dapat disesuaikan dengan kemampuan usaha Anda loh. Segera ajukan pencairan dana mu ke SANFIND!</p>',
             ], [
                 'title' => 'Pembelian dengan Pembayaran Secara Angsuran',
-                'description' => '<p>Ada benefit tambahan hanya untuk kamu, pelanggan setia SANFIND! Dengan mengikuti program Purchase with Payment by Installment dari SANFIND, Anda dapat membeli produk-habis-pakai kebutuhan perusahaan mu di vendor pilihan secara angsuran loh!</p><p>Yuk segera hubungi SANFIND!</p>'
+                'description' => '<p>Ada benefit tambahan hanya untuk kamu, pelanggan setia SANFIND! Dengan mengikuti program Purchase with Payment by Installment dari SANFIND, Anda dapat membeli produk-habis-pakai kebutuhan perusahaan mu di vendor pilihan secara angsuran loh!</p><p>Yuk segera hubungi SANFIND!</p>',
             ], [
                 'title' => 'Fasilitas Modal Usaha',
-                'description' => '<p>Butuh modal usaha? Tak perlu khawatir, SANFIND akan selalu mendukung Anda dalam hal pembiaayan.</p><p>Anda dapat mengajukan fasilitas pembiayaan modal Kerja untuk melancarkan arus keuangan dengan persyaratan mudah dan tenor panjang. Tunggu apalagi? Yuk segara hubungi SANFIND.</p>'
+                'description' => '<p>Butuh modal usaha? Tak perlu khawatir, SANFIND akan selalu mendukung Anda dalam hal pembiaayan.</p><p>Anda dapat mengajukan fasilitas pembiayaan modal Kerja untuk melancarkan arus keuangan dengan persyaratan mudah dan tenor panjang. Tunggu apalagi? Yuk segara hubungi SANFIND.</p>',
             ],
         ];
 
@@ -47,12 +47,12 @@ class ProductSeeder extends Seeder
                 'image' => json_encode([
                     'file_name' => explode('/', $uploadFile)[1],
                     'path' => $uploadFile,
-                    'mime_type' => $type
+                    'mime_type' => $type,
                 ]),
                 'image_path' => $uploadFile,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
-                'modified_by' => json_encode([])
+                'modified_by' => json_encode([]),
             ];
         }
 

@@ -11,7 +11,7 @@ class ReadProductBuyController extends RestApiController
 {
     public function __invoke(string $xid, Guard $userAuth, GuzzleReadProductBuyService $service)
     {
-        $dto = (object)[
+        $dto = (object) [
             'xid' => $xid,
             'userId' => $userAuth->id(),
         ];

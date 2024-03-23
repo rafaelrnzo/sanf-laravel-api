@@ -30,6 +30,7 @@ class Response implements ResponseInterface
     {
         $body = $this->getBody();
         $body->rewind();
+
         return $body->getContents();
     }
 

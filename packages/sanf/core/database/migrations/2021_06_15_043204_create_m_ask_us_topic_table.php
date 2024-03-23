@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateMAskUsTopicTable extends Migration
 {
-
     public function up()
     {
         Schema::create('m_ask_us_topic', function (Blueprint $table) {
@@ -20,7 +19,7 @@ class CreateMAskUsTopicTable extends Migration
             ['id' => '1', 'name' => 'Saran', 'updated_at' => date('Y-m-d H:i:s')],
             ['id' => '2', 'name' => 'Kritik', 'updated_at' => date('Y-m-d H:i:s')],
             ['id' => '3', 'name' => 'Keluhan', 'updated_at' => date('Y-m-d H:i:s')],
-            ['id' => '4', 'name' => 'Pertanyaan', 'updated_at' => date('Y-m-d H:i:s')]
+            ['id' => '4', 'name' => 'Pertanyaan', 'updated_at' => date('Y-m-d H:i:s')],
         ]);
     }
 
@@ -28,5 +27,4 @@ class CreateMAskUsTopicTable extends Migration
     {
         Schema::dropIfExists('m_ask_us_topic');
     }
-
 }

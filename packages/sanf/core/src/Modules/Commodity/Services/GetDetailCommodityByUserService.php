@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Commodity\Services;
-
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Commodity\Exceptions\GeneralCommodityException;
@@ -16,6 +14,7 @@ class GetDetailCommodityByUserService extends CommodityByUserService implements 
         if (is_null($commodity) || $commodity->user_id != $user->id) {
             throw new GeneralCommodityException('Commodity Not Found');
         }
+
         return $commodity;
     }
 }

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Api\Modules\User\Controllers;
-
 
 use Illuminate\Http\Request;
 use NbsPhp\Core\Services\RegisterByAppleServiceInterface;

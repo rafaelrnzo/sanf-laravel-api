@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Staff;
-
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Staff\Services\GetDetailCompanyStaffService;
@@ -32,11 +30,11 @@ class InviteCompanyStaffAsUserService implements ApplicationServiceInterface
     public function execute($dto = null)
     {
         $staff = $this->getDetailCompanyStaffService->execute($dto);
-        $user = $this->inviteUserService->execute((object)[
+        $user = $this->inviteUserService->execute((object) [
             'fullName' => $staff->fullName,
             'email' => $staff->email,
         ]);
-        $this->activateCompanyStaffService->execute((object)[
+        $this->activateCompanyStaffService->execute((object) [
             'userId' => $user->id,
             'companyXid' => $dto->xid,
             'createdBy' => $dto->userId,

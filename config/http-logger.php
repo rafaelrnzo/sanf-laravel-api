@@ -1,4 +1,5 @@
 <?php
+
 return [
     'enabled' => env('HTTP_LOGGER', false),
     /*TODO IMPROVE CUSTOM DRIVER

@@ -2,7 +2,6 @@
 
 namespace Sanf\Core\Modules\Invoice\Repositories;
 
-
 interface InvoiceCollectionSubmissionRepositoryInterface
 {
     public function findById($id);

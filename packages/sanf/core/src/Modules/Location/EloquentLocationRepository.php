@@ -1,13 +1,10 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Location;
-
 
 class EloquentLocationRepository implements LocationRepositoryInterface
 {
-
-    /** @var LocationModel $query */
+    /** @var LocationModel */
     protected $model;
 
     public function __construct(LocationModel $model)

@@ -9,11 +9,11 @@ class BrowseProductSpecificationItemResponseTransformer extends TransformerAbstr
     public function transform($dto): array
     {
         return [
-            'name' => (string)optional($dto)->name,
-            'description' => (string)optional($dto)->description,
-            'rating' => (float)optional($dto)->rating,
-            'images_file' => (array)optional($dto->image)->path,
-            'videos_file' => (array)optional($dto->video)->path,
+            'name' => (string) optional($dto)->name,
+            'description' => (string) optional($dto)->description,
+            'rating' => (float) optional($dto)->rating,
+            'images_file' => (array) optional($dto->image)->path,
+            'videos_file' => (array) optional($dto->video)->path,
         ];
     }
 }

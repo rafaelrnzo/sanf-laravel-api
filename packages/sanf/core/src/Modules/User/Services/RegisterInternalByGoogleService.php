@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\User\Services;
-
 
 use NbsPhp\Core\Enum\UserStatus;
 use NbsPhp\Core\Services\RegisterByGoogleServiceInterface;
@@ -30,7 +28,6 @@ class RegisterInternalByGoogleService implements RegisterByGoogleServiceInterfac
         $this->repository = $repository;
         $this->internalApiClient = $internalApiClient;
     }
-
 
     public function execute($dto = null)
     {
@@ -67,7 +64,7 @@ class RegisterInternalByGoogleService implements RegisterByGoogleServiceInterfac
             'personal_xid' => $customerId,
         ]);
 
-        $user->token =  optional($user)->token;
+        $user->token = optional($user)->token;
 
         //TODO DTO
         return json_decode(json_encode($user));

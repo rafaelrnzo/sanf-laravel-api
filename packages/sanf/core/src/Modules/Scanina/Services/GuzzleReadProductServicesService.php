@@ -26,9 +26,9 @@ class GuzzleReadProductServicesService implements ApplicationServiceInterface
             $this->specification->readService($dto->xid)
         );
 
-        $data = (array)$productServiceResponse->data;
+        $data = (array) $productServiceResponse->data;
         unset($data['reviews']);
-        $productServiceResponseDto =  new ReadProductServiceResponseDto($data);
+        $productServiceResponseDto = new ReadProductServiceResponseDto($data);
         $productServiceResponseDto->customerReviews = [];
 
         return $productServiceResponseDto;

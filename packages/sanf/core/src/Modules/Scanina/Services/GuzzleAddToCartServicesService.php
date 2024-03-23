@@ -95,9 +95,9 @@ class GuzzleAddToCartServicesService implements ApplicationServiceInterface
             $this->productSpecification->readService($xid)
         );
 
-        $data = (array)$productServiceResponse->data;
+        $data = (array) $productServiceResponse->data;
         unset($data['review']);
-        $productServiceResponseDto = new ReadProductServiceResponseDto((array)$productServiceResponse->data);
+        $productServiceResponseDto = new ReadProductServiceResponseDto((array) $productServiceResponse->data);
         $productServiceResponseDto->customerReviews = [];
 
         return $productServiceResponseDto;

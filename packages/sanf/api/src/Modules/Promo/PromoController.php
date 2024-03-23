@@ -2,7 +2,6 @@
 
 namespace Sanf\Api\Modules\Promo;
 
-
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use NbsPhp\Core\Controllers\RestApiController;
@@ -12,18 +11,17 @@ use Sanf\Core\Modules\Promo\GetListPromoService;
 
 class PromoController extends RestApiController
 {
-
     public function getList(Request $request, GetListPromoService $service)
     {
         $this->validate($request, [
             'timestamp' => ['nullable', 'integer', 'min:0', 'max:99999999999'],
             'skip' => 'nullable',
             'limit' => 'nullable',
-            'sort_by' => ['nullable', Rule::in(['oldest', 'latest',])],
+            'sort_by' => ['nullable', Rule::in(['oldest', 'latest'])],
         ]);
 
         $dto = new GetListPromoDto([
-            'timestamp' => (int)$request->input('timestamp'),
+            'timestamp' => (int) $request->input('timestamp'),
             'skip' => $request->input('skip'),
             'limit' => ($request->input('limit')),
             'sort_by' => $request->input('sort_by') ?? 'latest',
@@ -34,5 +32,4 @@ class PromoController extends RestApiController
         return fractal($result->data, PromoItemTransformer::class)
             ->paginateWith(new LazyPaginatorAdapter($result->paginate));
     }
-
 }

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Financing\Services;
-
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Financing\Dto\AddFinancingApplicationDto;
@@ -28,7 +26,7 @@ class AddCompanyFinancingApplicationByUserService extends FinancingByUserService
         }
         //TODO VALIDATE OPTION, facility, method and BTM
 
-        /**@var FinancingObjectDto * */
+        /** @var FinancingObjectDto * */
         $financingObjects = [];
         foreach ($dto->financingObjects as $financingObject) {
             $financingObjects[] = [
@@ -68,7 +66,7 @@ class AddCompanyFinancingApplicationByUserService extends FinancingByUserService
             'address' => $dto->profile->address,
             'business_since' => $dto->profile->businessSince,
             'is_pic' => $dto->profile->isPic,
-            'version' => 1
+            'version' => 1,
         ];
         $newFinancingApplication = $this->financingApplicationRepository->add([
             'xid' => nano_id(),
@@ -83,13 +81,14 @@ class AddCompanyFinancingApplicationByUserService extends FinancingByUserService
             'segment' => $dto->segment,
             'project_location' => $dto->projectLocation,
             'status_id' => FinancingStatusEnum::PROCESSED,
-            'type_id' => FinancingApplicationTypeEnum::COMPANY
+            'type_id' => FinancingApplicationTypeEnum::COMPANY,
         ]);
 
         $financingApplication = $this->financingApplicationRepository->findById($newFinancingApplication->id);
         $financingApplication->profile = $dto->profile;
         $financingApplication->user = $user;
         event(new FinancingApplicationCreatedEvent($financingApplication));
+
         return $financingApplication;
     }
 }

@@ -24,7 +24,7 @@ class AddRentCartByUserController extends RestApiController
             'end_at' => 'required|integer|gte:start_at',
         ]);
 
-        $addToCartRequestBody = (object)[
+        $addToCartRequestBody = (object) [
             'userId' => $userAuth->id(),
             'xid' => $xid,
             'startedAt' => $input['start_at'],

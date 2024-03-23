@@ -1,8 +1,6 @@
 <?php
 
-
 namespace NbsPhp\Core\Response;
-
 
 use Symfony\Component\HttpFoundation\Response;
 

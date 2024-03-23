@@ -32,7 +32,7 @@ class GetPersonalAssistantUserService extends UserService implements Application
                     $hasContract = false;
                 }
 
-                return (object)[
+                return (object) [
                     'msisdn' => $item['NO_AE'],
                     'cust_id' => $item['CUST_ID_SANF'],
                     'has_contract' => $hasContract,
@@ -41,10 +41,11 @@ class GetPersonalAssistantUserService extends UserService implements Application
             ->first();
 
         if (!$profile) {
-            throw new UserNotFoundException("Theres no user personal");
+            throw new UserNotFoundException('Theres no user personal');
         }
 
         $profile->message = ''; //TODO CONFIGURABLE MESSAGE
+
         return $profile;
     }
 }

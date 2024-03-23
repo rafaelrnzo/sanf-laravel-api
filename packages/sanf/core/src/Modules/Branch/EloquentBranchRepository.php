@@ -2,10 +2,9 @@
 
 namespace Sanf\Core\Modules\Branch;
 
-
 class EloquentBranchRepository implements BranchRepositoryInterface
 {
-    /** @var \Sanf\Core\Modules\Branch\BranchModel $model */
+    /** @var \Sanf\Core\Modules\Branch\BranchModel */
     protected BranchModel $model;
 
     public function __construct(BranchModel $model)

@@ -10,6 +10,7 @@ abstract class AbstractController extends BaseController
     public function validate(Request $request, array $rules, array $messages = [], array $customAttributes = [])
     {
         $validatedInput = parent::validate($request, $rules, $messages, $customAttributes);
+
         return $this->castValidatedInput($validatedInput, $rules);
     }
 
@@ -24,8 +25,9 @@ abstract class AbstractController extends BaseController
             }
             $inputRules = is_string($rules[$key]) ? explode('|', $rules[$key]) : $rules[$key];
             if (in_array('integer', $inputRules, true)) {
-                return (int)$value;
+                return (int) $value;
             }
+
             return $value;
         })->toArray();
     }

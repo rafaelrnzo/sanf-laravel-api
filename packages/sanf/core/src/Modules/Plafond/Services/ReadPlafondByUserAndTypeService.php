@@ -2,7 +2,6 @@
 
 namespace Sanf\Core\Modules\Plafond\Services;
 
-
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Plafond\Dtos\ReadPlafondByProfileAndTypeRequestDto;
 use Sanf\Core\Modules\Plafond\Entities\GuzzlePlafondHistoryEntity;
@@ -22,24 +21,24 @@ final class ReadPlafondByUserAndTypeService extends PlafondByUserService impleme
         }
 
         $type = $plafond->getType();
-        $data = (object)[
+        $data = (object) [
             'id' => $plafond->getId(),
             'remainingBalance' => $plafond->getRemainingBalance(),
             'usedBalance' => $plafond->getUsedBalance(),
             'updatedAt' => $plafond->getUpdatedAt(),
-            'type' => (object)[
+            'type' => (object) [
                 'id' => $type->getId(),
                 'title' => $type->getTitle(),
                 'name' => $type->getName(),
             ],
             'histories' => collect($plafond->getHistories())->map(function (GuzzlePlafondHistoryEntity $item) use ($type) {
-                return (object)[
+                return (object) [
                     'status' => $item->getStatus(),
                     'updatedAt' => $item->getUpdatedAt(),
                     'currentBalance' => $item->getCurrentBalance(),
                     'addedBalance' => $item->getAddedBalance(),
                     'submittedBalance' => $item->getSubmittedBalance(),
-                    'type' => (object)[
+                    'type' => (object) [
                         'id' => $type->getId(),
                         'title' => $type->getTitle(),
                         'name' => $type->getName(),

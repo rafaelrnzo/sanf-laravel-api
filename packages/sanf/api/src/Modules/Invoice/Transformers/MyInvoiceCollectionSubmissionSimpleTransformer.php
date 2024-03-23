@@ -18,7 +18,7 @@ final class MyInvoiceCollectionSubmissionSimpleTransformer extends TransformerAb
             'year' => $dto->year,
             'status' => fractal($dto->status, new InvoiceCollectionSubmissionStatusTransformer()),
             'created_at' => unix_timestamp($dto->createdAt),
-            'updated_at' => unix_timestamp($dto->updatedAt)
+            'updated_at' => unix_timestamp($dto->updatedAt),
         ];
     }
 }

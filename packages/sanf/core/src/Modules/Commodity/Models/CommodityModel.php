@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Commodity\Models;
-
 
 use NbsPhp\Core\Models\AbstractModel;
 use Sanf\Core\Modules\User\AuthModel;

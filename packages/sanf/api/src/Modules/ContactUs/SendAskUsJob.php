@@ -23,7 +23,6 @@ class SendAskUsJob implements ShouldQueue
      *
      * @return void
      */
-
     public function __construct($email, $emailRecipients)
     {
         $this->email = $email;

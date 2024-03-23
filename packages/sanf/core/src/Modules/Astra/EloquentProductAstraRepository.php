@@ -6,8 +6,7 @@ use Carbon\Carbon;
 
 class EloquentProductAstraRepository implements ProductAstraRepositoryInterface
 {
-
-    /** @var ProductAstraModel $model */
+    /** @var ProductAstraModel */
     protected $model;
 
     public function __construct(ProductAstraModel $model)

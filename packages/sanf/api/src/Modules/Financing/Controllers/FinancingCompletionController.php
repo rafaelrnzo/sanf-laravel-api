@@ -11,7 +11,7 @@ class FinancingCompletionController extends RestApiController
     //TODO Refactor to USER
     public function validateKtp($xid, ValidateKtpService $service)
     {
-        $dto = (object)[
+        $dto = (object) [
             'xid' => $xid,
         ];
 
@@ -21,10 +21,11 @@ class FinancingCompletionController extends RestApiController
             'is_valid' => $isValid,
         ]);
     }
+
     //TODO Refactor to USER
     public function validateNpwp($xid, ValidateNpwpService $service)
     {
-        $dto = (object)[
+        $dto = (object) [
             'user_id' => $xid,
         ];
 

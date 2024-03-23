@@ -11,7 +11,7 @@ class FrequentlyAskQuestionCategoryModel extends AbstractModel
 
     protected $table = 'faq_category';
 
-    protected $fillable = ['name',];
+    protected $fillable = ['name'];
 
     public function faqs()
     {

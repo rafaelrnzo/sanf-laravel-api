@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Financing\Specifications;
 
 use Sanf\Core\Modules\Financing\Models\FinancingMethodModel;
@@ -38,6 +37,7 @@ class EloquentPaginateFinancingMethodSpecification
             })->when($this->sort_by, function ($query) {
                 return $query->orderBy('priority', $this->sort_by);
             });
+
         return $query;
     }
 }

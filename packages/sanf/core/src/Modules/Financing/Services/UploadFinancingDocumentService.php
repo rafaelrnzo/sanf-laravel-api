@@ -7,7 +7,6 @@ use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class UploadFinancingDocumentService implements ApplicationServiceInterface
 {
-
     private SanfCoreApiClient $client;
 
     public function __construct(SanfCoreApiClient $client)
@@ -19,6 +18,6 @@ class UploadFinancingDocumentService implements ApplicationServiceInterface
     {
         $data = $this->client->uploadFinancingAsset($dto);
 
-        return (bool)($data['status'] ?? null);
+        return (bool) ($data['status'] ?? null);
     }
 }

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Project\Services;
-
 
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use Sanf\Core\Modules\Project\Repositories\ProjectRepositoryInterface;

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\User\Services;
-
 
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Models\AuthModel;
@@ -36,19 +34,19 @@ class UpdateCompanyProfileService implements ApplicationServiceInterface
             throw new UserNotFoundException('Missmatch Type');
         }
         $this->internalApiClient->updateCustomer([
-            "cust_id" => $dto->customerId,
-            "cust_type" => ProfileType::COMPANY,
-            "notelp" => $dto->landlineNumber,
-            "nohp" => $dto->phoneNumber,
-            "idprov" => $dto->provinceId,
-            "prov" => $dto->provinceName,
-            "idkota" => $dto->cityId,
-            "kota" => $dto->cityName,
-            "kecamatan" => $dto->districtName,
-            "kelurahan" => $dto->subdistrictName,
-            "kodepos" => $dto->postcode,
-            "alamat" => $dto->address,
-            "lama_usaha" => $dto->businessSince,
+            'cust_id' => $dto->customerId,
+            'cust_type' => ProfileType::COMPANY,
+            'notelp' => $dto->landlineNumber,
+            'nohp' => $dto->phoneNumber,
+            'idprov' => $dto->provinceId,
+            'prov' => $dto->provinceName,
+            'idkota' => $dto->cityId,
+            'kota' => $dto->cityName,
+            'kecamatan' => $dto->districtName,
+            'kelurahan' => $dto->subdistrictName,
+            'kodepos' => $dto->postcode,
+            'alamat' => $dto->address,
+            'lama_usaha' => $dto->businessSince,
         ]);
     }
 }

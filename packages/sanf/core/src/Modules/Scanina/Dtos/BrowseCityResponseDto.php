@@ -2,8 +2,6 @@
 
 namespace Sanf\Core\Modules\Scanina\Dtos;
 
-use Sanf\Core\Modules\Scanina\Enums\ScaninaProductSortByEnum;
-
 class BrowseCityResponseDto extends ScaninaRequestDataTransferObject
 {
     public ?int $id;

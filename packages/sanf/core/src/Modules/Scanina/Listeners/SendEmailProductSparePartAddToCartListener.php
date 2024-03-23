@@ -8,7 +8,6 @@ use Sanf\Api\Modules\Scanina\Jobs\SendEmailProductAddToCartForUserJob;
 
 class SendEmailProductSparePartAddToCartListener
 {
-
     public function handle($event)
     {
         $request = $event->request;

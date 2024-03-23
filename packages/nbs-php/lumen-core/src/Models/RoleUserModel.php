@@ -24,7 +24,6 @@ class RoleUserModel extends Pivot
         parent::__construct($attributes);
     }
 
-
     protected static function boot()
     {
         parent::boot();

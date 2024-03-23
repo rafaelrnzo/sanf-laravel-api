@@ -54,7 +54,7 @@ final class AddFinancingUnitLocationSubmissionByUserService extends FinancingUni
         $entity->submitted_location_metadata = json_decode($entity->submitted_location_metadata);
         $entity->brand_type_model = $dto->brandTypeModel;
         $entity->year = $dto->year;
-        $entity->location_metadata = (object)$dto->locationMetadata;
+        $entity->location_metadata = (object) $dto->locationMetadata;
         $entity->user = $user;
         event(new FinancingUnitLocationSubmissionAddedEvent($entity));
 

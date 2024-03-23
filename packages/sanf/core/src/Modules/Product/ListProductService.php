@@ -1,15 +1,12 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Product;
-
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Api\Modules\Product\ListProductResultDto;
 
 class ListProductService implements ApplicationServiceInterface
 {
-
     protected $repository;
 
     public function __construct(ProductRepositoryInterface $repository)
@@ -28,11 +25,11 @@ class ListProductService implements ApplicationServiceInterface
             $filter += ['title' => "title like '%{$dto->title}%'"];
 
         // concat with 'and' separator;
-        $search  = implode(' and ', $filter);
+        $search = implode(' and ', $filter);
 
         // sent list data;
         return new ListProductResultDto([
-            'list' => $this->repository->list($dto->limit, $dto->offset, $search)
+            'list' => $this->repository->list($dto->limit, $dto->offset, $search),
         ]);
     }
 }

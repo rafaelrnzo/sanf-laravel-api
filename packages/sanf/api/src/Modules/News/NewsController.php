@@ -2,7 +2,6 @@
 
 namespace Sanf\Api\Modules\News;
 
-
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use NbsPhp\Core\Controllers\RestApiController;
@@ -12,7 +11,6 @@ use Sanf\Core\Modules\News\GetListNewsService;
 
 class NewsController extends RestApiController
 {
-
     public function getList(Request $request, GetListNewsService $service)
     {
         $this->validate($request, [
@@ -24,7 +22,7 @@ class NewsController extends RestApiController
         ]);
 
         $dto = new GetListNewsDto([
-            'timestamp' => (int)$request->input('timestamp'),
+            'timestamp' => (int) $request->input('timestamp'),
             'keyword' => $request->input('keyword'),
             'skip' => $request->input('skip'),
             'limit' => $request->input('limit'),
@@ -36,5 +34,4 @@ class NewsController extends RestApiController
         return fractal($result->data, NewsItemTransformer::class)
             ->paginateWith(new LazyPaginatorAdapter($result->paginate));
     }
-
 }

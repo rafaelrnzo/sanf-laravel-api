@@ -56,9 +56,9 @@ class GuzzleBrowseProductServiceCartService implements ApplicationServiceInterfa
 
         $responseProductService = $this->syncWithApi($records);
 
-        return (object)[
+        return (object) [
             'data' => $responseProductService,
-            'paginate' => (object)[
+            'paginate' => (object) [
                 'total' => 0,
                 'count' => 0,
                 'skip' => null,
@@ -83,7 +83,7 @@ class GuzzleBrowseProductServiceCartService implements ApplicationServiceInterfa
                 throw $exception;
             }
 
-            $data = (array)$productServiceResponse->data;
+            $data = (array) $productServiceResponse->data;
             unset($data['reviews']);
             $productServiceResponseDto = new ReadProductServiceResponseDto($data);
             $productServiceResponseDto->xid = $product->xid;

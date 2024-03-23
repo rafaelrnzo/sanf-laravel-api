@@ -21,17 +21,17 @@ class AllTest extends TestCase
 
     /**
      * Expected Behavior:
-     * - Array of ApiResource instances with correct attributes returned
+     * - Array of ApiResource instances with correct attributes returned.
      */
     public function testAll()
     {
         $data = [
             [
-                'id' => 1
+                'id' => 1,
             ],
             [
-                'id' => 2
-            ]
+                'id' => 2,
+            ],
         ];
         $json = json_encode($data);
         $response = BasicApiResource::all([], $this->getMockClient(200, $json));

@@ -44,7 +44,7 @@ class SendPushNotificationByExternalService implements ApplicationServiceInterfa
                 'id' => nano_id(),
                 'type' => $dto->type,
                 'email' => $user->username,
-                'customer_id' => (string)$user->xid ?? null,
+                'customer_id' => (string) $user->xid ?? null,
                 'title' => $dto->title,
                 'subtitle' => $dto->subtitle,
                 'screen' => $dto->screen,

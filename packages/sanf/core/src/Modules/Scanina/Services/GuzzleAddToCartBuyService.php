@@ -62,7 +62,7 @@ class GuzzleAddToCartBuyService implements ApplicationServiceInterface
         $productBuyResponse = $this->getProduct($dto->productXid);
 
         if (is_null($productBuyResponse->stock) || $productBuyResponse->stock === 0) {
-            throw new ScaninaProductInvalidRequestException("Product out of stock");
+            throw new ScaninaProductInvalidRequestException('Product out of stock');
         }
 
         $requestBodyDto = new AddToCartRequestDto([
@@ -100,7 +100,7 @@ class GuzzleAddToCartBuyService implements ApplicationServiceInterface
             $this->productSpecification->readBuy($xid)
         );
 
-        $data = (array)$productBuyResponse->data;
+        $data = (array) $productBuyResponse->data;
         unset($data['review']);
         $productBuyResponseDto = new ReadProductBuyResponseDto($data);
 
@@ -110,10 +110,10 @@ class GuzzleAddToCartBuyService implements ApplicationServiceInterface
 
         $specifications = array_map(function ($specification) {
             $specification->subSpecification = array_map(function ($subSpecification) {
-                return new BrowseProductSubSpecificationResponseDto((array)$subSpecification);
+                return new BrowseProductSubSpecificationResponseDto((array) $subSpecification);
             }, $specification->subSpecification);
 
-            return new BrowseProductSpecificationResponseDto((array)$specification);
+            return new BrowseProductSpecificationResponseDto((array) $specification);
         }, $productBuySpecificationResponse->data->rows);
 
         $subSpecifications = [];

@@ -2,7 +2,6 @@
 
 namespace NbsPhp\Core\Jobs;
 
-use Illuminate\Support\Facades\Auth;
 use NbsPhp\Core\AbstractJob;
 use NbsPhp\Core\Models\ApiRequestLogModel;
 use Psr\Http\Message\RequestInterface;
@@ -32,7 +31,6 @@ class LogApiRequestToDatabaseJob extends AbstractJob
         $this->userId = $userId;
     }
 
-
     /**
      * Execute the job.
      *
@@ -50,11 +48,10 @@ class LogApiRequestToDatabaseJob extends AbstractJob
             'path' => $this->request->getUri()->getPath(),
             'header' => $this->censoringNestedArray($censoredKeys, $this->request->getHeaders()),
             'query' => $this->censoringNestedArray($censoredKeys, $this->request->getUri()->getQuery()),
-            'body' => $this->censoringNestedArray($censoredKeys, $this->requestBody,),
-            'response' => $this->censoringNestedArray($censoredKeys, $this->responseBody)
+            'body' => $this->censoringNestedArray($censoredKeys, $this->requestBody, ),
+            'response' => $this->censoringNestedArray($censoredKeys, $this->responseBody),
         ]);
     }
-
 
     protected function censoringNestedArray($needles, $haystack)
     {

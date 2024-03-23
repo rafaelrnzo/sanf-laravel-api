@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Api\Modules\Asset;
-
 
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
@@ -19,7 +17,7 @@ class AssetFileController extends RestApiController
         // set upload file dto;
         $dto = new AssetUploadRequestDto([
             'file' => $inputs['file'],
-            'type' => (int)$inputs['asset_type']
+            'type' => (int) $inputs['asset_type'],
         ]);
 
         // run service;
@@ -49,12 +47,12 @@ class AssetFileController extends RestApiController
                 'required',
                 'file',
                 "mimetypes:{$types[$request->get('asset_type')]}",
-                "max:{$maxSizes[$request->get('asset_type')]}"
+                "max:{$maxSizes[$request->get('asset_type')]}",
             ],
             'asset_type' => [
                 'required',
                 "in:{$string}",
-            ]
+            ],
         ];
 
         return $this->validate($request, $rules);

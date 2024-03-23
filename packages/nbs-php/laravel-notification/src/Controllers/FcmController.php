@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use NbsPhp\Core\Controllers\RestApiController;
-use NbsPhp\Core\Controllers\RestController;
 use NbsPhp\Notification\Models\UserSessionModel;
 
 class FcmController extends RestApiController

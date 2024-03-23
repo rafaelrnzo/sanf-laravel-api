@@ -16,5 +16,4 @@ class InsuranceClaimSubmissionAddedEvent extends Event
     {
         $this->insuranceClaimSubmission = $insuranceClaimSubmission;
     }
-
 }

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Project\Services;
-
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Project\Dto\PaginateUserProjectDto;
@@ -36,16 +34,17 @@ class GetListProjectService extends ProjectService implements ApplicationService
 
         $data = collect($data)->map(function ($item) use ($dto) {
             $item->is_owner = ($item->user_id == $dto->userId);
+
             return $item;
         });
 
-        return (object)[
+        return (object) [
             'data' => $data,
-            'paginate' => (object)[
-                'total' => (int)$total,
+            'paginate' => (object) [
+                'total' => (int) $total,
                 'count' => collect($data)->count(),
-                'skip' => (int)$dto->skip,
-                'limit' => (int)$dto->limit,
+                'skip' => (int) $dto->skip,
+                'limit' => (int) $dto->limit,
                 'sort_by' => $dto->sortBy,
             ],
         ];

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Location;
-
 
 use MyCLabs\Enum\Enum;
 

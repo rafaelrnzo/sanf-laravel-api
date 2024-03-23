@@ -84,7 +84,7 @@ final class ESignUserRegisteredService implements ApplicationServiceInterface
             'type' => (string) NotificationTypeEnum::INFO,
             'screen' => 'esign_registration_complete',
             'published_at' => Carbon::now(),
-            'click_action' => 'FLUTTER_NOTIFICATION_CLICK'
+            'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
         ];
 
         try {

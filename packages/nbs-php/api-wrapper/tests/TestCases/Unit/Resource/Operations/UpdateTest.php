@@ -20,13 +20,13 @@ class UpdateTest extends TestCase
 
     /**
      * Expected Behavior:
-     * - ApiResource instance with correct attributes returned
+     * - ApiResource instance with correct attributes returned.
      */
     public function testUpdate()
     {
         $data = [
             'id' => 1,
-            'name' => 'George Burdell'
+            'name' => 'George Burdell',
         ];
         $json = json_encode($data);
         $response = BasicApiResource::update(1, $data, [], $this->getMockClient(200, $json));
@@ -37,17 +37,17 @@ class UpdateTest extends TestCase
 
     /**
      * Expected Behavior:
-     * - ApiResource instance with correct attributes returned (same instance)
+     * - ApiResource instance with correct attributes returned (same instance).
      */
     public function testUpdateAttributes()
     {
         $original = [
             'id' => 1,
-            'is_admin' => false
+            'is_admin' => false,
         ];
         $data = [
             'id' => 1,
-            'name' => 'George Burdell'
+            'name' => 'George Burdell',
         ];
         $json = json_encode($data);
         $resource = new BasicApiResource($original);
@@ -60,17 +60,17 @@ class UpdateTest extends TestCase
 
     /**
      * Expected Behavior:
-     * - ApiResource instance with correct attributes returned (same instance)
+     * - ApiResource instance with correct attributes returned (same instance).
      */
     public function testSaveChanges()
     {
         $original = [
             'id' => 1,
-            'is_admin' => false
+            'is_admin' => false,
         ];
         $data = [
             'id' => 1,
-            'name' => 'George Burdell'
+            'name' => 'George Burdell',
         ];
         $json = json_encode($data);
         $resource = new BasicApiResource($original);

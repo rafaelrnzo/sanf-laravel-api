@@ -22,7 +22,7 @@ final class ContractByUserController extends RestApiController
         ]);
         $dto = new BrowseContractByUserRequestDto($input + [
                 'profileXid' => $xid,
-                'userId' => $auth->id()
+                'userId' => $auth->id(),
             ]);
         $result = $service->execute($dto);
 

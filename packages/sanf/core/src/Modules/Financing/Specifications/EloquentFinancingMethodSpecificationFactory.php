@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Financing\Specifications;
 
 class EloquentFinancingMethodSpecificationFactory implements FinancingMethodSpecificationFactoryInterface

@@ -43,7 +43,7 @@ class EloquentGetProductCartByUserSpecification
             ->where('profile_xid', '=', $this->parameter->profileXid)
             ->where('type_id', '=', $this->parameter->productType)
             ->when($keyword, function ($query) use ($keyword) {
-                return $query->where('snapshot_response_body->name', "ILIKE", '%' . $keyword . '%');
+                return $query->where('snapshot_response_body->name', 'ILIKE', '%' . $keyword . '%');
             })->when($skip, function ($query) use ($skip) {
                 return $query->skip($skip);
             })->when($limit, function ($query) use ($limit) {

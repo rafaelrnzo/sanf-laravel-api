@@ -1,7 +1,8 @@
 <?php
+
 return [
     'logger' => env('GUZZLE_LOGGER', false),
-    'driver' => 'database', # log, database
+    'driver' => 'database', // log, database
     'censor' => [
         'replacement' => '**censor**',
         'bad-keys' => [

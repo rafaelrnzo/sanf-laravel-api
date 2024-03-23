@@ -22,7 +22,6 @@ class SendRequestDeletionAccountForUserNotification implements ShouldQueue
      *
      * @return void
      */
-
     public function __construct($data, $emailRecipients)
     {
         $this->data = $data;
@@ -43,7 +42,7 @@ class SendRequestDeletionAccountForUserNotification implements ShouldQueue
                 "Pengguna atas nama <span class='text-bold'>{$this->data['name']}</span> saat ini {$this->data['createdAt']} WIB telah mengajukan  permintaan untuk Hapus Akun. Sistem akan secara otomatis menghapus akun jika pengguna tidak login ke aplikasi terhitung sejak tanggal {$this->data['restoreExpiredAt']}."
             )
             ->lineWithUrl(
-                __("Jika Anda merasa tidak membuat request tersebut mohon abaikan email ini atau anda dapat"),
+                __('Jika Anda merasa tidak membuat request tersebut mohon abaikan email ini atau anda dapat'),
                 [__('laporkan email ini'), $reportUrl]
             );
 

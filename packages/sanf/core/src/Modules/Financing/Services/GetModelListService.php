@@ -7,7 +7,6 @@ use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class GetModelListService implements ApplicationServiceInterface
 {
-
     private SanfCoreApiClient $client;
 
     public function __construct(SanfCoreApiClient $client)
@@ -22,19 +21,19 @@ class GetModelListService implements ApplicationServiceInterface
     {
         $data = $this->client->getModels($dto->brand_id, $dto->type_id);
 
-        return (object)[
+        return (object) [
             'data' => collect($data['data'])
                 ->map(function ($item) {
-                    return (object)[
-                        "brand_id" => $item['BRAND_ID'] ?? null,
-                        "type_id" => $item['TYPE_ID'] ?? null,
-                        "model_id" => $item['MODEL_ID'] ?? null,
-                        "model_name" => $item['MODEL_NAME'] ?? null,
+                    return (object) [
+                        'brand_id' => $item['BRAND_ID'] ?? null,
+                        'type_id' => $item['TYPE_ID'] ?? null,
+                        'model_id' => $item['MODEL_ID'] ?? null,
+                        'model_name' => $item['MODEL_NAME'] ?? null,
                     ];
                 }),
-            'paginate' => (object)[
-                'total' => (int)($data['total'] ?? 0),
-                'count' => (int)($data['count'] ?? 0),
+            'paginate' => (object) [
+                'total' => (int) ($data['total'] ?? 0),
+                'count' => (int) ($data['count'] ?? 0),
                 'skip' => null,
                 'limit' => null,
                 'sort_by' => null,

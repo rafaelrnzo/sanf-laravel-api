@@ -11,10 +11,10 @@ class SummaryBillContractTransformer extends TransformerAbstract
     {
         return [
             'due_at' => ($item->due_at) ? Carbon::parse($item->due_at)->format('Y-m-d') : null,
-            'bill_amount' => (string)$item->bill_amount,
-            'penalty_amount' => (string)$item->penalty_amount,
-            'currency_type' =>  (string)$item->currency_type,
-            'installment_index' => (string)$item->installment_index,
+            'bill_amount' => (string) $item->bill_amount,
+            'penalty_amount' => (string) $item->penalty_amount,
+            'currency_type' =>  (string) $item->currency_type,
+            'installment_index' => (string) $item->installment_index,
         ];
     }
 }

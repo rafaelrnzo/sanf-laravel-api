@@ -2,7 +2,6 @@
 
 namespace Sanf\Core\Modules\Plafond\Services;
 
-
 use Carbon\Carbon;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Plafond\Dtos\AddPlafondRequestDto;
@@ -30,7 +29,7 @@ final class ApplyNewPlafondByUserService extends PlafondByUserService implements
                 $plafondType = __('Factoring');
                 break;
         }
-        $plafondRequest = (object)[
+        $plafondRequest = (object) [
             'profileXid' => $dto->profileXid,
             'amount' => $dto->amount,
             'createdAt' => Carbon::now(),

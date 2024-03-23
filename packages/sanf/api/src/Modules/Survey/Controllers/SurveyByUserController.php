@@ -22,14 +22,16 @@ class SurveyByUserController extends RestApiController
         Request $request,
         GetListSurveyService $service
     ) {
-        $input = $this->validate($request, [
+        $input = $this->validate(
+            $request,
+            [
                 'status_id' => ['nullable', 'integer', 'in:0,2'],
                 'skip' => ['nullable', 'integer', 'max:2147483647'],
                 'limit' => ['nullable', 'integer', 'max:2147483647'],
                 'sort_by' => ['nullable', 'in:earliest,latest'],
             ]
         );
-        if ((int)($input['status_id'] ?? null) === 0) {
+        if ((int) ($input['status_id'] ?? null) === 0) {
             $input['status_id'] = null;
         }
         $dto = new GetListSurveyRequestDto($input + ['userId' => $auth->id()]);

@@ -3,8 +3,6 @@
 namespace Sanf\Core\Modules\RequestedDocument\Services;
 
 use Carbon\Carbon;
-use GuzzleHttp\Exception\GuzzleException;
-use NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\RequestedDocument\Exceptions\RequestedDocumentNotFoundException;
@@ -35,7 +33,7 @@ class ReadUploadRequestedDocumentService implements ApplicationServiceInterface
         $this->getUser($dto);
         $requestDocument = $this->getRequestedDocument($dto->request_id, $dto->profile_xid);
 
-        return (object)[
+        return (object) [
             'id' => $requestDocument->id,
             'profile_xid' => $requestDocument->profile_xid,
             'request_no' => $requestDocument->request_no,
@@ -70,10 +68,10 @@ class ReadUploadRequestedDocumentService implements ApplicationServiceInterface
     private function mapRequestedItemDocs($items): array
     {
         return array_map(function ($data) {
-            return (object)[
+            return (object) [
                 'id' => $data['document_id'],
                 'title' => $data['document_name'],
-                'is_uploaded' => !is_null($data['document_file'])
+                'is_uploaded' => !is_null($data['document_file']),
             ];
         }, $items->toArray());
     }

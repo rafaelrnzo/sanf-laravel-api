@@ -13,7 +13,7 @@ class GetUserAccountController extends RestApiController
 {
     public function __invoke(string $xid, Request $request, Guard $userAuth, GuzzleUserAccountService $service)
     {
-        $requestBodyDto = (object)[
+        $requestBodyDto = (object) [
             'userId' => $userAuth->id(),
             'xid' => $xid,
         ];

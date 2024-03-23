@@ -31,6 +31,7 @@ class InsuranceClaimSubmissionByUserService
         if (!$user) {
             throw new UserNotFoundException();
         }
+
         return $user;
     }
 
@@ -40,6 +41,7 @@ class InsuranceClaimSubmissionByUserService
         if (!$user) {
             throw new ProfileNotFoundException();
         }
+
         return $user;
     }
 }

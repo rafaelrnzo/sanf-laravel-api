@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Commodity\Specifications;
-
 
 use Sanf\Core\Modules\Commodity\Models\CommodityModel;
 

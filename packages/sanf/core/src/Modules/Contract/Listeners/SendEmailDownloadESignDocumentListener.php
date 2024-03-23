@@ -2,9 +2,7 @@
 
 namespace Sanf\Core\Modules\Contract\Listeners;
 
-use Illuminate\Support\Str;
 use Sanf\Core\Modules\Contract\Jobs\SendEmailDownloadESignDocumentJob;
-use Sanf\Core\Modules\Contract\Jobs\SendEmailFinancingUnitLocationJob;
 
 class SendEmailDownloadESignDocumentListener
 {
@@ -18,7 +16,7 @@ class SendEmailDownloadESignDocumentListener
     {
         $data = [
             'fullName' => $event->document->full_name,
-            'documentName' => $event->document->document_name ?? $event->document->document_id . ".pdf",
+            'documentName' => $event->document->document_name ?? $event->document->document_id . '.pdf',
             'path' => $event->document->document_file->path,
         ];
 

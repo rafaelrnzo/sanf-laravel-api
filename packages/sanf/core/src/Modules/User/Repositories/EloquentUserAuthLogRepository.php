@@ -65,10 +65,12 @@ class EloquentUserAuthLogRepository extends AbstractEloquentRepository implement
     {
         if (!is_null($specification)) {
             $model = $specification->buildQuery($this->model)->update($fields);
+
             return $this->stripEloquentModel($model);
         }
 
         $model = $this->model->newQuery()->where('id', $fields['id'])->update($fields);
+
         return $this->stripEloquentModel($model);
     }
 }

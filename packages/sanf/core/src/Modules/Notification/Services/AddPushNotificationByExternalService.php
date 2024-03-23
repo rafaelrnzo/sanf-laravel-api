@@ -55,10 +55,10 @@ final class AddPushNotificationByExternalService implements ApplicationServiceIn
             'title' => $dto->title,
             'subtitle' => $dto->subtitle,
             'body' => $dto->body,
-            'type' => (string)$dto->type->getValue(),
+            'type' => (string) $dto->type->getValue(),
             'screen' => $dto->screen,
             'published_at' => Carbon::createFromTimestampUTC($dto->publishedAt),
-            'click_action' => 'FLUTTER_NOTIFICATION_CLICK'
+            'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
         ];
         try {
             $userNotification = $this->userNotificationRepository->create([

@@ -36,7 +36,7 @@ class BrowseUserDeletionAccountService implements ApplicationServiceInterface
         );
 
         $mappingData = array_map(function ($item) {
-            return (object)[
+            return (object) [
                 'id' => $item->id,
                 'xid' => $item->xid,
                 'userId' => $item->user_id,
@@ -51,13 +51,13 @@ class BrowseUserDeletionAccountService implements ApplicationServiceInterface
             ];
         }, $query);
 
-        return (object)[
+        return (object) [
             'data' => $mappingData,
-            'paginate' => (object)[
+            'paginate' => (object) [
                 'total' => $total,
                 'count' => count($mappingData),
-                'skip' => (int)$dto->skip,
-                'limit' => (int)$dto->limit,
+                'skip' => (int) $dto->skip,
+                'limit' => (int) $dto->limit,
                 'sort_by' => $dto->sortBy,
             ],
         ];

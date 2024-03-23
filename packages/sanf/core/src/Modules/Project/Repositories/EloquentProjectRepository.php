@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Project\Repositories;
-
 
 use NbsPhp\Core\Repositories\AbstractEloquentRepository;
 use Sanf\Core\Modules\Project\Models\ProjectModel;
@@ -19,24 +17,28 @@ class EloquentProjectRepository extends AbstractEloquentRepository implements Pr
     public function findById($id)
     {
         $model = $this->model->newQuery()->with(['user', 'status'])->find($id);
+
         return $this->stripEloquentModel($model);
     }
 
     public function findByXid($xid)
     {
         $model = $this->model->newQuery()->where('xid', $xid)->with(['user', 'status'])->first();
+
         return $this->stripEloquentModel($model);
     }
 
     public function query($specification)
     {
         $models = $specification->buildQuery($this->model)->get();
+
         return $this->stripEloquentModel($models);
     }
 
     public function add($fields)
     {
         $model = $this->model->newQuery()->forceCreate($fields);
+
         return $this->stripEloquentModel($model);
     }
 
@@ -44,10 +46,12 @@ class EloquentProjectRepository extends AbstractEloquentRepository implements Pr
     {
         if (!is_null($specification)) {
             $model = $specification->buildQuery($this->model)->update($fields);
+
             return $this->stripEloquentModel($model);
         }
 
         $model = $this->model->newQuery()->where('id', $fields['id'])->update($fields);
+
         return $this->stripEloquentModel($model);
     }
 
@@ -75,6 +79,7 @@ class EloquentProjectRepository extends AbstractEloquentRepository implements Pr
         if (!is_null($specification)) {
             return $specification->buildQuery($this->model)->count();
         }
+
         return $this->model->newQuery()->select('id')->count();
     }
 }

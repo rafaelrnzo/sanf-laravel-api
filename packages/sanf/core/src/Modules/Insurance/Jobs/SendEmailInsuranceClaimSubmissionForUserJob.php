@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Insurance\Jobs;
 
 use Illuminate\Bus\Queueable;
@@ -9,7 +8,6 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 use Sanf\Core\Mail\MailLayout2Columns;
-
 
 class SendEmailInsuranceClaimSubmissionForUserJob implements ShouldQueue
 {
@@ -22,7 +20,6 @@ class SendEmailInsuranceClaimSubmissionForUserJob implements ShouldQueue
      *
      * @return void
      */
-
     public function __construct($data, $recipient)
     {
         $this->data = $data;
@@ -50,7 +47,8 @@ class SendEmailInsuranceClaimSubmissionForUserJob implements ShouldQueue
             ->rightLogo(asset('assets/png/sanf-tagline.png'))
             ->banner(asset('assets/png/email-verification.png'))
             ->greeting(__("Halo {$this->data->user->full_name}!"))
-            ->line(__('Berikut kami lampirkan data untuk pengajuan klaim asuransi Anda untuk'
+            ->line(__(
+                'Berikut kami lampirkan data untuk pengajuan klaim asuransi Anda untuk'
             ))
             ->writeContent($data)
             ->generateSeparator([

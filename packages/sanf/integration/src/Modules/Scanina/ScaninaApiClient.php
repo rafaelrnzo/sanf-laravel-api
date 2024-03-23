@@ -170,7 +170,7 @@ class ScaninaApiClient
 
     public function getAccount(string $email)
     {
-        $response = Request::route("scanina.user.account.check", $this->client)
+        $response = Request::route('scanina.user.account.check', $this->client)
             ->json(['email' => $email])
             ->send();
 
@@ -183,7 +183,7 @@ class ScaninaApiClient
             return !is_null($value);
         });
 
-        $response = Request::route("scanina.user.account.register", $this->client)
+        $response = Request::route('scanina.user.account.register', $this->client)
             ->headers([
                 'Content-Type' => 'application/x-www-form-urlencoded',
             ])
@@ -199,7 +199,7 @@ class ScaninaApiClient
             return !is_null($value);
         });
 
-        $response = Request::route("scanina.user.account.add-cart", $this->client)
+        $response = Request::route('scanina.user.account.add-cart', $this->client)
             ->headers([
                 'Content-Type' => 'application/x-www-form-urlencoded',
             ])
@@ -211,7 +211,7 @@ class ScaninaApiClient
 
     public function resendEmail(string $email)
     {
-        $response = Request::route("scanina.user.account.resend-mail", $this->client)
+        $response = Request::route('scanina.user.account.resend-mail', $this->client)
             ->json(['email' => $email])
             ->send();
 
@@ -221,7 +221,7 @@ class ScaninaApiClient
     public function getCountry(object $arguments)
     {
         $response = Request::route('scanina.country.browse', $this->client)
-            ->queryParams((array)$arguments)
+            ->queryParams((array) $arguments)
             ->send();
 
         return $response->json(false);
@@ -230,7 +230,7 @@ class ScaninaApiClient
     public function getCity(object $arguments)
     {
         $response = Request::route('scanina.city.browse', $this->client)
-            ->queryParams((array)$arguments)
+            ->queryParams((array) $arguments)
             ->send();
 
         return $response->json(false);
@@ -239,7 +239,7 @@ class ScaninaApiClient
     public function getBusinessSector(object $arguments)
     {
         $response = Request::route('scanina.business-sector.browse', $this->client)
-            ->queryParams((array)$arguments)
+            ->queryParams((array) $arguments)
             ->send();
 
         return $response->json(false);
@@ -248,7 +248,7 @@ class ScaninaApiClient
     public function getMerchant(object $arguments)
     {
         $response = Request::route('scanina.merchant.browse', $this->client)
-            ->queryParams((array)$arguments)
+            ->queryParams((array) $arguments)
             ->send();
 
         return $response->json(false);

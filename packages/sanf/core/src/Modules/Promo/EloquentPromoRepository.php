@@ -6,8 +6,7 @@ use Carbon\Carbon;
 
 class EloquentPromoRepository implements PromoRepositoryInterface
 {
-
-    /** @var PromoModel $model */
+    /** @var PromoModel */
     protected $model;
 
     public function __construct(PromoModel $model)

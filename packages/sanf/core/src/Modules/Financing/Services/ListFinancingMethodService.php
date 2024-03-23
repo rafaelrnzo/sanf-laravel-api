@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Financing\Services;
-
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Financing\Dto\ListFinancingMethodResultDto;
@@ -11,7 +9,6 @@ use Sanf\Core\Modules\Financing\Repositories\FinancingFacilityRepositoryInterfac
 use Sanf\Core\Modules\Financing\Repositories\FinancingMethodRepositoryInterface;
 use Sanf\Core\Modules\Financing\Repositories\FinancingPrerequisiteRepositoryInterface;
 use Sanf\Core\Modules\Financing\Specifications\FinancingMethodSpecificationFactoryInterface;
-
 
 class ListFinancingMethodService extends FinancingService implements ApplicationServiceInterface
 {
@@ -48,25 +45,25 @@ class ListFinancingMethodService extends FinancingService implements Application
 
         // Get data from specification factory
         $data = $this->financingMethodRepository->query(
-            $this->specificationFactory->paginate($dto->skip, $dto->limit , $dto->sort_by)
+            $this->specificationFactory->paginate($dto->skip, $dto->limit, $dto->sort_by)
         );
 
         $total = $this->financingMethodRepository->size(
             $this->specificationFactory->paginate()
         );
 
-        $paginate = (object)[
-            'total' => (int)$total,
+        $paginate = (object) [
+            'total' => (int) $total,
             'count' => count($data),
             'skip' => (int) $dto->skip,
-            'limit' => (int)$dto->limit,
+            'limit' => (int) $dto->limit,
             'sort_by' => $dto->sort_by,
         ];
 
         // sent list data;
         return new ListFinancingMethodResultDto([
             'data' => $data,
-            'paginate'=> $paginate
+            'paginate'=> $paginate,
         ]);
     }
 }

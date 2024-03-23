@@ -2,6 +2,7 @@
 
 namespace NbsPhp\Core\Jwt;
 
+use function config;
 use Firebase\JWT\JWK;
 use Firebase\JWT\JWT;
 use Hidehalo\Nanoid\Client;
@@ -9,9 +10,7 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use NbsPhp\Core\Exceptions\ExpiredAccessTokenException;
 use NbsPhp\Core\Exceptions\InvalidTokenException;
 use NbsPhp\Core\Models\UserSessionModel;
-use function config;
 use function report;
-
 
 class JWTHelper
 {
@@ -40,31 +39,31 @@ class JWTHelper
     protected $app_token;
 
     /**
-     * [$decoded description]
+     * [$decoded description].
      * @var [type]
      */
     protected $decoded;
 
     /**
-     * [$decoded description]
+     * [$decoded description].
      * @var [type]
      */
     protected $decoded_refresh_token;
 
     /**
-     * [$decoded description]
+     * [$decoded description].
      * @var [type]
      */
     protected $decoded_app_token;
 
     /**
-     * [$key description]
+     * [$key description].
      * @var string
      */
     protected $key;
 
     /**
-     * [$includes fields in USER instance to include in JWT]
+     * [$includes fields in USER instance to include in JWT].
      * @var string[]
      */
     protected $includes;
@@ -76,26 +75,26 @@ class JWTHelper
     protected $id_field;
 
     /**
-     * Expire (in seconds)
+     * Expire (in seconds).
      * @var string
      */
     protected $expire_after;
 
     /**
-     * Expire (in seconds)
+     * Expire (in seconds).
      * @var string
      */
     protected $refresh_before;
 
     /**
-     * The JWT Issuer
+     * The JWT Issuer.
      * @var string
      */
     protected $issuer;
 
     /**
-     * Delay in seconds before token will be valid
-     * @var integer
+     * Delay in seconds before token will be valid.
+     * @var int
      */
     protected $notBefore_delay;
 
@@ -132,7 +131,7 @@ class JWTHelper
         }
 
         $includes = config('jwt.include');
-        $this->includes = is_null($includes) ? [$this->id_field] : explode(",", $includes);
+        $this->includes = is_null($includes) ? [$this->id_field] : explode(',', $includes);
         if (!in_array($this->id_field, $this->includes)) {
             $this->includes[] = $this->id_field; // always add user id
         }
@@ -140,17 +139,17 @@ class JWTHelper
 
     /**
      * Check if helper has a token.
-     * @return boolean
+     * @return bool
      */
     public function isHealthy()
     {
-        return ($this->getDecoded() !== null);
+        return $this->getDecoded() !== null;
     }
 
     /**
-     * [setToken description]
+     * [setToken description].
      *
-     * @param String $token
+     * @param string $token
      *
      * @return JWTHelper
      */
@@ -163,7 +162,7 @@ class JWTHelper
     }
 
     /**
-     * Get Token String
+     * Get Token String.
      * @return string Token String
      */
     public function getToken()
@@ -180,8 +179,8 @@ class JWTHelper
      */
     public function getRefreshToken($sessionId)
     {
-        $decoded = (array)$this->getDecoded();
-        $decoded['data'] = (array)$decoded['data'];
+        $decoded = (array) $this->getDecoded();
+        $decoded['data'] = (array) $decoded['data'];
         $issuedAt = time();
         $notBefore = $issuedAt;
         $expire = $notBefore + $this->refresh_before;
@@ -201,7 +200,7 @@ class JWTHelper
      */
     public function getAppToken()
     {
-        $decoded = (array)$this->getDecodedAppToken();
+        $decoded = (array) $this->getDecodedAppToken();
         $issuedAt = time();
         $expire = $issuedAt + 131400 * 60; // 3 Month
 
@@ -328,13 +327,13 @@ class JWTHelper
         $issuer = $this->issuer;
 
         $jwt_payload = [
-            "iss" => $issuer,
-            "jti" => $tokenId,
-            "iat" => $issuedAt,
-            "nbf" => $notBefore,
-            "exp" => $expire,
-            "email" => $email,
-            "token" => $token,
+            'iss' => $issuer,
+            'jti' => $tokenId,
+            'iat' => $issuedAt,
+            'nbf' => $notBefore,
+            'exp' => $expire,
+            'email' => $email,
+            'token' => $token,
         ];
 
         return $this->token = JWT::encode($jwt_payload, $jwt_key, 'HS512');
@@ -352,20 +351,20 @@ class JWTHelper
         $issuer = $this->issuer;
 
         $jwt_payload = [
-            "iss" => $issuer,
-            "jti" => $tokenId,
-            "iat" => $issuedAt,
-            "nbf" => $notBefore,
-            "exp" => $expire,
-            "sub" => $id,
-            "token" => $token,
+            'iss' => $issuer,
+            'jti' => $tokenId,
+            'iat' => $issuedAt,
+            'nbf' => $notBefore,
+            'exp' => $expire,
+            'sub' => $id,
+            'token' => $token,
         ];
 
         return $this->token = JWT::encode($jwt_payload, $jwt_key, 'HS512');
     }
 
     /**
-     * Get value stored in token id field
+     * Get value stored in token id field.
      * @return string
      */
     public function getId()
@@ -382,7 +381,7 @@ class JWTHelper
     }
 
     /**
-     * Get value stored in token id field
+     * Get value stored in token id field.
      * @return string
      */
     public function getEnt()
@@ -397,17 +396,17 @@ class JWTHelper
     }
 
     /**
-     * Refresh token
+     * Refresh token.
      * @return string New Token
      * @throws ExpiredAccessTokenException
      */
     public function refresh()
     {
         try {
-            $decoded = (array)JWT::decode($this->token, $this->key, ['HS512']);
+            $decoded = (array) JWT::decode($this->token, $this->key, ['HS512']);
         } catch (\Exception $e) {
             if ($e->getMessage() == 'Expired token') {
-                [$header, $payload, $signature] = explode(".", $this->token);
+                [$header, $payload, $signature] = explode('.', $this->token);
 
                 $decoded = json_decode(base64_decode($payload), true);
             } else {
@@ -415,7 +414,7 @@ class JWTHelper
             }
         }
 
-        $decoded['data'] = (array)$decoded['data'];
+        $decoded['data'] = (array) $decoded['data'];
 
         $this->decoded = null;
         $issuedAt = time();
@@ -473,7 +472,7 @@ class JWTHelper
         }
 
         try {
-            $payload = (array)JWT::decode($token, JWK::parseKeySet($jwks), ['RS256']);
+            $payload = (array) JWT::decode($token, JWK::parseKeySet($jwks), ['RS256']);
         } catch (\Exception $e) {
             throw new InvalidTokenException($e->getMessage());
         }
@@ -535,7 +534,7 @@ class JWTHelper
         }
 
         try {
-            $payload = (array)JWT::decode($token, JWK::parseKeySet($jwks), ['RS256']);
+            $payload = (array) JWT::decode($token, JWK::parseKeySet($jwks), ['RS256']);
         } catch (\Exception $e) {
             throw new InvalidTokenException($e->getMessage());
         }

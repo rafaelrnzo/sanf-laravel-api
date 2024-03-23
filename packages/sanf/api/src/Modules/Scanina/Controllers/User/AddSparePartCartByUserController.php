@@ -23,7 +23,7 @@ class AddSparePartCartByUserController extends RestApiController
             'quantity' => 'required|integer',
         ]);
 
-        $addToCartRequestBody = (object)[
+        $addToCartRequestBody = (object) [
             'userId' => $userAuth->id(),
             'xid' => $xid,
             'productXid' => $product_xid,

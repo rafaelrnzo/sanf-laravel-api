@@ -2,9 +2,6 @@
 
 namespace Sanf\Core\Modules\Contract\Specifications;
 
-use Sanf\Core\Modules\Contract\Specifications\EloquentPaginateDocumentAssigneeByUserIdSpecification;
-use Sanf\Core\Modules\Contract\Specifications\ESignDocumentSpecificationFactoryInterface;
-
 class EloquentESignDocumentSpecificationFactory implements ESignDocumentSpecificationFactoryInterface
 {
     public function paginateDocumentAssigneeByUserId(

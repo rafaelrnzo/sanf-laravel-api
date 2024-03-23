@@ -6,7 +6,6 @@ use NbsPhp\Core\Models\AbstractModel;
 
 class RequestedDocumentModel extends AbstractModel
 {
-
     protected $table = 'requested_document';
     protected $fillable = [
         'xid',

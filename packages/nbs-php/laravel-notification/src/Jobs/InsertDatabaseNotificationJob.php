@@ -2,7 +2,6 @@
 
 namespace NbsPhp\Notification\Jobs;
 
-
 use NbsPhp\Core\AbstractJob;
 use NbsPhp\Notification\Models\UserNotificationModel;
 
@@ -23,7 +22,6 @@ class InsertDatabaseNotificationJob extends AbstractJob
         $this->payload = $payload;
     }
 
-
     /**
      * Execute the job.
      *
@@ -37,7 +35,7 @@ class InsertDatabaseNotificationJob extends AbstractJob
             'type' => $this->payload['type'],
             'notifiable_id' => $this->notifiable->id,
             'notifiable_type' => $this->notifiable->type,
-            'data' => $this->payload
+            'data' => $this->payload,
         ]);
     }
 }

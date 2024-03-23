@@ -2,7 +2,6 @@
 
 namespace Sanf\Core\Modules\Plafond\Services;
 
-
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Plafond\Dtos\BrowsePlafondHistoryByUserRequestDto;
 use Sanf\Core\Modules\Plafond\Dtos\BrowsePlafondHistoryByUserResponseDto;
@@ -19,8 +18,9 @@ final class BrowsePlafondHistoryByUserService extends PlafondByUserService imple
         $plafonds = $this->repository->getHistoryByProfile($dto->profileXid);
         $data = collect($plafonds)->map(function (GuzzlePlafondHistoryEntity $item) {
             $type = $item->getType();
-            return (object)[
-                'type' => (object)[
+
+            return (object) [
+                'type' => (object) [
                     'id' => $type->getId(),
                     'title' => $type->getTitle(),
                     'name' => $type->getName(),
@@ -32,15 +32,16 @@ final class BrowsePlafondHistoryByUserService extends PlafondByUserService imple
                 'submittedBalance' => $item->getSubmittedBalance(),
             ];
         });
+
         return new BrowsePlafondHistoryByUserResponseDto([
             'data' => $data,
             'paginate' => [
                 'total' => count($data),
                 'count' => count($data),
-                'skip' => (int)$dto->skip,
-                'limit' => (int)$dto->limit,
+                'skip' => (int) $dto->skip,
+                'limit' => (int) $dto->limit,
                 'sortBy' => $dto->sortBy,
-            ]
+            ],
         ]);
     }
 }

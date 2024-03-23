@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\User;
-
 
 use NbsPhp\Core\Exceptions\ApiException;
 

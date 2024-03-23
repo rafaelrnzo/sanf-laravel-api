@@ -11,7 +11,6 @@ use Sanf\Core\Modules\User\Repositories\ProfileRepositoryInterface;
 
 class GuzzleUserAccountService implements ApplicationServiceInterface
 {
-
     private ScaninaUserRepositoryInterface $repository;
     private ScaninaUserSpecificationInterface $specification;
     private AuthModel $userRepository;

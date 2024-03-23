@@ -6,7 +6,6 @@ use League\Fractal\TransformerAbstract;
 
 class PromoItemTransformer extends TransformerAbstract
 {
-
     public function transform($dto)
     {
         return [

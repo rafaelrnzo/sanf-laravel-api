@@ -20,7 +20,7 @@ class DeleteTest extends TestCase
 
     /**
      * Expected Behavior:
-     * - No exceptions are thrown
+     * - No exceptions are thrown.
      */
     public function testDelete()
     {
@@ -30,12 +30,12 @@ class DeleteTest extends TestCase
 
     /**
      * Expected Behavior:
-     * - No exceptions are thrown
+     * - No exceptions are thrown.
      */
     public function testDestroy()
     {
         $data = [
-            'id' => 1
+            'id' => 1,
         ];
         $resource = new BasicApiResource($data);
         $resource->destroy([], $this->getMockClient());

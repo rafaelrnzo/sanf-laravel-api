@@ -1,8 +1,6 @@
 <?php
 
-
 namespace NbsPhp\Core\Services;
-
 
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;

@@ -26,16 +26,19 @@ class EloquentPrepaymentSubmissionRepository extends AbstractEloquentRepository 
                 ->newQuery()->forceCreate([
                     'submission_id' => $model->id,
                     'status_id' => $model->status_id,
-                    'created_by' => new \stdClass() //TODO SNAPSHOT
+                    'created_by' => new \stdClass(), //TODO SNAPSHOT
                 ]);
+
             return $model;
         });
+
         return $this->stripEloquentModel($model);
     }
 
     public function whereContractNo($contractNo): array
     {
         $models = $this->model->newQuery()->where('contract_no', $contractNo)->get();
+
         return $this->stripEloquentModel($models);
     }
 }

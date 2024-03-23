@@ -37,8 +37,8 @@ final class ResendESignVerificationService implements ApplicationServiceInterfac
         }
 
         $result = $this->client->sendVerificationMail([
-            ['name' => 'nik', 'contents' => $dto->nik,],
-            ['name' => 'email', 'contents' => $dto->email,],
+            ['name' => 'nik', 'contents' => $dto->nik],
+            ['name' => 'email', 'contents' => $dto->email],
         ]);
 
         if ($result['code'] && $result['code'] !== TekenAjaApiResponseErrorCodeEnum::USER_EXISTS_VERIFIED) {

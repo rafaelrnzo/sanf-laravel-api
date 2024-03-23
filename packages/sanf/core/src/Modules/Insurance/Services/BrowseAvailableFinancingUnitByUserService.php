@@ -52,16 +52,15 @@ final class BrowseAvailableFinancingUnitByUserService implements ApplicationServ
                 'paginate' => [
                     'total' => 0,
                     'count' => 0,
-                    'skip' => (int)$dto->skip,
-                    'limit' => (int)$dto->limit,
+                    'skip' => (int) $dto->skip,
+                    'limit' => (int) $dto->limit,
                     'sortBy' => $dto->sortBy,
-                ]
+                ],
             ]);
         }
 
-
         $data = array_map(function ($item) {
-            return (object)[
+            return (object) [
                 'contractNo' => $item->AGREE_NO,
                 'polisNo' => $item->POLIS_NO,
                 'serialNo' => $item->SERIAL_NO,
@@ -83,12 +82,12 @@ final class BrowseAvailableFinancingUnitByUserService implements ApplicationServ
         return new BrowseFinancingUnitByUserResponseDto([
             'data' => $data,
             'paginate' => [
-                'total' => (int)($result->total ?? $result->count),
-                'count' => (int)$result->count,
-                'skip' => (int)$dto->skip,
-                'limit' => (int)$dto->limit,
+                'total' => (int) ($result->total ?? $result->count),
+                'count' => (int) $result->count,
+                'skip' => (int) $dto->skip,
+                'limit' => (int) $dto->limit,
                 'sortBy' => $dto->sortBy,
-            ]
+            ],
         ]);
     }
 }

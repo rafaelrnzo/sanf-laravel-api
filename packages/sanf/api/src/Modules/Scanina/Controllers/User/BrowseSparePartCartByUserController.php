@@ -24,7 +24,7 @@ class BrowseSparePartCartByUserController extends RestApiController
             'keyword' => 'nullable|string|max:255',
         ]);
 
-        $dto = (object)[
+        $dto = (object) [
             'userId' => $userAuth->id(),
             'profileXid' => $xid,
             'skip' => $queryParam['skip'] ?? 0,

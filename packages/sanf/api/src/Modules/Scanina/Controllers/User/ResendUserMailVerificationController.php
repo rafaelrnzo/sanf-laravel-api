@@ -13,7 +13,7 @@ class ResendUserMailVerificationController extends RestApiController
         Guard $userAuth,
         GuzzleResendUserMailVerificationService $service
     ) {
-        $requestBodyDto = (object)[
+        $requestBodyDto = (object) [
             'userId' => $userAuth->id(),
             'xid' => $xid,
         ];

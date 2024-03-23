@@ -40,7 +40,8 @@ class ResetPasswordNotification extends Notification
                 <blockquote style="margin: 0 3em;font-size: 16px; line-height: 150%;">
                     Jika benar, mohon verifikasi email Anda dengan mengklik tombol di bawah ini.
                 </blockquote>
-            '))
+            '
+            ))
             ->action(__('Reset Password'), $resetUrl)
             ->lineWithUrl(
                 __('Jika Anda merasa tidak membuat request tersebut mohon abaikan email ini atau Anda dapat'),
@@ -48,7 +49,6 @@ class ResetPasswordNotification extends Notification
             )
             ->to($notifiable->getEmailForPasswordReset(), $notifiable->getNameForPasswordReset());
     }
-
 
     protected function resetUrl($notifiable)
     {
@@ -59,6 +59,7 @@ class ResetPasswordNotification extends Notification
         if ($resetPasswordUrl != '' || $resetPasswordUrl != null) {
             return "{$resetPasswordUrl}?token={$jwtToken}";
         }
+
         return route('password.reset', ['token' => $jwtToken]);
     }
 }

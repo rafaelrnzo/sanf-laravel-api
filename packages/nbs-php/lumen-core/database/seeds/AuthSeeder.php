@@ -24,7 +24,7 @@ class AuthSeeder extends Seeder
                 'id' => '20',
                 'name' => 'Mobile',
                 'updated_at' => date('Y-m-d H:i:s'),
-            ]
+            ],
         ]);
         DB::table(config('auth.table_names.user_auth'))->insertOrIgnore([
             'id' => '1',

@@ -41,7 +41,7 @@ class MaintenanceModeMiddleware
                 'success' => false,
                 'code' => '503',
                 'message' => 'The application is down for maintenance.',
-                'timestamp' => date('Y-m-d H:i:s')
+                'timestamp' => date('Y-m-d H:i:s'),
             ], 503);
         }
 
@@ -49,7 +49,7 @@ class MaintenanceModeMiddleware
     }
 
     /**
-     * Get client ip
+     * Get client ip.
      */
     private function getIp()
     {

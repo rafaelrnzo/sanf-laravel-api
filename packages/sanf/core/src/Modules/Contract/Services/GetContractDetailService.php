@@ -12,7 +12,6 @@ use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class GetContractDetailService extends UserService implements ApplicationServiceInterface
 {
-
     protected SanfCoreApiClient $internalApiClient;
 
     public function __construct(AuthModel $userRepository, SanfCoreApiClient $internalApiClient)
@@ -38,11 +37,11 @@ class GetContractDetailService extends UserService implements ApplicationService
         $response = $this->internalApiClient->getContractDetail($dto->profile_xid, $dto->contract_no);
         $data = $response->data[$response->count - 1];
 
-        return (object)[
+        return (object) [
             'contract_at' => $data->TGL_KONTRAK ?? null,
             'contract_no' => $data->NO_KONTRAK ?? null,
             'currency_type' => $data->CURR_ID ?? null,
-            'status' => (object)[
+            'status' => (object) [
                 'id' => $data->STATUS_ID ?? null,
                 'name' => $data->STATUS ?? null,
             ],
@@ -55,19 +54,19 @@ class GetContractDetailService extends UserService implements ApplicationService
             'total_outstanding_amount' => $data->TAGIHAN_SISA ?? 0,
             'due_at' => $data->DT_DUE ?? null,
             'installment_count' => $data->ANGSURAN_KE ?? 0,
-            'financing' => (object)[
+            'financing' => (object) [
                 'due_at' => $data->DT_DUE ?? null,
                 'finished_at' => $data->TGL_SELESAI ?? null,
                 'interest_percentage' => $data->RATE_EFF ?? 0,
-                'facility' => (object)[
+                'facility' => (object) [
                     'id' => $data->ID_JENIS_PEMBIAYAAN ?? null,
                     'name' => $data->JENIS_PEMBIAYAAN ?? null,
                 ],
-                'method' => (object)[
+                'method' => (object) [
                     'id' => $data->ID_CARA_PEMBIAYAAN ?? null,
                     'name' => $data->CARA_PEMBIAYAAN ?? null,
                 ],
-                'total_tenor' => $data->TENOR ?? 0
+                'total_tenor' => $data->TENOR ?? 0,
             ],
             'total_financing_unit' => $data->TOT_UNIT ?? 0,
         ];

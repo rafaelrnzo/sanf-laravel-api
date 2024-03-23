@@ -2,12 +2,10 @@
 
 namespace Sanf\Api\Modules\Location\Transformers;
 
-
 use League\Fractal\TransformerAbstract;
 
 class LocationListTransformer extends TransformerAbstract
 {
-
     public function transform($dto)
     {
         return [

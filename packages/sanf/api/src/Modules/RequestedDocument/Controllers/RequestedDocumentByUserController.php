@@ -69,7 +69,7 @@ final class RequestedDocumentByUserController extends RestApiController
             'sort_by' => ['nullable', 'in:earliest,oldest'],
         ]);
 
-        $dto = (object)[
+        $dto = (object) [
             'user_id' => $auth->id(),
             'profile_xid' => $xid,
             'request_id' => $request_id,
@@ -123,10 +123,10 @@ final class RequestedDocumentByUserController extends RestApiController
         TransactionalSessionInterface $transactionalSession,
         SubmitRequestedDocumentService $service
     ) {
-        $dto = (object)[
+        $dto = (object) [
             'user_id' => $auth->id(),
             'profile_xid' => $xid,
-            'request_id' => $request_id
+            'request_id' => $request_id,
         ];
 
         $transactionalService = new TransactionalApplicationService($service, $transactionalSession);
@@ -146,7 +146,7 @@ final class RequestedDocumentByUserController extends RestApiController
         ReadUploadRequestedDocumentService $service
     ) {
 
-        $dto = (object)[
+        $dto = (object) [
             'user_id' => $auth->id(),
             'profile_xid' => $xid,
             'request_id' => $request_id,

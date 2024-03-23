@@ -29,22 +29,24 @@ final class PrepaymentSimulationByUserController extends RestApiController
             'contractNo' => $input['contract_no'],
             'prepaymentDate' => CarbonImmutable::make($input['prepayment_date']),
             'userId' => $auth->id(),
-            'isDownloadPdf' => $input['is_download_pdf']
+            'isDownloadPdf' => $input['is_download_pdf'],
         ]);
         $simulationResult = $service->execute($dto);
         if ($dto->isDownloadPdf) {
             // Set dto for download service
             $dtoDownload = new GetPdfPrepaymentSimulationRequestDto([
-                    'user_id' => $auth->id()
+                    'user_id' => $auth->id(),
                 ] + $simulationResult->toArray());
 
             // Execute download service
-            return $this->streamDownload(function () use ($downloadPrepaymentService, $dtoDownload) {
+            return $this->streamDownload(
+                function () use ($downloadPrepaymentService, $dtoDownload) {
                 echo $downloadPrepaymentService->execute($dtoDownload);
-            }
-                , 'Simulasi Pelunasan Dipercepat ' . date('d_m_y') . '.pdf'
+            },
+                'Simulasi Pelunasan Dipercepat ' . date('d_m_y') . '.pdf'
             );
         }
+
         return fractal($simulationResult, PrepaymentSimulationTransformer::class);
     }
 }

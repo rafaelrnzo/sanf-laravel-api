@@ -10,7 +10,7 @@ class BrowseProductSubSpecificationResponseTransformer extends TransformerAbstra
     public function transform($dto): array
     {
         return [
-            'name' => (string)optional($dto)->name,
+            'name' => (string) optional($dto)->name,
             'items' => fractal($dto->subSpecificationColumn, BrowseProductSpecificationItemResponseTransformer::class)
                 ->serializeWith(new ArraySerializer()),
         ];

@@ -1,13 +1,10 @@
 <?php
 
-
 namespace Sanf\Core\Modules\ContactUs;
-
 
 class EloquentAskUsRepository implements AskUsRepositoryInterface
 {
-
-    /** @var AskUsModel $model */
+    /** @var AskUsModel */
     protected $model;
 
     public function __construct(AskUsModel $model)

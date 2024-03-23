@@ -29,7 +29,7 @@ class CreateFinancingFacilityTable extends Migration
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
                 'modified_by' => '{"id":"0","role":"SEEDERS"}',
-                'version' => 1
+                'version' => 1,
             ],
             [
                 'id' => 2,
@@ -37,7 +37,7 @@ class CreateFinancingFacilityTable extends Migration
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
                 'modified_by' => '{"id":"0","role":"SEEDERS"}',
-                'version' => 1
+                'version' => 1,
             ],
             [
                 'id' => 3,
@@ -45,7 +45,7 @@ class CreateFinancingFacilityTable extends Migration
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
                 'modified_by' => '{"id":"0","role":"SEEDERS"}',
-                'version' => 1
+                'version' => 1,
             ],
         ]);
     }

@@ -19,7 +19,7 @@ class AddBuyCartByUserController extends RestApiController
         GuzzleAddToCartBuyService $service,
         TransactionalSessionInterface $transactionalSession
     ) {
-        $addToCartRequestBody = (object)[
+        $addToCartRequestBody = (object) [
             'userId' => $userAuth->id(),
             'xid' => $xid,
             'productXid' => $product_xid,

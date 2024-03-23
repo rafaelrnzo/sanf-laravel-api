@@ -50,7 +50,7 @@ class ApproveDeactivateAccountService implements ApplicationServiceInterface
             throw new UserNotFoundException();
         }
 
-        $createdBy = (array)$dto;
+        $createdBy = (array) $dto;
         unset($createdBy['xid']);
 
         $this->logRepository->update([
@@ -71,7 +71,7 @@ class ApproveDeactivateAccountService implements ApplicationServiceInterface
             $user->oauth->delete();
         }
 
-        dispatch(new SendApprovalRequestDeletionAccountNotification(['name' => $user->full_name,], $user->username));
+        dispatch(new SendApprovalRequestDeletionAccountNotification(['name' => $user->full_name], $user->username));
 
         return $dto;
     }

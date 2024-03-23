@@ -16,7 +16,7 @@ class NewsSeeder extends Seeder
         $faker = Faker::create();
         $data[] = [
             'xid' => nano_id(),
-            'title' => "Promo menarik 2021",
+            'title' => 'Promo menarik 2021',
             'image_url' => 'https://apps.sanfinance.com/img/testing/pic1.jpg',
             'link_url' => 'https://apps.sanfinance.com/info/news',
             'created_at' => date('Y-m-d H:i:s'),

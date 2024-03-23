@@ -56,17 +56,17 @@ final class GetESignUserService implements ApplicationServiceInterface
                 'fullName' => isset($item['NAME']) ? $item['NAME'] : null,
                 'dob' => isset($item['DOB']) ? $item['DOB'] : null,
                 'pob' => isset($item['POB']) ? $item['POB'] : null,
-                'gender' => isset($item['GENDER']) ? (int)$item['GENDER'] : null,
+                'gender' => isset($item['GENDER']) ? (int) $item['GENDER'] : null,
                 'address' => isset($item['ADDRESS']) ? $item['ADDRESS'] : null,
-                'postalCode' => isset($item['ZIP_CODE']) ? (int)$item['ZIP_CODE'] : null,
+                'postalCode' => isset($item['ZIP_CODE']) ? (int) $item['ZIP_CODE'] : null,
                 'statusId' => ESignRegistrationStatusEnum::AVAILABLE,
             ];
         }, $response['data'])[0];
 
         $userTekenAja = $this->eSignRepository->findUserByEmail($result['email']);
         $resultTekenAja = $this->clientTekenAja->registerCheck([
-            ['name' => 'email', 'contents' => $result['email'],],
-            ['name' => 'nik', 'contents' => $result['nik'],],
+            ['name' => 'email', 'contents' => $result['email']],
+            ['name' => 'nik', 'contents' => $result['nik']],
         ]);
 
         $exceptCodeCondition = ($resultTekenAja['code'] == TekenAjaApiResponseErrorCodeEnum::USER_EXISTS_VERIFIED or $resultTekenAja['code'] == TekenAjaApiResponseErrorCodeEnum::NIK_EMAIL_MATCHED);

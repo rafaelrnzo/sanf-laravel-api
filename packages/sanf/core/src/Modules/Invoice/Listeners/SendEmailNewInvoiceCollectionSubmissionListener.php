@@ -7,7 +7,6 @@ use Sanf\Core\Modules\Invoice\Jobs\SendEmailInvoiceCollectionSubmissionForUserJo
 
 class SendEmailNewInvoiceCollectionSubmissionListener
 {
-
     /**
      * Handle the event.
      *
@@ -18,9 +17,9 @@ class SendEmailNewInvoiceCollectionSubmissionListener
     {
         $invoiceCollectionSubmissions = $event->invoiceCollectionSubmissions;
         $adminRecipients = explode(',', config('sanf-mobile.mail_to.service'));
-        $userRecipient = (object)[
+        $userRecipient = (object) [
             'email' => $invoiceCollectionSubmissions[0]->user->username,
-            'fullName' => $invoiceCollectionSubmissions[0]->user->full_name
+            'fullName' => $invoiceCollectionSubmissions[0]->user->full_name,
         ];
         dispatch(new SendEmailInvoiceCollectionSubmissionForUserJob($invoiceCollectionSubmissions, $userRecipient));
         dispatch(new SendEmailInvoiceCollectionSubmissionForAdminJob($invoiceCollectionSubmissions, $adminRecipients));

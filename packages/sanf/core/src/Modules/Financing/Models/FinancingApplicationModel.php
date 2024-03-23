@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Financing\Models;
-
 
 use NbsPhp\Core\Models\AbstractModel;
 
@@ -12,7 +10,7 @@ class FinancingApplicationModel extends AbstractModel
 
     protected $casts = [
         'profile_snapshot' => 'object',
-        'segment' => 'object'
+        'segment' => 'object',
     ];
 
     public function facility()

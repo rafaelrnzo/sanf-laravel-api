@@ -55,7 +55,7 @@ abstract class ApiResource
         'int',
         'object',
         'string',
-        'timestamp'
+        'timestamp',
     ];
 
     /**
@@ -126,7 +126,7 @@ abstract class ApiResource
      * @param mixed $value
      * @return $this
      */
-    public function setAttribute(string $key, $value): ApiResource
+    public function setAttribute(string $key, $value): self
     {
         if ($this->castsAttribute($key)) {
             $value = $this->castAs($value, $this->getAttributeCastType($key));
@@ -145,7 +145,7 @@ abstract class ApiResource
      * @param bool $clear
      * @return $this
      */
-    public function setAttributes(array $attributes, bool $clear = false): ApiResource
+    public function setAttributes(array $attributes, bool $clear = false): self
     {
         if ($clear) {
             $this->attributes = [];
@@ -159,7 +159,7 @@ abstract class ApiResource
      * @param array $attributes
      * @return $this
      */
-    public function mergeAttributes(array $attributes): ApiResource
+    public function mergeAttributes(array $attributes): self
     {
         foreach ($attributes as $key => $value) {
             $this->setAttribute($key, $value);
@@ -236,7 +236,7 @@ abstract class ApiResource
      */
     protected function castAsClass($value, string $type)
     {
-        if (class_exists($type) && is_subclass_of($type, ApiResource::class)) {
+        if (class_exists($type) && is_subclass_of($type, self::class)) {
             if (collect($value)->every(function ($value, $key) {
                 return is_int($key) && is_array($value);
             })) {
@@ -297,7 +297,7 @@ abstract class ApiResource
      * @param string $data
      * @return static
      */
-    public static function fromJson(string $data): ApiResource
+    public static function fromJson(string $data): self
     {
         return new static(json_decode($data, true));
     }
@@ -333,7 +333,7 @@ abstract class ApiResource
      * @param array|stdClass $data
      * @return ApiResource
      */
-    public static function cast($data): ApiResource
+    public static function cast($data): self
     {
         return new static((array) $data);
     }

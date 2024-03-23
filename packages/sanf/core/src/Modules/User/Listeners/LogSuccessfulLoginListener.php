@@ -2,7 +2,6 @@
 
 namespace Sanf\Core\Modules\User\Listeners;
 
-
 use Carbon\Carbon;
 use Illuminate\Auth\Events\Login;
 

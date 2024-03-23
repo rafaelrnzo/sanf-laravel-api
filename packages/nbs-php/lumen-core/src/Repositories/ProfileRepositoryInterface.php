@@ -1,8 +1,6 @@
 <?php
 
-
 namespace NbsPhp\Core\Repositories;
-
 
 interface ProfileRepositoryInterface
 {

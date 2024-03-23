@@ -1,8 +1,6 @@
 <?php
 
-
 namespace NbsPhp\Core\Providers;
-
 
 use Laravel\Horizon\Horizon;
 

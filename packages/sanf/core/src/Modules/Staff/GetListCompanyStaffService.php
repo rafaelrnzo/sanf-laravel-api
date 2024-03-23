@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Staff;
-
 
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
@@ -34,23 +32,24 @@ class GetListCompanyStaffService extends StaffService implements ApplicationServ
                 })->first();
                 $registeredUser = AuthModel::where('username', $email)->first();
                 $status = optional($registeredUser)->status;
-                return (object)[
-                    "no" => $item['SR_NO'] ?? '',
-                    "name" => ucwords(strtolower($item['CUST_NAME'] ?? '')),
-                    "email" => $email,
-                    "status" => $status,
-                    "isMe" => $email == $user->username,
-                    "isInvited" => !is_null($activeStaff)
+
+                return (object) [
+                    'no' => $item['SR_NO'] ?? '',
+                    'name' => ucwords(strtolower($item['CUST_NAME'] ?? '')),
+                    'email' => $email,
+                    'status' => $status,
+                    'isMe' => $email == $user->username,
+                    'isInvited' => !is_null($activeStaff),
                 ];
             });
 
-        return (object)[
+        return (object) [
             'data' => $data,
-            'paginate' => (object)[
-                'total' => (int)$data->count(),
-                'count' => (int)$data->count(),
-                'skip' => (int)($dto->skip ?? null),
-                'limit' => (int)($dto->limit ?? null),
+            'paginate' => (object) [
+                'total' => (int) $data->count(),
+                'count' => (int) $data->count(),
+                'skip' => (int) ($dto->skip ?? null),
+                'limit' => (int) ($dto->limit ?? null),
                 'sort_by' => $dto->sort_by ?? null,
             ],
         ];

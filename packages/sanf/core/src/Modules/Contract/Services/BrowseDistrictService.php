@@ -37,7 +37,7 @@ final class BrowseDistrictService implements ApplicationServiceInterface
 
         $result = $this->client->getDistricts($dto->province_id);
         $mapping = array_map(function ($key, $item) use ($dto) {
-            return (object)[
+            return (object) [
                 'xid' => $key,
                 'name' => mb_convert_case($item, MB_CASE_TITLE, 'UTF-8'),
                 'province_id' => $dto->province_id,
@@ -62,14 +62,15 @@ final class BrowseDistrictService implements ApplicationServiceInterface
                         return $item->name;
                     });
                 }
+
                 return $collection->sortByDesc(function ($item) {
                     return $item->name;
                 });
             });
 
-        return (object)[
+        return (object) [
             'data' => $data,
-            'paginate' => (object)[
+            'paginate' => (object) [
                 'total' => $data->count(),
                 'count' => $data->count() ?? 0,
                 'skip' => $dto->skip ?? 0,

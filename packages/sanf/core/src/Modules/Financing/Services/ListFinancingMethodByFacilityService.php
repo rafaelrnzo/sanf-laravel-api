@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Financing\Services;
-
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Financing\Dto\ListFinancingMethodResultDto;
@@ -56,23 +54,22 @@ class ListFinancingMethodByFacilityService extends FinancingService implements A
             $this->specificationFactory->paginateByFacility($dto->id)
         );
 
-
         if (is_null($data)) {
             throw new FinancingGeneralException('Financing Facility Not Found');
         }
 
-        $paginate = (object)[
-            'total' => (int)$total,
+        $paginate = (object) [
+            'total' => (int) $total,
             'count' => count($data),
-            'skip' => (int)$dto->skip,
-            'limit' => (int)$dto->limit,
+            'skip' => (int) $dto->skip,
+            'limit' => (int) $dto->limit,
             'sort_by' => $dto->sort_by,
         ];
 
         // sent list data;
         return new ListFinancingMethodResultDto([
             'data' => $data,
-            'paginate' => $paginate
+            'paginate' => $paginate,
         ]);
     }
 }

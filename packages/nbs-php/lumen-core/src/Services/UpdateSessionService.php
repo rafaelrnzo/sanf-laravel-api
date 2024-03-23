@@ -1,8 +1,6 @@
 <?php
 
-
 namespace NbsPhp\Core\Services;
-
 
 use Illuminate\Support\Facades\Auth;
 use NbsPhp\Core\Enum\AuthProvider;

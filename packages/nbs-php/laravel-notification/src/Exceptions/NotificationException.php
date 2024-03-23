@@ -1,8 +1,6 @@
 <?php
 
-
 namespace NbsPhp\Notification\Exceptions;
-
 
 use NbsPhp\Core\Exceptions\ApiException;
 

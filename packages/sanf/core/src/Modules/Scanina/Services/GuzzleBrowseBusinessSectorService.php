@@ -9,7 +9,6 @@ use Sanf\Core\Modules\Scanina\Specifications\ScaninaRegionSpecificationInterface
 
 class GuzzleBrowseBusinessSectorService implements ApplicationServiceInterface
 {
-
     private ScaninaRegionRepositoryInterface $repository;
     private ScaninaRegionSpecificationInterface $specification;
 
@@ -28,12 +27,12 @@ class GuzzleBrowseBusinessSectorService implements ApplicationServiceInterface
         );
 
         $responseCountry = array_map(function ($city) {
-            return new BrowseBusinessSectorResponseDto((array)$city);
+            return new BrowseBusinessSectorResponseDto((array) $city);
         }, $response->data->rows);
 
-        return (object)[
+        return (object) [
             'data' => $responseCountry,
-            'paginate' => (object)[
+            'paginate' => (object) [
                 'total' => $response->data->metadata->total ?? 0,
                 'count' => $response->data->metadata->count ?? 0,
                 'skip' => $dto->skip,

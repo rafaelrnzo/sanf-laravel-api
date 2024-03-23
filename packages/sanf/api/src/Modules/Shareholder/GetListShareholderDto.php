@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Api\Modules\Shareholder;
-
 
 use Spatie\DataTransferObject\DataTransferObject;
 

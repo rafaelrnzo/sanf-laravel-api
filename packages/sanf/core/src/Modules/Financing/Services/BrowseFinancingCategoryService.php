@@ -29,13 +29,13 @@ final class BrowseFinancingCategoryService implements ApplicationServiceInterfac
             $this->specificationFactory->paginate($dto->keyword, null, null, null)
         );
 
-        return (object)[
+        return (object) [
             'data' => $data,
-            'paginate' => (object)[
+            'paginate' => (object) [
                 'total' => $total,
                 'count' => collect($data)->count(),
-                'skip' => (int)$dto->skip,
-                'limit' => (int)$dto->limit,
+                'skip' => (int) $dto->skip,
+                'limit' => (int) $dto->limit,
                 'sort_by' => $dto->sortBy,
             ],
         ];

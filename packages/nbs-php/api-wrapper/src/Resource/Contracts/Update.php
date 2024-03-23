@@ -14,8 +14,12 @@ interface Update
      * @param GuzzleClient|null $client
      * @return static
      */
-    public static function update($id, array $attributes, array $options = [],
-                                  GuzzleClient $client = null): ApiResource;
+    public static function update(
+        $id,
+        array $attributes,
+        array $options = [],
+        GuzzleClient $client = null
+    ): ApiResource;
 
     /**
      * Call the "Update" Route for this ApiResource using an array of attributes.

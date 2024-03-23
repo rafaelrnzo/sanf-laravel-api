@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Plafond;
 
 use Illuminate\Bus\Queueable;
@@ -22,7 +21,6 @@ class SendEmailRequestIncreasePlafondForUserJob implements ShouldQueue
      *
      * @return void
      */
-
     public function __construct($data, $emailRecipients)
     {
         $this->data = $data;
@@ -47,18 +45,19 @@ class SendEmailRequestIncreasePlafondForUserJob implements ShouldQueue
             ->greeting(__('Halo :name!', ['name' => $fullName]))
             ->line(__(
                 '<blockquote style="margin: 0 0;font-size: 16px; line-height: 150%;">
-                    Pengajuan Plafon '. $type .' sedang dalam proses oleh tim kami, berikut kami lampirkan ringkasan pengajuan Plafon Anda.
+                    Pengajuan Plafon ' . $type . ' sedang dalam proses oleh tim kami, berikut kami lampirkan ringkasan pengajuan Plafon Anda.
                 </blockquote>
-            '))
+            '
+            ))
             ->writeContent($this->data)
             ->generateSeparator([
-                [ 'joinToIndex' => 1, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08);">' ],
+                ['joinToIndex' => 1, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08);">'],
                 [
                     'joinToIndex' => 6,
-                    'html' => '<p style="font-size: 16px; font-weight: 700; color:#232227;">Ringkasan Kenaikan Nilai Plafon '. $type .'</p>'
+                    'html' => '<p style="font-size: 16px; font-weight: 700; color:#232227;">Ringkasan Kenaikan Nilai Plafon ' . $type . '</p>',
                 ],
-                [ 'joinToIndex' => 7, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08);">' ],
-                [ 'joinToIndex' => 10, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08);">' ],
+                ['joinToIndex' => 7, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08);">'],
+                ['joinToIndex' => 10, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08);">'],
             ])
             ->line(
                 __('Email ini dibuat secara otomatis mohon tidak membalas email ini, jika terdapat keluhan silahkan hubungi Sanf Customer Service')

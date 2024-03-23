@@ -2,7 +2,6 @@
 
 namespace Sanf\Core\Modules\Scanina\Services;
 
-use Carbon\Carbon;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Models\AuthModel;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
@@ -63,7 +62,7 @@ class GuzzleAddToCartRentService implements ApplicationServiceInterface
         $productRentResponse = $this->getProduct($dto->productXid);
 
         if (is_null($productRentResponse->stock) || $productRentResponse->stock === 0) {
-            throw new ScaninaProductInvalidRequestException("Product out of stock");
+            throw new ScaninaProductInvalidRequestException('Product out of stock');
         }
 
         $requestBodyDto = new AddToCartRequestDto([
@@ -105,7 +104,7 @@ class GuzzleAddToCartRentService implements ApplicationServiceInterface
             $this->productSpecification->readRent($xid)
         );
 
-        $data = (array)$productRentResponse->data;
+        $data = (array) $productRentResponse->data;
         unset($data['review']);
         $productRentResponseDto = new ReadProductRentResponseDto($data);
 
@@ -115,10 +114,10 @@ class GuzzleAddToCartRentService implements ApplicationServiceInterface
 
         $specifications = array_map(function ($specification) {
             $specification->subSpecification = array_map(function ($subSpecification) {
-                return new BrowseProductSubSpecificationResponseDto((array)$subSpecification);
+                return new BrowseProductSubSpecificationResponseDto((array) $subSpecification);
             }, $specification->subSpecification);
 
-            return new BrowseProductSpecificationResponseDto((array)$specification);
+            return new BrowseProductSpecificationResponseDto((array) $specification);
         }, $productBuySpecificationResponse->data->rows);
 
         $subSpecifications = [];

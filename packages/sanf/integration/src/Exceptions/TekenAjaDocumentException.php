@@ -8,5 +8,5 @@ class TekenAjaDocumentException extends ApiException
 {
     protected $code = 'E_TEKEN_6';
 
-    protected $message = "Document Exception";
+    protected $message = 'Document Exception';
 }

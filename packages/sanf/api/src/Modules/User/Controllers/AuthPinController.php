@@ -23,7 +23,7 @@ class AuthPinController extends RestApiController
             'pin' => ['required', 'string', 'min:6', 'max:6'],
         ]);
 
-        $dto = (object)[
+        $dto = (object) [
             'userId' => $auth->id(),
             'pin' => $input['pin'],
         ];
@@ -42,7 +42,7 @@ class AuthPinController extends RestApiController
             'pin' => ['required', 'string', 'min:6', 'max:6'],
         ]);
 
-        $dto = (object)[
+        $dto = (object) [
             'userId' => $auth->id(),
             'pin' => $input['pin'],
         ];
@@ -62,7 +62,7 @@ class AuthPinController extends RestApiController
             'new_pin' => ['required', 'string', 'min:6', 'max:6'],
         ]);
 
-        $dto = (object)[
+        $dto = (object) [
             'userId' => $auth->id(),
             'current_pin' => $input['current_pin'],
             'new_pin' => $input['new_pin'],
@@ -82,7 +82,7 @@ class AuthPinController extends RestApiController
             'password' => ['required', 'min:8', 'regex:/^(?=.*\d)(?=.*[a-zA-Z])/'],
         ]);
 
-        $dto = (object)[
+        $dto = (object) [
             'userId' => $auth->id(),
             'password' => $input['password'],
         ];
@@ -99,10 +99,10 @@ class AuthPinController extends RestApiController
     ) {
         $input = $this->validate($request, [
             'pin' => ['required', 'string', 'min:6', 'max:6'],
-            'code' => ['required', 'string', 'min:4', 'max:4']
+            'code' => ['required', 'string', 'min:4', 'max:4'],
         ]);
 
-        $dto = (object)[
+        $dto = (object) [
             'userId' => $auth->id(),
             'pin' => $input['pin'],
             'code' => $input['code'],
@@ -112,5 +112,4 @@ class AuthPinController extends RestApiController
 
         return $this->responseOk();
     }
-
 }

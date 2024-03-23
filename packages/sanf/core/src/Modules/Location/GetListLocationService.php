@@ -2,7 +2,6 @@
 
 namespace Sanf\Core\Modules\Location;
 
-
 class GetListLocationService
 {
     protected $repository;
@@ -16,13 +15,13 @@ class GetListLocationService
     {
         $data = $this->repository->list($dto);
 
-        return (object)[
+        return (object) [
             'data' => $data['lists'],
-            'paginate' => (object)[
-                'total' => (int)$data['total'],
-                'count' => (int)$data['count'],
-                'skip' => (int)$dto->skip,
-                'limit' => (int)$dto->limit,
+            'paginate' => (object) [
+                'total' => (int) $data['total'],
+                'count' => (int) $data['count'],
+                'skip' => (int) $dto->skip,
+                'limit' => (int) $dto->limit,
                 'sort_by' => $dto->sort_by,
             ],
         ];

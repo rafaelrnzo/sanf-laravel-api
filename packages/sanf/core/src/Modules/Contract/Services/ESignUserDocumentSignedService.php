@@ -80,10 +80,10 @@ final class ESignUserDocumentSignedService implements ApplicationServiceInterfac
         ]);
         $document->email = $documentAssignee->email ?? $dto->email;
         $document->signs = [
-            (object)[
+            (object) [
                 'email' => $documentAssignee->email ?? $dto->email,
-                'document_sign_url' => $documentAssignee->document_sign_url ?? null
-            ]
+                'document_sign_url' => $documentAssignee->document_sign_url ?? null,
+            ],
         ];
 
         return $document;

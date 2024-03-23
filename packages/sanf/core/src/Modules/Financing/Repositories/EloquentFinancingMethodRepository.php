@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Financing\Repositories;
 
 use NbsPhp\Core\Repositories\AbstractEloquentRepository;
@@ -39,20 +38,23 @@ class EloquentFinancingMethodRepository extends AbstractEloquentRepository imple
                 'name',
                 'interest_rate',
             ])
-            ->where('id',$id)
+            ->where('id', $id)
             ->first();
+
         return $this->stripEloquentModel($models);
     }
 
     public function get($specification)
     {
         $models = $specification->buildQuery($this->model)->first();
+
         return $this->stripEloquentModel($models);
     }
 
     public function query($specification)
     {
         $models = $specification->buildQuery($this->model)->get();
+
         return $this->stripEloquentModel($models);
     }
 
@@ -61,7 +63,7 @@ class EloquentFinancingMethodRepository extends AbstractEloquentRepository imple
         if (!is_null($specification)) {
             return $specification->buildQuery($this->model)->count();
         }
+
         return $this->model->newQuery()->select('id')->count();
     }
 }
-

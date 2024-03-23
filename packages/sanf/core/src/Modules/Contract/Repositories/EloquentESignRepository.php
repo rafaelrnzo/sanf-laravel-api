@@ -109,6 +109,7 @@ class EloquentESignRepository extends AbstractEloquentRepository implements ESig
         if (!is_null($specification)) {
             return $specification->buildQuery($this->eSignDocumentAssigneeModel)->count();
         }
+
         return $this->$this->eSignDocumentAssigneeModel->newQuery()->select('id')->count();
     }
 

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Asset;
-
 
 use Spatie\DataTransferObject\DataTransferObject;
 

@@ -9,7 +9,7 @@ use Symfony\Component\String\Inflector\EnglishInflector;
 use function Symfony\Component\String\u;
 
 /**
-* @mixin \NbsPhp\ApiWrapper\Resource\ApiResource
+ * @mixin \NbsPhp\ApiWrapper\Resource\ApiResource
  */
 trait Update
 {
@@ -35,11 +35,16 @@ trait Update
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException
      */
-    public static function update($id, array $attributes, array $options = [],
-                                  GuzzleClient $client = null): ApiResource
+    public static function update(
+        $id,
+        array $attributes,
+        array $options = [],
+        GuzzleClient $client = null
+    ): ApiResource
     {
         $instance = static::cast([]);
         $instance->setAttribute($instance->getIdField(), $id);
+
         return $instance->updateAttributes($attributes, $options, $client);
     }
 

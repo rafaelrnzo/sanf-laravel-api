@@ -44,6 +44,7 @@ class EloquentBrowseUserAuthLogByUserIdSpecification
 
         $statusId = $this->statusId;
         $keyword = $this->keyword;
+
         return $model->newQuery()
             ->select([
                 'user_auth_log.id',

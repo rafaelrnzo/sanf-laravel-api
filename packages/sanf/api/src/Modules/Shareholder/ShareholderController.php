@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Api\Modules\Shareholder;
-
 
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
@@ -17,20 +15,20 @@ class ShareholderController extends RestApiController
     public function postCreate(Request $request, CreateShareholderService $service, string $xid)
     {
         $this->validate($request, [
-            "title" => ["required", "string"],
-            "name" => ["required", "string"],
-            "share_percentage" => ["required", "string"],
-            "position" => ["nullable", "string"],
-            "type" => ["required", "string", "in:C,P"],
+            'title' => ['required', 'string'],
+            'name' => ['required', 'string'],
+            'share_percentage' => ['required', 'string'],
+            'position' => ['nullable', 'string'],
+            'type' => ['required', 'string', 'in:C,P'],
         ]);
 
         $dto = new CreateShareholderDto([
-            "id" => $xid,
-            "title" => $request->input('title'),
-            "name" => $request->input('name'),
-            "job" => $request->input('position'),
-            "percentage" => $request->input('share_percentage'),
-            "type" => $request->input('type'),
+            'id' => $xid,
+            'title' => $request->input('title'),
+            'name' => $request->input('name'),
+            'job' => $request->input('position'),
+            'percentage' => $request->input('share_percentage'),
+            'type' => $request->input('type'),
         ]);
 
         $result = $service->execute($dto);
@@ -41,7 +39,7 @@ class ShareholderController extends RestApiController
     public function getList(GetListShareholderService $service, string $xid)
     {
         $dto = new GetListShareholderDto([
-            'xid' => $xid
+            'xid' => $xid,
         ]);
         $result = $service->execute($dto);
 
@@ -51,38 +49,41 @@ class ShareholderController extends RestApiController
     public function getDetail(Request $request)
     {
         $result = [
-                "no" => "10",
-                "title" => "MR.",
-                "name" => "SANTOS IBRAHIM NOOR",
-                "share_percentage" => "0",
-                "position" => "DIREKTUR",
-                'type' => "P"
+                'no' => '10',
+                'title' => 'MR.',
+                'name' => 'SANTOS IBRAHIM NOOR',
+                'share_percentage' => '0',
+                'position' => 'DIREKTUR',
+                'type' => 'P',
             ];
         $result = json_decode(json_encode($result));
+
         return fractal($result, ShareholderTransformer::class);
     }
 
-    public function putUpdate(Request $request,
-                              UpdateShareholderService $service,
-                              string $xid,
-                              string $no)
+    public function putUpdate(
+        Request $request,
+        UpdateShareholderService $service,
+        string $xid,
+        string $no
+    )
     {
         $this->validate($request, [
-            "title" => ["required", "string"],
-            "name" => ["required", "string"],
-            "share_percentage" => ["required", "string"],
-            "position" => ["nullable", "string"],
-            "type" => ["required", "string", "in:C,P"],
+            'title' => ['required', 'string'],
+            'name' => ['required', 'string'],
+            'share_percentage' => ['required', 'string'],
+            'position' => ['nullable', 'string'],
+            'type' => ['required', 'string', 'in:C,P'],
         ]);
 
         $dto = new UpdateShareholderDto([
-            "id" => $xid,
-            "no" => $no,
-            "title" => $request->input('title'),
-            "name" => $request->input('name'),
-            "job" => $request->input('position'),
-            "percentage" => $request->input('share_percentage'),
-            "type" => $request->input('type'),
+            'id' => $xid,
+            'no' => $no,
+            'title' => $request->input('title'),
+            'name' => $request->input('name'),
+            'job' => $request->input('position'),
+            'percentage' => $request->input('share_percentage'),
+            'type' => $request->input('type'),
         ]);
 
         $result = $service->execute($dto);
@@ -93,8 +94,8 @@ class ShareholderController extends RestApiController
     public function delete(DeleteShareholderService $service, string $xid, string $no)
     {
         $dto = new DeleteShareholderDto([
-            "id" => $xid,
-            "no" => $no,
+            'id' => $xid,
+            'no' => $no,
         ]);
 
         $result = $service->execute($dto);

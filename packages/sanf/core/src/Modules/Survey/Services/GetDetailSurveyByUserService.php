@@ -20,7 +20,6 @@ class GetDetailSurveyByUserService extends UserService implements ApplicationSer
      */
     protected SanfCoreApiClient $internalApiClient;
 
-
     /**
      * @param AuthModel $userRepository
      * @param SanfCoreApiClient $internalApiClient
@@ -30,7 +29,6 @@ class GetDetailSurveyByUserService extends UserService implements ApplicationSer
         parent::__construct($userRepository);
         $this->internalApiClient = $internalApiClient;
     }
-
 
     /**
      * @param null $dto
@@ -61,7 +59,7 @@ class GetDetailSurveyByUserService extends UserService implements ApplicationSer
                     try {
                         if ($file->IMAGE) {
                             $metadata = Storage::getMetaData($file->IMAGE);
-                            $imageFiles[] = (object)[
+                            $imageFiles[] = (object) [
                                 'file_name' => $metadata['path'],
                                 'origin_name' => $metadata['filename'] ?? null,
                                 'url' => Storage::url($file->IMAGE),
@@ -72,15 +70,15 @@ class GetDetailSurveyByUserService extends UserService implements ApplicationSer
                     }
                 }
 
-                $items[] = (object)[
+                $items[] = (object) [
                     'code' => $item->DOC_ID_SURVEY ?? null,
                     'title' => $item->DESCRIPTION ?? null,
                     'description' => $item->NOTE ?? null,
-                    'image_files' => $imageFiles ?? null
+                    'image_files' => $imageFiles ?? null,
                 ];
             }
 
-            $data = (object)[
+            $data = (object) [
                 'branch_id' => $surveyData->BR_ID ?? null,
                 'profile_xid' => $surveyData->CUST_ID ?? null,
                 'contract_no' => $surveyData->REG_NO ?? null,
@@ -92,21 +90,21 @@ class GetDetailSurveyByUserService extends UserService implements ApplicationSer
                 'items' => $items ?? null,
             ];
         } catch (SanfInternalApiDataNotFoundException $exception) {
-            return (object)[
+            return (object) [
                 'data' => [],
-                'paginate' => (object)[
+                'paginate' => (object) [
                     'total' => 0,
                     'count' => 0,
                     'skip' => $dto->skip,
                     'limit' => $dto->limit,
                     'sortBy' => $dto->sortBy,
-                ]
+                ],
             ];
         }
 
-        return (object)[
+        return (object) [
             'data' => $data,
-            'paginate' => (object)[
+            'paginate' => (object) [
                 'total' => $response->total ?? $response->count,
                 'count' => $response->count ?? 0,
                 'skip' => $dto->skip,

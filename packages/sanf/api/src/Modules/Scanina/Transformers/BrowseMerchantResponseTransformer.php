@@ -9,10 +9,10 @@ class BrowseMerchantResponseTransformer extends TransformerAbstract
 {
     public function transform($dto): array
     {
-        /** @var BrowseMerchantResponseDto $dto */
+        /* @var BrowseMerchantResponseDto $dto */
         return [
             'xid' => $dto->xid ?? $dto->id,
-            'name' => (string)optional($dto)->shopName,
+            'name' => (string) optional($dto)->shopName,
         ];
     }
 }

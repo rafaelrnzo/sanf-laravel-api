@@ -55,7 +55,7 @@ class GuzzleLoggerServiceProvider extends ServiceProvider
                                     'status' => $res->getStatusCode(),
                                     'headers' => $res->getHeaders(),
                                     'body' => $res->getBody()->getContents(),
-                                ]
+                                ],
                             ]);
 
                             // Move pointer to the beginning of the stream
@@ -72,7 +72,7 @@ class GuzzleLoggerServiceProvider extends ServiceProvider
                                     'status' => $e->hasResponse() ? $e->getResponse()->getStatusCode() : $e->getCode(),
                                     'message' => $e->getMessage(),
                                     'body' => $e->hasResponse() ? $e->getResponse()->getBody()->getContents() : null,
-                                ]
+                                ],
                             ]);
                         }
                     );
@@ -93,6 +93,7 @@ class GuzzleLoggerServiceProvider extends ServiceProvider
                         $requestContent = json_decode($requestBody, true);
                         $promise->then(function (ResponseInterface $response) use ($request, $requestContent, $userId) {
                             $responseContent = json_decode($response->getBody(), true);
+
                             return dispatch(new LogApiRequestToDatabaseJob(
                                 $request,
                                 $requestContent,
@@ -104,6 +105,7 @@ class GuzzleLoggerServiceProvider extends ServiceProvider
                     })
                 );
             }
+
             return new \GuzzleHttp\Client([
                 'handler' => $handlerStack,
             ]);

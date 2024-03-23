@@ -1,8 +1,6 @@
 <?php
 
-
 namespace NbsPhp\Core\Services;
-
 
 use Carbon\Carbon;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
@@ -18,6 +16,7 @@ class CreatePasswordService implements ApplicationServiceInterface
         }
         $user->password = bcrypt($dto->password);
         $user->password_updated_at = Carbon::now();
+
         return $user->save();
     }
 }

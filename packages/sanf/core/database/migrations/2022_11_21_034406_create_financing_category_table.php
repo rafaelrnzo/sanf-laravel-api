@@ -27,7 +27,7 @@ class CreateFinancingCategoryTable extends Migration
         });
 
         DB::table('financing_category')->insertOrIgnore([
-            ['id' => 1, 'xid' => 'jtl-CKbzYXXYollyRGekv', 'title' => 'Lorem ipsum', 'description' => '<h2>Lorem ipsum..</h2>', 'icon_url' => 'https://via.placeholder.com/100x100.png?text=Icon', 'image_url' => 'https://via.placeholder.com/400x400.png?text=Image', 'button_label' => 'Lorem Ipsum', 'button_value' => 'financingMethodId', 'created_at' => '2022-01-01 00:00:00',],
+            ['id' => 1, 'xid' => 'jtl-CKbzYXXYollyRGekv', 'title' => 'Lorem ipsum', 'description' => '<h2>Lorem ipsum..</h2>', 'icon_url' => 'https://via.placeholder.com/100x100.png?text=Icon', 'image_url' => 'https://via.placeholder.com/400x400.png?text=Image', 'button_label' => 'Lorem Ipsum', 'button_value' => 'financingMethodId', 'created_at' => '2022-01-01 00:00:00'],
         ]);
     }
 

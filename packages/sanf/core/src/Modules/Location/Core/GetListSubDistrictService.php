@@ -1,14 +1,11 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Location\Core;
-
 
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class GetListSubDistrictService
 {
-
     protected SanfCoreApiClient $client;
 
     public function __construct(SanfCoreApiClient $client)
@@ -22,13 +19,13 @@ class GetListSubDistrictService
 
         return collect($response['data'])
             ->map(function ($item) {
-                return (object)[
-                    "country_id" => $item['COUNTRY_ID'] ?? '',
-                    "province_id" => $item['PROVINSI_ID'] ?? '',
-                    "city_id" => $item['CITY_ID'] ?? '',
-                    "district_name" => ucwords(strtolower($item['DISTRICT'] ?? '')),
-                    "sub_district_name" => ucwords(strtolower($item['SUBDISTRICT'] ?? '')),
-                    "postcode" => $item['POSTCODE'] ?? '',
+                return (object) [
+                    'country_id' => $item['COUNTRY_ID'] ?? '',
+                    'province_id' => $item['PROVINSI_ID'] ?? '',
+                    'city_id' => $item['CITY_ID'] ?? '',
+                    'district_name' => ucwords(strtolower($item['DISTRICT'] ?? '')),
+                    'sub_district_name' => ucwords(strtolower($item['SUBDISTRICT'] ?? '')),
+                    'postcode' => $item['POSTCODE'] ?? '',
                 ];
             });
     }

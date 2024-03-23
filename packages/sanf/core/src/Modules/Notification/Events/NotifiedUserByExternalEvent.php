@@ -6,7 +6,6 @@ use NbsPhp\Core\Event;
 
 class NotifiedUserByExternalEvent extends Event
 {
-
     public array $contents;
 
     public function __construct(array $contents)

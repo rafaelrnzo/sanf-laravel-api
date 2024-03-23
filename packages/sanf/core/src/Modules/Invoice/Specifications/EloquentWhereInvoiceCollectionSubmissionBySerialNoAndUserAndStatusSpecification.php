@@ -23,6 +23,7 @@ final class EloquentWhereInvoiceCollectionSubmissionBySerialNoAndUserAndStatusSp
             ->where('user_id', $this->userId)
             ->where('serial_no', $this->serialNo)
             ->where('status_id', $this->status);
+
         return $query;
     }
 }

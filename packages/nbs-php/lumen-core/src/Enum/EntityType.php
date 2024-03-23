@@ -1,14 +1,11 @@
 <?php
 
-
 namespace NbsPhp\Core\Enum;
-
 
 use MyCLabs\Enum\Enum;
 
 /**
- * Class EntityType
- * @package NbsPhp\Core\Enum
+ * Class EntityType.
  * @method static ADMIN()
  * @method static MOBILE()
  */

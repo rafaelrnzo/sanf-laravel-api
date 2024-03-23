@@ -6,12 +6,11 @@ use League\Fractal\TransformerAbstract;
 
 class PlafondTypeListTransformer extends TransformerAbstract
 {
-
     public function transform($item)
     {
         return [
-            "id" => $item->id,
-            "name" => $item->title,
+            'id' => $item->id,
+            'name' => $item->title,
         ];
     }
 }

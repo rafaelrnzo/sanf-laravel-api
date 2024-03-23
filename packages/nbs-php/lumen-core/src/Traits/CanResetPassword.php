@@ -2,9 +2,7 @@
 
 namespace NbsPhp\Core\Traits;
 
-
 use NbsPhp\Core\Notifications\ResetPasswordNotification;
-use NbsPhp\Core\Notifications\VerifyEmailNotification;
 
 trait CanResetPassword
 {

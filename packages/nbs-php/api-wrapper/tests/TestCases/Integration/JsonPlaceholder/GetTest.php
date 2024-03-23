@@ -20,7 +20,7 @@ class GetTest extends TestCase
 
     /**
      * Expected Behavior:
-     * - ApiResource instance with correct attributes returned
+     * - ApiResource instance with correct attributes returned.
      */
     public function testGet()
     {
@@ -32,13 +32,13 @@ class GetTest extends TestCase
 
     /**
      * Expected Behavior:
-     * - ApiResource instance with correct attributes returned (same instance)
+     * - ApiResource instance with correct attributes returned (same instance).
      */
     public function testRefresh()
     {
         $original = [
             'id' => 1,
-            'title' => 'Not the real title'
+            'title' => 'Not the real title',
         ];
         $resource = new JsonPlaceholderPost($original);
         $response = $resource->refresh();
@@ -51,13 +51,13 @@ class GetTest extends TestCase
 
     /**
      * Expected Behavior:
-     * - ApiResource instance with correct attributes returned (new instance)
+     * - ApiResource instance with correct attributes returned (new instance).
      */
     public function testFresh()
     {
         $original = [
             'id' => 1,
-            'title' => 'Not the real title'
+            'title' => 'Not the real title',
         ];
         $resource = new JsonPlaceholderPost($original);
         $response = $resource->fresh();

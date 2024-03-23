@@ -22,10 +22,10 @@ class FrequentlyAskQuestionByExternalController extends RestApiController
             'limit' => 'nullable|integer',
             'skip' => 'nullable|integer',
             'keyword' => 'nullable|string|max:255',
-            'sort_by' => ['nullable', Rule::in(['asc', 'desc',])],
+            'sort_by' => ['nullable', Rule::in(['asc', 'desc'])],
         ]);
 
-        $dto = (object)[
+        $dto = (object) [
             'keyword' => $input['keyword'] ?? null,
             'limit' => $input['limit'] ?? null,
             'skip' => $input['skip'] ?? null,
@@ -34,7 +34,7 @@ class FrequentlyAskQuestionByExternalController extends RestApiController
         $result = $service->execute($dto);
 
         return fractal($result->data, BrowseFrequentlyAskQuestionTransformer::class)
-            ->paginateWith( new LazyPaginatorAdapter($result->paginate));
+            ->paginateWith(new LazyPaginatorAdapter($result->paginate));
     }
 
     public function postAdd(

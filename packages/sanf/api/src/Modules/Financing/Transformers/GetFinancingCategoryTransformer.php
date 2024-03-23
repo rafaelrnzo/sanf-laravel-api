@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Sanf\Api\Modules\Financing\Transformers;
 
 use League\Fractal\TransformerAbstract;
@@ -20,5 +19,4 @@ class GetFinancingCategoryTransformer extends TransformerAbstract
             'created_at' => unix_timestamp($item->created_at),
         ];
     }
-
 }

@@ -10,7 +10,6 @@ use Sanf\Core\Modules\Scanina\Specifications\ScaninaProductSpecificationInterfac
 
 class GuzzleBrowseProductSparePartService implements ApplicationServiceInterface
 {
-
     private ScaninaProductRepositoryInterface $repository;
     private ScaninaProductSpecificationInterface $specification;
 
@@ -25,18 +24,17 @@ class GuzzleBrowseProductSparePartService implements ApplicationServiceInterface
     public function execute($dto = null)
     {
         /** @var BrowseProductSparePartRequestDto $dto */
-
         $response = $this->repository->get(
             $this->specification->getSparePart($dto)
         );
 
         $responseProductSparePart = array_map(function ($buyItem) {
-            return new BrowseProductSparepartResponseDto((array)$buyItem);
+            return new BrowseProductSparepartResponseDto((array) $buyItem);
         }, $response->data->rows);
 
-        return (object)[
+        return (object) [
             'data' => $responseProductSparePart,
-            'paginate' => (object)[
+            'paginate' => (object) [
                 'total' => $response->data->metadata->total ?? 0,
                 'count' => $response->data->metadata->count ?? 0,
                 'skip' => $dto->skip,

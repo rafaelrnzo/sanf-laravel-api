@@ -1,6 +1,5 @@
 <?php
 
-
 namespace NbsPhp\Core\Middleware;
 
 use Closure;

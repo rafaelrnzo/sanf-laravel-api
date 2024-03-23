@@ -8,11 +8,10 @@ class InsuranceClaimSubmissionHistoryModel extends AbstractModel
 {
     public const UPDATED_AT = null;
 
-
     protected $table = 'insurance_claim_submission_history';
 
     protected $casts = [
-        'created_by' => 'object'
+        'created_by' => 'object',
     ];
 
     public function status()

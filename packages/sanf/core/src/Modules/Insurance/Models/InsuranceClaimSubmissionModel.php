@@ -2,7 +2,6 @@
 
 namespace Sanf\Core\Modules\Insurance\Models;
 
-
 use NbsPhp\Core\Models\AbstractModel;
 
 class InsuranceClaimSubmissionModel extends AbstractModel
@@ -11,7 +10,7 @@ class InsuranceClaimSubmissionModel extends AbstractModel
 
     protected $casts = [
         'location_metadata' => 'object',
-        'image_files' => 'array'
+        'image_files' => 'array',
     ];
 
     public function status()

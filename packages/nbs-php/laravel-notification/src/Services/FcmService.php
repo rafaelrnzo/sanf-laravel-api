@@ -38,8 +38,8 @@ class FcmService implements PushNotificationServiceInterface
             'topic' => $topic,
             'notification' => [
                 // https://firebase.google.com/docs/reference/fcm/rest/v1/projects.messages#notification
-                'title' => (string)$data['title'],
-                'body' => (string)$data['body'],
+                'title' => (string) $data['title'],
+                'body' => (string) $data['body'],
             ],
             'data' => array_merge([
                 'sound' => 'default',
@@ -62,12 +62,12 @@ class FcmService implements PushNotificationServiceInterface
             'webpush' => [
                 // https://firebase.google.com/docs/reference/fcm/rest/v1/projects.messages#webpushconfig
                 'notification' => [
-                    'title' => (string)$data['title'],
-                    'body' => (string)$data['body'],
-                    'icon' => (string)($data['icon'] ?? ''),
+                    'title' => (string) $data['title'],
+                    'body' => (string) $data['body'],
+                    'icon' => (string) ($data['icon'] ?? ''),
                 ],
                 'fcm_options' => [
-                    'link' => (string)($data['link'] ?? ''),
+                    'link' => (string) ($data['link'] ?? ''),
                 ],
             ],
         ];
@@ -86,8 +86,8 @@ class FcmService implements PushNotificationServiceInterface
             'token' => $token,
             'notification' => [
                 // https://firebase.google.com/docs/reference/fcm/rest/v1/projects.messages#notification
-                'title' => (string)$data['title'],
-                'body' => (string)$data['body'],
+                'title' => (string) $data['title'],
+                'body' => (string) $data['body'],
             ],
             'data' => array_merge([
                 'sound' => 'default',
@@ -110,12 +110,12 @@ class FcmService implements PushNotificationServiceInterface
             'webpush' => [
                 // https://firebase.google.com/docs/reference/fcm/rest/v1/projects.messages#webpushconfig
                 'notification' => [
-                    'title' => (string)$data['title'],
-                    'body' => (string)$data['body'],
-                    'icon' => (string)($data['icon'] ?? ''),
+                    'title' => (string) $data['title'],
+                    'body' => (string) $data['body'],
+                    'icon' => (string) ($data['icon'] ?? ''),
                 ],
                 'fcm_options' => [
-                    'link' => (string)($data['link'] ?? ''),
+                    'link' => (string) ($data['link'] ?? ''),
                 ],
             ],
         ];

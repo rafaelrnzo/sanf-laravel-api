@@ -19,6 +19,7 @@ class EloquentFinancingApplicationRepository extends AbstractEloquentRepository 
     public function findById($id)
     {
         $model = $this->model->newQuery()->with(['status', 'objects', 'facility', 'method'])->find($id);
+
         return $this->stripEloquentModel($model);
     }
 
@@ -29,12 +30,14 @@ class EloquentFinancingApplicationRepository extends AbstractEloquentRepository 
             ->where('profile_xid', $xid)
             ->where('xid', $applicationXid)
             ->with(['status', 'objects', 'facility', 'method'])->first();
+
         return $this->stripEloquentModel($model);
     }
 
     public function query($specification)
     {
         $models = $specification->buildQuery($this->model)->get();
+
         return $this->stripEloquentModel($models);
     }
 
@@ -44,12 +47,14 @@ class EloquentFinancingApplicationRepository extends AbstractEloquentRepository 
             $fieldFinancingObjects = $fields['financing_objects'];
             $fieldFinancingApplication = collect($fields)->except(['financing_objects'])->toArray();
             $model = $this->model->newQuery()->forceCreate($fieldFinancingApplication);
-            $financingObjects = array_map(function($item) {
+            $financingObjects = array_map(function ($item) {
                 return new FinancingObjectModel($item);
             }, $fieldFinancingObjects);
             $model->objects()->saveMany($financingObjects);
+
             return $model;
         });
+
         return $this->stripEloquentModel($model);
     }
 
@@ -57,10 +62,12 @@ class EloquentFinancingApplicationRepository extends AbstractEloquentRepository 
     {
         if (!is_null($specification)) {
             $model = $specification->buildQuery($this->model)->update($fields);
+
             return $this->stripEloquentModel($model);
         }
 
         $model = $this->model->newQuery()->where('id', $fields['id'])->update($fields);
+
         return $this->stripEloquentModel($model);
     }
 
@@ -84,6 +91,7 @@ class EloquentFinancingApplicationRepository extends AbstractEloquentRepository 
         if (!is_null($specification)) {
             return $specification->buildQuery($this->model)->count();
         }
+
         return $this->model->newQuery()->select('id')->count();
     }
 }

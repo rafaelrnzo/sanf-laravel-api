@@ -21,18 +21,21 @@ class EloquentInvoiceCollectionSubmissionRepository extends AbstractEloquentRepo
     public function findById($id)
     {
         $model = $this->model->newQuery()->with(['user', 'status'])->find($id);
+
         return $this->stripEloquentModel($model);
     }
 
     public function findByXid($xid)
     {
         $model = $this->model->newQuery()->where('xid', $xid)->with(['user', 'status'])->first();
+
         return $this->stripEloquentModel($model);
     }
 
     public function query($specification)
     {
         $models = $specification->buildQuery($this->model)->get();
+
         return $this->stripEloquentModel($models);
     }
 
@@ -43,16 +46,19 @@ class EloquentInvoiceCollectionSubmissionRepository extends AbstractEloquentRepo
             $this->historyModel->newQuery()->forceCreate([
                 'submission_id' => $model->id,
                 'status_id' => $model->status_id,
-                'created_by' => new \stdClass() //TODO SNAPSHOT
+                'created_by' => new \stdClass(), //TODO SNAPSHOT
             ]);
+
             return $model;
         });
+
         return $this->stripEloquentModel($model);
     }
 
     public function update($fields)
     {
         $model = $this->model->newQuery()->where('id', $fields['id'])->update($fields);
+
         return $this->stripEloquentModel($model);
     }
 
@@ -66,6 +72,7 @@ class EloquentInvoiceCollectionSubmissionRepository extends AbstractEloquentRepo
         if (!is_null($specification)) {
             return $specification->buildQuery($this->model)->count();
         }
+
         return $this->model->newQuery()->select('id')->count();
     }
 }

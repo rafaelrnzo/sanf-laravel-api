@@ -94,7 +94,7 @@ class VendorPublishCommand extends Command
             $this->option('provider'), (array) $this->option('tag'),
         ];
 
-        if (! $this->provider && ! $this->tags) {
+        if (!$this->provider && !$this->tags) {
             $this->promptForProviderOrTag();
         }
     }
@@ -179,7 +179,8 @@ class VendorPublishCommand extends Command
     protected function pathsToPublish($tag)
     {
         return ServiceProvider::pathsToPublish(
-            $this->provider, $tag
+            $this->provider,
+            $tag
         );
     }
 
@@ -210,7 +211,7 @@ class VendorPublishCommand extends Command
      */
     protected function publishFile($from, $to)
     {
-        if (! $this->files->exists($to) || $this->option('force')) {
+        if (!$this->files->exists($to) || $this->option('force')) {
             $this->createParentDirectory(dirname($to));
 
             $this->files->copy($from, $to);
@@ -245,8 +246,8 @@ class VendorPublishCommand extends Command
     protected function moveManagedFiles($manager)
     {
         foreach ($manager->listContents('from://', true) as $file) {
-            if ($file['type'] === 'file' && (! $manager->has('to://'.$file['path']) || $this->option('force'))) {
-                $manager->put('to://'.$file['path'], $manager->read('from://'.$file['path']));
+            if ($file['type'] === 'file' && (!$manager->has('to://' . $file['path']) || $this->option('force'))) {
+                $manager->put('to://' . $file['path'], $manager->read('from://' . $file['path']));
             }
         }
     }
@@ -259,7 +260,7 @@ class VendorPublishCommand extends Command
      */
     protected function createParentDirectory($directory)
     {
-        if (! $this->files->isDirectory($directory)) {
+        if (!$this->files->isDirectory($directory)) {
             $this->files->makeDirectory($directory, 0755, true);
         }
     }
@@ -278,6 +279,6 @@ class VendorPublishCommand extends Command
 
         $to = str_replace(base_path(), '', realpath($to));
 
-        $this->line('<info>Copied '.$type.'</info> <comment>['.$from.']</comment> <info>To</info> <comment>['.$to.']</comment>');
+        $this->line('<info>Copied ' . $type . '</info> <comment>[' . $from . ']</comment> <info>To</info> <comment>[' . $to . ']</comment>');
     }
 }

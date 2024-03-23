@@ -28,6 +28,7 @@ class RestProfileRepository implements ProfileRepositoryInterface
             if (empty($response['data'])) {
                 return null;
             }
+
             return $this->factory->make($response['data'][0]);
         } catch (SanfInternalApiDataNotFoundException $exception) {
             return null;
@@ -38,6 +39,7 @@ class RestProfileRepository implements ProfileRepositoryInterface
     {
         try {
             $response = $this->client->findCustomerByEmail($email);
+
             return array_map(function ($item) {
                 return $this->factory->make($item);
             }, $response['data']);
@@ -54,6 +56,7 @@ class RestProfileRepository implements ProfileRepositoryInterface
             if (empty($response['data'])) {
                 return null;
             }
+
             return $this->factory->make($profile);
         } catch (SanfInternalApiDataNotFoundException $exception) {
             return null;

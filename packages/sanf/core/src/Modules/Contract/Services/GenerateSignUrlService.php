@@ -58,7 +58,7 @@ final class GenerateSignUrlService implements ApplicationServiceInterface
             'updated_at' => Carbon::now(),
         ]);
 
-        return (object)[
+        return (object) [
             'url' => $result['data']['url'] ?? null,
             'createdAt' => Carbon::now(),
         ];

@@ -13,7 +13,6 @@ use Sanf\Core\Modules\Commodity\Events\CommodityCreatedEvent;
 
 class CreateCommodityByUserService extends CommodityByUserService implements ApplicationServiceInterface
 {
-
     /**
      * @param CreateCommodityDto|null $dto
      * @return mixed
@@ -41,7 +40,7 @@ class CreateCommodityByUserService extends CommodityByUserService implements App
                 $imageFile = [
                     'file_name' => $dto->imageFile,
                     'directory' => $metadata['dirname'] ?? $newPath,
-                    'path' => $metadata["path"],
+                    'path' => $metadata['path'],
                     'mime_type' => $metadata['mimetype'] ?? Storage::getMimeType("{$newPath}{$dto->imageFile}"),
                     'timestamp' => $metadata['timestamp'],
                     'size' => $metadata['size'],
@@ -66,7 +65,7 @@ class CreateCommodityByUserService extends CommodityByUserService implements App
 //            'modified_by' => //TODO USER SNAPSHOT
             'city_name' => $dto->locationMetadata['city_name'],
             'province_name' => $dto->locationMetadata['province_name'],
-            'image_path' => $imageFile['path'] ?? null
+            'image_path' => $imageFile['path'] ?? null,
         ]);
 
         event(new CommodityCreatedEvent($commodity));

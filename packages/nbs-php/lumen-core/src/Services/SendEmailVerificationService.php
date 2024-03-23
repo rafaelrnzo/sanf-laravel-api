@@ -1,8 +1,6 @@
 <?php
 
-
 namespace NbsPhp\Core\Services;
-
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use NbsPhp\Core\Exceptions\VerifyEmailFailedException;
@@ -20,7 +18,6 @@ class SendEmailVerificationService implements ApplicationServiceInterface
     {
         $this->repository = $repository;
     }
-
 
     public function execute($dto = null)
     {

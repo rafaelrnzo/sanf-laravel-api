@@ -2,7 +2,6 @@
 
 namespace Sanf\Core\Modules\Location;
 
-
 use Spatie\DataTransferObject\DataTransferObject;
 
 class GetListLocationDto extends DataTransferObject

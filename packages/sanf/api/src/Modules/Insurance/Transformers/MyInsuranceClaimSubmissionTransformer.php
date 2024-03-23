@@ -22,7 +22,7 @@ final class MyInsuranceClaimSubmissionTransformer extends TransformerAbstract
             'image_files' => fractal($dto->imageFiles, PrivateAssetFileSimpleTransformer::class)->serializeWith(new ArraySerializer()),
             'status' => fractal($dto->status, new InsuranceClaimSubmissionStatusTransformer()),
             'created_at' => unix_timestamp($dto->createdAt),
-            'updated_at' => unix_timestamp($dto->updatedAt)
+            'updated_at' => unix_timestamp($dto->updatedAt),
         ];
     }
 }

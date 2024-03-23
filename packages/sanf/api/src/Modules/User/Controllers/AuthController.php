@@ -12,7 +12,6 @@ use NbsPhp\Core\Services\ThrottleFailureService;
 use NbsPhp\Core\Services\VerifyEmailServiceInterface;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Core\Modules\User\Services\ActivateUserAndRegisterInternalService;
-use Sanf\Core\Modules\User\Services\ValidateUserAccountDeletionService;
 use Sanf\Core\Modules\User\Services\VerifyEmailAndRegisterInternalService;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
@@ -45,8 +44,8 @@ class AuthController extends \NbsPhp\Core\Controllers\AuthController
                 'devicePlatformId' => $input['device']['device_platform_id'],
                 'notificationToken' => $input['device']['notification_token'],
                 'notificationChannelId' => $input['device']['notification_channel_id'],
-                'metadata' => $input['device']['metadata']
-            ])
+                'metadata' => $input['device']['metadata'],
+            ]),
         ]);
         $throttleService = new ThrottleFailureService($request, $service);
         $user = $throttleService->execute($dto);

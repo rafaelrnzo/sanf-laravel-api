@@ -2,7 +2,6 @@
 
 namespace Sanf\Core\Modules\Financing\Repositories;
 
-
 interface FinancingApplicationRepositoryInterface
 {
     public function findById($id);

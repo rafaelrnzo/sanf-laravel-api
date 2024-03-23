@@ -2,7 +2,6 @@
 
 namespace NbsPhp\Notification\Listeners;
 
-
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Str;
@@ -82,6 +81,7 @@ class NotificationListener implements ShouldQueue
         foreach ($vars as $key => $value) {
             $varBraces['{' . $key . '}'] = $value;
         }
+
         return $varBraces;
     }
 
@@ -99,6 +99,7 @@ class NotificationListener implements ShouldQueue
         $data['body_formatted'] = strtr($data['body_formatted'] ?? $data['body'], $templateVars);
         $data['link'] = strtr($data['link'] ?? '', $templateVars);
         $data['icon'] = file_get_url($data['icon'] ?? config('notifications.default_icon'));
+
         return $data;
     }
 
@@ -113,6 +114,7 @@ class NotificationListener implements ShouldQueue
                     $notifiable = json_decode(json_encode($notifiable));
                     dispatch(new SendEmailNotificationJob($notifiable, $payload));
                 }
+
                 return;
             case 'database':
                 foreach ($notifiables as $notifiable) {
@@ -120,6 +122,7 @@ class NotificationListener implements ShouldQueue
                     $notifiable->type = 'user'; //TODO SET THIS SOMEWHERE
                     dispatch(new InsertDatabaseNotificationJob($notifiable, $payload));
                 }
+
                 return;
             case 'pushnotification':
                 // FOR NOW ONLY SUPPORTED FCM
@@ -127,6 +130,7 @@ class NotificationListener implements ShouldQueue
                 foreach ($fcmTokens as $fcmToken) {
                     dispatch(new SendPushNotificationJob($fcmToken, $payload));
                 }
+
                 return;
             default:
                 throw new \Exception('Notification: Undefined Driver ' . $provider);
@@ -138,7 +142,7 @@ class NotificationListener implements ShouldQueue
         //NEED QUERY IMPROVEMENT TO COLLECT UNIQUE VALUES FROM MULTIPLE TARGET
         $tokens = [];
         foreach ($targets as $target) {
-            $configs = config("notifications.targets");
+            $configs = config('notifications.targets');
             switch ($configs[$target]['type']) {
                 case 'permission':
                     $results = UserSessionModel::select('notification_token')
@@ -181,6 +185,7 @@ class NotificationListener implements ShouldQueue
                     throw new \Exception('Notification: undefined targets type' . $target['type']);
             }
         }
+
         return $tokens;
     }
 
@@ -189,7 +194,7 @@ class NotificationListener implements ShouldQueue
         //NEED QUERY IMPROVEMENT TO COLLECT UNIQUE VALUES FROM MULTIPLE TARGET
         $notifiables = collect();
         foreach ($targets as $target) {
-            $configs = config("notifications.targets");
+            $configs = config('notifications.targets');
             switch ($configs[$target]['type']) {
                 case 'permission':
                     $results = AuthModel::select('id', 'name', 'username as email')
@@ -217,6 +222,7 @@ class NotificationListener implements ShouldQueue
             }
             $notifiables = $notifiables->unique('id');
         }
+
         return $notifiables;
     }
 }

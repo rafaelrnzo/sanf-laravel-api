@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Staff;
-
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 
@@ -16,24 +14,27 @@ class ValidateEligibleProfileByStaffService extends StaffService implements Appl
             ->map(function ($item) use ($activeStaffCollections) {
                 if ($item->isPic) {
                     $item->isEligible = true;
+
                     return $item;
                 }
                 $staffCompany = $activeStaffCollections->firstWhere('company_xid', $item->xid);
                 if (!is_null($staffCompany)) {
                     $item->isEligible = true;
+
                     return $item;
                 }
                 $item->isEligible = false;
+
                 return $item;
             });
 
-        return (object)[
+        return (object) [
             'data' => $data,
-            'paginate' => (object)[
-                'total' => (int)$data->count(),
-                'count' => (int)$data->count(),
-                'skip' => (int)($dto->skip ?? null),
-                'limit' => (int)($dto->limit ?? null),
+            'paginate' => (object) [
+                'total' => (int) $data->count(),
+                'count' => (int) $data->count(),
+                'skip' => (int) ($dto->skip ?? null),
+                'limit' => (int) ($dto->limit ?? null),
                 'sort_by' => $dto->sort_by ?? null,
             ],
         ];

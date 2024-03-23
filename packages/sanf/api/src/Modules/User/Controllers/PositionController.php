@@ -14,6 +14,7 @@ class PositionController extends RestApiController
         $response = $service->execute();
 
         $data = fractal($response, PositionTransformer::class)->serializeWith(new ArraySerializer());
+
         return collect($data)->flatten()->all();
     }
 }

@@ -11,7 +11,7 @@ class MaintenanceModeByExternalController extends RestApiController
     {
         Artisan::call('maintenance:up');
 
-        return $this->responseOk(['message' => "The application alive after 5 seconds."]);
+        return $this->responseOk(['message' => 'The application alive after 5 seconds.']);
     }
 
     public function postDown()

@@ -26,8 +26,8 @@ class ReadSparePartCartByUserService implements ApplicationServiceInterface
             $this->productSpecification->readSparePart($dto->productXid)
         );
 
-        $data = (array)$productSparePartResponse->data;
-        $productSparePartResponseDto =  new ReadProductSparePartResponseDto($data);
+        $data = (array) $productSparePartResponse->data;
+        $productSparePartResponseDto = new ReadProductSparePartResponseDto($data);
         $productSparePartResponseDto->xid = $dto->productXid;
         $productSparePartResponseDto->customerReviews = [];
 

@@ -3,7 +3,6 @@
 namespace Sanf\Core\Modules\User\Services;
 
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Hash;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\User\AuthModel;

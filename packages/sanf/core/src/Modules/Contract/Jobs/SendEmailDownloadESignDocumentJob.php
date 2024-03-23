@@ -20,7 +20,6 @@ class SendEmailDownloadESignDocumentJob implements ShouldQueue
      *
      * @return void
      */
-
     public function __construct($recipient, $data)
     {
         $this->recipient = $recipient;
@@ -42,7 +41,8 @@ class SendEmailDownloadESignDocumentJob implements ShouldQueue
                 <blockquote style="margin: 0 3em;font-size: 16px; line-height: 150%;">
                     Berikut kami lampirkan dokumen yang telah selesai ditanda tangani.
                 </blockquote>
-            '))
+            '
+            ))
             ->line(
                 __('Email ini dibuat secara otomatis mohon tidak membalas email ini, jika terdapat keluhan silahkan hubungi Sanf Customer Service')
             )
@@ -55,5 +55,4 @@ class SendEmailDownloadESignDocumentJob implements ShouldQueue
 
         return Mail::to($this->recipient)->send($email);
     }
-
 }

@@ -9,7 +9,7 @@ use Symfony\Component\String\Inflector\EnglishInflector;
 use function Symfony\Component\String\u;
 
 /**
-* @mixin \NbsPhp\ApiWrapper\Resource\ApiResource
+ * @mixin \NbsPhp\ApiWrapper\Resource\ApiResource
  */
 trait Get
 {
@@ -28,7 +28,7 @@ trait Get
 
     /**
      * Call the "Get" Route for this Resource.
-     * @param string|integer $id
+     * @param string|int $id
      * @param array $options
      * @param GuzzleClient|null $client
      * @return static|null

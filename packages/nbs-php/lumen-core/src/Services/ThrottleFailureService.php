@@ -81,7 +81,6 @@ class ThrottleFailureService implements ApplicationServiceInterface
      *
      * @return mixed
      * @throws \Illuminate\Validation\ValidationException
-     *
      */
     protected function sendLockoutResponse(Request $request)
     {

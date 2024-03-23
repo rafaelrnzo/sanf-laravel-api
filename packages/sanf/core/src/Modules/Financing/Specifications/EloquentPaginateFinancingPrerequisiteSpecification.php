@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Financing\Specifications;
-
 
 use Sanf\Core\Modules\Financing\Models\FinancingPrerequisiteModel;
 
@@ -31,7 +29,7 @@ class EloquentPaginateFinancingPrerequisiteSpecification
             ->select([
                 'id',
                 'title',
-                'description'
+                'description',
             ])
             ->with('items')
             ->whereNull('parent_id')
@@ -43,8 +41,6 @@ class EloquentPaginateFinancingPrerequisiteSpecification
                 return $query->orderBy('created_at', $this->sort_by);
             });
 
-
         return $query;
     }
-
 }

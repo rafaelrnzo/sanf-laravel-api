@@ -5,12 +5,9 @@ namespace Sanf\Api\Modules\Scanina\Controllers\User;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
-use NbsPhp\Core\Database\TransactionalSessionInterface;
-use NbsPhp\Core\Services\TransactionalApplicationService;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
 use Sanf\Api\Modules\Scanina\Transformers\BrowseProductBuyResponseTransformer;
 use Sanf\Core\Modules\Scanina\Services\GuzzleBrowseProductBuyCartService;
-use Sanf\Core\Modules\Scanina\Services\GuzzleAddToCartBuyService;
 
 class BrowseBuyCartByUserController extends RestApiController
 {
@@ -27,7 +24,7 @@ class BrowseBuyCartByUserController extends RestApiController
             'keyword' => 'nullable|string|max:255',
         ]);
 
-        $dto = (object)[
+        $dto = (object) [
             'userId' => $userAuth->id(),
             'profileXid' => $xid,
             'skip' => $queryParam['skip'] ?? 0,

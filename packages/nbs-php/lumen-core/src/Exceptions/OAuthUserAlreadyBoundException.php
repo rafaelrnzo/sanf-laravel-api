@@ -1,8 +1,6 @@
 <?php
 
-
 namespace NbsPhp\Core\Exceptions;
-
 
 class OAuthUserAlreadyBoundException extends ApiException
 {

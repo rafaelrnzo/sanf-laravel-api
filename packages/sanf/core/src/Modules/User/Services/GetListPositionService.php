@@ -2,12 +2,11 @@
 
 namespace Sanf\Core\Modules\User\Services;
 
-use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 use function collect;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class GetListPositionService
 {
-
     protected $integrationListPosition;
 
     public function __construct(SanfCoreApiClient $integrationListPosition)
@@ -21,9 +20,9 @@ class GetListPositionService
 
         return collect($response['data'])
             ->map(function ($item) {
-                return (object)[
-                    "id" => $item['ID'] ?? '',
-                    "name" => $item['DESCRIPTION'] ?? '',
+                return (object) [
+                    'id' => $item['ID'] ?? '',
+                    'name' => $item['DESCRIPTION'] ?? '',
                 ];
             });
     }

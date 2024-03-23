@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 class JsonResponseMapper implements ResponseMapperInterface
 {
     /**
-     * Formatting Success Response
+     * Formatting Success Response.
      * @param Response $response
      * @return Response
      */
@@ -36,7 +36,7 @@ class JsonResponseMapper implements ResponseMapperInterface
         $responseSuccess = [
             'success' => true,
             'code' => $content['response_code'] ?? '200',
-            'message' => $content['message'] ?? 'OK'
+            'message' => $content['message'] ?? 'OK',
         ];
 
         if ($content != '') {
@@ -58,7 +58,7 @@ class JsonResponseMapper implements ResponseMapperInterface
     }
 
     /**
-     * Formatting Error Response
+     * Formatting Error Response.
      *
      * @param Response $response
      * @return Response
@@ -68,7 +68,7 @@ class JsonResponseMapper implements ResponseMapperInterface
         $exception = $response->exception;
         if ($exception) {
             $exceptionCode = $exception->getCode();
-            $errorMapping = config("response-codes." . get_class($exception)) ?? config("response-codes." . $exceptionCode);
+            $errorMapping = config('response-codes.' . get_class($exception)) ?? config('response-codes.' . $exceptionCode);
             list($error, $httpStatus) = $this->parseException($exception);
         } elseif ($response instanceof JsonResponse && $response->getStatusCode() == Response::HTTP_UNPROCESSABLE_ENTITY) {
             $decodedContent = json_decode($response->getContent(), true);
@@ -78,7 +78,7 @@ class JsonResponseMapper implements ResponseMapperInterface
                 'code' => '422',
                 'message' => 'Input Validation Error',
                 'timestamp' => date('Y-m-d H:i:s'),
-                'data' => $content
+                'data' => $content,
             ];
         } else {
             throw new Exception('Response Mappper: Unknown response error payload');
@@ -108,8 +108,8 @@ class JsonResponseMapper implements ResponseMapperInterface
 
         //TODO MOVE config loader outside class
         $exceptionCode = $exception->getCode();
-        $errorMapping = config("response-codes." . get_class($exception)) ?? config("response-codes." . $exceptionCode);
-        $error['code'] = $errorMapping['code'] ?? (string)Response::HTTP_INTERNAL_SERVER_ERROR;
+        $errorMapping = config('response-codes.' . get_class($exception)) ?? config('response-codes.' . $exceptionCode);
+        $error['code'] = $errorMapping['code'] ?? (string) Response::HTTP_INTERNAL_SERVER_ERROR;
         $error['message'] = $errorMapping['message'] ?? __('Internal Server Error');
 
         if ($exception instanceof ApiException) {
@@ -123,7 +123,7 @@ class JsonResponseMapper implements ResponseMapperInterface
         if ($exception instanceof ServerException) {
             $error['code'] = $errorMapping['code'] ?? $exception->getCode();
             if ($error['code'] == HttpResponse::HTTP_INTERNAL_SERVER_ERROR || $error['code'] == HttpResponse::HTTP_BAD_GATEWAY) {
-                $error['message'] = "Maaf, aplikasi sedang mengalami gangguan integrasi. Mohon hubungi CS";
+                $error['message'] = 'Maaf, aplikasi sedang mengalami gangguan integrasi. Mohon hubungi CS';
             }
         }
 
@@ -136,7 +136,7 @@ class JsonResponseMapper implements ResponseMapperInterface
                     'stack' => $exception->getFile() . ' - ' . $exception->getLine(),
                     'trace' => collect($exception->getTrace())->map(function ($trace) {
                         return Arr::except($trace, ['args']);
-                    })->all()
+                    })->all(),
                 ];
 
             //handle response for validation exception
@@ -149,6 +149,7 @@ class JsonResponseMapper implements ResponseMapperInterface
         if ($exception instanceof ApiException) {
             $httpStatus = $errorMapping['status'] ?? $exception->getStatus();
         }
+
         return [$error, $httpStatus];
     }
 }

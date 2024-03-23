@@ -15,7 +15,6 @@ use Sanf\Core\Modules\User\AuthModel;
 
 class UploadRequestedDocumentService implements ApplicationServiceInterface
 {
-
     private AuthModel $userRepository;
     private RequestedDocumentRepositoryInterface $eloquentRequestedDocRepository;
     private RequestedDocumentItemRepositoryInterface $eloquentRequestedDocItemRepository;

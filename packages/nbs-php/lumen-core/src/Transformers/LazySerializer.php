@@ -1,8 +1,6 @@
 <?php
 
-
 namespace NbsPhp\Core\Transformers;
-
 
 use Illuminate\Support\Facades\Request;
 use League\Fractal\Pagination\CursorInterface;
@@ -51,11 +49,11 @@ class LazySerializer extends BaseArraySerializer
     public function paginator(PaginatorInterface $paginator)
     {
         $pagination = [
-            'total' => (int)$paginator->getTotal(),
-            'count' => (int)$paginator->getCount(),
-            'skip' => (int)$paginator->getSkip(),
-            'limit' => (int)$paginator->getPerPage(),
-            'sort_by' => $this->getSortQueryParam()
+            'total' => (int) $paginator->getTotal(),
+            'count' => (int) $paginator->getCount(),
+            'skip' => (int) $paginator->getSkip(),
+            'limit' => (int) $paginator->getPerPage(),
+            'sort_by' => $this->getSortQueryParam(),
         ];
 
         return ['metadata' => $pagination];
@@ -68,7 +66,7 @@ class LazySerializer extends BaseArraySerializer
             'prev' => $cursor->getPrev(),
             'next' => $cursor->getNext(),
             'count' => (int) $cursor->getCount(),
-            'sort_by' => $this->getSortQueryParam()
+            'sort_by' => $this->getSortQueryParam(),
         ];
 
         return ['metadata' => $cursor];

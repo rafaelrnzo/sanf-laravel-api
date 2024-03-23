@@ -19,7 +19,6 @@ class AddFrequentlyAskQuestionService implements ApplicationServiceInterface
     public function execute($dto = null): bool
     {
         /** @var AddFrequentlyAskQuestionDto $dto */
-
         $category = $this->repository->findCategoryById($dto->categoryId);
         if (!$category) {
             throw new FrequentlyAskQuestionCategoryNotFoundException();
@@ -30,7 +29,7 @@ class AddFrequentlyAskQuestionService implements ApplicationServiceInterface
             'title' => $dto->title,
             'description' => $dto->description,
             'is_popular' => $dto->isPopular,
-            'order' => (double) $dto->order,
+            'order' => (float) $dto->order,
         ]);
 
         return true;

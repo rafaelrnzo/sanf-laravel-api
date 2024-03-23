@@ -2,10 +2,8 @@
 
 namespace Sanf\Core\Modules\Promo;
 
-
 class GetListPromoService
 {
-
     protected $repository;
 
     public function __construct(PromoRepositoryInterface $repository)
@@ -17,13 +15,13 @@ class GetListPromoService
     {
         $data = $this->repository->list($dto);
 
-        return (object)[
+        return (object) [
             'data' => $data['lists'],
-            'paginate' => (object)[
-                'total' => (int)$data['total'],
-                'count' => (int)$data['count'],
-                'skip' => (int)$dto->skip,
-                'limit' => (int)$dto->limit,
+            'paginate' => (object) [
+                'total' => (int) $data['total'],
+                'count' => (int) $data['count'],
+                'skip' => (int) $dto->skip,
+                'limit' => (int) $dto->limit,
                 'sort_by' => $dto->sort_by,
             ],
         ];

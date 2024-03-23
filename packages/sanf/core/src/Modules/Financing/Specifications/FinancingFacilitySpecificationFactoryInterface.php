@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Financing\Specifications;
-
 
 interface FinancingFacilitySpecificationFactoryInterface
 {

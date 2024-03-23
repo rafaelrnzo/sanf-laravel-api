@@ -22,7 +22,7 @@ class CreateTest extends TestCase
     {
         $data = [
             'title' => 'Inferno',
-            'body' => 'Abandon all hope ye who enter here'
+            'body' => 'Abandon all hope ye who enter here',
         ];
         $response = JsonPlaceholderPost::create($data);
 
@@ -38,7 +38,7 @@ class CreateTest extends TestCase
     {
         $data = [
             'title' => 'Inferno',
-            'body' => 'Abandon all hope ye who enter here'
+            'body' => 'Abandon all hope ye who enter here',
         ];
         $resource = new JsonPlaceholderPost($data);
         $response = $resource->store();

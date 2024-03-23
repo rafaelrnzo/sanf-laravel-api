@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Project\Services;
-
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Project\ProjectStatus;
@@ -33,9 +31,9 @@ class GetProjectMetadataByUserService extends ProjectByUserService implements Ap
             $this->specificationFactory->getAllOwned($dto->userId)
         );
 
-        return (object)[
+        return (object) [
             'publishedCount' => $publishedCount,
-            'totalCount' => $totalCount
+            'totalCount' => $totalCount,
         ];
     }
 }

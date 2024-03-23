@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Api\Modules\ContactUs;
-
 
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
@@ -26,8 +24,8 @@ class ListAskUsTopicController extends RestApiController
 
         // set property;
         $property = [];
-        if (isset($inputs['limit'])) $property += ['limit' => (int)$inputs['limit']];
-        if (isset($inputs['offset'])) $property += ['offset' => (int)$inputs['offset']];
+        if (isset($inputs['limit'])) $property += ['limit' => (int) $inputs['limit']];
+        if (isset($inputs['offset'])) $property += ['offset' => (int) $inputs['offset']];
 
         // set up dto;
         $dto = new ListAskUsTopicRequestDto($property);
@@ -45,7 +43,6 @@ class ListAskUsTopicController extends RestApiController
         // sent response;
         return fractal($collection, ListAskUsTopicTransformer::class);
     }
-
 
     private function validating(Request $request)
     {

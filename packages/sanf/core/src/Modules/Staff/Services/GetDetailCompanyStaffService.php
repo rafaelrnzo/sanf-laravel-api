@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Staff\Services;
-
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Staff\GeneralStaffException;
@@ -24,7 +22,8 @@ class GetDetailCompanyStaffService extends StaffService implements ApplicationSe
         if ($invitedStaff) {
             throw new GeneralStaffException('Already Invited');
         }
-        return (object)[
+
+        return (object) [
             'customerId' => $staff['CUST_ID'],
             'no' => $staff['SR_NO'],
             'title' => $staff['CUST_TITLE'],

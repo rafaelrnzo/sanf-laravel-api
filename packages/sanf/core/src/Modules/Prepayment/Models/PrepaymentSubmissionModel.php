@@ -9,7 +9,7 @@ class PrepaymentSubmissionModel extends AbstractModel
     protected $table = 'prepayment_submission';
 
     protected $casts = [
-        'items' => 'array'
+        'items' => 'array',
     ];
 
     public function status()

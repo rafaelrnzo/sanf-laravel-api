@@ -23,12 +23,12 @@ return [
     'rules' => [
         'login' => [
             'username' => 'required',
-            'password' => 'required'
-        ]
+            'password' => 'required',
+        ],
     ],
 
     'services' => [
-        'login' => []
+        'login' => [],
     ],
 
     'reset_password_url' => env('AUTH_RESET_PASS_URL'),
@@ -38,21 +38,21 @@ return [
     'input_validations' => [
         'change_password' => [
             'rules' => [
-                'password' => ['required', 'min:10', 'regex:/^(?=.*\d)(?=.*[a-zA-Z])/']
+                'password' => ['required', 'min:10', 'regex:/^(?=.*\d)(?=.*[a-zA-Z])/'],
             ],
             'messages' => [
-                'password.regex' => 'Password must be alphanumeric'
-            ]
+                'password.regex' => 'Password must be alphanumeric',
+            ],
         ],
         'reset_password' => [
             'rules' => [
                 'token' => 'required',
-                'password' => ['required', 'min:10', 'regex:/^(?=.*\d)(?=.*[a-zA-Z])/']
+                'password' => ['required', 'min:10', 'regex:/^(?=.*\d)(?=.*[a-zA-Z])/'],
             ],
             'messages' => [
-                'password.regex' => 'Password must be alphanumeric'
-            ]
-        ]
+                'password.regex' => 'Password must be alphanumeric',
+            ],
+        ],
     ],
 
     /*
@@ -91,7 +91,7 @@ return [
     'guards' => [
         'api' => [
             'driver' => 'jwt-auth',
-            'provider' => 'mobile-auth'
+            'provider' => 'mobile-auth',
         ],
     ],
 
@@ -120,7 +120,7 @@ return [
         'app-auth' => [
             'client_id' => env('APP_CLIENT_ID'),
             'client_secret' => env('APP_CLIENT_SECRET'),
-        ]
+        ],
     ],
 
     /*
@@ -154,12 +154,12 @@ return [
     'routes' => [
         'prefix' => $routePrefix = '/users',
 
-        'namespace' => $namespace = "NbsPhp\\Core\\Controllers\\",
+        'namespace' => $namespace = 'NbsPhp\\Core\\Controllers\\',
 
         'list' => [
             [
                 'method' => 'post',
-                'uri' => "auth/user-app",
+                'uri' => 'auth/user-app',
                 'name' => 'auth.user-app',
                 'action' => "{$namespace}AuthController@loginApp",
                 'middleware' => [],
@@ -222,7 +222,7 @@ return [
             ],
             [
                 'method' => 'get',
-                'uri' => "pages/verify-email/{id}/{token}",
+                'uri' => 'pages/verify-email/{id}/{token}',
                 'name' => 'email.verify',
                 'action' => "{$namespace}AuthController@verifyEmail",
                 'middleware' => [],

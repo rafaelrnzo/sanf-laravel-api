@@ -74,7 +74,7 @@ class WebViewController extends RestApiController
         TransactionalSessionInterface $transactionalSession
     ) {
         $transactionalService = new TransactionalApplicationService($service, $transactionalSession);
-        $transactionalService->execute((object)['xid' => $xid,]);
+        $transactionalService->execute((object) ['xid' => $xid]);
 
         return view('core::layouts.message', ['message' => 'Deactivate Account']);
     }
@@ -90,7 +90,7 @@ class WebViewController extends RestApiController
             'keyword' => 'nullable|string|regex:/^[a-zA-Z0-9 ]+$/',
             'limit' => 'nullable|integer',
             'skip' => 'nullable|integer',
-            'sort_by' => ['nullable', Rule::in(['titleAsc', 'titleDesc', 'orderAsc', 'orderDesc',])],
+            'sort_by' => ['nullable', Rule::in(['titleAsc', 'titleDesc', 'orderAsc', 'orderDesc'])],
         ]);
 
         $keyword = $inputs['keyword'] ?? null;
@@ -106,7 +106,7 @@ class WebViewController extends RestApiController
         $faqs = $faqs->getData();
 
         $faqCategoryRequest = new ListFrequentlyAskQuestionCategoryPageDto([
-            'keyword' => $keyword
+            'keyword' => $keyword,
         ]);
         $faqCategoryResult = $faqCategoryService->execute($faqCategoryRequest);
         $faqCategories = new Collection($faqCategoryResult, SimpleFrequentlyAskQuestionCategoryPageTransformer::class);
@@ -128,7 +128,7 @@ class WebViewController extends RestApiController
             'keyword' => 'nullable|string|regex:/^[a-zA-Z0-9 ]+$/',
             'limit' => 'nullable|integer',
             'skip' => 'nullable|integer',
-            'sort_by' => ['nullable', Rule::in(['titleAsc', 'titleDesc', 'orderAsc', 'orderDesc',])],
+            'sort_by' => ['nullable', Rule::in(['titleAsc', 'titleDesc', 'orderAsc', 'orderDesc'])],
         ]);
 
         $keyword = $inputs['keyword'] ?? null;
@@ -169,12 +169,12 @@ class WebViewController extends RestApiController
         }
 
         $faqCategory = fractal($faqCategoryResult, SimpleFrequentlyAskQuestionCategoryPageTransformer::class);
-        $faqCategory = (object)$faqCategory->toArray();
+        $faqCategory = (object) $faqCategory->toArray();
 
         $keyword = $inputs['keyword'] ?? null;
         $faqRequest = new ListFrequentlyAskQuestionPageDto([
             'keyword' => $keyword,
-            'categoryId' => (int) $categoryId
+            'categoryId' => (int) $categoryId,
         ]);
         $faqResult = $faqService->execute($faqRequest);
         $faqs = new Collection($faqResult, SimpleFrequentlyAskQuestionTransformer::class);

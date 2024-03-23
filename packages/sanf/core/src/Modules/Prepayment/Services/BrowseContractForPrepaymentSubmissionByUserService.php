@@ -2,7 +2,6 @@
 
 namespace Sanf\Core\Modules\Prepayment\Services;
 
-
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Prepayment\Dtos\BrowseContractByUserRequestDto;
 use Sanf\Core\Modules\Prepayment\Dtos\BrowseContractByUserResponseDto;
@@ -28,7 +27,6 @@ final class BrowseContractForPrepaymentSubmissionByUserService extends Prepaymen
         $this->apiClient = $apiClient;
     }
 
-
     /**
      * @param BrowseContractByUserRequestDto $dto
      * @return BrowseContractByUserResponseDto
@@ -50,15 +48,15 @@ final class BrowseContractForPrepaymentSubmissionByUserService extends Prepaymen
                 'paginate' => [
                     'total' => 0,
                     'count' => 0,
-                    'skip' => (int)$dto->skip,
-                    'limit' => (int)$dto->limit,
+                    'skip' => (int) $dto->skip,
+                    'limit' => (int) $dto->limit,
                     'sortBy' => $dto->sortBy,
-                ]
+                ],
             ]);
         }
 
         $data = array_map(function ($item) {
-            return (object)[
+            return (object) [
                 'contractNo' => $item->AGREE_NO,
                 'isSubmitted' => !empty($this->repository->whereContractNo($item->AGREE_NO)),
                 'remainingBalance' => $item->PAY_AMT,
@@ -69,12 +67,12 @@ final class BrowseContractForPrepaymentSubmissionByUserService extends Prepaymen
         return new BrowseContractByUserResponseDto([
             'data' => $data,
             'paginate' => [
-                'total' => (int)($result->total ?? $result->count),
-                'count' => (int)$result->count,
-                'skip' => (int)$dto->skip,
-                'limit' => (int)$dto->limit,
+                'total' => (int) ($result->total ?? $result->count),
+                'count' => (int) $result->count,
+                'skip' => (int) $dto->skip,
+                'limit' => (int) $dto->limit,
                 'sortBy' => $dto->sortBy,
-            ]
+            ],
         ]);
     }
 }

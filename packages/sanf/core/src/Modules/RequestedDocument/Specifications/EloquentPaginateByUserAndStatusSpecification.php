@@ -78,7 +78,7 @@ class EloquentPaginateByUserAndStatusSpecification
             ->with([
                 'items' => function ($query) {
                     return $query->whereNull('deleted_at');
-                }
+                },
             ])
             ->whereNull('deleted_at')
             ->where('profile_xid', '=', $this->profileXid)

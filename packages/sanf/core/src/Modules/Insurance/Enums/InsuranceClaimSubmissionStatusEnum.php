@@ -2,7 +2,6 @@
 
 namespace Sanf\Core\Modules\Insurance\Enums;
 
-
 use MyCLabs\Enum\Enum;
 
 class InsuranceClaimSubmissionStatusEnum extends Enum

@@ -59,9 +59,9 @@ class GuzzleBrowseProductRentCartService implements ApplicationServiceInterface
 
         $responseProductRent = $this->syncWithApi($records);
 
-        return (object)[
+        return (object) [
             'data' => $responseProductRent,
-            'paginate' => (object)[
+            'paginate' => (object) [
                 'total' => 0,
                 'count' => 0,
                 'skip' => null,
@@ -86,7 +86,7 @@ class GuzzleBrowseProductRentCartService implements ApplicationServiceInterface
                 throw $exception;
             }
 
-            $data = (array)$productRentResponse->data;
+            $data = (array) $productRentResponse->data;
             unset($data['review']);
             $productRentResponseDto = new ReadProductRentResponseDto($data);
 
@@ -96,10 +96,10 @@ class GuzzleBrowseProductRentCartService implements ApplicationServiceInterface
 
             $specifications = array_map(function ($specification) {
                 $specification->subSpecification = array_map(function ($subSpecification) {
-                    return new BrowseProductSubSpecificationResponseDto((array)$subSpecification);
+                    return new BrowseProductSubSpecificationResponseDto((array) $subSpecification);
                 }, $specification->subSpecification);
 
-                return new BrowseProductSpecificationResponseDto((array)$specification);
+                return new BrowseProductSpecificationResponseDto((array) $specification);
             }, $productRentSpecificationResponse->data->rows);
 
             $subSpecifications = [];

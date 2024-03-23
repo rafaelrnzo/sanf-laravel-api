@@ -89,6 +89,7 @@ class GetPdfFinancingSimulationService extends FinancingByUserService implements
     {
         $type = pathinfo($assetPath, PATHINFO_EXTENSION);
         $data = file_get_contents($assetPath);
+
         return 'data:image/' . $type . ';base64,' . base64_encode($data);
     }
 }

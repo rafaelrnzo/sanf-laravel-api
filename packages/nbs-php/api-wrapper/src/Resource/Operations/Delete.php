@@ -8,7 +8,7 @@ use Symfony\Component\String\Inflector\EnglishInflector;
 use function Symfony\Component\String\u;
 
 /**
-* @mixin \NbsPhp\ApiWrapper\Resource\ApiResource
+ * @mixin \NbsPhp\ApiWrapper\Resource\ApiResource
  */
 trait Delete
 {

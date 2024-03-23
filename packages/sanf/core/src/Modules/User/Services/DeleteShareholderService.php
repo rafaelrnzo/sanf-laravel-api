@@ -1,14 +1,11 @@
 <?php
 
-
 namespace Sanf\Core\Modules\User\Services;
-
 
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class DeleteShareholderService
 {
-
     protected SanfCoreApiClient $client;
 
     public function __construct(SanfCoreApiClient $client)

@@ -2,7 +2,6 @@
 
 namespace Sanf\Core\Modules\Contract\Enums;
 
-
 use MyCLabs\Enum\Enum;
 
 class FinancingUnitLocationSubmissionStatusEnum extends Enum

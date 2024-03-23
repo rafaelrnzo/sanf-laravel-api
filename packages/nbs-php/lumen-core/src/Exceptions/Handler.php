@@ -35,13 +35,13 @@ class Handler extends ExceptionHandler
 
     protected $ignoredInput = [
         'password',
-        'token'
+        'token',
     ];
 
     protected $loggedHeaders = [
         'user-agent',
         'x-app-version-number',
-        'x-app-version-string'
+        'x-app-version-string',
     ];
 
     public function __construct(ResponseMapperInterface $mapper)
@@ -113,6 +113,7 @@ class Handler extends ExceptionHandler
             foreach ($this->loggedHeaders as $header) {
                 $headers[$header] = $request->header($header);
             }
+
             return array_filter($headers);
         } catch (\Throwable $e) {
             return [];

@@ -3,7 +3,6 @@
 namespace Sanf\Api\Modules\Scanina\Transformers;
 
 use League\Fractal\TransformerAbstract;
-use Sanf\Core\Modules\Scanina\Dtos\BrowseProductBuyResponseDto;
 
 class BrowseRegionResponseTransformer extends TransformerAbstract
 {
@@ -11,7 +10,7 @@ class BrowseRegionResponseTransformer extends TransformerAbstract
     {
         return [
             'xid' => $dto->xid ?? $dto->id,
-            'name' => (string)optional($dto)->name,
+            'name' => (string) optional($dto)->name,
         ];
     }
 }

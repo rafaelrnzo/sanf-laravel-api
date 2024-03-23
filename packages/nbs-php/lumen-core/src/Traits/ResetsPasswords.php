@@ -54,6 +54,7 @@ trait ResetsPasswords
             if ($request->expectsJson()) {
                 throw $exception;
             }
+
             return view(config('auth.views.reset-password'))->with(
                 ['token' => $request->token, 'error' => $exception->getMessage()]
             )->withErrors(['error' => $exception->getMessage()]);
@@ -81,7 +82,8 @@ trait ResetsPasswords
             // will update the password on an actual user model and persist it to the
             // database. Otherwise we will parse the error and return the response.
             $response = $this->broker()->reset(
-                $this->credentials($request), function ($user, $password) {
+                $this->credentials($request),
+                function ($user, $password) {
                 $this->resetPassword($user, $password);
             }
             );
@@ -140,7 +142,9 @@ trait ResetsPasswords
     protected function credentials(Request $request)
     {
         return $request->only(
-            'username', 'password', 'token'
+            'username',
+            'password',
+            'token'
         );
     }
 
@@ -189,6 +193,7 @@ trait ResetsPasswords
         if ($request->expectsJson()) {
             return $this->responseOk();
         }
+
         return view(config('auth.views.password-set'));
     }
 
@@ -225,8 +230,7 @@ trait ResetsPasswords
     }
 
     /**
-     * replace request with jwt payload
-     *
+     * replace request with jwt payload.
      */
     public function getRequest(Request $request)
     {
@@ -234,6 +238,7 @@ trait ResetsPasswords
         $request['username'] = $decodedToken->email;
         $request['token'] = $decodedToken->token;
         $request['jwtToken'] = $jwtToken;
+
         return $request;
     }
 
@@ -245,6 +250,7 @@ trait ResetsPasswords
         if (is_null($decodedToken)) {
             throw new ResetPasswordFailedException(trans(Password::INVALID_TOKEN));
         }
+
         return [$decodedToken, $jwtToken];
     }
 }

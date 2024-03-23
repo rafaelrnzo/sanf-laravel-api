@@ -43,7 +43,7 @@ class EloquentPaginateFinancingApplicationByUserSpecification
             ->where('profile_xid', $this->profileXid)
             ->orderBy($orderBy, $orderDirection)
             ->when($this->keyword, function ($query) {
-                return $query->where('name', "ILIKE", '%' . $this->keyword . '%');
+                return $query->where('name', 'ILIKE', '%' . $this->keyword . '%');
             })->when($this->skip, function ($query) {
                 return $query->skip($this->skip);
             })->when($this->limit, function ($query) {

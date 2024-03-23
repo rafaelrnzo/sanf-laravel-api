@@ -10,8 +10,8 @@ class ContractStatusTransformer extends TransformerAbstract
     public function transform($item)
     {
         return [
-            'id' => (string)$item->id,
-            'name' => Str::title($item->name)
+            'id' => (string) $item->id,
+            'name' => Str::title($item->name),
         ];
     }
 }

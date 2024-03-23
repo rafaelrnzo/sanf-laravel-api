@@ -12,17 +12,19 @@ class ProjectByExternalController extends AbstractController
 {
     public function postApproveByExternal($xid, ApproveProjectByExternalService $service)
     {
-        $service->execute((object)[
-            'xid' => $xid
+        $service->execute((object) [
+            'xid' => $xid,
         ]);
+
         return redirect()->route('web-view.approval-project', ['status' => 'approve']);
     }
 
     public function postRejectByExternal($xid, RejectProjectByExternalService $service)
     {
-        $service->execute((object)[
-            'xid' => $xid
+        $service->execute((object) [
+            'xid' => $xid,
         ]);
+
         return redirect()->route('web-view.approval-project', ['status' => 'reject']);
     }
 }

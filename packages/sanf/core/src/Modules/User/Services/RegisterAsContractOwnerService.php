@@ -2,6 +2,8 @@
 
 namespace Sanf\Core\Modules\User\Services;
 
+use function bcrypt;
+use function collect;
 use NbsPhp\Core\Enum\UserStatus;
 use NbsPhp\Core\Exceptions\EmailAlreadyExistException;
 use NbsPhp\Core\Models\NeedSetupPasswordInterface;
@@ -10,8 +12,6 @@ use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Core\Modules\User\ContractOwnerNotFoundException;
 use Sanf\Core\Modules\User\Enums\EntityType;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
-use function bcrypt;
-use function collect;
 
 class RegisterAsContractOwnerService implements ApplicationServiceInterface
 {

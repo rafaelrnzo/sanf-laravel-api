@@ -1,8 +1,6 @@
 <?php
 
-
 namespace NbsPhp\Core\Services;
-
 
 use NbsPhp\Core\Models\AuthModel;
 
@@ -23,8 +21,9 @@ class UpdateProfileService implements ApplicationServiceInterface
     {
         $user = $this->repository->findOrFail($dto->userId)
             ->forceFill([
-                'full_name' => $dto->fullName
+                'full_name' => $dto->fullName,
             ])->save();
+
         return json_decode(json_encode($user));
     }
 }

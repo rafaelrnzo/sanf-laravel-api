@@ -2,8 +2,6 @@
 
 namespace Sanf\Core\Modules\Notification\Services;
 
-
-
 use Carbon\Carbon;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use NbsPhp\Notification\Dtos\ReadNotificationByUserRequestDto;
@@ -19,6 +17,7 @@ final class MarkAsReadNotificationByUserService extends NotificationService impl
     public function execute($dto = null)
     {
         $readCount = $this->notificationRepository->setUserNotificationReadByXids($dto->userId, $dto->xids, Carbon::now());
+
         return new ReadNotificationByUserResponseDto(['readCount' => $readCount]);
     }
 }

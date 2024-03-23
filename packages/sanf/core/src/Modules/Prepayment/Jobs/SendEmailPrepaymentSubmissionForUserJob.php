@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Prepayment\Jobs;
 
 use Illuminate\Bus\Queueable;
@@ -11,7 +10,6 @@ use Illuminate\Support\Facades\Mail;
 use NbsPhp\Core\Mail\BaseMail;
 use Sanf\Core\Modules\Prepayment\Dtos\GetPdfPrepaymentSimulationRequestDto;
 use Sanf\Core\Modules\Prepayment\Services\GetPdfPrepaymentSimulationService;
-
 
 class SendEmailPrepaymentSubmissionForUserJob implements ShouldQueue
 {
@@ -24,7 +22,6 @@ class SendEmailPrepaymentSubmissionForUserJob implements ShouldQueue
      *
      * @return void
      */
-
     public function __construct($data, $recipient)
     {
         $this->data = $data;
@@ -44,7 +41,7 @@ class SendEmailPrepaymentSubmissionForUserJob implements ShouldQueue
             ->line(__(
                 '<p>
                     Berikut kami lampirkan hasil perhitungan simulasi pelunasan dipercepat Anda pertanggal
-                    <strong>' .  date_localized($this->data->created_at, '%d %B %Y') . '</strong> dari nomor kontrak
+                    <strong>' . date_localized($this->data->created_at, '%d %B %Y') . '</strong> dari nomor kontrak
                     <strong>“' . $this->data->contract_no . '”</strong> Terimakasih.
                 </p>'
             ))

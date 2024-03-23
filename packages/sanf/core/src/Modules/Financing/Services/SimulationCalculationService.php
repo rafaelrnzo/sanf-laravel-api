@@ -61,14 +61,14 @@ class SimulationCalculationService extends FinancingService implements Applicati
         $installment_per_month = number_format($calc, 2, '.', '');
 
         $result = [
-            "financing_method_id" => (int)$dto->financing_method_id,
-            "financing_method_name" => (string)$financing_method->name,
-            "financing_amount" => (float)$dto->financing_amount,
-            "down_payment_percentage" => (int)$dto->down_payment_percentage,
-            "down_payment_amount" => (float)$dto->down_payment_amount,
-            "tenor_in_month" => (int)$dto->tenor_in_month,
-            "installment_per_month" => (float)$installment_per_month,
-            "interest_rate_percentage" => (int)($financing_method->interest_rate * 100)
+            'financing_method_id' => (int) $dto->financing_method_id,
+            'financing_method_name' => (string) $financing_method->name,
+            'financing_amount' => (float) $dto->financing_amount,
+            'down_payment_percentage' => (int) $dto->down_payment_percentage,
+            'down_payment_amount' => (float) $dto->down_payment_amount,
+            'tenor_in_month' => (int) $dto->tenor_in_month,
+            'installment_per_month' => (float) $installment_per_month,
+            'interest_rate_percentage' => (int) ($financing_method->interest_rate * 100),
         ];
 
         return new SimulationCalculationResultDto($result);

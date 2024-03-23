@@ -10,7 +10,6 @@ use Sanf\Core\Modules\Scanina\Specifications\ScaninaProductSpecificationInterfac
 
 class GuzzleBrowseProductRentService implements ApplicationServiceInterface
 {
-
     private ScaninaProductRepositoryInterface $repository;
     private ScaninaProductSpecificationInterface $specification;
 
@@ -25,21 +24,20 @@ class GuzzleBrowseProductRentService implements ApplicationServiceInterface
     public function execute($dto = null)
     {
         /** @var BrowseProductRentRequestDto $dto */
-
         $response = $this->repository->get(
             $this->specification->getRent($dto)
         );
 
         $responseProductRent = array_map(function ($buyItem) {
-            $buyItem->startDateAvailable = (int)optional($buyItem)->startDateAvailable;
-            $buyItem->endDateAvailable = (int)optional($buyItem)->endDateAvailable;
+            $buyItem->startDateAvailable = (int) optional($buyItem)->startDateAvailable;
+            $buyItem->endDateAvailable = (int) optional($buyItem)->endDateAvailable;
 
-            return new BrowseProductRentResponseDto((array)$buyItem);
+            return new BrowseProductRentResponseDto((array) $buyItem);
         }, $response->data->rows);
 
-        return (object)[
+        return (object) [
             'data' => $responseProductRent,
-            'paginate' => (object)[
+            'paginate' => (object) [
                 'total' => $response->data->metadata->total ?? 0,
                 'count' => $response->data->metadata->count ?? 0,
                 'skip' => $dto->skip,

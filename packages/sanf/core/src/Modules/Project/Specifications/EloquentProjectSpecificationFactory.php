@@ -1,12 +1,9 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Project\Specifications;
-
 
 class EloquentProjectSpecificationFactory implements ProjectSpecificationFactoryInterface
 {
-
     public function paginate(?int $skip, ?int $limit, ?string $sortBy, ?int $timestamp, ?string $keyword)
     {
         return new EloquentPaginateProjectSpecification($skip, $limit, $sortBy, $timestamp, $keyword);

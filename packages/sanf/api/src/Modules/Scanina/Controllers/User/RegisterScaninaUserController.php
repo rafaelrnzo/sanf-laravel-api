@@ -26,7 +26,7 @@ class RegisterScaninaUserController extends RestApiController
             'city_id' => 'nullable|integer',
             'city_name' => 'required|string|max:255|regex:/^[0-9a-zA-Z-_\h]+$/',
             'password' => 'required|min:8|confirmed|regex:/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[_@$!%*#?&+-])([\da-zA-Z@$!%*#?&\-+])+$/',
-            'password_confirmation' => 'required'
+            'password_confirmation' => 'required',
         ], [
             'password.regex' => 'Password must consist of at least one upper and lower case letter, one number, and one special character',
         ], []);

@@ -10,24 +10,21 @@ class MailLayout2Columns extends BaseMail
      * The Markdown template for the message (if applicable).
      *
      * @var string
-    **/
-
+     **/
     public $markdown = 'mail::message-v3';
 
     /**
      * Content template for the message (if applicable).
      *
      * @var array
-    **/
-
+     **/
     public $emailContent = [];
 
     /**
      * Table header template for the message (if applicable).
      *
      * @var array
-    **/
-
+     **/
     public $emailTableHeader = [];
 
     /**
@@ -35,18 +32,20 @@ class MailLayout2Columns extends BaseMail
      *
      * @var array
      **/
-
     public $emailTableBody = [];
 
     public function generateSeparator($separator = [])
     {
         foreach($separator as $value)
         {
-            array_splice($this->emailContent, $value['joinToIndex'], 0,
+            array_splice(
+                $this->emailContent,
+                $value['joinToIndex'],
+                0,
                 [
-                    array(
-                        'separator' => $value['html']
-                    )
+                    [
+                        'separator' => $value['html'],
+                    ],
                 ]
             );
 
@@ -61,10 +60,10 @@ class MailLayout2Columns extends BaseMail
 
         foreach($content as $key => $value)
         {
-            array_push($tempArr, array(
+            array_push($tempArr, [
                 'label' => $key,
                 'text'  => $value,
-            ));
+            ]);
         }
 
         $this->emailContent = $tempArr;
@@ -97,7 +96,7 @@ class MailLayout2Columns extends BaseMail
     }
 
     /**
-     * Build the message
+     * Build the message.
      * @todo handle this method if use third party email provider
      */
     public function build()

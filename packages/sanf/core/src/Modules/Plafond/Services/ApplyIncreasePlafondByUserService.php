@@ -2,7 +2,6 @@
 
 namespace Sanf\Core\Modules\Plafond\Services;
 
-
 use Carbon\Carbon;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Plafond\Dtos\AddPlafondRequestDto;
@@ -37,7 +36,7 @@ final class ApplyIncreasePlafondByUserService extends PlafondByUserService imple
                 break;
         }
 
-        $plafondRequest = (object)[
+        $plafondRequest = (object) [
             'profileXid' => $dto->profileXid,
             'currentBalance' => $plafond->getCurrentBalance(),
             'addedBalance' => $dto->amount - $plafond->getCurrentBalance(),

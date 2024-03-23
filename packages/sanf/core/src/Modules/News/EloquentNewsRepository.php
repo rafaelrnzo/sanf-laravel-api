@@ -6,8 +6,7 @@ use Carbon\Carbon;
 
 class EloquentNewsRepository implements NewsRepositoryInterface
 {
-
-    /** @var NewsModel $model */
+    /** @var NewsModel */
     protected $model;
 
     public function __construct(NewsModel $model)

@@ -56,6 +56,7 @@ final class ContractFinancingUnitByUserController extends RestApiController
         return fractal($result->data, ListContractTransformer::class)
             ->paginateWith(new LazyPaginatorAdapter($result->paginate));
     }
+
     public function getList(
         Guard $auth,
         Request $request,
@@ -93,7 +94,7 @@ final class ContractFinancingUnitByUserController extends RestApiController
 
     public function getDetail(Guard $auth, $xid, $contract_no, GetContractDetailService $service)
     {
-        $dto = (object)[
+        $dto = (object) [
             'user_id' => $auth->id(),
             'profile_xid' => $xid,
             'contract_no' => $contract_no,
@@ -151,12 +152,12 @@ final class ContractFinancingUnitByUserController extends RestApiController
         return fractal($result->data, SummaryBillContractTransformer::class)
             ->paginateWith(new LazyPaginatorAdapter($result->paginate))
             ->addMeta([
-                'total_amount' => (string)$result->metadata->total_amount,
-                'total_outstanding_amount' => (string)$result->metadata->total_outstanding_amount,
-                'total_paid_amount' => (string)$result->metadata->total_paid_amount,
-                'total_penalty_amount' => (string)$result->metadata->total_penalty_amount,
-                'total_invoice_amount' => (string)$result->metadata->total_invoice_amount,
-                'total_installment_amount' => (string)$result->metadata->total_installment_amount,
+                'total_amount' => (string) $result->metadata->total_amount,
+                'total_outstanding_amount' => (string) $result->metadata->total_outstanding_amount,
+                'total_paid_amount' => (string) $result->metadata->total_paid_amount,
+                'total_penalty_amount' => (string) $result->metadata->total_penalty_amount,
+                'total_invoice_amount' => (string) $result->metadata->total_invoice_amount,
+                'total_installment_amount' => (string) $result->metadata->total_installment_amount,
             ]);
     }
 }

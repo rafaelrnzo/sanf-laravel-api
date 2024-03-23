@@ -22,7 +22,6 @@ class SendRequestDeletionAccountForAdminNotification implements ShouldQueue
      *
      * @return void
      */
-
     public function __construct($data, $emailRecipients)
     {
         $this->data = $data;
@@ -36,7 +35,7 @@ class SendRequestDeletionAccountForAdminNotification implements ShouldQueue
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
             ->rightLogo(asset('assets/png/sanf-tagline.png'))
             ->banner(asset('assets/png/email-verification.png'))
-            ->greeting("Halo Admin SANFIND!")
+            ->greeting('Halo Admin SANFIND!')
             ->line(
                 "Pengguna atas nama <span class='text-bold'>{$this->data['name']}</span> saat ini {$this->data['createdAt']} WIB telah mengajukan  permintaan untuk Hapus Akun."
             )

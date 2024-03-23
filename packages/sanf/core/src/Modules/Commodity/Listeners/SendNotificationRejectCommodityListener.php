@@ -1,14 +1,11 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Commodity\Listeners;
-
 
 use Sanf\Core\Modules\Commodity\Jobs\SendNotificationRejectCommodityJob;
 
 class SendNotificationRejectCommodityListener
 {
-
     /**
      * Handle the event.
      *

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace NbsPhp\Core\Services;
-
 
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -81,6 +79,7 @@ class RegisterByAppleService implements RegisterByAppleServiceInterface
 
         if ($user instanceof MustVerifyEmail && !$user->hasVerifiedEmail()) {
             $user->sendEmailVerificationNotification();
+
             return json_decode(json_encode($user));
         }
 
@@ -113,13 +112,15 @@ class RegisterByAppleService implements RegisterByAppleServiceInterface
         $refreshTokenExpiredAt = $jwtToken->getDecodedRefreshToken()->exp;
 
         //TODO DTO
-        return json_decode(json_encode(array_merge($user->toArray(), [
+        return json_decode(json_encode(array_merge(
+            $user->toArray(),
+            [
                 'token' => [
                     'accessToken' => $token,
                     'accessExpiredAt' => $accessTokenExpiredAt,
                     'refreshToken' => $refreshToken,
                     'refreshExpiredAt' => $refreshTokenExpiredAt,
-                ]]
+                ], ]
         )));
     }
 }

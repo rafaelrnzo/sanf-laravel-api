@@ -8,7 +8,6 @@ use Sanf\Core\Modules\RequestedDocument\Models\RequestedDocumentItemModel;
 class EloquentRequestedDocumentItemRepository extends AbstractEloquentRepository implements
     RequestedDocumentItemRepositoryInterface
 {
-
     private RequestedDocumentItemModel $model;
 
     public function __construct(RequestedDocumentItemModel $model)

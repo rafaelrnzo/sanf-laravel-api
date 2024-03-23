@@ -1,8 +1,6 @@
 <?php
 
-
 namespace NbsPhp\Notification\Repositories;
-
 
 use Carbon\Carbon;
 use NbsPhp\Core\Repositories\AbstractEloquentRepository;
@@ -98,7 +96,6 @@ class EloquentUserNotificationRepository extends AbstractEloquentRepository impl
             ->count();
     }
 
-
     public function updateFcmToken($userId, $token)
     {
         $this->userSessionModel->newQuery()
@@ -110,6 +107,7 @@ class EloquentUserNotificationRepository extends AbstractEloquentRepository impl
                 'notification_channel_id' => NotificationChannelEnum::FCM,
                 'notification_token' => $token,
             ]);
+
         return json_decode(json_encode($tokens));
     }
 
@@ -122,7 +120,7 @@ class EloquentUserNotificationRepository extends AbstractEloquentRepository impl
             ->when(!empty($notificationIds), function ($query) use ($notificationIds) {
                 $query->whereIn('id', $notificationIds);
             })
-            ->update(["read_at" => $readAt]);
+            ->update(['read_at' => $readAt]);
     }
 
     public function setUserNotificationReadByXids($userId, $notificationXids, $readAt)

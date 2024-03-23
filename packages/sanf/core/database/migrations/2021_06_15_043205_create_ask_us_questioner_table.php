@@ -2,12 +2,10 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class CreateAskUsQuestionerTable extends Migration
 {
-
     public function up()
     {
         Schema::create('ask_us_questioner', function (Blueprint $table) {
@@ -39,5 +37,4 @@ class CreateAskUsQuestionerTable extends Migration
     {
         Schema::dropIfExists('ask_us_questioner');
     }
-
 }

@@ -11,7 +11,6 @@ use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class GetUserMetadataContractService extends UserService implements ApplicationServiceInterface
 {
-
     protected SanfCoreApiClient $internalApiClient;
 
     public function __construct(AuthModel $userRepository, SanfCoreApiClient $internalApiClient)
@@ -42,7 +41,7 @@ class GetUserMetadataContractService extends UserService implements ApplicationS
         $totalActive += $collect->sum('TOTAL_AKTIF');
         $totalFinish += $collect->sum('TOTAL_SELESAI');
 
-        return (object)[
+        return (object) [
             'total_active_contract' => $totalActive,
             'total_finished_contract' => $totalFinish,
         ];

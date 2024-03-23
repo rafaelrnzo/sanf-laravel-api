@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Api\Modules\Project;
-
 
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
@@ -48,11 +46,12 @@ class ProjectController extends RestApiController
 
     public function getDetail(Guard $auth, $xid, GetDetailProjectService $service)
     {
-        $dto = (object)[
+        $dto = (object) [
             'xid' => $xid,
-            'userId' => $auth->id()
+            'userId' => $auth->id(),
         ];
         $result = $service->execute($dto);
+
         return fractal($result, new ProjectTransformer());
     }
 
@@ -75,11 +74,12 @@ class ProjectController extends RestApiController
 
     public function getDetailByUser(Guard $auth, $xid, GetDetailProjectByUserService $service)
     {
-        $dto = (object)[
+        $dto = (object) [
             'xid' => $xid,
-            'userId' => $auth->id()
+            'userId' => $auth->id(),
         ];
         $result = $service->execute($dto);
+
         return fractal($result, new MyProjectTransformer());
     }
 
@@ -98,6 +98,7 @@ class ProjectController extends RestApiController
         ]);
         $dto = new CreateProjectDto($input + ['userId' => $auth->id()]);
         $service->execute($dto);
+
         return $this->responseOk();
     }
 
@@ -116,55 +117,61 @@ class ProjectController extends RestApiController
         ]);
         $dto = new UpdateProjectDto($input + [
                 'xid' => $xid,
-                'userId' => $auth->id()
+                'userId' => $auth->id(),
             ]);
         $service->execute($dto);
+
         return $this->responseOk();
     }
 
     public function deleteByUser(Guard $auth, $xid, DeleteProjectByUserService $service)
     {
-        $dto = (object)[
+        $dto = (object) [
             'userId' => $auth->id(),
-            'xid' => $xid
+            'xid' => $xid,
         ];
         $service->execute($dto);
+
         return $this->responseOk();
     }
 
     public function postPublishByUser(Guard $auth, $xid, PublishProjectByUserService $service)
     {
-        $dto = (object)[
+        $dto = (object) [
             'userId' => $auth->id(),
-            'xid' => $xid
+            'xid' => $xid,
         ];
         $service->execute($dto);
+
         return $this->responseOk();
     }
 
     public function postUnpublishByUser(Guard $auth, $xid, UnpublishProjectByUserService $service)
     {
-        $dto = (object)[
+        $dto = (object) [
             'userId' => $auth->id(),
-            'xid' => $xid
+            'xid' => $xid,
         ];
         $service->execute($dto);
+
         return $this->responseOk();
     }
 
     public function postApproveByExternal($xid, ApproveProjectByExternalService $service)
     {
-        $service->execute((object)[
-            'xid' => $xid
+        $service->execute((object) [
+            'xid' => $xid,
         ]);
+
         return redirect()->route('web-view.approval-project', ['status' => 'approve']);
     }
 
     public function postRejectByExternal($xid, RejectProjectByExternalService $service)
     {
-        $service->execute((object)[
-            'xid' => $xid
+        $service->execute((object) [
+            'xid' => $xid,
         ]);
+
         return redirect()->route('web-view.approval-project', ['status' => 'reject']);
     }
 }

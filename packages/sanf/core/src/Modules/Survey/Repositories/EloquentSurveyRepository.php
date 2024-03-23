@@ -28,6 +28,7 @@ class EloquentSurveyRepository extends AbstractEloquentRepository implements Sur
     public function query($specification)
     {
         $models = $specification->buildQuery($this->surveyModel)->get();
+
         return $this->stripEloquentModel($models);
     }
 

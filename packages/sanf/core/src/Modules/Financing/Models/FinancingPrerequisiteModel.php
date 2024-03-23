@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Financing\Models;
-
 
 use NbsPhp\Core\Models\AbstractModel;
 
@@ -12,7 +10,7 @@ class FinancingPrerequisiteModel extends AbstractModel
 
     public function childs()
     {
-        return $this->hasMany(FinancingPrerequisiteModel::class, 'parent_id', 'id');
+        return $this->hasMany(self::class, 'parent_id', 'id');
     }
 
     public function items()
@@ -20,4 +18,3 @@ class FinancingPrerequisiteModel extends AbstractModel
         return $this->childs()->with('items');
     }
 }
-

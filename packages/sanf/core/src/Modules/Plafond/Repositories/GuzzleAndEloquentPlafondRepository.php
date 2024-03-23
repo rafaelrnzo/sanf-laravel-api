@@ -32,8 +32,10 @@ class GuzzleAndEloquentPlafondRepository implements PlafondRepositoryInterface
     {
         try {
             $response = $this->client->getCustomerPlafonds($xid);
+
             return array_map(function ($item) {
                 $item['type'] = $this->plafondTypeModel->find($item['P_CODE'])->toArray();
+
                 return $this->factory->make($item);
             }, $response['data']);
         } catch (SanfInternalApiDataNotFoundException $exception) {
@@ -45,8 +47,10 @@ class GuzzleAndEloquentPlafondRepository implements PlafondRepositoryInterface
     {
         try {
             $response = $this->client->getCustomerPlafondHistories($xid);
+
             return array_map(function ($item) {
                 $item['type'] = $this->plafondTypeModel->find($item['P_CODE'])->toArray();
+
                 return $this->historyFactory->make($item);
             }, $response['data']);
         } catch (SanfInternalApiDataNotFoundException $exception) {
@@ -61,6 +65,7 @@ class GuzzleAndEloquentPlafondRepository implements PlafondRepositoryInterface
             $plafond = array_merge($response['data']['header'][0]);
             $plafond['type'] = $this->plafondTypeModel->find($plafond['P_CODE'])->toArray();
             $plafond['items'] = $response['data']['items'];
+
             return $this->factory->make($plafond);
         } catch (SanfInternalApiDataNotFoundException $exception) {
             return null;
@@ -70,6 +75,7 @@ class GuzzleAndEloquentPlafondRepository implements PlafondRepositoryInterface
     public function submitApplication($profileXid, $typeId, $amount)
     {
         $response = $this->client->requestPlafond($profileXid, $typeId, $amount);
+
         return $response['status'];
     }
 }

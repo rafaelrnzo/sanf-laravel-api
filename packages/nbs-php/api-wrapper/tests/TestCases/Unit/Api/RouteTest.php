@@ -83,7 +83,7 @@ class RouteTest extends TestCase
         self::$callbackResponse = null;
 
         Route::group('https://www.example.com', [BasicPreProcessor::class], function () {
-            RouteTest::$callbackResponse = Route::post('test', 'test');
+            self::$callbackResponse = Route::post('test', 'test');
         });
 
         /** @var Endpoint $groupedEndpoint */
@@ -107,11 +107,11 @@ class RouteTest extends TestCase
         self::$callbackResponse = [];
 
         Route::group('https://www.example.com', [BasicPreProcessor::class], function () {
-            Route::group('https://www.heliumservices.com', [BasicPostProcessor::class], function() {
-                RouteTest::$callbackResponse[] = Route::post('test', 'test');
+            Route::group('https://www.heliumservices.com', [BasicPostProcessor::class], function () {
+                self::$callbackResponse[] = Route::post('test', 'test');
             });
 
-            RouteTest::$callbackResponse[] = Route::post('test2', 'test2');
+            self::$callbackResponse[] = Route::post('test2', 'test2');
         });
 
         /** @var Endpoint $groupedEndpoint */

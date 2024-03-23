@@ -42,7 +42,6 @@ class GuzzleUserRegisterService implements ApplicationServiceInterface
     public function execute($dto = null)
     {
         /** @var PostUserRegisterRequestDto $dto */
-
         $user = $this->repository->findOrFail($dto->userId);
         if (empty($user->xid) || empty($user->personal_xid)) {
             $profile = $this->profileRepository->findPersonalProfileByEmail($user->username);

@@ -1,15 +1,12 @@
 <?php
 
-
 namespace Sanf\Core\Modules\User\Enums;
 
-
-use MyCLabs\Enum\Enum;
 use function __;
+use MyCLabs\Enum\Enum;
 
 /**
- * Class EntityType
- * @package Sanf\Core\Modules\User
+ * Class EntityType.
  */
 class EntityType extends Enum
 {
@@ -18,6 +15,6 @@ class EntityType extends Enum
 
     public function getTranslation()
     {
-        return __('core::constant.entity_type.'.$this->getKey());
+        return __('core::constant.entity_type.' . $this->getKey());
     }
 }

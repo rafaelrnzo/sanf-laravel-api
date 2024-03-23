@@ -9,7 +9,6 @@ use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class GetUserMetadataAccountReceivableService extends UserService implements ApplicationServiceInterface
 {
-
     protected SanfCoreApiClient $internalApiClient;
 
     public function __construct(AuthModel $userRepository, SanfCoreApiClient $internalApiClient)
@@ -33,7 +32,7 @@ class GetUserMetadataAccountReceivableService extends UserService implements App
         $totalOutstandingAmount += $collect->where('CURR_ID_AKTIF', '=', $dto->currency_type)->sum('AMT_AKTIF');
         $totalPaidAmount += $collect->where('CURR_ID_SELESAI', '=', $dto->currency_type)->sum('AMT_SELESAI');
 
-        return (object)[
+        return (object) [
             'total_outstanding_amount' => $totalOutstandingAmount,
             'total_paid_amount' => $totalPaidAmount,
             'currency_type' => $dto->currency_type,

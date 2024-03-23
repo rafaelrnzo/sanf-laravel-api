@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Api\Modules\Commodity;
-
 
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
@@ -46,11 +44,12 @@ class CommodityController extends RestApiController
 
     public function getDetail(Guard $auth, $xid, GetDetailCommodityService $service)
     {
-        $dto = (object)[
+        $dto = (object) [
             'xid' => $xid,
-            'userId' => $auth->id()
+            'userId' => $auth->id(),
         ];
         $result = $service->execute($dto);
+
         return fractal($result, new CommodityTransformer());
     }
 
@@ -73,11 +72,12 @@ class CommodityController extends RestApiController
 
     public function getDetailByUser(Guard $auth, $xid, GetDetailCommodityByUserService $service)
     {
-        $dto = (object)[
+        $dto = (object) [
             'xid' => $xid,
-            'userId' => $auth->id()
+            'userId' => $auth->id(),
         ];
         $result = $service->execute($dto);
+
         return fractal($result, new MyCommodityTransformer());
     }
 
@@ -95,6 +95,7 @@ class CommodityController extends RestApiController
         ]);
         $dto = new CreateCommodityDto($input + ['userId' => $auth->id()]);
         $service->execute($dto);
+
         return $this->responseOk();
     }
 
@@ -112,39 +113,43 @@ class CommodityController extends RestApiController
         ]);
         $dto = new UpdateCommodityDto($input + [
                 'xid' => $xid,
-                'userId' => $auth->id()
+                'userId' => $auth->id(),
             ]);
         $service->execute($dto);
+
         return $this->responseOk();
     }
 
     public function deleteByUser(Guard $auth, $xid, DeleteCommodityByService $service)
     {
-        $dto = (object)[
+        $dto = (object) [
             'userId' => $auth->id(),
-            'xid' => $xid
+            'xid' => $xid,
         ];
         $service->execute($dto);
+
         return $this->responseOk();
     }
 
     public function postPublishByUser(Guard $auth, $xid, PublishUserCommodityService $service)
     {
-        $dto = (object)[
+        $dto = (object) [
             'userId' => $auth->id(),
-            'xid' => $xid
+            'xid' => $xid,
         ];
         $service->execute($dto);
+
         return $this->responseOk();
     }
 
     public function postUnpublishByUser(Guard $auth, $xid, UnpublishCommodityByUserService $service)
     {
-        $dto = (object)[
+        $dto = (object) [
             'userId' => $auth->id(),
-            'xid' => $xid
+            'xid' => $xid,
         ];
         $service->execute($dto);
+
         return $this->responseOk();
     }
 }

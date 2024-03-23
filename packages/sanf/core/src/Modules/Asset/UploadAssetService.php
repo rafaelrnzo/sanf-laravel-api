@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Asset;
-
 
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\FileNotFoundException;
@@ -10,7 +8,6 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 
 class UploadAssetService implements ApplicationServiceInterface
 {
-
     public function execute($dto = null)
     {
         $path = config('image-path.temp');
@@ -30,7 +27,7 @@ class UploadAssetService implements ApplicationServiceInterface
             'origin_name' => $dto->file->getClientOriginalName(),
             'path' => "{$path}{$filename}",
             'file_name' => $filename,
-            'url' => $url
+            'url' => $url,
         ]);
     }
 }

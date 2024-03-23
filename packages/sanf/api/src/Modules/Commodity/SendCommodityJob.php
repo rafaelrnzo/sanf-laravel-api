@@ -22,7 +22,6 @@ class SendCommodityJob implements ShouldQueue
      *
      * @return void
      */
-
     public function __construct($emailSender, $emailRecipients)
     {
         $this->emailSender = $emailSender;
@@ -43,7 +42,7 @@ class SendCommodityJob implements ShouldQueue
             '))
             ->actionApproval([
                 [__('Approve Komoditi'), '#'], //TODO: implement url to approve
-                [__('Reject Komoditi'), '#'] //TODO: implement url to reject
+                [__('Reject Komoditi'), '#'], //TODO: implement url to reject
             ]);
 
         $commodityApprovalMail->from($this->emailSender[0], $this->emailSender[1]);

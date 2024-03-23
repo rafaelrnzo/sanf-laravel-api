@@ -48,7 +48,7 @@ class RejectDeactivateAccountService implements ApplicationServiceInterface
             throw new UserNotFoundException();
         }
 
-        $createdBy = (array)$dto;
+        $createdBy = (array) $dto;
         unset($createdBy['xid']);
 
         $this->logRepository->update([

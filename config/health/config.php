@@ -219,7 +219,7 @@ return [
 
         'list' => [
             [
-                'uri' => "health",
+                'uri' => 'health',
                 'name' => 'app.health.status',
                 'action' => "{$namespace}@checkSimplified",
 //                'action' => "{$namespace}@check",

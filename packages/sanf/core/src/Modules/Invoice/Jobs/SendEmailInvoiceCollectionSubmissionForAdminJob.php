@@ -23,7 +23,6 @@ class SendEmailInvoiceCollectionSubmissionForAdminJob implements ShouldQueue
      *
      * @return void
      */
-
     public function __construct($data, $recipient)
     {
         $this->data = $data;
@@ -43,7 +42,7 @@ class SendEmailInvoiceCollectionSubmissionForAdminJob implements ShouldQueue
                 'contract_number' => $datum->contract_no,
                 'model' => $datum->brand_type_model,
                 'serial_number' => $datum->serial_no,
-                'year' => $datum->year
+                'year' => $datum->year,
             ];
         }
 
@@ -67,7 +66,7 @@ class SendEmailInvoiceCollectionSubmissionForAdminJob implements ShouldQueue
                 ['joinToIndex' => 2, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08); margin: 5px 0;">'],
                 [
                     'joinToIndex' => 3,
-                    'html' => '<p style="color: #232227; font-size: 14px;"><strong>Daftar Pengembalian Invoice</strong><p>'
+                    'html' => '<p style="color: #232227; font-size: 14px;"><strong>Daftar Pengembalian Invoice</strong><p>',
                 ],
             ])
             ->writeTableHead([
@@ -77,20 +76,21 @@ class SendEmailInvoiceCollectionSubmissionForAdminJob implements ShouldQueue
                 ],
                 [
                     'targetData' => 'model',
-                    'label' => 'Model'
+                    'label' => 'Model',
                 ],
                 [
                     'targetData' => 'serial_number',
-                    'label' => 'Serial Number'
+                    'label' => 'Serial Number',
                 ],
                 [
                     'targetData' => 'year',
-                    'label' => 'Tahun'
-                ]
+                    'label' => 'Tahun',
+                ],
             ])
             ->writeTableBody($tableData);
 
         $ccMails = explode(',', config('sanf-mobile.mail_to.it_helpdesk'));
+
         return Mail::to($this->recipient)
             ->cc($ccMails)
             ->send($invoiceSubmission);

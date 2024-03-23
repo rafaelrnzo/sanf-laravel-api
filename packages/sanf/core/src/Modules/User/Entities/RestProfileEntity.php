@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\User\Entities;
-
 
 use Carbon\CarbonImmutable;
 
@@ -149,7 +147,7 @@ final class RestProfileEntity implements ProfileEntityInterface
 
     public function getIsPic()
     {
-        return (bool)$this->attributes['PIC'];
+        return (bool) $this->attributes['PIC'];
     }
 
     public function getPersonalAssistantContactNumber()
@@ -220,7 +218,7 @@ final class RestProfileEntity implements ProfileEntityInterface
             'business_since' => $this->getBusinessSince(),
             'is_pic' => $this->getIsPic(),
             'personal_assistant_contact_number' => $this->getIsPic(),
-            'version' => self::SNAPSHOT_VERSION
+            'version' => self::SNAPSHOT_VERSION,
         ];
     }
 }

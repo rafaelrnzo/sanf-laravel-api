@@ -1,8 +1,6 @@
 <?php
 
-
 namespace NbsPhp\Notification\Services;
-
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use NbsPhp\Notification\Enums\NotificationChannelEnum;

@@ -2,7 +2,6 @@
 
 namespace Sanf\Core\Modules\Contract\Models;
 
-
 use NbsPhp\Core\Models\AbstractModel;
 use Sanf\Core\Modules\User\AuthModel;
 

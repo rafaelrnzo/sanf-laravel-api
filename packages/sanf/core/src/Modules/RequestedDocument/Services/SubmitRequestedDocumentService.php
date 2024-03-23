@@ -18,7 +18,6 @@ use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class SubmitRequestedDocumentService implements ApplicationServiceInterface
 {
-
     private AuthModel $userRepository;
     private RequestedDocumentRepositoryInterface $eloquentRequestedDocRepository;
     private RequestedDocumentItemRepositoryInterface $eloquentRequestedDocItemRepository;
@@ -62,7 +61,7 @@ class SubmitRequestedDocumentService implements ApplicationServiceInterface
             }
 
             $upload_date = Carbon::make($documentItem->created_at)->format('d-M-Y');
-            $request = (object)[
+            $request = (object) [
                 'request_no' => $requestedDocument->request_no,
                 'document_id' => $documentItem->document_id,
                 'path' => $documentItem->document_file->path,

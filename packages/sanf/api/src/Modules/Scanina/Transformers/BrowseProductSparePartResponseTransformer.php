@@ -10,9 +10,8 @@ class BrowseProductSparePartResponseTransformer extends TransformerAbstract
     public function transform($dto): array
     {
         /** @var BrowseProductSparePartResponseDto $dto */
-
-        $originPrice = (float)optional($dto)->priceBefore;
-        $cutPrice = (float)optional($dto)->price;
+        $originPrice = (float) optional($dto)->priceBefore;
+        $cutPrice = (float) optional($dto)->price;
         $discount = (($originPrice - $cutPrice) > 0) ? (($originPrice - $cutPrice) / $originPrice) * 100 : 0;
 
         $imagesFiles = array_map(function ($files) {
@@ -21,16 +20,16 @@ class BrowseProductSparePartResponseTransformer extends TransformerAbstract
 
         $response = [
             'xid' => $dto->xid ?? $dto->id,
-            'name' => (string)optional($dto)->name,
+            'name' => (string) optional($dto)->name,
             'image_url' => $imagesFiles[0] ?? null,
-            'location' => (string)optional($dto)->location,
+            'location' => (string) optional($dto)->location,
             'price' => $originPrice,
             'discount' => $discount,
             'price_cut' => $cutPrice,
-            'rating' => (float)optional($dto)->rating,
-            'total_review' => (int)optional($dto)->reviewCount,
-            'sold' => (int)optional($dto)->itemSoldCount,
-            'stock' => (int)optional($dto)->stock,
+            'rating' => (float) optional($dto)->rating,
+            'total_review' => (int) optional($dto)->reviewCount,
+            'sold' => (int) optional($dto)->itemSoldCount,
+            'stock' => (int) optional($dto)->stock,
         ];
 
         if (optional($dto)->quantity) {

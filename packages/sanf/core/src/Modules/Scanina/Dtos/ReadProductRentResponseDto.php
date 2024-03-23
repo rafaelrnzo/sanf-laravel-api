@@ -6,7 +6,6 @@ use Spatie\DataTransferObject\FlexibleDataTransferObject;
 
 class ReadProductRentResponseDto extends FlexibleDataTransferObject
 {
-
     public ?int $id;
     public ?string $xid;
     public ?int $shopId;

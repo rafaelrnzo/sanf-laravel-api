@@ -58,11 +58,12 @@ class SanfCoreApiClient
          * 'F_ACTIVE': 'Y',
          * 'PIC': '1',
          * 'NO_AE': null
-         * }
+         * }.
          */
         $response = Request::route('customer.find-by-email', $this->client)
             ->json(['email' => $email])
             ->send();
+
         return $response->json();
     }
 
@@ -104,11 +105,12 @@ class SanfCoreApiClient
          * 'PIC': '1',
          * 'NO_AE': null,
          * 'EMAIL_STAFF': 'suhendar.ade23@gmail.com'
-         * }
+         * }.
          */
         $response = Request::route('customer.find-by-id', $this->client)
             ->pathParams(['id' => $id])
             ->send();
+
         return $response->json();
     }
 
@@ -124,9 +126,10 @@ class SanfCoreApiClient
         $response = Request::route('customer.find-by-email-and-npwp', $this->client)
             ->pathParams([
                 'email' => $email,
-                'npwp' => $npwp
+                'npwp' => $npwp,
             ])
             ->send();
+
         return $response->json();
     }
 
@@ -149,6 +152,7 @@ class SanfCoreApiClient
                 'nohp' => $phoneNumber,
             ])
             ->send();
+
         return $response->json();
     }
 
@@ -161,7 +165,7 @@ class SanfCoreApiClient
     public function createCompany($data) //TODO DTO
     {
         $response = Request::route('customer.create-company', $this->client)
-            /**
+            /*
              * {
              * "cust_accnt": "3ACCNT",
              * "cust_title": "PT",
@@ -175,6 +179,7 @@ class SanfCoreApiClient
              */
             ->json($data)
             ->send();
+
         return $response->json();
     }
 
@@ -212,6 +217,7 @@ class SanfCoreApiClient
           */
             ->json($data)
             ->send();
+
         return $response->json();
     }
 
@@ -240,12 +246,12 @@ class SanfCoreApiClient
     {
         $response = Request::route('customer.shareholder.create', $this->client)
             ->json([
-                "cust_id" => $request->id,
-                "cust_title" => $request->title,
-                "cust_name" => $request->name,
-                "job_desc" => $request->job,
-                "percshare" => $request->percentage,
-                "type" => $request->type
+                'cust_id' => $request->id,
+                'cust_title' => $request->title,
+                'cust_name' => $request->name,
+                'job_desc' => $request->job,
+                'percshare' => $request->percentage,
+                'type' => $request->type,
             ])
             ->send();
 
@@ -262,13 +268,13 @@ class SanfCoreApiClient
     {
         $response = Request::route('customer.shareholder.update', $this->client)
             ->json([
-                "cust_id" => $request->id,
-                "sr_no" => $request->no,
-                "cust_title" => $request->title,
-                "cust_name" => $request->name,
-                "job_desc" => $request->job,
-                "percshare" => $request->percentage,
-                "type" => $request->type,
+                'cust_id' => $request->id,
+                'sr_no' => $request->no,
+                'cust_title' => $request->title,
+                'cust_name' => $request->name,
+                'job_desc' => $request->job,
+                'percshare' => $request->percentage,
+                'type' => $request->type,
 
             ])
             ->send();
@@ -287,8 +293,8 @@ class SanfCoreApiClient
     {
         $response = Request::route('customer.shareholder.delete', $this->client)
             ->json([
-                "cust_id" => $id,
-                "sr_no" => $no,
+                'cust_id' => $id,
+                'sr_no' => $no,
             ])
             ->send();
 
@@ -407,7 +413,7 @@ class SanfCoreApiClient
          * "JABATAN": "DIREKTUR",
          * "F_PC": "P",
          * "EMAIL": "LUCYNDA_TANJUNG@GMAIL.COM"
-         * }
+         * }.
          */
         $response = Request::route('customer.staff.list', $this->client)
             ->pathParams(['id' => $id])
@@ -552,6 +558,7 @@ class SanfCoreApiClient
             ->pathParams([
                 'customer_id' => $customerId,
             ])->send();
+
         return $response->json();
     }
 
@@ -596,6 +603,7 @@ class SanfCoreApiClient
                 'customer_id' => $customerId,
                 'p_code' => $plafondCode,
             ])->send();
+
         return $response->json();
     }
 
@@ -616,6 +624,7 @@ class SanfCoreApiClient
                 'amount' => $amount,
             ])
             ->send();
+
         return $response->json();
     }
 
@@ -662,9 +671,10 @@ class SanfCoreApiClient
         $response = Request::route('customer.plafond.history', $this->client)
             ->queryParams([
                 'uid' => $customerId,
-                'typeplafond' => $plafondCode
+                'typeplafond' => $plafondCode,
             ])
             ->send();
+
         return $response->json();
     }
 
@@ -767,9 +777,10 @@ class SanfCoreApiClient
                 'limit' => $limit ?? self::DEFAULT_LIMIT,
                 'order' => $order ?? self::DEFAULT_ORDER,
                 'timestamp' => $timestamp,
-                'no_kontrak' => $keyword
+                'no_kontrak' => $keyword,
             ])
             ->send();
+
         return $response->json(false);
     }
 
@@ -826,9 +837,10 @@ class SanfCoreApiClient
         $response = Request::route('prepayment.detail', $this->client)
             ->queryParams([
                 'AgreeNo' => $contractNo,
-                'TglPrepay' => $prepaymentDate->format('dmY')
+                'TglPrepay' => $prepaymentDate->format('dmY'),
             ])
             ->send();
+
         return $response->json(false);
     }
 
@@ -978,7 +990,7 @@ class SanfCoreApiClient
                 'skip' => $skip,
                 'limit' => $limit,
                 'order' => $sort_by,
-                'no_kontrak' => $keyword
+                'no_kontrak' => $keyword,
             ])
             ->send();
 
@@ -1056,9 +1068,10 @@ class SanfCoreApiClient
                 'limit' => $limit ?? self::DEFAULT_LIMIT,
                 'order' => $order ?? self::DEFAULT_ORDER,
                 'timestamp' => $timestamp,
-                'param' => $keyword
+                'param' => $keyword,
             ])
             ->send();
+
         return $response->json(false);
     }
 
@@ -1098,9 +1111,10 @@ class SanfCoreApiClient
                 'limit' => $limit ?? self::DEFAULT_LIMIT,
                 'order' => $order ?? self::DEFAULT_ORDER,
                 'timestamp' => $timestamp,
-                'param' => $keyword
+                'param' => $keyword,
             ])
             ->send();
+
         return $response->json(false);
     }
 

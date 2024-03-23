@@ -60,7 +60,7 @@ class GuzzleAddToCartSparePartService implements ApplicationServiceInterface
         $productSparePartResponse = $this->getProduct($dto->productXid);
 
         if (is_null($productSparePartResponse->stock) || $productSparePartResponse->stock === 0 || $productSparePartResponse->stock < $dto->quantity) {
-            throw new ScaninaProductInvalidRequestException("Product out of stock");
+            throw new ScaninaProductInvalidRequestException('Product out of stock');
         }
 
         $requestBodyDto = new AddToCartRequestDto([
@@ -100,9 +100,9 @@ class GuzzleAddToCartSparePartService implements ApplicationServiceInterface
             $this->productSpecification->readSparePart($xid)
         );
 
-        $data = (array)$productSparePartResponse->data;
+        $data = (array) $productSparePartResponse->data;
         unset($data['review']);
-        $productSparePartResponseDto = new ReadProductSparePartResponseDto((array)$productSparePartResponse->data);
+        $productSparePartResponseDto = new ReadProductSparePartResponseDto((array) $productSparePartResponse->data);
         $productSparePartResponseDto->customerReviews = [];
 
         return $productSparePartResponseDto;

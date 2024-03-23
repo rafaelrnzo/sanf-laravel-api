@@ -21,10 +21,10 @@ class AddServiceCartByUserController extends RestApiController
     ) {
         $input = $this->validate($request, [
             'service_at' => 'required|integer',
-            'notes' => 'nullable|string|max:255'
+            'notes' => 'nullable|string|max:255',
         ]);
 
-        $addToCartRequestBody = (object)[
+        $addToCartRequestBody = (object) [
             'userId' => $userAuth->id(),
             'xid' => $xid,
             'servicedAt' => $input['service_at'],

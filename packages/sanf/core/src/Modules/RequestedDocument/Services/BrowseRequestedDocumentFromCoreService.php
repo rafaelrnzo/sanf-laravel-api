@@ -46,7 +46,7 @@ class BrowseRequestedDocumentFromCoreService implements ApplicationServiceInterf
                 $sortBy = 'latest';
             }
 
-            $arguments = (object)[
+            $arguments = (object) [
                 'profile_xid' => $dto->profile_xid,
                 //'document_type' => $type ?? null, TODO please fix filter document type at sanf core api
                 'skip' => $dto->skip,
@@ -57,7 +57,7 @@ class BrowseRequestedDocumentFromCoreService implements ApplicationServiceInterf
 
             $response = $this->internalApiClient->browseRequestedDocuments($arguments);
         } catch (SanfInternalApiDataNotFoundException $exception) {
-            return (object)[
+            return (object) [
                 'data' => [],
                 'total' => 0,
             ];
@@ -71,7 +71,7 @@ class BrowseRequestedDocumentFromCoreService implements ApplicationServiceInterf
             });
         }
 
-        return (object)[
+        return (object) [
             'data' => $data,
             'total' => $response->total,
         ];
@@ -92,13 +92,13 @@ class BrowseRequestedDocumentFromCoreService implements ApplicationServiceInterf
                     break;
             }
 
-            return (object)[
+            return (object) [
                 'request_no' => $data->NO_PERMINTAAN ?? null,
                 'request_at' => $data->TGL_PERMINTAAN ? Carbon::make($data->TGL_PERMINTAAN) : null,
                 'document_no' => $data->NO_TYPE_DOC ?? null,
                 'document_type' => $documentType ?? null,
                 'documents' => $data->ITEM ? $this->mapRequestedItemDocs($data->ITEM) : [],
-                'total_document' => $data->ITEM ? count($data->ITEM) : 0
+                'total_document' => $data->ITEM ? count($data->ITEM) : 0,
             ];
         }, $response->data);
     }
@@ -106,7 +106,7 @@ class BrowseRequestedDocumentFromCoreService implements ApplicationServiceInterf
     private function mapRequestedItemDocs(array $response): array
     {
         return array_map(function ($data) {
-            return (object)[
+            return (object) [
                 'id' => $data->DOC_ID ?? null,
                 'title' => $data->DOC_NAME ?? null,
                 'is_uploaded' => false,

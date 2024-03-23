@@ -30,5 +30,4 @@ abstract class AbstractMaintenanceCommand extends IlluminateCommand
      * @return void
      */
     abstract public function handle();
-
 }

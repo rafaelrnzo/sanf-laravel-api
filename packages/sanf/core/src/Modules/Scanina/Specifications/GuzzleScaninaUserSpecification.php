@@ -7,8 +7,6 @@ use Sanf\Core\Modules\Scanina\Dtos\ScaninaUserRegisterRequestDto;
 
 class GuzzleScaninaUserSpecification implements ScaninaUserSpecificationInterface
 {
-
-
     /**
      * @return GuzzlePostUserAccountSpecification
      */
@@ -34,7 +32,6 @@ class GuzzleScaninaUserSpecification implements ScaninaUserSpecificationInterfac
     {
         return new GuzzleAddToCartSpecification($parameter);
     }
-
 
     /**
      * @return GuzzleResendEmailVerificationSpecification

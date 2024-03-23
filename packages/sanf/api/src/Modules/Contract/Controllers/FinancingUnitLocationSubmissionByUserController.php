@@ -86,7 +86,7 @@ final class FinancingUnitLocationSubmissionByUserController extends RestApiContr
                 'userId' => $auth->id(),
                 'profileXid' => $xid,
                 'xid' => $contract_no,
-                'serialNo' => $serial_no
+                'serialNo' => $serial_no,
             ]
         );
         $dto->sortBy = Str::title($dto->sortBy);

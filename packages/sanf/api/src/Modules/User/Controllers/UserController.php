@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Api\Modules\User\Controllers;
-
 
 use Illuminate\Contracts\Auth\Guard;
 use NbsPhp\Core\Controllers\RestApiController;
@@ -20,8 +18,9 @@ class UserController extends RestApiController
         Guard $auth,
         GetMetadataFinancingByUserService $service
     ) {
-        $dto = (object)['userId' => $auth->id()];
+        $dto = (object) ['userId' => $auth->id()];
         $result = $service->execute($dto);
+
         return fractal($result, new UserMetadataFinancingTransformer());
     }
 
@@ -30,10 +29,12 @@ class UserController extends RestApiController
         GetProjectMetadataByUserService $projectService,
         GetCommodityMetadataByUserService $commodityService
     ) {
-        $dto = (object)['userId' => $auth->id()];
+        $dto = (object) ['userId' => $auth->id()];
         $projectMetadata = $projectService->execute($dto);
         $commodityMetadata = $commodityService->execute($dto);
-        return fractal((object)[
+
+        return fractal(
+            (object) [
             'projectMetadata' => $projectMetadata,
             'commodityMetadata' => $commodityMetadata,
         ],
@@ -46,11 +47,12 @@ class UserController extends RestApiController
         $xid,
         GetPersonalAssistantUserService $service
     ) {
-        $dto = (object)[
+        $dto = (object) [
             'userId' => $auth->id(),
             'profileActiveId' => $xid,
         ];
         $result = $service->execute($dto);
+
         return fractal($result, new PersonalAssistantTransformer());
     }
 }

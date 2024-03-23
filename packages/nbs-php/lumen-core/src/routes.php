@@ -1,4 +1,5 @@
 <?php
+
 //phpcs:disable
 
 /*
@@ -11,7 +12,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-/** @var Router $router */
+/* @var Router $router */
 
 use Laravel\Lumen\Routing\Router;
 

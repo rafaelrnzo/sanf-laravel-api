@@ -37,8 +37,8 @@ final class GetESignUserCheckService implements ApplicationServiceInterface
         }
 
         $result = $this->client->registerCheck([
-            ['name' => 'nik', 'contents' => $dto->nik,],
-            ['name' => 'email', 'contents' => $dto->email,],
+            ['name' => 'nik', 'contents' => $dto->nik],
+            ['name' => 'email', 'contents' => $dto->email],
         ]);
 
         $exceptCodeCondition = ($result['code'] == TekenAjaApiResponseErrorCodeEnum::USER_EXISTS_VERIFIED or $result['code'] == TekenAjaApiResponseErrorCodeEnum::NIK_EMAIL_MATCHED);

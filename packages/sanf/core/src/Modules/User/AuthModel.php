@@ -5,7 +5,6 @@ namespace Sanf\Core\Modules\User;
 use Carbon\Carbon;
 use NbsPhp\Core\Models\UserOAuthModel;
 use NbsPhp\Core\Models\UserStatusModel;
-use Sanf\Core\Modules\User\Enums\UserAuthLogStatusEnum;
 
 class AuthModel extends \NbsPhp\Core\Models\AuthModel
 {
@@ -27,7 +26,6 @@ class AuthModel extends \NbsPhp\Core\Models\AuthModel
      * @property string             xid
      * @property string             profile_type
      */
-
     protected $fillable = [
         'username',
         'password',

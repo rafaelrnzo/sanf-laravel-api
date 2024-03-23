@@ -56,9 +56,9 @@ class GuzzleBrowseProductSparePartCartService implements ApplicationServiceInter
 
         $responseProductSparePart = $this->syncWithApi($records);
 
-        return (object)[
+        return (object) [
             'data' => $responseProductSparePart,
-            'paginate' => (object)[
+            'paginate' => (object) [
                 'total' => 0,
                 'count' => 0,
                 'skip' => null,
@@ -83,9 +83,9 @@ class GuzzleBrowseProductSparePartCartService implements ApplicationServiceInter
                 throw $exception;
             }
 
-            $data = (array)$productSparePartResponse->data;
+            $data = (array) $productSparePartResponse->data;
             unset($data['reviews']);
-            $productSparePartResponseDto =  new ReadProductSparePartResponseDto($data);
+            $productSparePartResponseDto = new ReadProductSparePartResponseDto($data);
             $productSparePartResponseDto->xid = $product->xid;
             $productSparePartResponseDto->quantity = $product->quantity;
             $productSparePartResponseDto->customerReviews = [];

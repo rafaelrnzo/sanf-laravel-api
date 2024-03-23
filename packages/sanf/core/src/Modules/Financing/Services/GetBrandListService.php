@@ -7,7 +7,6 @@ use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class GetBrandListService implements ApplicationServiceInterface
 {
-
     private SanfCoreApiClient $client;
 
     public function __construct(SanfCoreApiClient $client)
@@ -22,17 +21,17 @@ class GetBrandListService implements ApplicationServiceInterface
     {
         $data = $this->client->getBrands();
 
-        return (object)[
+        return (object) [
             'data' => collect($data['data'])
                 ->map(function ($item) {
-                    return (object)[
-                        "brand_id" => $item['BRAND_ID'] ?? null,
-                        "brand_name" => $item['BRAND_NAME'] ?? null,
+                    return (object) [
+                        'brand_id' => $item['BRAND_ID'] ?? null,
+                        'brand_name' => $item['BRAND_NAME'] ?? null,
                     ];
                 }),
-            'paginate' => (object)[
-                'total' => (int)($data['total'] ?? 0),
-                'count' => (int)($data['count'] ?? 0),
+            'paginate' => (object) [
+                'total' => (int) ($data['total'] ?? 0),
+                'count' => (int) ($data['count'] ?? 0),
                 'skip' => null,
                 'limit' => null,
                 'sort_by' => null,

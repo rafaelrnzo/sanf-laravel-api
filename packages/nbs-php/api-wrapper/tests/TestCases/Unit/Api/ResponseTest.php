@@ -11,7 +11,7 @@ class ResponseTest extends TestCase
     public function testGetContents()
     {
         $data = [
-            'abc' => 123
+            'abc' => 123,
         ];
 
         $json = json_encode($data);
@@ -28,7 +28,7 @@ class ResponseTest extends TestCase
     public function testJson()
     {
         $data = [
-            'abc' => 123
+            'abc' => 123,
         ];
 
         $json = json_encode($data);

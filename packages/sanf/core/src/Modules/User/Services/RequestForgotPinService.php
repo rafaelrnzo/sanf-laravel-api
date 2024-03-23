@@ -42,7 +42,7 @@ class RequestForgotPinService implements ApplicationServiceInterface
         ]);
 
         // TODO use transformer
-        return (object)[
+        return (object) [
             'reset_pin_code' => $user->reset_pin_code,
             'reset_pin_expired_at' => $user->reset_pin_expired_at,
         ];

@@ -15,10 +15,10 @@ class OnBoardingController extends RestApiController
     {
         $input = $this->validate($request, [
             'limit' => 'nullable|integer',
-            'sort_by' => ['nullable', Rule::in(['asc', 'desc',])],
+            'sort_by' => ['nullable', Rule::in(['asc', 'desc'])],
         ]);
 
-        $dto = (object)[
+        $dto = (object) [
             'limit' => $input['limit'] ?? null,
             'sortBy' => $input['sort_by'] ?? null,
         ];

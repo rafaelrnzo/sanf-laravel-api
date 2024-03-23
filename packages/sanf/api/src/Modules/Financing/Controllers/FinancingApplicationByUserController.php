@@ -51,9 +51,10 @@ class FinancingApplicationByUserController extends RestApiController
         $dto = new ReadFinancingApplicationDto([
             'xid' => $xid,
             'applicationXid' => $application_xid,
-            'userId' => $auth->id()
+            'userId' => $auth->id(),
         ]);
         $result = $service->execute($dto);
+
         return fractal($result, new FinancingApplicationTransformer());
     }
 
@@ -68,9 +69,9 @@ class FinancingApplicationByUserController extends RestApiController
         GetDetailCustomerProfileByUserService $profileService
     ) {
         $input = $this->validateApplication($request);
-        $profile = $profileService->execute((object)[
+        $profile = $profileService->execute((object) [
             'userId' => $auth->id(),
-            'customerId' => $input['profile_xid']
+            'customerId' => $input['profile_xid'],
         ]);
         $financingObjects = [];
         foreach ($input['financing_objects'] ?? [] as $financingObject) {
@@ -79,9 +80,10 @@ class FinancingApplicationByUserController extends RestApiController
         $dto = new AddFinancingApplicationDto($input + [
                 'userId' => $auth->id(),
                 'profile' => $profile,
-                'financingObjects' => $financingObjects
+                'financingObjects' => $financingObjects,
             ]);
         $financingService->execute($dto);
+
         return $this->responseOk();
     }
 
@@ -92,9 +94,9 @@ class FinancingApplicationByUserController extends RestApiController
         GetDetailCustomerProfileByUserService $profileService
     ) {
         $input = $this->validateApplication($request);
-        $profile = $profileService->execute((object)[
+        $profile = $profileService->execute((object) [
             'userId' => $auth->id(),
-            'customerId' => $input['profile_xid']
+            'customerId' => $input['profile_xid'],
         ]);
         $financingObjects = [];
         foreach ($input['financing_objects'] ?? [] as $financingObject) {
@@ -103,9 +105,10 @@ class FinancingApplicationByUserController extends RestApiController
         $dto = new AddFinancingApplicationDto($input + [
                 'userId' => $auth->id(),
                 'profile' => $profile,
-                'financingObjects' => $financingObjects
+                'financingObjects' => $financingObjects,
             ]);
         $financingService->execute($dto);
+
         return $this->responseOk();
     }
 

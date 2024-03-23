@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Api\Modules\Product;
-
 
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
@@ -11,7 +9,6 @@ use Spatie\Fractalistic\ArraySerializer;
 
 class ListProductController extends RestApiController
 {
-
     protected $service;
 
     public function __construct(ListProductService $service)
@@ -28,9 +25,9 @@ class ListProductController extends RestApiController
 
         // set property;
         $property = [];
-        if (isset($inputs['limit'])) $property += ['limit' => (int)$inputs['limit']];
-        if (isset($inputs['offset'])) $property += ['offset' => (int)$inputs['offset']];
-        if (isset($inputs['id'])) $property += ['id' => (int)$inputs['id']];
+        if (isset($inputs['limit'])) $property += ['limit' => (int) $inputs['limit']];
+        if (isset($inputs['offset'])) $property += ['offset' => (int) $inputs['offset']];
+        if (isset($inputs['id'])) $property += ['id' => (int) $inputs['id']];
         if (isset($inputs['title'])) $property += ['title' => $inputs['title']];
 
         // set up dto;
@@ -49,11 +46,11 @@ class ListProductController extends RestApiController
         $rules = [
             'id' => [
                 'nullable',
-                'max:20'
+                'max:20',
             ],
             'title' => [
                 'nullable', 'string',
-                'max:255'
+                'max:255',
             ],
             'limit' => [
                 'nullable',

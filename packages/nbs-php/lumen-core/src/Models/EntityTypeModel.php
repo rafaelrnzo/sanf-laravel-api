@@ -18,4 +18,5 @@ class EntityTypeModel extends Model
     {
         $this->table = config('auth.table_names.entity_type');
         parent::__construct($attributes);
-    }}
+    }
+}

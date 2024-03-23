@@ -26,7 +26,7 @@ class AuditHttpLogModel extends AbstractModel
         'header' => 'object',
         'query' => 'object',
         'body' => 'object',
-        'response' => 'object'
+        'response' => 'object',
     ];
 
     const UPDATED_AT = null;

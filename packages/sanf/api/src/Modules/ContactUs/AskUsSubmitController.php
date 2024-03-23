@@ -44,21 +44,20 @@ class AskUsSubmitController extends RestApiController
         return $response->successResponse(response()->json());
     }
 
-
     private function validating(Request $request)
     {
         $rules = [
-            'topic_id' => ['required',],
-            'title' => ['required', 'string', 'max:100',],
-            'message' => ['required', 'string', 'max:500',],
-            'name' => ['required', 'string', 'max:128',],
-            'email' => ['required', 'email', 'max:255',],
-            'phone_number' => ['required', 'string', 'min:11', 'max:20',],
+            'topic_id' => ['required'],
+            'title' => ['required', 'string', 'max:100'],
+            'message' => ['required', 'string', 'max:500'],
+            'name' => ['required', 'string', 'max:128'],
+            'email' => ['required', 'email', 'max:255'],
+            'phone_number' => ['required', 'string', 'min:11', 'max:20'],
             'contract_no' => ['nullable', 'string', 'max:50'],
             'contact_media' => ['required', 'string', 'max:20'],
             'contact_time' => ['required', 'string', 'max:20'],
-            'images' => ['nullable',],
-            'images.*' => ['string', 'max:64',]
+            'images' => ['nullable'],
+            'images.*' => ['string', 'max:64'],
         ];
 
         return $this->validate($request, $rules);

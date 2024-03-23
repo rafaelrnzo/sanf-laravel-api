@@ -6,7 +6,6 @@ use Spatie\DataTransferObject\DataTransferObject;
 
 class AccountReceivableContractDto extends DataTransferObject
 {
-
     public ?string $user_id;
 
     public string $profile_xid;

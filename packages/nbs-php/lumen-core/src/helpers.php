@@ -111,7 +111,7 @@ if (!function_exists('config_path')) {
 
 if (!function_exists('public_path')) {
     /**
-     * Return the path to public dir
+     * Return the path to public dir.
      * @param null $path
      * @return string
      */
@@ -148,7 +148,6 @@ if (!function_exists('unix_timestamp')) {
     }
 }
 
-
 if (!function_exists('redirect_with_session')) {
     /**
      * Get an instance of the redirector.
@@ -181,6 +180,7 @@ if (!function_exists('date_localized')) {
     function date_localized($dateTime, $format = '%A %d %B %Y', $timezone = 'Asia/Jakarta')
     {
         Carbon::setLocale(config('app.locale'));
+
         return optional(Carbon::make($dateTime))
             ->setTimezone(new \DateTimeZone($timezone))
             ->formatLocalized($format);
@@ -191,15 +191,17 @@ if (!function_exists('extract_validation_message')) {
     function extract_validation_message(ValidationException $exception)
     {
         $errors = $exception->getResponse()->original;
+
         return collect(array_dot($errors))->first();
     }
 }
 
 if (!function_exists('extract_route_name')) {
-    function extract_route_name(\Illuminate\Http\Request $request)
+    function extract_route_name(Illuminate\Http\Request $request)
     {
         $methodName = $request->getMethod();
         $pathInfo = $request->getPathInfo();
+
         return app()->router->getRoutes()[$methodName . $pathInfo]['action']['as'];
 
     }

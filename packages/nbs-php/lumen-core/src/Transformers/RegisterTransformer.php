@@ -1,8 +1,6 @@
 <?php
 
-
 namespace NbsPhp\Core\Transformers;
-
 
 use League\Fractal\TransformerAbstract;
 

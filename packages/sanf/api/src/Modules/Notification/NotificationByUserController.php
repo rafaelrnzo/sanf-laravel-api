@@ -35,11 +35,12 @@ final class NotificationByUserController extends RestApiController
     public function patchMarkAsRead(Guard $auth, Request $request, MarkAsReadNotificationByUserService $service, TransactionalSessionInterface $transactionalSession)
     {
         $input = $this->validate($request, [
-            'xids' => ['nullable', 'array']
+            'xids' => ['nullable', 'array'],
         ]);
         $dto = new ReadNotificationByUserRequestDto($input + ['userId' => $auth->id()]);
         $transactionalService = new TransactionalApplicationService($service, $transactionalSession);
         $transactionalService->execute($dto);
+
         return $this->responseOk();
     }
 }

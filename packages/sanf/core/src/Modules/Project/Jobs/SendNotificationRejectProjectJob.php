@@ -24,7 +24,6 @@ class SendNotificationRejectProjectJob implements ShouldQueue
      *
      * @return void
      */
-
     public function __construct($project, $user)
     {
         $this->project = $project;
@@ -41,7 +40,7 @@ class SendNotificationRejectProjectJob implements ShouldQueue
             'title' => __('Pengajuan Proyek Anda di TOLAK'),
             'subtitle' => __('Info Proyek Anda'),
             'screen' => 'my_project',
-            'body' => __("Mohon maaf proyek anda yang berjudul :title telah ditolak", ['title' => $this->project->title]),
+            'body' => __('Mohon maaf proyek anda yang berjudul :title telah ditolak', ['title' => $this->project->title]),
             'published_at' => Carbon::now()->timestamp,
         ]);
 

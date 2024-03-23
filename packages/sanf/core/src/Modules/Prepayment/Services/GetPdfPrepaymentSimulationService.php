@@ -1,13 +1,11 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Prepayment\Services;
 
 use Dompdf\Dompdf;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Enums\CurrencyTypeEnum;
 use Sanf\Core\Modules\Prepayment\Dtos\GetPdfPrepaymentSimulationRequestDto;
-
 
 final class GetPdfPrepaymentSimulationService extends PrepaymentSubmissionByUserService implements ApplicationServiceInterface
 {
@@ -41,7 +39,7 @@ final class GetPdfPrepaymentSimulationService extends PrepaymentSubmissionByUser
             'openingSentence' => 'Selamat siang ' . $user->full_name . ', berikut kami lampirkan hasil perhitungan simulasi prepayment untuk pembiayaan Anda:',
             'email' => $user->username,
             'data' => $lineItems,
-            'closingSentence' => 'Hasil perhitungan simulasi pelunasan dipercepat ini bersifat tidak mengikat.'
+            'closingSentence' => 'Hasil perhitungan simulasi pelunasan dipercepat ini bersifat tidak mengikat.',
         ]])->render();
 
         $pdf = new Dompdf();
@@ -56,6 +54,7 @@ final class GetPdfPrepaymentSimulationService extends PrepaymentSubmissionByUser
     {
         $type = pathinfo($assetPath, PATHINFO_EXTENSION);
         $data = file_get_contents($assetPath);
+
         return 'data:image/' . $type . ';base64,' . base64_encode($data);
     }
 }

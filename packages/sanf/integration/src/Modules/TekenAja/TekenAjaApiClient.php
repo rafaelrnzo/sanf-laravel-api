@@ -19,7 +19,7 @@ class TekenAjaApiClient
     }
 
     /**
-     * {
+     * {.
         "11": "ACEH",
         "51": "BALI",
         "36": "BANTEN",
@@ -28,11 +28,12 @@ class TekenAjaApiClient
     public function getProvinces()
     {
         $response = Request::route('location.province', $this->client)->send();
+
         return $response->json();
     }
 
     /**
-     * {
+     * {.
         "73": "JAKARTA BARAT",
         "71": "JAKARTA PUSAT",
         "74": "JAKARTA SELATAN",
@@ -46,6 +47,7 @@ class TekenAjaApiClient
         $response = Request::route('location.district', $this->client)
             ->queryParams(['province' => $provinceId])
             ->send();
+
         return $response->json();
     }
 
@@ -57,13 +59,14 @@ class TekenAjaApiClient
                 'district' => $subDistrict,
             ])
             ->send();
+
         return $response->json();
     }
 
     public function addRegisterUser(array $request)
     {
         $response = Request::route('user.registration.detail', $this->client)
-            ->headers(['Accept' => 'application/json',])
+            ->headers(['Accept' => 'application/json'])
             ->multipart($request)
             ->send();
 
@@ -77,7 +80,7 @@ class TekenAjaApiClient
             'contents' => 'check_nik',
         ];
         $response = Request::route('user.registration.check', $this->client)
-            ->headers(['Accept' => 'application/json',])
+            ->headers(['Accept' => 'application/json'])
             ->multipart($request)
             ->send();
 
@@ -91,7 +94,7 @@ class TekenAjaApiClient
             'contents' => 'resend_email',
         ];
         $response = Request::route('user.registration.check', $this->client)
-            ->headers(['Accept' => 'application/json',])
+            ->headers(['Accept' => 'application/json'])
             ->multipart($request)
             ->send();
 
@@ -101,7 +104,7 @@ class TekenAjaApiClient
     public function generateSignUrl(string $documentId, string $email)
     {
         $response = Request::route('document.generate-url', $this->client)
-            ->headers(['Accept' => 'application/json',])
+            ->headers(['Accept' => 'application/json'])
             ->multipart([
                 ['name' => 'document_id', 'contents' => $documentId],
                 ['name' => 'user_email', 'contents' => $email],
@@ -114,7 +117,7 @@ class TekenAjaApiClient
     public function download(string $documentId)
     {
         $response = Request::route('document.download', $this->client)
-            ->headers(['Accept' => 'application/json',])
+            ->headers(['Accept' => 'application/json'])
             ->multipart([
                 ['name' => 'document_id', 'contents' => $documentId],
             ])

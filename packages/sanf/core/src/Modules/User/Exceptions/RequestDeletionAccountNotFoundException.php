@@ -8,5 +8,5 @@ class RequestDeletionAccountNotFoundException extends ApiException
 {
     protected $code = 'E_ADEL_2';
 
-    protected $message = "User Delete Account Not Found";
+    protected $message = 'User Delete Account Not Found';
 }

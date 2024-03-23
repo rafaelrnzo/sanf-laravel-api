@@ -9,8 +9,7 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Dtos\BrowseProcessFinancingUnitLocationSubmissionByUserRequestDto;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 
-final class BrowseProcessFinancingUnitLocationSubmissionByUserService extends
-    FinancingUnitLocationSubmissionByUserService implements ApplicationServiceInterface
+final class BrowseProcessFinancingUnitLocationSubmissionByUserService extends FinancingUnitLocationSubmissionByUserService implements ApplicationServiceInterface
 {
     /**
      * @param BrowseProcessFinancingUnitLocationSubmissionByUserRequestDto $dto
@@ -42,42 +41,43 @@ final class BrowseProcessFinancingUnitLocationSubmissionByUserService extends
             $collection = collect($submissions);
             $data = collect($response->data)->map(function ($item) use ($collection) {
                 $submission = $collection->where('serial_no', $item->SERIAL_NO)->first();
-                $metadata = json_decode($submission->submitted_location_metadata ?? "");
-                return (object)[
+                $metadata = json_decode($submission->submitted_location_metadata ?? '');
+
+                return (object) [
                     'serial_no' => $item->SERIAL_NO ?: null,
                     'brand_type_model' => $item->BTM ?: null,
                     'provider_name' => null,
                     'year' => $item->YEAR,
-                    'location_metadata' => (object)[
+                    'location_metadata' => (object) [
                         'city_id' => $item->CITY_ID,
-                        'city_name' => $item->CITY
+                        'city_name' => $item->CITY,
                     ],
-                    'status' => ($submission) ? (object)[
+                    'status' => ($submission) ? (object) [
                         'id' => $submission->status->id,
-                        'name' => $submission->status->name
+                        'name' => $submission->status->name,
                     ] : null,
-                    'submitted_location_metadata' => ($submission) ? (object)[
+                    'submitted_location_metadata' => ($submission) ? (object) [
                         'city_id' => $metadata->city_id,
                         'city_name' => $metadata->city_name,
                     ] : null,
                 ];
             });
         } catch (SanfInternalApiDataNotFoundException $exception) {
-            return (object)[
+            return (object) [
                 'data' => [],
-                'paginate' => (object)[
+                'paginate' => (object) [
                     'total' => 0,
                     'count' => 0,
-                    'skip' => (int)$dto->skip,
-                    'limit' => (int)$dto->limit,
+                    'skip' => (int) $dto->skip,
+                    'limit' => (int) $dto->limit,
                     'sortBy' => $dto->sortBy,
-                ]
+                ],
             ];
         }
 
-        return (object)[
+        return (object) [
             'data' => $data,
-            'paginate' => (object)[
+            'paginate' => (object) [
                 'total' => $response->total ?? $response->count,
                 'count' => $response->count ?? 0,
                 'skip' => $dto->skip,

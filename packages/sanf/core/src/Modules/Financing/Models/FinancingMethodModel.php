@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Financing\Models;
 
 use NbsPhp\Core\Models\AbstractModel;

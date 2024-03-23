@@ -2,7 +2,6 @@
 
 namespace NbsPhp\Core\Repositories;
 
-
 use Illuminate\Support\Facades\DB;
 use NbsPhp\Core\Models\UserMetadataModel;
 use Sanf\Core\Modules\User\AuthModel;
@@ -28,11 +27,14 @@ class EloquentUserRepository extends AbstractEloquentRepository implements UserR
         $query = $this->userMetadataModel->newQuery()->where('user_id', $userId);
         if (is_array($keys)) {
             $query->whereIn('key', $keys);
+
             return json_decode(json_encode($query->get()));
         } elseif ($keys != null) {
             $query->where('key', $keys);
+
             return json_decode(json_encode($query->first()));
         }
+
         return json_decode(json_encode($query->get()));
     }
 
@@ -42,7 +44,7 @@ class EloquentUserRepository extends AbstractEloquentRepository implements UserR
             ->forceCreate([
                 'user_id' => $userId,
                 'key' => $key,
-                'value' => $value
+                'value' => $value,
             ]);
 
         return $metadata;
@@ -57,13 +59,13 @@ class EloquentUserRepository extends AbstractEloquentRepository implements UserR
         if ($version == null) {
             return $query->where('version', $version)->update([
                 'value' => $value,
-                'version' => DB::raw('version+1')
+                'version' => DB::raw('version+1'),
             ]);
         }
 
         return $query->where('version', $version)->update([
             'value' => $value,
-            'version' => $version + 1
+            'version' => $version + 1,
         ]);
     }
 }

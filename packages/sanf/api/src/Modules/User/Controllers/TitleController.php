@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Sanf\Api\Modules\User\Controllers;
 
 use Illuminate\Http\Request;
@@ -12,7 +11,6 @@ use Spatie\Fractalistic\ArraySerializer;
 
 class TitleController extends RestApiController
 {
-
     public function getList(GetListTitleService $service, Request $request)
     {
         $dto = new GetListTitleDto([

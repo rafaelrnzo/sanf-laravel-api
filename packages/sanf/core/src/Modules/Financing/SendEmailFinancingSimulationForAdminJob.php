@@ -24,7 +24,6 @@ class SendEmailFinancingSimulationForAdminJob implements ShouldQueue
      *
      * @return void
      */
-
     public function __construct($data, $recipient)
     {
         $this->data = $data;
@@ -38,7 +37,7 @@ class SendEmailFinancingSimulationForAdminJob implements ShouldQueue
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
             ->rightLogo(asset('assets/png/sanf-tagline.png'))
             ->banner(asset('assets/png/email-verification.png'))
-            ->greeting("Halo Admin SANFIND!")
+            ->greeting('Halo Admin SANFIND!')
             ->line(
                 __(
                     '<blockquote style="margin: 0 3em;font-size: 16px; line-height: 150%;">Berikut kami lampirkan hasil perhitungan simulasi pengajuan pembiayaan ' . $this->recipient->name . '</blockquote> '
@@ -51,6 +50,7 @@ class SendEmailFinancingSimulationForAdminJob implements ShouldQueue
         );
 
         $ccMails = explode(',', config('sanf-mobile.mail_to.it_helpdesk'));
+
         return Mail::to($this->recipient->email)
             ->cc($ccMails)
             ->send($simulationEmail);

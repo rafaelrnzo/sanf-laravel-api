@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\User\Services;
-
 
 use Carbon\Carbon;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
@@ -37,22 +35,22 @@ class UpdatePersonalProfileService implements ApplicationServiceInterface
             throw new UserNotFoundException('Missmatch Type');
         }
         $this->internalApiClient->updateCustomer([
-            "cust_id" => $dto->customerId,
-            "ktp" => $dto->identityNumber,
-            "cust_type" => ProfileType::PERSONAL,
-            "notelp" => $dto->landlineNumber,
-            "nohp" => $dto->phoneNumber,
-            "gender" => $dto->gender,
-            "tgl_lahir" => Carbon::make($dto->birthdate)->format('Y/m/d'),
-            "idprov" => $dto->provinceId,
-            "prov" => $dto->provinceName,
-            "idkota" => $dto->cityId,
-            "kota" => $dto->cityName,
-            "kecamatan" => $dto->districtName,
-            "kelurahan" => $dto->subdistrictName,
-            "kodepos" => $dto->postcode,
-            "alamat" => $dto->address,
-            "lama_usaha" => $dto->businessSince,
+            'cust_id' => $dto->customerId,
+            'ktp' => $dto->identityNumber,
+            'cust_type' => ProfileType::PERSONAL,
+            'notelp' => $dto->landlineNumber,
+            'nohp' => $dto->phoneNumber,
+            'gender' => $dto->gender,
+            'tgl_lahir' => Carbon::make($dto->birthdate)->format('Y/m/d'),
+            'idprov' => $dto->provinceId,
+            'prov' => $dto->provinceName,
+            'idkota' => $dto->cityId,
+            'kota' => $dto->cityName,
+            'kecamatan' => $dto->districtName,
+            'kelurahan' => $dto->subdistrictName,
+            'kodepos' => $dto->postcode,
+            'alamat' => $dto->address,
+            'lama_usaha' => $dto->businessSince,
         ]);
     }
 }

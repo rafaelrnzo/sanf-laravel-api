@@ -5,8 +5,7 @@ namespace NbsPhp\Core\Enum;
 use MyCLabs\Enum\Enum;
 
 /**
- * Class UserStatus
- * @package NbsPhp\Core\Enum
+ * Class UserStatus.
  */
 class UserStatus extends Enum
 {

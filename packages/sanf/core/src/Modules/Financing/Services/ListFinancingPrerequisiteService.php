@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Financing\Services;
-
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Financing\Dto\ListFinancingPrerequisiteResultDto;
@@ -47,7 +45,7 @@ class ListFinancingPrerequisiteService extends FinancingService implements Appli
 
         // Get data from specification factory financing prerequisite
         $data = $this->financingPrerequisiteRepository->query(
-            $this->specificationFactory->paginate($dto->skip, $dto->limit , $dto->sort_by)
+            $this->specificationFactory->paginate($dto->skip, $dto->limit, $dto->sort_by)
         );
 
         $total = $this->financingPrerequisiteRepository->size(
@@ -55,18 +53,18 @@ class ListFinancingPrerequisiteService extends FinancingService implements Appli
         );
 
         // Assert paginate to object
-        $paginate = (object)[
-            'total' => (int)$total,
+        $paginate = (object) [
+            'total' => (int) $total,
             'count' => count($data),
             'skip' => (int) $dto->skip,
-            'limit' => (int)$dto->limit,
+            'limit' => (int) $dto->limit,
             'sort_by' => $dto->sort_by,
         ];
 
         // sent list data;
         return new ListFinancingPrerequisiteResultDto([
             'data' => $data,
-            'paginate'=> $paginate
+            'paginate'=> $paginate,
         ]);
     }
 }

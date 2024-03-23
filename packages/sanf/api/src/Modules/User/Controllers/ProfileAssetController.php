@@ -24,28 +24,30 @@ final class ProfileAssetController extends RestApiController
             'file' => ['required', 'image', 'mimetypes:image/png,image/jpeg,image/jpg,image/svg', 'max:5000'],
             'asset_type' => [
                 'required',
-                Rule::in(AssetTypeEnum::ASSET_TYPE)
-            ]
+                Rule::in(AssetTypeEnum::ASSET_TYPE),
+            ],
         ]);
         if (in_array($input['asset_type'], AssetTypeEnum::PROFILE_DOCUMENT)) {
             $dto = new UploadFinancingDocumentDto([
                 'xid' => $xid,
                 'file' => $input['file'],
-                'asset_type' => ((int)$input['asset_type'] === AssetTypeEnum::ID_KTP) ?
+                'asset_type' => ((int) $input['asset_type'] === AssetTypeEnum::ID_KTP) ?
                     AssetTypeEnum::KTP : AssetTypeEnum::NPWP,
             ]);
 
             $financingDocumentService->execute($dto);
+
             return $this->responseOk();
         }
 
         // set upload file dto;
         $dto = new AssetUploadRequestDto([
             'file' => $input['file'],
-            'type' => (int)$input['asset_type']
+            'type' => (int) $input['asset_type'],
         ]);
 
         $result = $assetService->execute($dto);
+
         return fractal($result, PublicAssetFileSimpleTransformer::class);
     }
 }

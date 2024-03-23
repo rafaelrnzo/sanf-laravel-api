@@ -30,15 +30,16 @@ class SubmitCoreSurveySubmissionService implements ApplicationServiceInterface
             $imagesFile = [];
             $paths = explode('|', $data['image_path']);
             foreach ($paths as $path) {
-                $imagesFile[] = (object)[
+                $imagesFile[] = (object) [
                     'IMAGEITEM' => $path,
                 ];
             }
-            return (object)[
+
+            return (object) [
                 'CODE' => $data['code'],
                 'DESCRIPTION' => $data['title'],
                 'NOTES' => $data['description'],
-                'IMAGES' => $imagesFile
+                'IMAGES' => $imagesFile,
             ];
         })->toArray();
         $this->internalApiClient->addSurvey($input);

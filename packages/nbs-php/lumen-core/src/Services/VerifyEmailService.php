@@ -1,8 +1,6 @@
 <?php
 
-
 namespace NbsPhp\Core\Services;
-
 
 use NbsPhp\Core\Exceptions\UnauthorizedException;
 use NbsPhp\Core\Models\AuthModel;
@@ -30,7 +28,7 @@ class VerifyEmailService implements VerifyEmailServiceInterface
             throw new NotFoundHttpException();
         }
 
-        if (!hash_equals((string)$dto->token, hash('sha256', $user->getEmailForVerification()))) {
+        if (!hash_equals((string) $dto->token, hash('sha256', $user->getEmailForVerification()))) {
             throw new UnauthorizedException();
         }
 

@@ -25,7 +25,7 @@ class BasicApiResource extends ApiResource implements AllContract, CreateContrac
     public $idField = 'id';
 
     public $attributes = [
-        'id' => 1
+        'id' => 1,
     ];
 
     public $dirty = [];
@@ -39,12 +39,14 @@ class BasicApiResource extends ApiResource implements AllContract, CreateContrac
     public function getAttribute(string $key)
     {
         $this->didGetAttributes[] = $key;
+
         return parent::getAttribute($key);
     }
 
     public function setAttribute(string $key, $value): ApiResource
     {
         $this->didSetAttributes[] = $key;
+
         return parent::setAttribute($key, $value);
     }
 }

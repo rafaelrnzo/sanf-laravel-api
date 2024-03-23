@@ -2,7 +2,7 @@
 
 namespace Sanf\Api\Modules\Financing\Controllers;
 
-use Carbon\Carbon;
+use function fractal;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -28,8 +28,6 @@ use Sanf\Core\Modules\Financing\Services\ListFinancingMethodService;
 use Sanf\Core\Modules\Financing\Services\ListFinancingPrerequisiteService;
 use Sanf\Core\Modules\Financing\Services\SendEmailFinancingSimulationService;
 use Sanf\Core\Modules\Financing\Services\SimulationCalculationService;
-
-use function fractal;
 
 class FinancingController extends RestApiController
 {
@@ -59,7 +57,7 @@ class FinancingController extends RestApiController
         ]);
 
         // Insert id to array input
-        $input = array_merge($input, ['id' => (int)$id]);
+        $input = array_merge($input, ['id' => (int) $id]);
 
         $dto = new ListFinancingMethodByFacilityRequestDto($input);
 
@@ -125,7 +123,7 @@ class FinancingController extends RestApiController
             // Set dto for send email service
             $dtoSendEmail = new SendEmailFinancingSimulationDto(
                 [
-                    'user_id' => $auth->id()
+                    'user_id' => $auth->id(),
                 ] + $simulationResult->toArray()
             );
 
@@ -137,7 +135,7 @@ class FinancingController extends RestApiController
             // Set dto for download service
             $dtoDownload = new PdfFinancingSimulationRequestDto(
                 [
-                    'user_id' => $auth->id()
+                    'user_id' => $auth->id(),
                 ] + $simulationResult->toArray()
             );
 
@@ -159,7 +157,7 @@ class FinancingController extends RestApiController
             'keyword' => ['nullable', 'string', 'max:255'],
             'skip' => ['nullable', 'integer'],
             'limit' => ['nullable', 'integer'],
-            'sort_by' => ['nullable', 'string', Rule::in(['oldest', 'latest',])],
+            'sort_by' => ['nullable', 'string', Rule::in(['oldest', 'latest'])],
         ]);
 
         $dto = new BrowseRequestDto($input);

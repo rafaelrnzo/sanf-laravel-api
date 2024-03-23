@@ -64,7 +64,8 @@ class AddSurveySubmissionService implements ApplicationServiceInterface
 
             $input = $data;
             $input['image_files'] = json_encode($imageFiles);
-            $input['image_path'] = implode("|", $imagePaths);
+            $input['image_path'] = implode('|', $imagePaths);
+
             return $input;
         })->toArray();
 

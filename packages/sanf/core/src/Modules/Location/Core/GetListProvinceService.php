@@ -1,14 +1,11 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Location\Core;
-
 
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class GetListProvinceService
 {
-
     protected SanfCoreApiClient $client;
 
     public function __construct(SanfCoreApiClient $client)
@@ -22,10 +19,10 @@ class GetListProvinceService
 
         return collect($response['data'])
             ->map(function ($item) {
-                return (object)[
-                    "country_id" => $item['COUNTRY_ID'] ?? '',
-                    "province_id" => $item['PROVINSI'] ?? '',
-                    "name" => ucwords(strtolower($item['DESCRIPTION'] ?? '')),
+                return (object) [
+                    'country_id' => $item['COUNTRY_ID'] ?? '',
+                    'province_id' => $item['PROVINSI'] ?? '',
+                    'name' => ucwords(strtolower($item['DESCRIPTION'] ?? '')),
                 ];
             });
     }

@@ -46,7 +46,7 @@ class Request
      * @return static
      * @throws Exceptions\EndpointNotDefinedException
      */
-    public static function route(string $name, GuzzleClient $client = null): Request
+    public static function route(string $name, GuzzleClient $client = null): self
     {
         return new static(Route::find($name), $client);
     }
@@ -71,7 +71,7 @@ class Request
      * @param array $pathParams
      * @return $this
      */
-    public function pathParams(array $pathParams): Request
+    public function pathParams(array $pathParams): self
     {
         $this->pathParams = array_merge($this->pathParams, $pathParams);
 
@@ -85,7 +85,7 @@ class Request
      * @param array|string $auth
      * @return $this
      */
-    public function auth($auth): Request
+    public function auth($auth): self
     {
         $this->options['auth'] = $auth;
 
@@ -99,7 +99,7 @@ class Request
      * @param array $headers
      * @return $this
      */
-    public function headers(array $headers): Request
+    public function headers(array $headers): self
     {
         $this->options['headers'] = array_merge($this->options['headers'] ?? [], $headers);
 
@@ -113,7 +113,7 @@ class Request
      * @param array $queryParams
      * @return $this
      */
-    public function queryParams(array $queryParams): Request
+    public function queryParams(array $queryParams): self
     {
         $this->options['query'] = array_merge($this->options['query'] ?? [], $queryParams);
 
@@ -127,7 +127,7 @@ class Request
      * @param string|resource|StreamInterface $body
      * @return $this
      */
-    public function body($body): Request
+    public function body($body): self
     {
         $this->options['body'] = $body;
 
@@ -141,7 +141,7 @@ class Request
      * @param array $data
      * @return $this
      */
-    public function json(array $data): Request
+    public function json(array $data): self
     {
         $this->options['json'] = array_merge($this->options['json'] ?? [], $data);
 
@@ -155,7 +155,7 @@ class Request
      * @param array $data
      * @return $this
      */
-    public function formParams(array $data): Request
+    public function formParams(array $data): self
     {
         $this->options['form_params'] = array_merge($this->options['form_params'] ?? [], $data);
 
@@ -169,7 +169,7 @@ class Request
      * @param array $data
      * @return $this
      */
-    public function multipart(array $data): Request
+    public function multipart(array $data): self
     {
         $this->options['multipart'] = array_merge($this->options['multipart'] ?? [], $data);
 
@@ -183,7 +183,7 @@ class Request
      * @param array $options
      * @return $this
      */
-    public function options(array $options): Request
+    public function options(array $options): self
     {
         $this->options = array_merge($this->options, $options);
 
@@ -239,7 +239,7 @@ class Request
      */
     public function send(): Response
     {
-        $callback = function (Request $request): Response {
+        $callback = function (self $request): Response {
             return new Response($this->client->request(
                 $request->getMethod(),
                 $request->getUrl(),
@@ -249,7 +249,7 @@ class Request
 
         foreach ($this->endpoint->getProcessors() as $processor)
         {
-            $callback = function (Request $request) use ($callback, $processor): Response {
+            $callback = function (self $request) use ($callback, $processor): Response {
                 return call_user_func_array("$processor::handle", [$request, $callback]);
             };
         }

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace NbsPhp\Core\Providers;
-
 
 use Illuminate\Support\ServiceProvider;
 use NbsPhp\Core\Repositories\ProfileRepositoryInterface;
@@ -25,6 +23,7 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerRoutes();
         $this->registerBindings();
     }
+
     /**
      * Register routes.
      */
@@ -34,6 +33,7 @@ class AuthServiceProvider extends ServiceProvider
             $this->registerRoute($route);
         });
     }
+
     /**
      * Get the list of routes.
      *
@@ -43,6 +43,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         return config('auth.routes.list');
     }
+
     /**
      * @param $route
      * @param null $name

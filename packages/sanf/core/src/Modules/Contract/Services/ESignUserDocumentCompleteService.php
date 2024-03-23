@@ -125,7 +125,7 @@ final class ESignUserDocumentCompleteService implements ApplicationServiceInterf
                 'file_name' => $formattedDocumentName,
                 'directory' => $path,
                 'path' => "{$path}{$formattedDocumentName}",
-                'mime_type' => Storage::getMimeType("{$path}{$formattedDocumentName}")
+                'mime_type' => Storage::getMimeType("{$path}{$formattedDocumentName}"),
             ],
             'status_id' => ESignContractStatusEnum::COMPLETED,
             'updated_at' => Carbon::now(),
@@ -136,7 +136,7 @@ final class ESignUserDocumentCompleteService implements ApplicationServiceInterf
                 'full_name' => $user->full_name ?? null,
                 'xid' => $user->xid ?? null,
                 'personal_xid' => $user->personal_xid ?? null,
-            ]
+            ],
         ]);
 
         // update core
@@ -175,7 +175,7 @@ final class ESignUserDocumentCompleteService implements ApplicationServiceInterf
             'type' => (string) NotificationTypeEnum::INFO,
             'screen' => 'contract_document_complete',
             'published_at' => Carbon::now(),
-            'click_action' => 'FLUTTER_NOTIFICATION_CLICK'
+            'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
         ];
 
         foreach ($usersId as $userId) {

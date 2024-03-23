@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Branch;
-
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 

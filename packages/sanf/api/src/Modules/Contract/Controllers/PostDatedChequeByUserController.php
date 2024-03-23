@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Sanf\Api\Modules\Contract\Controllers;
 
 use Illuminate\Contracts\Auth\Guard;

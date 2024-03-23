@@ -2,7 +2,6 @@
 
 namespace Sanf\Core\Modules\Invoice\Enums;
 
-
 use MyCLabs\Enum\Enum;
 
 class InvoiceCollectionSubmissionStatusEnum extends Enum

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Financing\Repositories;
-
 
 use NbsPhp\Core\Repositories\AbstractEloquentRepository;
 use Sanf\Core\Modules\Financing\Models\FinancingPrerequisiteModel;
@@ -19,12 +17,14 @@ class EloquentFinancingPrerequisiteRepository extends AbstractEloquentRepository
     public function get($specification)
     {
         $models = $specification->buildQuery($this->model)->first();
+
         return $this->stripEloquentModel($models);
     }
 
     public function query($specification)
     {
         $models = $specification->buildQuery($this->model)->get();
+
         return $this->stripEloquentModel($models);
     }
 
@@ -33,7 +33,7 @@ class EloquentFinancingPrerequisiteRepository extends AbstractEloquentRepository
         if (!is_null($specification)) {
             return $specification->buildQuery($this->model)->count();
         }
+
         return $this->model->newQuery()->select('id')->count();
     }
-
 }

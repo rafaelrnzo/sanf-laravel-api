@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Project\Events;
-
 
 class ProjectUnpublishedEvent extends AbstractProjectEvent
 {

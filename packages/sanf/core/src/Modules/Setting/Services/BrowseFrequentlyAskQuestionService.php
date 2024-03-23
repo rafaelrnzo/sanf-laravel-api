@@ -29,13 +29,13 @@ class BrowseFrequentlyAskQuestionService implements ApplicationServiceInterface
             $this->specification->paginate($dto->keyword)
         );
 
-        $mappingData =  array_map(function ($item) {
+        $mappingData = array_map(function ($item) {
             return (object) [
                 'id' => $item->id,
                 'title' => $item->title ?? null,
                 'description' => $item->description ?? null,
                 'isPopular' => $item->is_popular ?? false,
-                'order' => (double) $item->order ?? 0,
+                'order' => (float) $item->order ?? 0,
                 'categoryId' => $item->category->id,
                 'category' => $item->category->name,
                 'createdAt' => $item->created_at ?? Carbon::now(),
@@ -43,13 +43,13 @@ class BrowseFrequentlyAskQuestionService implements ApplicationServiceInterface
             ];
         }, $query);
 
-        return (object)[
+        return (object) [
             'data' => $mappingData,
-            'paginate' => (object)[
+            'paginate' => (object) [
                 'total' => $total,
                 'count' => count($mappingData),
-                'skip' => (int)$dto->skip,
-                'limit' => (int)$dto->limit,
+                'skip' => (int) $dto->skip,
+                'limit' => (int) $dto->limit,
                 'sort_by' => $dto->sortBy,
             ],
         ];

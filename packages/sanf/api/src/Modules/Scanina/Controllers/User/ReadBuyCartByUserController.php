@@ -15,7 +15,7 @@ class ReadBuyCartByUserController extends RestApiController
         Guard $userAuth,
         ReadBuyCartByUserService $service
     ) {
-        $dto = (object)[
+        $dto = (object) [
             'xid' => $xid,
             'productXid' => $product_xid,
             'userId' => $userAuth->id(),

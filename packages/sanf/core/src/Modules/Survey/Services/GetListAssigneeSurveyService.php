@@ -23,7 +23,6 @@ class GetListAssigneeSurveyService extends UserService implements ApplicationSer
     protected SurveyRepositoryInterface $surveyRepository;
     protected SurveySpecificationFactoryInterface $specificationFactory;
 
-
     /**
      * @param AuthModel $userRepository
      * @param SanfCoreApiClient $internalApiClient
@@ -39,7 +38,6 @@ class GetListAssigneeSurveyService extends UserService implements ApplicationSer
         $this->surveyRepository = $surveyRepository;
         $this->specificationFactory = $specificationFactory;
     }
-
 
     /**
      * @param PaginateAssigneeSurveyDto $dto
@@ -63,7 +61,7 @@ class GetListAssigneeSurveyService extends UserService implements ApplicationSer
 
             $data = collect($response->data)->map(function ($property) use ($surveyCollection) {
                 foreach ($property->ITEMS ?? [] as $item) {
-                    $items[] = (object)[
+                    $items[] = (object) [
                         'code' => $item->DOC_ID_SURVEY ?? null,
                         'title' => $item->DESCRIPTION ?? null,
                     ];
@@ -73,7 +71,7 @@ class GetListAssigneeSurveyService extends UserService implements ApplicationSer
                     ->where('contract_no', '=', $property->HEADER->REG_NO)
                     ->first();
 
-                return (object)[
+                return (object) [
                     'branch_id' => $property->HEADER->BR_ID ?? null,
                     'profile_xid' => $property->HEADER->CUST_ID ?? null,
                     'contract_no' => $property->HEADER->REG_NO ?? null,
@@ -89,21 +87,21 @@ class GetListAssigneeSurveyService extends UserService implements ApplicationSer
                 ];
             });
         } catch (SanfInternalApiDataNotFoundException $exception) {
-            return (object)[
+            return (object) [
                 'data' => [],
-                'paginate' => (object)[
+                'paginate' => (object) [
                     'total' => 0,
                     'count' => 0,
                     'skip' => 0,
                     'limit' => 0,
                     'sortBy' => '',
-                ]
+                ],
             ];
         }
 
-        return (object)[
+        return (object) [
             'data' => $data,
-            'paginate' => (object)[
+            'paginate' => (object) [
                 'total' => $response->total ?? $response->count,
                 'count' => $response->count ?? 0,
                 'skip' => 0,

@@ -1,14 +1,11 @@
 <?php
 
-
 namespace NbsPhp\Core\Enum;
-
 
 use MyCLabs\Enum\Enum;
 
 /**
- * Class OAuthProvider
- * @package NbsPhp\Core\Enum
+ * Class OAuthProvider.
  */
 class OAuthProvider extends Enum
 {

@@ -38,15 +38,15 @@ class ResetPasswordNotification extends Notification
             ->to($notifiable->getEmailForPasswordReset(), $notifiable->getNameForPasswordReset());
     }
 
-
     protected function resetUrl($notifiable)
     {
         $agent = new Agent();
         $jwtToken = (new \NbsPhp\Core\Jwt\JWTHelper())->newResetPasswordToken($notifiable->getEmailForPasswordReset(), $this->token);
-        $resetPasswordUrl = ($agent->isiPhone() || $agent->isiOS() || $agent->isiPad()) ? config('auth.reset_password_ios_url') : config('auth.reset_password_url') ;
+        $resetPasswordUrl = ($agent->isiPhone() || $agent->isiOS() || $agent->isiPad()) ? config('auth.reset_password_ios_url') : config('auth.reset_password_url');
         if ($resetPasswordUrl != '' || $resetPasswordUrl != null) {
             return "{$resetPasswordUrl}?token={$jwtToken}";
         }
+
         return route('password.reset', ['token' => $jwtToken]);
     }
 }

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace NbsPhp\Core\Database;
-
 
 use Illuminate\Support\Facades\DB;
 

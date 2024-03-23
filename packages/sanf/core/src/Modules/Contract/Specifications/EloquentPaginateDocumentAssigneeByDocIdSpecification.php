@@ -3,7 +3,6 @@
 namespace Sanf\Core\Modules\Contract\Specifications;
 
 use Carbon\Carbon;
-use Sanf\Core\Modules\Contract\Enums\ESignContractStatusEnum;
 use Sanf\Core\Modules\Contract\Models\ESignDocumentAssigneeModel;
 
 class EloquentPaginateDocumentAssigneeByDocIdSpecification
@@ -78,8 +77,8 @@ class EloquentPaginateDocumentAssigneeByDocIdSpecification
             ->when($this->statusId, function ($query) {
                 return $query->where('esign_document.status_id', $this->statusId);
             })->when($this->keyword, function ($query) {
-                return $query->where('esign_document.document_name', "ILIKE", '%' . $this->keyword . '%')
-                    ->orWhere('esign_document_assignee.document_id', "ILIKE", '%' . $this->keyword . '%');
+                return $query->where('esign_document.document_name', 'ILIKE', '%' . $this->keyword . '%')
+                    ->orWhere('esign_document_assignee.document_id', 'ILIKE', '%' . $this->keyword . '%');
             })->when($this->skip, function ($query) {
                 return $query->skip($this->skip);
             })->when($this->limit, function ($query) {

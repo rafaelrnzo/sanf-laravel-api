@@ -23,7 +23,6 @@ class GetListSurveyService extends UserService implements ApplicationServiceInte
     private SurveyRepositoryInterface $surveyRepository;
     private SurveySpecificationFactoryInterface $specificationFactory;
 
-
     /**
      * @param AuthModel $userRepository
      * @param SanfCoreApiClient $internalApiClient
@@ -39,7 +38,6 @@ class GetListSurveyService extends UserService implements ApplicationServiceInte
         $this->surveyRepository = $surveyRepository;
         $this->specificationFactory = $specificationFactory;
     }
-
 
     /**
      * @param null $dto
@@ -71,7 +69,8 @@ class GetListSurveyService extends UserService implements ApplicationServiceInte
                 $isSubmitted = $surveyCollection->where('branch_id', '=', $property->BR_ID)
                     ->where('contract_no', '=', $property->REG_NO)
                     ->first();
-                return (object)[
+
+                return (object) [
                     'branch_id' => $property->BR_ID ?? null,
                     'profile_xid' => $property->CUST_ID ?? null,
                     'contract_no' => $property->REG_NO ?? null,
@@ -94,21 +93,21 @@ class GetListSurveyService extends UserService implements ApplicationServiceInte
                 });
             }
         } catch (SanfInternalApiDataNotFoundException $exception) {
-            return (object)[
+            return (object) [
                 'data' => [],
-                'paginate' => (object)[
+                'paginate' => (object) [
                     'total' => 0,
                     'count' => 0,
                     'skip' => $dto->skip,
                     'limit' => $dto->limit,
                     'sortBy' => $dto->sortBy,
-                ]
+                ],
             ];
         }
 
-        return (object)[
+        return (object) [
             'data' => $data,
-            'paginate' => (object)[
+            'paginate' => (object) [
                 'total' => $response->total ?? $response->count,
                 'count' => count($data),
                 'skip' => $dto->skip,

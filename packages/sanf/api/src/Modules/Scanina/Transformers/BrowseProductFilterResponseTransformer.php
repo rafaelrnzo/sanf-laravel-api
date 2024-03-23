@@ -10,8 +10,8 @@ class BrowseProductFilterResponseTransformer extends TransformerAbstract
     {
         return [
             'xid' => $dto->xid ?? $dto->id,
-            'name' => (string)optional($dto)->name,
-            'icon_url' => (string)optional($dto)->iconUrl
+            'name' => (string) optional($dto)->name,
+            'icon_url' => (string) optional($dto)->iconUrl,
         ];
     }
 }

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\User\Services;
-
 
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Models\AuthModel;
@@ -62,6 +60,7 @@ class GetMyProfileService implements ApplicationServiceInterface
         } else {
             $profile->setNotAsPic();
         }
+
         return $profile;
     }
 }

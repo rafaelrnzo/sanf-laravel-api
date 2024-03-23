@@ -1,8 +1,6 @@
 <?php
 
-
 namespace NbsPhp\Core\Services;
-
 
 use NbsPhp\Core\Exceptions\UserActivationFailedException;
 use NbsPhp\Core\Models\AuthModel;
@@ -20,7 +18,6 @@ class SendEmailActivationService implements ApplicationServiceInterface
     {
         $this->repository = $repository;
     }
-
 
     public function execute($dto = null)
     {

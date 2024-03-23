@@ -53,6 +53,7 @@ class EloquentBrowseFrequentlyAskQuestionPageSpecification
         $isPopular = $this->isPopular;
         $categoryId = $this->categoryId;
         $keyword = $this->keyword;
+
         return $model->newQuery()
             ->with('category')
             ->whereHas('category')

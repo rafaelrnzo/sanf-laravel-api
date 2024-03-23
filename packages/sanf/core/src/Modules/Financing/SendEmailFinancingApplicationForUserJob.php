@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Financing;
 
 use Illuminate\Bus\Queueable;
@@ -25,7 +24,6 @@ class SendEmailFinancingApplicationForUserJob implements ShouldQueue
      *
      * @return void
      */
-
     public function __construct($data, $user, $emailRecipients)
     {
         $this->data = $data;
@@ -47,7 +45,8 @@ class SendEmailFinancingApplicationForUserJob implements ShouldQueue
                 '<blockquote style="margin: 0 0;font-size: 16px; line-height: 150%;">
                     Pengajuan Pembiayaan Anda Sedang Diproses oleh tim kami, berikut kami lampirkan ringkasan pengajuan pembiayaan Anda.
                 </blockquote>
-            '))
+            '
+            ))
             ->writeContent($this->data)
             ->generateSeparator([
                 ['joinToIndex' => 1, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08);">'],

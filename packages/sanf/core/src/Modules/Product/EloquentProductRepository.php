@@ -1,20 +1,16 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Product;
-
 
 class EloquentProductRepository implements ProductRepositoryInterface
 {
-
-    /** @var ProductModel $model */
+    /** @var ProductModel */
     protected $model;
 
     public function __construct(ProductModel $model)
     {
         $this->model = $model;
     }
-
 
     public function list($limit, $offset, $search = null)
     {
@@ -25,7 +21,7 @@ class EloquentProductRepository implements ProductRepositoryInterface
                 'title',
                 'description',
                 'financing_method_id',
-                'image'
+                'image',
             ])
             ->when($search, function ($query) use ($search) {
                 return $query->whereRaw($search);

@@ -13,6 +13,6 @@ class PlafondStatusEnum extends Enum
 
     public function getTranslation()
     {
-        return __('core::constant.plafond-status.'.$this->getKey());
+        return __('core::constant.plafond-status.' . $this->getKey());
     }
 }

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace NbsPhp\Notification\Models;
-
 
 use NbsPhp\Core\Models\AbstractModel;
 

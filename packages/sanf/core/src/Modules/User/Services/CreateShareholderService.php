@@ -1,15 +1,12 @@
 <?php
 
-
 namespace Sanf\Core\Modules\User\Services;
-
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class CreateShareholderService implements ApplicationServiceInterface
 {
-
     protected SanfCoreApiClient $client;
 
     public function __construct(SanfCoreApiClient $client)

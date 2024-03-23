@@ -2,7 +2,6 @@
 
 namespace Sanf\Core\Modules\Financing\Specifications;
 
-use Carbon\Carbon;
 use Sanf\Core\Modules\Financing\Models\FinancingCategoryModel;
 
 class EloquentPaginateFinancingCategorySpecification

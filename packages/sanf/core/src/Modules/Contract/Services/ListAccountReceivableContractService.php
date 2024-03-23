@@ -14,7 +14,6 @@ use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class ListAccountReceivableContractService extends UserService implements ApplicationServiceInterface
 {
-
     protected SanfCoreApiClient $internalApiClient;
 
     public function __construct(AuthModel $userRepository, SanfCoreApiClient $internalApiClient)
@@ -46,7 +45,7 @@ class ListAccountReceivableContractService extends UserService implements Applic
                 $dto->sort_by
             );
             $data = collect($response->data)->map(function ($item) {
-                return (object)[
+                return (object) [
                     'outstanding_amount' => $item->AR_OUT ?? 0,
                     'paid_amount' => $item->AR_PAID ?? 0,
                     'due_date' => $item->JATUH_TEMPO ?? null,
@@ -56,28 +55,27 @@ class ListAccountReceivableContractService extends UserService implements Applic
                 ];
             });
         } catch (SanfInternalApiDataNotFoundException $exception) {
-            return (object)[
+            return (object) [
                 'data' => [],
-                'paginate' => (object)[
+                'paginate' => (object) [
                     'total' => 0,
                     'count' => 0,
-                    'skip' => (int)$dto->skip,
-                    'limit' => (int)$dto->limit,
+                    'skip' => (int) $dto->skip,
+                    'limit' => (int) $dto->limit,
                     'sortBy' => $dto->sort_by,
-                ]
+                ],
             ];
         }
 
-        return (object)[
+        return (object) [
             'data' => $data,
-            'paginate' => (object)[
+            'paginate' => (object) [
                 'total' => $response->total ?? $response->count,
-                'count' => (int)$response->count,
+                'count' => (int) $response->count,
                 'skip' => $dto->skip,
                 'limit' => $dto->limit,
                 'sort_by' => $dto->sort_by,
             ],
         ];
     }
-
 }

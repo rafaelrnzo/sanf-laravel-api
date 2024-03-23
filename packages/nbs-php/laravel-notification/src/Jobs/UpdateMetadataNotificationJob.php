@@ -2,7 +2,6 @@
 
 namespace NbsPhp\Notification\Jobs;
 
-
 use Illuminate\Support\Facades\DB;
 use NbsPhp\Core\AbstractJob;
 use NbsPhp\Notification\Models\UserMetadataModel;
@@ -25,7 +24,6 @@ class UpdateMetadataNotificationJob extends AbstractJob
         $this->event = $event;
     }
 
-
     /**
      * Execute the job.
      *
@@ -39,7 +37,7 @@ class UpdateMetadataNotificationJob extends AbstractJob
                 ->where('key', $metadataKey)
                 ->update([
                     'value' => DB::raw('version+1'),
-                    'version' => DB::raw('version+1')
+                    'version' => DB::raw('version+1'),
                 ]);
             if (!$result) {
                 UserMetadataModel::forceCreate([

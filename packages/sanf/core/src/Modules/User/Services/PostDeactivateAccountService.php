@@ -41,7 +41,7 @@ class PostDeactivateAccountService implements ApplicationServiceInterface
     {
         if (!$token = Auth::attempt([
             'username' => $dto->username,
-            'password' => $dto->password
+            'password' => $dto->password,
         ])) {
             throw new InvalidCredentialException();
         }

@@ -10,7 +10,7 @@ class FinancingContractTypeTransformer extends TransformerAbstract
     public function transform($item)
     {
         return [
-            'id' => (string)$item->id,
+            'id' => (string) $item->id,
             'name' => Str::title($item->name),
         ];
     }

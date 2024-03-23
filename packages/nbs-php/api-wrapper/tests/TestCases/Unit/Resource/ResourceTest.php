@@ -16,7 +16,7 @@ class ResourceTest extends TestCase
     public function testConstruct()
     {
         $data = [
-            'abc' => 123
+            'abc' => 123,
         ];
         $resource = new BasicApiResource($data);
 
@@ -33,7 +33,7 @@ class ResourceTest extends TestCase
     public function testGet()
     {
         $data = [
-            'abc' => 123
+            'abc' => 123,
         ];
         $resource = new BasicApiResource($data);
         $resource->didGetAttributes = [];
@@ -76,7 +76,7 @@ class ResourceTest extends TestCase
     /**
      * Expected Behavior:
      * - Value is passed through from attributes array
-     * - Keys not in the attributes array return null value
+     * - Keys not in the attributes array return null value.
      */
     public function testGetAttribute()
     {
@@ -93,7 +93,7 @@ class ResourceTest extends TestCase
      * Expected Behavior:
      * - Keys in casts array are cast then passed through to attributes array
      * - Otherwise, value is passed through to attributes array
-     * - Attributes added to dirty array
+     * - Attributes added to dirty array.
      */
     public function testSetAttribute()
     {
@@ -122,13 +122,13 @@ class ResourceTest extends TestCase
      * - If $clear is true, overwrite attributes array completely with the provided array
      * - Keys in casts array are cast then passed through to attributes array
      * - Attributes added to dirty array
-     * - Returns $this
+     * - Returns $this.
      */
     public function testSetAttributes()
     {
         $oldData = [
             'abc' => 123,
-            'def' => 345
+            'def' => 345,
         ];
         $resource = new BasicApiResource();
         $resource->attributes = $oldData;
@@ -189,20 +189,20 @@ class ResourceTest extends TestCase
      * Expected Behavior:
      * - Data merged into attribute array
      * - Attributes added to dirty array
-     * - Returns $this
+     * - Returns $this.
      */
     public function testMergeAttributes()
     {
         $oldData = [
             'abc' => 123,
-            'def' => 345
+            'def' => 345,
         ];
         $resource = new BasicApiResource();
         $resource->attributes = $oldData;
 
         $newData = [
             'abc' => 0,
-            'xyz' => 345
+            'xyz' => 345,
         ];
 
         $returnValue = $resource->mergeAttributes($newData);
@@ -225,13 +225,13 @@ class ResourceTest extends TestCase
 
     /**
      * Expected Behavior:
-     * - Array of dirty attribues is passed through
+     * - Array of dirty attribues is passed through.
      */
     public function testGetDirty()
     {
         $resource = new BasicApiResource();
         $data = [
-            'abc' => 123
+            'abc' => 123,
         ];
         $resource->dirty = $data;
 
@@ -240,7 +240,7 @@ class ResourceTest extends TestCase
 
     /**
      * Expected Behavior:
-     * - Returns whether key is in casts array
+     * - Returns whether key is in casts array.
      */
     public function testCastsAttribute()
     {
@@ -254,7 +254,7 @@ class ResourceTest extends TestCase
 
     /**
      * Expected Behavior:
-     * - Returns value from casts array
+     * - Returns value from casts array.
      */
     public function testGetAttributeCastType()
     {
@@ -268,7 +268,7 @@ class ResourceTest extends TestCase
 
     /**
      * Expected Behavior:
-     * - Attributes are cast to the appropriate type when set
+     * - Attributes are cast to the appropriate type when set.
      */
     public function testCastAs()
     {
@@ -284,13 +284,13 @@ class ResourceTest extends TestCase
             'string' => 'string',
             'class' => BasicApiResource::class,
             'classCollection' => BasicApiResource::class,
-            'other' => 'abc'
+            'other' => 'abc',
         ];
         $data = [
             'bool' => 'true',
             'collection' => [
                 'abc',
-                'def'
+                'def',
             ],
             'date' => 'Jan 01, 2000',
             'datetime' => 'Jan 01, 2000 8:00 AM',
@@ -299,17 +299,17 @@ class ResourceTest extends TestCase
             'int' => '10',
             'string' => 10,
             'class' => [
-                'abc' => 123
+                'abc' => 123,
             ],
             'classCollection' => [
                 [
-                    'abc' => 123
+                    'abc' => 123,
                 ],
                 [
-                    'abc' => 123
-                ]
+                    'abc' => 123,
+                ],
             ],
-            'other' => 123
+            'other' => 123,
         ];
         $resource->setAttributes($data, true);
 
@@ -354,13 +354,13 @@ class ResourceTest extends TestCase
 
     /**
      * Expected Behavior:
-     * - Attributes are encoded to a JSON string
+     * - Attributes are encoded to a JSON string.
      */
     public function testToJson()
     {
         $resource = new BasicApiResource();
         $data = [
-            'abc' => 123
+            'abc' => 123,
         ];
         $resource->attributes = $data;
 
@@ -369,13 +369,13 @@ class ResourceTest extends TestCase
 
     /**
      * Expected Behavior:
-     * - JSON string is used to set attributes of a new instance
+     * - JSON string is used to set attributes of a new instance.
      */
     public function testFromJson()
     {
         $data = [
             'id' => 1,
-            'abc' => 123
+            'abc' => 123,
         ];
         $json = json_encode($data);
 
@@ -387,7 +387,7 @@ class ResourceTest extends TestCase
 
     /**
      * Expected Behavior:
-     * - idField on class is returned
+     * - idField on class is returned.
      */
     public function testGetIdField()
     {
@@ -400,13 +400,13 @@ class ResourceTest extends TestCase
 
     /**
      * Expected Behavior:
-     * - Value of id field in attributes array is returned
+     * - Value of id field in attributes array is returned.
      */
     public function testGetId()
     {
         $resource = new BasicApiResource([
             'id' => 123,
-            'primary_key' => 456
+            'primary_key' => 456,
         ]);
 
         $this->assertEquals(123, $resource->getId());
@@ -417,13 +417,13 @@ class ResourceTest extends TestCase
 
     /**
      * Expected Behavior:
-     * - Array of attributes is used to create a new instance
+     * - Array of attributes is used to create a new instance.
      */
     public function testCast()
     {
         $data = [
             'id' => 1,
-            'abc' => 123
+            'abc' => 123,
         ];
         $resource = BasicApiResource::cast($data);
 
@@ -434,27 +434,27 @@ class ResourceTest extends TestCase
     /**
      * Expected Behavior:
      * - Attributes array is returned
-     * - Attributes are cast to array values if possible
+     * - Attributes are cast to array values if possible.
      */
     public function testToArray()
     {
         $data = [
             'id' => 1,
             'collection' => [
-                'abc' => 123
+                'abc' => 123,
             ],
             'class' => [
                 'id' => 2,
-                'abc' => 123
+                'abc' => 123,
             ],
             'string' => 'abc',
-            'int' => 123
+            'int' => 123,
         ];
 
         $resource = new BasicApiResource();
         $resource->casts = [
             'collection' => 'collection',
-            'class' => BasicApiResource::class
+            'class' => BasicApiResource::class,
         ];
         $resource->setAttributes($data);
 

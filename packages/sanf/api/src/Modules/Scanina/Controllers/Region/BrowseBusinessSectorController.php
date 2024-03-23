@@ -20,7 +20,7 @@ class BrowseBusinessSectorController extends RestApiController
             'keyword' => 'nullable|string|max:255',
         ]);
 
-        $dto = (object)[
+        $dto = (object) [
             'skip' => $queryParam['skip'] ?? 0,
             'limit' => $queryParam['limit'] ?? 10,
             'sortBy' => $queryParam['sort_by'] ?? 'latest',

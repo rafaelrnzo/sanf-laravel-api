@@ -41,7 +41,7 @@ class CreateProjectByUserService extends ProjectByUserService implements Applica
                 $imageFile = [
                     'file_name' => $dto->imageFile,
                     'directory' => $metadata['dirname'] ?? $newPath,
-                    'path' => $metadata["path"],
+                    'path' => $metadata['path'],
                     'mime_type' => $metadata['mimetype'] ?? Storage::getMimeType("{$newPath}{$dto->imageFile}"),
                     'timestamp' => $metadata['timestamp'],
                     'size' => $metadata['size'],

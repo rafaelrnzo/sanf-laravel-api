@@ -50,70 +50,70 @@ class EventServiceProvider extends ServiceProvider
 {
     protected $listen = [
         Login::class => [
-            LogSuccessfulLoginListener::class
+            LogSuccessfulLoginListener::class,
         ],
         ProjectCreatedEvent::class => [
-            SendEmailRequestApprovalProjectListener::class
+            SendEmailRequestApprovalProjectListener::class,
         ],
         CommodityCreatedEvent::class => [
-            SendEmailRequestApprovalCommodityListener::class
+            SendEmailRequestApprovalCommodityListener::class,
         ],
         ProjectUpdatedEvent::class => [
-            SendEmailRequestApprovalProjectListener::class
+            SendEmailRequestApprovalProjectListener::class,
         ],
         CommodityUpdatedEvent::class => [
-            SendEmailRequestApprovalCommodityListener::class
+            SendEmailRequestApprovalCommodityListener::class,
         ],
         PlafondRequestedEvent::class => [
-            SendEmailRequestNewPlafondListener::class
+            SendEmailRequestNewPlafondListener::class,
         ],
         PlafondIncreaseRequestedEvent::class => [
-            SendEmailRequestIncreasePlafondListener::class
+            SendEmailRequestIncreasePlafondListener::class,
         ],
         FinancingApplicationCreatedEvent::class => [
-            SendEmailNewFinancingApplicationListener::class
+            SendEmailNewFinancingApplicationListener::class,
         ],
         PrepaymentSubmissionAddedEvent::class => [
-            SendEmailNewPrepaymentSubmissionListener::class
+            SendEmailNewPrepaymentSubmissionListener::class,
         ],
         FinancingUnitLocationSubmissionAddedEvent::class => [
-            SendEmailRequestChangeFinancingUnitLocationListener::class
+            SendEmailRequestChangeFinancingUnitLocationListener::class,
         ],
         InvoiceCollectionSubmissionAddedEvent::class => [
-            SendEmailNewInvoiceCollectionSubmissionListener::class
+            SendEmailNewInvoiceCollectionSubmissionListener::class,
         ],
         InsuranceClaimSubmissionAddedEvent::class => [
-            SendEmailNewInsuranceClaimSubmissionListener::class
+            SendEmailNewInsuranceClaimSubmissionListener::class,
         ],
         ESignDocumentDownloadEvent::class => [
-            SendEmailDownloadESignDocumentListener::class
+            SendEmailDownloadESignDocumentListener::class,
         ],
         CommodityApprovedEvent::class => [
-            SendNotificationApprovalCommodityListener::class
+            SendNotificationApprovalCommodityListener::class,
         ],
         CommodityRejectedEvent::class => [
-            SendNotificationRejectCommodityListener::class
+            SendNotificationRejectCommodityListener::class,
         ],
         ProjectApprovedEvent::class => [
-            SendNotificationApprovalProjectListener::class
+            SendNotificationApprovalProjectListener::class,
         ],
         ProjectRejectedEvent::class => [
-            SendNotificationRejectProjectListener::class
+            SendNotificationRejectProjectListener::class,
         ],
         NotifiedUserByExternalEvent::class => [
-            SendPushNotificationByExternalListener::class
+            SendPushNotificationByExternalListener::class,
         ],
         ProductBuyAddToCartEvent::class => [
-            SendEmailProductBuyAddToCartListener::class
+            SendEmailProductBuyAddToCartListener::class,
         ],
         ProductRentAddToCartEvent::class => [
-            SendEmailProductRentAddToCartListener::class
+            SendEmailProductRentAddToCartListener::class,
         ],
         ProductSparePartAddToCartEvent::class => [
-            SendEmailProductSparePartAddToCartListener::class
+            SendEmailProductSparePartAddToCartListener::class,
         ],
         ProductServiceAddToCartEvent::class => [
-            SendEmailProductServiceAddToCartListener::class
+            SendEmailProductServiceAddToCartListener::class,
         ],
     ];
 }

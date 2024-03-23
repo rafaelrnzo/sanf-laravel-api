@@ -6,7 +6,6 @@ use Spatie\DataTransferObject\FlexibleDataTransferObject;
 
 class BrowseProductSpecificationResponseDto extends FlexibleDataTransferObject
 {
-
     public ?int $id;
     public ?string $name;
     public ?array $specificationColumn;

@@ -8,7 +8,6 @@ use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class ValidateKtpService implements ApplicationServiceInterface
 {
-
     private SanfCoreApiClient $client;
 
     public function __construct(SanfCoreApiClient $client)
@@ -27,6 +26,7 @@ class ValidateKtpService implements ApplicationServiceInterface
             return false;
         }
         $code = $data['code'] ?? null;
-        return ($code === 'S_GetData');
+
+        return $code === 'S_GetData';
     }
 }

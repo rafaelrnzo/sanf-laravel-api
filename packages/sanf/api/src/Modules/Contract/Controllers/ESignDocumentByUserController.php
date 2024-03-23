@@ -44,7 +44,7 @@ final class ESignDocumentByUserController extends RestApiController
         Guard $auth,
         GetESignUserService $service
     ) {
-        $dto = (object)['user_id' => $auth->id(),];
+        $dto = (object) ['user_id' => $auth->id()];
 
         $result = $service->execute($dto);
 
@@ -61,12 +61,12 @@ final class ESignDocumentByUserController extends RestApiController
         TransactionalSessionInterface $transactionalSession
     ) {
         $input = $this->validate($request, [
-            'status_id' => ['nullable', 'integer', Rule::in(ESignContractStatusEnum::ALL),],
-            'keyword' => ['nullable', 'string', 'max:255',],
-            'skip' => ['nullable', 'integer', 'max:2147483647',],
-            'limit' => ['nullable', 'integer', 'max:2147483647',],
-            'sort_by' => ['nullable', 'in:earliest,latest',],
-            'timestamp' => ['nullable', 'integer',],
+            'status_id' => ['nullable', 'integer', Rule::in(ESignContractStatusEnum::ALL)],
+            'keyword' => ['nullable', 'string', 'max:255'],
+            'skip' => ['nullable', 'integer', 'max:2147483647'],
+            'limit' => ['nullable', 'integer', 'max:2147483647'],
+            'sort_by' => ['nullable', 'in:earliest,latest'],
+            'timestamp' => ['nullable', 'integer'],
         ]);
 
         $dto = new BrowseESignDocumentDto($input + ['profile_xid' => $xid]);
@@ -134,10 +134,10 @@ final class ESignDocumentByUserController extends RestApiController
         BrowseProvinceService $service
     ) {
         $input = $this->validate($request, [
-            'keyword' => ['nullable', 'string', 'max:255',],
-            'skip' => ['nullable', 'integer', 'max:2147483647',],
-            'limit' => ['nullable', 'integer', 'max:2147483647',],
-            'sort_by' => ['nullable', 'in:asc,desc',],
+            'keyword' => ['nullable', 'string', 'max:255'],
+            'skip' => ['nullable', 'integer', 'max:2147483647'],
+            'limit' => ['nullable', 'integer', 'max:2147483647'],
+            'sort_by' => ['nullable', 'in:asc,desc'],
         ]);
 
         $dto = new BrowseProvinceDto($input + ['user_id' => $auth->id()]);
@@ -156,10 +156,10 @@ final class ESignDocumentByUserController extends RestApiController
         BrowseDistrictService $service
     ) {
         $input = $this->validate($request, [
-            'keyword' => ['nullable', 'string', 'max:255',],
-            'skip' => ['nullable', 'integer', 'max:2147483647',],
-            'limit' => ['nullable', 'integer', 'max:2147483647',],
-            'sort_by' => ['nullable', 'in:asc,desc',],
+            'keyword' => ['nullable', 'string', 'max:255'],
+            'skip' => ['nullable', 'integer', 'max:2147483647'],
+            'limit' => ['nullable', 'integer', 'max:2147483647'],
+            'sort_by' => ['nullable', 'in:asc,desc'],
         ]);
 
         $dto = new BrowseDistrictDto($input + [
@@ -182,10 +182,10 @@ final class ESignDocumentByUserController extends RestApiController
         BrowseSubDistrictService $service
     ) {
         $input = $this->validate($request, [
-            'keyword' => ['nullable', 'string', 'max:255',],
-            'skip' => ['nullable', 'integer', 'max:2147483647',],
-            'limit' => ['nullable', 'integer', 'max:2147483647',],
-            'sort_by' => ['nullable', 'in:asc,desc',],
+            'keyword' => ['nullable', 'string', 'max:255'],
+            'skip' => ['nullable', 'integer', 'max:2147483647'],
+            'limit' => ['nullable', 'integer', 'max:2147483647'],
+            'sort_by' => ['nullable', 'in:asc,desc'],
         ]);
 
         $dto = new BrowseSubDistrictDto($input + [
@@ -206,12 +206,12 @@ final class ESignDocumentByUserController extends RestApiController
         $xid,
         GetESignUserCheckService $service
     ) {
-        $input  = $this->validate($request, [
+        $input = $this->validate($request, [
             'email' => 'required|email|string|max:255',
             'nik' => 'required|string|max:255',
         ]);
 
-        $dto = (object)[
+        $dto = (object) [
             'nik' => $input['nik'],
             'email' => $input['email'],
             'userId' => $auth->id(),
@@ -228,12 +228,12 @@ final class ESignDocumentByUserController extends RestApiController
         $xid,
         ResendESignVerificationService $service
     ) {
-        $input  = $this->validate($request, [
+        $input = $this->validate($request, [
             'email' => 'required|email|string|max:255',
             'nik' => 'required|string|max:255',
         ]);
 
-        $dto = (object)[
+        $dto = (object) [
             'nik' => $input['nik'],
             'email' => $input['email'],
             'userId' => $auth->id(),
@@ -251,11 +251,11 @@ final class ESignDocumentByUserController extends RestApiController
         $document_id,
         GenerateSignUrlService $service
     ) {
-        $input  = $this->validate($request, [
+        $input = $this->validate($request, [
             'email' => 'required|email|string|max:255',
         ]);
 
-        $dto = (object)[
+        $dto = (object) [
             'documentId' => $document_id,
             'email' => $input['email'],
             'userId' => $auth->id(),
@@ -313,4 +313,3 @@ final class ESignDocumentByUserController extends RestApiController
         return $this->responseOk();
     }
 }
-

@@ -1,15 +1,12 @@
 <?php
 
-
 namespace Sanf\Core\Modules\ContactUs;
-
 
 use Illuminate\Support\Facades\Storage;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 
 class AskUsSubmitService implements ApplicationServiceInterface
 {
-
     protected $repository;
 
     public function __construct(AskUsRepositoryInterface $repository)
@@ -38,7 +35,7 @@ class AskUsSubmitService implements ApplicationServiceInterface
                     'file_name' => $image,
                     'directory' => $newPath,
                     'path' => "{$newPath}{$image}",
-                    'mime_type' => Storage::getMimeType("{$newPath}{$image}")
+                    'mime_type' => Storage::getMimeType("{$newPath}{$image}"),
                 ];
             }
         }

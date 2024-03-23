@@ -26,9 +26,9 @@ class ReadServiceCartByUserService implements ApplicationServiceInterface
             $this->productSpecification->readService($dto->productXid)
         );
 
-        $data = (array)$productServiceResponse->data;
+        $data = (array) $productServiceResponse->data;
         unset($data['reviews']);
-        $productServiceResponseDto =  new ReadProductServiceResponseDto($data);
+        $productServiceResponseDto = new ReadProductServiceResponseDto($data);
         $productServiceResponseDto->xid = $dto->productXid;
         $productServiceResponseDto->customerReviews = [];
 

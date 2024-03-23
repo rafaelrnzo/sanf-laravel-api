@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sanf\Core\Modules\Location;
-
 
 use NbsPhp\Core\Models\AbstractModel;
 

@@ -10,7 +10,6 @@ use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class AllCityListServices implements ApplicationServiceInterface
 {
-
     protected SanfCoreApiClient $internalApiClient;
 
     public function __construct(SanfCoreApiClient $internalApiClient)
@@ -28,7 +27,7 @@ class AllCityListServices implements ApplicationServiceInterface
     {
         $response = $this->internalApiClient->getCities();
         $data = collect($response->data)->map(function ($item) {
-            return (object)[
+            return (object) [
                 'id' => $item->CITY_ID ?? null,
                 'name' => $item->DESCRIPTION ?? null,
             ];
@@ -44,9 +43,9 @@ class AllCityListServices implements ApplicationServiceInterface
                 break;
         }
 
-        return (object)[
+        return (object) [
             'data' => $sort,
-            'paginate' => (object)[
+            'paginate' => (object) [
                 'total' => $response->total ?? $response->count,
                 'count' => $response->count ?? 0,
                 'skip' => $dto->skip,

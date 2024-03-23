@@ -7,7 +7,6 @@ use Sanf\Core\Modules\Scanina\Models\ScaninaProductCartModel;
 
 class EloquentProductCartRepository extends AbstractEloquentRepository implements ProductCartRepositoryInterface
 {
-
     private ScaninaProductCartModel $model;
 
     public function __construct(ScaninaProductCartModel $model)

@@ -23,6 +23,7 @@ class InvoiceCollectionSubmissionByUserService
         if (!$user) {
             throw new UserNotFoundException();
         }
+
         return $user;
     }
 }

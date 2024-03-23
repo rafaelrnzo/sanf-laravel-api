@@ -17,7 +17,7 @@ class AllTest extends TestCase
 
     /**
      * Expected Behavior:
-     * - Array of ApiResource instances with correct attributes returned
+     * - Array of ApiResource instances with correct attributes returned.
      */
     public function testAll()
     {

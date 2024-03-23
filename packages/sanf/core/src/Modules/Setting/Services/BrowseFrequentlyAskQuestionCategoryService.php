@@ -30,7 +30,7 @@ class BrowseFrequentlyAskQuestionCategoryService implements ApplicationServiceIn
             $this->specification->paginateCategory($dto->keyword)
         );
 
-        $mappingData =  array_map(function ($item) {
+        $mappingData = array_map(function ($item) {
             return (object) [
                 'id' => $item->id,
                 'name' => $item->name ?? null,
@@ -39,13 +39,13 @@ class BrowseFrequentlyAskQuestionCategoryService implements ApplicationServiceIn
             ];
         }, $query);
 
-        return (object)[
+        return (object) [
             'data' => $mappingData,
-            'paginate' => (object)[
+            'paginate' => (object) [
                 'total' => $total,
                 'count' => count($mappingData),
-                'skip' => (int)$dto->skip,
-                'limit' => (int)$dto->limit,
+                'skip' => (int) $dto->skip,
+                'limit' => (int) $dto->limit,
                 'sort_by' => $dto->sortBy,
             ],
         ];

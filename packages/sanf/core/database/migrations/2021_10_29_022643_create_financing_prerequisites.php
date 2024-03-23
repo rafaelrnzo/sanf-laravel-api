@@ -41,7 +41,7 @@ class CreateFinancingPrerequisites extends Migration
                     ['title' => 'Holding Unit(s)'],
                     ['title' => 'Perjanjian Jual Beli/Surat Pemesanan Kendaraan'],
                     ['title' => 'Laporan Produksi 3 s/d 6 bulan terakhir'],
-                ]
+                ],
             ],
             [
                 'title' => 'Dokumen PT',
@@ -64,7 +64,7 @@ class CreateFinancingPrerequisites extends Migration
                     ['title' => 'Laporan Keuangan Audited / Non-Audited 2 tahun terakhir (Exposure >50M wajib audited)'],
                     ['title' => 'SIUP/IUT/SP BKPM/Izin Usaha/Izin lain'],
                     ['title' => 'Laporan Produksi 3 s/d 6 bulan terakhir'],
-                ]
+                ],
             ],
             [
                 'title' => 'Dokumen CV',
@@ -83,7 +83,7 @@ class CreateFinancingPrerequisites extends Migration
                     ['title' => 'Laporan Keuangan Audited / Non-Audited 2 tahun terakhir (Exposure >50M wajib audited)'],
                     ['title' => 'SIUP/IUT/SP BKPM/Izin Usaha/Izin lain'],
                     ['title' => 'Laporan Produksi 3 s/d 6 bulan terakhir'],
-                ]
+                ],
             ],
             [
                 'title' => 'Dokumen CV',
@@ -99,7 +99,7 @@ class CreateFinancingPrerequisites extends Migration
                             ['title' => 'PKP2B'],
                             ['title' => 'Kontrak Penjualan dengan Buyer'],
                             ['title' => 'Lain Lain'],
-                        ]
+                        ],
                     ],
                     [
                         'title' => 'B. Kehutanan',
@@ -109,7 +109,7 @@ class CreateFinancingPrerequisites extends Migration
                             ['title' => 'IUPHHK'],
                             ['title' => 'Izin Pemanfaatan Kayu'],
                             ['title' => 'Lain Lain'],
-                        ]
+                        ],
                     ],
                     [
                         'title' => 'C. Perkebunan',
@@ -119,7 +119,7 @@ class CreateFinancingPrerequisites extends Migration
                             ['title' => 'Izin Pinjam Pakai'],
                             ['title' => 'Hak Guna Usaha'],
                             ['title' => 'Lain Lain'],
-                        ]
+                        ],
                     ],
                     [
                         'title' => 'D. Trasportasi & Logistik',
@@ -130,21 +130,21 @@ class CreateFinancingPrerequisites extends Migration
                             ['title' => 'Rekening Koran 6 Bulan Terakhir  (Untuk SPK)'],
                             ['title' => 'PO 6 Bulan Terakhir'],
                             ['title' => 'Izin Trayek (Khusus Bus)'],
-                        ]
+                        ],
                     ],
                     [
                         'title' => 'E. Perindustrian',
                         'items' => [
                             ['title' => 'Izin Usaha Industri'],
                             ['title' => 'Lain Lain'],
-                        ]
+                        ],
                     ],
                     [
                         'title' => 'F. Konstruksi',
                         'items' => [
                             ['title' => 'Izin Usaha Jasa Konstruksi (IUJK)'],
                             ['title' => 'Lain Lain'],
-                        ]
+                        ],
                     ],
                     [
                         'title' => 'G. Mesin Printing',
@@ -160,10 +160,10 @@ class CreateFinancingPrerequisites extends Migration
                             ['title' => 'Riwayat Pembayaran Supplier'],
                             ['title' => 'Store Mapping'],
                             ['title' => 'Lain Lain'],
-                        ]
+                        ],
                     ],
-                ]
-            ]
+                ],
+            ],
         ];
 
         $prerequisitesFields = [];
@@ -179,7 +179,7 @@ class CreateFinancingPrerequisites extends Migration
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
                 'modified_by' => '{"id":"0","role":"SEEDERS"}',
-                'version' => 1
+                'version' => 1,
             ];
             $id++;
             foreach ($level1['items'] ?? [] as $level2) {
@@ -192,7 +192,7 @@ class CreateFinancingPrerequisites extends Migration
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s'),
                     'modified_by' => '{"id":"0","role":"SEEDERS"}',
-                    'version' => 1
+                    'version' => 1,
                 ];
                 $parentLevel2Id = $id;
                 $id++;
@@ -206,7 +206,7 @@ class CreateFinancingPrerequisites extends Migration
                         'created_at' => date('Y-m-d H:i:s'),
                         'updated_at' => date('Y-m-d H:i:s'),
                         'modified_by' => '{"id":"0","role":"SEEDERS"}',
-                        'version' => 1
+                        'version' => 1,
                     ];
                     $id++;
                 }

@@ -24,7 +24,6 @@ class SendEmailRequestIncreasePlafondForAdminJob implements ShouldQueue
      *
      * @return void
      */
-
     public function __construct($data, $emailRecipients)
     {
         $this->data = $data;
@@ -55,13 +54,14 @@ class SendEmailRequestIncreasePlafondForAdminJob implements ShouldQueue
                 ['joinToIndex' => 1, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08);">'],
                 [
                     'joinToIndex' => 6,
-                    'html' => '<p style="font-size: 16px; font-weight: 700; color:#232227;">Ringkasan Kenaikan Nilai Plafon ' . $type . '</p>'
+                    'html' => '<p style="font-size: 16px; font-weight: 700; color:#232227;">Ringkasan Kenaikan Nilai Plafon ' . $type . '</p>',
                 ],
                 ['joinToIndex' => 7, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08);">'],
                 ['joinToIndex' => 10, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08);">'],
             ]);
 
         $ccMails = explode(',', config('sanf-mobile.mail_to.it_helpdesk'));
+
         return Mail::to($this->emailRecipients)
             ->cc($ccMails)
             ->send($mailable);

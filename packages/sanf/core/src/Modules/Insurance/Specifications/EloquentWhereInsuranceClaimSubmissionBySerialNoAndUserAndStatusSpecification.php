@@ -23,6 +23,7 @@ final class EloquentWhereInsuranceClaimSubmissionBySerialNoAndUserAndStatusSpeci
             ->where('user_id', $this->userId)
             ->where('serial_no', $this->serialNo)
             ->whereIn('status_id', $this->status);
+
         return $query;
     }
 }

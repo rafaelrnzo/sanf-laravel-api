@@ -4,5 +4,5 @@ namespace NbsPhp\ApiWrapper\Api;
 
 abstract class Processor
 {
-    public abstract static function handle(Request $request, callable $next): Response;
+    abstract public static function handle(Request $request, callable $next): Response;
 }

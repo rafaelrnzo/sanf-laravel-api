@@ -8,7 +8,6 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 use Sanf\Core\Mail\MailLayout2Columns;
-use Sanf\Core\Modules\User\Enums\ProfileType;
 
 class SendEmailNewRequestPlafondForUserJob implements ShouldQueue
 {
@@ -23,7 +22,6 @@ class SendEmailNewRequestPlafondForUserJob implements ShouldQueue
      *
      * @return void
      */
-
     public function __construct($data, $emailRecipients)
     {
         $this->data = $data;
@@ -47,7 +45,7 @@ class SendEmailNewRequestPlafondForUserJob implements ShouldQueue
             ->greeting(__('Halo :name!', ['name' => $fullName]))
             ->line(__(
                 '<blockquote style="margin: 0 0;font-size: 16px; line-height: 150%;">
-                    Pengajuan Plafon '. $type .' sedang dalam proses oleh tim kami, berikut kami lampirkan ringkasan pengajuan Plafon Anda.
+                    Pengajuan Plafon ' . $type . ' sedang dalam proses oleh tim kami, berikut kami lampirkan ringkasan pengajuan Plafon Anda.
                 </blockquote>
             '
             ))

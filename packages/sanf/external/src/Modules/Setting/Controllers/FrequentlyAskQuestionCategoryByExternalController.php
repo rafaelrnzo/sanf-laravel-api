@@ -21,10 +21,10 @@ class FrequentlyAskQuestionCategoryByExternalController extends RestApiControlle
             'limit' => 'nullable|integer',
             'skip' => 'nullable|integer',
             'keyword' => 'nullable|string|max:255',
-            'sort_by' => ['nullable', Rule::in(['asc', 'desc',])],
+            'sort_by' => ['nullable', Rule::in(['asc', 'desc'])],
         ]);
 
-        $dto = (object)[
+        $dto = (object) [
             'keyword' => $input['keyword'] ?? null,
             'limit' => $input['limit'] ?? null,
             'skip' => $input['skip'] ?? null,
@@ -45,7 +45,7 @@ class FrequentlyAskQuestionCategoryByExternalController extends RestApiControlle
             'name' => 'required|string|max:50',
         ]);
 
-        $service->execute((object)['name' => $inputs['name'],]);
+        $service->execute((object) ['name' => $inputs['name']]);
 
         return $this->responseOk();
     }

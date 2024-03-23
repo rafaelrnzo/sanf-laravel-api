@@ -2,12 +2,11 @@
 
 namespace NbsPhp\Core\Commands;
 
-use Illuminate\Support\Str;
 use Illuminate\Console\Command;
+use Illuminate\Support\Str;
 
 /**
- * Class KeyGenerateCommand
- * @package App\Console\Commands
+ * Class KeyGenerateCommand.
  */
 class KeyGenerateCommand extends Command
 {
@@ -23,7 +22,7 @@ class KeyGenerateCommand extends Command
      *
      * @var string
      */
-    protected $description = "Set the application key";
+    protected $description = 'Set the application key';
 
     /**
      * Execute the console command.

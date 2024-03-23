@@ -10,7 +10,6 @@ use Sanf\Core\Modules\Scanina\Specifications\ScaninaProductSpecificationInterfac
 
 class GuzzleBrowseProductFilterModelService implements ApplicationServiceInterface
 {
-
     private ScaninaProductRepositoryInterface $repository;
     private ScaninaProductSpecificationInterface $specification;
 
@@ -25,18 +24,17 @@ class GuzzleBrowseProductFilterModelService implements ApplicationServiceInterfa
     public function execute($dto = null)
     {
         /** @var BrowseProductFilterRequestDto $dto */
-
         $response = $this->repository->get(
             $this->specification->getFilterModel($dto)
         );
 
         $responseProductFilterModel = array_map(function ($category) {
-            return new BrowseProductFilterModelResponseDto((array)$category);
+            return new BrowseProductFilterModelResponseDto((array) $category);
         }, $response->data->rows);
 
-        return (object)[
+        return (object) [
             'data' => $responseProductFilterModel,
-            'paginate' => (object)[
+            'paginate' => (object) [
                 'total' => $response->data->metadata->total ?? 0,
                 'count' => $response->data->metadata->count ?? 0,
                 'skip' => $dto->skip,

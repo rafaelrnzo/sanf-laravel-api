@@ -42,13 +42,13 @@ return [
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/lumen.log'),
-            'level' => env('LOG_LEVEL','debug'),
+            'level' => env('LOG_LEVEL', 'debug'),
         ],
 
         'daily' => [
             'driver' => 'daily',
             'path' => storage_path('logs/lumen.log'),
-            'level' => env('LOG_LEVEL','debug'),
+            'level' => env('LOG_LEVEL', 'debug'),
             'days' => 14,
         ],
 
@@ -57,7 +57,7 @@ return [
             'url' => env('LOG_SLACK_WEBHOOK_URL'),
             'username' => 'Lumen Log',
             'emoji' => ':boom:',
-            'level' => env('LOG_LEVEL','debug'),
+            'level' => env('LOG_LEVEL', 'debug'),
         ],
 
         'papertrail' => [
@@ -76,7 +76,7 @@ return [
             'formatter' => env('LOG_STDERR_FORMATTER'),
             'with' => [
                 'stream' => 'php://stderr',
-                'level' => env('LOG_LEVEL', 'debug')
+                'level' => env('LOG_LEVEL', 'debug'),
             ],
         ],
 
