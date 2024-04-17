@@ -134,7 +134,7 @@ $rules = [
 $finder = Finder::create()
     ->in([
         __DIR__ . '/config',
-        __DIR__ . '/packages/nbs-php/api-wrapper',
+        __DIR__ . '/packages',
     ])
     ->exclude([
         // __DIR__ . '/packages/nucleo/laravel-theme-metronic/node_modules',
