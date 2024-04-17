@@ -609,19 +609,21 @@ class SanfCoreApiClient
 
     /**
      * @param $customerId
-     * @param $typeId 001,002
+     * @param $typeId 001,002,003
      * @param $amount
+     * @param $notes
      * @return array|stdClass|null
      * @throws EndpointNotDefinedException
      * @throws GuzzleException
      */
-    public function requestPlafond($customerId, $plafondCode, $amount)
+    public function requestPlafond($customerId, $plafondCode, $amount = 0, $notes = null)
     {
         $response = Request::route('customer.plafond.create', $this->client)
             ->json([
                 'cust_id' => $customerId,
                 'p_code' => $plafondCode,
                 'amount' => $amount,
+                'notes' => $notes,
             ])
             ->send();
 

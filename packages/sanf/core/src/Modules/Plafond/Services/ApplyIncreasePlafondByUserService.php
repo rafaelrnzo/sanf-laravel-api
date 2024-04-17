@@ -17,7 +17,7 @@ final class ApplyIncreasePlafondByUserService extends PlafondByUserService imple
      */
     public function execute($dto = null)
     {
-        $this->repository->submitApplication($dto->profileXid, $dto->typeId, $dto->amount);
+        $this->repository->submitApplication($dto->profileXid, $dto->typeId, $dto->amount, $dto->notes);
         $plafond = $this->repository->getByProfileAndType($dto->profileXid, $dto->typeId);
         if (is_null($plafond)) {
             throw new PlafondInvalidException('Plafond Not Found');
@@ -41,6 +41,7 @@ final class ApplyIncreasePlafondByUserService extends PlafondByUserService imple
             'currentBalance' => $plafond->getCurrentBalance(),
             'addedBalance' => $dto->amount - $plafond->getCurrentBalance(),
             'submittedBalance' => $dto->amount,
+            'notes' => $dto->notes,
             'createdAt' => Carbon::now(),
             'type' => $plafondType,
         ];

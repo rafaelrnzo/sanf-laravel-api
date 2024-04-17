@@ -109,16 +109,25 @@ class PlafondController extends RestApiController
         $input = $this->validate($request, [
             'type_id' => ['required', 'string', 'max:255'],
             'amount' => ['required', 'string', 'max:255'],
+            'notes' => ['nullable', 'array'],
+            'notes.*' => ['string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
         ]);
+
+        $isPlafondFactoring = $request->get('type_id') === PlafondTypeEnum::FACTORING;
+        $isEmptyNotes = is_null($request->get('notes')) || empty($request->get('notes'));
+        if ($isPlafondFactoring && $isEmptyNotes === true) {
+            throw new BadRequestHttpException('Please update your apps');
+        }
+
         $profile = $profileService->execute((object) [
             'userId' => $auth->id(),
             'customerId' => $xid,
         ]);
         $dto = new AddPlafondRequestDto($input + [
-                'profileXid' => $xid,
-                'profile' => $profile,
-                'userId' => $auth->id(),
-            ]);
+            'profileXid' => $xid,
+            'profile' => $profile,
+            'userId' => $auth->id(),
+        ]);
         $plafondService->execute($dto);
 
         return $this->responseOk();
@@ -134,16 +143,25 @@ class PlafondController extends RestApiController
         $input = $this->validate($request, [
             'type_id' => ['required', 'string', 'max:255'],
             'amount' => ['required', 'string', 'max:255'],
+            'notes' => ['nullable', 'array'],
+            'notes.*' => ['string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
         ]);
+
+        $isPlafondFactoring = $request->get('type_id') === PlafondTypeEnum::FACTORING;
+        $isEmptyNotes = is_null($request->get('notes')) || empty($request->get('notes'));
+        if ($isPlafondFactoring && $isEmptyNotes === true) {
+            throw new BadRequestHttpException('Please update your apps');
+        }
+
         $profile = $profileService->execute((object) [
             'userId' => $auth->id(),
             'customerId' => $xid,
         ]);
         $dto = new AddPlafondRequestDto($input + [
-                'profileXid' => $xid,
-                'profile' => $profile,
-                'userId' => $auth->id(),
-            ]);
+            'profileXid' => $xid,
+            'profile' => $profile,
+            'userId' => $auth->id(),
+        ]);
         $plafondService->execute($dto);
 
         return $this->responseOk();
