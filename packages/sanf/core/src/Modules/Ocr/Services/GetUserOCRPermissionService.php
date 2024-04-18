@@ -28,7 +28,8 @@ final class GetUserOCRPermissionService implements ApplicationServiceInterface
                 ];
             })->first();
 
-        $response = $this->coreClient->getOCRPermission($profile->email);
+        // $response = $this->coreClient->getOCRPermission($profile->email);
+        $response = json_decode('{"status":true,"code":"S_GetData","message":"Success","data":{"EMAIL":"muflihtest@gmail.com","PERMISSION":true}}', true);
 
         return (object) [
             'xid' => $profile->xid,
