@@ -1,0 +1,63 @@
+{
+    "apiVersion": "apps/v1",
+    "kind": "Deployment",
+    "metadata": {
+        "annotations": {
+            "deployment.kubernetes.io/revision": "1"
+        },
+        "generation": 1,
+        "labels": {
+            "app": "api"
+        },
+        "name": "api",
+        "namespace": "d-sanf-app"
+    },
+    "spec": {
+        "replicas": 1,
+        "selector": {
+            "matchLabels": {
+                "app": "api"
+            }
+        },
+        "template": {
+            "spec": {
+                "automountServiceAccountToken": true,
+                "containers": [
+                    {
+                        "envFrom": [
+                            {
+                                "configMapRef": {
+                                    "name": "api-env",
+                                    "optional": false
+                                }
+                            }
+                        ],
+                        "image": "cr.nbs.dev/sanf/core/api:latest",
+                        "imagePullPolicy": "Always",
+                        "name": "api",
+                        "ports": [
+                            {
+                                "containerPort": 8080,
+                                "protocol": "TCP"
+                            }
+                        ],
+                        "resources": {
+                            "limits": {
+                                "memory": "128M"
+                            },
+                            "requests": {
+                                "memory": "64M"
+                            }
+                        }
+                    }
+                ],
+                "imagePullSecrets": [
+                    {
+                        "name": ""
+                    }
+                ],
+                "restartPolicy": "Always"
+            }
+        }
+    }
+}
