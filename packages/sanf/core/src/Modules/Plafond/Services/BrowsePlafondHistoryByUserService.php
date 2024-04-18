@@ -30,6 +30,7 @@ final class BrowsePlafondHistoryByUserService extends PlafondByUserService imple
                 'currentBalance' => $item->getCurrentBalance(),
                 'addedBalance' => $item->getAddedBalance(),
                 'submittedBalance' => $item->getSubmittedBalance(),
+                'notes' => $item->getNotes(),
             ];
         });
 

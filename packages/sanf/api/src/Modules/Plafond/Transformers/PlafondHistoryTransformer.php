@@ -21,6 +21,7 @@ final class PlafondHistoryTransformer extends TransformerAbstract
             'current_balance' => $dto->currentBalance,
             'added_balance' => $dto->addedBalance,
             'submitted_balance' => $dto->submittedBalance,
+            'notes' => $dto->notes,
         ];
     }
 }

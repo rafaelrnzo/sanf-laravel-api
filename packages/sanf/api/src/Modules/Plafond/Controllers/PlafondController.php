@@ -22,6 +22,7 @@ use Sanf\Core\Modules\Plafond\Services\BrowsePlafondHistoryByUserService;
 use Sanf\Core\Modules\Plafond\Services\ListPlafondTypeService;
 use Sanf\Core\Modules\Plafond\Services\ReadPlafondByUserAndTypeService;
 use Sanf\Core\Modules\User\Services\GetDetailCustomerProfileByUserService;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class PlafondController extends RestApiController
 {
@@ -94,6 +95,11 @@ class PlafondController extends RestApiController
             'typeId' => $typeId,
             'profileXid' => $xid,
         ]);
+
+        if ($typeId === PlafondTypeEnum::FACTORING) {
+            throw new BadRequestHttpException('Please update your apps');
+        }
+
         $result = $service->execute($dto);
 
         return fractal($result, new PlafondTransformer());

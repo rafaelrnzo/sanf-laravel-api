@@ -43,6 +43,7 @@ final class ReadPlafondByUserAndTypeService extends PlafondByUserService impleme
                         'title' => $type->getTitle(),
                         'name' => $type->getName(),
                     ],
+                    'notes' => $item->getNotes(),
                 ];
             }),
         ];

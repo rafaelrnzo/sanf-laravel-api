@@ -11,4 +11,5 @@ class AddPlafondRequestDto extends CamelCaseDataTransferObject
     public string $profileXid;
     public string $typeId;
     public string $amount;
+    public array $notes;
 }
