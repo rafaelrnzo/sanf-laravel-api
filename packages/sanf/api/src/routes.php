@@ -195,6 +195,9 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::post('users/profiles/{xid}/requests-document/{request_id}/documents/submit', ['as' => 'v1.users.request-document-history.submit', 'uses' => 'RequestedDocument\Controllers\RequestedDocumentByUserController@postSubmit']);
     Route::post('users/profiles/{xid}/requests-document/{request_id}/documents/{document_id}', ['as' => 'v1.users.request-document-history.upload', 'uses' => 'RequestedDocument\Controllers\RequestedDocumentByUserController@postUpload']);
     Route::get('users/profiles/{xid}/requests-document/{request_id}/documents/{document_id}', ['as' => 'v1.users.request-document-history.browse', 'uses' => 'RequestedDocument\Controllers\RequestedDocumentByUserController@getHistory']);
+
+    // OCR
+    Route::get('users/profiles/{xid}/permission/ocr', ['as' => 'v1.users.ocr.permission.read', 'uses' => 'Ocr\Controllers\OCRController@getUserPermission']);
 });
 
 Route::group(['prefix' => 'v2', 'middleware' => 'auth'], function () {
