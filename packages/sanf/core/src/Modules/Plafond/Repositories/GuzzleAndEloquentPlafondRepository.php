@@ -2,6 +2,7 @@
 
 namespace Sanf\Core\Modules\Plafond\Repositories;
 
+use Sanf\Core\Modules\Plafond\Entities\PlafondEntityFactoringFactory;
 use Sanf\Core\Modules\Plafond\Entities\PlafondEntityFactory;
 use Sanf\Core\Modules\Plafond\Entities\PlafondEntityHistoryFactory;
 use Sanf\Core\Modules\Plafond\Entities\PlafondEntityInterface;
@@ -14,17 +15,20 @@ class GuzzleAndEloquentPlafondRepository implements PlafondRepositoryInterface
     protected SanfCoreApiClient $client;
     protected PlafondEntityFactory $factory;
     protected PlafondEntityHistoryFactory $historyFactory;
+    protected PlafondEntityFactoringFactory $factoringFactory;
     protected PlafondTypeModel $plafondTypeModel;
 
     public function __construct(
         SanfCoreApiClient $client,
         PlafondEntityFactory $factory,
         PlafondEntityHistoryFactory $historyFactory,
+        PlafondEntityFactoringFactory $factoringFactory,
         PlafondTypeModel $plafondTypeModel
     ) {
         $this->client = $client;
         $this->factory = $factory;
         $this->historyFactory = $historyFactory;
+        $this->factoringFactory = $factoringFactory;
         $this->plafondTypeModel = $plafondTypeModel;
     }
 
@@ -52,6 +56,19 @@ class GuzzleAndEloquentPlafondRepository implements PlafondRepositoryInterface
                 $item['type'] = $this->plafondTypeModel->find($item['P_CODE'])->toArray();
 
                 return $this->historyFactory->make($item);
+            }, $response['data']);
+        } catch (SanfInternalApiDataNotFoundException $exception) {
+            return [];
+        }
+    }
+
+    public function getPlafondFactoringByProfile($xid): array
+    {
+        try {
+            $response = $this->client->getPlafondFactoring($xid);
+
+            return array_map(function ($item) {
+                return $this->factoringFactory->make($item);
             }, $response['data']);
         } catch (SanfInternalApiDataNotFoundException $exception) {
             return [];

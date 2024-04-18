@@ -6,18 +6,21 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
+use Sanf\Api\Modules\Plafond\Transformers\PlafondFactoringTransformer;
 use Sanf\Api\Modules\Plafond\Transformers\PlafondHistoryTransformer;
 use Sanf\Api\Modules\Plafond\Transformers\PlafondSimpleTransformer;
 use Sanf\Api\Modules\Plafond\Transformers\PlafondTransformer;
 use Sanf\Api\Modules\Plafond\Transformers\PlafondTypeListTransformer;
 use Sanf\Core\Modules\Plafond\Dtos\AddPlafondRequestDto;
 use Sanf\Core\Modules\Plafond\Dtos\BrowsePlafondByProfileRequestDto;
+use Sanf\Core\Modules\Plafond\Dtos\BrowsePlafondFactoringRequestDto;
 use Sanf\Core\Modules\Plafond\Dtos\BrowsePlafondHistoryByUserRequestDto;
 use Sanf\Core\Modules\Plafond\Dtos\ReadPlafondByProfileAndTypeRequestDto;
 use Sanf\Core\Modules\Plafond\Enums\PlafondTypeEnum;
 use Sanf\Core\Modules\Plafond\Services\ApplyIncreasePlafondByUserService;
 use Sanf\Core\Modules\Plafond\Services\ApplyNewPlafondByUserService;
 use Sanf\Core\Modules\Plafond\Services\BrowsePlafondByUserService;
+use Sanf\Core\Modules\Plafond\Services\BrowsePlafondFactoringService;
 use Sanf\Core\Modules\Plafond\Services\BrowsePlafondHistoryByUserService;
 use Sanf\Core\Modules\Plafond\Services\ListPlafondTypeService;
 use Sanf\Core\Modules\Plafond\Services\ReadPlafondByUserAndTypeService;
@@ -171,5 +174,25 @@ class PlafondController extends RestApiController
         $plafondService->execute($dto);
 
         return $this->responseOk();
+    }
+
+    public function browsePlafondFactoring(
+        Guard $auth,
+        $xid,
+        Request $request,
+        BrowsePlafondFactoringService $service
+    ) {
+        $input = $this->validate($request, [
+            'skip' => ['nullable', 'integer'],
+            'limit' => ['nullable', 'integer'],
+            'sort_by' => ['nullable', 'string'],
+            'keyword' => ['nullable', 'string'],
+        ]);
+        $dto = new BrowsePlafondFactoringRequestDto($input + ['profileXid' => $xid, 'userId' => $auth->id()]);
+        $result = $service->execute($dto);
+
+        return fractal($result->data)
+            ->transformWith(PlafondFactoringTransformer::class)
+            ->paginateWith(new LazyPaginatorAdapter($result->paginate));
     }
 }

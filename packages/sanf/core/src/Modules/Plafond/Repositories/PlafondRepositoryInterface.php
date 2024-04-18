@@ -10,6 +10,8 @@ interface PlafondRepositoryInterface
 
     public function getHistoryByProfile($xid): array;
 
+    public function getPlafondFactoringByProfile($xid): array;
+
     public function getByProfileAndType($profileXid, $typeId): ?PlafondEntityInterface;
 
     public function submitApplication($profileXid, $typeId, $amount, $notes);
