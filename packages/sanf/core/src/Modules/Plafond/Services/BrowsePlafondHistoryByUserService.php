@@ -6,6 +6,7 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Plafond\Dtos\BrowsePlafondHistoryByUserRequestDto;
 use Sanf\Core\Modules\Plafond\Dtos\BrowsePlafondHistoryByUserResponseDto;
 use Sanf\Core\Modules\Plafond\Entities\GuzzlePlafondHistoryEntity;
+use Sanf\Core\Modules\Plafond\Enums\PlafondTypeEnum;
 
 final class BrowsePlafondHistoryByUserService extends PlafondByUserService implements ApplicationServiceInterface
 {
@@ -18,6 +19,10 @@ final class BrowsePlafondHistoryByUserService extends PlafondByUserService imple
         $plafonds = $this->repository->getHistoryByProfile($dto->profileXid);
         $data = collect($plafonds)->map(function (GuzzlePlafondHistoryEntity $item) {
             $type = $item->getType();
+            $notes = $item->getNotes();
+            if ($type->getId() === PlafondTypeEnum::FACTORING) {
+                $notes = ['PT. Emas Perkasa Gemilang', 'PT. Dominika Permata Digital'];
+            }
 
             return (object) [
                 'type' => (object) [
@@ -30,7 +35,7 @@ final class BrowsePlafondHistoryByUserService extends PlafondByUserService imple
                 'currentBalance' => $item->getCurrentBalance(),
                 'addedBalance' => $item->getAddedBalance(),
                 'submittedBalance' => $item->getSubmittedBalance(),
-                'notes' => $item->getNotes(),
+                'notes' => $notes,
             ];
         });
 
