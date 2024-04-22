@@ -8,9 +8,9 @@ class AssetUploadResultDto extends DataTransferObject
 {
     public string $path;
 
-    public string $origin_name;
+    public string $originName;
 
-    public string $file_name;
+    public string $fileName;
 
     public string $url;
 }

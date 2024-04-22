@@ -24,9 +24,9 @@ class UploadAssetService implements ApplicationServiceInterface
 
         // return result;
         return new AssetUploadResultDto([
-            'origin_name' => $dto->file->getClientOriginalName(),
+            'originName' => $dto->file->getClientOriginalName(),
             'path' => "{$path}{$filename}",
-            'file_name' => $filename,
+            'fileName' => $filename,
             'url' => $url,
         ]);
     }
