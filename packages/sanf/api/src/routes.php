@@ -129,6 +129,7 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::get('users/profiles/{xid}/plafonds/histories', ['as' => 'users.plafonds.histories.list', 'uses' => 'Plafond\Controllers\PlafondController@getBrowseHistoryByUserProfile']);
     Route::get('users/profiles/{xid}/plafonds/types/{typeId}', ['as' => 'users.plafonds.detail-by-type', 'uses' => 'Plafond\Controllers\PlafondController@getReadByUserProfileAndType']);
     Route::get('users/profiles/{xid}/plafonds/factoring', ['as' => 'users.plafonds.factoring', 'uses' => 'Plafond\Controllers\PlafondController@browsePlafondFactoring']);
+    Route::post('users/profiles/{xid}/plafonds/invoice', ['as' => 'users.plafonds.invoice.add', 'uses' => 'Plafond\Controllers\InvoicePlafondController@uploadDocument']);
 
     // E-SIGN
     Route::get('users/profiles/{xid}/contracts/esign-user', ['as' => 'users.contracts.esign-user', 'uses' => 'Contract\Controllers\ESignDocumentByUserController@getUser']);
