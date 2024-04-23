@@ -10,8 +10,8 @@ class PrivateAssetFileSimpleTransformer extends TransformerAbstract
     {
         return [
             'url' => file_get_temp_url($item->path ?? null),
-            'file_name' => $item->file_name,
-            'origin_name' => $item->origin_name ?? $item->file_name,
+            'file_name' => $item->fileName,
+            'origin_name' => $item->originName ?? $item->fileName,
         ];
     }
 }
