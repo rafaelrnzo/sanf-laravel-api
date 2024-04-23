@@ -25,12 +25,13 @@ class NanonetsClient
             ->pathParams([
                 'uuid' => config('nanonets-api.uuid.scan'),
             ])
-            // ->multipart([
-            //     [
-            //         'name' => 'file',
-            //         'contents' => $file,
-            //     ],
-            // ])
+            ->multipart([
+                [
+                    'name' => 'file',
+                    'contents' => fopen($file->getPathname(), 'r'),
+                    'filename' => $file->getClientOriginalName(),
+                ],
+            ])
             ->send();
 
         return $response->json(false);

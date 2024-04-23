@@ -2,6 +2,7 @@
 
 namespace Sanf\Core\Modules\Ocr\Services;
 
+use Exception;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Ocr\Dtos\OcrScanDocumentResponseDto;
 use Sanf\Core\Modules\Plafond\Dtos\InvoicePlafondUploadDocumentRequestDto;
@@ -19,26 +20,38 @@ final class OcrScanDocumentService implements ApplicationServiceInterface
     public function execute($dto = null)
     {
         /** @var InvoicePlafondUploadDocumentRequestDto $dto */
-        if ($dto->ocrScan === false) {
-            return new OcrScanDocumentResponseDto([
+        $ocrScanDocumentResponseDto = new OcrScanDocumentResponseDto([
             'invoiceNo' => '',
             'invoiceDate' => '',
             'invoiceAmount' => '',
             'taxAmount' => '',
             'vatAmount' => '',
             'totalAmount' => '',
-            ]);
+        ]);
+
+        if ($dto->ocrScan === true) {
+            try {
+                $uploadResponse = $this->client->scanDocument($dto->file);
+                $latestDataResult = $uploadResponse->result;
+
+                $filterScannerData = [];
+                foreach ($latestDataResult[0]->prediction as $key => $scanner) {
+                    $filterScannerData[$scanner->label] = $scanner->ocr_text;
+                }
+
+                return new OcrScanDocumentResponseDto([
+                    'invoiceNo' => $filterScannerData['invoice_number'],
+                    'invoiceDate' => $filterScannerData['invoice_date'],
+                    'invoiceAmount' => $filterScannerData['subtotal_before_tax'],
+                    'taxAmount' => $filterScannerData['pph23'],
+                    'vatAmount' => $filterScannerData['vat_amount'],
+                    'totalAmount' => $filterScannerData['total_after_tax'],
+                ]);
+            } catch (Exception $exception) {
+                report($exception->getMessage());
+            }
         }
 
-        $uploadResponse = $this->client->scanDocument($dto->file);
-
-        return new OcrScanDocumentResponseDto([
-            'invoiceNo' => '123ABC',
-            'invoiceDate' => '123ABC',
-            'invoiceAmount' => '123ABC',
-            'taxAmount' => '123ABC',
-            'vatAmount' => '123ABC',
-            'totalAmount' => '123ABC',
-        ]);
+        return $ocrScanDocumentResponseDto;
     }
 }

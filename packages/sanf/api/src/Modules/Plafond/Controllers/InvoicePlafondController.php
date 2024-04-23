@@ -33,7 +33,6 @@ class InvoicePlafondController extends RestApiController
 
         $uploadServiceResult = $uploadService->execute($requestDto);
 
-        $requestDto->ocrScan = false;
         $scanDocumentServiceResult = $ocrDocumentScanService->execute($requestDto);
 
         $result = $uploadServiceResult->toArray() + $scanDocumentServiceResult->toArray();
