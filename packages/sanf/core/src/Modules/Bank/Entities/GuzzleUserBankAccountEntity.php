@@ -35,7 +35,7 @@ class GuzzleUserBankAccountEntity
 
     public function getIsDefault(): bool
     {
-        return $this->attributes['IS_DEFAULT'];
+        return $this->attributes['IS_DEFAULT'] === 'Y';
     }
 
     public function getUpdatedAt(): \DateTimeImmutable

@@ -189,7 +189,7 @@ class SanfCoreApiClient
      * @throws EndpointNotDefinedException
      * @throws GuzzleException
      */
-    public function updateCustomer($data)//TODO DTO
+    public function updateCustomer($data) //TODO DTO
     {
         $response = Request::route('customer.update', $this->client)
             /*
@@ -1290,5 +1290,15 @@ class SanfCoreApiClient
             ])->send();
 
         return $response->json();
+    }
+
+    public function getUserBankAccount(string $profileXid, object $arguments = null)
+    {
+        $response = Request::route('bank.account', $this->client)
+            ->queryParams([
+                'cust_id' => $profileXid,
+            ])->send();
+
+        return $response->json(true);
     }
 }

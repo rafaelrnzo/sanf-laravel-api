@@ -39,6 +39,8 @@ Route::group(config('sanf-api.url'), [SanfCoreApiProcessor::class], function () 
     Route::post('customer.plafond.create', '/Plafond');
     Route::get('customer.plafond.history', '/plafond/history');
 
+    Route::get('bank.account', '/Plafond/Bankaccount');
+
     Route::get('prepayment.contract.list', '/Prepayment/header');
     Route::get('prepayment.detail', '/Prepayment');
 
