@@ -28,13 +28,21 @@ final class GetUserOCRPermissionService implements ApplicationServiceInterface
                 ];
             })->first();
 
-        // $response = $this->coreClient->getOCRPermission($profile->email);
-        $response = json_decode('{"status":true,"code":"S_GetData","message":"Success","data":{"EMAIL":"muflihtest@gmail.com","PERMISSION":true}}', true);
+        $response = $this->coreClient->getOCRPermission($profile->email);
+        $accountFiltered = array_filter($response['data'], function ($account) use ($request) {
+            return $account['CUST_ID'] === $request->customerId;
+        });
+        $accountFiltered = array_values($accountFiltered);
+
+        $account = ['F_SCANOCR' => 'N'];
+        if (empty($accountFiltered) === false) {
+            $account = $accountFiltered[0];
+        }
 
         return (object) [
             'xid' => $profile->xid,
-            'email' => $response['data']['EMAIL'] ?? $profile->email,
-            'isPermitted' => $response['data']['PERMISSION'] ?? false,
+            'email' => $account['EMAIL'] ?? $profile->email,
+            'isPermitted' => $account['F_SCANOCR'] == 'Y',
         ];
     }
 }

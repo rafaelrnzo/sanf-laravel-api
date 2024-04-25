@@ -1301,4 +1301,14 @@ class SanfCoreApiClient
 
         return $response->json(true);
     }
+
+    public function getOCRPermission(string $email)
+    {
+        $response = Request::route('ocr.permission', $this->client)
+            ->queryParams([
+                'email' => $email,
+            ])->send();
+
+        return $response->json(true);
+    }
 }
