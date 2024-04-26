@@ -133,8 +133,8 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::get('users/profiles/{xid}/plafonds/factorings/{plafond_xid}/dirbusements', ['as' => 'users.plafonds.factorings.dirbusement.browse', 'uses' => 'Plafond\Controllers\PlafondFactoringDisbursementController@browse']);
     Route::post('users/profiles/{xid}/plafonds/factorings/{plafond_xid}/dirbusements/{disbursement_xid}', ['as' => 'users.plafonds.factorings.dirbusement.update', 'uses' => 'Plafond\Controllers\PlafondFactoringDisbursementController@update']);
     Route::post('users/profiles/{xid}/plafonds/invoice', ['as' => 'users.plafonds.invoice.add', 'uses' => 'Plafond\Controllers\InvoicePlafondController@uploadDocument']);
-    Route::post('users/profiles/{xid}/plafonds/factorings/{plafond_xid}/payment-accelaration-document/email', ['as' => 'v1.plafond.payment-accelaration-document.email', 'uses' => 'PlafondDocumentController@sendPaymentAccelarationDocument']);
-    Route::get('plafonds/payment-accelaration-document/download', ['as' => 'v1.plafond.payment-accelaration-document.download', 'uses' => 'PlafondDocumentController@downloadPaymentAccelarationDocument']);
+    Route::post('users/profiles/{xid}/plafonds/factorings/{plafond_xid}/payment-accelaration-document/email', ['as' => 'v1.plafond.payment-accelaration-document.email', 'uses' => 'Plafond\Controllers\PlafondDocumentController@sendPaymentAccelarationDocument']);
+    Route::get('plafonds/payment-accelaration-document/download', ['as' => 'v1.plafond.payment-accelaration-document.download', 'uses' => 'Plafond\Controllers\PlafondDocumentController@downloadPaymentAccelarationDocument']);
 
     // E-SIGN
     Route::get('users/profiles/{xid}/contracts/esign-user', ['as' => 'users.contracts.esign-user', 'uses' => 'Contract\Controllers\ESignDocumentByUserController@getUser']);

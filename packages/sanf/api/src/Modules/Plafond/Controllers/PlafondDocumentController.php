@@ -21,7 +21,7 @@ class PlafondDocumentController extends RestApiController
         return fractal($result, PrivateAssetFileSimpleTransformer::class);
     }
 
-    public function sendPaymentAccelerationDocument(Guard $auth)
+    public function sendPaymentAccelarationDocument(Guard $auth)
     {
         return $this->responseOk();
     }
