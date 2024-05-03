@@ -546,17 +546,17 @@ class SanfCoreApiClient
      * 'P_CODE': '001',
      * 'JENIS_PLAFOND': 'UNIT',
      * 'CUST_ID': '3010000050',
-     * 'P_CURRENT': '0',
-     * 'P_USED': '0',
-     * 'P_SISA': '0',
+     * 'P_CURRENT': '0', -> P_TOTAL
+     * 'P_USED': '0', -> P_TERPAKAI
+     * 'P_SISA': '0', -> P_SISA
      * 'DATE_UPDATE': '03-NOV-21'
      * }
      */
     public function getCustomerPlafonds($customerId)
     {
         $response = Request::route('customer.plafond.list', $this->client)
-            ->pathParams([
-                'customer_id' => $customerId,
+            ->queryParams([
+                'cust_id' => $customerId,
             ])->send();
 
         return $response->json();

@@ -15,7 +15,7 @@ final class GuzzlePlafondEntity implements PlafondEntityInterface
 
     public function getId(): string
     {
-        return $this->attributes['PLAFONDHEADER_ID'];
+        return $this->attributes['P_CODE'];
     }
 
     public function getCustomerId(): string
@@ -25,12 +25,12 @@ final class GuzzlePlafondEntity implements PlafondEntityInterface
 
     public function getCurrentBalance(): string
     {
-        return $this->attributes['P_CURRENT'];
+        return $this->attributes['P_TOTAL'];
     }
 
     public function getUsedBalance(): string
     {
-        return $this->attributes['P_USED'];
+        return $this->attributes['P_TERPAKAI'];
     }
 
     public function getRemainingBalance(): string

@@ -18,6 +18,6 @@ return [
             'invoice_document' => 'plafond/disbursement/invoice-document/',
             'payment_acc_document' => 'plafond/disbursement/payment-acc-document/',
             'other_document' => 'plafond/disbursement/other-document/',
-        ]
+        ],
     ],
 ];

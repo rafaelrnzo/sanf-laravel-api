@@ -34,7 +34,7 @@ Route::group(config('sanf-api.url'), [SanfCoreApiProcessor::class], function () 
 
     Route::post('customer.upload', 'upload');
 
-    Route::get('customer.plafond.list', '/Plafond/Header/{customer_id}');
+    Route::get('customer.plafond.list', '/Plafond/Header');
     Route::get('customer.plafond.list-by-type', '/Plafond/Detail/{customer_id}/{p_code}');
     Route::post('customer.plafond.create', '/Plafond');
     Route::get('customer.plafond.history', '/plafond/history');
@@ -77,5 +77,4 @@ Route::group(config('sanf-api.url'), [SanfCoreApiProcessor::class], function () 
     Route::get('request-document.browse', '/upload/listdoc');
     Route::get('request-uploaded-document.browse', '/upload/riwayatdoc');
     Route::post('request-document.submit', '/upload/submitdoc');
-
 });
