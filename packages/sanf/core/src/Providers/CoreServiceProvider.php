@@ -61,6 +61,8 @@ use Sanf\Core\Modules\News\EloquentNewsRepository;
 use Sanf\Core\Modules\News\NewsRepositoryInterface;
 use Sanf\Core\Modules\Plafond\Repositories\EloquentPlafondTypeRepository;
 use Sanf\Core\Modules\Plafond\Repositories\GuzzleAndEloquentPlafondRepository;
+use Sanf\Core\Modules\Plafond\Repositories\PlafondDisbursementEloquentRepository;
+use Sanf\Core\Modules\Plafond\Repositories\PlafondDisbursementRepositoryInterface;
 use Sanf\Core\Modules\Plafond\Repositories\PlafondRepositoryInterface;
 use Sanf\Core\Modules\Plafond\Repositories\PlafondTypeRepositoryInterface;
 use Sanf\Core\Modules\Prepayment\Repositories\EloquentPrepaymentSubmissionRepository;
@@ -207,6 +209,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(SurveyEntityFactoryInterface::class, EloquentSurveyFactoryEntity::class);
         $this->app->bind(RequestedDocumentRepositoryInterface::class, EloquentRequestedDocumentRepository::class);
         $this->app->bind(RequestedDocumentItemRepositoryInterface::class, EloquentRequestedDocumentItemRepository::class);
+        $this->app->bind(PlafondDisbursementRepositoryInterface::class, PlafondDisbursementEloquentRepository::class);
 
         //SPECIFICATION FACTORY
         $this->app->bind(ProjectSpecificationFactoryInterface::class, EloquentProjectSpecificationFactory::class);

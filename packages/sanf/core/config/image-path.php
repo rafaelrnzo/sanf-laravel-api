@@ -13,4 +13,11 @@ return [
     'document_tekenaja' => 'tekenaja/document/',
     'on-board' => 'on-board/',
     'requested-document' => 'requested-document/',
+    'plafond' => [
+        'disbursement' => [
+            'invoice_document' => 'plafond/disbursement/invoice-document/',
+            'payment_acc_document' => 'plafond/disbursement/payment-acc-document/',
+            'other_document' => 'plafond/disbursement/other-document/',
+        ]
+    ],
 ];

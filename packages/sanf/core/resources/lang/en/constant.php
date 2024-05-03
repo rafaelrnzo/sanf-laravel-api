@@ -26,4 +26,9 @@ return [
         'APPROVED' => 'Disetujui',
         'RESTORE' => 'Dipulihkan',
     ],
+    'plafond.disbursement.status.SUBMIT' => 'Diajukan',
+    'plafond.disbursement.status.ON_PROCESS' => 'Diproses',
+    'plafond.disbursement.status.REVISION' => 'Revisi',
+    'plafond.disbursement.status.REJECT' => 'Ditolak',
+    'plafond.disbursement.status.APPROVE' => 'Diterima',
 ];

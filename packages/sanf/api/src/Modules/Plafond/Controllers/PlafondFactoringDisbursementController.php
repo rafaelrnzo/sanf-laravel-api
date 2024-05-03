@@ -5,8 +5,16 @@ namespace Sanf\Api\Modules\Plafond\Controllers;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
+use NbsPhp\Core\Database\TransactionalSessionInterface;
+use NbsPhp\Core\Services\TransactionalApplicationService;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
 use Sanf\Api\Modules\Plafond\Transformers\PlafondFactoringDisbursementTransformer;
+use Sanf\Core\Modules\Plafond\Dtos\DisbursementAllocationFormRequest;
+use Sanf\Core\Modules\Plafond\Dtos\DisbursementBowheerFormRequest;
+use Sanf\Core\Modules\Plafond\Dtos\DisbursementDocumentFormRequest;
+use Sanf\Core\Modules\Plafond\Dtos\DisbursementInvoiceFormRequest;
+use Sanf\Core\Modules\Plafond\Dtos\PlafondDisbursementFormRequest;
+use Sanf\Core\Modules\Plafond\UseCase\PlafondDisbursementSubmitUseCase;
 
 class PlafondFactoringDisbursementController extends RestApiController
 {
@@ -43,6 +51,114 @@ class PlafondFactoringDisbursementController extends RestApiController
         Guard $auth,
         string $xid,
         string $plafond_xid,
+        Request $request,
+        TransactionalSessionInterface $transactionalSession,
+        PlafondDisbursementSubmitUseCase $submitUseCase
+    ) {
+        $this->validate($request, [
+            'bouwheer.id' => ['required', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
+            'bouwheer.name' => ['required', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
+            'bouwheer.email' => ['required', 'email', 'max:32'],
+            'bouwheer.code' => ['required', 'string', 'max:32'],
+            'invoices' => ['required', 'array'],
+            'invoices.*.photos' => ['required', 'array'],
+            'invoices.*.photos.*.file_name' => ['required', 'string'],
+            'invoices.*.photos.*.origin_name' => ['required', 'string'],
+            'invoices.*.file_name' => ['required', 'string'],
+            'invoices.*.origin_name' => ['required', 'string'],
+            'invoices.*.invoice_no' => ['required', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
+            'invoices.*.invoice_date' => ['required', 'date_format:Y-m-d'],
+            'invoices.*.invoice_amount' => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
+            'invoices.*.tax_amount'  => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
+            'invoices.*.vat_amount' => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
+            'invoices.*.backharge_amount' => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
+            'invoices.*.other_amount' => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
+            'invoices.*.total_amount' => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
+            'invoices.*.order_no' => ['required', 'integer'],
+            'total_invoice_amount' => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
+            'allocations' => ['required', 'array'],
+            'allocations.*.xid' => ['required', 'string', 'max:32'],
+            'allocations.*.account_name' => ['required', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
+            'allocations.*.account_provider' => ['required', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
+            'allocations.*.account_no' => ['required', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
+            'allocations.*.notes' => ['required', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
+            'allocations.*.is_default' => ['required', 'boolean'],
+            'allocations.*.amount' => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
+            'allocations.*.order_no' => ['required', 'integer'],
+            'payment_acc_document' => ['nullable', 'array'],
+            'payment_acc_document.file_name' => ['nullable', 'string'],
+            'payment_acc_document.origin_name' => ['nullable', 'string'],
+            'other_document' => ['nullable', 'array'],
+            'other_document.*.file_name' => ['required', 'string'],
+            'other_document.*.origin_name' => ['required', 'string'],
+            'customer_review' => ['required', 'boolean'],
+            'created_at' => ['required', 'integer'],
+        ]);
+
+        $formRequest = new PlafondDisbursementFormRequest([
+            'user_id' => $auth->id(),
+            'client_id' => $xid,
+            'plafond_id' => $plafond_xid,
+            'bouwheer' => new DisbursementBowheerFormRequest([
+                'id' => $request->get('bouwheer')['id'],
+                'name' => $request->get('bouwheer')['name'],
+                'email' => $request->get('bouwheer')['email'],
+                'code' => $request->get('bouwheer')['code'],
+            ]),
+            'invoices' => array_map(function ($invoice) {
+                $invoice['invoice_amount'] = (float) ($invoice['invoice_amount'] ?? 0.0);
+                $invoice['tax_amount'] = (float) ($invoice['tax_amount'] ?? 0.0);
+                $invoice['vat_amount'] = (float) ($invoice['vat_amount'] ?? 0.0);
+                $invoice['backharge_amount'] = (float) ($invoice['backharge_amount'] ?? 0.0);
+                $invoice['other_amount'] = (float) ($invoice['other_amount'] ?? 0.0);
+                $invoice['total_amount'] = (float) ($invoice['total_amount'] ?? 0.0);
+                $invoice['photos'] = array_map(function ($photo) {
+                    return new DisbursementDocumentFormRequest([
+                        'name' => $photo['file_name'],
+                        'origin' => $photo['origin_name'],
+                    ]);
+                }, $invoice['photos']);
+
+                return new DisbursementInvoiceFormRequest($invoice);
+            }, $request->get('invoices')),
+            'total_invoice_amount' => (float) $request->get('total_invoice_amount'),
+            'allocations' => array_map(function ($allocation) {
+                return new DisbursementAllocationFormRequest([
+                    'id' => $allocation['xid'],
+                    'name' => $allocation['account_name'],
+                    'provider' => $allocation['account_provider'],
+                    'account_no' => $allocation['account_no'],
+                    'notes' => $allocation['notes'],
+                    'is_default' => $allocation['is_default'],
+                    'amount' => (float) $allocation['amount'],
+                    'order_no' => $allocation['order_no'],
+                ]);
+            }, $request->get('allocations')),
+            'payment_acc_document' => new DisbursementDocumentFormRequest([
+                'name' => $request->get('payment_acc_document')['file_name'] ?? null,
+                'origin' => $request->get('payment_acc_document')['origin_name'] ?? null,
+            ]),
+            'other_document' => array_map(function ($document) {
+                return new DisbursementDocumentFormRequest([
+                    'name' => $document['file_name'],
+                    'origin' => $document['origin_name'],
+                ]);
+            }, $request->get('other_document')),
+            'customer_review' => $request->get('customer_review'),
+            'created_at' => $request->get('created_at'),
+        ]);
+
+        $transactionalService = new TransactionalApplicationService($submitUseCase, $transactionalSession);
+        $transactionalService->execute($formRequest);
+
+        return $this->responseOk();
+    }
+
+    public function update(
+        Guard $auth,
+        string $xid,
+        string $plafond_xid,
+        string $disbursement_xid,
         Request $request
     ) {
         $this->validate($request, [
@@ -72,55 +188,10 @@ class PlafondFactoringDisbursementController extends RestApiController
             'allocations.*.notes' => ['required', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
             'allocations.*.is_default' => ['required', 'boolean'],
             'allocations.*.amount' => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
-            'payment_acc_document.file_name' => ['required', 'string'],
-            'payment_acc_document.origin_name' => ['required', 'string'],
-            'other_document' => ['required', 'array'],
-            'other_document.*.file_name' => ['required', 'string'],
-            'other_document.*.origin_name' => ['required', 'string'],
-            'customer_review' => ['required', 'boolean'],
-            'created_at' => ['required', 'integer'],
-        ]);
-
-        return $this->responseOk();
-    }
-
-        public function update(
-            Guard $auth,
-            string $xid,
-            string $plafond_xid,
-            string $disbursement_xid,
-            Request $request
-        ) {
-        $this->validate($request, [
-            'bouwheer' => ['required', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
-            'code' => ['required', 'string', 'max:32'],
-            'invoices' => ['required', 'array'],
-            'invoices.*.photos' => ['required', 'array'],
-            'invoices.*.photos.*.file_name' => ['required', 'string'],
-            'invoices.*.photos.*.origin_name' => ['required', 'string'],
-            'invoices.*.file_name' => ['required', 'string'],
-            'invoices.*.origin_name' => ['required', 'string'],
-            'invoices.*.invoice_no' => ['required', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
-            'invoices.*.invoice_date' => ['required', 'date_format:Y-m-d'],
-            'invoices.*.invoice_amount' => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
-            'invoices.*.tax_amount'  => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
-            'invoices.*.vat_amount' => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
-            'invoices.*.backharge_amount' => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
-            'invoices.*.other_amount' => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
-            'invoices.*.total_amount' => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
-            'invoices.*.order_no' => ['required', 'integer'],
-            'total_invoice_amount' => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
-            'allocations' => ['required', 'array'],
-            'allocations.*.xid' => ['required', 'string', 'max:32'],
-            'allocations.*.account_name' => ['required', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
-            'allocations.*.account_provider' => ['required', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
-            'allocations.*.account_no' => ['required', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
-            'allocations.*.notes' => ['required', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
-            'allocations.*.is_default' => ['required', 'boolean'],
-            'allocations.*.amount' => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
-            'payment_acc_document.file_name' => ['required', 'string'],
-            'payment_acc_document.origin_name' => ['required', 'string'],
-            'other_document' => ['required', 'array'],
+            'payment_acc_document' => ['nullable', 'array'],
+            'payment_acc_document.file_name' => ['nullable', 'string'],
+            'payment_acc_document.origin_name' => ['nullable', 'string'],
+            'other_document' => ['nullable', 'array'],
             'other_document.*.file_name' => ['required', 'string'],
             'other_document.*.origin_name' => ['required', 'string'],
             'customer_review' => ['required', 'boolean'],
