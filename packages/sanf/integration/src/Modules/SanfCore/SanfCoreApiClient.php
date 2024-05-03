@@ -672,7 +672,7 @@ class SanfCoreApiClient
     {
         $response = Request::route('customer.plafond.history', $this->client)
             ->queryParams([
-                'uid' => $customerId,
+                'cust_id' => $customerId,
                 'typeplafond' => $plafondCode,
             ])
             ->send();

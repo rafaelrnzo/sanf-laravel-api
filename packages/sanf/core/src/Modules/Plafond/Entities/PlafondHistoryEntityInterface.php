@@ -14,9 +14,11 @@ interface PlafondHistoryEntityInterface
 
     public function getCustomerId(): string;
 
-    public function getSubmittedBalance(): string;
-
     public function getCurrentBalance(): string;
+
+    public function getUsedBalance(): string;
+
+    public function getRemainingBalance(): string;
 
     public function getAddedBalance(): string;
 

@@ -7,9 +7,14 @@ return [
     ],
     'plafond-status' => [
         'IN_PROGRESS' => 'Diproses',
-        'REJECT' => 'Ditolak',
         'APPROVED' => 'Disetujui',
-        'CLOSED' => 'Ditutup',
+        'REJECT' => 'Ditolak',
+        'SUBMIT' => 'Diajukan',
+        'ON_REVIEW' => 'On Review',
+        'REVISION' => 'Revisi',
+        'PROCESS' => 'Diproses',
+        'TRANSFERED' => 'Dicairkan',
+
     ],
     'financing_unit_location_submission' => [
         'IN_PROGRESS' => 'Diproses',

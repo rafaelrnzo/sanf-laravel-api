@@ -16,7 +16,7 @@ final class GuzzlePlafondHistoryEntity implements PlafondHistoryEntityInterface
 
     public function getPlafondId(): string
     {
-        return $this->attributes['PLAFONDHEADER_ID'];
+        return $this->attributes['NO_PLAFOND'];
     }
 
     public function getType(): PlafondTypeEntityInterface
@@ -29,24 +29,39 @@ final class GuzzlePlafondHistoryEntity implements PlafondHistoryEntityInterface
         return $this->attributes['CUST_ID'];
     }
 
-    public function getSubmittedBalance(): string
-    {
-        return $this->attributes['P_SUBMIT'];
-    }
-
     public function getCurrentBalance(): string
     {
-        return $this->attributes['P_CURRENT'];
+        return $this->attributes['P_TOTAL'] ?? '';
+    }
+
+    public function getUsedBalance(): string
+    {
+        return $this->attributes['P_TERPAKAI'] ?? '';
+    }
+
+    public function getRemainingBalance(): string
+    {
+        return $this->attributes['P_SISA'] ?? '';
     }
 
     public function getAddedBalance(): string
     {
-        return $this->attributes['P_TAMBAHAN'];
+        return $this->attributes['P_TAMBAHAN'] ?? '';
     }
 
     public function getStatus(): PlafondStatusEnum
     {
-        return new PlafondStatusEnum($this->attributes['P_STATUS']);
+        $status = $this->attributes['P_STATUS'];
+        if (strlen($status) === 3) {
+            $status = '1' . substr($status, 1);
+        }
+
+        return new PlafondStatusEnum($status);
+    }
+
+    public function getStatusLabel(): PlafondStatusEnum
+    {
+        return $this->attributes['DESCRIPTION'];
     }
 
     public function getUpdatedAt(): \DateTimeImmutable

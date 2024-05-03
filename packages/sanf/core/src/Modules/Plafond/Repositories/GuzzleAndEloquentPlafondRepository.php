@@ -53,6 +53,7 @@ class GuzzleAndEloquentPlafondRepository implements PlafondRepositoryInterface
             $response = $this->client->getCustomerPlafondHistories($xid);
 
             return array_map(function ($item) {
+                $item['P_CODE'] = '0' . substr($item['P_CODE'], 1);
                 $item['type'] = $this->plafondTypeModel->find($item['P_CODE'])->toArray();
 
                 return $this->historyFactory->make($item);
