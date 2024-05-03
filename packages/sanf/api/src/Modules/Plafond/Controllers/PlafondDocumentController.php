@@ -12,10 +12,10 @@ class PlafondDocumentController extends RestApiController
     public function downloadPaymentAccelarationDocument(Guard $auth)
     {
         $result = new AssetUploadResultDto([
-            'originName' => 'DESIGNOPS-JACAProductDesigner-220222-1531.pdf',
-            'fileName' => 'tMZ1vq1fT53MNhbTCAgTlbcXh41qsdksLDK6KkRu.pdf',
-            'path' => 'temp/tMZ1vq1fT53MNhbTCAgTlbcXh41qsdksLDK6KkRu.pdf',
-            'url' => file_get_temp_url('temp/tMZ1vq1fT53MNhbTCAgTlbcXh41qsdksLDK6KkRu.pdf'),
+            'originName' => 'FORM PERCEPATAN PEMBAYARAN.doc.pdf',
+            'fileName' => 'f0R7HEzDXi6OL4INb55bPBRama4UjEYeusPoAUfG.pdf',
+            'path' => 'temp/f0R7HEzDXi6OL4INb55bPBRama4UjEYeusPoAUfG.pdf',
+            'url' => file_get_temp_url('temp/f0R7HEzDXi6OL4INb55bPBRama4UjEYeusPoAUfG.pdf'),
         ]);
 
         return fractal($result, PrivateAssetFileSimpleTransformer::class);
