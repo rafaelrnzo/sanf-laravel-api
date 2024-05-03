@@ -35,15 +35,15 @@ final class ReadPlafondByUserAndTypeService extends PlafondByUserService impleme
                 return (object) [
                     'status' => $item->getStatus(),
                     'updatedAt' => $item->getUpdatedAt(),
-                    'currentBalance' => $item->getCurrentBalance(),
+                    'currentBalance' => $item->getRemainingBalance(),
                     'addedBalance' => $item->getAddedBalance(),
-                    'submittedBalance' => $item->getSubmittedBalance(),
+                    'submittedBalance' => $item->getCurrentBalance(),
                     'type' => (object) [
                         'id' => $type->getId(),
                         'title' => $type->getTitle(),
                         'name' => $type->getName(),
                     ],
-                    'notes' => $item->getNotes(),
+                    'notes' => explode(',', $item->getNotes()),
                 ];
             }),
         ];

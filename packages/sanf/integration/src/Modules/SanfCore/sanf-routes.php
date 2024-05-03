@@ -35,7 +35,7 @@ Route::group(config('sanf-api.url'), [SanfCoreApiProcessor::class], function () 
     Route::post('customer.upload', 'upload');
 
     Route::get('customer.plafond.list', '/Plafond/Header');
-    Route::get('customer.plafond.list-by-type', '/Plafond/Detail/{customer_id}/{p_code}');
+    Route::get('customer.plafond.list-by-type', '/Plafond/Detail');
     Route::post('customer.plafond.create', '/Plafond');
     Route::get('customer.plafond.history', '/plafond/history');
 

@@ -15,7 +15,7 @@ final class BrowsePlafondHistoryByUserService extends PlafondByUserService imple
      */
     public function execute($dto = null)
     {
-        $plafonds = $this->repository->getHistoryByProfile('CUST001');
+        $plafonds = $this->repository->getHistoryByProfile($dto->profileXid);
         $data = collect($plafonds)->map(function (GuzzlePlafondHistoryEntity $item) {
             $type = $item->getType();
 

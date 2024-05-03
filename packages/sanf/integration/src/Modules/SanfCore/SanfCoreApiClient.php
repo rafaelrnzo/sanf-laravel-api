@@ -599,9 +599,12 @@ class SanfCoreApiClient
     public function getCustomerPlafondsByType($customerId, $plafondCode)
     {
         $response = Request::route('customer.plafond.list-by-type', $this->client)
-            ->pathParams([
-                'customer_id' => $customerId,
-                'p_code' => $plafondCode,
+            ->queryParams([
+                'cust_id' => $customerId,
+                'code_plafond' => $plafondCode,
+                'skip' => 0,
+                'limit' => 1000,
+                'order' => 'Latest',
             ])->send();
 
         return $response->json();
@@ -616,14 +619,15 @@ class SanfCoreApiClient
      * @throws EndpointNotDefinedException
      * @throws GuzzleException
      */
-    public function requestPlafond($customerId, $plafondCode, $amount = 0, $notes = null)
+    public function requestPlafond($customerId, $plafondCode, $code, $amount = 0, $notes = null)
     {
         $response = Request::route('customer.plafond.create', $this->client)
             ->json([
                 'cust_id' => $customerId,
                 'p_code' => $plafondCode,
+                't_code' => $code,
                 'amount' => $amount,
-                'notes' => $notes,
+                'notes' => 'PT.Test indo, PT.TEKOTOK',
             ])
             ->send();
 
