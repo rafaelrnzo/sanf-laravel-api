@@ -2,8 +2,16 @@
 
 namespace Sanf\Core\Modules\Plafond\UseCase;
 
+use Carbon\Carbon;
+use Firebase\Auth\Token\Exception\InvalidToken;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Storage;
+use Kreait\Firebase\Exception\MessagingException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
+use NbsPhp\Notification\Repositories\UserNotificationRepositoryInterface;
+use NbsPhp\Notification\Services\PushNotificationServiceInterface;
+use Sanf\Core\Modules\Notification\Exceptions\NotificationInvalidException;
+use Sanf\Core\Modules\Notification\NotificationTypeEnum;
 use Sanf\Core\Modules\Plafond\Dtos\DisbursementAllocationFormRequest;
 use Sanf\Core\Modules\Plafond\Dtos\DisbursementDocumentFormRequest;
 use Sanf\Core\Modules\Plafond\Dtos\DisbursementInvoiceFormRequest;
@@ -20,11 +28,19 @@ final class PlafondDisbursementSubmitUseCase implements ApplicationServiceInterf
 
     private $coreClientRepository;
     private $disbursementRepository;
+    private $userNotificationRepository;
+    private $pushNotificationService;
 
-    public function __construct(PlafondDisbursementRepositoryInterface $disbursementRepository, ProfileRepositoryInterface $coreClientRepository)
-    {
+    public function __construct(
+        PlafondDisbursementRepositoryInterface $disbursementRepository,
+        ProfileRepositoryInterface $coreClientRepository,
+        UserNotificationRepositoryInterface $userNotificationRepository,
+        PushNotificationServiceInterface $pushNotificationService
+    ) {
         $this->coreClientRepository = $coreClientRepository;
         $this->disbursementRepository = $disbursementRepository;
+        $this->userNotificationRepository = $userNotificationRepository;
+        $this->pushNotificationService = $pushNotificationService;
     }
 
     /**
@@ -185,6 +201,45 @@ final class PlafondDisbursementSubmitUseCase implements ApplicationServiceInterf
             $document['submission_id'] = $submissionModel->id;
 
             $this->disbursementRepository->createDocument($document);
+        }
+
+        // send notification
+        // TODO create self service of send notification using event service
+        $fcmTokens = $this->userNotificationRepository->getFcmTokens($formRequest->userId);
+        $data = [
+            'xid' => nano_id(),
+            'title' => __('Pengajuan anda berhasil'),
+            'subtitle' => __('Sukses pengajuan pencairan plafond'),
+            'body' => __('Pengajuan pencairan plafond and telah berhasil dikirim dan sedang dalam proses.'),
+            'type' => (string) NotificationTypeEnum::INFO,
+            'screen' => '',
+            'published_at' => Carbon::now(),
+            'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
+        ];
+
+        try {
+            $this->userNotificationRepository->create([
+                'xid' => $data['xid'],
+                'type' => (int) $data['type'],
+                'user_id' => $formRequest->userId,
+                'data' => $data,
+            ]);
+        } catch (QueryException $exception) {
+            if ($exception->getCode() == '23505') {
+                throw new NotificationInvalidException('ID not unique');
+            }
+            throw $exception;
+        }
+        foreach (array_unique($fcmTokens) as $fcmToken) {
+            try {
+                $this->pushNotificationService->sendToDevice($fcmToken, $data);
+            } catch (InvalidToken $exception) {
+                $this->userNotificationRepository->deleteFcmToken($fcmToken);
+                report($exception);
+            } catch (MessagingException $exception) {
+                $this->userNotificationRepository->deleteFcmToken($fcmToken);
+                report($exception);
+            }
         }
 
         return $disbursementModel;
