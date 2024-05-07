@@ -17,6 +17,7 @@ use Sanf\Core\Modules\Plafond\Dtos\DisbursementDocumentFormRequest;
 use Sanf\Core\Modules\Plafond\Dtos\DisbursementInvoiceFormRequest;
 use Sanf\Core\Modules\Plafond\Dtos\PlafondDisbursementFormRequest;
 use Sanf\Core\Modules\Plafond\Enums\PlafondDisbursementStatusEnum;
+use Sanf\Core\Modules\Plafond\Events\PlafondDisbursementSubmittedEvent;
 use Sanf\Core\Modules\Plafond\Repositories\PlafondDisbursementRepositoryInterface;
 use Sanf\Core\Modules\User\Exceptions\ProfileNotFoundException;
 use Sanf\Core\Modules\User\Repositories\ProfileRepositoryInterface;
@@ -241,6 +242,17 @@ final class PlafondDisbursementSubmitUseCase implements ApplicationServiceInterf
                 report($exception);
             }
         }
+
+        $mailContent = (object) [
+            'fullName' => $userGuzzleEntity->getFullName(),
+            'email' => $userGuzzleEntity->getEmail(),
+            'bowheer' => $formRequest->bouwheer,
+            'disbursementNo' => $disbursementXid,
+            'invoiceCount' => count($invoicesInput),
+            'totalAmount' => $formRequest->totalInvoiceAmount,
+            'createdAt' => $disbursementModel->created_at,
+        ];
+        event(new PlafondDisbursementSubmittedEvent($mailContent));
 
         return $disbursementModel;
     }

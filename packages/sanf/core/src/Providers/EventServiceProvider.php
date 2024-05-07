@@ -27,8 +27,10 @@ use Sanf\Core\Modules\Invoice\Events\InvoiceCollectionSubmissionAddedEvent;
 use Sanf\Core\Modules\Invoice\Listeners\SendEmailNewInvoiceCollectionSubmissionListener;
 use Sanf\Core\Modules\Notification\Events\NotifiedUserByExternalEvent;
 use Sanf\Core\Modules\Notification\Listeners\SendPushNotificationByExternalListener;
+use Sanf\Core\Modules\Plafond\Events\PlafondDisbursementSubmittedEvent;
 use Sanf\Core\Modules\Plafond\Events\PlafondIncreaseRequestedEvent;
 use Sanf\Core\Modules\Plafond\Events\PlafondRequestedEvent;
+use Sanf\Core\Modules\Plafond\Listeners\SendEmailPlafondDisbursementSubmittedListener;
 use Sanf\Core\Modules\Plafond\Listeners\SendEmailRequestIncreasePlafondListener;
 use Sanf\Core\Modules\Plafond\Listeners\SendEmailRequestNewPlafondListener;
 use Sanf\Core\Modules\Prepayment\Events\PrepaymentSubmissionAddedEvent;
@@ -114,6 +116,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         ProductServiceAddToCartEvent::class => [
             SendEmailProductServiceAddToCartListener::class,
+        ],
+        PlafondDisbursementSubmittedEvent::class => [
+            SendEmailPlafondDisbursementSubmittedListener::class,
         ],
     ];
 }
