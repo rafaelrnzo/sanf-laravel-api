@@ -5,6 +5,7 @@ namespace Sanf\Integration\Modules\SanfCore;
 use GuzzleHttp\Exception\GuzzleException;
 use NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException;
 use NbsPhp\ApiWrapper\Api\Request;
+use Sanf\Core\Modules\Plafond\Enums\PlafondTypeEnum;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 use stdClass;
 
@@ -678,6 +679,21 @@ class SanfCoreApiClient
             ->queryParams([
                 'cust_id' => $customerId,
                 'typeplafond' => $plafondCode,
+            ])
+            ->send();
+
+        return $response->json();
+    }
+
+    public function getPlafondFactoring($customerId)
+    {
+        $response = Request::route('customer.plafond.factoring', $this->client)
+            ->queryParams([
+                'cust_id' => $customerId,
+                'code_plafond' => PlafondTypeEnum::FACTORING,
+                'skip' => self::DEFAULT_SKIP,
+                'limit' => self::DEFAULT_LIMIT,
+                'order' => self::DEFAULT_ORDER,
             ])
             ->send();
 

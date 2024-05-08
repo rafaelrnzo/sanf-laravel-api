@@ -15,7 +15,7 @@ final class GuzzlePlafondFactoringEntity
 
     public function getPlafondId(): string
     {
-        return $this->attributes['PLAFONDHEADER_ID'];
+        return $this->attributes['NO_PLAFOND'];
     }
 
     public function getCustomerId(): string
@@ -23,29 +23,24 @@ final class GuzzlePlafondFactoringEntity
         return $this->attributes['CUST_ID'];
     }
 
-    public function getSubmittedBalance(): string
-    {
-        return $this->attributes['P_SUBMIT'];
-    }
-
     public function getCurrentBalance(): string
     {
-        return $this->attributes['P_CURRENT'];
-    }
-
-    public function getAddedBalance(): string
-    {
-        return $this->attributes['P_TAMBAHAN'];
+        return $this->attributes['P_TOTAL'] ?? '';
     }
 
     public function getUsedBalance(): string
     {
-        return $this->attributes['P_USED'];
+        return $this->attributes['P_TERPAKAI'] ?? '';
     }
 
     public function getRemainingBalance(): string
     {
-        return $this->attributes['P_SISA'];
+        return $this->attributes['P_SISA'] ?? '';
+    }
+
+    public function getAddedBalance(): string
+    {
+        return $this->attributes['P_TAMBAHAN'] ?? '';
     }
 
     public function getCustomerReview(): bool
@@ -57,16 +52,11 @@ final class GuzzlePlafondFactoringEntity
     {
         return array_map(function ($item) {
             return new GuzzleCustomerPlafondFactoringEntity($item);
-        }, $this->attributes['CUSTOMERS']);
+        }, $this->attributes['CUSTOMER']);
     }
 
     public function getExpiredAt(): \DateTimeImmutable
     {
-        return CarbonImmutable::parse($this->attributes['DATE_EXPIRED']);
-    }
-
-    public function getUpdatedAt(): \DateTimeImmutable
-    {
-        return CarbonImmutable::parse($this->attributes['DATE_UPDATE']);
+        return CarbonImmutable::parse($this->attributes['EXP_DATE']);
     }
 }

@@ -66,8 +66,7 @@ class GuzzleAndEloquentPlafondRepository implements PlafondRepositoryInterface
     public function getPlafondFactoringByProfile($xid): array
     {
         try {
-            // $response = $this->client->getPlafondFactoring($xid);
-            $response = json_decode('{"status":true,"code":"S_GetData","message":"Success","count":15,"data":[{"P_CODE":"003","PLAFONDHEADER_ID":"PH6","CUST_ID":"7198PROSM","P_CURRENT":"0", "P_SUBMIT":"100000000","P_USED":"100000000","P_SISA":"100000000","CUSTOMER_REVIEW":true,"CUSTOMERS":[{"NAME":"PT. Emas Perkasa Gemilang","CODE":"ABC123","EMAIL":"emas@mail.com"},{"NAME":"PT. Dominika Permata Digital","CODE":"ZXC789","EMAIL":"dominika@mail.com"}],"DATE_EXPIRED":"11-05-2023","DATE_UPDATE":"11-05-2023"}]}', true);
+            $response = $this->client->getPlafondFactoring($xid);
 
             return array_map(function ($item) {
                 return $this->factoringFactory->make($item);

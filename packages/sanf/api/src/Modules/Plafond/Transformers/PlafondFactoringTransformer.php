@@ -19,7 +19,6 @@ final class PlafondFactoringTransformer extends TransformerAbstract
                 ->transformWith(CustomerPlafondFactoringTransformer::class)
                 ->serializeWith(new ArraySerializer()),
             'expired_at' => unix_timestamp($dto->expiredAt),
-            'updated_at' => unix_timestamp($dto->updatedAt),
         ];
     }
 }

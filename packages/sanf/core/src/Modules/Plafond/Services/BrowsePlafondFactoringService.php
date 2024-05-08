@@ -21,7 +21,7 @@ final class BrowsePlafondFactoringService extends PlafondByUserService implement
         $data = collect($plafonds)->map(function (GuzzlePlafondFactoringEntity $item) {
             return (object) [
                 'xid' => $item->getPlafondId(),
-                'submitAmount' => $item->getSubmittedBalance(),
+                'submitAmount' => $item->getCurrentBalance(),
                 'remainingAmount' => $item->getRemainingBalance(),
                 'usedAmount' => $item->getUsedBalance(),
                 'customers' => array_map(function (GuzzleCustomerPlafondFactoringEntity $customer) {
@@ -31,9 +31,8 @@ final class BrowsePlafondFactoringService extends PlafondByUserService implement
                         'email' => $customer->getEmail(),
                     ];
                 }, $item->getCustomers()),
-                'customerReview' => $item->getCustomerReview(),
+                'customerReview' => $item->getCustomerReview() == 'Y',
                 'expiredAt' => $item->getExpiredAt(),
-                'updatedAt' => $item->getUpdatedAt(),
             ];
         });
 
