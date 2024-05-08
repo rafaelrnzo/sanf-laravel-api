@@ -55,12 +55,14 @@ final class PlafondDisbursementSubmitUseCase implements ApplicationServiceInterf
             throw new ProfileNotFoundException("User {$formRequest->clientId} not found");
         }
 
-        $disbursementXid = nano_id();
         $submissionXid = nano_id();
+        $disbursementXid = nano_id();
+        $disbursementNo = Carbon::now()->format('Ymdhis');
         $disbursementStatus = (new PlafondDisbursementStatusEnum(PlafondDisbursementStatusEnum::SUBMIT));
 
         $disbursementModel = $this->disbursementRepository->createDisbursement([
             'xid' => $disbursementXid,
+            'disbursement_no' => $disbursementNo,
             'client_id' => $userGuzzleEntity->getCustomerId(),
             'client_name' => $userGuzzleEntity->getFullName(),
             'client_mail' => $userGuzzleEntity->getEmail(),
@@ -247,7 +249,7 @@ final class PlafondDisbursementSubmitUseCase implements ApplicationServiceInterf
             'fullName' => $userGuzzleEntity->getFullName(),
             'email' => $userGuzzleEntity->getEmail(),
             'bowheer' => $formRequest->bouwheer,
-            'disbursementNo' => $disbursementXid,
+            'disbursementNo' => $disbursementNo,
             'invoiceCount' => count($invoicesInput),
             'totalAmount' => $formRequest->totalInvoiceAmount,
             'createdAt' => $disbursementModel->created_at,
