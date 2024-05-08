@@ -5,6 +5,7 @@ namespace Sanf\Api\Modules\Plafond\Controllers;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
+use Sanf\Api\Modules\Plafond\Transformers\InvoicePlafondScanOcrDocumentTransformer;
 use Sanf\Api\Modules\Plafond\Transformers\InvoicePlafondUploadDocumentTransformer;
 use Sanf\Core\Modules\Asset\UploadAssetService;
 use Sanf\Core\Modules\Ocr\Services\OcrScanDocumentService;
@@ -12,31 +13,59 @@ use Sanf\Core\Modules\Plafond\Dtos\InvoicePlafondUploadDocumentRequestDto;
 
 class InvoicePlafondController extends RestApiController
 {
+
     public function uploadDocument(
         Guard $auth,
         string $xid,
         Request $request,
-        UploadAssetService $uploadService,
+        UploadAssetService $uploadService
+    ) {
+        $inputs = $this->validate($request, [
+            'document' => ['required', 'file', 'mimetypes:application/pdf', 'max:10000'],
+            'photos' => ['required', 'array'],
+            'photos.*' => ['required', 'image', 'mimetypes:image/png,image/jpeg,image/jpg', 'max:5000'],
+        ]);
+
+        $documentMetadata = $uploadService->execute(new InvoicePlafondUploadDocumentRequestDto([
+            'userId' => $auth->id(),
+            'profileXid' => $xid,
+            'file' => $inputs['document'],
+        ]));
+
+        $photosMetadata = [];
+        foreach ($inputs['photos'] as $photo) {
+            $photosMetadata[] = $uploadService->execute(new InvoicePlafondUploadDocumentRequestDto([
+                'userId' => $auth->id(),
+                'profileXid' => $xid,
+                'file' => $photo,
+            ]));
+        }
+
+        $uploadFile = [
+            'document' => $documentMetadata,
+            'photos' => $photosMetadata,
+        ];
+        return fractal((object) $uploadFile, InvoicePlafondUploadDocumentTransformer::class);
+    }
+
+    public function scanOCRDocument(
+        Guard $auth,
+        string $xid,
+        Request $request,
         OcrScanDocumentService $ocrDocumentScanService
     ) {
         $this->validate($request, [
-            'file' => ['required', 'file', 'mimetypes:application/pdf', 'max:10000'],
-            'ocr_scan' => ['nullable', 'boolean'],
+            'document' => ['required', 'file', 'mimetypes:application/pdf', 'max:10000'],
         ]);
 
         $requestDto = new InvoicePlafondUploadDocumentRequestDto([
             'userId' => $auth->id(),
             'profileXid' => $xid,
-            'file' => $request->file('file'),
-            'ocrScan' => $request->get('ocr_scan'),
+            'file' => $request->file('document'),
         ]);
 
-        $uploadServiceResult = $uploadService->execute($requestDto);
+        $scanDocument = $ocrDocumentScanService->execute($requestDto);
 
-        $scanDocumentServiceResult = $ocrDocumentScanService->execute($requestDto);
-
-        $result = $uploadServiceResult->toArray() + $scanDocumentServiceResult->toArray();
-
-        return fractal((object) $result, InvoicePlafondUploadDocumentTransformer::class);
+        return fractal($scanDocument, InvoicePlafondScanOcrDocumentTransformer::class);
     }
 }

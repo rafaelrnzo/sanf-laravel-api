@@ -9,5 +9,4 @@ final class InvoicePlafondUploadDocumentRequestDto extends DataTransferObject
     public $userId;
     public $profileXid;
     public $file;
-    public $ocrScan;
 }

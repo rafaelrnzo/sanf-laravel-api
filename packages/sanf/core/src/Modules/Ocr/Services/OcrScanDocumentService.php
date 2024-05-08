@@ -29,27 +29,25 @@ final class OcrScanDocumentService implements ApplicationServiceInterface
             'totalAmount' => '',
         ]);
 
-        if ($dto->ocrScan === true) {
-            try {
-                $uploadResponse = $this->client->scanDocument($dto->file);
-                $latestDataResult = $uploadResponse->result;
+        try {
+            $uploadResponse = $this->client->scanDocument($dto->file);
+            $latestDataResult = $uploadResponse->result;
 
-                $filterScannerData = [];
-                foreach ($latestDataResult[0]->prediction as $key => $scanner) {
-                    $filterScannerData[$scanner->label] = $scanner->ocr_text;
-                }
-
-                return new OcrScanDocumentResponseDto([
-                    'invoiceNo' => $filterScannerData['invoice_number'],
-                    'invoiceDate' => $filterScannerData['invoice_date'],
-                    'invoiceAmount' => $filterScannerData['subtotal_before_tax'],
-                    'taxAmount' => $filterScannerData['pph23'],
-                    'vatAmount' => $filterScannerData['vat_amount'],
-                    'totalAmount' => $filterScannerData['total_after_tax'],
-                ]);
-            } catch (Exception $exception) {
-                report($exception->getMessage());
+            $filterScannerData = [];
+            foreach ($latestDataResult[0]->prediction as $key => $scanner) {
+                $filterScannerData[$scanner->label] = $scanner->ocr_text;
             }
+
+            return new OcrScanDocumentResponseDto([
+                'invoiceNo' => $filterScannerData['invoice_number'],
+                'invoiceDate' => $filterScannerData['invoice_date'],
+                'invoiceAmount' => $filterScannerData['subtotal_before_tax'],
+                'taxAmount' => $filterScannerData['pph23'],
+                'vatAmount' => $filterScannerData['vat_amount'],
+                'totalAmount' => $filterScannerData['total_after_tax'],
+            ]);
+        } catch (Exception $exception) {
+            report($exception->getMessage());
         }
 
         return $ocrScanDocumentResponseDto;
