@@ -20,7 +20,21 @@ class InvoicePlafondController extends RestApiController
         UploadAssetService $uploadService
     ) {
         $inputs = $this->validate($request, [
-            'document' => ['required', 'file', 'mimetypes:application/pdf', 'max:10000'],
+            'document' => [
+                'required',
+                'file',
+                'mimetypes:application/pdf',
+                'max:10000',
+                function ($attribute, $document, $fail) {
+                    $limit = config('ocr.document.max_page');
+                    $file = file_get_contents($document);
+                    $totalPage = preg_match_all("/\/Page\W/", $file);
+
+                    if ($totalPage > $limit) {
+                        $fail("{$attribute} more than {$limit} page.");
+                    }
+                },
+            ],
             'photos' => ['required', 'array'],
             'photos.*' => ['required', 'image', 'mimetypes:image/png,image/jpeg,image/jpg', 'max:5000'],
         ]);
@@ -55,7 +69,21 @@ class InvoicePlafondController extends RestApiController
         OcrScanDocumentService $ocrDocumentScanService
     ) {
         $this->validate($request, [
-            'document' => ['required', 'file', 'mimetypes:application/pdf', 'max:10000'],
+            'document' => [
+                'required',
+                'file',
+                'mimetypes:application/pdf',
+                'max:10000',
+                function ($attribute, $document, $fail) {
+                    $limit = config('ocr.document.max_page');
+                    $file = file_get_contents($document);
+                    $totalPage = preg_match_all("/\/Page\W/", $file);
+
+                    if ($totalPage > $limit) {
+                        $fail("{$attribute} more than {$limit} page.");
+                    }
+                },
+            ],
         ]);
 
         $requestDto = new InvoicePlafondUploadDocumentRequestDto([

@@ -255,6 +255,7 @@ class CoreServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__ . '/../../config/image-path.php', 'image-path');
         $this->mergeConfigFrom(__DIR__ . '/../../config/sanf-mobile.php', 'sanf-mobile');
+        $this->mergeConfigFrom(__DIR__ . '/../../config/ocr.php', 'ocr');
     }
 
     /**
