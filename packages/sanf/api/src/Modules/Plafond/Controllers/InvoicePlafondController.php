@@ -13,7 +13,6 @@ use Sanf\Core\Modules\Plafond\Dtos\InvoicePlafondUploadDocumentRequestDto;
 
 class InvoicePlafondController extends RestApiController
 {
-
     public function uploadDocument(
         Guard $auth,
         string $xid,
@@ -45,6 +44,7 @@ class InvoicePlafondController extends RestApiController
             'document' => $documentMetadata,
             'photos' => $photosMetadata,
         ];
+
         return fractal((object) $uploadFile, InvoicePlafondUploadDocumentTransformer::class);
     }
 

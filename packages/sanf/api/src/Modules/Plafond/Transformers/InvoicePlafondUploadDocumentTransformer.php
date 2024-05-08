@@ -18,7 +18,7 @@ final class InvoicePlafondUploadDocumentTransformer extends TransformerAbstract
             ],
             'photos' => fractal($dto->photos)
                 ->transformWith(PrivateAssetFileSimpleTransformer::class)
-                ->serializeWith(new ArraySerializer())
+                ->serializeWith(new ArraySerializer()),
         ];
     }
 }
