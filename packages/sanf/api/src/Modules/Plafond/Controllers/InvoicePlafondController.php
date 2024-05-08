@@ -35,8 +35,8 @@ class InvoicePlafondController extends RestApiController
                     }
                 },
             ],
-            'photos' => ['required', 'array'],
-            'photos.*' => ['required', 'image', 'mimetypes:image/png,image/jpeg,image/jpg', 'max:5000'],
+            'photos' => ['nullable', 'array'],
+            'photos.*' => ['nullable', 'image', 'mimetypes:image/png,image/jpeg,image/jpg', 'max:5000'],
         ]);
 
         $documentMetadata = $uploadService->execute(new InvoicePlafondUploadDocumentRequestDto([
@@ -46,7 +46,7 @@ class InvoicePlafondController extends RestApiController
         ]));
 
         $photosMetadata = [];
-        foreach ($inputs['photos'] as $photo) {
+        foreach ($inputs['photos'] ?? [] as $photo) {
             $photosMetadata[] = $uploadService->execute(new InvoicePlafondUploadDocumentRequestDto([
                 'userId' => $auth->id(),
                 'profileXid' => $xid,
