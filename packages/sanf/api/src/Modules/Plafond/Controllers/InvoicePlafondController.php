@@ -8,6 +8,7 @@ use NbsPhp\Core\Controllers\RestApiController;
 use Sanf\Api\Modules\Plafond\Transformers\InvoicePlafondScanOcrDocumentTransformer;
 use Sanf\Api\Modules\Plafond\Transformers\InvoicePlafondUploadDocumentTransformer;
 use Sanf\Core\Modules\Asset\UploadAssetService;
+use Sanf\Core\Modules\Ocr\Exceptions\DocumentScanLimitException;
 use Sanf\Core\Modules\Ocr\Services\OcrScanDocumentService;
 use Sanf\Core\Modules\Plafond\Dtos\InvoicePlafondUploadDocumentRequestDto;
 
@@ -25,19 +26,18 @@ class InvoicePlafondController extends RestApiController
                 'file',
                 'mimetypes:application/pdf',
                 'max:10000',
-                function ($attribute, $document, $fail) {
-                    $limit = config('ocr.document.max_page');
-                    $file = file_get_contents($document);
-                    $totalPage = preg_match_all("/\/Page\W/", $file);
-
-                    if ($totalPage > $limit) {
-                        $fail("{$attribute} more than {$limit} page.");
-                    }
-                },
             ],
             'photos' => ['nullable', 'array'],
             'photos.*' => ['nullable', 'image', 'mimetypes:image/png,image/jpeg,image/jpg', 'max:5000'],
         ]);
+
+        $limit = config('ocr.document.max_page');
+        $file = file_get_contents($request->file('document'));
+        $totalPage = preg_match_all("/\/Page\W/", $file);
+
+        if ($totalPage > $limit) {
+            throw new DocumentScanLimitException();
+        }
 
         $documentMetadata = $uploadService->execute(new InvoicePlafondUploadDocumentRequestDto([
             'userId' => $auth->id(),
@@ -74,17 +74,16 @@ class InvoicePlafondController extends RestApiController
                 'file',
                 'mimetypes:application/pdf',
                 'max:10000',
-                function ($attribute, $document, $fail) {
-                    $limit = config('ocr.document.max_page');
-                    $file = file_get_contents($document);
-                    $totalPage = preg_match_all("/\/Page\W/", $file);
-
-                    if ($totalPage > $limit) {
-                        $fail("{$attribute} more than {$limit} page.");
-                    }
-                },
             ],
         ]);
+
+        $limit = config('ocr.document.max_page');
+        $file = file_get_contents($request->file('document'));
+        $totalPage = preg_match_all("/\/Page\W/", $file);
+
+        if ($totalPage > $limit) {
+            throw new DocumentScanLimitException();
+        }
 
         $requestDto = new InvoicePlafondUploadDocumentRequestDto([
             'userId' => $auth->id(),
