@@ -628,7 +628,7 @@ class SanfCoreApiClient
                 'p_code' => $plafondCode,
                 't_code' => $code,
                 'amount' => $amount,
-                'notes' => 'PT.Test indo, PT.TEKOTOK',
+                'notes' => $notes,
             ])
             ->send();
 

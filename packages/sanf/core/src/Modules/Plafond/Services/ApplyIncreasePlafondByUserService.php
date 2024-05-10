@@ -22,7 +22,7 @@ final class ApplyIncreasePlafondByUserService extends PlafondByUserService imple
             $dto->typeId,
             '102',
             $dto->amount,
-            $dto->notes
+            implode(',', $dto->notes)
         );
         $plafond = $this->repository->getByProfileAndType($dto->profileXid, $dto->typeId);
         if (is_null($plafond)) {

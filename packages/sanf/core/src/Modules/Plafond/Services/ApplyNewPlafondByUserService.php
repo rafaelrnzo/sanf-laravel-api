@@ -21,7 +21,7 @@ final class ApplyNewPlafondByUserService extends PlafondByUserService implements
             $dto->typeId,
             '101',
             $dto->amount,
-            $dto->notes
+            implode(',', $dto->notes)
         );
         switch ($dto->typeId) {
             case PlafondTypeEnum::UNIT:
