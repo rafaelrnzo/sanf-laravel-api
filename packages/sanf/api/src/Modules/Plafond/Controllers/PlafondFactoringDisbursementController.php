@@ -14,7 +14,7 @@ use Sanf\Core\Modules\Plafond\Dtos\DisbursementBowheerFormRequest;
 use Sanf\Core\Modules\Plafond\Dtos\DisbursementDocumentFormRequest;
 use Sanf\Core\Modules\Plafond\Dtos\DisbursementInvoiceFormRequest;
 use Sanf\Core\Modules\Plafond\Dtos\PlafondDisbursementFormRequest;
-use Sanf\Core\Modules\Plafond\UseCase\PlafondDisbursementSubmitUseCase;
+use Sanf\Core\Modules\Plafond\UseCase\SubmitPlafondDisbursementUseCase;
 
 class PlafondFactoringDisbursementController extends RestApiController
 {
@@ -53,7 +53,7 @@ class PlafondFactoringDisbursementController extends RestApiController
         string $plafond_xid,
         Request $request,
         TransactionalSessionInterface $transactionalSession,
-        PlafondDisbursementSubmitUseCase $submitUseCase
+        SubmitPlafondDisbursementUseCase $submitUseCase
     ) {
         $this->validate($request, [
             'bouwheer.id' => ['required', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],

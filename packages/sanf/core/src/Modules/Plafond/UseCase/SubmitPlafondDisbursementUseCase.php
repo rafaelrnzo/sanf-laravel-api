@@ -22,7 +22,7 @@ use Sanf\Core\Modules\Plafond\Repositories\PlafondDisbursementRepositoryInterfac
 use Sanf\Core\Modules\User\Exceptions\ProfileNotFoundException;
 use Sanf\Core\Modules\User\Repositories\ProfileRepositoryInterface;
 
-final class PlafondDisbursementSubmitUseCase implements ApplicationServiceInterface
+final class SubmitPlafondDisbursementUseCase implements ApplicationServiceInterface
 {
     private const DEFAULT_AMOUNT = 0.0;
     private const DEFAULT_VERSION = 1;
