@@ -51,12 +51,7 @@ final class GuzzlePlafondHistoryEntity implements PlafondHistoryEntityInterface
 
     public function getStatus(): PlafondStatusEnum
     {
-        $status = $this->attributes['P_STATUS'];
-        if (strlen($status) === 3) {
-            $status = '1' . substr($status, 1);
-        }
-
-        return new PlafondStatusEnum($status);
+        return new PlafondStatusEnum($this->attributes['P_STATUS']);
     }
 
     public function getStatusLabel(): PlafondStatusEnum

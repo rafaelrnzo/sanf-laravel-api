@@ -6,9 +6,13 @@ use MyCLabs\Enum\Enum;
 
 class PlafondStatusEnum extends Enum
 {
-    public const IN_PROGRESS = '101';
-    public const APPROVED = '102';
-    public const REJECT = '103';
+    public const IN_PROGRESS_301 = '301';
+    public const IN_PROGRESS_401 = '401';
+    public const APPROVED_302 = '302';
+    public const APPROVED_402 = '402';
+    public const REJECT_303 = '303';
+    public const REJECT_403 = '403';
+
     public const SUBMIT = '01';
     public const ON_REVIEW = '02';
     public const REVISION = '03';
