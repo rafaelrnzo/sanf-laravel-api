@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddDueDateColumnAtPlafondDisbursementTable extends Migration
+class AddDueDateColumnAtPlafondDisbursementInvoiceTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class AddDueDateColumnAtPlafondDisbursementTable extends Migration
      */
     public function up()
     {
-        Schema::table('plafond_disbursement', function (Blueprint $table) {
+        Schema::table('plafond_disbursement_invoice', function (Blueprint $table) {
             $table->timestamp('due_at')->nullable();
         });
     }
@@ -26,7 +26,7 @@ class AddDueDateColumnAtPlafondDisbursementTable extends Migration
     public function down()
     {
         //
-        Schema::table('plafond_disbursement', function (Blueprint $table) {
+        Schema::table('plafond_disbursement_invoice', function (Blueprint $table) {
             //
         });
     }

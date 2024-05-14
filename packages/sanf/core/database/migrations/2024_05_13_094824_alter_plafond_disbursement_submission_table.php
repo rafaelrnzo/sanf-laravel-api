@@ -14,14 +14,14 @@ class AlterPlafondDisbursementSubmissionTable extends Migration
     public function up()
     {
         Schema::table('plafond_disbursement_submission', function (Blueprint $table) {
-            $table->string('payment_ins_web_doc_origin_name')->nullable();
-            $table->string('payment_ins_web_doc_file_name')->nullable();
-            $table->string('payment_ins_web_doc_path')->nullable();
-            $table->json('payment_ins_web_doc_metadata')->nullable();
             $table->string('payment_acc_web_doc_origin_name')->nullable();
             $table->string('payment_acc_web_doc_file_name')->nullable();
             $table->string('payment_acc_web_doc_path')->nullable();
             $table->json('payment_acc_web_doc_metadata')->nullable();
+            $table->string('payment_ins_web_doc_origin_name')->nullable();
+            $table->string('payment_ins_web_doc_file_name')->nullable();
+            $table->string('payment_ins_web_doc_path')->nullable();
+            $table->json('payment_ins_web_doc_metadata')->nullable();
         });
     }
 
