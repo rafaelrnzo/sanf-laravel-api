@@ -11,6 +11,11 @@ final class GuzzleCustomerPlafondFactoringEntity
         $this->attributes = $attributes;
     }
 
+    public function getId(): string
+    {
+        return $this->attributes['ID'] ?? '-';
+    }
+
     public function getName(): string
     {
         return $this->attributes['NAME'] ?? '-';

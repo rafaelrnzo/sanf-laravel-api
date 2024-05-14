@@ -9,6 +9,7 @@ final class CustomerPlafondFactoringTransformer extends TransformerAbstract
     public function transform($dto)
     {
         return [
+            'id' => $dto->id,
             'name' => $dto->name,
             'code' => $dto->code,
             'email' => $dto->email,

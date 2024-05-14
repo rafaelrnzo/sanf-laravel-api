@@ -26,6 +26,7 @@ final class BrowsePlafondFactoringService extends PlafondByUserService implement
                 'usedAmount' => $item->getUsedBalance(),
                 'customers' => array_map(function (GuzzleCustomerPlafondFactoringEntity $customer) {
                     return (object) [
+                        'id' => $customer->getId(),
                         'name' => $customer->getName(),
                         'code' => $customer->getCode(),
                         'email' => $customer->getEmail(),
