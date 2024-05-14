@@ -6,6 +6,7 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Plafond\Dtos\BrowsePlafondHistoryByUserRequestDto;
 use Sanf\Core\Modules\Plafond\Dtos\BrowsePlafondHistoryByUserResponseDto;
 use Sanf\Core\Modules\Plafond\Entities\GuzzlePlafondHistoryEntity;
+use Sanf\Core\Modules\Plafond\Enums\PlafondSubmissionTypeEnum;
 
 final class BrowsePlafondHistoryByUserService extends PlafondByUserService implements ApplicationServiceInterface
 {
@@ -18,6 +19,7 @@ final class BrowsePlafondHistoryByUserService extends PlafondByUserService imple
         $plafonds = $this->repository->getHistoryByProfile($dto->profileXid);
         $data = collect($plafonds)->map(function (GuzzlePlafondHistoryEntity $item) {
             $type = $item->getType();
+            $submissionType = (int) $item->getSubmissionType();
 
             return (object) [
                 'type' => (object) [
@@ -28,8 +30,8 @@ final class BrowsePlafondHistoryByUserService extends PlafondByUserService imple
                 'status' => $item->getStatus(),
                 'updatedAt' => $item->getUpdatedAt(),
                 'currentBalance' => $item->getUsedBalance(),
-                'addedBalance' => $item->getAddedBalance(),
-                'submittedBalance' => $item->getCurrentBalance(),
+                'addedBalance' => ($submissionType == PlafondSubmissionTypeEnum::INCREASE) ? $item->getAddedBalance() : '0',
+                'submittedBalance' => $item->getAddedBalance(),
                 'notes' => explode(',', $item->getNotes()),
             ];
         });
