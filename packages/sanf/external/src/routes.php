@@ -15,9 +15,11 @@ Route::group(['prefix' => 'v1/external', 'middleware' => ['basic-auth-config:cor
     Route::get('on-boardings', ['as' => 'on-boarding.browse', 'uses' => 'Setting\Controllers\OnBoardingByExternalController@getBrowse']);
     Route::post('on-boardings/{xid}', ['as' => 'on-boarding.update', 'uses' => 'Setting\Controllers\OnBoardingByExternalController@postUpdate']);
 
-    Route::get('user-delete-accounts', ['as' => 'user-delete-accounts.browse', 'uses' => 'User\UserAuthLogControllerByExternal@getBrowse']);
-    Route::post('user-delete-accounts/{xid}/approve', ['as' => 'user-delete-accounts.approve', 'uses' => 'User\UserAuthLogControllerByExternal@postApprove']);
-    Route::post('user-delete-accounts/{xid}/reject', ['as' => 'user-delete-accounts.reject', 'uses' => 'User\UserAuthLogControllerByExternal@postReject']);
+    Route::get('user-delete-accounts', ['as' => 'user-delete-accounts.browse', 'uses' => 'User\Controllers\UserAuthLogControllerByExternal@getBrowse']);
+    Route::post('user-delete-accounts/{xid}/approve', ['as' => 'user-delete-accounts.approve', 'uses' => 'User\Controllers\UserAuthLogControllerByExternal@postApprove']);
+    Route::post('user-delete-accounts/{xid}/reject', ['as' => 'user-delete-accounts.reject', 'uses' => 'User\Controllers\UserAuthLogControllerByExternal@postReject']);
+
+    Route::post('users/availabilities', ['as' => 'users.availabilities', 'uses' => 'User\Controllers\UserAvailabilityController@browseByScanina']);
 });
 
 Route::group(['prefix' => 'v1/public'], function () {

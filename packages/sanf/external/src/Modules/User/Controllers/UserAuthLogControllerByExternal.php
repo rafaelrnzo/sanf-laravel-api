@@ -1,6 +1,6 @@
 <?php
 
-namespace Sanf\External\Modules\User;
+namespace Sanf\External\Modules\User\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
