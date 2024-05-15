@@ -3,6 +3,7 @@
 namespace Sanf\Core\Modules\Plafond\UseCase;
 
 use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use Firebase\Auth\Token\Exception\InvalidToken;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Storage;
@@ -57,7 +58,7 @@ final class SubmitPlafondDisbursementUseCase implements ApplicationServiceInterf
 
         $submissionXid = nano_id();
         $disbursementXid = nano_id();
-        $disbursementNo = Carbon::now()->format('Ymdhis');
+        $disbursementNo = $this->generateDisbursementNo();
         $disbursementStatus = (new PlafondDisbursementStatusEnum(PlafondDisbursementStatusEnum::SUBMIT));
 
         $disbursementModel = $this->disbursementRepository->createDisbursement([
@@ -320,5 +321,16 @@ final class SubmitPlafondDisbursementUseCase implements ApplicationServiceInterf
         $path = config('image-path.plafond.disbursement.other_document');
 
         return $this->moveFile($filename, $temporaryPath, $path);
+    }
+
+    private function generateDisbursementNo()
+    {
+        $now = CarbonImmutable::now();
+        $year = $now->format('Y');
+        $month = $now->format('m');
+        $count = $this->disbursementRepository->countInMonth($now);
+        $width = 6;
+
+        return "{$year}{$month}" . str_pad((string) $count++, $width, '0', STR_PAD_LEFT);
     }
 }

@@ -46,4 +46,9 @@ interface PlafondDisbursementRepositoryInterface
      * @return PlafondDisbursementDocumentModel
      */
     public function createDocument(array $request): PlafondDisbursementDocumentModel;
+
+    /**
+     * @return int
+     */
+    public function countInMonth($dateTime): int;
 }

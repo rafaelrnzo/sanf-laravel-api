@@ -87,4 +87,12 @@ class PlafondDisbursementEloquentRepository implements PlafondDisbursementReposi
     {
         return $this->documentModel->query()->create($request);
     }
+
+    /**
+     * @return int
+     */
+    public function countInMonth($dateTime): int
+    {
+        return $this->disbursementModel->query()->whereMonth('created_at', $dateTime)->count();
+    }
 }
