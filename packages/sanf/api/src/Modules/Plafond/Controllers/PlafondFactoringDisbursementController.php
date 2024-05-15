@@ -81,7 +81,7 @@ class PlafondFactoringDisbursementController extends RestApiController
             'allocations.*.account_name' => ['required', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
             'allocations.*.account_provider' => ['required', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
             'allocations.*.account_no' => ['required', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
-            'allocations.*.notes' => ['required', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
+            'allocations.*.notes' => ['nullable', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
             'allocations.*.is_default' => ['required', 'boolean'],
             'allocations.*.amount' => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
             'allocations.*.order_no' => ['required', 'integer'],

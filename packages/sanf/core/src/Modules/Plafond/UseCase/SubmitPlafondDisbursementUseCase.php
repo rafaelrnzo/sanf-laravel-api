@@ -159,8 +159,7 @@ final class SubmitPlafondDisbursementUseCase implements ApplicationServiceInterf
 
             ];
         }
-
-        $paymentAccDocument = $this->paymentAccDocumentMovingFile($formRequest);
+        $paymentAccDocument = ($formRequest->paymentAccDocument->origin) ? $this->paymentAccDocumentMovingFile($formRequest) : [];
         $submissionModel = $this->disbursementRepository->createSubmission([
             'xid' => $submissionXid,
             'plafond_disbursement_id' => $disbursementModel->id,
@@ -171,7 +170,7 @@ final class SubmitPlafondDisbursementUseCase implements ApplicationServiceInterf
             'other_doc_snapshot' => json_encode($documentsInput),
             'payment_acc_doc_origin_name' => $formRequest->paymentAccDocument->origin,
             'payment_acc_doc_file_name' => $formRequest->paymentAccDocument->name,
-            'payment_acc_doc_path' => $paymentAccDocument['path'],
+            'payment_acc_doc_path' => $paymentAccDocument['path'] ?? null,
             'payment_acc_doc_metadata' => json_encode($paymentAccDocument),
             'status_id' => $disbursementStatus->getValue(),
             'status' => $disbursementStatus->getLabel(),
@@ -188,8 +187,11 @@ final class SubmitPlafondDisbursementUseCase implements ApplicationServiceInterf
 
         foreach ($invoicesInput as $invoice) {
             $invoice['submission_id'] = $submissionModel->id;
-            $photos = $invoice['photos'];
-            unset($invoice['photos']);
+            $photos = [];
+            if (isset($invoice['photos'])) {
+                $photos = $invoice['photos'];
+                unset($invoice['photos']);
+            }
 
             $invoiceModel = $this->disbursementRepository->createInvoice($invoice);
 
