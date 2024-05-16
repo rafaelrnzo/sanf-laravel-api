@@ -14,6 +14,8 @@ final class InvoicePlafondScanOcrDocumentTransformer extends TransformerAbstract
             'invoice_amount' => $dto->invoiceAmount,
             'tax_amount' => $dto->taxAmount,
             'vat_amount' => $dto->vatAmount,
+            'backharge_amount' => $dto->backhargeAmount,
+            'other_amount' => $dto->otherAmount,
             'total_amount' => $dto->totalAmount,
         ];
     }

@@ -26,6 +26,8 @@ final class OcrScanDocumentService implements ApplicationServiceInterface
             'invoiceAmount' => '',
             'taxAmount' => '',
             'vatAmount' => '',
+            'backhargeAmount' => '',
+            'otherAmount' => '',
             'totalAmount' => '',
         ]);
 
@@ -39,12 +41,14 @@ final class OcrScanDocumentService implements ApplicationServiceInterface
             }
 
             return new OcrScanDocumentResponseDto([
-                'invoiceNo' => $filterScannerData['invoice_number'],
-                'invoiceDate' => $filterScannerData['invoice_date'],
-                'invoiceAmount' => $filterScannerData['subtotal_before_tax'],
-                'taxAmount' => $filterScannerData['pph23'],
-                'vatAmount' => $filterScannerData['vat_amount'],
-                'totalAmount' => $filterScannerData['total_after_tax'],
+                'invoiceNo' => $filterScannerData['invoice_number'] ?? '',
+                'invoiceDate' => $filterScannerData['invoice_date'] ?? '',
+                'invoiceAmount' => $filterScannerData['subtotal_before_tax'] ?? '',
+                'taxAmount' => $filterScannerData['pph23'] ?? '',
+                'vatAmount' => $filterScannerData['vat_amount'] ?? '',
+                'backhargeAmount' => $filterScannerData['backharge_amount'] ?? '',
+                'otherAmount' => $filterScannerData['other_amount'] ?? '',
+                'totalAmount' => $filterScannerData['total_after_tax'] ?? '',
             ]);
         } catch (Exception $exception) {
             report($exception->getMessage());
