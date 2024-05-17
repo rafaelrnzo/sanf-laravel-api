@@ -19,7 +19,8 @@ Route::group(['prefix' => 'v1/external', 'middleware' => ['basic-auth-config:cor
     Route::post('user-delete-accounts/{xid}/approve', ['as' => 'user-delete-accounts.approve', 'uses' => 'User\Controllers\UserAuthLogControllerByExternal@postApprove']);
     Route::post('user-delete-accounts/{xid}/reject', ['as' => 'user-delete-accounts.reject', 'uses' => 'User\Controllers\UserAuthLogControllerByExternal@postReject']);
 
-    Route::post('users/availabilities', ['as' => 'users.availabilities', 'uses' => 'User\Controllers\UserAvailabilityController@browseByScanina']);
+    Route::post('users', ['as' => 'users.add', 'uses' => 'User\Controllers\CoreAccountController@addByScanina']);
+    Route::post('users/availabilities', ['as' => 'users.availabilities', 'uses' => 'User\Controllers\CoreAccountController@browseByScanina']);
 });
 
 Route::group(['prefix' => 'v1/public'], function () {

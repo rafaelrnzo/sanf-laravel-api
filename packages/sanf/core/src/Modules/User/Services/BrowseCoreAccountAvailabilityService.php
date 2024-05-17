@@ -8,7 +8,7 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
-final class BrowseUserAvailabilityService implements ApplicationServiceInterface
+final class BrowseCoreAccountAvailabilityService implements ApplicationServiceInterface
 {
     protected AuthModel $userModel;
     protected SanfCoreApiClient $coreClient;

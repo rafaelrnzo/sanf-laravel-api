@@ -5,7 +5,7 @@ namespace Sanf\Api\Modules\User\Transformers;
 use League\Fractal\TransformerAbstract;
 use Spatie\Fractalistic\ArraySerializer;
 
-final class UserAvailabilityTransformer extends TransformerAbstract
+final class CoreAccountAvailabilityTransformer extends TransformerAbstract
 {
     public function transform($dto)
     {
