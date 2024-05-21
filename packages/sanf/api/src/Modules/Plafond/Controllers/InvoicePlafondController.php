@@ -25,7 +25,7 @@ class InvoicePlafondController extends RestApiController
                 'required',
                 'file',
                 'mimetypes:application/pdf',
-                'max:10000',
+                'max:100000',
             ],
             'photos' => ['nullable', 'array'],
             'photos.*' => ['nullable', 'image', 'mimetypes:image/png,image/jpeg,image/jpg', 'max:5000'],
@@ -73,7 +73,7 @@ class InvoicePlafondController extends RestApiController
                 'required',
                 'file',
                 'mimetypes:application/pdf',
-                'max:10000',
+                'max:100000',
             ],
         ]);
 
