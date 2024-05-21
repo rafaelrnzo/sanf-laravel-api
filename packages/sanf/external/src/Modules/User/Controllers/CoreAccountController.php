@@ -29,17 +29,17 @@ class CoreAccountController extends RestApiController
     public function addByScanina(Request $request, RegisterCoreAccountService $service)
     {
         $input = $this->validate($request, [
-            'user.full_name' => ['required', 'string', 'max:255'],
-            'user.email' => ['required', 'email', 'max:128'],
-            'user.telephone' => 'required|max:13|regex:/^[0-9a-zA-Z-()\h\-]+$/',
-            'user.handphone' => ['required', 'max:13', 'regex:/^[0-9]+$/'],
+            'full_name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:128'],
+            'telephone' => 'required|max:16|regex:/^[0-9a-zA-Z-()\h\-]+$/',
+            'handphone' => ['required', 'max:13', 'regex:/^[0-9]+$/'],
         ]);
 
-        $registerRequestDto = new RegisterCoreAccountRequestDto($input['user']);
+        $registerRequestDto = new RegisterCoreAccountRequestDto($input);
 
-        $registerResponseDto = $service->execute($registerRequestDto);
+        $result = $service->execute($registerRequestDto);
 
-        return fractal($registerResponseDto)
+        return fractal($result)
             ->transformWith(RegisterCoreAccountTransformer::class)
             ->serializeWith(ArraySerializer::class);
     }
