@@ -2,14 +2,16 @@
 
 namespace Sanf\Core\Modules\Plafond\Repositories;
 
+use NbsPhp\Core\Repositories\AbstractEloquentRepository;
 use Sanf\Core\Modules\Plafond\Models\PlafondDisbursementAllocationModel;
 use Sanf\Core\Modules\Plafond\Models\PlafondDisbursementDocumentModel;
 use Sanf\Core\Modules\Plafond\Models\PlafondDisbursementInvoiceModel;
 use Sanf\Core\Modules\Plafond\Models\PlafondDisbursementInvoicePhotoModel;
 use Sanf\Core\Modules\Plafond\Models\PlafondDisbursementModel;
 use Sanf\Core\Modules\Plafond\Models\PlafondDisbursementSubmissionModel;
+use Sanf\Core\Modules\Plafond\Queries\BrowsePlafondDisbursementEloquentBuilder;
 
-class PlafondDisbursementEloquentRepository implements PlafondDisbursementRepositoryInterface
+class PlafondDisbursementEloquentRepository extends AbstractEloquentRepository implements PlafondDisbursementRepositoryInterface
 {
     private PlafondDisbursementModel $disbursementModel;
     private PlafondDisbursementSubmissionModel $submissionModel;
@@ -32,6 +34,20 @@ class PlafondDisbursementEloquentRepository implements PlafondDisbursementReposi
         $this->invoicePhotoModel = $invoicePhotoModel;
         $this->allocationModel = $allocationModel;
         $this->documentModel = $documentModel;
+    }
+
+    public function query($builder)
+    {
+        /** @var BrowsePlafondDisbursementEloquentBuilder $builder */
+        $disbursementCollection = $builder->build($this->disbursementModel)->get();
+
+        return $this->stripEloquentModel($disbursementCollection);
+    }
+
+    public function count($builder): int
+    {
+        /* @var BrowsePlafondDisbursementEloquentBuilder $builder */
+        return $builder->build($this->disbursementModel)->count();
     }
 
     /**

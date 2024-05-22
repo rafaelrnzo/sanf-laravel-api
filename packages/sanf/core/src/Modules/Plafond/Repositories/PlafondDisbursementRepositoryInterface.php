@@ -11,6 +11,10 @@ use Sanf\Core\Modules\Plafond\Models\PlafondDisbursementSubmissionModel;
 
 interface PlafondDisbursementRepositoryInterface
 {
+    public function query($builder);
+
+    public function count($builder): int;
+
     /**
      * @param array $request
      * @return PlafondDisbursementModel

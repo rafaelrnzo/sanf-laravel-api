@@ -11,6 +11,7 @@ use Kreait\Firebase\Exception\MessagingException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use NbsPhp\Notification\Repositories\UserNotificationRepositoryInterface;
 use NbsPhp\Notification\Services\PushNotificationServiceInterface;
+use Sanf\Core\Modules\Financing\Exceptions\FinancingApplicationLimitExceedException;
 use Sanf\Core\Modules\Notification\Exceptions\NotificationInvalidException;
 use Sanf\Core\Modules\Notification\NotificationTypeEnum;
 use Sanf\Core\Modules\Plafond\Dtos\DisbursementAllocationFormRequest;
@@ -331,7 +332,10 @@ final class SubmitPlafondDisbursementUseCase implements ApplicationServiceInterf
         $month = $now->format('m');
         $count = $this->disbursementRepository->countInMonth($now);
         $width = 6;
+        if ($count >= 999999) {
+            throw new FinancingApplicationLimitExceedException();
+        }
 
-        return "{$year}{$month}" . str_pad((string) $count++, $width, '0', STR_PAD_LEFT);
+        return "{$month}{$year}" . str_pad((string) $count + 1, $width, '0', STR_PAD_LEFT);
     }
 }

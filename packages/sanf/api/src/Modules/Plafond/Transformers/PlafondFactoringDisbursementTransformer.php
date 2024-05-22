@@ -19,7 +19,6 @@ final class PlafondFactoringDisbursementTransformer extends TransformerAbstract
             'allocations' => $dto->allocations,
             'payment_acc_document' => $dto->payment_acc_document,
             'other_document' => $dto->other_document,
-            'other_document' => $dto->other_document,
             'created_at' => $dto->created_at,
             'updated_at' => $dto->updated_at,
         ];
