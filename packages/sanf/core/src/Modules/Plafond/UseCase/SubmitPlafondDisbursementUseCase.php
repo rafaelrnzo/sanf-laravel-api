@@ -63,6 +63,7 @@ final class SubmitPlafondDisbursementUseCase implements ApplicationServiceInterf
 
         $disbursementModel = $this->disbursementRepository->createDisbursement([
             'xid' => $disbursementXid,
+            'plafond_id' => $formRequest->plafondId,
             'disbursement_no' => $disbursementNo,
             'client_id' => $userGuzzleEntity->getCustomerId(),
             'client_name' => $userGuzzleEntity->getFullName(),

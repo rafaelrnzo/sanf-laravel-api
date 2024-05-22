@@ -13,6 +13,7 @@ class PlafondDisbursementModel extends AbstractModel
 
     protected $fillable = [
         'xid',
+        'plafond_id',
         'disbursement_no',
         'client_id',
         'client_name',
