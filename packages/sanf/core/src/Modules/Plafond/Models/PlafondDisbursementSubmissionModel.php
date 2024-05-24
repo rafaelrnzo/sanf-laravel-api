@@ -29,4 +29,19 @@ class PlafondDisbursementSubmissionModel extends AbstractModel
         'created_at',
         'updated_at',
     ];
+
+    public function invoicesRelation()
+    {
+        return $this->hasMany(PlafondDisbursementInvoiceModel::class, 'submission_id', 'id');
+    }
+
+    public function allocationsRelation()
+    {
+        return $this->hasMany(PlafondDisbursementAllocationModel::class, 'submission_id', 'id');
+    }
+
+    public function documentsRelation()
+    {
+        return $this->hasMany(PlafondDisbursementDocumentModel::class, 'submission_id', 'id');
+    }
 }

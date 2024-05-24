@@ -1,6 +1,6 @@
 <?php
 
-namespace Sanf\Core\Modules\Plafond\UseCase;
+namespace Sanf\Core\Modules\Plafond\UseCases;
 
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
@@ -70,8 +70,9 @@ final class SubmitPlafondDisbursementUseCase implements ApplicationServiceInterf
             'client_name' => $userGuzzleEntity->getFullName(),
             'client_mail' => $userGuzzleEntity->getEmail(),
             'customer_id' => $formRequest->bouwheer->id,
-            'customer_mail' => $formRequest->bouwheer->email,
             'customer_name' => $formRequest->bouwheer->name,
+            'customer_mail' => $formRequest->bouwheer->email,
+            'customer_code' => $formRequest->bouwheer->code,
             'customer_review' => $formRequest->customerReview,
             'status_id' => $disbursementStatus->getValue(),
             'status' => $disbursementStatus->getLabel(),

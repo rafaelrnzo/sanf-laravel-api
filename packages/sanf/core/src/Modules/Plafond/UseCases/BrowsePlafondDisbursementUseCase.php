@@ -1,6 +1,6 @@
 <?php
 
-namespace Sanf\Core\Modules\Plafond\UseCase;
+namespace Sanf\Core\Modules\Plafond\UseCases;
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Plafond\Dtos\BrowsePlafondDisbursementRequestDto;

@@ -32,4 +32,9 @@ class PlafondDisbursementInvoiceModel extends AbstractModel
         'created_at',
         'updated_at',
     ];
+
+    public function photosRelation()
+    {
+        return $this->hasMany(PlafondDisbursementInvoicePhotoModel::class, 'invoice_id', 'id');
+    }
 }

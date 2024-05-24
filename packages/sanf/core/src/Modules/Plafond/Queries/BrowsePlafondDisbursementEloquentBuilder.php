@@ -25,6 +25,7 @@ class BrowsePlafondDisbursementEloquentBuilder
      */
     public function build(PlafondDisbursementModel $plafondDisbursementModel)
     {
+        /** @var BrowsePlafondDisbursementRequestDto $dto */
         $dto = $this->dto;
         switch ($dto->sortBy) {
             case 'earliest':

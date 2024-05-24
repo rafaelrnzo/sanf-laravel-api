@@ -10,15 +10,18 @@ use NbsPhp\Core\Database\TransactionalSessionInterface;
 use NbsPhp\Core\Services\TransactionalApplicationService;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
 use Sanf\Api\Modules\Plafond\Transformers\PlafondFactoringDisbursementSimpleTransformer;
+use Sanf\Api\Modules\Plafond\Transformers\PlafondFactoringDisbursementTransformer;
 use Sanf\Core\Modules\Plafond\Dtos\BrowsePlafondDisbursementRequestDto;
 use Sanf\Core\Modules\Plafond\Dtos\DisbursementAllocationFormRequest;
 use Sanf\Core\Modules\Plafond\Dtos\DisbursementBowheerFormRequest;
 use Sanf\Core\Modules\Plafond\Dtos\DisbursementDocumentFormRequest;
 use Sanf\Core\Modules\Plafond\Dtos\DisbursementInvoiceFormRequest;
 use Sanf\Core\Modules\Plafond\Dtos\PlafondDisbursementFormRequest;
+use Sanf\Core\Modules\Plafond\Dtos\ReadPlafondDisbursementRequestDto;
 use Sanf\Core\Modules\Plafond\Enums\PlafondDisbursementStatusEnum;
-use Sanf\Core\Modules\Plafond\UseCase\BrowsePlafondDisbursementUseCase;
-use Sanf\Core\Modules\Plafond\UseCase\SubmitPlafondDisbursementUseCase;
+use Sanf\Core\Modules\Plafond\UseCases\BrowsePlafondDisbursementUseCase;
+use Sanf\Core\Modules\Plafond\UseCases\ReadPlafondDisbursementUseCase;
+use Sanf\Core\Modules\Plafond\UseCases\SubmitPlafondDisbursementUseCase;
 
 class PlafondFactoringDisbursementController extends RestApiController
 {
@@ -50,6 +53,26 @@ class PlafondFactoringDisbursementController extends RestApiController
         return fractal($browsePlafondDisbursementResponseDto->data)
             ->transformWith(PlafondFactoringDisbursementSimpleTransformer::class)
             ->paginateWith(new LazyPaginatorAdapter($browsePlafondDisbursementResponseDto->paginate));
+    }
+
+    public function read(
+        Guard $auth,
+        string $xid,
+        string $plafond_xid,
+        string $disbursement_xid,
+        ReadPlafondDisbursementUseCase $readUseCase
+    ) {
+        $readPlafondDisbursementRequestDto = new ReadPlafondDisbursementRequestDto([
+            'user_id' => $auth->id(),
+            'profile_xid' => $xid,
+            'plafond_xid' => $plafond_xid,
+            'disbursement_xid' => $disbursement_xid,
+        ]);
+
+        $readPlafondDisbursementResponseDto = $readUseCase->execute($readPlafondDisbursementRequestDto);
+
+        return fractal($readPlafondDisbursementResponseDto)
+            ->transformWith(PlafondFactoringDisbursementTransformer::class);
     }
 
     public function add(

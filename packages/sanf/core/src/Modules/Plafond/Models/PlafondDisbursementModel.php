@@ -19,6 +19,7 @@ class PlafondDisbursementModel extends AbstractModel
         'client_name',
         'client_mail',
         'customer_id',
+        'customer_name',
         'customer_mail',
         'customer_code',
         'customer_review',
@@ -34,4 +35,10 @@ class PlafondDisbursementModel extends AbstractModel
         'created_at',
         'updated_at',
     ];
+
+    public function disbursementRelation()
+    {
+
+        return $this->hasOne(PlafondDisbursementSubmissionModel::class, 'xid', 'plafond_submission_xid');
+    }
 }
