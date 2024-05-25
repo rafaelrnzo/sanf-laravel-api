@@ -3,7 +3,6 @@
 namespace Sanf\Core\Modules\Plafond\UseCases;
 
 use Carbon\Carbon;
-use Carbon\CarbonImmutable;
 use Firebase\Auth\Token\Exception\InvalidToken;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Storage;
@@ -11,20 +10,23 @@ use Kreait\Firebase\Exception\MessagingException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use NbsPhp\Notification\Repositories\UserNotificationRepositoryInterface;
 use NbsPhp\Notification\Services\PushNotificationServiceInterface;
-use Sanf\Core\Modules\Financing\Exceptions\FinancingApplicationLimitExceedException;
 use Sanf\Core\Modules\Notification\Exceptions\NotificationInvalidException;
 use Sanf\Core\Modules\Notification\NotificationTypeEnum;
 use Sanf\Core\Modules\Plafond\Dtos\DisbursementAllocationFormRequest;
 use Sanf\Core\Modules\Plafond\Dtos\DisbursementDocumentFormRequest;
 use Sanf\Core\Modules\Plafond\Dtos\DisbursementInvoiceFormRequest;
 use Sanf\Core\Modules\Plafond\Dtos\PlafondDisbursementFormRequest;
+use Sanf\Core\Modules\Plafond\Dtos\ReadPlafondDisbursementRequestDto;
 use Sanf\Core\Modules\Plafond\Enums\PlafondDisbursementStatusEnum;
 use Sanf\Core\Modules\Plafond\Events\PlafondDisbursementSubmittedEvent;
+use Sanf\Core\Modules\Plafond\Exceptions\PlafondDisbursementIsNotRevisionException;
+use Sanf\Core\Modules\Plafond\Exceptions\PlafondDisbursementNotFoundException;
+use Sanf\Core\Modules\Plafond\Queries\ReadPlafondDisbursementEloquentBuilder;
 use Sanf\Core\Modules\Plafond\Repositories\PlafondDisbursementRepositoryInterface;
 use Sanf\Core\Modules\User\Exceptions\ProfileNotFoundException;
 use Sanf\Core\Modules\User\Repositories\ProfileRepositoryInterface;
 
-final class SubmitPlafondDisbursementUseCase implements ApplicationServiceInterface
+final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterface
 {
     private const DEFAULT_AMOUNT = 0.0;
     private const DEFAULT_VERSION = 1;
@@ -57,34 +59,35 @@ final class SubmitPlafondDisbursementUseCase implements ApplicationServiceInterf
             throw new ProfileNotFoundException("User {$formRequest->clientId} not found");
         }
 
-        $submissionXid = nano_id();
-        $disbursementXid = nano_id();
-        $disbursementNo = $this->generateDisbursementNo();
-        $disbursementStatus = (new PlafondDisbursementStatusEnum(PlafondDisbursementStatusEnum::SUBMIT));
+        $dto = new ReadPlafondDisbursementRequestDto([
+            'user_id' => $formRequest->userId,
+            'profile_xid' => $formRequest->clientId,
+            'plafond_xid' => $formRequest->plafondId,
+            'disbursement_xid' => $formRequest->disbursementId,
+        ]);
 
-        $disbursementModel = $this->disbursementRepository->createDisbursement([
-            'xid' => $disbursementXid,
-            'plafond_id' => $formRequest->plafondId,
-            'disbursement_no' => $disbursementNo,
-            'client_id' => $userGuzzleEntity->getCustomerId(),
-            'client_name' => $userGuzzleEntity->getFullName(),
-            'client_mail' => $userGuzzleEntity->getEmail(),
-            'customer_id' => $formRequest->bouwheer->id,
-            'customer_name' => $formRequest->bouwheer->name,
-            'customer_mail' => $formRequest->bouwheer->email,
-            'customer_code' => $formRequest->bouwheer->code,
-            'customer_review' => $formRequest->customerReview,
+        $plafondDisbursements = $this->disbursementRepository->query(new ReadPlafondDisbursementEloquentBuilder($dto));
+        if (count($plafondDisbursements) === 0) {
+            throw new PlafondDisbursementNotFoundException();
+        }
+
+        $disbursementData = $plafondDisbursements[0];
+        if ($disbursementData->status_id === PlafondDisbursementStatusEnum::REVISION) {
+            throw new PlafondDisbursementIsNotRevisionException();
+        }
+
+        $submissionXid = nano_id();
+        $disbursementNo = $disbursementData->disbursement_no;
+        $disbursementStatus = (new PlafondDisbursementStatusEnum(PlafondDisbursementStatusEnum::SUBMIT));
+        $disbursementSubmissionStatus = (new PlafondDisbursementStatusEnum(PlafondDisbursementStatusEnum::SUBMIT));
+        $version = $disbursementData->version + 1;
+
+        $disbursementModel = $this->disbursementRepository->updateDisbursement($disbursementData->id, [
             'status_id' => $disbursementStatus->getValue(),
             'status' => $disbursementStatus->getLabel(),
             'client_amount' => $formRequest->totalInvoiceAmount,
-            'customer_amount' => self::DEFAULT_AMOUNT,
-            'admin_amount' => self::DEFAULT_AMOUNT,
-            'plafond_submission_xid' => $submissionXid,
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => null,
-            'customer_updated_at' => null,
-            'admin_updated_at' => null,
-            'version' => self::DEFAULT_VERSION,
+            'updated_at' => date('Y-m-d H:i:s'),
+            'version' => $version,
         ]);
 
         $allocationsInput = [];
@@ -101,7 +104,7 @@ final class SubmitPlafondDisbursementUseCase implements ApplicationServiceInterf
                 'amount' => $allocation->amount,
                 'notes' => $allocation->notes,
                 'order_no' => $allocation->orderNo,
-                'version' => self::DEFAULT_VERSION,
+                'version' => $version,
             ];
         }
 
@@ -126,7 +129,7 @@ final class SubmitPlafondDisbursementUseCase implements ApplicationServiceInterf
                 'order_no' => $invoice->orderNo,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => null,
-                'version' => self::DEFAULT_VERSION,
+                'version' => $version,
             ];
 
             foreach ($invoice->photos as $photoIndex => $photo) {
@@ -141,7 +144,7 @@ final class SubmitPlafondDisbursementUseCase implements ApplicationServiceInterf
                     'order_no' => $photoIndex + 1,
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => null,
-                    'version' => self::DEFAULT_VERSION,
+                    'version' => $version,
                 ];
             }
         }
@@ -159,7 +162,7 @@ final class SubmitPlafondDisbursementUseCase implements ApplicationServiceInterf
                 'order_no' => $documentIndex + 1,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => null,
-                'version' => self::DEFAULT_VERSION,
+                'version' => $version,
 
             ];
         }
@@ -168,7 +171,7 @@ final class SubmitPlafondDisbursementUseCase implements ApplicationServiceInterf
             'xid' => $submissionXid,
             'plafond_disbursement_id' => $disbursementModel->id,
             'client_amount' => $formRequest->totalInvoiceAmount,
-            'customer_amount' => self::DEFAULT_AMOUNT,
+            'customer_amount' => ($disbursementData->customer_amount > 0) ? $disbursementData->customer_amount : self::DEFAULT_AMOUNT,
             'invoice_snapshot' => json_encode($invoicesInput),
             'allocation_snapshot' => json_encode($allocationsInput),
             'other_doc_snapshot' => json_encode($documentsInput),
@@ -176,11 +179,11 @@ final class SubmitPlafondDisbursementUseCase implements ApplicationServiceInterf
             'payment_acc_doc_file_name' => $formRequest->paymentAccDocument->name,
             'payment_acc_doc_path' => $paymentAccDocument['path'] ?? null,
             'payment_acc_doc_metadata' => json_encode($paymentAccDocument),
-            'status_id' => $disbursementStatus->getValue(),
-            'status' => $disbursementStatus->getLabel(),
+            'status_id' => $disbursementSubmissionStatus->getValue(),
+            'status' => $disbursementSubmissionStatus->getLabel(),
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => null,
-            'version' => self::DEFAULT_VERSION,
+            'version' => $version,
         ]);
 
         foreach ($allocationsInput as $allocation) {
@@ -324,19 +327,5 @@ final class SubmitPlafondDisbursementUseCase implements ApplicationServiceInterf
         $path = config('image-path.plafond.disbursement.other_document');
 
         return $this->moveFile($filename, $temporaryPath, $path);
-    }
-
-    private function generateDisbursementNo()
-    {
-        $now = CarbonImmutable::now();
-        $year = $now->format('Y');
-        $month = $now->format('m');
-        $count = $this->disbursementRepository->countInMonth($now);
-        $width = 6;
-        if ($count >= 999999) {
-            throw new FinancingApplicationLimitExceedException();
-        }
-
-        return "{$month}{$year}" . str_pad((string) $count + 1, $width, '0', STR_PAD_LEFT);
     }
 }

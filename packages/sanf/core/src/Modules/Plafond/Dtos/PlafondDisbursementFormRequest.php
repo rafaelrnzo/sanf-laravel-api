@@ -9,6 +9,7 @@ final class PlafondDisbursementFormRequest extends CamelCaseDataTransferObject
     public int $userId;
     public string $clientId;
     public string $plafondId;
+    public ?string $disbursementId;
     public DisbursementBowheerFormRequest $bouwheer;
     public $invoices;
     public float $totalInvoiceAmount;

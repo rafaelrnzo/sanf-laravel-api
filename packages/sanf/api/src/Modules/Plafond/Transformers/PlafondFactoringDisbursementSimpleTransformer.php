@@ -19,14 +19,18 @@ final class PlafondFactoringDisbursementSimpleTransformer extends TransformerAbs
             $totalAmount = $dto->admin_amount;
         }
 
+        $createdAt = $dto->disbursement_relation->created_at ?? null;
+        $updatedAt = $dto->disbursement_relation->updated_at ?? null;
+
         return [
             'xid' => $dto->xid,
             'disbursement_no' => $dto->disbursement_no,
             'total_amount' => (float) $totalAmount,
             'status_id' => $dto->status_id,
             'status' => $dto->status,
-            'created_at' => unix_timestamp($dto->created_at),
-            'updated_at' => unix_timestamp($dto->updated_at),
+            'notes' => $dto->disbursement_relation->revision_notes,
+            'created_at' => ($createdAt) ? unix_timestamp($createdAt) : $createdAt,
+            'updated_at' => ($updatedAt) ? unix_timestamp($updatedAt) : $updatedAt,
         ];
     }
 }

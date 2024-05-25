@@ -53,6 +53,15 @@ class BrowsePlafondDisbursementEloquentBuilder
 
         return $plafondDisbursementModel->newQuery()
             ->orderBy($orderBy, $orderDirection)
+            ->with(['disbursementRelation' => function ($query) {
+                return $query->select([
+                    'id',
+                    'xid',
+                    'revision_notes',
+                    'created_at',
+                    'updated_at',
+                ]);
+            }])
             ->where('plafond_id', '=', $dto->plafondXid)
             ->where('client_id', '=', $dto->profileXid)
             ->when($statusCondition, function ($query) use ($statusCondition) {
