@@ -136,6 +136,7 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::post('users/profiles/{xid}/plafonds/invoice/upload', ['as' => 'users.plafonds.invoice.upload', 'uses' => 'Plafond\Controllers\InvoicePlafondController@uploadDocument']);
     Route::post('users/profiles/{xid}/plafonds/invoice/scan', ['as' => 'users.plafonds.invoice.scan', 'uses' => 'Plafond\Controllers\InvoicePlafondController@scanOCRDocument']);
     Route::post('users/profiles/{xid}/plafonds/factorings/{plafond_xid}/payment-accelaration-document/email', ['as' => 'v1.plafond.payment-accelaration-document.email', 'uses' => 'Plafond\Controllers\PlafondDocumentController@sendPaymentAccelarationDocument']);
+    Route::post('users/profiles/{xid}/plafonds/factorings/{plafond_xid}/payment-accelaration-document/print', ['as' => 'v1.plafond.payment-accelaration-document.print', 'uses' => 'Plafond\Controllers\PlafondDocumentController@printPaymentAccelarationDocument']);
     Route::get('plafonds/payment-accelaration-document/download', ['as' => 'v1.plafond.payment-accelaration-document.download', 'uses' => 'Plafond\Controllers\PlafondDocumentController@downloadPaymentAccelarationDocument']);
 
     // E-SIGN
