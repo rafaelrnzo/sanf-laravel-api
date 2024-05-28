@@ -18,7 +18,7 @@ final class PlafondFactoringTransformer extends TransformerAbstract
             'customers' => fractal($dto->customers)
                 ->transformWith(CustomerPlafondFactoringTransformer::class)
                 ->serializeWith(new ArraySerializer()),
-            'expired_at' => unix_timestamp($dto->expiredAt),
+            'expired_at' => unix_timestamp($dto->expiredAt->endOfDay()),
         ];
     }
 }
