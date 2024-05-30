@@ -11,5 +11,7 @@ final class OcrScanDocumentResponseDto extends DataTransferObject
     public string $invoiceAmount;
     public string $taxAmount;
     public string $vatAmount;
+    public string $backhargeAmount;
+    public string $otherAmount;
     public string $totalAmount;
 }
