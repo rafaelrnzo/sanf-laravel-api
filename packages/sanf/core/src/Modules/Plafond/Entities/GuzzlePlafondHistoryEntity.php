@@ -36,22 +36,22 @@ final class GuzzlePlafondHistoryEntity implements PlafondHistoryEntityInterface
 
     public function getCurrentBalance(): string
     {
-        return $this->attributes['P_TOTAL'] ?? '';
+        return $this->attributes['P_TOTAL'] ?? '0';
     }
 
     public function getUsedBalance(): string
     {
-        return $this->attributes['P_TERPAKAI'] ?? '';
+        return $this->attributes['P_TERPAKAI'] ?? '0';
     }
 
     public function getRemainingBalance(): string
     {
-        return $this->attributes['P_SISA'] ?? '';
+        return $this->attributes['P_SISA'] ?? '0';
     }
 
     public function getAddedBalance(): string
     {
-        return $this->attributes['P_TAMBAHAN'] ?? '';
+        return $this->attributes['P_TAMBAHAN'] ?? '0';
     }
 
     public function getStatus(): PlafondStatusEnum
