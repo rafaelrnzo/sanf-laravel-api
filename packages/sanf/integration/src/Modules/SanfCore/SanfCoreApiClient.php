@@ -1331,4 +1331,13 @@ class SanfCoreApiClient
 
         return $response->json(true);
     }
+
+    public function submitPlafondDisbursement(object $dto)
+    {
+        $response = Request::route('customer.plafond.disbursement', $this->client)
+            ->json($dto->toArray())
+            ->send();
+
+        return $response->json();
+    }
 }

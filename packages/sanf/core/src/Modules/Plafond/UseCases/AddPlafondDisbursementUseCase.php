@@ -33,17 +33,20 @@ final class AddPlafondDisbursementUseCase implements ApplicationServiceInterface
     private $disbursementRepository;
     private $userNotificationRepository;
     private $pushNotificationService;
+    private $submitToCoreUseCase;
 
     public function __construct(
         PlafondDisbursementRepositoryInterface $disbursementRepository,
         ProfileRepositoryInterface $coreClientRepository,
         UserNotificationRepositoryInterface $userNotificationRepository,
-        PushNotificationServiceInterface $pushNotificationService
+        PushNotificationServiceInterface $pushNotificationService,
+        SubmitPlafondDisbursementCoreUseCase $submitToCoreUseCase
     ) {
         $this->coreClientRepository = $coreClientRepository;
         $this->disbursementRepository = $disbursementRepository;
         $this->userNotificationRepository = $userNotificationRepository;
         $this->pushNotificationService = $pushNotificationService;
+        $this->submitToCoreUseCase = $submitToCoreUseCase;
     }
 
     /**
@@ -57,10 +60,10 @@ final class AddPlafondDisbursementUseCase implements ApplicationServiceInterface
             throw new ProfileNotFoundException("User {$formRequest->clientId} not found");
         }
 
-        $submissionXid = nano_id();
         $disbursementXid = nano_id();
         $disbursementNo = $this->generateDisbursementNo();
         $disbursementStatus = (new PlafondDisbursementStatusEnum(PlafondDisbursementStatusEnum::SUBMIT));
+        $submissionXid = nano_id();
 
         $disbursementModel = $this->disbursementRepository->createDisbursement([
             'xid' => $disbursementXid,
@@ -210,6 +213,16 @@ final class AddPlafondDisbursementUseCase implements ApplicationServiceInterface
             $document['submission_id'] = $submissionModel->id;
 
             $this->disbursementRepository->createDocument($document);
+        }
+
+        if ($formRequest->customerReview === false) {
+            $coreFormRequest = (object) [
+                'userId' => $formRequest->userId,
+                'clientId' => $formRequest->clientId,
+                'plafondId' => $formRequest->plafondId,
+                'disbursementId' => $disbursementXid,
+            ];
+            $submitToCore = $this->submitToCoreUseCase->execute($coreFormRequest);
         }
 
         // send notification

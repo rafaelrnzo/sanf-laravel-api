@@ -46,8 +46,8 @@ final class OcrScanDocumentService implements ApplicationServiceInterface
                 'invoiceAmount' => $filterScannerData['subtotal_before_tax'] ?? '',
                 'taxAmount' => $filterScannerData['pph23'] ?? '',
                 'vatAmount' => $filterScannerData['vat_amount'] ?? '',
-                'backhargeAmount' => $filterScannerData['backharge_amount'] ?? '',
-                'otherAmount' => $filterScannerData['other_amount'] ?? '',
+                'backhargeAmount' => $filterScannerData['backcharge'] ?? '',
+                'otherAmount' => $filterScannerData['others'] ?? '',
                 'totalAmount' => $filterScannerData['total_after_tax'] ?? '',
             ]);
         } catch (Exception $exception) {

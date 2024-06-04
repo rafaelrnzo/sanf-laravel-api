@@ -3,6 +3,7 @@
 namespace Sanf\Api\Modules\Plafond\Transformers;
 
 use League\Fractal\TransformerAbstract;
+use Sanf\Core\Modules\Plafond\Enums\PlafondDisbursementStatusEnum;
 use Spatie\Fractalistic\ArraySerializer;
 
 final class PlafondFactoringDisbursementTransformer extends TransformerAbstract
@@ -20,6 +21,19 @@ final class PlafondFactoringDisbursementTransformer extends TransformerAbstract
             $totalAmount = $dto->admin_amount;
         }
 
+        $paymentAccDocument = (object) [
+            'file_name' => $dto->disbursement_relation->payment_acc_doc_file_name,
+            'origin_name' => $dto->disbursement_relation->payment_acc_doc_origin_name,
+            'path' => file_get_temp_url($dto->disbursement_relation->payment_acc_doc_path),
+        ];
+        if ($dto->status_id === PlafondDisbursementStatusEnum::REVISION && !is_null($dto->disbursement_relation->payment_acc_web_doc_path)) {
+            $paymentAccDocument = (object) [
+                'file_name' => $dto->disbursement_relation->payment_acc_web_doc_file_name,
+                'origin_name' => $dto->disbursement_relation->payment_acc_web_doc_origin_name,
+                'path' => file_get_temp_url($dto->disbursement_relation->payment_acc_web_doc_path),
+            ];
+        }
+
         return [
             'bouwheer' => fractal($dto)
                 ->transformWith(BowheerTransformer::class)
@@ -34,7 +48,7 @@ final class PlafondFactoringDisbursementTransformer extends TransformerAbstract
             'allocations' => fractal($dto->disbursement_relation->allocations_relation)
                 ->transformWith(PlafondDisbursementAllocationTransformer::class)
                 ->serializeWith(ArraySerializer::class),
-            'payment_acc_document' => (object) [],
+            'payment_acc_document' => $paymentAccDocument,
             'other_document' => fractal($dto->disbursement_relation->documents_relation)
                 ->transformWith(PlafondDisbursementFileMetadataTransformer::class)
                 ->serializeWith(ArraySerializer::class),
