@@ -13,21 +13,26 @@ final class GuzzleCustomerPlafondFactoringEntity
 
     public function getId(): string
     {
-        return $this->attributes['ID'] ?? '-';
+        return $this->attributes['ID'] ?? '';
     }
 
     public function getName(): string
     {
-        return $this->attributes['NAME'] ?? '-';
+        return $this->attributes['NAME'] ?? '';
     }
 
     public function getCode(): string
     {
-        return $this->attributes['CODE'] ?? '-';
+        return $this->attributes['CODE'] ?? '';
     }
 
     public function getEmail(): string
     {
-        return $this->attributes['EMAIL'] ?? '-';
+        return $this->attributes['EMAIL'] ?? '';
+    }
+
+    public function getCustomerId(): string
+    {
+        return $this->attributes['CUST_ID'] ?? '';
     }
 }

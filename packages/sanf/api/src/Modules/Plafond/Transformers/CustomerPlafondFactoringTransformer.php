@@ -13,6 +13,7 @@ final class CustomerPlafondFactoringTransformer extends TransformerAbstract
             'name' => $dto->name,
             'code' => $dto->code,
             'email' => $dto->email,
+            'cust_id' => $dto->customer_id,
         ];
     }
 }

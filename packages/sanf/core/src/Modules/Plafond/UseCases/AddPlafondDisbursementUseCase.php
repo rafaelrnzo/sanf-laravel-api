@@ -72,7 +72,8 @@ final class AddPlafondDisbursementUseCase implements ApplicationServiceInterface
             'client_id' => $userGuzzleEntity->getCustomerId(),
             'client_name' => $userGuzzleEntity->getFullName(),
             'client_mail' => $userGuzzleEntity->getEmail(),
-            'customer_id' => $formRequest->bouwheer->id,
+            'customer_id' => $formRequest->bouwheer->custId,
+            'customer_bowheer_id' => $formRequest->bouwheer->id,
             'customer_name' => $formRequest->bouwheer->name,
             'customer_mail' => $formRequest->bouwheer->email,
             'customer_code' => $formRequest->bouwheer->code,
@@ -184,6 +185,14 @@ final class AddPlafondDisbursementUseCase implements ApplicationServiceInterface
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => null,
             'version' => self::DEFAULT_VERSION,
+            'user_updated_by' => json_encode([
+                'source' => 'client',
+                'user' => [
+                    'id' => $userGuzzleEntity->getCustomerId(),
+                    'name' => $userGuzzleEntity->getFullName(),
+                    'email' => $userGuzzleEntity->getEmail(),
+                ],
+            ]),
         ]);
 
         foreach ($allocationsInput as $allocation) {

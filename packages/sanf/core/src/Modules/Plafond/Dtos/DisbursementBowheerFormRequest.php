@@ -10,4 +10,5 @@ final class DisbursementBowheerFormRequest extends CamelCaseDataTransferObject
     public string $name;
     public string $email;
     public string $code;
+    public ?string $custId;
 }

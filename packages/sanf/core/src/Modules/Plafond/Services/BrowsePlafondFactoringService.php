@@ -30,6 +30,7 @@ final class BrowsePlafondFactoringService extends PlafondByUserService implement
                         'name' => $customer->getName(),
                         'code' => $customer->getCode(),
                         'email' => $customer->getEmail(),
+                        'customer_id' => $customer->getCustomerId(),
                     ];
                 }, $item->getCustomers()),
                 'customerReview' => $item->getCustomerReview() == 'Y',

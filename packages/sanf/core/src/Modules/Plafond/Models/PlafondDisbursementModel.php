@@ -2,10 +2,13 @@
 
 namespace Sanf\Core\Modules\Plafond\Models;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
 use NbsPhp\Core\Models\AbstractModel;
 
 class PlafondDisbursementModel extends AbstractModel
 {
+    use SoftDeletes;
+
     const CREATED_AT = null;
     const UPDATED_AT = null;
 
@@ -19,6 +22,7 @@ class PlafondDisbursementModel extends AbstractModel
         'client_name',
         'client_mail',
         'customer_id',
+        'customer_bowheer_id',
         'customer_name',
         'customer_mail',
         'customer_code',

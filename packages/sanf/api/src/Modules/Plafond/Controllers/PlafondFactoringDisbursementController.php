@@ -89,6 +89,7 @@ class PlafondFactoringDisbursementController extends RestApiController
             'bouwheer.name' => ['required', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
             'bouwheer.email' => ['required', 'email', 'max:32'],
             'bouwheer.code' => ['required', 'string', 'max:32'],
+            'bouwheer.cust_id' => ['nullable', 'string', 'max:32'],
             'invoices' => ['required', 'array'],
             'invoices.*.photos' => ['nullable', 'array'],
             'invoices.*.photos.*.file_name' => ['nullable', 'string'],
@@ -133,6 +134,7 @@ class PlafondFactoringDisbursementController extends RestApiController
                 'name' => $request->get('bouwheer')['name'],
                 'email' => $request->get('bouwheer')['email'],
                 'code' => $request->get('bouwheer')['code'],
+                'cust_id' => $request->get('bouwheer')['cust_id'] ?? null,
             ]),
             'invoices' => array_map(function ($invoice) {
                 $invoice['invoice_amount'] = (float) ($invoice['invoice_amount'] ?? 0.0);
@@ -197,6 +199,7 @@ class PlafondFactoringDisbursementController extends RestApiController
             'bouwheer.name' => ['required', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
             'bouwheer.email' => ['required', 'email', 'max:32'],
             'bouwheer.code' => ['required', 'string', 'max:32'],
+            'bouwheer.cust_id' => ['nullable', 'string', 'max:32'],
             'invoices' => ['required', 'array'],
             'invoices.*.photos' => ['nullable', 'array'],
             'invoices.*.photos.*.file_name' => ['nullable', 'string'],
