@@ -2,6 +2,6 @@
 
 return [
     'document' => [
-        'max_page' => env('OCR_MAX_SCAN', 5),
+        'max_page' => env('OCR_SCAN_PAGE_LIMIT', 5),
     ],
 ];

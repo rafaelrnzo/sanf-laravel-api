@@ -4,6 +4,8 @@ namespace Sanf\External\Modules\Financing\Controllers;
 
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
+use NbsPhp\Core\Database\TransactionalSessionInterface;
+use NbsPhp\Core\Services\TransactionalApplicationService;
 use Sanf\Api\Modules\Financing\Transformers\FinancingApplicationSimpleTransformer;
 use Sanf\Core\Modules\Financing\Dto\FinancingApplicationByScaninaRequestDto;
 use Sanf\Core\Modules\Financing\Dto\FinancingApplicationObjectByScaninaRequestDto;
@@ -13,8 +15,11 @@ use Spatie\Fractalistic\ArraySerializer;
 
 class FinancingApplicationController extends RestApiController
 {
-    public function addByScanina(Request $request, SubmitFinanceApplicationByScaninaUseCase $submitUseCase)
-    {
+    public function addByScanina(
+        Request $request,
+        TransactionalSessionInterface $transactionalSession,
+        SubmitFinanceApplicationByScaninaUseCase $submitUseCase
+    ) {
         $inputs = $this->validate($request, [
             'profile_xid' => ['required', 'alpha_num', 'max: 13'],
             'payment.amount' => ['required', 'numeric'],
@@ -37,11 +42,11 @@ class FinancingApplicationController extends RestApiController
         $requestDto = new FinancingApplicationByScaninaRequestDto([
             'profile_xid' => $request->get('profile_xid'),
             'payment' => new FinancingApplicationPaymentByScaninaRequestDto([
-                'amount' => $inputs['payment']['amount'],
-                'down_payment_percentage' => $inputs['payment']['down_payment_percentage'],
-                'down_payment_amount' => $inputs['payment']['down_payment_amount'],
-                'first_payment_amount' => $inputs['payment']['first_payment_amount'],
-                'total_amount' => $inputs['payment']['total_amount'],
+                'amount' => (float) $inputs['payment']['amount'],
+                'down_payment_percentage' => (float) $inputs['payment']['down_payment_percentage'],
+                'down_payment_amount' => (float) $inputs['payment']['down_payment_amount'],
+                'first_payment_amount' => (float) $inputs['payment']['first_payment_amount'],
+                'total_amount' => (float) $inputs['payment']['total_amount'],
                 'tenor' => $inputs['payment']['tenor'],
             ]),
             'objects' => array_map(function ($object) {
@@ -53,12 +58,13 @@ class FinancingApplicationController extends RestApiController
                     'model' => $object['model'],
                     'description' => $object['description'] ?? null,
                     'quantity' => $object['quantity'],
-                    'price_per_unit' => $object['price_per_unit'],
+                    'price_per_unit' => (float) $object['price_per_unit'],
                 ]);
             }, $inputs['objects']),
         ]);
 
-        $responseDto = $submitUseCase->execute($requestDto);
+        $transactionalService = new TransactionalApplicationService($submitUseCase, $transactionalSession);
+        $responseDto = $transactionalService->execute($requestDto);
 
         return fractal($responseDto)
             ->transformWith(FinancingApplicationSimpleTransformer::class)

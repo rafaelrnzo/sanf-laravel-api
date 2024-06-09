@@ -45,12 +45,18 @@ class EloquentFinancingApplicationRepository extends AbstractEloquentRepository 
     {
         $model = DB::transaction(function () use ($fields) {
             $fieldFinancingObjects = $fields['financing_objects'];
-            $fieldFinancingApplication = collect($fields)->except(['financing_objects'])->toArray();
+            $fieldFinancingHistory = $fields['financing_history'];
+            $fieldFinancingApplication = collect($fields)->except(['financing_objects', 'financing_history'])->toArray();
+
             $model = $this->model->newQuery()->forceCreate($fieldFinancingApplication);
+
             $financingObjects = array_map(function ($item) {
                 return new FinancingObjectModel($item);
             }, $fieldFinancingObjects);
             $model->objects()->saveMany($financingObjects);
+
+            $fieldFinancingHistory['application_id'] = $model->id;
+            $model->history()->create($fieldFinancingHistory);
 
             return $model;
         });

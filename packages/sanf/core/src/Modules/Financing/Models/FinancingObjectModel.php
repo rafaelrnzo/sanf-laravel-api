@@ -19,5 +19,9 @@ class FinancingObjectModel extends AbstractModel
         'type_name',
         'model_id',
         'model_name',
+        'category_name',
+        'description',
+        'price_per_unit',
+        'client',
     ];
 }

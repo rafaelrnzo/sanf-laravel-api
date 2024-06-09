@@ -13,6 +13,11 @@ class FinancingApplicationModel extends AbstractModel
         'segment' => 'object',
     ];
 
+    public function history()
+    {
+        return $this->belongsTo(FinancingApplicationHistoryModel::class, 'application_id');
+    }
+
     public function facility()
     {
         return $this->belongsTo(FinancingFacilityModel::class, 'facility_id');
