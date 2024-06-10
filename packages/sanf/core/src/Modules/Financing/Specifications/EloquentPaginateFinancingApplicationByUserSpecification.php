@@ -37,10 +37,15 @@ class EloquentPaginateFinancingApplicationByUserSpecification
                 $orderBy = 'created_at';
                 $orderDirection = 'DESC';
         }
+        $userId = $this->userId;
+        $profileXid = $this->profileXid;
+
         $query = $model->newQuery()
             ->with(['status', 'facility', 'method', 'objects'])
-            ->where('user_id', $this->userId)
-            ->where('profile_xid', $this->profileXid)
+            ->where(function ($query) use ($userId, $profileXid) {
+                return $query->where('user_id', $userId)
+                    ->orWhere('profile_xid', $profileXid);
+            })
             ->orderBy($orderBy, $orderDirection)
             ->when($this->keyword, function ($query) {
                 return $query->where('name', 'ILIKE', '%' . $this->keyword . '%');

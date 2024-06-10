@@ -78,7 +78,7 @@ class BrowseFinancingApplicationByUserService implements ApplicationServiceInter
                 'application_code' => $data->application_code,
                 'status_id' => $data->status->id,
                 'status_name' => $data->status->name,
-                'financing_object_count' => count($data->objects),
+                'financing_object_count' => $data->total_object ?? count($data->objects),
                 'financing_facility_name' => optional($data->facility)->name,
                 'financing_method_name' => optional($data->method)->name,
                 'created_at' => $data->created_at,

@@ -13,6 +13,8 @@ use Sanf\Core\Modules\User\Enums\ProfileType;
 
 class AddPersonalFinancingApplicationByUserService extends FinancingByUserService implements ApplicationServiceInterface
 {
+    private const SANF_CLIENT = 'SANF';
+
     /**
      * @param AddFinancingApplicationDto $dto
      * @return mixed
@@ -29,6 +31,7 @@ class AddPersonalFinancingApplicationByUserService extends FinancingByUserServic
 
         /** @var FinancingObjectDto * */
         $financingObjects = [];
+        $totalObject = 0;
         foreach ($dto->financingObjects as $financingObject) {
             $financingObjects[] = [
                 'amount' => $financingObject->amount,
@@ -39,7 +42,9 @@ class AddPersonalFinancingApplicationByUserService extends FinancingByUserServic
                 'type_name' => $financingObject->typeName,
                 'model_id' => $financingObject->modelId,
                 'model_name' => $financingObject->modelName,
+                'client' => self::SANF_CLIENT,
             ];
+            $totalObject++;
         }
         $profileSnapshot = [
             'xid' => $dto->profile->xid,
@@ -78,11 +83,30 @@ class AddPersonalFinancingApplicationByUserService extends FinancingByUserServic
             'facility_id' => $dto->financingFacilityId,
             'method_id' => $dto->financingMethodId,
             'financing_objects' => $financingObjects,
+            'financing_history' => [
+                'status_id' => FinancingStatusEnum::PROCESSED,
+                'facility_id' => $dto->financingFacilityId,
+                'method_id' => $dto->financingMethodId,
+                'amount' => 0,
+                'down_payment_amount' => 0,
+                'down_payment_percentage' => 0,
+                'tax_amount' => 0,
+                'vat_amount' => 0,
+                'backharge_amount' => 0,
+                'other_amount' => 0,
+                'total_amount' => 0,
+                'tenor' => 0,
+                'request_snapshot' => json_encode($dto),
+                'client' => self::SANF_CLIENT,
+                'created_by' => json_encode($profileSnapshot),
+            ],
             'is_receive_offer' => $dto->isReceiveOffer,
             'segment' => $dto->segment,
             'project_location' => $dto->projectLocation,
             'status_id' => FinancingStatusEnum::PROCESSED,
             'type_id' => FinancingApplicationTypeEnum::PERSONAL,
+            'total_object' => $totalObject,
+            'client' => self::SANF_CLIENT,
         ]);
 
         $financingApplication = $this->financingApplicationRepository->findById($newFinancingApplication->id);

@@ -16,7 +16,7 @@ use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 final class SubmitFinanceApplicationByScaninaUseCase implements ApplicationServiceInterface
 {
-    private const SCANINA_CLIENT = 'SCN';
+    private const SCANINA_CLIENT = 'SCAN';
 
     private $financingApplicationRepository;
     private $financingSpecificationFactory;
@@ -74,7 +74,7 @@ final class SubmitFinanceApplicationByScaninaUseCase implements ApplicationServi
             'xid' => nano_id(),
             'application_code' => $applicationCode,
             'profile_xid' => $dto->profileXid,
-            'profile_snapshot' => json_encode($profile),
+            'profile_snapshot' => $profile,
             'facility_id' => config('scanina-web.financing-application.facility'),
             'method_id' => config('scanina-web.financing-application.method'),
             'financing_objects' => array_map(function ($object) {
