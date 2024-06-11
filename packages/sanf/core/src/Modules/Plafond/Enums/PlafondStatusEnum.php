@@ -12,6 +12,7 @@ class PlafondStatusEnum extends Enum
     public const APPROVED_402 = '402';
     public const REJECT_303 = '303';
     public const REJECT_403 = '403';
+    public const DONE_404 = '404';
 
     public const SUBMIT = '01';
     public const ON_REVIEW = '02';
