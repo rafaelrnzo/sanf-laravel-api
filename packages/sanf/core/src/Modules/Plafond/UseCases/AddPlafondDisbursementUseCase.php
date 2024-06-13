@@ -2,24 +2,14 @@
 
 namespace Sanf\Core\Modules\Plafond\UseCases;
 
-use Carbon\Carbon;
 use Carbon\CarbonImmutable;
-use Firebase\Auth\Token\Exception\InvalidToken;
-use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Storage;
-use Kreait\Firebase\Exception\MessagingException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use NbsPhp\Notification\Repositories\UserNotificationRepositoryInterface;
-use NbsPhp\Notification\Services\PushNotificationServiceInterface;
 use Sanf\Core\Modules\Financing\Exceptions\FinancingApplicationLimitExceedException;
-use Sanf\Core\Modules\Notification\Exceptions\NotificationInvalidException;
-use Sanf\Core\Modules\Notification\NotificationTypeEnum;
-use Sanf\Core\Modules\Plafond\Dtos\DisbursementAllocationFormRequest;
-use Sanf\Core\Modules\Plafond\Dtos\DisbursementDocumentFormRequest;
-use Sanf\Core\Modules\Plafond\Dtos\DisbursementInvoiceFormRequest;
 use Sanf\Core\Modules\Plafond\Dtos\PlafondDisbursementFormRequest;
 use Sanf\Core\Modules\Plafond\Enums\PlafondDisbursementStatusEnum;
-use Sanf\Core\Modules\Plafond\Events\PlafondDisbursementSubmittedEvent;
+use Sanf\Core\Modules\Plafond\Events\PlafondDisbursementSubmittedMailEvent;
+use Sanf\Core\Modules\Plafond\Events\PlafondDisbursementSubmittedNotificationEvent;
 use Sanf\Core\Modules\Plafond\Repositories\PlafondDisbursementRepositoryInterface;
 use Sanf\Core\Modules\User\Exceptions\ProfileNotFoundException;
 use Sanf\Core\Modules\User\Repositories\ProfileRepositoryInterface;
@@ -31,21 +21,15 @@ final class AddPlafondDisbursementUseCase implements ApplicationServiceInterface
 
     private $coreClientRepository;
     private $disbursementRepository;
-    private $userNotificationRepository;
-    private $pushNotificationService;
     private $submitToCoreUseCase;
 
     public function __construct(
         PlafondDisbursementRepositoryInterface $disbursementRepository,
         ProfileRepositoryInterface $coreClientRepository,
-        UserNotificationRepositoryInterface $userNotificationRepository,
-        PushNotificationServiceInterface $pushNotificationService,
         SubmitPlafondDisbursementCoreUseCase $submitToCoreUseCase
     ) {
         $this->coreClientRepository = $coreClientRepository;
         $this->disbursementRepository = $disbursementRepository;
-        $this->userNotificationRepository = $userNotificationRepository;
-        $this->pushNotificationService = $pushNotificationService;
         $this->submitToCoreUseCase = $submitToCoreUseCase;
     }
 
@@ -72,7 +56,7 @@ final class AddPlafondDisbursementUseCase implements ApplicationServiceInterface
             'client_id' => $userGuzzleEntity->getCustomerId(),
             'client_name' => $userGuzzleEntity->getFullName(),
             'client_mail' => $userGuzzleEntity->getEmail(),
-            'customer_id' => $formRequest->bouwheer->custId,
+            'customer_id' => $formRequest->bouwheer->custId ?? $userGuzzleEntity->getCustomerId(),
             'customer_bowheer_id' => $formRequest->bouwheer->id,
             'customer_name' => $formRequest->bouwheer->name,
             'customer_mail' => $formRequest->bouwheer->email,
@@ -234,55 +218,29 @@ final class AddPlafondDisbursementUseCase implements ApplicationServiceInterface
             $submitToCore = $this->submitToCoreUseCase->execute($coreFormRequest);
         }
 
-        // send notification
-        // TODO create self service of send notification using event service
-        $fcmTokens = $this->userNotificationRepository->getFcmTokens($formRequest->userId);
-        $data = [
-            'xid' => nano_id(),
-            'title' => __('Pengajuan anda berhasil'),
-            'subtitle' => __('Sukses pengajuan pencairan plafond'),
-            'body' => __('Pengajuan pencairan plafond and telah berhasil dikirim dan sedang dalam proses.'),
-            'type' => (string) NotificationTypeEnum::INFO,
-            'screen' => '',
-            'published_at' => Carbon::now(),
-            'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
-        ];
-
-        try {
-            $this->userNotificationRepository->create([
-                'xid' => $data['xid'],
-                'type' => (int) $data['type'],
-                'user_id' => $formRequest->userId,
-                'data' => $data,
-            ]);
-        } catch (QueryException $exception) {
-            if ($exception->getCode() == '23505') {
-                throw new NotificationInvalidException('ID not unique');
-            }
-            throw $exception;
-        }
-        foreach (array_unique($fcmTokens) as $fcmToken) {
-            try {
-                $this->pushNotificationService->sendToDevice($fcmToken, $data);
-            } catch (InvalidToken $exception) {
-                $this->userNotificationRepository->deleteFcmToken($fcmToken);
-                report($exception);
-            } catch (MessagingException $exception) {
-                $this->userNotificationRepository->deleteFcmToken($fcmToken);
-                report($exception);
-            }
-        }
-
         $mailContent = (object) [
             'fullName' => $userGuzzleEntity->getFullName(),
-            'email' => $userGuzzleEntity->getEmail(),
+            'email' => (object) [
+                'client' => $userGuzzleEntity->getEmail(),
+                'customer' => $formRequest->bouwheer->email,
+            ],
             'bowheer' => $formRequest->bouwheer,
             'disbursementNo' => $disbursementNo,
             'invoiceCount' => count($invoicesInput),
             'totalAmount' => $formRequest->totalInvoiceAmount,
             'createdAt' => $disbursementModel->created_at,
         ];
-        event(new PlafondDisbursementSubmittedEvent($mailContent));
+        $notificationContent = (object) [
+            'userId' => $formRequest->userId,
+            'clientId' => $formRequest->clientId,
+            'client' => $userGuzzleEntity->getFullName(),
+            'bowheerId' => $formRequest->bouwheer->id,
+            'bowheer' => $formRequest->bouwheer->name,
+            'disbursementXid' => $disbursementXid,
+        ];
+
+        event(new PlafondDisbursementSubmittedMailEvent($mailContent));
+        event(new PlafondDisbursementSubmittedNotificationEvent($notificationContent));
 
         return $disbursementModel;
     }

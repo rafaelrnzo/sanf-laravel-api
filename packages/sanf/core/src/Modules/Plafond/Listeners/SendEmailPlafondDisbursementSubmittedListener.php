@@ -2,7 +2,8 @@
 
 namespace Sanf\Core\Modules\Plafond\Listeners;
 
-use Sanf\Core\Modules\Plafond\Jobs\SendEmailPlafondDisbursementSubmittedForUserJob;
+use Sanf\Core\Modules\Plafond\Jobs\SendEmailPlafondDisbursementSubmittedForClientJob;
+use Sanf\Core\Modules\Plafond\Jobs\SendEmailPlafondDisbursementSubmittedForCustomerJob;
 
 class SendEmailPlafondDisbursementSubmittedListener
 {
@@ -16,8 +17,8 @@ class SendEmailPlafondDisbursementSubmittedListener
     {
         $content = $event->content;
 
-        $data = [
-            'full_name' => $content->fullName,
+        $clientPayload = [
+            'to' => $content->fullName,
             'Tanggal Pengajuan' => date_localized($content->createdAt, '%d %B %Y'),
             'Nama Perusahaan (Bowheer)' => $content->bowheer->name,
             'Nomor Pengajuan' => $content->disbursementNo,
@@ -25,6 +26,16 @@ class SendEmailPlafondDisbursementSubmittedListener
             'Total Nilai Invoice' => 'Rp. ' . number_format($content->totalAmount, 0, ',', '.'),
         ];
 
-        dispatch(new SendEmailPlafondDisbursementSubmittedForUserJob($data, [$content->email]));
+        $customerPayload = [
+            'to' => $content->bowheer->name,
+            'Nama Client' => $content->fullName,
+            'ID Pengajuan' => $content->disbursementNo,
+            'Tanggal Pengajuan' => date_localized($content->createdAt, '%d %B %Y'),
+            'Jumlah Invoice' => $content->invoiceCount,
+            'Total Invoice' => 'Rp. ' . number_format($content->totalAmount, 0, ',', '.'),
+        ];
+
+        dispatch(new SendEmailPlafondDisbursementSubmittedForClientJob($clientPayload, [$content->email->client]));
+        dispatch(new SendEmailPlafondDisbursementSubmittedForCustomerJob($customerPayload, [$content->email->customer]));
     }
 }

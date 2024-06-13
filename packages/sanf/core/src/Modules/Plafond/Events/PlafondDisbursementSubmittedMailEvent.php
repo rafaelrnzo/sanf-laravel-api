@@ -4,7 +4,7 @@ namespace Sanf\Core\Modules\Plafond\Events;
 
 use NbsPhp\Core\Event;
 
-class PlafondDisbursementSubmittedEvent extends Event
+class PlafondDisbursementSubmittedMailEvent extends Event
 {
     public $content;
 

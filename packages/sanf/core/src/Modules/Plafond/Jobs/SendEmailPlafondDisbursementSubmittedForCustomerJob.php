@@ -9,7 +9,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 use Sanf\Core\Mail\MailLayout2Columns;
 
-class SendEmailPlafondDisbursementSubmittedForUserJob implements ShouldQueue
+class SendEmailPlafondDisbursementSubmittedForCustomerJob implements ShouldQueue
 {
     use InteractsWithQueue;
     use Queueable;
@@ -31,8 +31,8 @@ class SendEmailPlafondDisbursementSubmittedForUserJob implements ShouldQueue
 
     public function handle()
     {
-        $fullName = $this->data['full_name'];
-        unset($this->data['full_name']);
+        $fullName = $this->data['to'];
+        unset($this->data['to']);
 
         $adminMail = config('sanf-mobile.mail_to_admin');
         $reportUrl = "mailto:{$adminMail}?subject=Laporan Pengajuan Pencairan Plafon";
@@ -41,18 +41,20 @@ class SendEmailPlafondDisbursementSubmittedForUserJob implements ShouldQueue
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
             ->rightLogo(asset('assets/png/sanf-tagline.png'))
             ->banner(asset('assets/png/email-verification.png'))
-            ->greeting(__('Halo :name!', ['name' => $fullName]))
+            ->greeting(__('Hi :name!', ['name' => $fullName]))
             ->line(__(
                 '<blockquote style="margin: 0 0;font-size: 16px; line-height: 150%;">
-                    Pengajuan anjak piutang anda sedang diproses, berikut kami lampirkan ringkasan pengajuan Anda.
-                </blockquote>
-            '
+                Kamu memiliki permohonan percepatan pembayaran yang perlu direview. Berikut adalah rincian nya.
+                </blockquote>'
+            ))
+            ->line(__(
+                '<blockquote style="margin: 0 0;font-size: 16px; line-height: 150%;">
+                Detail Anjak Piutang
+                </blockquote>'
             ))
             ->writeContent($this->data)
             ->generateSeparator([
-                ['joinToIndex' => 1, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08);">'],
-                ['joinToIndex' => 7, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08);">'],
-                ['joinToIndex' => 10, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08);">'],
+                ['joinToIndex' => 4, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08);">'],
             ])
             ->line(
                 __('Email ini dibuat secara otomatis mohon tidak membalas email ini, jika terdapat keluhan silahkan hubungi Sanf Customer Service')
