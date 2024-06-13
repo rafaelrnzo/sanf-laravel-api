@@ -58,7 +58,8 @@
             "Sanf\\Api\\": "packages/sanf/api/src",
             "Sanf\\Web\\": "packages/sanf/web/src",
             "Sanf\\External\\": "packages/sanf/external/src",
-            "Sanf\\Integration\\": "packages/sanf/integration/src"
+            "Sanf\\Integration\\": "packages/sanf/integration/src",
+            "Sanf\\Dashboard\\": "packages/sanf/dashboard/src"
         },
         "files": [
             "packages/nbs-php/lumen-core/src/helpers.php"

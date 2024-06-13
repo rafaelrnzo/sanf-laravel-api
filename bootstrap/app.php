@@ -92,9 +92,9 @@ $app->configure('tinker');
 |
 */
 
- $app->middleware([
-     \Illuminate\Session\Middleware\StartSession::class,
- ]);
+$app->middleware([
+    \Illuminate\Session\Middleware\StartSession::class,
+]);
 
 $app->singleton(Illuminate\Session\SessionManager::class, function () use ($app) {
     return $app->loadComponent('session', Illuminate\Session\SessionServiceProvider::class, 'session');
@@ -143,6 +143,7 @@ $app->register(Sanf\Core\Providers\CoreServiceProvider::class);
 $app->register(Sanf\Console\Providers\ConsoleServiceProvider::class);
 $app->register(Sanf\Api\Providers\ApiServiceProvider::class);
 $app->register(Sanf\Web\Providers\WebServiceProvider::class);
+$app->register(Sanf\Dashboard\Providers\DashboardServiceProvider::class);
 $app->register(\Sanf\External\ExternalServiceProvider::class);
 $app->register(\Laravel\Tinker\TinkerServiceProvider::class);
 
@@ -160,7 +161,7 @@ $app->register(\Laravel\Tinker\TinkerServiceProvider::class);
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
 ], function ($router) {
-    require __DIR__.'/../routes/web.php';
+    require __DIR__ . '/../routes/web.php';
 });
 
 return $app;

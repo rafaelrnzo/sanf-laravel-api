@@ -79,6 +79,22 @@ return [
             'prefix' => env('DB_PREFIX', ''),
         ],
 
+        'dashboard_db' => [
+            'driver' => 'pgsql',
+            'url' => env('DASHBOARD_DATABASE_URL'),
+            'host' => env('DASHBOARD_DB_HOST', env('DB_HOST', '127.0.0.1')),
+            'port' => env('DASHBOARD_DB_PORT', env('DB_PORT', '5432')),
+            'database' => env('DASHBOARD_DB_DATABASE', 'database'),
+            'username' => env('DASHBOARD_DB_USERNAME', env('DB_USERNAME', 'postgres')),
+            'password' => env('DASHBOARD_DB_PASSWORD', env('DB_PASSWORD', '')),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'search_path' => implode(',', array_filter([env('DASHBOARD_DB_SCHEMA'), 'public'])),
+            'sslmode' => 'prefer',
+            'schema' => env('DASHBOARD_DB_SCHEMA', 'sanf_dashboard_sch'),
+        ],
+
     ],
 
     /*
