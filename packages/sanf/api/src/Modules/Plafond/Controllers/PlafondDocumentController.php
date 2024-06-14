@@ -5,21 +5,27 @@ namespace Sanf\Api\Modules\Plafond\Controllers;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
+use NbsPhp\Core\Database\TransactionalSessionInterface;
+use NbsPhp\Core\Services\TransactionalApplicationService;
 use Sanf\Api\Modules\Asset\PrivateAssetFileSimpleTransformer;
-use Sanf\Core\Modules\Asset\AssetUploadResultDto;
+use Sanf\Core\Modules\Plafond\UseCases\DownloadPaymentAccelarationDocumentUseCase;
+use Sanf\Core\Modules\Plafond\UseCases\SavePaymentAccelarationDocumentUseCase;
 
 class PlafondDocumentController extends RestApiController
 {
-    public function downloadPaymentAccelarationDocument(Guard $auth)
-    {
-        $result = new AssetUploadResultDto([
-            'originName' => 'FORM PERCEPATAN PEMBAYARAN.doc.pdf',
-            'fileName' => 'f0R7HEzDXi6OL4INb55bPBRama4UjEYeusPoAUfG.pdf',
-            'path' => 'temp/f0R7HEzDXi6OL4INb55bPBRama4UjEYeusPoAUfG.pdf',
-            'url' => file_get_temp_url('temp/f0R7HEzDXi6OL4INb55bPBRama4UjEYeusPoAUfG.pdf'),
-        ]);
+    public function downloadPaymentAccelarationDocument(
+        string $xid,
+        string $plafond_xid,
+        Guard $auth,
+        DownloadPaymentAccelarationDocumentUseCase $downloadUseCase
+    ) {
+        $requestDto = (object) [
+            'userId' => $auth->id(),
+            'clientId' => $xid,
+            'plafondId' => $plafond_xid,
+        ];
 
-        return fractal($result, PrivateAssetFileSimpleTransformer::class);
+        return $downloadUseCase->execute($requestDto);
     }
 
     public function sendPaymentAccelarationDocument(Guard $auth)
