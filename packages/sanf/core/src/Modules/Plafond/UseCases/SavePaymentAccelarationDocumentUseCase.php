@@ -56,6 +56,7 @@ final class SavePaymentAccelarationDocumentUseCase implements ApplicationService
             'plafond_id' => $dto->plafondId,
             'company' => $dto->companyName,
             'bowheer' => $dto->bowheerName ?? '',
+            'bowheer_email' => $dto->bowheerEmail ?? '',
             'document_no' => $dto->documentNo,
             'document_date' => $dto->documentDate,
             'first_signer_company' => $dto->firstSigner->company ?? $dto->companyName,

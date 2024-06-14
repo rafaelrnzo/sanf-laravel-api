@@ -14,6 +14,7 @@ class PaymentAccelarationDocumentModel extends AbstractModel
         'plafond_id',
         'company',
         'bowheer',
+        'bowheer_email',
         'document_no',
         'document_date',
         'first_signer_company',

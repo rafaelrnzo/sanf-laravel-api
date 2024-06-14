@@ -20,6 +20,7 @@ class CreatePaymentAccDocumentTable extends Migration
             $table->string('plafond_id', 64)->index();
             $table->string('company')->index();
             $table->string('bowheer')->index();
+            $table->string('bowheer_email')->index();
             $table->string('document_no')->index();
             $table->date('document_date')->index();
             $table->string('first_signer_company')->index();

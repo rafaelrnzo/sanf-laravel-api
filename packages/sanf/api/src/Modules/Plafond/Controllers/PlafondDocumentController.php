@@ -10,6 +10,7 @@ use NbsPhp\Core\Services\TransactionalApplicationService;
 use Sanf\Api\Modules\Asset\PrivateAssetFileSimpleTransformer;
 use Sanf\Core\Modules\Plafond\UseCases\DownloadPaymentAccelarationDocumentUseCase;
 use Sanf\Core\Modules\Plafond\UseCases\SavePaymentAccelarationDocumentUseCase;
+use Sanf\Core\Modules\Plafond\UseCases\SendPaymentAccelarationDocumentUseCase;
 
 class PlafondDocumentController extends RestApiController
 {
@@ -28,8 +29,20 @@ class PlafondDocumentController extends RestApiController
         return $downloadUseCase->execute($requestDto);
     }
 
-    public function sendPaymentAccelarationDocument(Guard $auth)
-    {
+    public function sendPaymentAccelarationDocument(
+        string $xid,
+        string $plafond_xid,
+        Guard $auth,
+        SendPaymentAccelarationDocumentUseCase $sendUseCase
+    ) {
+        $requestDto = (object) [
+            'userId' => $auth->id(),
+            'clientId' => $xid,
+            'plafondId' => $plafond_xid,
+        ];
+
+        $sendUseCase->execute($requestDto);
+
         return $this->responseOk();
     }
 
@@ -43,7 +56,8 @@ class PlafondDocumentController extends RestApiController
     ) {
         $this->validate($request, [
             'company_name' => ['required', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
-            'bowheer' => ['nullable', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
+            'bowheer_name' => ['nullable', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
+            'bowheer_email' => ['nullable', 'email'],
             'document_no' => ['required', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
             'document_date' => ['required', 'date_format:Y-m-d'],
             'first_signer.company' => ['nullable', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
@@ -60,7 +74,8 @@ class PlafondDocumentController extends RestApiController
             'clientId' => $xid,
             'plafondId' => $plafond_xid,
             'companyName' => $request->get('company_name'),
-            'bowheerName' => $request->get('bowheer') ?? null,
+            'bowheerName' => $request->get('bowheer_name') ?? null,
+            'bowheerEmail' => $request->get('bowheer_email') ?? null,
             'documentNo' => $request->get('document_no'),
             'documentDate' => $request->get('document_date'),
             'firstSigner' => (object) [
