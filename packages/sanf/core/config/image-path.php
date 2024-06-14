@@ -20,4 +20,5 @@ return [
             'other_document' => 'plafond/disbursement/other-document/',
         ],
     ],
+    'payment-acc-document' => 'payment-acc-document/',
 ];
