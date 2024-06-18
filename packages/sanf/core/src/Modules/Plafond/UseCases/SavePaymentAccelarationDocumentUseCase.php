@@ -79,12 +79,7 @@ final class SavePaymentAccelarationDocumentUseCase implements ApplicationService
             $this->paymentAccDocumentRepositoryInterface->update($paymentAccDocumentEloquent->id, $paymentAccDocumentData);
         }
 
-        return (object) [
-            'originName' => $paymentAccDocumentEloquent->origin,
-            'fileName' => $paymentAccDocumentEloquent->filename,
-            'path' => $paymentAccDocumentEloquent->path,
-            'url' => file_get_temp_url($paymentAccDocumentEloquent->path),
-        ];
+        return Storage::download($paymentAccDocumentEloquent->path, $paymentAccDocumentEloquent->origin);
     }
 
     private function generateFile(array $content)

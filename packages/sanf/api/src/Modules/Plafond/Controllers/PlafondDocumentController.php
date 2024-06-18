@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Database\TransactionalSessionInterface;
 use NbsPhp\Core\Services\TransactionalApplicationService;
-use Sanf\Api\Modules\Asset\PrivateAssetFileSimpleTransformer;
 use Sanf\Core\Modules\Plafond\UseCases\DownloadPaymentAccelarationDocumentUseCase;
 use Sanf\Core\Modules\Plafond\UseCases\SavePaymentAccelarationDocumentUseCase;
 use Sanf\Core\Modules\Plafond\UseCases\SendPaymentAccelarationDocumentUseCase;
@@ -93,8 +92,6 @@ class PlafondDocumentController extends RestApiController
 
         $transactionService = new TransactionalApplicationService($saveUseCase, $transactionalSession);
 
-        $result = $transactionService->execute($requestDto);
-
-        return fractal($result, PrivateAssetFileSimpleTransformer::class);
+        return $transactionService->execute($requestDto);
     }
 }
