@@ -45,7 +45,7 @@ class BrowseFinancingApplicationByUserService implements ApplicationServiceInter
         }
         try {
             $result = $this->client->browseFinancingApplication($user->username, $dto->xid);
-            $coreData = array_map(function ($data) {
+            $resultMapping = array_map(function ($data) {
                 return (object) [
                     'xid' => $data['XID'],
                     'application_code' => $data['APPLICATION_CODE'],
@@ -54,9 +54,12 @@ class BrowseFinancingApplicationByUserService implements ApplicationServiceInter
                     'financing_object_count' => $data['COUNT'],
                     'financing_facility_name' => $data['FACILITY_NAME'] ?? null,
                     'financing_method_name' => $data['METHOD_NAME'] ?? null,
-                    'created_at' => Carbon::parse($data['CRATED_AT']),
+                    'created_at' => Carbon::parse($data['CREATED_AT']),
                 ];
             }, $result['data']);
+
+            $coreData = collect($resultMapping);
+            $applicationCodes = $coreData->pluck('application_code')->toArray();
         } catch (\Exception $e) {
             Log::warning('Core Exception');
             $coreData = [];
@@ -96,15 +99,19 @@ class BrowseFinancingApplicationByUserService implements ApplicationServiceInter
             )
         );
 
-        $mergeData = collect($coreData)->merge($internalData)->sortByDesc('created_at');
+        $internalFilterData = array_filter($internalData, function ($data) use ($applicationCodes) {
+            return !in_array($data->application_code, $applicationCodes);
+        });
 
-        $totalCoreData = count($coreData);
+        $mergeData = collect($coreData)->merge($internalFilterData)->sortByDesc('created_at');
+
+        $totalCoreData = $coreData->count();
 
         return (object) [
             'data' => $mergeData,
             'paginate' => (object) [
                 'total' => (int) $total + $totalCoreData,
-                'count' => count($mergeData) + $totalCoreData,
+                'count' => count($mergeData),
                 'skip' => (int) $dto->skip,
                 'limit' => (int) $dto->limit,
                 'sort_by' => $dto->sortBy,
