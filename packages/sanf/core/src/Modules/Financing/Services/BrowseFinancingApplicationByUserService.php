@@ -43,6 +43,9 @@ class BrowseFinancingApplicationByUserService implements ApplicationServiceInter
         if (!$user) {
             throw new UserNotFoundException();
         }
+
+        $coreData = collect([]);
+        $applicationCodes = [];
         try {
             $result = $this->client->browseFinancingApplication($user->username, $dto->xid);
             $resultMapping = array_map(function ($data) {
@@ -60,9 +63,9 @@ class BrowseFinancingApplicationByUserService implements ApplicationServiceInter
 
             $coreData = collect($resultMapping);
             $applicationCodes = $coreData->pluck('application_code')->toArray();
-        } catch (\Exception $e) {
+        } catch (\Exception $exception) {
+            report($exception);
             Log::warning('Core Exception');
-            $coreData = [];
         }
 
         $result = $this->financingApplicationRepository->query(
