@@ -21,12 +21,16 @@ final class PlafondFactoringDisbursementTransformer extends TransformerAbstract
             $totalAmount = $dto->admin_amount;
         }
 
-        $paymentAccDocument = (object) [
-            'file_name' => $dto->disbursement_relation->payment_acc_doc_file_name,
-            'origin_name' => $dto->disbursement_relation->payment_acc_doc_origin_name,
-            'path' => file_get_temp_url($dto->disbursement_relation->payment_acc_doc_path),
-        ];
-        if ($dto->status_id === PlafondDisbursementStatusEnum::REVISION && !is_null($dto->disbursement_relation->payment_acc_web_doc_path)) {
+        $paymentAccDocument = null;
+        if (is_null($dto->disbursement_relation->payment_acc_doc_path) === false) {
+            $paymentAccDocument = (object) [
+                'file_name' => $dto->disbursement_relation->payment_acc_doc_file_name,
+                'origin_name' => $dto->disbursement_relation->payment_acc_doc_origin_name,
+                'path' => file_get_temp_url($dto->disbursement_relation->payment_acc_doc_path),
+            ];
+        }
+
+        if (is_null($dto->disbursement_relation->payment_acc_web_doc_path) === false && $dto->status_id === PlafondDisbursementStatusEnum::REVISION) {
             $paymentAccDocument = (object) [
                 'file_name' => $dto->disbursement_relation->payment_acc_web_doc_file_name,
                 'origin_name' => $dto->disbursement_relation->payment_acc_web_doc_origin_name,
