@@ -67,8 +67,17 @@ return [
 
         'minio' => [
             'driver' => 's3',
+            'endpoint' => env('MINIO_URL', 'http://127.0.0.1:9000'),
+            'use_path_style_endpoint' => true,
+            'key' => env('MINIO_ACCESS_KEY_ID'),
+            'secret' => env('MINIO_SECRET_ACCESS_KEY'),
+            'region' => 'ap-southeast-1',
+            'bucket' => env('MINIO_BUCKET'),
+        ],
+
+        'minio_post' => [
+            'driver' => 's3',
             'endpoint' => env('MINIO_ENDPOINT', 'http://127.0.0.1:9000'),
-            'url' => env('MINIO_URL'),
             'use_path_style_endpoint' => true,
             'key' => env('MINIO_ACCESS_KEY_ID'),
             'secret' => env('MINIO_SECRET_ACCESS_KEY'),

@@ -40,7 +40,7 @@ if (!function_exists('file_upload')) {
      */
     function file_upload($file, $path, $options = [])
     {
-        $fileId = Storage::putFile($path, $file, $options);
+        $fileId = Storage::disk('minio_post')->putFile($path, $file, $options);
 
         return str_replace($path . '/', '', $fileId);
     }
@@ -203,6 +203,5 @@ if (!function_exists('extract_route_name')) {
         $pathInfo = $request->getPathInfo();
 
         return app()->router->getRoutes()[$methodName . $pathInfo]['action']['as'];
-
     }
 }
