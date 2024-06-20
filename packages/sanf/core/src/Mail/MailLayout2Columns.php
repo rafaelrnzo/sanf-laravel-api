@@ -34,10 +34,30 @@ class MailLayout2Columns extends BaseMail
      **/
     public $emailTableBody = [];
 
+    /**
+     * The text / label for the action.
+     *
+     * @var string
+     */
+    public $actionText;
+
+    /**
+     * The action URL.
+     *
+     * @var string
+     */
+    public $actionUrl;
+
+    /**
+     * The action Help.
+     *
+     * @var array
+     */
+    public $actionHelp;
+
     public function generateSeparator($separator = [])
     {
-        foreach($separator as $value)
-        {
+        foreach ($separator as $value) {
             array_splice(
                 $this->emailContent,
                 $value['joinToIndex'],
@@ -48,7 +68,6 @@ class MailLayout2Columns extends BaseMail
                     ],
                 ]
             );
-
         }
 
         return $this;
@@ -58,8 +77,7 @@ class MailLayout2Columns extends BaseMail
     {
         $tempArr = [];
 
-        foreach($content as $key => $value)
-        {
+        foreach ($content as $key => $value) {
             array_push($tempArr, [
                 'label' => $key,
                 'text'  => $value,
@@ -69,7 +87,6 @@ class MailLayout2Columns extends BaseMail
         $this->emailContent = $tempArr;
 
         return $this;
-
     }
 
     public function writeTableHead($th = [])
@@ -101,5 +118,23 @@ class MailLayout2Columns extends BaseMail
      */
     public function build()
     {
+    }
+
+    /**
+     * Configure the "call to action" button.
+     *
+     * @param string $text
+     * @param string $url
+     * @param array $help
+     *
+     * @return $this
+     */
+    public function action($text, $url, $help = [])
+    {
+        $this->actionText = $text;
+        $this->actionUrl = $url;
+        $this->actionHelp = $help;
+
+        return $this;
     }
 }

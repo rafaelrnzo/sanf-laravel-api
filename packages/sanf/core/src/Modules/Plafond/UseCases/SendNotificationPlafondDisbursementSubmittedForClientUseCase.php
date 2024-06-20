@@ -29,9 +29,9 @@ class SendNotificationPlafondDisbursementSubmittedForClientUseCase implements Ap
     {
         $data = [
             'xid' => nano_id(),
-            'title' => __('Pengajuan anda berhasil'),
+            'title' => __('Pengajuan Anda Berhasil'),
             'subtitle' => __('Sukses pengajuan pencairan plafond'),
-            'body' => __('Pengajuan pencairan plafond and telah berhasil dikirim dan sedang dalam proses.'),
+            'body' => __('Pengajuan pencairan plafond Anda telah berhasil dikirim dan sedang dalam proses.'),
             'type' => (string) NotificationTypeEnum::INFO,
             'screen' => '',
             'published_at' => Carbon::now(),

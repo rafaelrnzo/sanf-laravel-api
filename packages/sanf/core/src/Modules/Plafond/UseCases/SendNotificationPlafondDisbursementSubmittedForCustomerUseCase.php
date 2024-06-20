@@ -31,7 +31,7 @@ class SendNotificationPlafondDisbursementSubmittedForCustomerUseCase implements 
 
     public function execute($dto = null)
     {
-        $webPartnerUrl = config('web-partner.base_url');
+        $webPartnerUrl = config('web-partner.base_url') . "/plafond/disbursements/{$dto->disbursementXid}/submissions/{$dto->submissionXid}";
         $body = "<span><b>{$dto->bowheer}</b> telah melakukan pengajuan dan membutuhkan review Anda. Periksa sekarang!</span>";
         $notificationData = [
             'xid' => nano_id(),
@@ -56,11 +56,11 @@ class SendNotificationPlafondDisbursementSubmittedForCustomerUseCase implements 
             'xid' => nano_id(),
             'title' => __('Pengajuan Pencairan Plafond'),
             'subtitle' => __('Pengajuan Pencairan plafond'),
-            'body' => $body,
+            'body' => strip_tags($body),
             'type' => (string) NotificationTypeEnum::INFO,
             'screen' => '',
             'published_at' => Carbon::now(),
-            'click_action' => "xid:{$dto->disbursementXid}",
+            'click_action' => "url:{$webPartnerUrl}",
         ];
 
         try {

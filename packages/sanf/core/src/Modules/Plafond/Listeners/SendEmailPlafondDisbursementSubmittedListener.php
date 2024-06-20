@@ -28,6 +28,7 @@ class SendEmailPlafondDisbursementSubmittedListener
 
         $customerPayload = [
             'to' => $content->bowheer->name,
+            'url' => $content->webPartnerUrl,
             'Nama Client' => $content->fullName,
             'ID Pengajuan' => $content->disbursementNo,
             'Tanggal Pengajuan' => date_localized($content->createdAt, '%d %B %Y'),

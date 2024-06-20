@@ -229,6 +229,7 @@ final class AddPlafondDisbursementUseCase implements ApplicationServiceInterface
             'invoiceCount' => count($invoicesInput),
             'totalAmount' => $formRequest->totalInvoiceAmount,
             'createdAt' => $disbursementModel->created_at,
+            'webPartnerUrl' => config('web-partner.base_url') . "/plafond/disbursements/{$disbursementXid}/submissions/{$submissionXid}",
         ];
         $notificationContent = (object) [
             'userId' => $formRequest->userId,
@@ -237,6 +238,7 @@ final class AddPlafondDisbursementUseCase implements ApplicationServiceInterface
             'bowheerId' => $formRequest->bouwheer->id,
             'bowheer' => $formRequest->bouwheer->name,
             'disbursementXid' => $disbursementXid,
+            'submissionXid' => $submissionXid,
         ];
 
         event(new PlafondDisbursementSubmittedMailEvent($mailContent));

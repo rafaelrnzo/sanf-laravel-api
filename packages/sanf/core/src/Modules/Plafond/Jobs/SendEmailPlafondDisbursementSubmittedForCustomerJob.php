@@ -34,6 +34,9 @@ class SendEmailPlafondDisbursementSubmittedForCustomerJob implements ShouldQueue
         $fullName = $this->data['to'];
         unset($this->data['to']);
 
+        $url = $this->data['url'];
+        unset($this->data['url']);
+
         $adminMail = config('sanf-mobile.mail_to_admin');
         $reportUrl = "mailto:{$adminMail}?subject=Laporan Pengajuan Pencairan Plafon";
         $mailable = (new MailLayout2Columns())
@@ -42,6 +45,7 @@ class SendEmailPlafondDisbursementSubmittedForCustomerJob implements ShouldQueue
             ->rightLogo(asset('assets/png/sanf-tagline.png'))
             ->banner(asset('assets/png/email-verification.png'))
             ->greeting(__('Hi :name!', ['name' => $fullName]))
+            ->action(__('Cek Pengajuan Pembayaran'), $url)
             ->line(__(
                 '<blockquote style="margin: 0 0;font-size: 16px; line-height: 150%;">
                 Kamu memiliki permohonan percepatan pembayaran yang perlu direview. Berikut adalah rincian nya.

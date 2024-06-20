@@ -26,6 +26,7 @@ class SendNotificationPlafondDisbursementSubmittedListener
             'bowheerId' => $content->bowheerId,
             'bowheer' => $content->bowheer,
             'disbursementXid' => $content->disbursementXid,
+            'submissionXid' => $content->submissionXid,
         ];
         dispatch(new SendNotificationPlafondDisbursementSubmittedForCustomerJob($customerNotificationDto));
     }
