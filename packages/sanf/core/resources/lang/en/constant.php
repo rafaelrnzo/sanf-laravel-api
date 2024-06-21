@@ -6,6 +6,7 @@ return [
         'COMPANY' => 'Perusahaan',
     ],
     'plafond-status' => [
+        'SUBMIT' => 'Diajukan',
         'IN_PROGRESS_301' => 'Diproses',
         'IN_PROGRESS_401' => 'Diproses',
         'APPROVED_302' => 'Disetujui',
@@ -13,7 +14,6 @@ return [
         'REJECT_303' => 'Ditolak',
         'REJECT_403' => 'Ditolak',
         'DONE_404' => 'Selesai',
-        'SUBMIT' => 'Diajukan',
         'ON_REVIEW' => 'On Review',
         'REVISION' => 'Revisi',
         'PROCESS' => 'Diproses',
