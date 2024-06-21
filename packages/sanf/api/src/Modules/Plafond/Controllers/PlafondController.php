@@ -4,6 +4,7 @@ namespace Sanf\Api\Modules\Plafond\Controllers;
 
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
 use Sanf\Api\Modules\Plafond\Transformers\PlafondFactoringTransformer;
@@ -81,7 +82,7 @@ class PlafondController extends RestApiController
         $input = $this->validate($request, [
             'skip' => ['nullable', 'integer'],
             'limit' => ['nullable', 'integer'],
-            'sort_by' => ['nullable', 'string'],
+            'sort_by' => ['nullable', 'string', Rule::in(['latest', 'oldest'])],
             'keyword' => ['nullable', 'string'],
         ]);
         $dto = new BrowsePlafondHistoryByUserRequestDto($input + ['profileXid' => $xid, 'userId' => $auth->id()]);

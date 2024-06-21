@@ -16,8 +16,8 @@ final class BrowsePlafondHistoryByUserService extends PlafondByUserService imple
      */
     public function execute($dto = null)
     {
-        $plafonds = $this->repository->getHistoryByProfile($dto->profileXid);
-        $data = collect($plafonds)->map(function (GuzzlePlafondHistoryEntity $item) {
+        $coreResponse = $this->repository->getHistoryByProfile($dto->profileXid);
+        $coreResponseMapping = collect($coreResponse)->map(function (GuzzlePlafondHistoryEntity $item) {
             $type = $item->getType();
             $submissionType = (int) $item->getSubmissionType();
 
@@ -35,6 +35,12 @@ final class BrowsePlafondHistoryByUserService extends PlafondByUserService imple
                 'notes' => explode(',', $item->getNotes()),
             ];
         });
+
+        if (is_null($dto->sortBy) === false && $dto->sortBy === 'oldest') {
+            $data = $coreResponseMapping->sortBy('updatedAt');
+        } else {
+            $data = $coreResponseMapping->sortbyDesc('updatedAt');
+        }
 
         return new BrowsePlafondHistoryByUserResponseDto([
             'data' => $data,
