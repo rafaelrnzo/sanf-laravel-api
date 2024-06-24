@@ -20,8 +20,7 @@ final class SavePaymentAccelarationDocumentUseCase implements ApplicationService
 
     public function execute($dto = null)
     {
-        $tempFilePath = tempnam(sys_get_temp_dir(), 'pdf');
-        file_put_contents($tempFilePath, $this->generateFile([
+        $pdfFile = $this->generateFile([
             'company' => $dto->companyName,
             'bowheer' => $dto->bowheerName ?? 'NO NAME',
             'document_no' => $dto->documentNo,
@@ -32,8 +31,10 @@ final class SavePaymentAccelarationDocumentUseCase implements ApplicationService
             'second_signer_company' => $dto->secondSigner->company ?? 'NO NAME',
             'second_signer_name' => $dto->secondSigner->fullName,
             'second_signer_position' => $dto->secondSigner->position,
+        ]);
 
-        ]));
+        $tempFilePath = tempnam(sys_get_temp_dir(), 'pdf');
+        file_put_contents($tempFilePath, $pdfFile);
         $directory = config('image-path.payment-acc-document');
         $filename = file_upload($tempFilePath, $directory, 'public');
 
@@ -79,7 +80,7 @@ final class SavePaymentAccelarationDocumentUseCase implements ApplicationService
             $this->paymentAccDocumentRepositoryInterface->update($paymentAccDocumentEloquent->id, $paymentAccDocumentData);
         }
 
-        return Storage::download($paymentAccDocumentEloquent->path, $paymentAccDocumentEloquent->origin);
+        return $pdfFile;
     }
 
     private function generateFile(array $content)

@@ -61,7 +61,10 @@ class SendEmailPaymentAccelarationDocumentJob implements ShouldQueue
                 __('. Jika Anda merasa tidak membuat request tersebut mohon abaikan email ini atau anda dapat'),
                 [__('Laporkan email ini'), $reportUrl]
             )
-            ->attachFromStorage($this->payload->path, $this->payload->origin);
+            ->attach($this->payload->tempFile, [
+                'as' => "Surat-Percepatan-Plafond:{$this->payload->plafondId}.pdf",
+                'mime' => 'application/pdf',
+            ]);
 
         return Mail::to([$this->recipient])->send($mailable);
     }

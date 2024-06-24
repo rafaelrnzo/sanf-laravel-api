@@ -25,7 +25,12 @@ class PlafondDocumentController extends RestApiController
             'plafondId' => $plafond_xid,
         ];
 
-        return $downloadUseCase->execute($requestDto);
+        return $this->streamDownload(
+            function () use ($downloadUseCase, $requestDto) {
+                echo $downloadUseCase->execute($requestDto);
+            },
+            "Surat-Percepatan-Plafond:{$plafond_xid}.pdf"
+        );
     }
 
     public function sendPaymentAccelarationDocument(
@@ -92,6 +97,11 @@ class PlafondDocumentController extends RestApiController
 
         $transactionService = new TransactionalApplicationService($saveUseCase, $transactionalSession);
 
-        return $transactionService->execute($requestDto);
+        return $this->streamDownload(
+            function () use ($transactionService, $requestDto) {
+                echo $transactionService->execute($requestDto);
+            },
+            "Surat-Percepatan-Plafond:{$plafond_xid}.pdf"
+        );
     }
 }
