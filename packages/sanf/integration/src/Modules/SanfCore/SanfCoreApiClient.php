@@ -620,7 +620,7 @@ class SanfCoreApiClient
      * @throws EndpointNotDefinedException
      * @throws GuzzleException
      */
-    public function requestPlafond($customerId, $plafondCode, $code, $amount = 0, $notes = null)
+    public function requestPlafond($customerId, $plafondCode, $code, $amount = 0, $plafondId = null, $notes = null)
     {
         $response = Request::route('customer.plafond.create', $this->client)
             ->json([
@@ -628,6 +628,7 @@ class SanfCoreApiClient
                 'p_code' => $plafondCode,
                 't_code' => $code,
                 'amount' => $amount,
+                'noplafond' => $plafondId,
                 'notes' => $notes,
             ])
             ->send();

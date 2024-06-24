@@ -90,9 +90,9 @@ class GuzzleAndEloquentPlafondRepository implements PlafondRepositoryInterface
         }
     }
 
-    public function submitApplication($profileXid, $typeId, $code, $amount = 0, $notes = null)
+    public function submitApplication($profileXid, $typeId, $code, $amount = 0, $plafondId = null, $notes = null)
     {
-        $response = $this->client->requestPlafond($profileXid, $typeId, $code, $amount, $notes);
+        $response = $this->client->requestPlafond($profileXid, $typeId, $code, $amount, $plafondId, $notes);
 
         return $response['status'];
     }

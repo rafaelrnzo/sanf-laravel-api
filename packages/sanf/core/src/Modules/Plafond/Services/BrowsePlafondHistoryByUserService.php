@@ -19,9 +19,10 @@ final class BrowsePlafondHistoryByUserService extends PlafondByUserService imple
         $coreResponse = $this->repository->getHistoryByProfile($dto->profileXid);
         $coreResponseMapping = collect($coreResponse)->map(function (GuzzlePlafondHistoryEntity $item) {
             $type = $item->getType();
-            $submissionType = (int) $item->getSubmissionType();
+            $submissionType = (string) $item->getSubmissionType();
 
             return (object) [
+                'xid' => $item->getPlafondId(),
                 'type' => (object) [
                     'id' => $type->getId(),
                     'title' => $type->getTitle(),

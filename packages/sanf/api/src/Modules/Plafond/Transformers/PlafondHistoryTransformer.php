@@ -29,6 +29,7 @@ final class PlafondHistoryTransformer extends TransformerAbstract
         }
 
         return [
+            'xid' => $dto->xid,
             'type' => [
                 'id' => $dto->type->id,
                 'name' => $dto->type->name,

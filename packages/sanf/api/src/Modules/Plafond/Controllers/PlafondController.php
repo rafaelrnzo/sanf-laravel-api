@@ -155,11 +155,13 @@ class PlafondController extends RestApiController
             'amount' => ['required', 'string', 'max:255'],
             'notes' => ['nullable', 'array'],
             'notes.*' => ['string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
+            'plafond_id' => ['required', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
         ]);
 
         $isPlafondFactoring = $request->get('type_id') === PlafondTypeEnum::FACTORING;
         $isEmptyNotes = is_null($request->get('notes')) || empty($request->get('notes'));
-        if ($isPlafondFactoring && $isEmptyNotes === true) {
+        $isEmptyPlafondId = is_null($request->get('plafond_id')) || empty($request->get('plafond_id'));
+        if (($isPlafondFactoring && $isEmptyNotes === true) || ($isPlafondFactoring && $isEmptyPlafondId)) {
             throw new BadRequestHttpException('Please update your apps');
         }
 

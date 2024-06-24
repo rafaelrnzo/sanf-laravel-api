@@ -23,6 +23,7 @@ final class ApplyIncreasePlafondByUserService extends PlafondByUserService imple
             $dto->typeId,
             PlafondSubmissionTypeEnum::INCREASE,
             $dto->amount,
+            $dto->plafondId,
             implode(',', $dto->notes)
         );
         $plafond = $this->repository->getByProfileAndType($dto->profileXid, $dto->typeId);
