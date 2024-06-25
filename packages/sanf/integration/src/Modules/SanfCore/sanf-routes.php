@@ -34,12 +34,13 @@ Route::group(config('sanf-api.url'), [SanfCoreApiProcessor::class], function () 
 
     Route::post('customer.upload', 'upload');
 
-    Route::get('customer.plafond.list', '/Plafond/Header');
-    Route::get('customer.plafond.list-by-type', '/Plafond/detail');
-    Route::get('customer.plafond.factoring', '/Plafond/detailfactoring');
-    Route::post('customer.plafond.create', '/Plafond');
-    Route::get('customer.plafond.history', '/plafond/history');
-    Route::post('customer.plafond.disbursement', '/Plafond/Disburstment');
+    Route::get('plafond.list', '/Plafond/Header');
+    Route::get('plafond.list-by-type', '/Plafond/detail');
+    Route::get('plafond.factoring', '/Plafond/detailfactoring');
+    Route::post('plafond.create', '/Plafond');
+    Route::get('plafond.history', '/plafond/history');
+    Route::post('plafond.disbursement.create', '/Plafond/Disburstment');
+    Route::get('plafond.disbursement.browse', '/Plafond/Listpencairan');
 
     Route::get('bank.account', '/Plafond/Bankaccount');
     Route::get('ocr.permission', '/Plafond/Ocrpermission');

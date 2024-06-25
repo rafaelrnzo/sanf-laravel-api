@@ -18,14 +18,18 @@ final class ApplyIncreasePlafondByUserService extends PlafondByUserService imple
      */
     public function execute($dto = null)
     {
+        $plafondId = $dto->plafondId ?? null;
+        $notes = ($dto->notes) ? implode(',', $dto->notes) : null;
+
         $this->repository->submitApplication(
             $dto->profileXid,
             $dto->typeId,
             PlafondSubmissionTypeEnum::INCREASE,
             $dto->amount,
-            $dto->plafondId,
-            implode(',', $dto->notes)
+            $plafondId,
+            $notes
         );
+
         $plafond = $this->repository->getByProfileAndType($dto->profileXid, $dto->typeId);
         if (is_null($plafond)) {
             throw new PlafondInvalidException('Plafond Not Found');

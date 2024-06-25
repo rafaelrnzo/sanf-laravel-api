@@ -13,6 +13,8 @@ final class PlafondDisbursementStatusEnum extends Enum
     public const APPROVE = 31;
     public const REJECT = 32;
 
+    public const APPROVE_CORE = 'SELESAI';
+
     public const ALL_TAB = [
         self::SUBMIT,
         self::ON_PROCESS,
@@ -31,6 +33,8 @@ final class PlafondDisbursementStatusEnum extends Enum
     public const DONE_TAB = [
         self::APPROVE,
         self::REJECT,
+        self::DONE,
+        self::APPROVE_CORE,
     ];
 
     /**

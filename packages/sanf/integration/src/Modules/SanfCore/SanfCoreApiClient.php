@@ -555,7 +555,7 @@ class SanfCoreApiClient
      */
     public function getCustomerPlafonds($customerId)
     {
-        $response = Request::route('customer.plafond.list', $this->client)
+        $response = Request::route('plafond.list', $this->client)
             ->queryParams([
                 'cust_id' => $customerId,
             ])->send();
@@ -599,7 +599,7 @@ class SanfCoreApiClient
      */
     public function getCustomerPlafondsByType($customerId, $plafondCode)
     {
-        $response = Request::route('customer.plafond.list-by-type', $this->client)
+        $response = Request::route('plafond.list-by-type', $this->client)
             ->queryParams([
                 'cust_id' => $customerId,
                 'code_plafond' => $plafondCode,
@@ -622,7 +622,7 @@ class SanfCoreApiClient
      */
     public function requestPlafond($customerId, $plafondCode, $code, $amount = 0, $plafondId = null, $notes = null)
     {
-        $response = Request::route('customer.plafond.create', $this->client)
+        $response = Request::route('plafond.create', $this->client)
             ->json([
                 'cust_id' => $customerId,
                 'p_code' => $plafondCode,
@@ -676,7 +676,7 @@ class SanfCoreApiClient
      */
     public function getCustomerPlafondHistories($customerId, $plafondCode = 'all')
     {
-        $response = Request::route('customer.plafond.history', $this->client)
+        $response = Request::route('plafond.history', $this->client)
             ->queryParams([
                 'cust_id' => $customerId,
                 'typeplafond' => $plafondCode,
@@ -688,7 +688,7 @@ class SanfCoreApiClient
 
     public function getPlafondFactoring($customerId)
     {
-        $response = Request::route('customer.plafond.factoring', $this->client)
+        $response = Request::route('plafond.factoring', $this->client)
             ->queryParams([
                 'cust_id' => $customerId,
                 'code_plafond' => PlafondTypeEnum::FACTORING,
@@ -1335,10 +1335,21 @@ class SanfCoreApiClient
 
     public function submitPlafondDisbursement(object $dto)
     {
-        $response = Request::route('customer.plafond.disbursement', $this->client)
+        $response = Request::route('plafond.disbursement.create', $this->client)
             ->json($dto->toArray())
             ->send();
 
         return $response->json();
+    }
+
+    public function getPlafondDisbursement(string $clientId, string $plafondId = null)
+    {
+        $response = Request::route('plafond.disbursement.browse', $this->client)
+            ->queryParams([
+                'cust_id' => $clientId,
+                'no_plafond' => $plafondId,
+            ])->send();
+
+        return $response->json(true);
     }
 }
