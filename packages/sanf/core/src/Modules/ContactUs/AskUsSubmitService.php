@@ -19,23 +19,23 @@ class AskUsSubmitService implements ApplicationServiceInterface
         $images = [];
 
         // move asset;
-        if($dto->images){
+        if ($dto->images) {
 
             //TODO REFACTOR
             foreach ($dto->images as $image) {
                 $newPath = config('image-path.ask-us');
                 $tempPath = config('image-path.temp');
 
-                $exist = Storage::exists("{$newPath}{$image}");
-                if(!$exist){
-                    Storage::move("{$tempPath}{$image}", "{$newPath}{$image}");
+                $exist = Storage::disk('minio_post')->exists("{$newPath}{$image}");
+                if (!$exist) {
+                    Storage::disk('minio_post')->move("{$tempPath}{$image}", "{$newPath}{$image}");
                 }
 
                 $images[] = [
                     'file_name' => $image,
                     'directory' => $newPath,
                     'path' => "{$newPath}{$image}",
-                    'mime_type' => Storage::getMimeType("{$newPath}{$image}"),
+                    'mime_type' => Storage::disk('minio_post')->getMimeType("{$newPath}{$image}"),
                 ];
             }
         }

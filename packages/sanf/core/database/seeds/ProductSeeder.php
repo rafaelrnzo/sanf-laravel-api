@@ -40,7 +40,7 @@ class ProductSeeder extends Seeder
         for ($index = 1; $index <= 6; $index++) {
             $file = new File(public_path("/assets/products/{$index}.jpg"), "{$index}.jpg");
             $uploadFile = file_upload(UploadedFile::createFromBase($file), '/product');
-            $type = Storage::getMimeType("{$uploadFile}");
+            $type = Storage::disk('minio_post')->getMimeType("{$uploadFile}");
 
             $data[$index - 1] += [
                 'id' => $index,

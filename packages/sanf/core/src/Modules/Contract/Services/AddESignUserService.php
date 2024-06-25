@@ -143,16 +143,16 @@ final class AddESignUserService implements ApplicationServiceInterface
     {
         $tempPath = config('image-path.temp');
 
-        $exist = Storage::exists("{$path}{$file}");
+        $exist = Storage::disk('minio_post')->exists("{$path}{$file}");
         if (!$exist) {
-            Storage::move("{$tempPath}{$file}", "{$path}{$file}");
+            Storage::disk('minio_post')->move("{$tempPath}{$file}", "{$path}{$file}");
         }
 
         return [
             'file_name' => $file,
             'directory' => $path,
             'path' => "{$path}{$file}",
-            'mime_type' => Storage::getMimeType("{$path}{$file}"),
+            'mime_type' => Storage::disk('minio_post')->getMimeType("{$path}{$file}"),
         ];
     }
 

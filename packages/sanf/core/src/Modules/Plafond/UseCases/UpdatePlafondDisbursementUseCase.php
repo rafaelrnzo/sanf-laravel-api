@@ -276,12 +276,12 @@ final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterf
      */
     protected function moveFile(string $filename, string $temporaryPath, string $path)
     {
-        $fileExist = Storage::exists("{$temporaryPath}{$filename}");
+        $fileExist = Storage::disk('minio_post')->exists("{$temporaryPath}{$filename}");
         if ($fileExist) {
-            Storage::move("{$temporaryPath}{$filename}", "{$path}{$filename}");
+            Storage::disk('minio_post')->move("{$temporaryPath}{$filename}", "{$path}{$filename}");
         }
 
-        $metadata = Storage::getMetaData("{$path}{$filename}");
+        $metadata = Storage::disk('minio_post')->getMetaData("{$path}{$filename}");
 
         return [
             'file_name' => $filename,

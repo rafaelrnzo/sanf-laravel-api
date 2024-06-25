@@ -29,19 +29,19 @@ class CreateCommodityByUserService extends CommodityByUserService implements App
             $newPath = config('image-path.commodity');
             $tempPath = config('image-path.temp');
 
-            $exist = Storage::exists("{$newPath}{$dto->imageFile}");
+            $exist = Storage::disk('minio_post')->exists("{$newPath}{$dto->imageFile}");
             try {
                 if (!$exist) {
-                    Storage::move("{$tempPath}{$dto->imageFile}", "{$newPath}{$dto->imageFile}");
+                    Storage::disk('minio_post')->move("{$tempPath}{$dto->imageFile}", "{$newPath}{$dto->imageFile}");
                 }
 
-                $metadata = Storage::getMetadata("{$newPath}{$dto->imageFile}");
+                $metadata = Storage::disk('minio_post')->getMetadata("{$newPath}{$dto->imageFile}");
 
                 $imageFile = [
                     'file_name' => $dto->imageFile,
                     'directory' => $metadata['dirname'] ?? $newPath,
                     'path' => $metadata['path'],
-                    'mime_type' => $metadata['mimetype'] ?? Storage::getMimeType("{$newPath}{$dto->imageFile}"),
+                    'mime_type' => $metadata['mimetype'] ?? Storage::disk('minio_post')->getMimeType("{$newPath}{$dto->imageFile}"),
                     'timestamp' => $metadata['timestamp'],
                     'size' => $metadata['size'],
                 ];
@@ -62,7 +62,7 @@ class CreateCommodityByUserService extends CommodityByUserService implements App
             'whatsapp_number' => $dto->whatsappNumber,
             'business_email' => $dto->businessEmail,
             'status_id' => CommodityStatus::WAITING_APPROVAL,
-//            'modified_by' => //TODO USER SNAPSHOT
+            //            'modified_by' => //TODO USER SNAPSHOT
             'city_name' => $dto->locationMetadata['city_name'],
             'province_name' => $dto->locationMetadata['province_name'],
             'image_path' => $imageFile['path'] ?? null,

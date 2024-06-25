@@ -104,10 +104,10 @@ final class ESignUserDocumentCompleteService implements ApplicationServiceInterf
         $documentName = $document->document_name ?? $document->document_id;
         $slugDocumentName = str_slug(strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $documentName))));
         $formattedDocumentName = "final-{$slugDocumentName}.pdf";
-        Storage::put($path . "{$formattedDocumentName}", file_get_contents($result['data']));
+        Storage::disk('minio_post')->put($path . "{$formattedDocumentName}", file_get_contents($result['data']));
 
         // if image doesnt exist
-        $exist = Storage::exists("{$path}{$formattedDocumentName}");
+        $exist = Storage::disk('minio_post')->exists("{$path}{$formattedDocumentName}");
         throw_if(!$exist, new FileNotFoundException("{$path}{$formattedDocumentName}"));
 
         // update e-sign document assignee status
@@ -125,7 +125,7 @@ final class ESignUserDocumentCompleteService implements ApplicationServiceInterf
                 'file_name' => $formattedDocumentName,
                 'directory' => $path,
                 'path' => "{$path}{$formattedDocumentName}",
-                'mime_type' => Storage::getMimeType("{$path}{$formattedDocumentName}"),
+                'mime_type' => Storage::disk('minio_post')->getMimeType("{$path}{$formattedDocumentName}"),
             ],
             'status_id' => ESignContractStatusEnum::COMPLETED,
             'updated_at' => Carbon::now(),

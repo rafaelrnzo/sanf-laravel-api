@@ -58,7 +58,7 @@ class GetDetailSurveyByUserService extends UserService implements ApplicationSer
                 foreach ($images as $file) {
                     try {
                         if ($file->IMAGE) {
-                            $metadata = Storage::getMetaData($file->IMAGE);
+                            $metadata = Storage::disk('minio_post')->getMetaData($file->IMAGE);
                             $imageFiles[] = (object) [
                                 'file_name' => $metadata['path'],
                                 'origin_name' => $metadata['filename'] ?? null,

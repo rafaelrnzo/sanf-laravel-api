@@ -42,12 +42,12 @@ class AddSurveySubmissionService implements ApplicationServiceInterface
                 foreach ($data['image_files'] as $fileName) {
                     $path = $dir . "$dto->contractNo/{$data['code']}/" . $fileName;
 
-                    $exist = Storage::exists($tempDir . $fileName);
+                    $exist = Storage::disk('minio_post')->exists($tempDir . $fileName);
                     if ($exist) {
-                        Storage::move($tempDir . $fileName, $path);
+                        Storage::disk('minio_post')->move($tempDir . $fileName, $path);
                     }
 
-                    $metadata = Storage::getMetaData($path);
+                    $metadata = Storage::disk('minio_post')->getMetaData($path);
                     $imageFiles[] = [
                         'file_name' => $fileName,
                         'directory' => $dir,

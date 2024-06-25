@@ -100,11 +100,11 @@ class UploadRequestedDocumentService implements ApplicationServiceInterface
 
     private function moveFile(string $filename, string $dir, string $tempDir): array
     {
-        $exist = Storage::exists($tempDir . $filename);
+        $exist = Storage::disk('minio_post')->exists($tempDir . $filename);
         if ($exist) {
-            Storage::move($tempDir . $filename, $dir . $filename);
+            Storage::disk('minio_post')->move($tempDir . $filename, $dir . $filename);
         }
 
-        return Storage::getMetaData($dir . $filename);
+        return Storage::disk('minio_post')->getMetaData($dir . $filename);
     }
 }

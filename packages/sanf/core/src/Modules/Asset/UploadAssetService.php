@@ -16,7 +16,7 @@ class UploadAssetService implements ApplicationServiceInterface
         $filename = file_upload($dto->file, $path, 'public');
 
         // if image doesnt exist
-        $exist = Storage::exists("{$path}{$filename}");
+        $exist = Storage::disk('minio_post')->exists("{$path}{$filename}");
         throw_if(!$exist, new FileNotFoundException("{$path}"));
 
         // get url file;

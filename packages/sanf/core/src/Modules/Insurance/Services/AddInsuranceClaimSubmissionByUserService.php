@@ -27,19 +27,19 @@ final class AddInsuranceClaimSubmissionByUserService extends InsuranceClaimSubmi
             $tempPath = config('image-path.temp');
 
             foreach ($dto->imageFiles as $imageFile) {
-                $exist = Storage::exists("{$newPath}{$imageFile}");
+                $exist = Storage::disk('minio_post')->exists("{$newPath}{$imageFile}");
                 try {
                     if (!$exist) {
-                        Storage::move("{$tempPath}{$imageFile}", "{$newPath}{$imageFile}");
+                        Storage::disk('minio_post')->move("{$tempPath}{$imageFile}", "{$newPath}{$imageFile}");
                     }
 
-                    $metadata = Storage::getMetadata("{$newPath}{$imageFile}");
+                    $metadata = Storage::disk('minio_post')->getMetadata("{$newPath}{$imageFile}");
 
                     $imageFiles[] = [
                         'file_name' => $imageFile,
                         'directory' => $metadata['dirname'] ?? $newPath,
                         'path' => $metadata['path'],
-                        'mime_type' => $metadata['mimetype'] ?? Storage::getMimeType("{$newPath}{$imageFile}"),
+                        'mime_type' => $metadata['mimetype'] ?? Storage::disk('minio_post')->getMimeType("{$newPath}{$imageFile}"),
                         'timestamp' => $metadata['timestamp'],
                         'size' => $metadata['size'],
                     ];

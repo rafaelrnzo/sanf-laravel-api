@@ -31,12 +31,12 @@ class UpdateOnBoardingService implements ApplicationServiceInterface
 
             $filename = file_upload($dto->imageFile, $directory, 'public');
 
-            $fileExist = Storage::exists("{$directory}{$filename}");
+            $fileExist = Storage::disk('minio_post')->exists("{$directory}{$filename}");
             if (!$fileExist) {
                 throw new FileNotFoundException("{$directory}{$filename}");
             }
 
-            $metadata = Storage::getMetaData("{$directory}{$filename}");
+            $metadata = Storage::disk('minio_post')->getMetaData("{$directory}{$filename}");
             $fileMetadata = [
                 'file_name' => $filename,
                 'directory' => $directory,
