@@ -32,7 +32,7 @@ class SendNotificationPlafondDisbursementSubmittedForCustomerUseCase implements 
     public function execute($dto = null)
     {
         $webPartnerUrl = config('web-partner.base_url') . "/plafond/disbursements/{$dto->disbursementXid}/submissions/{$dto->submissionXid}";
-        $body = "<span><b>{$dto->bowheer}</b> telah melakukan pengajuan dan membutuhkan review Anda. Periksa sekarang!</span>";
+        $body = "<span><b>{$dto->client}</b> telah melakukan pengajuan dan membutuhkan review Anda. Periksa sekarang!</span>";
         $notificationData = [
             'xid' => nano_id(),
             'notifiable_type' => 'bowheer_id',
