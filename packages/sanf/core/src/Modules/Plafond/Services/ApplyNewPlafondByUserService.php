@@ -17,12 +17,14 @@ final class ApplyNewPlafondByUserService extends PlafondByUserService implements
      */
     public function execute($dto = null)
     {
+        $notes = ($dto->notes) ? implode(',', $dto->notes) : null;
         $this->repository->submitApplication(
             $dto->profileXid,
             $dto->typeId,
             PlafondSubmissionTypeEnum::SUBMIT,
             $dto->amount,
-            implode(',', $dto->notes)
+            null,
+            $notes
         );
         switch ($dto->typeId) {
             case PlafondTypeEnum::UNIT:
