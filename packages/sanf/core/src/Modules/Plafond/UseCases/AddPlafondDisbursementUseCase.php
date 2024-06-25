@@ -255,15 +255,15 @@ final class AddPlafondDisbursementUseCase implements ApplicationServiceInterface
      */
     protected function moveFile(string $filename, string $temporaryPath, string $path)
     {
-        $fileExistInTempPath = Storage::exists("{$temporaryPath}{$filename}");
+        $fileExistInTempPath = Storage::disk('minio_post')->exists("{$temporaryPath}{$filename}");
         if ($fileExistInTempPath) {
-            $fileExistInNewPath = Storage::exists("{$path}{$filename}");
+            $fileExistInNewPath = Storage::disk('minio_post')->exists("{$path}{$filename}");
             if ($fileExistInNewPath === false) {
-                Storage::move("{$temporaryPath}{$filename}", "{$path}{$filename}");
+                Storage::disk('minio_post')->move("{$temporaryPath}{$filename}", "{$path}{$filename}");
             }
         }
 
-        $metadata = Storage::getMetaData("{$path}{$filename}");
+        $metadata = Storage::disk('minio_post')->getMetaData("{$path}{$filename}");
 
         return [
             'file_name' => $filename,
