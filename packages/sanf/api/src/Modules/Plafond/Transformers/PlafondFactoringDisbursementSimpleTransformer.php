@@ -3,6 +3,7 @@
 namespace Sanf\Api\Modules\Plafond\Transformers;
 
 use League\Fractal\TransformerAbstract;
+use Sanf\Core\Modules\Plafond\Enums\PlafondDisbursementStatusEnum;
 
 final class PlafondFactoringDisbursementSimpleTransformer extends TransformerAbstract
 {
@@ -22,11 +23,27 @@ final class PlafondFactoringDisbursementSimpleTransformer extends TransformerAbs
         $createdAt = $dto->disbursement_relation->created_at ?? null;
         $updatedAt = $dto->disbursement_relation->updated_at ?? null;
 
+        switch ($dto->status_id) {
+            case PlafondDisbursementStatusEnum::DONE:
+            case PlafondDisbursementStatusEnum::APPROVE:
+            case PlafondDisbursementStatusEnum::REJECT:
+                $statusId = PlafondDisbursementStatusEnum::DONE;
+                break;
+            case PlafondDisbursementStatusEnum::ON_PROCESS:
+            case PlafondDisbursementStatusEnum::REVISION:
+                $statusId = PlafondDisbursementStatusEnum::ON_PROCESS;
+                break;
+            case PlafondDisbursementStatusEnum::SUBMIT:
+            default:
+                $statusId = PlafondDisbursementStatusEnum::SUBMIT;
+                break;
+        }
+
         return [
             'xid' => $dto->xid,
             'disbursement_no' => $dto->disbursement_no,
             'total_amount' => (float) $totalAmount,
-            'status_id' => $dto->status_id,
+            'status_id' => $statusId,
             'status' => $dto->status,
             'notes' => $dto->disbursement_relation->revision_notes,
             'created_at' => ($createdAt) ? unix_timestamp($createdAt) : $createdAt,
