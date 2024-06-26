@@ -13,7 +13,7 @@ final class PlafondDisbursementStatusEnum extends Enum
     public const APPROVE = 31;
     public const REJECT = 32;
 
-    public const APPROVE_CORE = 'SELESAI';
+    public const APPROVE_CORE = ['SELESAI', 'TELAH DICAIRKAN'];
 
     public const ALL_TAB = [
         self::SUBMIT,

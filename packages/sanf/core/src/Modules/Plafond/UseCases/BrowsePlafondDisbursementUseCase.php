@@ -74,7 +74,7 @@ final class BrowsePlafondDisbursementUseCase implements ApplicationServiceInterf
             $plafondDisbursementsCore = $plafondDisbursementsCoreCollection->where('disbursementNo', '=', $item->disbursement_no)->first();
 
             $disbursement = $item;
-            if ($plafondDisbursementsCore && $plafondDisbursementsCore->status === 'SELESAI') {
+            if ($plafondDisbursementsCore && in_array($plafondDisbursementsCore->status, PlafondDisbursementStatusEnum::APPROVE_CORE)) {
                 $approveId = PlafondDisbursementStatusEnum::APPROVE;
                 $approveStatus = (new PlafondDisbursementStatusEnum($approveId));
                 $disbursement->status_id = $approveStatus->getValue();
