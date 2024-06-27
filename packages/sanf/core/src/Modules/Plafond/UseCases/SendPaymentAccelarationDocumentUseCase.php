@@ -2,53 +2,41 @@
 
 namespace Sanf\Core\Modules\Plafond\UseCases;
 
-use Carbon\Carbon;
 use Dompdf\Dompdf;
+use NbsPhp\Core\Exceptions\UserNotFoundException;
+use NbsPhp\Core\Repositories\UserRepositoryInterface;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\Plafond\Exceptions\PaymentAccDocumentNotFoundException;
 use Sanf\Core\Modules\Plafond\Jobs\SendEmailPaymentAccelarationDocumentJob;
-use Sanf\Core\Modules\Plafond\Repositories\PaymentAccelarationDocumentRepositoryInterface;
-use Sanf\Core\Modules\User\Exceptions\ProfileNotFoundException;
-use Sanf\Core\Modules\User\Repositories\ProfileRepositoryInterface;
 
 final class SendPaymentAccelarationDocumentUseCase implements ApplicationServiceInterface
 {
-    private $coreClientRepository;
-    private $paymentAccDocumentRepositoryInterface;
+    private $userRepository;
 
     public function __construct(
-        PaymentAccelarationDocumentRepositoryInterface $paymentAccDocumentRepositoryInterface,
-        ProfileRepositoryInterface $coreClientRepository
+        UserRepositoryInterface $userRepository
     ) {
-        $this->coreClientRepository = $coreClientRepository;
-        $this->paymentAccDocumentRepositoryInterface = $paymentAccDocumentRepositoryInterface;
+        $this->userRepository = $userRepository;
     }
 
     public function execute($dto = null)
     {
-        /** @var PlafondDisbursementFormRequest $formRequest */
-        $userGuzzleEntity = $this->coreClientRepository->findById($dto->clientId);
-        if (is_null($userGuzzleEntity)) {
-            throw new ProfileNotFoundException("User {$dto->clientId} not found");
-        }
 
-        $paymentAccDocumentEloquent = $this->paymentAccDocumentRepositoryInterface->findByPlafondId($dto->plafondId);
-
-        if (is_null($paymentAccDocumentEloquent)) {
-            throw new PaymentAccDocumentNotFoundException();
+        $user = $this->userRepository->findById($dto->userId);
+        if (!$user) {
+            throw new UserNotFoundException();
         }
 
         $pdfFile = $this->generateFile([
-            'company' => $paymentAccDocumentEloquent->company ?? 'NO NAME',
-            'bowheer' => $paymentAccDocumentEloquent->bowheer ?? 'NO NAME',
-            'document_no' => $paymentAccDocumentEloquent->document_no,
-            'document_date' => Carbon::parse($paymentAccDocumentEloquent->document_date)->locale('id_ID')->isoFormat('DD MMMM YYYY'),
-            'first_signer_company' => $paymentAccDocumentEloquent->first_signer_company ?? $paymentAccDocumentEloquent->company,
-            'first_signer_name' => $paymentAccDocumentEloquent->first_signer_name,
-            'first_signer_position' => $paymentAccDocumentEloquent->first_signer_position,
-            'second_signer_company' => $paymentAccDocumentEloquent->second_signer_company ?? 'NO NAME',
-            'second_signer_name' => $paymentAccDocumentEloquent->second_signer_name,
-            'second_signer_position' => $paymentAccDocumentEloquent->second_signer_position,
+            'company' => 'PIHAK PERTAMA (PT)',
+            'bowheer' => 'PIHAK KEDUA (PT)',
+            'document_no' => 'NOMOR SURAT',
+            'document_date' => 'TANGGAL SURAT',
+            'first_signer_company' => 'PIHAK PERTAMA (PT)',
+            'first_signer_name' => 'PEJABAT PIHAK PERTAMA',
+            'first_signer_position' => 'JABATAN PIHAK PERTAMA',
+            'second_signer_company' => 'PIHAK KEDUA (PT)',
+            'second_signer_name' => 'PEJABAT PIHAK KEDUA',
+            'second_signer_position' => 'JABATAN PIHAK KEDUA',
         ]);
 
         $tempFilePath = tempnam(sys_get_temp_dir(), 'pdf');
@@ -56,11 +44,11 @@ final class SendPaymentAccelarationDocumentUseCase implements ApplicationService
 
         $payload = (object) [
             'tempFile' => $tempFilePath,
-            'company' => $paymentAccDocumentEloquent->company,
-            'bowheer' => $paymentAccDocumentEloquent->bowher,
-            'plafondId' => $paymentAccDocumentEloquent->plafond_id,
+            'company' => 'PIHAK PERTAMA (PT)',
+            'bowheer' => 'PIHAK KEDUA (PT)',
+            'plafondId' => 'PLAFOND NO',
         ];
-        dispatch(new SendEmailPaymentAccelarationDocumentJob($userGuzzleEntity->getEmail(), $payload));
+        dispatch(new SendEmailPaymentAccelarationDocumentJob($user->username, $payload));
 
         return true;
     }
