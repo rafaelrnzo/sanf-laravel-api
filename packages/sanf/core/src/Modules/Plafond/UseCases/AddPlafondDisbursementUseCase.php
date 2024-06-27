@@ -230,7 +230,7 @@ final class AddPlafondDisbursementUseCase implements ApplicationServiceInterface
             'invoiceCount' => count($invoicesInput),
             'totalAmount' => $formRequest->totalInvoiceAmount,
             'createdAt' => $disbursementModel->created_at,
-            'webPartnerUrl' => config('web-partner.base_url') . "/plafond/disbursements/{$disbursementXid}/submissions/{$submissionXid}",
+            'webPartnerUrl' => config('web-partner.base_url') . "plafond/disbursements/{$disbursementXid}/submissions/{$submissionXid}",
         ];
         $notificationContent = (object) [
             'userId' => $formRequest->userId,
