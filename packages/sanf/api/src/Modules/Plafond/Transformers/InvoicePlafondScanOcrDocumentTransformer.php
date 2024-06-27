@@ -10,7 +10,7 @@ final class InvoicePlafondScanOcrDocumentTransformer extends TransformerAbstract
     {
         return [
             'invoice_no' => $dto->invoiceNo,
-            'invoce_date' => $dto->invoiceDate,
+            'invoice_date' => $dto->invoiceDate,
             'invoice_amount' => $dto->invoiceAmount,
             'tax_amount' => $dto->taxAmount,
             'vat_amount' => $dto->vatAmount,
