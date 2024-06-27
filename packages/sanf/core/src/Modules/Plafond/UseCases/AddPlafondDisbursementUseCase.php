@@ -73,6 +73,7 @@ final class AddPlafondDisbursementUseCase implements ApplicationServiceInterface
             'customer_updated_at' => null,
             'admin_updated_at' => null,
             'version' => self::DEFAULT_VERSION,
+            'userId' => $formRequest->userId,
         ]);
 
         $allocationsInput = [];

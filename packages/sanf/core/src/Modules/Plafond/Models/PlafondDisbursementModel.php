@@ -38,6 +38,7 @@ class PlafondDisbursementModel extends AbstractModel
         'version',
         'created_at',
         'updated_at',
+        'user_id',
     ];
 
     public function disbursementRelation()
