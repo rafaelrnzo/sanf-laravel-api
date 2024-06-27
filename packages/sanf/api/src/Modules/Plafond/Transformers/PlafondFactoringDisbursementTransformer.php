@@ -57,6 +57,7 @@ final class PlafondFactoringDisbursementTransformer extends TransformerAbstract
                 ->transformWith(PlafondDisbursementFileMetadataTransformer::class)
                 ->serializeWith(ArraySerializer::class),
             'notes' => $dto->disbursement_relation->revision_notes,
+            'customer_review' => $dto->customer_review,
             'created_at' => unix_timestamp($dto->created_at),
             'updated_at' => unix_timestamp($dto->updated_at),
         ];
