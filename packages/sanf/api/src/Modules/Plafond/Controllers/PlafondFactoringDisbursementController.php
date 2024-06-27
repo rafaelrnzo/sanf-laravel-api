@@ -115,7 +115,7 @@ class PlafondFactoringDisbursementController extends RestApiController
             'allocations.*.is_default' => ['required', 'boolean'],
             'allocations.*.amount' => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
             'allocations.*.order_no' => ['required', 'integer'],
-            'payment_acc_document' => ['nullable', 'array', Rule::requiredIf($request->get('customer_review') === false)],
+            'payment_acc_document' => ['nullable', 'array'],
             'payment_acc_document.file_name' => ['nullable', 'string'],
             'payment_acc_document.origin_name' => ['nullable', 'string'],
             'other_document' => ['nullable', 'array'],
