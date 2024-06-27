@@ -40,5 +40,5 @@ return [
     'plafond.disbursement.status.REVISION' => 'Revisi',
     'plafond.disbursement.status.DONE' => 'Diterima Customer',
     'plafond.disbursement.status.REJECT' => 'Ditolak',
-    'plafond.disbursement.status.APPROVE' => 'Selesai',
+    'plafond.disbursement.status.APPROVE' => 'Disetujui',
 ];

@@ -4,6 +4,7 @@ namespace Sanf\Core\Modules\Plafond\Repositories;
 
 use NbsPhp\Core\Repositories\AbstractEloquentRepository;
 use Sanf\Core\Modules\Plafond\Exceptions\PlafondDisbursementNotFoundException;
+use Sanf\Core\Modules\Plafond\Exceptions\PlafondDisbursementSubmissionNotFoundException;
 use Sanf\Core\Modules\Plafond\Models\PlafondDisbursementAllocationModel;
 use Sanf\Core\Modules\Plafond\Models\PlafondDisbursementDocumentModel;
 use Sanf\Core\Modules\Plafond\Models\PlafondDisbursementInvoiceModel;
@@ -83,6 +84,22 @@ class PlafondDisbursementEloquentRepository extends AbstractEloquentRepository i
     public function createSubmission(array $request): PlafondDisbursementSubmissionModel
     {
         return $this->submissionModel->query()->create($request);
+    }
+
+    /**
+     * @param array $request
+     * @return PlafondDisbursementSubmissionModel
+     */
+    public function updateSubmission(int $id, array $request): PlafondDisbursementSubmissionModel
+    {
+        $submissionRecord = $this->submissionModel->query()->find($id);
+        if (is_null($submissionRecord)) {
+            throw new PlafondDisbursementSubmissionNotFoundException();
+        }
+
+        $submissionRecord->update($request);
+
+        return $submissionRecord;
     }
 
     /**

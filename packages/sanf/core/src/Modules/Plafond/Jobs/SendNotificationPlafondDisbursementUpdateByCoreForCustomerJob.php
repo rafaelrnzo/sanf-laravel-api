@@ -8,9 +8,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Sanf\Core\Modules\Notification\NotificationTypeEnum;
+use Sanf\Core\Modules\Plafond\Enums\PlafondDisbursementStatusEnum;
 use Sanf\Core\Modules\Plafond\UseCases\SendNotificationPlafondDisbursementForCustomerUseCase;
 
-class SendNotificationPlafondDisbursementSubmittedForCustomerJob implements ShouldQueue
+class SendNotificationPlafondDisbursementUpdateByCoreForCustomerJob implements ShouldQueue
 {
     use InteractsWithQueue;
     use Queueable;
@@ -30,8 +31,17 @@ class SendNotificationPlafondDisbursementSubmittedForCustomerJob implements Shou
 
     public function handle(SendNotificationPlafondDisbursementForCustomerUseCase $useCase)
     {
+        if ($this->dto->statusId === PlafondDisbursementStatusEnum::APPROVE) {
+            $title = __('Pencairan Plafond Berhasil');
+            $subtitle = __('Sukses pencairan plafond');
+            $body = "<span>Pengajuan percepatan pembayaran atas nama <b>{$this->dto->client}</b> telah <b>disetujui</b> oleh SANFIND</span>";
+        } else {
+            $title = __('Pencairan Plafond Anda ditolak');
+            $subtitle = __('Gagal pencairan plafond');
+            $body = "<span>Pengajuan percepatan pembayaran atas nama <b>{$this->dto->client}</b> telah <b>ditolak</b> oleh SANFIND</span>";
+        }
         $webPartnerUrl = config('web-partner.base_url') . "plafond/disbursements/{$this->dto->disbursementXid}/submissions/{$this->dto->submissionXid}";
-        $body = "<span><b>{$this->dto->client}</b> telah melakukan pengajuan dan membutuhkan review Anda. Periksa sekarang!</span>";
+
         $notificationData = [
             'xid' => nano_id(),
             'notifiable_type' => 'bowheer_id',
@@ -42,8 +52,8 @@ class SendNotificationPlafondDisbursementSubmittedForCustomerJob implements Shou
 
         $payloadNotification = [
             'xid' => nano_id(),
-            'title' => __('Pengajuan Pencairan Plafond'),
-            'subtitle' => __('Pengajuan Pencairan plafond'),
+            'title' => $title,
+            'subtitle' => $subtitle,
             'body' => strip_tags($body),
             'type' => (string) NotificationTypeEnum::INFO,
             'screen' => '',

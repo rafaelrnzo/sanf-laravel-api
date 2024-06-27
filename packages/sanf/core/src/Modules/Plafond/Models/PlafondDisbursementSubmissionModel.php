@@ -28,6 +28,7 @@ class PlafondDisbursementSubmissionModel extends AbstractModel
         'version',
         'created_at',
         'updated_at',
+        'revision_notes',
         'user_updated_by',
     ];
 

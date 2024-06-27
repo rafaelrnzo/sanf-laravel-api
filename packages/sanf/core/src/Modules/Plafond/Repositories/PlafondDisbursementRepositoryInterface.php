@@ -35,6 +35,12 @@ interface PlafondDisbursementRepositoryInterface
 
     /**
      * @param array $request
+     * @return PlafondDisbursementSubmissionModel
+     */
+    public function updateSubmission(int $id, array $request): PlafondDisbursementSubmissionModel;
+
+    /**
+     * @param array $request
      * @return PlafondDisbursementAllocationModel
      */
     public function createAllocation(array $request): PlafondDisbursementAllocationModel;

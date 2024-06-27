@@ -2,7 +2,6 @@
 
 namespace Sanf\Core\Modules\Plafond\UseCases;
 
-use Carbon\Carbon;
 use Firebase\Auth\Token\Exception\InvalidToken;
 use Illuminate\Database\QueryException;
 use Kreait\Firebase\Exception\MessagingException;
@@ -10,9 +9,8 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use NbsPhp\Notification\Repositories\UserNotificationRepositoryInterface;
 use NbsPhp\Notification\Services\PushNotificationServiceInterface;
 use Sanf\Core\Modules\Notification\Exceptions\NotificationInvalidException;
-use Sanf\Core\Modules\Notification\NotificationTypeEnum;
 
-class SendNotificationPlafondDisbursementSubmittedForClientUseCase implements ApplicationServiceInterface
+class SendNotificationPlafondDisbursementForClientUseCase implements ApplicationServiceInterface
 {
     private $userNotificationRepository;
     private $pushNotificationService;
@@ -25,21 +23,15 @@ class SendNotificationPlafondDisbursementSubmittedForClientUseCase implements Ap
         $this->pushNotificationService = $pushNotificationService;
     }
 
-    public function execute($userId = null)
+    public function execute($dto = null)
     {
-        $data = [
-            'xid' => nano_id(),
-            'title' => __('Pengajuan Anda Berhasil'),
-            'subtitle' => __('Sukses pengajuan pencairan plafond'),
-            'body' => __('Pengajuan pencairan plafond Anda telah berhasil dikirim dan sedang dalam proses.'),
-            'type' => (string) NotificationTypeEnum::INFO,
-            'screen' => '',
-            'published_at' => Carbon::now(),
-            'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
-        ];
+        $userId = $dto['userId'] ?? null;
+        $data = $dto['payload'];
 
-        // send notification
-        // TODO create self service of send notification using event service
+        if (is_null($userId)) {
+            return;
+        }
+
         $fcmTokens = $this->userNotificationRepository->getFcmTokens($userId);
 
         try {

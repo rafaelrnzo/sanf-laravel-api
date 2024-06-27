@@ -2,18 +2,16 @@
 
 namespace Sanf\Core\Modules\Plafond\UseCases;
 
-use Carbon\Carbon;
 use Firebase\Auth\Token\Exception\InvalidToken;
 use Illuminate\Database\QueryException;
 use Kreait\Firebase\Exception\MessagingException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use NbsPhp\Notification\Services\PushNotificationServiceInterface;
 use Sanf\Core\Modules\Notification\Exceptions\NotificationInvalidException;
-use Sanf\Core\Modules\Notification\NotificationTypeEnum;
 use Sanf\Dashboard\Modules\Notification\Repositories\NotificationEloquentRepository;
 use Sanf\Dashboard\Modules\User\Repositories\UserEloquentRepository;
 
-class SendNotificationPlafondDisbursementSubmittedForCustomerUseCase implements ApplicationServiceInterface
+class SendNotificationPlafondDisbursementForCustomerUseCase implements ApplicationServiceInterface
 {
     private $userDashboardRepository;
     private $notificationDashboardRepository;
@@ -31,15 +29,8 @@ class SendNotificationPlafondDisbursementSubmittedForCustomerUseCase implements 
 
     public function execute($dto = null)
     {
-        $webPartnerUrl = config('web-partner.base_url') . "plafond/disbursements/{$dto->disbursementXid}/submissions/{$dto->submissionXid}";
-        $body = "<span><b>{$dto->client}</b> telah melakukan pengajuan dan membutuhkan review Anda. Periksa sekarang!</span>";
-        $notificationData = [
-            'xid' => nano_id(),
-            'notifiable_type' => 'bowheer_id',
-            'notifiable_id' => $dto->bowheerId,
-            'body' => $body,
-            'url' => "{$webPartnerUrl}",
-        ];
+        $notificationData = $dto['notificationData'];
+        $payloadNotification = $dto['payloadNotification'];
 
         try {
             $this->notificationDashboardRepository->create($notificationData);
@@ -50,18 +41,7 @@ class SendNotificationPlafondDisbursementSubmittedForCustomerUseCase implements 
             throw $exception;
         }
 
-        $user = $this->userDashboardRepository->findUserAuthByBowheerId($dto->bowheerId);
-
-        $payloadNotification = [
-            'xid' => nano_id(),
-            'title' => __('Pengajuan Pencairan Plafond'),
-            'subtitle' => __('Pengajuan Pencairan plafond'),
-            'body' => strip_tags($body),
-            'type' => (string) NotificationTypeEnum::INFO,
-            'screen' => '',
-            'published_at' => Carbon::now(),
-            'click_action' => "url:{$webPartnerUrl}",
-        ];
+        $user = $this->userDashboardRepository->findUserAuthByBowheerId($dto['bowheerId']);
 
         try {
             $this->pushNotificationService->sendToDevice($user->fcmToken, $payloadNotification);

@@ -18,6 +18,7 @@ Route::group(['prefix' => 'v1/external', 'middleware' => ['basic-auth-config:cor
     Route::get('user-delete-accounts', ['as' => 'user-delete-accounts.browse', 'uses' => 'User\Controllers\UserAuthLogControllerByExternal@getBrowse']);
     Route::post('user-delete-accounts/{xid}/approve', ['as' => 'user-delete-accounts.approve', 'uses' => 'User\Controllers\UserAuthLogControllerByExternal@postApprove']);
     Route::post('user-delete-accounts/{xid}/reject', ['as' => 'user-delete-accounts.reject', 'uses' => 'User\Controllers\UserAuthLogControllerByExternal@postReject']);
+    Route::post('plafonds/disbursements', ['as' => 'plafond.disbursement.update', 'uses' => 'Plafond\Controllers\PlafondDisbursementController@update']);
 
     Route::post('users', ['as' => 'users.add', 'uses' => 'User\Controllers\CoreAccountController@addByScanina']);
     Route::post('users/availabilities', ['as' => 'users.availabilities', 'uses' => 'User\Controllers\CoreAccountController@browseByScanina']);
