@@ -72,7 +72,7 @@ final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterf
         }
 
         $disbursementData = $plafondDisbursements[0];
-        if ($disbursementData->status_id === PlafondDisbursementStatusEnum::REVISION) {
+        if ($disbursementData->status_id !== PlafondDisbursementStatusEnum::REVISION) {
             throw new PlafondDisbursementIsNotRevisionException();
         }
 
@@ -184,6 +184,14 @@ final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterf
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => null,
             'version' => $version,
+            'user_updated_by' => json_encode([
+                'source' => 'client',
+                'user' => [
+                    'id' => $userGuzzleEntity->getCustomerId(),
+                    'name' => $userGuzzleEntity->getFullName(),
+                    'email' => $userGuzzleEntity->getEmail(),
+                ],
+            ]),
         ]);
 
         foreach ($allocationsInput as $allocation) {
