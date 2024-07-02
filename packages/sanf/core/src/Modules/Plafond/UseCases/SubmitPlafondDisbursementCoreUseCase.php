@@ -100,12 +100,12 @@ final class SubmitPlafondDisbursementCoreUseCase implements ApplicationServiceIn
     public function mapInvoices(array $invoices): array
     {
         return array_map(function ($invoice) {
-            $totalAmount = ($invoice->total_amount + $invoice->vat_amount + $invoice->other_amount) - ($invoice->tax_amount + $invoice->backharge_amount);
+            $totalAmount = ($invoice->invoice_amount + $invoice->vat_amount + $invoice->other_amount) - ($invoice->tax_amount + $invoice->backharge_amount);
 
             return (object) [
                 'invc_number' => $invoice->document_no,
                 'invc_date' => $invoice->document_date,
-                'invc_amount' => (float) $invoice->total_amount,
+                'invc_amount' => (float) $invoice->invoice_amount,
                 'pph23_amount' => (float) $invoice->tax_amount,
                 'ppn_amount' => (float) $invoice->vat_amount,
                 'backharge_amount' => (float) $invoice->backharge_amount,

@@ -10,17 +10,6 @@ final class PlafondFactoringDisbursementTransformer extends TransformerAbstract
 {
     public function transform($dto)
     {
-        $totalAmount = 0;
-        if ($dto->client_amount > 0) {
-            $totalAmount = $dto->client_amount;
-        }
-        if ($dto->customer_amount > 0) {
-            $totalAmount = $dto->customer_amount;
-        }
-        if ($dto->admin_amount > 0) {
-            $totalAmount = $dto->admin_amount;
-        }
-
         $paymentAccDocument = null;
         if (is_null($dto->disbursement_relation->payment_acc_doc_path) === false) {
             $paymentAccDocument = (object) [
@@ -38,11 +27,17 @@ final class PlafondFactoringDisbursementTransformer extends TransformerAbstract
             ];
         }
 
+        $totalAmount = 0;
+        foreach ($dto->disbursement_relation->invoices_relation as $invoice) {
+            $totalInvoiceAmount = ($invoice->invoice_amount + $invoice->vat_amount + $invoice->other_amount) - ($invoice->tax_amount + $invoice->backharge_amount);
+            $totalAmount += $totalInvoiceAmount;
+        }
+
         return [
             'bouwheer' => fractal($dto)
                 ->transformWith(BowheerTransformer::class)
                 ->serializeWith(ArraySerializer::class),
-            'total_amount' => $totalAmount,
+            'total_amount' => (float) $totalAmount,
             'status' => fractal($dto)
                 ->transformWith(PlafondDisbursementStatusTransformer::class)
                 ->serializeWith(ArraySerializer::class),

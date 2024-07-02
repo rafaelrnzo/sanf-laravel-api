@@ -10,6 +10,8 @@ final class PlafondDisbursementInvoiceTransformer extends TransformerAbstract
 {
     public function transform($dto)
     {
+        $totalAmount = ($dto->invoice_amount + $dto->vat_amount + $dto->other_amount) - ($dto->tax_amount + $dto->backharge_amount);
+
         return [
             'photos' => fractal($dto->photos_relation)
                 ->transformWith(PlafondDisbursementFileMetadataTransformer::class)
@@ -24,7 +26,8 @@ final class PlafondDisbursementInvoiceTransformer extends TransformerAbstract
             'vat_amount' => (float) $dto->vat_amount,
             'backharge_amount' => (float) $dto->backharge_amount,
             'other_amount' => (float) $dto->other_amount,
-            'total_amount' => (float) $dto->total_amount,
+            'total_amount' => (float) $totalAmount,
+            'sales_amount' => $dto->sales_amount ?? (float) $totalAmount,
             'order_no' => $dto->order_no,
             'due_at' => ($dto->due_at) ? Carbon::parse($dto->due_at)->format('Y-m-d') : null,
         ];
