@@ -45,7 +45,6 @@ class BrowseFinancingApplicationByUserService implements ApplicationServiceInter
         }
 
         $coreData = collect([]);
-        $applicationCodes = [];
         try {
             $result = $this->client->browseFinancingApplication($user->username, $dto->xid);
             $resultMapping = array_map(function ($data) {
@@ -62,34 +61,10 @@ class BrowseFinancingApplicationByUserService implements ApplicationServiceInter
             }, $result['data']);
 
             $coreData = collect($resultMapping);
-            $applicationCodes = $coreData->pluck('application_code')->toArray();
         } catch (\Exception $exception) {
             report($exception);
             Log::warning('Core Exception');
         }
-
-        $result = $this->financingApplicationRepository->query(
-            $this->financingSpecificationFactory->paginateByUser(
-                $dto->userId,
-                $dto->xid,
-                $dto->skip,
-                $dto->limit,
-                $dto->sortBy,
-                $dto->keyword
-            )
-        );
-        $internalData = array_map(function ($data) {
-            return (object) [
-                'xid' => $data->xid,
-                'application_code' => $data->application_code,
-                'status_id' => $data->status->id,
-                'status_name' => $data->status->name,
-                'financing_object_count' => $data->total_object ?? count($data->objects),
-                'financing_facility_name' => optional($data->facility)->name,
-                'financing_method_name' => optional($data->method)->name,
-                'created_at' => $data->created_at,
-            ];
-        }, $result);
 
         $total = $this->financingApplicationRepository->size(
             $this->financingSpecificationFactory->paginateByUser(
@@ -102,19 +77,37 @@ class BrowseFinancingApplicationByUserService implements ApplicationServiceInter
             )
         );
 
-        $internalFilterData = array_filter($internalData, function ($data) use ($applicationCodes) {
-            return !in_array($data->application_code, $applicationCodes);
-        });
+        $result = $this->financingApplicationRepository->query(
+            $this->financingSpecificationFactory->paginateByUser(
+                $dto->userId,
+                $dto->xid,
+                $dto->skip,
+                $dto->limit,
+                $dto->sortBy,
+                $dto->keyword
+            )
+        );
 
-        $mergeData = collect($coreData)->merge($internalFilterData)->sortByDesc('created_at');
+        $mappingData = array_map(function ($data) use ($coreData) {
+            $core = $coreData->where('application_code', '=', $data->application_code)->first();
 
-        $totalCoreData = $coreData->count();
+            return (object) [
+                'xid' => $data->xid,
+                'application_code' => $data->application_code,
+                'status_id' => ($core) ? $core->status_id : $data->status->id,
+                'status_name' => ($core) ? $core->status_name : $data->status->name,
+                'financing_object_count' => $data->total_object ?? count($data->objects),
+                'financing_facility_name' => optional($data->facility)->name,
+                'financing_method_name' => optional($data->method)->name,
+                'created_at' => $data->created_at,
+            ];
+        }, $result);
 
         return (object) [
-            'data' => $mergeData,
+            'data' => collect($mappingData)->sortByDesc('created_at'),
             'paginate' => (object) [
-                'total' => (int) $total + $totalCoreData,
-                'count' => count($mergeData),
+                'total' => (int) $total,
+                'count' => count($mappingData),
                 'skip' => (int) $dto->skip,
                 'limit' => (int) $dto->limit,
                 'sort_by' => $dto->sortBy,
