@@ -2,6 +2,7 @@
 
 namespace Sanf\Core\Modules\Plafond\UseCases;
 
+use Carbon\Carbon;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Plafond\Dtos\PlafondDisbursementCoreFormRequest;
 use Sanf\Core\Modules\Plafond\Dtos\PlafondDisbursementFormRequest;
@@ -99,6 +100,8 @@ final class SubmitPlafondDisbursementCoreUseCase implements ApplicationServiceIn
     public function mapInvoices(array $invoices): array
     {
         return array_map(function ($invoice) {
+            $totalAmount = ($invoice->total_amount + $invoice->vat_amount + $invoice->other_amount) - ($invoice->tax_amount + $invoice->backharge_amount);
+
             return (object) [
                 'invc_number' => $invoice->document_no,
                 'invc_date' => $invoice->document_date,
@@ -107,6 +110,9 @@ final class SubmitPlafondDisbursementCoreUseCase implements ApplicationServiceIn
                 'ppn_amount' => (float) $invoice->vat_amount,
                 'backharge_amount' => (float) $invoice->backharge_amount,
                 'other_amount' => (float) $invoice->other_amount,
+                'invc_due' => ($invoice->due_at) ? Carbon::parse($invoice->due_at)->format('Y-m-d') : null,
+                'total_amount' => (float) $totalAmount,
+                'sales_amount' => null,
             ];
         }, $invoices);
     }
