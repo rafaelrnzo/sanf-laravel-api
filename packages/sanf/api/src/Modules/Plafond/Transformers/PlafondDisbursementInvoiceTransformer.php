@@ -2,6 +2,7 @@
 
 namespace Sanf\Api\Modules\Plafond\Transformers;
 
+use Carbon\Carbon;
 use League\Fractal\TransformerAbstract;
 use Spatie\Fractalistic\ArraySerializer;
 
@@ -25,6 +26,7 @@ final class PlafondDisbursementInvoiceTransformer extends TransformerAbstract
             'other_amount' => (float) $dto->other_amount,
             'total_amount' => (float) $dto->total_amount,
             'order_no' => $dto->order_no,
+            'due_at' => ($dto->due_at) ? Carbon::parse($dto->due_at)->format('Y-m-d') : null,
         ];
     }
 }

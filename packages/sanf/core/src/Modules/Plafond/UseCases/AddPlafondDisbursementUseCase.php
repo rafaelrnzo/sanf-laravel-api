@@ -113,6 +113,7 @@ final class AddPlafondDisbursementUseCase implements ApplicationServiceInterface
                 'other_amount' => $invoice->otherAmount,
                 'total_amount' => $invoice->totalAmount,
                 'order_no' => $invoice->orderNo,
+                'due_at' => $invoice->dueAt,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => null,
                 'version' => self::DEFAULT_VERSION,

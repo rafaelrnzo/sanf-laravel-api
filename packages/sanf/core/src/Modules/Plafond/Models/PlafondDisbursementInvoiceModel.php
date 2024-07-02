@@ -28,6 +28,7 @@ class PlafondDisbursementInvoiceModel extends AbstractModel
         'other_amount',
         'total_amount',
         'order_no',
+        'due_at',
         'version',
         'created_at',
         'updated_at',

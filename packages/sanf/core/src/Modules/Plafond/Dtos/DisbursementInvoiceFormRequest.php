@@ -18,4 +18,5 @@ final class DisbursementInvoiceFormRequest extends CamelCaseDataTransferObject
     public float $otherAmount;
     public float $totalAmount;
     public int $orderNo;
+    public ?string $dueAt;
 }
