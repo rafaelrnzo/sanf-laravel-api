@@ -30,17 +30,20 @@ final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterf
     private $disbursementRepository;
     private $userNotificationRepository;
     private $pushNotificationService;
+    private $submitToCoreUseCase;
 
     public function __construct(
         PlafondDisbursementRepositoryInterface $disbursementRepository,
         ProfileRepositoryInterface $coreClientRepository,
         UserNotificationRepositoryInterface $userNotificationRepository,
-        PushNotificationServiceInterface $pushNotificationService
+        PushNotificationServiceInterface $pushNotificationService,
+        SubmitPlafondDisbursementCoreUseCase $submitToCoreUseCase
     ) {
         $this->coreClientRepository = $coreClientRepository;
         $this->disbursementRepository = $disbursementRepository;
         $this->userNotificationRepository = $userNotificationRepository;
         $this->pushNotificationService = $pushNotificationService;
+        $this->submitToCoreUseCase = $submitToCoreUseCase;
     }
 
     /**
@@ -217,6 +220,16 @@ final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterf
             $document['submission_id'] = $submissionModel->id;
 
             $this->disbursementRepository->createDocument($document);
+        }
+
+        if ($formRequest->customerReview === false) {
+            $coreFormRequest = (object) [
+                'userId' => $formRequest->userId,
+                'clientId' => $formRequest->clientId,
+                'plafondId' => $formRequest->plafondId,
+                'disbursementId' => $disbursementModel->xid,
+            ];
+            $submitToCore = $this->submitToCoreUseCase->execute($coreFormRequest);
         }
 
         $mailContent = (object) [
