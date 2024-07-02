@@ -33,7 +33,7 @@ final class BrowsePlafondFactoringService extends PlafondByUserService implement
                         'customer_id' => $customer->getCustomerId(),
                     ];
                 }, $item->getCustomers()),
-                'customerReview' => $item->getCustomerReview() == 'Y',
+                'customerReview' => $item->getCustomerReview() === 'Y',
                 'expiredAt' => $item->getExpiredAt(),
             ];
         });

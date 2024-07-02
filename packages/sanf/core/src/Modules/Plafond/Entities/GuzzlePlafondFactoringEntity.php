@@ -43,7 +43,7 @@ final class GuzzlePlafondFactoringEntity
         return $this->attributes['P_TAMBAHAN'] ?? '0';
     }
 
-    public function getCustomerReview(): bool
+    public function getCustomerReview(): string
     {
         return $this->attributes['CUSTOMER_REVIEW'];
     }
