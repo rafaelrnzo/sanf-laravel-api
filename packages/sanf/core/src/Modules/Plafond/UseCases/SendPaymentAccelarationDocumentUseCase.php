@@ -27,16 +27,30 @@ final class SendPaymentAccelarationDocumentUseCase implements ApplicationService
         }
 
         $pdfFile = $this->generateFile([
-            'company' => 'PIHAK PERTAMA (PT)',
-            'bowheer' => 'PIHAK KEDUA (PT)',
-            'document_no' => 'NOMOR SURAT',
-            'document_date' => 'TANGGAL SURAT',
-            'first_signer_company' => 'PIHAK PERTAMA (PT)',
-            'first_signer_name' => 'PEJABAT PIHAK PERTAMA',
-            'first_signer_position' => 'JABATAN PIHAK PERTAMA',
-            'second_signer_company' => 'PIHAK KEDUA (PT)',
-            'second_signer_name' => 'PEJABAT PIHAK KEDUA',
-            'second_signer_position' => 'JABATAN PIHAK KEDUA',
+            'client' => '(PT) Pihak Pertama',
+            'customer' => '(PT) Pihak Kedua',
+            'customer_address' => 'Jl. Alamat Pihak Kedua',
+            'document_no' => 'Nomor Surat',
+            'document_date' => 'Tanggal Surat',
+            'first_signer_company' => '(PT) Pihak Pertama',
+            'first_signer_name' => 'Pejabat Pihak Pertama',
+            'first_signer_position' => 'Jabatan Pihak Pertama',
+            'second_signer_company' => '(PT) Pihak Kedua',
+            'second_signer_name' => 'Pejabat Pihak Kedua',
+            'second_signer_position' => 'Jabatan Pihak Kedua',
+            'invoices' => [
+                [
+                    'index' => '1.',
+                    'no' => 'xxxx-xxxx/xxxx/xxxx',
+                    'date' => 'dd/mm/yyyy',
+                    'amount' => 'Rp xxx.xxx,xx',
+                    'vat_amount' => 'Rp xxx.xxx,xx',
+                    'tax_amount' => 'Rp xxx.xxx,xx',
+                    'backharge_amount' => 'Rp xxx.xxx,xx',
+                    'total_amount' => 'Rp xxx.xxx,xx',
+                ],
+            ],
+            'total_amount' => 'Rp xxx.xxx,xx',
         ]);
 
         $tempFilePath = tempnam(sys_get_temp_dir(), 'pdf');
