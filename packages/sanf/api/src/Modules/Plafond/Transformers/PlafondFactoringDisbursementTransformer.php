@@ -37,7 +37,7 @@ final class PlafondFactoringDisbursementTransformer extends TransformerAbstract
             'bouwheer' => fractal($dto)
                 ->transformWith(BowheerTransformer::class)
                 ->serializeWith(ArraySerializer::class),
-            'total_amount' => (float) $totalAmount,
+            'total_amount' => (string) $totalAmount,
             'status' => fractal($dto)
                 ->transformWith(PlafondDisbursementStatusTransformer::class)
                 ->serializeWith(ArraySerializer::class),
