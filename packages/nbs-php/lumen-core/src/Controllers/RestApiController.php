@@ -32,6 +32,7 @@ class RestApiController extends AbstractController
                 $this->fallbackName($name)
             ));
         }
+        $response->headers->set('Content-Type', 'application/pdf');
 
         return $response;
     }
