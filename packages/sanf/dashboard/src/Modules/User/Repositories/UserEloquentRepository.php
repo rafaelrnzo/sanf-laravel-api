@@ -2,6 +2,7 @@
 
 namespace Sanf\Dashboard\Modules\User\Repositories;
 
+use Carbon\Carbon;
 use NbsPhp\Core\Repositories\AbstractEloquentRepository;
 use Sanf\Dashboard\Modules\User\Models\UserAuthModel;
 
@@ -21,6 +22,9 @@ class UserEloquentRepository extends AbstractEloquentRepository
             ->with([
                 'bindingAccount' => function ($query) use ($bowheerId) {
                     return $query->where('BowheerId', '=', $bowheerId);
+                },
+                'fcmTokens' => function ($query) {
+                    return $query->where('expiresAt', '>=', Carbon::now());
                 },
             ])
             ->has('bindingAccount')

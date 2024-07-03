@@ -8,6 +8,7 @@ use Kreait\Firebase\Exception\MessagingException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use NbsPhp\Notification\Services\PushNotificationServiceInterface;
 use Sanf\Core\Modules\Notification\Exceptions\NotificationInvalidException;
+use Sanf\Dashboard\Modules\Notification\Repositories\FcmNotificationEloquentRepository;
 use Sanf\Dashboard\Modules\Notification\Repositories\NotificationEloquentRepository;
 use Sanf\Dashboard\Modules\User\Repositories\UserEloquentRepository;
 
@@ -15,15 +16,18 @@ class SendNotificationPlafondDisbursementForCustomerUseCase implements Applicati
 {
     private $userDashboardRepository;
     private $notificationDashboardRepository;
+    private $fcmNotificationRepository;
     private $pushNotificationService;
 
     public function __construct(
         UserEloquentRepository $userDashboardRepository,
         NotificationEloquentRepository $notificationEloquentRepository,
+        FcmNotificationEloquentRepository $fcmNotificationEloquentRepository,
         PushNotificationServiceInterface $pushNotificationService
     ) {
         $this->userDashboardRepository = $userDashboardRepository;
         $this->notificationDashboardRepository = $notificationEloquentRepository;
+        $this->fcmNotificationRepository = $fcmNotificationEloquentRepository;
         $this->pushNotificationService = $pushNotificationService;
     }
 
@@ -42,13 +46,20 @@ class SendNotificationPlafondDisbursementForCustomerUseCase implements Applicati
         }
 
         $user = $this->userDashboardRepository->findUserAuthByBowheerId($dto['bowheerId']);
+        $tokens = array_map(function ($fcmSession) {
+            return $fcmSession->token;
+        }, $user->fcm_tokens ?? []);
 
-        try {
-            $this->pushNotificationService->sendToDevice($user->fcmToken, $payloadNotification);
-        } catch (InvalidToken $exception) {
-            report($exception);
-        } catch (MessagingException $exception) {
-            report($exception);
+        foreach (array_unique($tokens) as $token) {
+            try {
+                $this->pushNotificationService->sendToDevice($token, $payloadNotification);
+            } catch (InvalidToken $exception) {
+                $this->fcmNotificationRepository->deleteByToken($token);
+                report($exception);
+            } catch (MessagingException $exception) {
+                $this->fcmNotificationRepository->deleteByToken($token);
+                report($exception);
+            }
         }
     }
 }

@@ -14,4 +14,9 @@ class UserAuthModel extends AbstractModel
     {
         return $this->belongsTo(CustomerBindingModel::class, 'id', 'userAuthId');
     }
+
+    public function fcmTokens()
+    {
+        return $this->hasMany(FcmNotificationTokenModel::class, 'userAuthId', 'id');
+    }
 }
