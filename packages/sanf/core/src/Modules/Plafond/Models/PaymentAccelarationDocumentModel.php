@@ -27,5 +27,6 @@ class PaymentAccelarationDocumentModel extends AbstractModel
         'filename',
         'path',
         'metadata',
+        'invoices',
     ];
 }

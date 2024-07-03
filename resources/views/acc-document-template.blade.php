@@ -102,7 +102,7 @@
             <p>
                 <span>Kepada Yth,<span><br /><span>{{ $content['customer'] }}<span><br /><span>{{ $content['customer_address'] }}</span>
             </p>
-            <p>Attn: {{ $content['customer']}}</p>
+            <p>Attn: {{ $content['client']}}</p>
             <p>Subject: Permohonan Percepatan Pembayaran melalui program Vendor Financing</p>
             <p>Dengan hormat,</p>
             <p>Bersama ini kami bermaksud mengajukan Permohonan Percepatan Pembayaran atas tagihan-tagihan kami ke {{ $content['customer'] }} melalui program supplier financing yang difasilitasi oleh PT Surya Artha Nusantara Finance (SANF) sebesar {{ $content['total_amount' ]}} dengan detail perincian sebagaimana tercantum di LAMPIRAN 1.</p>

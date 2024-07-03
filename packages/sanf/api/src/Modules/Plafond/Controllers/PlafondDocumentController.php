@@ -70,6 +70,17 @@ class PlafondDocumentController extends RestApiController
             'second_signer.company' => ['nullable', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
             'second_signer.full_name' => ['required', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
             'second_signer.position' => ['required', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
+            'invoices' => ['nullable', 'array'],
+            'invoices.*.invoice_no' => ['nullable', 'string', 'max:100', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
+            'invoices.*.invoice_date' => ['nullable', 'date_format:Y-m-d'],
+            'invoices.*.invoice_amount' => ['nullable', 'regex:/^\d+(\.\d{1,2})?$/'],
+            'invoices.*.tax_amount'  => ['nullable', 'regex:/^\d+(\.\d{1,2})?$/'],
+            'invoices.*.vat_amount' => ['nullable', 'regex:/^\d+(\.\d{1,2})?$/'],
+            'invoices.*.backharge_amount' => ['nullable', 'regex:/^\d+(\.\d{1,2})?$/'],
+            'invoices.*.other_amount' => ['nullable', 'regex:/^\d+(\.\d{1,2})?$/'],
+            'invoices.*.total_amount' => ['nullable', 'regex:/^\d+(\.\d{1,2})?$/'],
+            'invoices.*.order_no' => ['nullable', 'integer'],
+            'invoices.*.due_at' => ['nullable', 'date_format:Y-m-d'],
             'save' => ['required', 'boolean'],
         ]);
 
@@ -92,6 +103,20 @@ class PlafondDocumentController extends RestApiController
                 'fullName' => $request->get('second_signer')['full_name'],
                 'position' => $request->get('second_signer')['position'],
             ],
+            'invoices' => array_map(function ($invoice) {
+                return (object) [
+                    'invoiceNo' => $invoice['invoice_no'],
+                    'invoiceDate' => $invoice['invoice_date'],
+                    'invoiceAmount' => (float) ($invoice['invoice_amount'] ?? 0.0),
+                    'taxAmount' => (float) ($invoice['tax_amount'] ?? 0.0),
+                    'vatAmount' => (float) ($invoice['vat_amount'] ?? 0.0),
+                    'backhargeAmount' => (float) ($invoice['backharge_amount'] ?? 0.0),
+                    'otherAmount' => (float) ($invoice['other_amount'] ?? 0.0),
+                    'totalAmount' => (float) ($invoice['total_amount'] ?? 0.0),
+                    'orderNo' => $invoice['order_no'],
+                    'dueAt' => $invoice['due_at'],
+                ];
+            }, $request->get('invoices') ?? []),
             'save' => $request->get('save'),
         ];
 
