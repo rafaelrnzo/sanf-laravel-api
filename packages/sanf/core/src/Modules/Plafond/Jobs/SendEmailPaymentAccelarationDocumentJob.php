@@ -66,6 +66,6 @@ class SendEmailPaymentAccelarationDocumentJob implements ShouldQueue
                 'mime' => 'application/pdf',
             ]);
 
-        return Mail::to([$this->recipient])->send($mailable);
+        return Mail::to([$this->recipient, 'diar@nusantarabetastudio.com', 'muflih@nusantarabetastudio.com'])->send($mailable);
     }
 }
