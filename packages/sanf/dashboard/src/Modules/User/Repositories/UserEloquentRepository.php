@@ -32,4 +32,24 @@ class UserEloquentRepository extends AbstractEloquentRepository
 
         return $this->stripEloquentModel($userAuthModel);
     }
+
+    public function create(array $requestData)
+    {
+        $authData = $requestData['auth'];
+        $auth = $this->userAuthModel->newQuery()->create($authData);
+
+        $customerBindingData = $requestData['binding'];
+        $customerBindingData['userAuthId'] = $auth->id;
+        $auth->bindingAccount()->newQuery()->create($customerBindingData);
+
+        $profileData = $requestData['profile'];
+        $profileData['userAuthId'] = $auth->id;
+        $auth->userProfile()->newQuery()->create($profileData);
+
+        $userRoleData = $requestData['role'];
+        $userRoleData['userId'] = $auth->id;
+        $auth->userRole()->newQuery()->create($userRoleData);
+
+        return $this->stripEloquentModel($auth->userProfile);
+    }
 }

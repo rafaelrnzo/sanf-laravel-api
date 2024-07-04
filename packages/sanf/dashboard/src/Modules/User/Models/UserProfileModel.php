@@ -4,24 +4,21 @@ namespace Sanf\Dashboard\Modules\User\Models;
 
 use NbsPhp\Core\Models\AbstractModel;
 
-class CustomerBindingModel extends AbstractModel
+class UserProfileModel extends AbstractModel
 {
     const CREATED_AT = 'createdAt';
     const UPDATED_AT = 'updatedAt';
 
     protected $connection = 'dashboard_db';
 
-    protected $table = 'CustomerBinding';
+    protected $table = 'UserProfile';
 
     protected $fillable = [
-        'BowheerId',
-        'BowheerEmail',
-        'BowheerName',
-        'BowheerCode',
+        'xid',
         'userAuthId',
+        'fullName',
+        'email',
         'createdAt',
         'updatedAt',
     ];
-
-    public $incrementing = false;
 }
