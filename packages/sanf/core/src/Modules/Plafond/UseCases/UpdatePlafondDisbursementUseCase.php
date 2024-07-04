@@ -244,6 +244,7 @@ final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterf
             'totalAmount' => $formRequest->totalInvoiceAmount,
             'createdAt' => $disbursementModel->created_at,
             'webPartnerUrl' => config('web-partner.base_url') . "plafond/disbursements/{$disbursementModel->xid}/submissions/{$submissionXid}",
+            'customerReview' => $formRequest->customerReview,
         ];
         $notificationContent = (object) [
             'userId' => $formRequest->userId,
@@ -253,6 +254,7 @@ final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterf
             'bowheer' => $formRequest->bouwheer->name,
             'disbursementXid' => $disbursementModel->xid,
             'submissionXid' => $submissionXid,
+            'customerReview' => $formRequest->customerReview,
         ];
 
         event(new PlafondDisbursementSubmittedMailEvent($mailContent));

@@ -20,14 +20,16 @@ class SendNotificationPlafondDisbursementSubmittedListener
 
         dispatch(new SendNotificationPlafondDisbursementSubmittedForClientJob($content->userId));
 
-        $customerNotificationDto = (object) [
-            'clientId' => $content->clientId,
-            'client' => $content->client,
-            'bowheerId' => $content->bowheerId,
-            'bowheer' => $content->bowheer,
-            'disbursementXid' => $content->disbursementXid,
-            'submissionXid' => $content->submissionXid,
-        ];
-        dispatch(new SendNotificationPlafondDisbursementSubmittedForCustomerJob($customerNotificationDto));
+        if ($content->customerReview) {
+            $customerNotificationDto = (object) [
+                'clientId' => $content->clientId,
+                'client' => $content->client,
+                'bowheerId' => $content->bowheerId,
+                'bowheer' => $content->bowheer,
+                'disbursementXid' => $content->disbursementXid,
+                'submissionXid' => $content->submissionXid,
+            ];
+            dispatch(new SendNotificationPlafondDisbursementSubmittedForCustomerJob($customerNotificationDto));
+        }
     }
 }

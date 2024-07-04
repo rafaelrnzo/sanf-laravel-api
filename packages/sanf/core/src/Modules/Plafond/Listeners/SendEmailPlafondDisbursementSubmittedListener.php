@@ -26,17 +26,20 @@ class SendEmailPlafondDisbursementSubmittedListener
             'Total Nilai Invoice' => 'Rp. ' . number_format($content->totalAmount, 0, ',', '.'),
         ];
 
-        $customerPayload = [
-            'to' => $content->bowheer->name,
-            'url' => $content->webPartnerUrl,
-            'Nama Client' => $content->fullName,
-            'ID Pengajuan' => $content->disbursementNo,
-            'Tanggal Pengajuan' => date_localized($content->createdAt, '%d %B %Y'),
-            'Jumlah Invoice' => $content->invoiceCount,
-            'Total Invoice' => 'Rp. ' . number_format($content->totalAmount, 0, ',', '.'),
-        ];
-
         dispatch(new SendEmailPlafondDisbursementSubmittedForClientJob($clientPayload, [$content->email->client]));
-        dispatch(new SendEmailPlafondDisbursementSubmittedForCustomerJob($customerPayload, [$content->email->customer]));
+
+        if ($content->customerReview) {
+            $customerPayload = [
+                'to' => $content->bowheer->name,
+                'url' => $content->webPartnerUrl,
+                'Nama Client' => $content->fullName,
+                'ID Pengajuan' => $content->disbursementNo,
+                'Tanggal Pengajuan' => date_localized($content->createdAt, '%d %B %Y'),
+                'Jumlah Invoice' => $content->invoiceCount,
+                'Total Invoice' => 'Rp. ' . number_format($content->totalAmount, 0, ',', '.'),
+            ];
+
+            dispatch(new SendEmailPlafondDisbursementSubmittedForCustomerJob($customerPayload, [$content->email->customer]));
+        }
     }
 }
