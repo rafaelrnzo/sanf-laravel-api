@@ -8,18 +8,27 @@ use Illuminate\Support\Facades\Storage;
 use League\Flysystem\FileNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Plafond\Repositories\PaymentAccelarationDocumentRepositoryInterface;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 final class SavePaymentAccelarationDocumentUseCase implements ApplicationServiceInterface
 {
     private $paymentAccDocumentRepositoryInterface;
+    private $coreClient;
 
-    public function __construct(PaymentAccelarationDocumentRepositoryInterface $paymentAccDocumentRepositoryInterface)
-    {
+    public function __construct(
+        PaymentAccelarationDocumentRepositoryInterface $paymentAccDocumentRepositoryInterface,
+        SanfCoreApiClient $coreClient
+    ) {
         $this->paymentAccDocumentRepositoryInterface = $paymentAccDocumentRepositoryInterface;
+        $this->coreClient = $coreClient;
     }
 
     public function execute($dto = null)
     {
+        $coreResponse = $this->coreClient->getBowheer($dto->clientId, null, null, 1000, 1);
+        $bowheerCoreData = collect($coreResponse['data']) ?? null;
+        $bowheerCoreDataByName = $bowheerCoreData->where('BOWHEER_NAME', '=', $dto->bowheerName)->first();
+
         $invoices = [];
         $totalAmount = 0;
         foreach ($dto->invoices as $index => $invoice) {
@@ -39,7 +48,7 @@ final class SavePaymentAccelarationDocumentUseCase implements ApplicationService
         $pdfFile = $this->generateFile([
             'client' => $dto->companyName ?? '(PT) Pihak Pertama',
             'customer' => $dto->bowheerName ?? '(PT) Pihak Kedua',
-            'customer_address' => 'Jl. Alamat Pihak Kedua',
+            'customer_address' => $bowheerCoreDataByName['BOWHEER_ADDRESS'] ?? 'Jl. Alamat Pihak Kedua',
             'document_no' => $dto->documentNo ?? 'Nomor Surat',
             'document_date' => ($dto->documentDate) ? Carbon::parse($dto->documentDate)->locale('id_ID')->isoFormat('DD MMMM YYYY') : 'Tanggal Surat',
             'first_signer_company' => $dto->firstSigner->company ?? '(PT) Pihak Pertama',
@@ -90,6 +99,7 @@ final class SavePaymentAccelarationDocumentUseCase implements ApplicationService
             'path' => "{$directory}/{$filename}",
             'metadata' => json_encode($fileMetadata),
             'invoices' => json_encode($dto->invoices),
+            'bowheer_address' => $bowheerCoreDataByName['BOWHEER_ADDRESS'] ?? null,
         ];
 
         $paymentAccDocumentEloquent = $this->paymentAccDocumentRepositoryInterface->findByPlafondId($dto->plafondId);

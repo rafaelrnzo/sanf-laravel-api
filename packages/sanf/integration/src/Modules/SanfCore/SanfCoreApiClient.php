@@ -1352,4 +1352,18 @@ class SanfCoreApiClient
 
         return $response->json(true);
     }
+
+    public function getBowheer(string $clientId, string $bowheerName = null, string $bowheerEmail = null, int $limit = 100, int $page = 1)
+    {
+        $response = Request::route('bowheer.browse', $this->client)
+            ->queryParams([
+                'cust_id' => $clientId,
+                'bowheer_name' => $bowheerName,
+                'bowheer_email' => $bowheerEmail,
+                'limit' => $limit,
+                'page' => $page,
+            ])->send();
+
+        return $response->json(true);
+    }
 }

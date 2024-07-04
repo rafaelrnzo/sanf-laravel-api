@@ -28,5 +28,6 @@ class PaymentAccelarationDocumentModel extends AbstractModel
         'path',
         'metadata',
         'invoices',
+        'bowheer_address',
     ];
 }

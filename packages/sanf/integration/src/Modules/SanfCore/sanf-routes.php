@@ -42,6 +42,8 @@ Route::group(config('sanf-api.url'), [SanfCoreApiProcessor::class], function () 
     Route::post('plafond.disbursement.create', '/Plafond/Disburstment');
     Route::get('plafond.disbursement.browse', '/Plafond/Listpencairan');
 
+    Route::get('bowheer.browse', '/Plafond/Bowheerlist');
+
     Route::get('bank.account', '/Plafond/Bankaccount');
     Route::get('ocr.permission', '/Plafond/Ocrpermission');
 
