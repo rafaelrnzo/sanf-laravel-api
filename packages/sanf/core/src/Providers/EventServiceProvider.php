@@ -51,6 +51,8 @@ use Sanf\Core\Modules\Scanina\Listeners\SendEmailProductRentAddToCartListener;
 use Sanf\Core\Modules\Scanina\Listeners\SendEmailProductServiceAddToCartListener;
 use Sanf\Core\Modules\Scanina\Listeners\SendEmailProductSparePartAddToCartListener;
 use Sanf\Core\Modules\User\Listeners\LogSuccessfulLoginListener;
+use Sanf\Dashboard\Modules\User\Events\AccountBindingCreatedByCoreNotificationEvent;
+use Sanf\Dashboard\Modules\User\Listeners\SendEmailActivationAccountBindingByCoreListener;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -129,6 +131,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         PlafondDisbursementUpdateByCoreNotificationEvent::class => [
             SendNotificationPlafondDisbursementUpdateByCoreListener::class,
+        ],
+        AccountBindingCreatedByCoreNotificationEvent::class => [
+            SendEmailActivationAccountBindingByCoreListener::class,
         ],
     ];
 }

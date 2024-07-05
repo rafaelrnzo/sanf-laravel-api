@@ -50,6 +50,6 @@ class UserEloquentRepository extends AbstractEloquentRepository
         $userRoleData['userId'] = $auth->id;
         $auth->userRole()->newQuery()->create($userRoleData);
 
-        return $this->stripEloquentModel($auth->userProfile);
+        return $this->stripEloquentModel($auth);
     }
 }

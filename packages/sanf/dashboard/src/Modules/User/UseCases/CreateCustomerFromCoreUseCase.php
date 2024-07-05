@@ -2,9 +2,11 @@
 
 namespace Sanf\Dashboard\Modules\User\UseCases;
 
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Dashboard\Modules\Role\Repositories\RoleEloquentRepository;
+use Sanf\Dashboard\Modules\User\Events\AccountBindingCreatedByCoreNotificationEvent;
 use Sanf\Dashboard\Modules\User\Exceptions\AccountExistException;
 use Sanf\Dashboard\Modules\User\Repositories\CustomerBindingEloquentRepository;
 use Sanf\Dashboard\Modules\User\Repositories\UserEloquentRepository;
@@ -46,6 +48,7 @@ final class CreateCustomerFromCoreUseCase implements ApplicationServiceInterface
                 'xid' => $this->nanoIdAlphaNumberic(),
                 'statusId' => config('web-partner.user.status.pending_id'),
                 'entityTypeId' => $entityId,
+                'fullName' => $dto->name,
                 'username' => $dto->email,
                 'password' => $this->password(),
                 'createdAt' => $now,
@@ -75,7 +78,23 @@ final class CreateCustomerFromCoreUseCase implements ApplicationServiceInterface
             ],
         ];
 
-        return $this->userDashboardRepository->create($requestData);
+        $userAuth = $this->userDashboardRepository->create($requestData);
+
+        $expireInDays = config('web-partner.user.verification.expire_days');
+        $mailContent = (object) [
+            'fullName' => $dto->name,
+            'email' => $userAuth->username,
+            'expireInDays' => $expireInDays,
+            'token' => base64_encode(json_encode([
+                'xid' => $userAuth->xid,
+                'token' => hash_hmac('sha256', $userAuth->username, $userAuth->id),
+                'expires' => Carbon::now()->addDays($expireInDays)->getTimestamp(),
+            ])),
+        ];
+
+        event(new AccountBindingCreatedByCoreNotificationEvent($mailContent));
+
+        return $userAuth;
     }
 
     public static function nanoIdAlphaNumberic(int $size = 5)
