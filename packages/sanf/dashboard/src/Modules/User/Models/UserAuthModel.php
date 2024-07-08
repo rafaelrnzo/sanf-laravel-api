@@ -7,7 +7,6 @@ use NbsPhp\Core\Models\AbstractModel;
 
 class UserAuthModel extends AbstractModel
 {
-
     use SoftDeletes;
 
     const CREATED_AT = 'createdAt';

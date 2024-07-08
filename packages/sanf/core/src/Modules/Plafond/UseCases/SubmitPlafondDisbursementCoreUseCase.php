@@ -51,13 +51,13 @@ final class SubmitPlafondDisbursementCoreUseCase implements ApplicationServiceIn
         if (!is_null($disbursementData->disbursement_relation->payment_acc_doc_path)) {
             $paymentAccDocument = (object) [
                 'percepatan_name' => $disbursementData->disbursement_relation->payment_acc_doc_origin_name,
-                'percepatah_path' => file_get_temp_url($disbursementData->disbursement_relation->payment_acc_doc_path),
+                'percepatan_path' => $disbursementData->disbursement_relation->payment_acc_doc_path,
             ];
         }
         if ($disbursementData->status_id === PlafondDisbursementStatusEnum::REVISION && !is_null($disbursementData->disbursement_relation->payment_acc_web_doc_path)) {
             $paymentAccDocument = (object) [
                 'percepatan_name' => $disbursementData->disbursement_relation->payment_acc_web_doc_origin_name,
-                'percepatan_path' => file_get_temp_url($disbursementData->disbursement_relation->payment_acc_web_doc_path),
+                'percepatan_path' => $disbursementData->disbursement_relation->payment_acc_web_doc_path,
             ];
         }
 
@@ -112,7 +112,7 @@ final class SubmitPlafondDisbursementCoreUseCase implements ApplicationServiceIn
                 'other_amount' => (float) $invoice->other_amount,
                 'invc_due' => ($invoice->due_at) ? Carbon::parse($invoice->due_at)->format('Y-m-d') : null,
                 'total_amount' => (float) $totalAmount,
-                'sales_amount' => null,
+                'sales_amount' => (float) $totalAmount,
             ];
         }, $invoices);
     }
@@ -127,6 +127,7 @@ final class SubmitPlafondDisbursementCoreUseCase implements ApplicationServiceIn
                 'account_number' => $allocation->account_no,
                 'is_default' => ($allocation->is_default) ? 'Y' : 'N',
                 'amount' => (float) $allocation->amount,
+                'notes' => (string) $allocation->notes,
             ];
         }, $allocations);
     }

@@ -5,6 +5,7 @@ namespace Sanf\Integration\Modules\SanfCore;
 use GuzzleHttp\Exception\GuzzleException;
 use NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException;
 use NbsPhp\ApiWrapper\Api\Request;
+use Sanf\Core\Modules\Plafond\Dtos\PlafondDisbursementCoreFormRequest;
 use Sanf\Core\Modules\Plafond\Enums\PlafondTypeEnum;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 use stdClass;
@@ -1333,11 +1334,31 @@ class SanfCoreApiClient
         return $response->json(true);
     }
 
-    public function submitPlafondDisbursement(object $dto)
+    public function submitPlafondDisbursement(PlafondDisbursementCoreFormRequest $dto)
     {
         $response = Request::route('plafond.disbursement.create', $this->client)
-            ->json($dto->toArray())
-            ->send();
+            ->json([
+                'cust_id' => $dto->cust_id,
+                'p_code' => $dto->p_code,
+                'disbursement_no' => $dto->disbursement_no,
+                'plafond_id' => $dto->plafond_id,
+                'bouwheer' => $dto->bouwheer,
+                'bouwheer_code' => $dto->bouwheer_code,
+                'amount' => $dto->amount,
+                'invoices' => array_map(function ($invoices) {
+                    return (array) $invoices;
+                }, $dto->invoices),
+                'allocations' => array_map(function ($allocation) {
+                    return (array) $allocation;
+                }, $dto->allocations),
+                'percepatan_doc' => array_map(function ($document) {
+                    return (array) $document;
+                }, $dto->percepatan_doc),
+                'pendukung_doc' => array_map(function ($document) {
+                    return (array) $document;
+                }, $dto->pendukung_doc),
+                'created_at' => $dto->created_at,
+            ])->send();
 
         return $response->json();
     }
