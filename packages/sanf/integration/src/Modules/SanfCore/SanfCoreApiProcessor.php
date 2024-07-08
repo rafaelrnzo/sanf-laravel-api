@@ -3,6 +3,7 @@
 namespace Sanf\Integration\Modules\SanfCore;
 
 use GuzzleHttp\Exception\ServerException;
+use Illuminate\Support\Facades\Log;
 use NbsPhp\ApiWrapper\Api\Processor;
 use NbsPhp\ApiWrapper\Api\Request;
 use NbsPhp\ApiWrapper\Api\Response;
@@ -20,6 +21,7 @@ class SanfCoreApiProcessor extends Processor
             $response = $next($request);
             $result = $response->json();
             if (is_null($result)) {
+                Log::error($response->getContents());
                 throw new \Exception('API CORE ERROR');
             }
             if ($result['status'] === false) {
