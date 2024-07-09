@@ -38,7 +38,7 @@ return [
     'plafond.disbursement.status.SUBMIT' => 'Diajukan',
     'plafond.disbursement.status.ON_PROCESS' => 'Diproses',
     'plafond.disbursement.status.REVISION' => 'Revisi',
-    'plafond.disbursement.status.DONE' => 'Diterima Customer',
+    'plafond.disbursement.status.DONE' => 'Admin Review',
     'plafond.disbursement.status.REJECT' => 'Ditolak',
     'plafond.disbursement.status.APPROVE' => 'Disetujui',
 ];

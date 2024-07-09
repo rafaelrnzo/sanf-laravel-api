@@ -24,11 +24,11 @@ final class PlafondFactoringDisbursementSimpleTransformer extends TransformerAbs
         $updatedAt = $dto->disbursement_relation->updated_at ?? null;
 
         switch ($dto->status_id) {
-            case PlafondDisbursementStatusEnum::DONE:
             case PlafondDisbursementStatusEnum::APPROVE:
             case PlafondDisbursementStatusEnum::REJECT:
                 $statusId = PlafondDisbursementStatusEnum::DONE;
                 break;
+            case PlafondDisbursementStatusEnum::DONE:
             case PlafondDisbursementStatusEnum::ON_PROCESS:
             case PlafondDisbursementStatusEnum::REVISION:
                 $statusId = PlafondDisbursementStatusEnum::ON_PROCESS;
@@ -39,12 +39,14 @@ final class PlafondFactoringDisbursementSimpleTransformer extends TransformerAbs
                 break;
         }
 
+        $status = (new PlafondDisbursementStatusEnum($dto->status_id));
+
         return [
             'xid' => $dto->xid,
             'disbursement_no' => $dto->disbursement_no,
             'total_amount' => (float) $totalAmount,
             'status_id' => $statusId,
-            'status' => $dto->status,
+            'status' => $status->getLabel(),
             'notes' => $dto->disbursement_relation->revision_notes,
             'created_at' => ($createdAt) ? unix_timestamp($createdAt) : $createdAt,
             'updated_at' => ($updatedAt) ? unix_timestamp($updatedAt) : $updatedAt,

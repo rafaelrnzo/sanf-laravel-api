@@ -46,7 +46,7 @@ final class AddPlafondDisbursementUseCase implements ApplicationServiceInterface
 
         $disbursementXid = nano_id();
         $disbursementNo = $this->generateDisbursementNo();
-        $disbursementStatus = (new PlafondDisbursementStatusEnum(PlafondDisbursementStatusEnum::SUBMIT));
+        $disbursementStatus = ($formRequest->customerReview) ? (new PlafondDisbursementStatusEnum(PlafondDisbursementStatusEnum::SUBMIT)) : (new PlafondDisbursementStatusEnum(PlafondDisbursementStatusEnum::DONE));
         $submissionXid = nano_id();
 
         $disbursementModel = $this->disbursementRepository->createDisbursement([
