@@ -30,10 +30,10 @@ final class PlafondFactoringDisbursementSimpleTransformer extends TransformerAbs
                 break;
             case PlafondDisbursementStatusEnum::ON_PROCESS:
             case PlafondDisbursementStatusEnum::REVISION:
-            case PlafondDisbursementStatusEnum::DONE:
                 $statusId = PlafondDisbursementStatusEnum::ON_PROCESS;
                 break;
             case PlafondDisbursementStatusEnum::SUBMIT:
+            case PlafondDisbursementStatusEnum::DONE:
             default:
                 $statusId = PlafondDisbursementStatusEnum::SUBMIT;
                 break;

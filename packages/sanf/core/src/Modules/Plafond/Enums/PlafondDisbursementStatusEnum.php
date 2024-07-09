@@ -25,12 +25,12 @@ final class PlafondDisbursementStatusEnum extends Enum
 
     public const SUBMIT_TAB = [
         self::SUBMIT,
+        self::DONE,
     ];
 
     public const PROCESS_TAB = [
         self::ON_PROCESS,
         self::REVISION,
-        self::DONE,
     ];
 
     public const DONE_TAB = [
