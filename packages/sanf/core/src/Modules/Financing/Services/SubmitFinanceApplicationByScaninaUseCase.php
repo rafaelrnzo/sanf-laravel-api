@@ -108,7 +108,7 @@ final class SubmitFinanceApplicationByScaninaUseCase implements ApplicationServi
                 'client' => self::SCANINA_CLIENT,
                 'created_by' => json_encode($profile),
             ],
-            'is_receive_offer' => true,
+            'is_receive_offer' => $dto->isReceiveOffer,
             'status_id' => FinancingStatusEnum::PROCESSED,
             'type_id' => FinancingApplicationTypeEnum::PERSONAL,
             'total_object' => count($dto->objects),

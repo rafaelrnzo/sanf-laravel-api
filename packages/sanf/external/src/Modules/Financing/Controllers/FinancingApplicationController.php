@@ -22,6 +22,7 @@ class FinancingApplicationController extends RestApiController
     ) {
         $inputs = $this->validate($request, [
             'profile_xid' => ['required', 'alpha_num', 'max: 13'],
+            'is_receive_offer' => ['nullable', 'boolean'],
             'payment.amount' => ['required', 'numeric'],
             'payment.down_payment_percentage' => ['required', 'numeric'],
             'payment.down_payment_amount' => ['required', 'numeric'],
@@ -41,6 +42,7 @@ class FinancingApplicationController extends RestApiController
 
         $requestDto = new FinancingApplicationByScaninaRequestDto([
             'profile_xid' => $request->get('profile_xid'),
+            'is_receive_offer' => (bool) $request->get('is_receive_offer') ?? false,
             'payment' => new FinancingApplicationPaymentByScaninaRequestDto([
                 'amount' => (float) $inputs['payment']['amount'],
                 'down_payment_percentage' => (float) $inputs['payment']['down_payment_percentage'],
