@@ -33,13 +33,13 @@ class SendNotificationPlafondDisbursementUpdateByCoreForClientJob implements Sho
     {
 
         if ($this->dto->statusId === PlafondDisbursementStatusEnum::APPROVE) {
-            $title = __('Pencairan Plafond Anda Berhasil');
-            $subtitle = __('Sukses pencairan plafond');
-            $body = __('Pengajuan pencairan plafond Anda telah disetujui Admin SANFIND.');
+            $title = __('Pencairan Plafond Disetujui');
+            $subtitle = $this->dto->client ?? __('Sukses pencairan plafond');
+            $body = "Pengajuan atas nama {$this->dto->bowheer} telah disetujui oleh SANF, Silahkan cek untuk melihat detailnya.";
         } else {
-            $title = __('Pencairan Plafond Anda ditolak');
-            $subtitle = __('Gagal pencairan plafond');
-            $body = __('Pengajuan pencairan plafond Anda telah ditolak Admin SANFIND.');
+            $title = __('Pencairan Plafond Ditolak');
+            $subtitle = $this->dto->client ?? __('Gagal pencairan plafond');
+            $body = "Pengajuan atas nama {$this->dto->bowheer} telah ditolak oleh SANF, Silahkan cek untuk melihat detailnya.";
         }
 
         $dto = [
@@ -50,7 +50,7 @@ class SendNotificationPlafondDisbursementUpdateByCoreForClientJob implements Sho
                 'subtitle' => $subtitle,
                 'body' => $body,
                 'type' => (string) NotificationTypeEnum::INFO,
-                'screen' => '',
+                'screen' => "plafond_approved|{$this->dto->plafondId}/{$this->dto->disbursementXid}",
                 'published_at' => Carbon::now(),
                 'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
             ],

@@ -78,6 +78,8 @@ final class UpdatePlafondDisbursementFromCoreUseCase implements ApplicationServi
             'client' => $disbursementModel->client_name,
             'bowheerId' => $disbursementModel->customer_bowheer_id,
             'bowheer' => $disbursementModel->customer_name,
+            'plafondId' => $disbursementModel->plafond_id,
+            'disbursementNo' => $disbursementModel->disbursement_no,
             'disbursementXid' => $disbursementModel->xid,
             'submissionXid' => $submissionModel->xid,
             'statusId' => $disbursementStatus->getValue(),

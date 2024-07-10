@@ -21,6 +21,12 @@ class SendNotificationPlafondDisbursementUpdateByCoreListener
         $clientNotificationDto = (object) [
             'userId' => $content->userId ?? null,
             'statusId' => $content->statusId,
+            'client' => $content->client,
+            'bowheer' => $content->bowheer,
+            'plafondId' => $content->plafondId,
+            'disbursementNo' => $content->disbursementNo,
+            'disbursementXid' => $content->disbursementXid,
+            'submissionXid' => $content->submissionXid,
         ];
 
         dispatch(new SendNotificationPlafondDisbursementUpdateByCoreForClientJob($clientNotificationDto));
