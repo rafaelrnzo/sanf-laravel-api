@@ -51,13 +51,13 @@ final class SubmitPlafondDisbursementCoreUseCase implements ApplicationServiceIn
         if (!is_null($disbursementData->disbursement_relation->payment_acc_doc_path)) {
             $paymentAccDocument = (object) [
                 'percepatan_name' => $disbursementData->disbursement_relation->payment_acc_doc_origin_name,
-                'percepatan_path' => $disbursementData->disbursement_relation->payment_acc_doc_path,
+                'percepatan_path' => config('image-path.plafond.disbursement.payment_acc_document'),
             ];
         }
         if ($disbursementData->status_id === PlafondDisbursementStatusEnum::REVISION && !is_null($disbursementData->disbursement_relation->payment_acc_web_doc_path)) {
             $paymentAccDocument = (object) [
                 'percepatan_name' => $disbursementData->disbursement_relation->payment_acc_web_doc_origin_name,
-                'percepatan_path' => $disbursementData->disbursement_relation->payment_acc_web_doc_path,
+                'percepatan_path' => config('image-path.plafond.disbursement.payment_acc_document'),
             ];
         }
 
@@ -137,7 +137,7 @@ final class SubmitPlafondDisbursementCoreUseCase implements ApplicationServiceIn
         return array_map(function ($document) {
             return (object) [
                 'pendukung_name' => $document->origin_name,
-                'pendukung_path' => $document->path,
+                'pendukung_path' => config('image-path.plafond.disbursement.other_document'),
             ];
         }, $documents);
     }
