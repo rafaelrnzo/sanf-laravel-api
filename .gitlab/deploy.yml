@@ -8,6 +8,7 @@ development:deploy:
     entrypoint: [""]
   needs:
     - job: app:dev:build
+    - job: worker:dev:build
   script:
     - kubectl
       --kubeconfig="/dev/null"
