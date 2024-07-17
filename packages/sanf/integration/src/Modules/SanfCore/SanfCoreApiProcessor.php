@@ -32,6 +32,7 @@ class SanfCoreApiProcessor extends Processor
             }
         } catch (ServerException $exception) {
             //TODO HANDLE EXCEPTION
+            report($exception);
             throw $exception;
         }
 
