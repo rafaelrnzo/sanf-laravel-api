@@ -103,6 +103,7 @@ final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterf
                 'notes' => $allocation->notes,
                 'order_no' => $allocation->orderNo,
                 'version' => $version,
+                'updated_at' => date('Y-m-d H:i:s'),
             ];
         }
 

@@ -91,6 +91,8 @@ final class AddPlafondDisbursementUseCase implements ApplicationServiceInterface
                 'notes' => $allocation->notes,
                 'order_no' => $allocation->orderNo,
                 'version' => self::DEFAULT_VERSION,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => null,
             ];
         }
 
