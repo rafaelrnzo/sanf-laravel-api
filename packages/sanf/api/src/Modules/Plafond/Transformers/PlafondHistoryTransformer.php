@@ -4,6 +4,7 @@ namespace Sanf\Api\Modules\Plafond\Transformers;
 
 use League\Fractal\TransformerAbstract;
 use Sanf\Core\Modules\Plafond\Enums\PlafondStatusEnum;
+use Sanf\Core\Modules\Plafond\Enums\PlafondSubmissionTypeEnum;
 
 final class PlafondHistoryTransformer extends TransformerAbstract
 {
@@ -43,6 +44,7 @@ final class PlafondHistoryTransformer extends TransformerAbstract
             'added_balance' => $dto->addedBalance,
             'submitted_balance' => $dto->submittedBalance,
             'notes' => $dto->notes,
+            'is_new_submission' => ($dto->submissionType == PlafondSubmissionTypeEnum::SUBMIT),
         ];
     }
 }

@@ -34,6 +34,7 @@ final class BrowsePlafondHistoryByUserService extends PlafondByUserService imple
                 'addedBalance' => ($submissionType == PlafondSubmissionTypeEnum::INCREASE) ? $item->getAddedBalance() : '0',
                 'submittedBalance' => $item->getAddedBalance(),
                 'notes' => explode(',', $item->getNotes()),
+                'submissionType' => $submissionType,
             ];
         });
 
