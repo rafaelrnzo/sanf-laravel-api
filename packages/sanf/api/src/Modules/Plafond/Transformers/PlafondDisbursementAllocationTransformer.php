@@ -9,7 +9,7 @@ final class PlafondDisbursementAllocationTransformer extends TransformerAbstract
     public function transform($dto)
     {
         return [
-            'xid' => $dto->xid,
+            'xid' => $dto->bank_id,
             'account_name' => $dto->owner,
             'account_provider' => $dto->provider,
             'account_no' => $dto->account_no,
