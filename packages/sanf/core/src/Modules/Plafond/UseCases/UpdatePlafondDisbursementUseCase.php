@@ -81,6 +81,7 @@ final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterf
         $version = $disbursementData->version + 1;
 
         $disbursementModel = $this->disbursementRepository->updateDisbursement($disbursementData->id, [
+            'plafond_submission_xid' => $submissionXid,
             'status_id' => $disbursementStatus->getValue(),
             'status' => $disbursementStatus->getLabel(),
             'client_amount' => $formRequest->totalInvoiceAmount,
