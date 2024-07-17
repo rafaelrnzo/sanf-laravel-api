@@ -9,17 +9,6 @@ final class PlafondFactoringDisbursementSimpleTransformer extends TransformerAbs
 {
     public function transform($dto)
     {
-        $totalAmount = 0;
-        if ($dto->client_amount > 0) {
-            $totalAmount = $dto->client_amount;
-        }
-        if ($dto->customer_amount > 0) {
-            $totalAmount = $dto->customer_amount;
-        }
-        if ($dto->admin_amount > 0) {
-            $totalAmount = $dto->admin_amount;
-        }
-
         $createdAt = $dto->disbursement_relation->created_at ?? null;
         $updatedAt = $dto->disbursement_relation->updated_at ?? null;
 
@@ -37,6 +26,12 @@ final class PlafondFactoringDisbursementSimpleTransformer extends TransformerAbs
             default:
                 $statusId = PlafondDisbursementStatusEnum::SUBMIT;
                 break;
+        }
+
+        $totalAmount = 0;
+        foreach ($dto->disbursement_relation->invoices_relation as $invoice) {
+            $totalInvoiceAmount = ($invoice->invoice_amount + $invoice->vat_amount + $invoice->other_amount) - ($invoice->tax_amount + $invoice->backharge_amount);
+            $totalAmount += $totalInvoiceAmount;
         }
 
         $status = (new PlafondDisbursementStatusEnum($dto->status_id));
