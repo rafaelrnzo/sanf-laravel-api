@@ -53,7 +53,7 @@ class SimulationCalculationService extends FinancingService implements Applicati
             FinancingMethodEnum::ANJAK_PIUTANG_TANPA_PEMBERIAN,
         ]);
         if ($isAnjak) {
-            $calc = $dto->financing_amount - (($dto->financing_amount * $financing_method->interest_rate) / 1200 * $dto->tenor_in_month) - $dto->down_payment_amount;
+            $calc = $dto->financing_amount - ((($dto->financing_amount * $financing_method->interest_rate) / 12) * $dto->tenor_in_month) - $dto->down_payment_amount;
         }
 
         // Formatting calculation
