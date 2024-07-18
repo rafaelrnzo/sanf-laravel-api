@@ -53,11 +53,7 @@ class SimulationCalculationService extends FinancingService implements Applicati
             FinancingMethodEnum::ANJAK_PIUTANG_TANPA_PEMBERIAN,
         ]);
         if ($isAnjak) {
-            // formula = (total invoice-nilai retensi) - ((total invoice - nilai retensi)* % rate anjak piutang)
-            //old
-            $calc = ($dto->financing_amount - $dto->down_payment_amount) - (($dto->financing_amount - $dto->down_payment_amount) * $financing_method->interest_rate);
-            //new
-            //$calc = ($dto->financing_amount ) - (($dto->financing_amount ) * $financing_method->interest_rate) - $dto->down_payment_amount;
+            $calc = $dto->financing_amount - (($dto->financing_amount * $financing_method->interest_rate) / 1200 * $dto->tenor_in_month) - $dto->down_payment_amount;
         }
 
         // Formatting calculation
