@@ -216,6 +216,9 @@ Route::group(['prefix' => 'v2', 'middleware' => 'auth'], function () {
     //TODO remove after +1 release version
     Route::get('plafond-types', ['as' => 'v2.plafond-types', 'uses' => 'Plafond\Controllers\PlafondController@getBrowseTypes']);
     Route::get('users/profiles/{xid}/contracts', ['as' => 'v2.users.contracts.browse', 'uses' => 'Contract\Controllers\ContractFinancingUnitByUserController@getList']);
+
+    // Ad-Ins e-SignHub
+    Route::get('users/profiles/{xid}/contracts/esign-user', ['as' => 'v2.users.contracts.esign-user', 'uses' => 'Contract\Controllers\ESignDocumentV2Controller@getUser']);
 });
 
 // SCANINA INTEGRATION
