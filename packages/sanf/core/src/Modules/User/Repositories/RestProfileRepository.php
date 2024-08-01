@@ -2,6 +2,7 @@
 
 namespace Sanf\Core\Modules\User\Repositories;
 
+use Illuminate\Support\Facades\Log;
 use Sanf\Core\Modules\User\Entities\ProfileEntityInterface;
 use Sanf\Core\Modules\User\Entities\RestProfileEntityFactory;
 use Sanf\Core\Modules\User\Enums\ProfileType;
@@ -31,6 +32,8 @@ class RestProfileRepository implements ProfileRepositoryInterface
 
             return $this->factory->make($response['data'][0]);
         } catch (SanfInternalApiDataNotFoundException $exception) {
+            Log::error($exception->getMessage());
+
             return null;
         }
     }

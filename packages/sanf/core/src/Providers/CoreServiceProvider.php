@@ -19,6 +19,7 @@ use Sanf\Core\Modules\ContactUs\AskUsRepositoryInterface;
 use Sanf\Core\Modules\ContactUs\AskUsTopicRepositoryInterface;
 use Sanf\Core\Modules\ContactUs\EloquentAskUsRepository;
 use Sanf\Core\Modules\ContactUs\EloquentAskUsTopicRepository;
+use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentRepository;
 use Sanf\Core\Modules\Contract\Repositories\EloquentESignRepository;
 use Sanf\Core\Modules\Contract\Repositories\EloquentFinancingUnitLocationSubmissionRepository;
 use Sanf\Core\Modules\Contract\Repositories\ESignRepositoryInterface;
@@ -213,6 +214,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(RequestedDocumentItemRepositoryInterface::class, EloquentRequestedDocumentItemRepository::class);
         $this->app->bind(PlafondDisbursementRepositoryInterface::class, PlafondDisbursementEloquentRepository::class);
         $this->app->bind(PaymentAccelarationDocumentRepositoryInterface::class, PaymentAccelarationDocumentEloquentRepository::class);
+        $this->app->bind(ESignRepositoryInterface::class, EloquentESignDocumentRepository::class);
 
         //SPECIFICATION FACTORY
         $this->app->bind(ProjectSpecificationFactoryInterface::class, EloquentProjectSpecificationFactory::class);

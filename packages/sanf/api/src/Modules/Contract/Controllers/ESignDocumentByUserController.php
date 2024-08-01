@@ -14,6 +14,7 @@ use Sanf\Api\Modules\Contract\Transformers\BrowseDistrictTransformer;
 use Sanf\Api\Modules\Contract\Transformers\BrowseESignDocumentTransformer;
 use Sanf\Api\Modules\Contract\Transformers\BrowseProvinceTransformer;
 use Sanf\Api\Modules\Contract\Transformers\BrowseSubDistrictTransformer;
+use Sanf\Api\Modules\Contract\Transformers\ESignDocumentOTPTransformer;
 use Sanf\Api\Modules\Contract\Transformers\GenerateSignUrlTransformer;
 use Sanf\Api\Modules\Contract\Transformers\GetESignUserTransformer;
 use Sanf\Core\Modules\Contract\Dto\AddESignUserDto;
@@ -21,6 +22,7 @@ use Sanf\Core\Modules\Contract\Dto\BrowseDistrictDto;
 use Sanf\Core\Modules\Contract\Dto\BrowseESignDocumentDto;
 use Sanf\Core\Modules\Contract\Dto\BrowseProvinceDto;
 use Sanf\Core\Modules\Contract\Dto\BrowseSubDistrictDto;
+use Sanf\Core\Modules\Contract\Dto\RequestESignDocumentOTPDto;
 use Sanf\Core\Modules\Contract\Dto\UpdateESignDocumentStatusDto;
 use Sanf\Core\Modules\Contract\Enums\ESignContractStatusEnum;
 use Sanf\Core\Modules\Contract\Enums\ESignRegistrationStatusEnum;
@@ -29,6 +31,7 @@ use Sanf\Core\Modules\Contract\Services\BrowseDistrictService;
 use Sanf\Core\Modules\Contract\Services\BrowseESignDocumentService;
 use Sanf\Core\Modules\Contract\Services\BrowseProvinceService;
 use Sanf\Core\Modules\Contract\Services\BrowseSubDistrictService;
+use Sanf\Core\Modules\Contract\Services\ESignDocumentOTPService;
 use Sanf\Core\Modules\Contract\Services\GenerateSignUrlService;
 use Sanf\Core\Modules\Contract\Services\GetESignUserCheckService;
 use Sanf\Core\Modules\Contract\Services\GetESignUserService;
@@ -311,5 +314,41 @@ final class ESignDocumentByUserController extends RestApiController
         $service->execute($dto);
 
         return $this->responseOk();
+    }
+
+    public function requestOtp(
+        Guard $auth,
+        Request $request,
+        $xid,
+        ESignDocumentOTPService $eSignOTPService,
+        TransactionalSessionInterface $transactionalSession
+    ) {
+        $bodyRequest = $this->validate($request, [
+            'email' => ['required', 'email', 'max:255'],
+            'msisdn' => [
+                'required',
+                'string',
+                'max:16',
+                function ($attribute, $value, $fail) {
+                    if (!preg_match('/^(\+62|62|0)/', $value)) {
+                        return $fail('The phone number must start with +62, 62, or 0.');
+                    }
+                    if (!preg_match('/^\+?[0-9]+$/', $value)) {
+                        return $fail('The phone number must only contain numeric characters.');
+                    }
+                },
+            ],
+            'reference_no' => ['required', 'string', 'max:255', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
+        ]);
+        $bodyRequest['profile_xid'] = $xid;
+        $bodyRequest['user_id'] = $auth->id();
+
+        $dto = new RequestESignDocumentOTPDto($bodyRequest);
+
+        $transactionalService = new TransactionalApplicationService($eSignOTPService, $transactionalSession);
+        $result = $transactionalService->execute($dto);
+
+        return fractal($result, ESignDocumentOTPTransformer::class)
+            ->serializeWith(new ArraySerializer());
     }
 }

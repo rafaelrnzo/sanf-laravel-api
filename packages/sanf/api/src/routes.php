@@ -210,6 +210,9 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
 
     // BANK
     Route::get('users/profiles/{xid}/banks', ['as' => 'v1.users.bank.account.browse', 'uses' => 'Bank\Controllers\BankController@getUserAccount']);
+
+    // Ad-Ins e-SignHub
+    Route::post('users/profiles/{xid}/contracts/esign-otp', ['as' => 'users.contracts.esign-otp', 'uses' => 'Contract\Controllers\ESignDocumentByUserController@requestOtp']);
 });
 
 Route::group(['prefix' => 'v2', 'middleware' => 'auth'], function () {
