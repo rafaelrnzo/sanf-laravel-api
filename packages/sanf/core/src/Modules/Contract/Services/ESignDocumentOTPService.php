@@ -26,11 +26,14 @@ class ESignDocumentOTPService implements ApplicationServiceInterface
      */
     public function execute($dto = null)
     {
+        $msisdn = $this->parseMsisdnWithZeroFormat($dto->msisdn);
+
         $otpRecord = $this->eSignRepository->findOTPRequestBySanfIdAndRefNoWhereNullCode($dto->profileXid, $dto->referenceNo);
         if ($otpRecord && $otpRecord->expired_at > (new DateTime())->format('Y-m-d H:i:s')) {
             throw new ESignDocumentOTPThrottleException();
         }
 
+        $dto->msisdn = $msisdn;
         $otpResult = $this->adInsOtpService->execute($dto);
 
         $currentTimestamp = new DateTime();
@@ -46,7 +49,7 @@ class ESignDocumentOTPService implements ApplicationServiceInterface
                 'xid' => nano_id(),
                 'user_id' => $dto->userId,
                 'sanf_id' => $dto->profileXid,
-                'msisdn' => $otpResult->msisdn,
+                'msisdn' => $msisdn,
                 'email' => $otpResult->email,
                 'expired_at' => $otpResult->expiredAt,
                 'reference_no' => $otpResult->referenceNo,
@@ -58,5 +61,18 @@ class ESignDocumentOTPService implements ApplicationServiceInterface
         }
 
         return $otpRecord;
+    }
+
+    private function parseMsisdnWithZeroFormat(string $msisdn): string
+    {
+        $trimValue = trim($msisdn);
+
+        if (strpos($trimValue, '+62') === 0) {
+            $msisdn = '0' . substr($trimValue, 3);
+        } elseif (strpos($trimValue, '62') === 0) {
+            $msisdn = '0' . substr($trimValue, 2);
+        }
+
+        return $msisdn;
     }
 }

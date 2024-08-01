@@ -8,8 +8,8 @@ class RegistrationDto extends CamelCaseDataTransferObject
 {
     public ?string $fullName;
     public ?string $email;
-    public ?string $birthPlace;
-    public ?string $birthOfDate;
+    public ?string $dateOfBirth;
+    public ?string $placeOfBirth;
     public ?string $gender;
     public ?string $msisdn;
     public ?string $identityNumber;

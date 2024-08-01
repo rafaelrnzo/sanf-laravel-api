@@ -221,6 +221,7 @@ Route::group(['prefix' => 'v2', 'middleware' => 'auth'], function () {
     Route::get('users/profiles/{xid}/contracts', ['as' => 'v2.users.contracts.browse', 'uses' => 'Contract\Controllers\ContractFinancingUnitByUserController@getList']);
 
     // Ad-Ins e-SignHub
+    Route::post('users/profiles/{xid}/contracts/esign-register', ['as' => 'v2.users.contracts.esign-register', 'uses' => 'Contract\Controllers\ESignDocumentV2Controller@registration']);
     Route::get('users/profiles/{xid}/contracts/esign-user', ['as' => 'v2.users.contracts.esign-user', 'uses' => 'Contract\Controllers\ESignDocumentV2Controller@getUser']);
 });
 

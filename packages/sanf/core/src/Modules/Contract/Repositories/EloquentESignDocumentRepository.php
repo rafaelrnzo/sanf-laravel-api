@@ -52,6 +52,17 @@ class EloquentESignDocumentRepository extends AbstractEloquentRepository impleme
         return $this->stripEloquentModel($model);
     }
 
+    public function findUserBySanfIdAndIdentityNo(string $sanfId, string $identityNo)
+    {
+        $model = $this->userAdInsModel
+            ->newQuery()
+            ->where('sanf_id', '=', $sanfId)
+            ->where('identity_no', '=', $identityNo)
+            ->first();
+
+        return $this->stripEloquentModel($model);
+    }
+
     public function createUser(array $data)
     {
         $model = $this->userAdInsModel

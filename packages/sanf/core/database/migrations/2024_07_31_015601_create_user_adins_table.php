@@ -35,6 +35,7 @@ class CreateUserAdinsTable extends Migration
             $table->json('identity_file');
             $table->tinyInteger('status_id');
             $table->string('password');
+            $table->string('transaction_no')->nullable();
             $table->timestamps();
         });
     }

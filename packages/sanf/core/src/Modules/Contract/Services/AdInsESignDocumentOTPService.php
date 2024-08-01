@@ -26,9 +26,8 @@ class AdInsESignDocumentOTPService implements ApplicationServiceInterface
      */
     public function execute($dto = null)
     {
-        $msisdn = $this->parseMsisdnWithZeroFormat($dto->msisdn);
         $bodyRequest = new OneTimePasswordDto([
-            'msisdn' => $msisdn,
+            'msisdn' => $dto->msisdn,
             'email' => $dto->email,
             'referenceNo' => $dto->referenceNo,
         ]);
@@ -39,24 +38,11 @@ class AdInsESignDocumentOTPService implements ApplicationServiceInterface
         }
 
         return new ResponseESignDocumentOTPDto([
-            'msisdn' => $msisdn,
+            'msisdn' => $dto->msisdn,
             'email' => $dto->email,
             'expiredAt' => (new DateTime())->modify('+1 minute'),
             'referenceNo' => $dto->referenceNo,
             'transactionNo' => $otpResponse->trxNo,
         ]);
-    }
-
-    private function parseMsisdnWithZeroFormat(string $msisdn): string
-    {
-        $trimValue = trim($msisdn);
-
-        if (strpos($trimValue, '+62') === 0) {
-            $msisdn = '0' . substr($trimValue, 3);
-        } elseif (strpos($trimValue, '62') === 0) {
-            $msisdn = '0' . substr($trimValue, 2);
-        }
-
-        return $msisdn;
     }
 }

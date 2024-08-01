@@ -11,6 +11,9 @@ return [
     'selfie_tekenaja' => 'tekenaja/selfie/',
     'identity_tekenaja' => 'tekenaja/identity/',
     'document_tekenaja' => 'tekenaja/document/',
+    'selfie_adins' => 'adins/selfie/',
+    'identity_adins' => 'adins/identity/',
+    'document_adins' => 'adins/document/',
     'on-board' => 'on-board/',
     'requested-document' => 'requested-document/',
     'plafond' => [

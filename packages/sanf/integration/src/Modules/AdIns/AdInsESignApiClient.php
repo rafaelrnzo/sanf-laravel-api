@@ -70,8 +70,8 @@ class AdInsESignApiClient
         $requestData = [
             'nama' => $dto->fullName,
             'email' => $dto->email,
-            'tmpLahir' => $dto->birthPlace,
-            'tglLahir' => $dto->birthOfDate,
+            'tmpLahir' => $dto->placeOfBirth,
+            'tglLahir' => $dto->dateOfBirth,
             'jenisKelamin' => $dto->gender,
             'tlp' => $dto->msisdn,
             'idKtp' => $dto->identityNumber,

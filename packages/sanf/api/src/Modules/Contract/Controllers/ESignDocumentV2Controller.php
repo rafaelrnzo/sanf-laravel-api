@@ -3,8 +3,13 @@
 namespace Sanf\Api\Modules\Contract\Controllers;
 
 use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
+use NbsPhp\Core\Database\TransactionalSessionInterface;
+use NbsPhp\Core\Services\TransactionalApplicationService;
 use Sanf\Api\Modules\Contract\Transformers\GetESignUserTransformer;
+use Sanf\Core\Modules\Contract\Dto\ESignRegisterFormDto;
+use Sanf\Core\Modules\Contract\Services\ESignRegisterAdInsService;
 use Sanf\Core\Modules\Contract\Services\SanfESignUserService;
 use Spatie\Fractalistic\ArraySerializer;
 
@@ -12,8 +17,8 @@ class ESignDocumentV2Controller extends RestApiController
 {
     public function getUser(
         string $xid,
-        Guard $auth,
-        SanfESignUserService $eSignSanfUserService
+        SanfESignUserService $eSignSanfUserService,
+        Guard $auth
     ) {
         $dto = (object) [
             'profileXid' => $xid,
@@ -24,5 +29,69 @@ class ESignDocumentV2Controller extends RestApiController
 
         return fractal($eSignSanfUser, GetESignUserTransformer::class)
             ->serializeWith(new ArraySerializer());
+    }
+
+    public function registration(
+        Request $request,
+        $xid,
+        ESignRegisterAdInsService $eSignRegisterAdinsService,
+        TransactionalSessionInterface $transactionalSession,
+        Guard $auth
+    ) {
+        $input = $this->validate($request, [
+            'email' => [
+                'required',
+                'email',
+                'string',
+                'max:255',
+            ],
+            'msisdn' => [
+                'required',
+                'string',
+                'max:16',
+                function ($attribute, $value, $fail) {
+                    if (!preg_match('/^(\+62|62|0)/', $value)) {
+                        return $fail('The phone number must start with +62, 62, or 0.');
+                    }
+                    if (!preg_match('/^\+?[0-9]+$/', $value)) {
+                        return $fail('The phone number must only contain numeric characters.');
+                    }
+                },
+            ],
+            'nik' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+            'full_name' => 'required|string|max:255',
+            'pob' => 'required|string|max:255',
+            'dob' => 'required|string|date_format:Y-m-d',
+            'gender' => 'required|integer|in:0,1',
+            'province_name' => ['required', 'regex:/^[a-zA-Z0-9\s]+$/'],
+            'city_name' => ['required', 'regex:/^[a-zA-Z0-9\s]+$/'],
+            'district_name' => ['required', 'regex:/^[a-zA-Z0-9\s]+$/'],
+            'sub_district_name' => ['required', 'regex:/^[a-zA-Z0-9\s]+$/'],
+            'address' => 'required|string|max:255',
+            'postal_code' => ['required', 'regex:/^[a-zA-Z0-9\s]+$/'],
+            'selfie_file' => 'required|string|max:255',
+            'identity_file' => 'required|string|max:255',
+            'password' => ['required', 'min:9', 'regex:/^(?=.*[!@#$%^&*(),.?":{}|<>])[^\s]+$/', 'confirmed'],
+            'password_confirmation' => ['required', 'min:9', 'regex:/^(?=.*[!@#$%^&*(),.?":{}|<>])[^\s]+$/'],
+        ]);
+
+        $input['userId'] = $auth->id();
+        $input['sanfId'] = $xid;
+        $input['identityNo'] = $input['nik'];
+        $input['province'] = $input['province_name'];
+        $input['city'] = $input['city_name'];
+        $input['district'] = $input['district_name'];
+        $input['subDistrict'] = $input['sub_district_name'];
+
+        $dto = new ESignRegisterFormDto($input);
+
+        $transactionalService = new TransactionalApplicationService($eSignRegisterAdinsService, $transactionalSession);
+        $transactionalService->execute($dto);
+
+        return $this->responseOk();
     }
 }
