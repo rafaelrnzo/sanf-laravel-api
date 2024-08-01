@@ -18,6 +18,7 @@ class IntegrationServiceProvider extends ServiceProvider
         ApiWrapper::load(__DIR__ . '/Modules/TekenAja/tekenaja-routes.php');
         ApiWrapper::load(__DIR__ . '/Modules/Scanina/scanina-routes.php');
         ApiWrapper::load(__DIR__ . '/Modules/Nanonets/nanonets-routes.php');
+        ApiWrapper::load(__DIR__ . '/Modules/AdIns/adins-routes.php');
     }
 
     /**
@@ -41,5 +42,6 @@ class IntegrationServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__ . '/../config/tekenaja-api.php', 'tekenaja-api');
         $this->mergeConfigFrom(__DIR__ . '/../config/scanina-api.php', 'scanina-api');
         $this->mergeConfigFrom(__DIR__ . '/../config/nanonets-api.php', 'nanonets-api');
+        $this->mergeConfigFrom(__DIR__ . '/../config/adins-api.php', 'adins');
     }
 }
