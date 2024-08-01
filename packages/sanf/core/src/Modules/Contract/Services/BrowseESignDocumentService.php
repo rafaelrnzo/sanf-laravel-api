@@ -46,23 +46,25 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
             throw new UserNotFoundException();
         }
 
-        $userTekenAja = $this->eSignRepository->findUserByUserId($user->id);
-        if (!$userTekenAja) {
-            throw new ESignUserNotRegisteredException();
-        }
+        // $userTekenAja = $this->eSignRepository->findUserByUserId($user->id);
+        // if (!$userTekenAja) {
+        //     throw new ESignUserNotRegisteredException();
+        // }
 
         // get list document from core
         if (!$dto->status_id or $dto->status_id === ESignContractStatusEnum::SUBMITTED) {
-            try {
-                $result = $this->client->browseESignDocument($userTekenAja->email, $dto->keyword);
-            } catch (SanfInternalApiDataNotFoundException $exception) {
-                $result['data'] = [];
-            }
+            $result['data'] = [];
+            // try {
+            //     $result = $this->client->browseESignDocument($userTekenAja->email, $dto->keyword);
+            // } catch (SanfInternalApiDataNotFoundException $exception) {
+            //     $result['data'] = [];
+            // }
 
             $mapping = array_map(function ($item) {
                 return (object) [
                     'documentName' => $item['FILENAME'] ?? null,
-                    'documentId' => $item['DOC_ID_TEKENAJA'] ?? null,
+                    'documentId' => $item['DOC_ID'] ?? null,
+                    'referenceNo' => $item['REF_NO'] ?? null,
                     'expiredAt' => isset($item['EXPIRATION_DATE']) ? Carbon::createFromFormat('d/m/Y', $item['EXPIRATION_DATE'])->endOfDay() : null,
                     'createdAt' => isset($item['CREATED_AT']) ? Carbon::createFromFormat('d/m/Y', $item['CREATED_AT']) : null,
                 ];
@@ -82,6 +84,7 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
                     'xid' => $item->xid,
                     'documentName' => $item->document_name,
                     'documentId' => $item->document_id,
+                    'referenceNo' => $item->reference_no,
                     'documentFile' => $file,
                     'statusId' => $item->assignee_status_id,
                     'expiredAt' => Carbon::make($item->expired_at),
@@ -102,6 +105,7 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
                         'xid' => null,
                         'documentName' => $newDocument->documentName,
                         'documentId' => $newDocument->documentId,
+                        'referenceNo' => $newDocument->referenceNo,
                         'documentFile' => null,
                         'statusId' => ESignContractStatusEnum::SUBMITTED,
                         'expiredAt' => $newDocument->expiredAt,
@@ -134,6 +138,7 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
                     'xid' => $item->xid,
                     'documentName' => $item->document_name,
                     'documentId' => $item->document_id,
+                    'referenceNo' => $item->reference_no,
                     'documentFile' => $file,
                     'statusId' => ($item->status_id === ESignContractStatusEnum::ON_PROGRESS && $item->assignee_status_id === ESignContractStatusEnum::DONE) ? ESignContractStatusEnum::ON_PROGRESS : $item->assignee_status_id,
                     'expiredAt' => Carbon::make($item->expired_at),

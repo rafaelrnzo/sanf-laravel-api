@@ -40,6 +40,7 @@ final class SycnESignDocumentSignService implements ApplicationServiceInterface
                 $this->eSignRepository->createDocumentAssignee([
                     'xid' => nano_id(),
                     'document_id' => $data->documentId,
+                    'reference_no' => $data->referenceNo,
                     'user_id' => $data->userId,
                     'email' => $data->email,
                     'status_id' => ESignContractStatusEnum::ASSIGNEE,
@@ -55,6 +56,7 @@ final class SycnESignDocumentSignService implements ApplicationServiceInterface
                 $this->eSignRepository->createDocument([
                     'xid' => nano_id(),
                     'document_id' => $data->documentId,
+                    'reference_no' => $data->referenceNo,
                     'document_name' => $data->documentName ?? null,
                     'expired_at' => $data->expiredAt ?? null,
                     'status_id' => ESignContractStatusEnum::SUBMITTED,
