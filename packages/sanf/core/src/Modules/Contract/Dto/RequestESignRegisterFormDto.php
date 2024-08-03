@@ -4,7 +4,7 @@ namespace Sanf\Core\Modules\Contract\Dto;
 
 use NbsPhp\Core\Dto\CamelCaseDataTransferObject;
 
-class ESignRegisterFormDto extends CamelCaseDataTransferObject
+class RequestESignRegisterFormDto extends CamelCaseDataTransferObject
 {
     public int $userId;
     public string $sanfId;

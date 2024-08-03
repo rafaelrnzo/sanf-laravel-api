@@ -8,7 +8,9 @@ use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Database\TransactionalSessionInterface;
 use NbsPhp\Core\Services\TransactionalApplicationService;
 use Sanf\Api\Modules\Contract\Transformers\GetESignUserTransformer;
-use Sanf\Core\Modules\Contract\Dto\ESignRegisterFormDto;
+use Sanf\Core\Modules\Contract\Dto\RequestESignDocumentSignDto;
+use Sanf\Core\Modules\Contract\Dto\RequestESignRegisterFormDto;
+use Sanf\Core\Modules\Contract\Services\ESignDocumentSignAdInsService;
 use Sanf\Core\Modules\Contract\Services\ESignRegisterAdInsService;
 use Sanf\Core\Modules\Contract\Services\SanfESignUserService;
 use Spatie\Fractalistic\ArraySerializer;
@@ -87,7 +89,52 @@ class ESignDocumentV2Controller extends RestApiController
         $input['district'] = $input['district_name'];
         $input['subDistrict'] = $input['sub_district_name'];
 
-        $dto = new ESignRegisterFormDto($input);
+        $dto = new RequestESignRegisterFormDto($input);
+
+        $transactionalService = new TransactionalApplicationService($eSignRegisterAdinsService, $transactionalSession);
+        $transactionalService->execute($dto);
+
+        return $this->responseOk();
+    }
+
+    public function signing(
+        Request $request,
+        $xid,
+        $document_id,
+        ESignDocumentSignAdInsService $eSignRegisterAdinsService,
+        TransactionalSessionInterface $transactionalSession,
+        Guard $auth
+    ) {
+        $input = $this->validate($request, [
+            'email' => [
+                'required',
+                'email',
+                'string',
+                'max:255',
+            ],
+            'msisdn' => [
+                'required',
+                'string',
+                'max:16',
+                function ($attribute, $value, $fail) {
+                    if (!preg_match('/^(\+62|62|0)/', $value)) {
+                        return $fail('The phone number must start with +62, 62, or 0.');
+                    }
+                    if (!preg_match('/^\+?[0-9]+$/', $value)) {
+                        return $fail('The phone number must only contain numeric characters.');
+                    }
+                },
+            ],
+            'otp' => ['required', 'regex:/^[a-zA-Z0-9\s]+$/'],
+        ]);
+
+        $input['userId'] = $auth->id();
+        $input['sanfId'] = $xid;
+        $input['documentId'] = $document_id;
+        $input['ipAddress'] = $request->ip();
+        $input['userAgent'] = $request->header('User-Agent');
+
+        $dto = new RequestESignDocumentSignDto($input);
 
         $transactionalService = new TransactionalApplicationService($eSignRegisterAdinsService, $transactionalSession);
         $transactionalService->execute($dto);

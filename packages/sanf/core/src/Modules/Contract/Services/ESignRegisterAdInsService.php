@@ -2,7 +2,7 @@
 
 namespace Sanf\Core\Modules\Contract\Services;
 
-use DateTime;
+use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
@@ -35,7 +35,7 @@ class ESignRegisterAdInsService implements ApplicationServiceInterface
         }
 
         $msisdn = $this->parseMsisdnWithZeroFormat($dto->msisdn);
-        $currentTimestamp = new DateTime();
+        $currentTimestamp = CarbonImmutable::now();
         $userAdInsRecord = $this->eSignRepository->createUser([
             'xid' => nano_id(),
             'user_id' => $dto->userId,

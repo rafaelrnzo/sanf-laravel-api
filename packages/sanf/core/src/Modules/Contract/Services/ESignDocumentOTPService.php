@@ -2,6 +2,8 @@
 
 namespace Sanf\Core\Modules\Contract\Services;
 
+use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use DateTime;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Dto\RequestESignDocumentOTPDto;
@@ -28,15 +30,15 @@ class ESignDocumentOTPService implements ApplicationServiceInterface
     {
         $msisdn = $this->parseMsisdnWithZeroFormat($dto->msisdn);
 
-        $otpRecord = $this->eSignRepository->findOTPRequestBySanfIdAndRefNoWhereNullCode($dto->profileXid, $dto->referenceNo);
-        if ($otpRecord && $otpRecord->expired_at > (new DateTime())->format('Y-m-d H:i:s')) {
+        $otpRecord = $this->eSignRepository->findOTPRequestBySanfIdAndRefNoWhereCodeIsNull($dto->profileXid, $dto->referenceNo);
+        if ($otpRecord && $otpRecord->expired_at > (CarbonImmutable::now()->format('Y-m-d H:i:s'))) {
             throw new ESignDocumentOTPThrottleException();
         }
 
         $dto->msisdn = $msisdn;
         $otpResult = $this->adInsOtpService->execute($dto);
 
-        $currentTimestamp = new DateTime();
+        $currentTimestamp = CarbonImmutable::now();
         if (is_null($otpRecord) === false) {
             $otpRecord = $this->eSignRepository->updateOTPRequest($otpRecord->id, [
                 'expired_at' => $otpResult->expiredAt,

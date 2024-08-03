@@ -3,7 +3,7 @@
 namespace Sanf\Core\Modules\Contract\Services;
 
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\Contract\Dto\ESignRegisterFormDto;
+use Sanf\Core\Modules\Contract\Dto\RequestESignRegisterFormDto;
 use Sanf\Core\Modules\Contract\Dto\ResponseESignRegisterDto;
 use Sanf\Integration\Modules\AdIns\AdInsESignApiClient;
 use Sanf\Integration\Modules\AdIns\DTOs\RegistrationDto;
@@ -21,11 +21,11 @@ class AdInsESignRegisterService implements ApplicationServiceInterface
     }
 
     /**
-     * @param ESignRegisterFormDto $dto
+     * @param RequestESignRegisterFormDto $dto
      */
     public function execute($dto = null)
     {
-        /** @var ESignRegisterFormDto $dto */
+        /** @var RequestESignRegisterFormDto $dto */
         $bodyRequest = new RegistrationDto([
             'fullName' => $dto->fullName,
             'email' => $dto->email,
@@ -54,7 +54,7 @@ class AdInsESignRegisterService implements ApplicationServiceInterface
             'msisdn' => $dto->msisdn,
             'email' => $dto->email,
             'nik' => $dto->identityNo,
-            'transactionNo' => implode(',', $registerResponse->trxNo),
+            'transactionNo' => ($registerResponse->trxNo) ? implode(',', $registerResponse->trxNo) : null,
         ]);
     }
 }

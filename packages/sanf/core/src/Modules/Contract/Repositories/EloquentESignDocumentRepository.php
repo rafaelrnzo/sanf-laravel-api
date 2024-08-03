@@ -32,14 +32,16 @@ class EloquentESignDocumentRepository extends AbstractEloquentRepository impleme
         return $this->userAdInsModel->newQuery()->find($id);
     }
 
-    public function findUserByUserId(int $id)
+    public function findUserBySanfId(string $id)
     {
         $model = $this->userAdInsModel
             ->newQuery()
-            ->where('user_id', '=', $id)
+            ->where('sanf_id', '=', $id)
             ->first();
 
-        return $this->stripEloquentModel($model);
+        $record = $model->toArray();
+        $record['code'] = $model->password_decrypt;
+        return $this->stripEloquentModel($record);
     }
 
     public function findUserByEmail(string $email)
@@ -166,11 +168,11 @@ class EloquentESignDocumentRepository extends AbstractEloquentRepository impleme
         return $this->eSignOTPModel->newQuery()->find($id);
     }
 
-    public function findOTPRequestBySanfIdAndRefNoWhereNullCode(string $sanf_id, string $referenceNo)
+    public function findOTPRequestBySanfIdAndRefNoWhereCodeIsNull(string $sanfId, string $referenceNo)
     {
         $model = $this->eSignOTPModel
             ->newQuery()
-            ->where('sanf_id', '=', $sanf_id)
+            ->where('sanf_id', '=', $sanfId)
             ->where('reference_no', '=', $referenceNo)
             ->whereNull('code')
             ->first();
@@ -178,11 +180,21 @@ class EloquentESignDocumentRepository extends AbstractEloquentRepository impleme
         return $this->stripEloquentModel($model);
     }
 
+    public function findOTPRequestBySanfIdWhereCodeIsNull(string $sanfId)
+    {
+        $model = $this->eSignOTPModel
+            ->newQuery()
+            ->where('sanf_id', '=', $sanfId)
+            ->whereNull('code')
+            ->orderByDesc('created_at')
+            ->first();
+
+        return $this->stripEloquentModel($model);
+    }
+
     public function createOTPRequest(array $data)
     {
-        $createData = $this->eSignOTPModel->newQuery()->forceCreate($data);
-
-        $model = $this->findOTPRequestById($createData->id);
+        $model = $this->eSignOTPModel->newQuery()->forceCreate($data);
 
         return $this->stripEloquentModel($model);
     }

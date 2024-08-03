@@ -6,7 +6,7 @@ interface ESignRepositoryInterface
 {
     public function findUserById(int $id);
 
-    public function findUserByUserId(int $id);
+    public function findUserBySanfId(string $id);
 
     public function findUserByEmail(string $email);
 

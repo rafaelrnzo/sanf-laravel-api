@@ -2,11 +2,16 @@
 
 namespace Sanf\Core\Modules\Contract\Models;
 
+use Illuminate\Support\Facades\Crypt;
 use NbsPhp\Core\Models\AbstractModel;
 
 class UserAdInsModel extends AbstractModel
 {
     protected $table = 'user_adins';
+
+    protected $hidden  = [
+        'password',
+    ];
 
     protected $fillable = [
         'xid',
@@ -37,4 +42,10 @@ class UserAdInsModel extends AbstractModel
         'selfie_file' => 'object',
         'identity_file' => 'object',
     ];
+
+
+    public function getPasswordDecryptAttribute()
+    {
+        return Crypt::decryptString($this->password);
+    }
 }

@@ -223,6 +223,7 @@ Route::group(['prefix' => 'v2', 'middleware' => 'auth'], function () {
     // Ad-Ins e-SignHub
     Route::post('users/profiles/{xid}/contracts/esign-register', ['as' => 'v2.users.contracts.esign-register', 'uses' => 'Contract\Controllers\ESignDocumentV2Controller@registration']);
     Route::get('users/profiles/{xid}/contracts/esign-user', ['as' => 'v2.users.contracts.esign-user', 'uses' => 'Contract\Controllers\ESignDocumentV2Controller@getUser']);
+    Route::post('users/profiles/{xid}/contracts/esign-files/{document_id}/signed', ['as' => 'v2.users.contracts.esign-files.signed', 'uses' => 'Contract\Controllers\ESignDocumentV2Controller@signing']);
 });
 
 // SCANINA INTEGRATION

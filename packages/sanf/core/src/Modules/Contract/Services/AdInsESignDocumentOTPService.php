@@ -2,7 +2,7 @@
 
 namespace Sanf\Core\Modules\Contract\Services;
 
-use DateTime;
+use Carbon\CarbonImmutable;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Dto\RequestESignDocumentOTPDto;
 use Sanf\Core\Modules\Contract\Dto\ResponseESignDocumentOTPDto;
@@ -40,9 +40,9 @@ class AdInsESignDocumentOTPService implements ApplicationServiceInterface
         return new ResponseESignDocumentOTPDto([
             'msisdn' => $dto->msisdn,
             'email' => $dto->email,
-            'expiredAt' => (new DateTime())->modify('+1 minute'),
+            'expiredAt' => CarbonImmutable::now()->addMinute(),
             'referenceNo' => $dto->referenceNo,
-            'transactionNo' => $otpResponse->trxNo,
+            'transactionNo' => $otpResponse->trxNo ?? null,
         ]);
     }
 }
