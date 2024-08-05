@@ -6,11 +6,11 @@ use MyCLabs\Enum\Enum;
 
 class FirstInstallmentTypeEnum extends Enum
 {
-    public const AADB = 'AADB';
-    public const AADM = 'AADM';
+    public const ADDB = 'ADDB';
+    public const ADDM = 'ADDM';
 
     public const ALL = [
-        self::AADB,
-        self::AADM,
+        self::ADDB,
+        self::ADDM,
     ];
 }

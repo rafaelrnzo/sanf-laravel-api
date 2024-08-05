@@ -109,7 +109,7 @@ class FinancingSimulationService extends FinancingService implements Application
 
         $monthlyPayment = $dto->unitAmount * $monthlyInterest / $presentValueAnnuity;
 
-        if ($dto->firstInstallmentType == FirstInstallmentTypeEnum::AADM) {
+        if ($dto->firstInstallmentType == FirstInstallmentTypeEnum::ADDM) {
             $monthlyPayment *= (1 + $monthlyInterest);
         }
 
