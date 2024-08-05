@@ -118,6 +118,12 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::post('financing-simulations', ['as' => 'financing-simulations.create', 'uses' => 'Financing\Controllers\FinancingController@postCalculateSimulation']);
     Route::get('tnc-financing-application', ['as' => 'financing.tnc', 'uses' => 'Financing\Controllers\FinancingObjectController@getTNC']);
     Route::get('financing-simulation-categories', ['as' => 'financing-simulations.categories.list', 'uses' => 'Financing\Controllers\FinancingController@browseCategories']);
+    Route::post('financing-simulations/financing-lease', ['as' => 'financing-simulations.financing-lease.calculate', 'uses' => 'Financing\Controllers\FinancingController@calculateFinancingLease']);
+    Route::post('financing-simulations/credit-buying', ['as' => 'financing-simulations.credit-buying.calculate', 'uses' => 'Financing\Controllers\FinancingController@calculateCreditBuying']);
+    Route::post('financing-simulations/sale-lease-back', ['as' => 'financing-simulations.sale-lease-back.calculate', 'uses' => 'Financing\Controllers\FinancingController@calculateSaleLeaseBack']);
+    Route::post('financing-simulations/business-capital-facilities', ['as' => 'financing-simulations.business-capital-facilities', 'uses' => 'Financing\Controllers\FinancingController@calculateBusinessCapitalFacilities']);
+    Route::post('financing/first-year-insurance-amount', ['as' => 'financing.first-year-insurance.calculate', 'uses' => 'Financing\Controllers\FinancingController@calculateFirstYearInsurance']);
+    Route::post('financing/provision-amount', ['as' => 'financing.provision-amount.calculate', 'uses' => 'Financing\Controllers\FinancingController@calculateProvision']);
 
     Route::get('users/profiles/{xid}/financing-applications', ['as' => 'financing-applications.list', 'uses' => 'Financing\Controllers\FinancingApplicationByUserController@getBrowse']);
     Route::get('users/profiles/{xid}/financing-applications/{application_xid}', ['as' => 'financing-applications.detail', 'uses' => 'Financing\Controllers\FinancingApplicationByUserController@getRead']);

@@ -9,7 +9,7 @@ class UserAdInsModel extends AbstractModel
 {
     protected $table = 'user_adins';
 
-    protected $hidden  = [
+    protected $hidden = [
         'password',
     ];
 
@@ -42,7 +42,6 @@ class UserAdInsModel extends AbstractModel
         'selfie_file' => 'object',
         'identity_file' => 'object',
     ];
-
 
     public function getPasswordDecryptAttribute()
     {

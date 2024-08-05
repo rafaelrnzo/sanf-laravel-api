@@ -14,7 +14,6 @@ use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentRepository;
 
 class ESignDocumentSignAdInsService implements ApplicationServiceInterface
 {
-
     private AdInsESignSignDocumentService $adInsSignDocumentService;
     private EloquentESignDocumentRepository $eSignRepository;
 

@@ -41,6 +41,7 @@ class EloquentESignDocumentRepository extends AbstractEloquentRepository impleme
 
         $record = $model->toArray();
         $record['code'] = $model->password_decrypt;
+
         return $this->stripEloquentModel($record);
     }
 
