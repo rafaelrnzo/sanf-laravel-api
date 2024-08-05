@@ -39,6 +39,10 @@ class EloquentESignDocumentRepository extends AbstractEloquentRepository impleme
             ->where('sanf_id', '=', $id)
             ->first();
 
+        if (is_null($model) === true) {
+            return null;
+        }
+
         $record = $model->toArray();
         $record['code'] = $model->password_decrypt;
 
