@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Database\TransactionalSessionInterface;
 use NbsPhp\Core\Services\TransactionalApplicationService;
-use Sanf\Api\Modules\Contract\Transformers\GetESignUserTransformer;
+use Sanf\Api\Modules\Contract\Transformers\ResponseESignUserTransformer;
 use Sanf\Core\Modules\Contract\Dto\RequestESignDocumentSignDto;
 use Sanf\Core\Modules\Contract\Dto\RequestESignRegisterFormDto;
 use Sanf\Core\Modules\Contract\Services\ESignDocumentSignAdInsService;
@@ -29,7 +29,7 @@ class ESignDocumentV2Controller extends RestApiController
 
         $eSignSanfUser = $eSignSanfUserService->execute($dto);
 
-        return fractal($eSignSanfUser, GetESignUserTransformer::class)
+        return fractal($eSignSanfUser, ResponseESignUserTransformer::class)
             ->serializeWith(new ArraySerializer());
     }
 

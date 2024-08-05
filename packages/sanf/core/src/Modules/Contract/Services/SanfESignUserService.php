@@ -4,20 +4,27 @@ namespace Sanf\Core\Modules\Contract\Services;
 
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\Contract\Dto\GetESignUserResponseDto;
+use Sanf\Core\Modules\Contract\Dto\ResponseESignUserDto;
 use Sanf\Core\Modules\Contract\Enums\ESignRegistrationStatusEnum;
+use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentRepository;
 use Sanf\Core\Modules\User\Repositories\RestProfileRepository;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class SanfESignUserService implements ApplicationServiceInterface
 {
+    public const MALE = 'M';
+    protected EloquentESignDocumentRepository $eSignDocumentRepository;
     protected RestProfileRepository $sanfProfileRepository;
     protected SanfCoreApiClient $sanfCoreClient;
 
-    public function __construct(RestProfileRepository $sanfProfileRepository, SanfCoreApiClient $sanfCoreClient)
-    {
+    public function __construct(
+        RestProfileRepository $sanfProfileRepository,
+        SanfCoreApiClient $sanfCoreClient,
+        EloquentESignDocumentRepository $eSignDocumentRepository
+    ) {
         $this->sanfProfileRepository = $sanfProfileRepository;
         $this->sanfCoreClient = $sanfCoreClient;
+        $this->eSignDocumentRepository = $eSignDocumentRepository;
     }
 
     public function execute($dto = null)
@@ -29,23 +36,32 @@ class SanfESignUserService implements ApplicationServiceInterface
 
         $eSignSanfUserResponse = $this->sanfCoreClient->getAvailableESignUser($userSanfResponse->getEmail());
 
-        return array_map(function ($item) use ($userSanfResponse) {
+        $eSignSanfUserMapping = array_map(function ($item) use ($userSanfResponse) {
             return [
                 'email' => isset($item['EMAIL']) ? $item['EMAIL'] : $userSanfResponse->getEmail(),
-                'msisdn' => isset($item['MOBILE']) ? $item['MOBILE'] : $userSanfResponse->getPhoneNumber(),
-                'nik' => isset($item['NIK']) ? $item['NIK'] : $userSanfResponse->getIdentityNumber(),
-                'fullName' => isset($item['NAME']) ? $item['NAME'] : $userSanfResponse->getFullName(),
-                'dob' => isset($item['DOB']) ? $item['DOB'] : null,
-                'pob' => isset($item['POB']) ? $item['POB'] : null,
-                'gender' => isset($item['GENDER']) ? (int) $item['GENDER'] : $userSanfResponse->getGender(),
-                'address' => isset($item['ADDRESS']) ? $item['ADDRESS'] : $userSanfResponse->getAddress(),
-                'postalCode' => isset($item['ZIP_CODE']) ? (int) $item['ZIP_CODE'] : $userSanfResponse->getPostcode(),
                 'statusId' => ESignRegistrationStatusEnum::AVAILABLE,
             ];
         }, $eSignSanfUserResponse['data'])[0];
 
-        $eSignUser = $eSignSanfUserResponse;
+        $adInsUser = $this->eSignDocumentRepository->findUserBySanfId($dto->profileXid);
+        if (is_null($adInsUser) === false) {
+            $eSignSanfUserMapping['xid'] = $adInsUser->xid;
+            $eSignSanfUserMapping['msisdn'] = $adInsUser->msisdn;
+            $eSignSanfUserMapping['nik'] = $adInsUser->identity_no;
+            $eSignSanfUserMapping['fullName'] = $adInsUser->full_name;
+            $eSignSanfUserMapping['dob'] = $adInsUser->date_of_birth;
+            $eSignSanfUserMapping['pob'] = $adInsUser->place_of_birth;
+            $eSignSanfUserMapping['gender'] = (int) ($adInsUser->gender === self::MALE);
+            $eSignSanfUserMapping['address'] = $adInsUser->address;
+            $eSignSanfUserMapping['postalCode'] = (string) $adInsUser->postal_code;
+            $eSignSanfUserMapping['province'] = $adInsUser->province;
+            $eSignSanfUserMapping['city'] = $adInsUser->city;
+            $eSignSanfUserMapping['district'] = $adInsUser->district;
+            $eSignSanfUserMapping['subDistrict'] = $adInsUser->sub_district;
+            $eSignSanfUserMapping['selfieFile'] = $adInsUser->selfie_file;
+            $eSignSanfUserMapping['identityFile'] = $adInsUser->identity_file;
+        }
 
-        return new GetESignUserResponseDto($eSignUser);
+        return new ResponseESignUserDto($eSignSanfUserMapping);
     }
 }
