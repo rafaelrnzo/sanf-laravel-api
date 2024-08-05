@@ -122,6 +122,8 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::post('financing-simulations/credit-buying', ['as' => 'financing-simulations.credit-buying.calculate', 'uses' => 'Financing\Controllers\FinancingController@calculateCreditBuying']);
     Route::post('financing-simulations/sale-lease-back', ['as' => 'financing-simulations.sale-lease-back.calculate', 'uses' => 'Financing\Controllers\FinancingController@calculateSaleLeaseBack']);
     Route::post('financing-simulations/business-capital-facilities', ['as' => 'financing-simulations.business-capital-facilities', 'uses' => 'Financing\Controllers\FinancingController@calculateBusinessCapitalFacilities']);
+    Route::post('financing-simulations/collateral-factoring', ['as' => 'financing-simulations.collateral-factoring', 'uses' => 'Financing\Controllers\FinancingController@calculateCollateralFactoring']);
+    Route::post('financing-simulations/unsecured-factoring', ['as' => 'financing-simulations.unsecured-factoring', 'uses' => 'Financing\Controllers\FinancingController@calculateUnSecuredFactoring']);
     Route::post('financing/first-year-insurance-amount', ['as' => 'financing.first-year-insurance.calculate', 'uses' => 'Financing\Controllers\FinancingController@calculateFirstYearInsurance']);
     Route::post('financing/provision-amount', ['as' => 'financing.provision-amount.calculate', 'uses' => 'Financing\Controllers\FinancingController@calculateProvision']);
 

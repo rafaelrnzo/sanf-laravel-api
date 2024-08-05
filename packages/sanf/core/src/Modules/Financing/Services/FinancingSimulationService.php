@@ -52,6 +52,10 @@ class FinancingSimulationService extends FinancingService implements Application
             case FinancingMethodEnum::FASILITAS_MODAL_USAHA:
                 return $this->calculateBusinessCapitalFacilities($dto);
 
+            case FinancingMethodEnum::ANJAK_PIUTANG_PEMBERIAN:
+            case FinancingMethodEnum::ANJAK_PIUTANG_TANPA_PEMBERIAN:
+                return $this->calculateFinancingFactoring($dto);
+
             default:
                 throw new Exception('Unknown financing method: ' . $financingMethod->id);
         }
@@ -65,39 +69,53 @@ class FinancingSimulationService extends FinancingService implements Application
         $firstPaymentAmount = $dto->downPaymentAmount + $dto->firstYearInsuranceAmount + $dto->adminFeeAmount + $dto->provisionAmount + $installmentInMonthAmount;
 
         return (object) [
-            'unit_amount' => number_format($dto->unitAmount, 2, '.', ''),
-            'down_payment_percentage' => number_format($dto->downPaymentPercentage, 2, '.', ''),
-            'down_payment_amount' => number_format($dto->downPaymentAmount, 2, '.', ''),
+            'unit_amount' => (float) $dto->unitAmount,
+            'down_payment_percentage' => (float) $dto->downPaymentPercentage,
+            'down_payment_amount' => (float) $dto->downPaymentAmount,
             'first_installment_type' => $dto->firstInstallmentType,
-            'interest_percentage' => number_format($dto->interestPercentage, 2, '.', ''),
+            'interest_percentage' => (float) $dto->interestPercentage,
             'tenor' => $dto->tenor,
-            'first_year_insurance_amount' => number_format($dto->firstYearInsuranceAmount, 2, '.', ''),
-            'admin_fee_amount' => number_format($dto->adminFeeAmount, 2, '.', ''),
-            'provision_amount' => number_format($dto->provisionAmount, 2, '.', ''),
-            'installment_per_month' => number_format($installmentInMonthAmount, 2, '.', ''),
-            'credit_insurance_amount' => number_format($insuranceInCreditAmount, 2, '.', ''),
-            'total_credit_amount' => number_format($totalCreditAmount, 2, '.', ''),
-            'first_installment_amount' => number_format($installmentInMonthAmount, 2, '.', ''),
-            'total_first_payment_amount' => number_format($firstPaymentAmount, 2, '.', ''),
+            'first_year_insurance_amount' => (float) $dto->firstYearInsuranceAmount,
+            'admin_fee_amount' => (float) $dto->adminFeeAmount,
+            'provision_amount' => (float) $dto->provisionAmount,
+            'installment_per_month' => (float) number_format($installmentInMonthAmount, 2, '.', ''),
+            'credit_insurance_amount' => (float) number_format($insuranceInCreditAmount, 2, '.', ''),
+            'total_credit_amount' => (float) number_format($totalCreditAmount, 2, '.', ''),
+            'first_installment_amount' => (float) number_format($installmentInMonthAmount, 2, '.', ''),
+            'total_first_payment_amount' => (float) number_format($firstPaymentAmount, 2, '.', ''),
         ];
     }
 
     private function calculateBusinessCapitalFacilities(RequestFinancingSimulationDto $dto)
     {
 
-        // Logic installment_per_month
         $R = ($dto->interestPercentage * 100) / (12 * 100);
 
         $R1 = ($R + 1) ** $dto->tenor;
 
-        // Calculation
         $calc = ($R + ($R / ($R1 - 1))) * $dto->financingAmount;
 
         return (object) [
-            'financing_amount' => number_format($dto->financingAmount, 2, '.', ''),
+            'financing_amount' => (float) $dto->financingAmount,
             'tenor' => $dto->tenor,
-            'installment_per_month' => number_format($calc, 2, '.', ''),
-            'interest_percentage' => number_format($dto->interestPercentage, 2, '.', ''),
+            'installment_per_month' => (float) number_format($calc, 2, '.', ''),
+            'interest_percentage' => (float) $dto->interestPercentage,
+        ];
+    }
+
+    private function calculateFinancingFactoring(RequestFinancingSimulationDto $dto)
+    {
+        $diskontoAmount = $dto->invoiceAmount * (($dto->interestPercentage / 100) / 360) * $dto->tenor;
+        $disbursementAmount = $dto->invoiceAmount - $diskontoAmount - $dto->retentionAmount;
+
+        return (object) [
+            'invoice_amount' => (float) $dto->invoiceAmount,
+            'interest_percentage' => (float) $dto->interestPercentage,
+            'tenor' => $dto->tenor,
+            'retention_amount' => (float) $dto->retentionAmount,
+            'retention_percentage' => (float) $dto->retentionPercentage,
+            'diskonto_amount' => (float) number_format($diskontoAmount, 2, '.', ''),
+            'disbursement_amount' => (float) number_format($disbursementAmount, 2, '.', ''),
         ];
     }
 

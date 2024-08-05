@@ -281,6 +281,50 @@ class FinancingController extends RestApiController
         return fractal($simulationResult, new ResponseFinancingSimulationTransformer());
     }
 
+    public function calculateCollateralFactoring(Request $request, FinancingSimulationService $service)
+    {
+        $input = $this->validate($request, [
+            'invoice_amount' => ['required', 'numeric'],
+            'interest_percentage' => ['required', 'integer'],
+            'retention_percentage' => ['required', 'integer'],
+            'retention_amount' => ['required', 'integer'],
+            'tenor' => ['required', 'integer'],
+            'is_send_email' => ['required', 'boolean'],
+            'is_download_pdf' => ['required', 'boolean'],
+        ]);
+
+        $input['invoice_amount'] = (float) $request->get('invoice_amount');
+        $input['retention_amount'] = (float) $request->get('retention_amount');
+        $input['financing_method_id'] = FinancingMethodEnum::ANJAK_PIUTANG_PEMBERIAN;
+        $requestSimulationDto = new RequestFinancingSimulationDto($input);
+
+        $simulationResult = $service->execute($requestSimulationDto);
+
+        return fractal($simulationResult, new ResponseFinancingSimulationTransformer());
+    }
+
+    public function calculateUnSecuredFactoring(Request $request, FinancingSimulationService $service)
+    {
+        $input = $this->validate($request, [
+            'invoice_amount' => ['required', 'numeric'],
+            'interest_percentage' => ['required', 'integer'],
+            'retention_percentage' => ['required', 'integer'],
+            'retention_amount' => ['required', 'integer'],
+            'tenor' => ['required', 'integer'],
+            'is_send_email' => ['required', 'boolean'],
+            'is_download_pdf' => ['required', 'boolean'],
+        ]);
+
+        $input['invoice_amount'] = (float) $request->get('invoice_amount');
+        $input['retention_amount'] = (float) $request->get('retention_amount');
+        $input['financing_method_id'] = FinancingMethodEnum::ANJAK_PIUTANG_TANPA_PEMBERIAN;
+        $requestSimulationDto = new RequestFinancingSimulationDto($input);
+
+        $simulationResult = $service->execute($requestSimulationDto);
+
+        return fractal($simulationResult, new ResponseFinancingSimulationTransformer());
+    }
+
     public function calculateFirstYearInsurance(Request $request, FirstYearInsuranceService $service)
     {
         $input = $this->validate($request, [

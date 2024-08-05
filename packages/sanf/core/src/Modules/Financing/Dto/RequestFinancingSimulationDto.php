@@ -8,7 +8,10 @@ class RequestFinancingSimulationDto extends CamelCaseDataTransferObject
 {
     public ?float $unitAmount;
     public ?float $financingAmount;
+    public ?float $invoiceAmount;
     public ?int $downPaymentPercentage;
+    public ?float $retentionAmount;
+    public ?int $retentionPercentage;
     public ?float $downPaymentAmount;
     public ?string $firstInstallmentType;
     public ?int $interestPercentage;
