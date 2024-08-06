@@ -3,6 +3,7 @@
 namespace NbsPhp\ApiWrapper\Api;
 
 use GuzzleHttp\Client as GuzzleClient;
+use Illuminate\Support\Facades\Log;
 use Psr\Http\Message\StreamInterface;
 
 class Request
@@ -240,11 +241,35 @@ class Request
     public function send(): Response
     {
         $callback = function (self $request): Response {
-            return new Response($this->client->request(
-                $request->getMethod(),
-                $request->getUrl(),
-                $request->getOptions()
+            $requestMethod = $request->getMethod();
+            $requestUrl = $request->getUrl();
+            $requestOptions = $request->getOptions();
+
+            $startTime = microtime(true);
+            $response = new Response($this->client->request(
+                $requestMethod,
+                $requestUrl,
+                $requestOptions
             ));
+            $endTime = microtime(true);
+            $responseTime = $endTime - $startTime;
+
+            unset($requestOptions['headers']);
+            $logEntry = sprintf(
+                '[%s] "%s %s" %d %s %s %s %0.2fms',
+                date('Y-m-d H:i:s'),
+                $requestMethod,
+                $requestUrl,
+                $response->getStatusCode(),
+                json_encode($requestOptions),
+                json_encode($response->getBody()),
+                $response->getContents(),
+                $responseTime * 1000
+            );
+
+            Log::info($logEntry);
+
+            return $response;
         };
 
         foreach ($this->endpoint->getProcessors() as $processor)
