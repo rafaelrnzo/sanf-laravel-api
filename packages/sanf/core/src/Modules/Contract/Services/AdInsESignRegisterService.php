@@ -41,7 +41,7 @@ class AdInsESignRegisterService implements ApplicationServiceInterface
             'subDistrict' => $dto->subDistrict,
             'postalCode' => $dto->postalCode,
             'selfPhoto' => $dto->selfieFile,
-            'identityCard' => $dto->identityFile,
+            'identityCardPhoto' => $dto->identityFile,
             'password' => $dto->password,
         ]);
 
