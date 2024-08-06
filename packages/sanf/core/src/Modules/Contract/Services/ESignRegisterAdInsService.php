@@ -36,6 +36,7 @@ class ESignRegisterAdInsService implements ApplicationServiceInterface
 
         $msisdn = $this->parseMsisdnWithZeroFormat($dto->msisdn);
         $currentTimestamp = CarbonImmutable::now();
+        $encryptedPassword = Crypt::encryptString($dto->password);
         $userAdInsRecord = $this->eSignRepository->createUser([
             'xid' => nano_id(),
             'user_id' => $dto->userId,
@@ -55,7 +56,7 @@ class ESignRegisterAdInsService implements ApplicationServiceInterface
             'sub_district' => $dto->subDistrict,
             'selfie_file' => $this->moveFile($dto->selfieFile, config('image-path.temp'), config('image-path.selfie_adins')),
             'identity_file' => $this->moveFile($dto->identityFile, config('image-path.temp'), config('image-path.identity_adins')),
-            'password' => Crypt::encryptString($dto->password),
+            'password' => $encryptedPassword,
             'status_id' => ESignRegistrationStatusEnum::SUBMIT,
             'created_at' => $currentTimestamp,
             'updated_at' => $currentTimestamp,
@@ -64,7 +65,7 @@ class ESignRegisterAdInsService implements ApplicationServiceInterface
         $dto->msisdn = $msisdn;
         $dto->selfieFile = $this->getBase64Image($userAdInsRecord->selfie_file->path, $userAdInsRecord->selfie_file->mime_type);
         $dto->identityFile = $this->getBase64Image($userAdInsRecord->identity_file->path, $userAdInsRecord->identity_file->mime_type);
-        $dto->password = Crypt::decryptString($dto->password);
+        $dto->password = Crypt::decryptString($encryptedPassword);
 
         $this->adInsRegisterService->execute($dto);
 
