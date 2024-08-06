@@ -64,7 +64,7 @@ class ESignRegisterAdInsService implements ApplicationServiceInterface
         $dto->msisdn = $msisdn;
         $dto->selfieFile = $this->getBase64Image($userAdInsRecord->selfie_file->path, $userAdInsRecord->selfie_file->mime_type);
         $dto->identityFile = $this->getBase64Image($userAdInsRecord->identity_file->path, $userAdInsRecord->identity_file->mime_type);
-        $dto->password = Crypt::decryptString($userAdInsRecord->password);
+        $dto->password = Crypt::decryptString($dto->password);
 
         $this->adInsRegisterService->execute($dto);
 
