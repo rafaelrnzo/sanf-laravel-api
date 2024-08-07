@@ -2,6 +2,7 @@
 
 namespace Sanf\Core\Modules\Contract\Services;
 
+use Carbon\CarbonImmutable;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Dto\ResponseESignUserDto;
@@ -16,15 +17,18 @@ class SanfESignUserService implements ApplicationServiceInterface
     protected EloquentESignDocumentRepository $eSignDocumentRepository;
     protected RestProfileRepository $sanfProfileRepository;
     protected SanfCoreApiClient $sanfCoreClient;
+    protected AdInsESignRegisterCheckService $adInsRegisterCheckService;
 
     public function __construct(
         RestProfileRepository $sanfProfileRepository,
         SanfCoreApiClient $sanfCoreClient,
-        EloquentESignDocumentRepository $eSignDocumentRepository
+        EloquentESignDocumentRepository $eSignDocumentRepository,
+        AdInsESignRegisterCheckService $adInsRegisterCheckService
     ) {
         $this->sanfProfileRepository = $sanfProfileRepository;
         $this->sanfCoreClient = $sanfCoreClient;
         $this->eSignDocumentRepository = $eSignDocumentRepository;
+        $this->adInsRegisterCheckService = $adInsRegisterCheckService;
     }
 
     public function execute($dto = null)
@@ -60,6 +64,29 @@ class SanfESignUserService implements ApplicationServiceInterface
             $eSignSanfUserMapping['subDistrict'] = $adInsUser->sub_district;
             $eSignSanfUserMapping['selfieFile'] = $adInsUser->selfie_file;
             $eSignSanfUserMapping['identityFile'] = $adInsUser->identity_file;
+            $eSignSanfUserMapping['statusId'] = $adInsUser->status_id;
+
+            $dto = (object) [
+                'email' => $adInsUser->email,
+                'msisdn' => $adInsUser->msisdn,
+                'identityNo' => $adInsUser->identity_no,
+            ];
+
+            $registerStatus = $this->adInsRegisterCheckService->execute($dto);
+
+            $vendor = 'Vida';
+            foreach($registerStatus->status as $status) {
+                if ($status->vendor == $vendor && $status->registrationStatus == $this->adInsRegisterCheckService::ACTIVE) {
+                    $eSignSanfUserMapping['statusId'] = ESignRegistrationStatusEnum::COMPLETE;
+                }
+            }
+
+            if ($adInsUser->status_id !== ESignRegistrationStatusEnum::COMPLETE && $eSignSanfUserMapping['statusId'] === ESignRegistrationStatusEnum::COMPLETE) {
+                $this->eSignDocumentRepository->updateUser($adInsUser->id, [
+                    'status_id' => ESignRegistrationStatusEnum::COMPLETE,
+                    'updated_at' => CarbonImmutable::now(),
+                ]);
+            }
         }
 
         return new ResponseESignUserDto($eSignSanfUserMapping);

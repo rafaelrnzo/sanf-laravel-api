@@ -15,8 +15,8 @@ class ESignRegisterAdInsService implements ApplicationServiceInterface
 {
     public const MALE = 1;
 
-    private AdInsESignRegisterService $adInsRegisterService;
-    private EloquentESignDocumentRepository $eSignRepository;
+    protected AdInsESignRegisterService $adInsRegisterService;
+    protected EloquentESignDocumentRepository $eSignRepository;
 
     public function __construct(AdInsESignRegisterService $adInsRegisterService, EloquentESignDocumentRepository $eSignRepository)
     {

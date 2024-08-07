@@ -9,5 +9,6 @@ class ResponseESignRegisterDto extends CamelCaseDataTransferObject
     public string $msisdn;
     public string $email;
     public string $nik;
-    public string $transactionNo;
+    public ?string $transactionNo;
+    public ?array $status;
 }
