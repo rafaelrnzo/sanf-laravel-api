@@ -64,6 +64,7 @@ class EloquentPaginateDocumentAssigneeByDocIdSpecification
                 'esign_document_assignee.email',
                 'esign_document_assignee.user_id',
                 'esign_document_assignee.created_at',
+                'esign_document_assignee.reference_no',
 
                 'esign_document.document_id',
                 'esign_document.document_name',

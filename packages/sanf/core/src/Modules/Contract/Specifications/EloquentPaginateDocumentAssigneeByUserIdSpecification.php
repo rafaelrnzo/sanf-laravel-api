@@ -70,6 +70,7 @@ class EloquentPaginateDocumentAssigneeByUserIdSpecification
                 'esign_document.document_file',
                 'esign_document.expired_at',
                 'esign_document.status_id',
+                'esign_document.reference_no',
             ])
             ->join('esign_document', 'esign_document.document_id', '=', 'esign_document_assignee.document_id')
             ->where('esign_document.status_id', '!=', ESignContractStatusEnum::FAILED)

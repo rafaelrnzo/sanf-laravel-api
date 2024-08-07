@@ -54,17 +54,17 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
         // get list document from core
         if (!$dto->status_id or $dto->status_id === ESignContractStatusEnum::SUBMITTED) {
             $result['data'] = [];
-            // try {
-            //     $result = $this->client->browseESignDocument($userTekenAja->email, $dto->keyword);
-            // } catch (SanfInternalApiDataNotFoundException $exception) {
-            //     $result['data'] = [];
-            // }
+            try {
+                $result = $this->client->browseESignDocument($user->username, $dto->keyword);
+            } catch (SanfInternalApiDataNotFoundException $exception) {
+                $result['data'] = [];
+            }
 
             $mapping = array_map(function ($item) {
                 return (object) [
                     'documentName' => $item['FILENAME'] ?? null,
-                    'documentId' => $item['DOC_ID'] ?? null,
-                    'referenceNo' => $item['REF_NO'] ?? null,
+                    'documentId' => $item['DOC_ID_TEKENAJA'] ?? null,
+                    'referenceNo' => $item['AGREE_NO'] ?? null,
                     'expiredAt' => isset($item['EXPIRATION_DATE']) ? Carbon::createFromFormat('d/m/Y', $item['EXPIRATION_DATE'])->endOfDay() : null,
                     'createdAt' => isset($item['CREATED_AT']) ? Carbon::createFromFormat('d/m/Y', $item['CREATED_AT']) : null,
                 ];
@@ -161,6 +161,13 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
             }
 
             return $item;
+        });
+
+        $data = array_filter($data, function ($item) {
+            return empty($item->documentId) === false && $item->documentId !== ' ';
+        });
+        $data = array_filter($data, function ($item) {
+            return empty($item->referenceNo) === false && $item->referenceNo !== ' ';
         });
 
         return (object) [

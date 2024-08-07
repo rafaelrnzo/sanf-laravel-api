@@ -20,6 +20,7 @@ class ESignDocumentV2Controller extends RestApiController
     public function getUser(
         string $xid,
         SanfESignUserService $eSignSanfUserService,
+        TransactionalSessionInterface $transactionalSession,
         Guard $auth
     ) {
         $dto = (object) [
@@ -27,7 +28,8 @@ class ESignDocumentV2Controller extends RestApiController
             'userId' => $auth->id(),
         ];
 
-        $eSignSanfUser = $eSignSanfUserService->execute($dto);
+        $transactionalService = new TransactionalApplicationService($eSignSanfUserService, $transactionalSession);
+        $eSignSanfUser = $transactionalService->execute($dto);
 
         return fractal($eSignSanfUser, ResponseESignUserTransformer::class)
             ->serializeWith(new ArraySerializer());
