@@ -195,4 +195,9 @@ class WebViewController extends RestApiController
     {
         return view('web::web-view.e-sign.terms-and-condition-vida');
     }
+
+    public function termAndConditionOfSignHub()
+    {
+        return view('web::web-view.e-sign.terms-and-condition-signhub');
+    }
 }

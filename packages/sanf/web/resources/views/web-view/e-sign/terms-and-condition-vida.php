@@ -13,6 +13,7 @@
       }
 
       h2 {
+          text-transform: uppercase;
           text-align: center;
       }
 

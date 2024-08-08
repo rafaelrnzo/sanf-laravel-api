@@ -32,3 +32,4 @@ Route::get('pages/approval-project/{status}', ['as' => 'web-view.approval-projec
 Route::get('pages/approval-deactivate-account/{xid}', ['as' => 'web-view.approval-deactivate-account', 'uses' => 'Setting\Controllers\WebViewController@approvalDeactivateAccount']);
 
 Route::get('web-view/vida/terms-and-condition', ['as' => 'web-view.vida.terms-and-condition', 'uses' => 'Setting\Controllers\WebViewController@termAndConditionOfVida']);
+Route::get('web-view/sign-hub/terms-and-condition', ['as' => 'web-view.sign-hub.terms-and-condition', 'uses' => 'Setting\Controllers\WebViewController@termAndConditionOfSignHub']);
