@@ -190,4 +190,9 @@ class WebViewController extends RestApiController
     {
         return view('web::web-view.faq.faq-not-found');
     }
+
+    public function termAndConditionOfVida()
+    {
+        return view('web::web-view.e-sign.terms-and-condition-vida');
+    }
 }

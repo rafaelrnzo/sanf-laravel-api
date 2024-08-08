@@ -30,3 +30,5 @@ Route::get('pages/privacy-policy', ['as' => 'web-view.privacy-policy', 'uses' =>
 Route::get('pages/approval-commodity/{status}', ['as' => 'web-view.approval-commodity', 'uses' => 'Setting\Controllers\WebViewController@approvalCommodity']);
 Route::get('pages/approval-project/{status}', ['as' => 'web-view.approval-project', 'uses' => 'Setting\Controllers\WebViewController@approvalProject']);
 Route::get('pages/approval-deactivate-account/{xid}', ['as' => 'web-view.approval-deactivate-account', 'uses' => 'Setting\Controllers\WebViewController@approvalDeactivateAccount']);
+
+Route::get('web-view/vida/terms-and-condition', ['as' => 'web-view.vida.terms-and-condition', 'uses' => 'Setting\Controllers\WebViewController@termAndConditionOfVida']);
