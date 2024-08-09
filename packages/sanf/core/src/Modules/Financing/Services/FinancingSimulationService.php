@@ -89,11 +89,7 @@ class FinancingSimulationService extends FinancingService implements Application
     private function calculateBusinessCapitalFacilities(RequestFinancingSimulationDto $dto)
     {
 
-        $R = ($dto->interestPercentage * 100) / (12 * 100);
-
-        $R1 = ($R + 1) ** $dto->tenor;
-
-        $calc = ($R + ($R / ($R1 - 1))) * $dto->financingAmount;
+        $calc = (($dto->financingAmount * ($dto->interestPercentage / 100)) + $dto->financingAmount) / $dto->tenor;
 
         return (object) [
             'financing_amount' => (float) $dto->financingAmount,
