@@ -28,6 +28,7 @@ use Sanf\Core\Modules\Financing\Enums\FinancingMethodEnum;
 use Sanf\Core\Modules\Financing\Enums\FirstInstallmentTypeEnum;
 use Sanf\Core\Modules\Financing\Services\BrowseFinancingCategoryService;
 use Sanf\Core\Modules\Financing\Services\FinancingSimulationPdfGeneratorService;
+use Sanf\Core\Modules\Financing\Services\FinancingSimulationSendEmailService;
 use Sanf\Core\Modules\Financing\Services\FinancingSimulationService;
 use Sanf\Core\Modules\Financing\Services\FirstYearInsuranceService;
 use Sanf\Core\Modules\Financing\Services\GetPdfFinancingSimulationService;
@@ -180,6 +181,7 @@ class FinancingController extends RestApiController
     public function calculateFinancingLease(
         Request $request,
         FinancingSimulationService $financingSimulationService,
+        FinancingSimulationSendEmailService $financingSimulationSendEmailService,
         FinancingSimulationPdfGeneratorService $financingSimulationPdfService,
         Guard $auth
     ) {
@@ -208,6 +210,15 @@ class FinancingController extends RestApiController
 
         $simulationResult = $financingSimulationService->execute($requestSimulationDto);
 
+        if ($requestSimulationDto->isSendEmail) {
+            $pdfSimulation = $simulationResult;
+            $pdfSimulation->user_id = $auth->id();
+
+            $financingSimulationPdfDto = new FinancingSimulationPdfDto((array) $pdfSimulation);
+
+            $financingSimulationSendEmailService->execute($financingSimulationPdfDto);
+        }
+
         if ($requestSimulationDto->isDownloadPdf) {
             $pdfSimulation = $simulationResult;
             $pdfSimulation->user_id = $auth->id();
@@ -228,6 +239,7 @@ class FinancingController extends RestApiController
     public function calculateCreditBuying(
         Request $request,
         FinancingSimulationService $financingSimulationService,
+        FinancingSimulationSendEmailService $financingSimulationSendEmailService,
         FinancingSimulationPdfGeneratorService $financingSimulationPdfService,
         Guard $auth
     ) {
@@ -255,6 +267,15 @@ class FinancingController extends RestApiController
 
         $simulationResult = $financingSimulationService->execute($requestSimulationDto);
 
+        if ($requestSimulationDto->isSendEmail) {
+            $pdfSimulation = $simulationResult;
+            $pdfSimulation->user_id = $auth->id();
+
+            $financingSimulationPdfDto = new FinancingSimulationPdfDto((array) $pdfSimulation);
+
+            $financingSimulationSendEmailService->execute($financingSimulationPdfDto);
+        }
+
         if ($requestSimulationDto->isDownloadPdf) {
             $pdfSimulation = $simulationResult;
             $pdfSimulation->user_id = $auth->id();
@@ -275,6 +296,7 @@ class FinancingController extends RestApiController
     public function calculateSaleLeaseBack(
         Request $request,
         FinancingSimulationService $financingSimulationService,
+        FinancingSimulationSendEmailService $financingSimulationSendEmailService,
         FinancingSimulationPdfGeneratorService $financingSimulationPdfService,
         Guard $auth
     ) {
@@ -302,6 +324,15 @@ class FinancingController extends RestApiController
 
         $simulationResult = $financingSimulationService->execute($requestSimulationDto);
 
+        if ($requestSimulationDto->isSendEmail) {
+            $pdfSimulation = $simulationResult;
+            $pdfSimulation->user_id = $auth->id();
+
+            $financingSimulationPdfDto = new FinancingSimulationPdfDto((array) $pdfSimulation);
+
+            $financingSimulationSendEmailService->execute($financingSimulationPdfDto);
+        }
+
         if ($requestSimulationDto->isDownloadPdf) {
             $pdfSimulation = $simulationResult;
             $pdfSimulation->user_id = $auth->id();
@@ -322,6 +353,7 @@ class FinancingController extends RestApiController
     public function calculateBusinessCapitalFacilities(
         Request $request,
         FinancingSimulationService $financingSimulationService,
+        FinancingSimulationSendEmailService $financingSimulationSendEmailService,
         FinancingSimulationPdfGeneratorService $financingSimulationPdfService,
         Guard $auth
     ) {
@@ -338,6 +370,15 @@ class FinancingController extends RestApiController
         $requestSimulationDto = new RequestFinancingSimulationDto($input);
 
         $simulationResult = $financingSimulationService->execute($requestSimulationDto);
+
+        if ($requestSimulationDto->isSendEmail) {
+            $pdfSimulation = $simulationResult;
+            $pdfSimulation->user_id = $auth->id();
+
+            $financingSimulationPdfDto = new FinancingSimulationPdfDto((array) $pdfSimulation);
+
+            $financingSimulationSendEmailService->execute($financingSimulationPdfDto);
+        }
 
         if ($requestSimulationDto->isDownloadPdf) {
             $pdfSimulation = $simulationResult;
@@ -359,6 +400,7 @@ class FinancingController extends RestApiController
     public function calculateCollateralFactoring(
         Request $request,
         FinancingSimulationService $financingSimulationService,
+        FinancingSimulationSendEmailService $financingSimulationSendEmailService,
         FinancingSimulationPdfGeneratorService $financingSimulationPdfService,
         Guard $auth
     ) {
@@ -378,6 +420,15 @@ class FinancingController extends RestApiController
         $requestSimulationDto = new RequestFinancingSimulationDto($input);
 
         $simulationResult = $financingSimulationService->execute($requestSimulationDto);
+
+        if ($requestSimulationDto->isSendEmail) {
+            $pdfSimulation = $simulationResult;
+            $pdfSimulation->user_id = $auth->id();
+
+            $financingSimulationPdfDto = new FinancingSimulationPdfDto((array) $pdfSimulation);
+
+            $financingSimulationSendEmailService->execute($financingSimulationPdfDto);
+        }
 
         if ($requestSimulationDto->isDownloadPdf) {
             $pdfSimulation = $simulationResult;
@@ -399,6 +450,7 @@ class FinancingController extends RestApiController
     public function calculateUnSecuredFactoring(
         Request $request,
         FinancingSimulationService $financingSimulationService,
+        FinancingSimulationSendEmailService $financingSimulationSendEmailService,
         FinancingSimulationPdfGeneratorService $financingSimulationPdfService,
         Guard $auth
     ) {
@@ -418,6 +470,15 @@ class FinancingController extends RestApiController
         $requestSimulationDto = new RequestFinancingSimulationDto($input);
 
         $simulationResult = $financingSimulationService->execute($requestSimulationDto);
+
+        if ($requestSimulationDto->isSendEmail) {
+            $pdfSimulation = $simulationResult;
+            $pdfSimulation->user_id = $auth->id();
+
+            $financingSimulationPdfDto = new FinancingSimulationPdfDto((array) $pdfSimulation);
+
+            $financingSimulationSendEmailService->execute($financingSimulationPdfDto);
+        }
 
         if ($requestSimulationDto->isDownloadPdf) {
             $pdfSimulation = $simulationResult;
