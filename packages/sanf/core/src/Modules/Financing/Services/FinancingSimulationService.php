@@ -90,7 +90,10 @@ class FinancingSimulationService extends FinancingService implements Application
     private function calculateBusinessCapitalFacilities(RequestFinancingSimulationDto $dto)
     {
 
-        $calc = (($dto->financingAmount * ($dto->interestPercentage / 100)) + $dto->financingAmount) / $dto->tenor;
+        $monthlyInterest = $dto->interestPercentage / 1200;
+        $presentValueAnnuity = 1 - pow(1 + $monthlyInterest, -$dto->tenor);
+
+        $calc = $dto->financingAmount * $monthlyInterest / $presentValueAnnuity;
 
         return (object) [
             'financing_method_id' => $dto->financingMethodId,
@@ -127,7 +130,7 @@ class FinancingSimulationService extends FinancingService implements Application
         $monthlyPayment = $dto->unitAmount * $monthlyInterest / $presentValueAnnuity;
 
         if ($dto->firstInstallmentType == FirstInstallmentTypeEnum::ADDM) {
-            $monthlyPayment *= (1 + $monthlyInterest);
+            $monthlyPayment = $monthlyPayment / (1 + $monthlyInterest);
         }
 
         return $monthlyPayment;

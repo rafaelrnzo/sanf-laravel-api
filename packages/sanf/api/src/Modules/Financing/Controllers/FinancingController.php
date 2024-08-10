@@ -202,7 +202,7 @@ class FinancingController extends RestApiController
         $input['unit_amount'] = (float) $request->get('unit_amount');
         $input['down_payment_amount'] = (float) $request->get('down_payment_amount');
         $input['first_year_insurance_amount'] = (float) $request->get('first_year_insurance_amount');
-        $input['admin_fee_amount'] = (float) $request->get('down_payment_amount');
+        $input['admin_fee_amount'] = (float) $request->get('admin_fee_amount');
         $input['provision_amount'] = (float) $request->get('provision_amount');
         $input['financing_method_id'] = FinancingMethodEnum::SEWA_PEMBIAYAAN;
 
@@ -260,7 +260,7 @@ class FinancingController extends RestApiController
         $input['unit_amount'] = (float) $request->get('unit_amount');
         $input['down_payment_amount'] = (float) $request->get('down_payment_amount');
         $input['first_year_insurance_amount'] = (float) $request->get('first_year_insurance_amount');
-        $input['admin_fee_amount'] = (float) $request->get('down_payment_amount');
+        $input['admin_fee_amount'] = (float) $request->get('admin_fee_amount');
         $input['provision_amount'] = (float) $request->get('provision_amount');
         $input['financing_method_id'] = FinancingMethodEnum::PEMBELIAN_ANGSURAN;
         $requestSimulationDto = new RequestFinancingSimulationDto($input);
@@ -317,7 +317,7 @@ class FinancingController extends RestApiController
         $input['unit_amount'] = (float) $request->get('unit_amount');
         $input['down_payment_amount'] = (float) $request->get('down_payment_amount');
         $input['first_year_insurance_amount'] = (float) $request->get('first_year_insurance_amount');
-        $input['admin_fee_amount'] = (float) $request->get('down_payment_amount');
+        $input['admin_fee_amount'] = (float) $request->get('admin_fee_amount');
         $input['provision_amount'] = (float) $request->get('provision_amount');
         $input['financing_method_id'] = FinancingMethodEnum::JUAL_SEWA_BALIK;
         $requestSimulationDto = new RequestFinancingSimulationDto($input);
