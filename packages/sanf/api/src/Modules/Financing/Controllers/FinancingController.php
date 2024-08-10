@@ -15,6 +15,7 @@ use Sanf\Api\Modules\Financing\Transformers\GetFinancingCategoryTransformer;
 use Sanf\Api\Modules\Financing\Transformers\ResponseFinancingSimulationTransformer;
 use Sanf\Api\Modules\Financing\Transformers\ResponseFirstYearInsuranceTransformer;
 use Sanf\Api\Modules\Financing\Transformers\ResponseProvisionTransformer;
+use Sanf\Core\Modules\Financing\Dto\FinancingSimulationPdfDto;
 use Sanf\Core\Modules\Financing\Dto\ListFinancingFacilityRequestDto;
 use Sanf\Core\Modules\Financing\Dto\ListFinancingMethodByFacilityRequestDto;
 use Sanf\Core\Modules\Financing\Dto\ListFinancingMethodRequestDto;
@@ -26,6 +27,7 @@ use Sanf\Core\Modules\Financing\Dto\SimulationCalculationRequestDto;
 use Sanf\Core\Modules\Financing\Enums\FinancingMethodEnum;
 use Sanf\Core\Modules\Financing\Enums\FirstInstallmentTypeEnum;
 use Sanf\Core\Modules\Financing\Services\BrowseFinancingCategoryService;
+use Sanf\Core\Modules\Financing\Services\FinancingSimulationPdfGeneratorService;
 use Sanf\Core\Modules\Financing\Services\FinancingSimulationService;
 use Sanf\Core\Modules\Financing\Services\FirstYearInsuranceService;
 use Sanf\Core\Modules\Financing\Services\GetPdfFinancingSimulationService;
@@ -175,8 +177,12 @@ class FinancingController extends RestApiController
             ->paginateWith(new LazyPaginatorAdapter($result->paginate));
     }
 
-    public function calculateFinancingLease(Request $request, FinancingSimulationService $service)
-    {
+    public function calculateFinancingLease(
+        Request $request,
+        FinancingSimulationService $financingSimulationService,
+        FinancingSimulationPdfGeneratorService $financingSimulationPdfService,
+        Guard $auth
+    ) {
         $input = $this->validate($request, [
             'unit_amount' => ['required', 'numeric'],
             'down_payment_percentage' => ['required', 'integer'],
@@ -197,15 +203,34 @@ class FinancingController extends RestApiController
         $input['admin_fee_amount'] = (float) $request->get('down_payment_amount');
         $input['provision_amount'] = (float) $request->get('provision_amount');
         $input['financing_method_id'] = FinancingMethodEnum::SEWA_PEMBIAYAAN;
+
         $requestSimulationDto = new RequestFinancingSimulationDto($input);
 
-        $simulationResult = $service->execute($requestSimulationDto);
+        $simulationResult = $financingSimulationService->execute($requestSimulationDto);
+
+        if ($requestSimulationDto->isDownloadPdf) {
+            $pdfSimulation = $simulationResult;
+            $pdfSimulation->user_id = $auth->id();
+
+            $financingSimulationPdfDto = new FinancingSimulationPdfDto((array) $pdfSimulation);
+
+            return $this->streamDownload(
+                function () use ($financingSimulationPdfService, $financingSimulationPdfDto) {
+                    echo $financingSimulationPdfService->execute($financingSimulationPdfDto);
+                },
+                'SANFIND-Simulasi' . date('Y-m-d-H-i-s') . '.pdf'
+            );
+        }
 
         return fractal($simulationResult, new ResponseFinancingSimulationTransformer());
     }
 
-    public function calculateCreditBuying(Request $request, FinancingSimulationService $service)
-    {
+    public function calculateCreditBuying(
+        Request $request,
+        FinancingSimulationService $financingSimulationService,
+        FinancingSimulationPdfGeneratorService $financingSimulationPdfService,
+        Guard $auth
+    ) {
         $input = $this->validate($request, [
             'unit_amount' => ['required', 'numeric'],
             'down_payment_percentage' => ['required', 'integer'],
@@ -228,13 +253,31 @@ class FinancingController extends RestApiController
         $input['financing_method_id'] = FinancingMethodEnum::PEMBELIAN_ANGSURAN;
         $requestSimulationDto = new RequestFinancingSimulationDto($input);
 
-        $simulationResult = $service->execute($requestSimulationDto);
+        $simulationResult = $financingSimulationService->execute($requestSimulationDto);
+
+        if ($requestSimulationDto->isDownloadPdf) {
+            $pdfSimulation = $simulationResult;
+            $pdfSimulation->user_id = $auth->id();
+
+            $financingSimulationPdfDto = new FinancingSimulationPdfDto((array) $pdfSimulation);
+
+            return $this->streamDownload(
+                function () use ($financingSimulationPdfService, $financingSimulationPdfDto) {
+                    echo $financingSimulationPdfService->execute($financingSimulationPdfDto);
+                },
+                'SANFIND-Simulasi' . date('Y-m-d-H-i-s') . '.pdf'
+            );
+        }
 
         return fractal($simulationResult, new ResponseFinancingSimulationTransformer());
     }
 
-    public function calculateSaleLeaseBack(Request $request, FinancingSimulationService $service)
-    {
+    public function calculateSaleLeaseBack(
+        Request $request,
+        FinancingSimulationService $financingSimulationService,
+        FinancingSimulationPdfGeneratorService $financingSimulationPdfService,
+        Guard $auth
+    ) {
         $input = $this->validate($request, [
             'unit_amount' => ['required', 'numeric'],
             'down_payment_percentage' => ['required', 'integer'],
@@ -257,13 +300,31 @@ class FinancingController extends RestApiController
         $input['financing_method_id'] = FinancingMethodEnum::JUAL_SEWA_BALIK;
         $requestSimulationDto = new RequestFinancingSimulationDto($input);
 
-        $simulationResult = $service->execute($requestSimulationDto);
+        $simulationResult = $financingSimulationService->execute($requestSimulationDto);
+
+        if ($requestSimulationDto->isDownloadPdf) {
+            $pdfSimulation = $simulationResult;
+            $pdfSimulation->user_id = $auth->id();
+
+            $financingSimulationPdfDto = new FinancingSimulationPdfDto((array) $pdfSimulation);
+
+            return $this->streamDownload(
+                function () use ($financingSimulationPdfService, $financingSimulationPdfDto) {
+                    echo $financingSimulationPdfService->execute($financingSimulationPdfDto);
+                },
+                'SANFIND-Simulasi' . date('Y-m-d-H-i-s') . '.pdf'
+            );
+        }
 
         return fractal($simulationResult, new ResponseFinancingSimulationTransformer());
     }
 
-    public function calculateBusinessCapitalFacilities(Request $request, FinancingSimulationService $service)
-    {
+    public function calculateBusinessCapitalFacilities(
+        Request $request,
+        FinancingSimulationService $financingSimulationService,
+        FinancingSimulationPdfGeneratorService $financingSimulationPdfService,
+        Guard $auth
+    ) {
         $input = $this->validate($request, [
             'financing_amount' => ['required', 'numeric'],
             'interest_percentage' => ['required', 'integer'],
@@ -276,13 +337,31 @@ class FinancingController extends RestApiController
         $input['financing_method_id'] = FinancingMethodEnum::FASILITAS_MODAL_USAHA;
         $requestSimulationDto = new RequestFinancingSimulationDto($input);
 
-        $simulationResult = $service->execute($requestSimulationDto);
+        $simulationResult = $financingSimulationService->execute($requestSimulationDto);
+
+        if ($requestSimulationDto->isDownloadPdf) {
+            $pdfSimulation = $simulationResult;
+            $pdfSimulation->user_id = $auth->id();
+
+            $financingSimulationPdfDto = new FinancingSimulationPdfDto((array) $pdfSimulation);
+
+            return $this->streamDownload(
+                function () use ($financingSimulationPdfService, $financingSimulationPdfDto) {
+                    echo $financingSimulationPdfService->execute($financingSimulationPdfDto);
+                },
+                'SANFIND-Simulasi' . date('Y-m-d-H-i-s') . '.pdf'
+            );
+        }
 
         return fractal($simulationResult, new ResponseFinancingSimulationTransformer());
     }
 
-    public function calculateCollateralFactoring(Request $request, FinancingSimulationService $service)
-    {
+    public function calculateCollateralFactoring(
+        Request $request,
+        FinancingSimulationService $financingSimulationService,
+        FinancingSimulationPdfGeneratorService $financingSimulationPdfService,
+        Guard $auth
+    ) {
         $input = $this->validate($request, [
             'invoice_amount' => ['required', 'numeric'],
             'interest_percentage' => ['required', 'integer'],
@@ -298,13 +377,31 @@ class FinancingController extends RestApiController
         $input['financing_method_id'] = FinancingMethodEnum::ANJAK_PIUTANG_PEMBERIAN;
         $requestSimulationDto = new RequestFinancingSimulationDto($input);
 
-        $simulationResult = $service->execute($requestSimulationDto);
+        $simulationResult = $financingSimulationService->execute($requestSimulationDto);
+
+        if ($requestSimulationDto->isDownloadPdf) {
+            $pdfSimulation = $simulationResult;
+            $pdfSimulation->user_id = $auth->id();
+
+            $financingSimulationPdfDto = new FinancingSimulationPdfDto((array) $pdfSimulation);
+
+            return $this->streamDownload(
+                function () use ($financingSimulationPdfService, $financingSimulationPdfDto) {
+                    echo $financingSimulationPdfService->execute($financingSimulationPdfDto);
+                },
+                'SANFIND-Simulasi' . date('Y-m-d-H-i-s') . '.pdf'
+            );
+        }
 
         return fractal($simulationResult, new ResponseFinancingSimulationTransformer());
     }
 
-    public function calculateUnSecuredFactoring(Request $request, FinancingSimulationService $service)
-    {
+    public function calculateUnSecuredFactoring(
+        Request $request,
+        FinancingSimulationService $financingSimulationService,
+        FinancingSimulationPdfGeneratorService $financingSimulationPdfService,
+        Guard $auth
+    ) {
         $input = $this->validate($request, [
             'invoice_amount' => ['required', 'numeric'],
             'interest_percentage' => ['required', 'integer'],
@@ -320,7 +417,21 @@ class FinancingController extends RestApiController
         $input['financing_method_id'] = FinancingMethodEnum::ANJAK_PIUTANG_TANPA_PEMBERIAN;
         $requestSimulationDto = new RequestFinancingSimulationDto($input);
 
-        $simulationResult = $service->execute($requestSimulationDto);
+        $simulationResult = $financingSimulationService->execute($requestSimulationDto);
+
+        if ($requestSimulationDto->isDownloadPdf) {
+            $pdfSimulation = $simulationResult;
+            $pdfSimulation->user_id = $auth->id();
+
+            $financingSimulationPdfDto = new FinancingSimulationPdfDto((array) $pdfSimulation);
+
+            return $this->streamDownload(
+                function () use ($financingSimulationPdfService, $financingSimulationPdfDto) {
+                    echo $financingSimulationPdfService->execute($financingSimulationPdfDto);
+                },
+                'SANFIND-Simulasi' . date('Y-m-d-H-i-s') . '.pdf'
+            );
+        }
 
         return fractal($simulationResult, new ResponseFinancingSimulationTransformer());
     }

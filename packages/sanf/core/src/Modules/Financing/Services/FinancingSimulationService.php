@@ -69,6 +69,7 @@ class FinancingSimulationService extends FinancingService implements Application
         $firstPaymentAmount = $dto->downPaymentAmount + $dto->firstYearInsuranceAmount + $dto->adminFeeAmount + $dto->provisionAmount + $installmentInMonthAmount;
 
         return (object) [
+            'financing_method_id' => $dto->financingMethodId,
             'unit_amount' => (float) $dto->unitAmount,
             'down_payment_percentage' => (float) $dto->downPaymentPercentage,
             'down_payment_amount' => (float) $dto->downPaymentAmount,
@@ -92,6 +93,7 @@ class FinancingSimulationService extends FinancingService implements Application
         $calc = (($dto->financingAmount * ($dto->interestPercentage / 100)) + $dto->financingAmount) / $dto->tenor;
 
         return (object) [
+            'financing_method_id' => $dto->financingMethodId,
             'financing_amount' => (float) $dto->financingAmount,
             'tenor' => $dto->tenor,
             'installment_per_month' => (float) number_format($calc, 2, '.', ''),
@@ -105,6 +107,7 @@ class FinancingSimulationService extends FinancingService implements Application
         $disbursementAmount = $dto->invoiceAmount - $diskontoAmount - $dto->retentionAmount;
 
         return (object) [
+            'financing_method_id' => $dto->financingMethodId,
             'invoice_amount' => (float) $dto->invoiceAmount,
             'interest_percentage' => (float) $dto->interestPercentage,
             'tenor' => $dto->tenor,
