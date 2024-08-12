@@ -29,7 +29,7 @@ class ESignDocumentSignAdInsService implements ApplicationServiceInterface
     public function execute($dto = null)
     {
         $userAdInsRecord = $this->eSignRepository->findUserBySanfId($dto->sanfId);
-        if ($userAdInsRecord || $userAdInsRecord->status_id !== ESignRegistrationStatusEnum::COMPLETE) {
+        if ($userAdInsRecord && $userAdInsRecord->status_id !== ESignRegistrationStatusEnum::COMPLETE) {
             throw new ESignUserNotRegisteredException();
         }
 
