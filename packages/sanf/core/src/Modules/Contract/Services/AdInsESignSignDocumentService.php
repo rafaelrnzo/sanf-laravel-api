@@ -25,7 +25,7 @@ class AdInsESignSignDocumentService implements ApplicationServiceInterface
     {
         /** @var RequestESignDocumentSignDto $dto */
         $bodyRequest = new DocumentDto([
-            'documentId' => $dto->documentId,
+            'documentsId' => [$dto->documentId],
             'email' => $dto->email,
             'msisdn' => $dto->msisdn,
             'password' => $dto->password,

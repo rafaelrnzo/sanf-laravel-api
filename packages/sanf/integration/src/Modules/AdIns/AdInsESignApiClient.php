@@ -106,7 +106,7 @@ class AdInsESignApiClient
     public function signDocument(DocumentDto $dto)
     {
         $requestData = [
-            'documentId' => $dto->documentId,
+            'documentId' => $dto->documentsId,
             'email' => $dto->email,
             'phoneNo' => $dto->msisdn,
             'password' => $dto->password,
