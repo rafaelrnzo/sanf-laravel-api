@@ -2,6 +2,7 @@
 
 namespace Sanf\Integration\Modules\SanfCore;
 
+use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException;
 use NbsPhp\ApiWrapper\Api\Request;
@@ -20,8 +21,11 @@ class SanfCoreApiClient
 
     public function __construct()
     {
-        //TODO INJECT
-        $this->client = app(\GuzzleHttp\Client::class);
+        $verifyOnProduction = config('app.env') === 'production';
+
+        $this->client = new Client([
+            'verify' => $verifyOnProduction,
+        ]);
     }
 
     /**
