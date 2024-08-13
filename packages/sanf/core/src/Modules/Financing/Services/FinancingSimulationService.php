@@ -70,20 +70,20 @@ class FinancingSimulationService extends FinancingService implements Application
 
         return (object) [
             'financing_method_id' => $dto->financingMethodId,
-            'unit_amount' => (float) $dto->unitAmount,
-            'down_payment_percentage' => (float) $dto->downPaymentPercentage,
-            'down_payment_amount' => (float) $dto->downPaymentAmount,
+            'unit_amount' => (int) $dto->unitAmount,
+            'down_payment_percentage' => (int) $dto->downPaymentPercentage,
+            'down_payment_amount' => (int) $dto->downPaymentAmount,
             'first_installment_type' => $dto->firstInstallmentType,
-            'interest_percentage' => (float) $dto->interestPercentage,
+            'interest_percentage' => (int) $dto->interestPercentage,
             'tenor' => $dto->tenor,
-            'first_year_insurance_amount' => (float) $dto->firstYearInsuranceAmount,
-            'admin_fee_amount' => (float) $dto->adminFeeAmount,
-            'provision_amount' => (float) $dto->provisionAmount,
-            'installment_per_month' => (float) number_format($installmentInMonthAmount, 2, '.', ''),
-            'credit_insurance_amount' => (float) number_format($insuranceInCreditAmount, 2, '.', ''),
-            'total_credit_amount' => (float) number_format($totalCreditAmount, 2, '.', ''),
-            'first_installment_amount' => (float) number_format($installmentInMonthAmount, 2, '.', ''),
-            'total_first_payment_amount' => (float) number_format($firstPaymentAmount, 2, '.', ''),
+            'first_year_insurance_amount' => (int) $dto->firstYearInsuranceAmount,
+            'admin_fee_amount' => (int) $dto->adminFeeAmount,
+            'provision_amount' => (int) $dto->provisionAmount,
+            'installment_per_month' => (int) number_format($installmentInMonthAmount, 2, '.', ''),
+            'credit_insurance_amount' => (int) number_format($insuranceInCreditAmount, 2, '.', ''),
+            'total_credit_amount' => (int) number_format($totalCreditAmount, 2, '.', ''),
+            'first_installment_amount' => (int) number_format($installmentInMonthAmount, 2, '.', ''),
+            'total_first_payment_amount' => (int) number_format($firstPaymentAmount, 2, '.', ''),
         ];
     }
 
@@ -97,10 +97,10 @@ class FinancingSimulationService extends FinancingService implements Application
 
         return (object) [
             'financing_method_id' => $dto->financingMethodId,
-            'financing_amount' => (float) $dto->financingAmount,
+            'financing_amount' => (int) $dto->financingAmount,
             'tenor' => $dto->tenor,
-            'installment_per_month' => (float) number_format($calc, 2, '.', ''),
-            'interest_percentage' => (float) $dto->interestPercentage,
+            'installment_per_month' => (int) number_format($calc, 2, '.', ''),
+            'interest_percentage' => (int) $dto->interestPercentage,
         ];
     }
 
@@ -111,13 +111,13 @@ class FinancingSimulationService extends FinancingService implements Application
 
         return (object) [
             'financing_method_id' => $dto->financingMethodId,
-            'invoice_amount' => (float) $dto->invoiceAmount,
-            'interest_percentage' => (float) $dto->interestPercentage,
+            'invoice_amount' => (int) $dto->invoiceAmount,
+            'interest_percentage' => (int) $dto->interestPercentage,
             'tenor' => $dto->tenor,
-            'retention_amount' => (float) $dto->retentionAmount,
-            'retention_percentage' => (float) $dto->retentionPercentage,
-            'diskonto_amount' => (float) number_format($diskontoAmount, 2, '.', ''),
-            'disbursement_amount' => (float) number_format($disbursementAmount, 2, '.', ''),
+            'retention_amount' => (int) $dto->retentionAmount,
+            'retention_percentage' => (int) $dto->retentionPercentage,
+            'diskonto_amount' => (int) number_format($diskontoAmount, 2, '.', ''),
+            'disbursement_amount' => (int) number_format($disbursementAmount, 2, '.', ''),
         ];
     }
 
