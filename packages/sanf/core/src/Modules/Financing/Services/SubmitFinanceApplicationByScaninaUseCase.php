@@ -11,7 +11,6 @@ use Sanf\Core\Modules\Financing\Enums\FinancingStatusEnum;
 use Sanf\Core\Modules\Financing\Exceptions\FinancingApplicationLimitExceedException;
 use Sanf\Core\Modules\Financing\Repositories\FinancingApplicationRepositoryInterface;
 use Sanf\Core\Modules\Financing\Specifications\FinancingApplicationSpecificationFactoryInterface;
-use Sanf\Core\Modules\User\Enums\ProfileType;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 final class SubmitFinanceApplicationByScaninaUseCase implements ApplicationServiceInterface
@@ -38,7 +37,7 @@ final class SubmitFinanceApplicationByScaninaUseCase implements ApplicationServi
         $userCoreResponse = $this->coreClient->findCustomerById($dto->profileXid);
 
         $profile = collect($userCoreResponse['data'])
-            ->where('ID_IDENTITY', ProfileType::PERSONAL)
+            ->where('CUST_ID_SANF', $dto->profileXid)
             ->map(function ($item) {
                 return (object) [
                     'xid' => $item['CUST_ID_SANF'],
