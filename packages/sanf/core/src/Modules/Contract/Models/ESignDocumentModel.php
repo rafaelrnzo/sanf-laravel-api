@@ -9,6 +9,7 @@ class ESignDocumentModel extends AbstractModel
     protected $table = 'esign_document';
 
     protected $fillable = [
+        'document_name',
         'document_file',
         'status_id',
         'version',

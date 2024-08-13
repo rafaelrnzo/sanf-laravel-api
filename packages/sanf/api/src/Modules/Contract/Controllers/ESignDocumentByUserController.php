@@ -31,6 +31,7 @@ use Sanf\Core\Modules\Contract\Services\BrowseDistrictService;
 use Sanf\Core\Modules\Contract\Services\BrowseESignDocumentService;
 use Sanf\Core\Modules\Contract\Services\BrowseProvinceService;
 use Sanf\Core\Modules\Contract\Services\BrowseSubDistrictService;
+use Sanf\Core\Modules\Contract\Services\ESignDocumentDownloadService;
 use Sanf\Core\Modules\Contract\Services\ESignDocumentOTPService;
 use Sanf\Core\Modules\Contract\Services\GenerateSignUrlService;
 use Sanf\Core\Modules\Contract\Services\GetESignUserCheckService;
@@ -350,5 +351,27 @@ final class ESignDocumentByUserController extends RestApiController
 
         return fractal($result, ESignDocumentOTPTransformer::class)
             ->serializeWith(new ArraySerializer());
+    }
+
+    public function downloadDocument(
+        Guard $auth,
+        $xid,
+        $document_id,
+        ESignDocumentDownloadService $eSignDocumentDownloadService,
+        TransactionalSessionInterface $transactionalSession
+    ) {
+        $dto = (object) [
+            'userId' => $auth->id(),
+            'sanfId' => $xid,
+            'documentId' => $document_id,
+        ];
+
+        return $this->streamDownload(
+            function () use ($eSignDocumentDownloadService, $transactionalSession, $dto) {
+            $transactionalService = new TransactionalApplicationService($eSignDocumentDownloadService, $transactionalSession);
+                echo $transactionalService->execute($dto);
+            },
+            "{$dto->documentId}.pdf"
+        );
     }
 }

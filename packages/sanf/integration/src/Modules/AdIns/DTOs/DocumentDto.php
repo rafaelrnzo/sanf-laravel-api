@@ -16,4 +16,5 @@ class DocumentDto extends CamelCaseDataTransferObject
     public ?string $browser;
     public ?string $otp;
     public ?string $selfPhoto;
+    public ?string $documentFileBase64;
 }

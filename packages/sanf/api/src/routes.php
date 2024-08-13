@@ -221,6 +221,7 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
 
     // Ad-Ins e-SignHub
     Route::post('users/profiles/{xid}/contracts/esign-otp', ['as' => 'users.contracts.esign-otp', 'uses' => 'Contract\Controllers\ESignDocumentByUserController@requestOtp']);
+    Route::get('users/profiles/{xid}/contracts/esign-files/{document_id}/download', ['as' => 'users.contracts.esign-files.download', 'uses' => 'Contract\Controllers\ESignDocumentByUserController@downloadDocument']);
 });
 
 Route::group(['prefix' => 'v2', 'middleware' => 'auth'], function () {

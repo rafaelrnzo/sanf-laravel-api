@@ -14,7 +14,6 @@ class BrowseESignDocumentTransformer extends TransformerAbstract
             'document_id' => $item->documentId,
             'reference_no' => $item->referenceNo,
             'status_id' => $item->statusId,
-            'file_url' => ($item->documentFile) ? file_get_temp_url($item->documentFile->path) : null,
             'expired_at' => ($item->expiredAt) ? unix_timestamp($item->expiredAt) : null,
             'created_at' => ($item->createdAt) ? unix_timestamp($item->createdAt) : null,
         ];
