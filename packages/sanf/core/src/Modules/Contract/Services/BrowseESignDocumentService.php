@@ -8,7 +8,6 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Dto\BrowseESignDocumentDto;
 use Sanf\Core\Modules\Contract\Dtos\BrowseProcessFinancingUnitLocationSubmissionByUserRequestDto;
 use Sanf\Core\Modules\Contract\Enums\ESignContractStatusEnum;
-use Sanf\Core\Modules\Contract\Exceptions\ESignUserNotRegisteredException;
 use Sanf\Core\Modules\Contract\Repositories\ESignRepositoryInterface;
 use Sanf\Core\Modules\Contract\Specifications\ESignDocumentSpecificationFactoryInterface;
 use Sanf\Core\Modules\User\AuthModel;
@@ -45,13 +44,6 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
         if (!$user) {
             throw new UserNotFoundException();
         }
-
-        // $userTekenAja = $this->eSignRepository->findUserByUserId($user->id);
-        // if (!$userTekenAja) {
-        //     throw new ESignUserNotRegisteredException();
-        // }
-
-        // get list document from core
         if (!$dto->status_id or $dto->status_id === ESignContractStatusEnum::SUBMITTED) {
             $result['data'] = [];
             try {
@@ -168,6 +160,10 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
         });
         $data = array_filter($data, function ($item) {
             return empty($item->referenceNo) === false && $item->referenceNo !== ' ';
+        });
+
+        $data = array_filter($data, function ($item) use ($newDocumentId) {
+            return $item->statusId !== ESignContractStatusEnum::SUBMITTED || in_array($item->documentId, $newDocumentId);
         });
 
         return (object) [
