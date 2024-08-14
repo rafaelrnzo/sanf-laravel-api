@@ -89,24 +89,25 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
             // skip same document id from core and sanf db
             $existingDocumentId = array_pluck($data, 'documentId');
             $newDocumentId = array_pluck($mapping, 'documentId');
-            $diffDocumentId = array_diff($newDocumentId, $existingDocumentId);
+
+            $data = array_filter($data, function ($item) use ($newDocumentId) {
+                return in_array($item->documentId, $newDocumentId);
+            });
 
             foreach ($mapping as $newDocument) {
-                if (in_array($newDocument->documentId, $diffDocumentId)) {
-                    $data[] = (object) [
-                        'xid' => null,
-                        'documentName' => $newDocument->documentName,
-                        'documentId' => $newDocument->documentId,
-                        'referenceNo' => $newDocument->referenceNo,
-                        'documentFile' => null,
-                        'statusId' => ESignContractStatusEnum::SUBMITTED,
-                        'expiredAt' => $newDocument->expiredAt,
-                        'createdAt' => $newDocument->createdAt,
-                        'userId' => $dto->user_id,
-                        'email' => $user->username,
-                    ];
-                    $total++;
-                }
+                $data[] = (object) [
+                    'xid' => null,
+                    'documentName' => $newDocument->documentName,
+                    'documentId' => $newDocument->documentId,
+                    'referenceNo' => $newDocument->referenceNo,
+                    'documentFile' => null,
+                    'expiredAt' => $newDocument->expiredAt,
+                    'statusId' => ESignContractStatusEnum::SUBMITTED,
+                    'createdAt' => $newDocument->createdAt,
+                    'userId' => $dto->user_id,
+                    'email' => $user->username,
+                ];
+                $total++;
             }
 
             // filter based on submit status
@@ -160,10 +161,6 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
         });
         $data = array_filter($data, function ($item) {
             return empty($item->referenceNo) === false && $item->referenceNo !== ' ';
-        });
-
-        $data = array_filter($data, function ($item) use ($newDocumentId) {
-            return $item->statusId !== ESignContractStatusEnum::SUBMITTED || in_array($item->documentId, $newDocumentId);
         });
 
         return (object) [
