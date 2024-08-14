@@ -6,26 +6,26 @@ use NbsPhp\Core\Dto\CamelCaseDataTransferObject;
 
 class FinancingSimulationPdfDto extends CamelCaseDataTransferObject
 {
-    public ?float $unitAmount;
-    public ?float $financingAmount;
-    public ?float $invoiceAmount;
-    public ?float $downPaymentPercentage;
-    public ?float $retentionAmount;
-    public ?float $retentionPercentage;
-    public ?float $downPaymentAmount;
+    public ?int $unitAmount;
+    public ?int $financingAmount;
+    public ?int $invoiceAmount;
+    public ?int $downPaymentPercentage;
+    public ?int $retentionAmount;
+    public ?int $retentionPercentage;
+    public ?int $downPaymentAmount;
     public ?string $firstInstallmentType;
-    public ?float $interestPercentage;
+    public ?int $interestPercentage;
     public ?int $tenor;
-    public ?float $firstYearInsuranceAmount;
-    public ?float $adminFeeAmount;
-    public ?float $provisionAmount;
-    public ?float $installmentPerMonth;
-    public ?float $creditInsuranceAmount;
-    public ?float $totalCreditAmount;
-    public ?float $firstInstallmentAmount;
-    public ?float $totalFirstPaymentAmount;
-    public ?float $diskontoAmount;
-    public ?float $disbursementAmount;
+    public ?int $firstYearInsuranceAmount;
+    public ?int $adminFeeAmount;
+    public ?int $provisionAmount;
+    public ?int $installmentPerMonth;
+    public ?int $creditInsuranceAmount;
+    public ?int $totalCreditAmount;
+    public ?int $firstInstallmentAmount;
+    public ?int $totalFirstPaymentAmount;
+    public ?int $diskontoAmount;
+    public ?int $disbursementAmount;
     public int $financingMethodId;
     public int $userId;
 }
