@@ -123,7 +123,7 @@ class AdInsESignApiClient
     public function signDocumentCheck(DocumentDto $dto)
     {
         $requestData = [
-            'refNo' => $dto->referenceNo,
+            'refNumber' => $dto->referenceNo,
         ];
         $response = $this->request('document.sign.check', $requestData);
 

@@ -6,16 +6,22 @@ use Carbon\CarbonImmutable;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\Storage;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
+use Sanf\Core\Modules\Contract\Enums\ESignContractStatusEnum;
 use Sanf\Core\Modules\Contract\Exceptions\ESignDocumentNotFoundException;
 use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentRepository;
 
 class ESignDocumentDownloadService implements ApplicationServiceInterface
 {
+    protected ESignDocumentSignCheckService $eSignDocumentSignCheckService;
     protected AdInsESignDownloadDocumentService $adInsDownloadDocumentService;
     protected EloquentESignDocumentRepository $eSignRepository;
 
-    public function __construct(AdInsESignDownloadDocumentService $adInsDownloadDocumentService, EloquentESignDocumentRepository $eSignRepository)
-    {
+    public function __construct(
+        ESignDocumentSignCheckService $eSignDocumentSignCheckService,
+        AdInsESignDownloadDocumentService $adInsDownloadDocumentService,
+        EloquentESignDocumentRepository $eSignRepository
+    ) {
+        $this->eSignDocumentSignCheckService = $eSignDocumentSignCheckService;
         $this->adInsDownloadDocumentService = $adInsDownloadDocumentService;
         $this->eSignRepository = $eSignRepository;
     }
@@ -41,6 +47,10 @@ class ESignDocumentDownloadService implements ApplicationServiceInterface
             'document_file' => $documentMetadata,
             'updated_at' => CarbonImmutable::now(),
         ]);
+
+        if ($eSignDocument->status_id !== ESignContractStatusEnum::COMPLETED) {
+            $eSignDocumentSignCheckResult = $this->eSignDocumentSignCheckService->execute($dto);
+        }
 
         return $documentBinary;
     }
