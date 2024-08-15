@@ -55,19 +55,8 @@ class ESignDocumentSignCheckService implements ApplicationServiceInterface
 
         $statusSigning = array_map(
             function ($signer) use (&$totalSignedDocument) {
-                switch ($signer->signStatus) {
-                    case self::SIGNED:
-                        $signer->signStatus = ESignContractStatusEnum::COMPLETED;
-                        $totalSignedDocument++;
-                        break;
-                    case self::FAILED:
-                        $signer->signStatus = ESignContractStatusEnum::FAILED;
-                        break;
-                    case self::UNSIGNED:
-                    case self::SIGN_IN:
-                    default:
-                        $signer->signStatus = ESignContractStatusEnum::SUBMITTED;
-                        break;
+                if ($signer->status === self::SIGNED) {
+                    $totalSignedDocument++;
                 }
 
                 return (object) $signer;
@@ -88,10 +77,19 @@ class ESignDocumentSignCheckService implements ApplicationServiceInterface
 
         $assigneStatus = array_values($assigneFilterByEmail)[0];
 
+        $assigneDocumentStatus = $eSignDocumentAssignment->status_id;
+        if ($assigneStatus->signStatus === self::SIGNED) {
+            $assigneDocumentStatus = ESignContractStatusEnum::DONE;
+        }
+
+        if ($assigneStatus->signStatus === self::FAILED) {
+            $assigneDocumentStatus = ESignContractStatusEnum::FAILED;
+        }
+
         $this->eSignRepository->updateDocumentAssignee(
             $eSignDocumentAssignment->id,
             [
-                'status_id' => $assigneStatus->signStatus,
+                'status_id' => $assigneDocumentStatus,
                 'updated_at' => CarbonImmutable::now(),
             ]
         );
@@ -100,7 +98,7 @@ class ESignDocumentSignCheckService implements ApplicationServiceInterface
             $this->eSignRepository->updateDocument(
                 $eSignDocument->id,
                 [
-                'status_id' => $assigneStatus->signStatus,
+                'status_id' => ESignContractStatusEnum::COMPLETED,
                 'updated_at' => CarbonImmutable::now(),
                 ]
             );
