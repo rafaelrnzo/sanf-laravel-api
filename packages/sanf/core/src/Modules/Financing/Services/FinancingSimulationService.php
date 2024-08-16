@@ -45,8 +45,8 @@ class FinancingSimulationService extends FinancingService implements Application
 
         switch ($financingMethod->id) {
             case FinancingMethodEnum::SEWA_PEMBIAYAAN:
-            case FinancingMethodEnum::JUAL_SEWA_BALIK:
             case FinancingMethodEnum::PEMBELIAN_ANGSURAN:
+            case FinancingMethodEnum::JUAL_SEWA_BALIK:
                 return $this->calculateFinancingLease($dto);
 
             case FinancingMethodEnum::FASILITAS_MODAL_USAHA:
@@ -65,8 +65,8 @@ class FinancingSimulationService extends FinancingService implements Application
     {
         $installmentInMonthAmount = $this->calculateInstallmentInMonthAmount($dto);
         $insuranceInCreditAmount = ($dto->firstYearInsuranceAmount / 12) * ($dto->tenor - 12);
-        $totalCreditAmount = ($dto->unitAmount - $dto->downPaymentAmount) + $insuranceInCreditAmount;
-        $firstPaymentAmount = $dto->downPaymentAmount + $dto->firstYearInsuranceAmount + $dto->adminFeeAmount + $dto->provisionAmount + $installmentInMonthAmount;
+        $totalCreditAmount = ceil(($dto->unitAmount - $dto->downPaymentAmount) + $insuranceInCreditAmount);
+        $firstPaymentAmount = ceil($dto->downPaymentAmount + $dto->firstYearInsuranceAmount + $dto->adminFeeAmount + $dto->provisionAmount + $installmentInMonthAmount);
 
         return (object) [
             'financing_method_id' => $dto->financingMethodId,
@@ -89,7 +89,6 @@ class FinancingSimulationService extends FinancingService implements Application
 
     private function calculateBusinessCapitalFacilities(RequestFinancingSimulationDto $dto)
     {
-
         $monthlyInterest = $dto->interestPercentage / 1200;
         $presentValueAnnuity = 1 - pow(1 + $monthlyInterest, -$dto->tenor);
 
@@ -133,6 +132,6 @@ class FinancingSimulationService extends FinancingService implements Application
             $monthlyPayment = $monthlyPayment / (1 + $monthlyInterest);
         }
 
-        return $monthlyPayment;
+        return ceil($monthlyPayment);
     }
 }
