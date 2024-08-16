@@ -98,7 +98,7 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
             $newDocumentId = array_pluck($mapping, 'documentId');
 
             $data = array_filter($data, function ($item) use ($newDocumentId) {
-                return in_array($item->documentId, $newDocumentId);
+                return in_array($item->documentId, $newDocumentId) && $item->statusId !== ESignContractStatusEnum::SUBMITTED;
             });
 
             foreach ($mapping as $newDocument) {
