@@ -40,10 +40,10 @@ class ESignDocumentDownloadService implements ApplicationServiceInterface
 
         $documentBinary = base64_decode($downloadResult->documentFileBase64);
 
-        $documentMetadata = $this->upload($documentBinary, $dto->documentId);
+        $filename = $eSignDocument->document_name ?? $dto->documentId;
+        $documentMetadata = $this->upload($documentBinary, $filename);
 
         $this->eSignRepository->updateDocument($eSignDocument->id, [
-            'document_name' => $documentMetadata['file_name'],
             'document_file' => $documentMetadata,
             'updated_at' => CarbonImmutable::now(),
         ]);
