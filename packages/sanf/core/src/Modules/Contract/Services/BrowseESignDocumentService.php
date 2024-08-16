@@ -45,7 +45,9 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
             throw new UserNotFoundException();
         }
         if (!$dto->status_id or $dto->status_id === ESignContractStatusEnum::SUBMITTED) {
-            $result['data'] = [];
+            $result = [
+                'data' => [],
+            ];
             try {
                 $result = $this->client->browseESignDocument($user->username, $dto->keyword);
             } catch (SanfInternalApiDataNotFoundException $exception) {
@@ -54,7 +56,7 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
 
             $mapping = array_map(function ($item) {
                 return (object) [
-                    'documentName' => $item['FILENAME'] ?? null,
+                    'documentName' => $item['FILE_NAME'] ?? null,
                     'documentId' => $item['DOC_ID_TEKENAJA'] ?? null,
                     'referenceNo' => $item['REFERENCE_NO'] ?? null,
                     'expiredAt' => isset($item['EXPIRATION_DATE']) ? Carbon::createFromFormat('d/m/Y', $item['EXPIRATION_DATE'])->endOfDay() : null,
@@ -69,8 +71,13 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
                 $this->eSignDocumentSpecificationFactory->paginateDocumentAssigneeByUserId($user->id, null)
             );
 
-            $data = array_map(function ($item) use ($dto, $user) {
+            $existingNonSubmitDocumentId = [];
+            $data = array_map(function ($item) use ($dto, $user, &$existingNonSubmitDocumentId) {
                 $file = is_string($item->document_file) ? json_decode($item->document_file) : $item->document_file;
+
+                if ($item->assignee_status_id !== ESignContractStatusEnum::SUBMITTED) {
+                    $existingNonSubmitDocumentId[] = $item->document_id;
+                }
 
                 return (object) [
                     'xid' => $item->xid,
@@ -95,6 +102,9 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
             });
 
             foreach ($mapping as $newDocument) {
+                if (in_array($newDocument->documentId, $existingNonSubmitDocumentId) === true) {
+                    continue;
+                }
                 $data[] = (object) [
                     'xid' => null,
                     'documentName' => $newDocument->documentName,
