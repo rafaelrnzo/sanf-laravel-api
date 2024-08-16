@@ -66,7 +66,7 @@
         <ol>
           <li>“<strong>Perusahaan</strong>” berarti PT Adicipta Inovasi Teknologi selaku pemilik dan pengelola situs <a href="https://esignhub.docsol.id" target="_blank">esignhub.docsol.id.</a>
           </li>
-          <li>“<strong>Anda</strong>” atau “<strong>Pengguna</strong>” atau “Pemilik” berarti setiap orang atau badan hukum yang melakukan aksestabilitas terhadap Situs termasuk tetapi tidak terbatas pada aktivasi dan penggunaan atas Layanan yang disediakan oleh Perusahaan. </li>
+          <li>“<strong>Anda</strong>” atau “<strong>Pengguna</strong>” atau “<strong>Pemilik</strong>” berarti setiap orang atau badan hukum yang melakukan aksestabilitas terhadap Situs termasuk tetapi tidak terbatas pada aktivasi dan penggunaan atas Layanan yang disediakan oleh Perusahaan. </li>
           <li>“<strong>Layanan</strong>” berarti penyediaan layanan <i>electronic signature</i>, e-meterai dan layanan digital lainnya yang terdapat didalam Situs dan telah dikonfirmasi oleh Pengguna berdasarkan Formulir Pendaftaran. </li>
           <li>“<strong>Akun</strong>” berarti identitas Anda berdasarkan username dan kode akses sebagaimana yang terdaftar sebagai aksestabilitas penggunaan Layanan yang terdapat didalam Situs. </li>
           <li>“<strong>Situs</strong>” berarti <a href="https://esignhub.docsol.id" target="_blank">esignhub.docsol.id</a>. </li>
@@ -117,7 +117,7 @@
         <ol>
           <li>AdIns memiliki hak untuk menyelidiki dan menuntut setiap pelanggaran sebagaimana yang dimaksud dalam Syarat Dan Ketentuan ini sepanjang dimungkinkan oleh hukum yang berlaku. AdIns dapat melibatkan dan bekerja sama dengan pihak penegak hukum atau institusi lainnya dalam menuntut Pengguna yang terbukti melanggar peraturan dan ketentuan yang telah ditetapkan.</li>
           <li>Apabila diperlukan AdIns dapat bekerjasama, bersikap kooperatif dan independen dalam kaitannya dengan penegakan hukum baik dalam proses penyidikan maupun penyelidikan suatu perkara hukum yang sedang terjadi melalui permintaan secara tertulis terlebih dahulu, Pengguna akan diberitahukan dalam kurun waktu 3 (tiga) hari kerja sebelum pengungkapan informasi yang diperintahkan oleh pengadilan, lembaga hukum, dan penegak hukum yang menangani perkara.</li>
-          <li>AdIns menyediakan Layanan yang tersedia didalam Situs dalam kondisi “as is” atau “sebagaimana adanya”. Pengguna memahami bahwa AdIns tidak memberikan pernyataan atau jaminan dalam bentuk apapun bahwa: <ol type="a">
+          <li>AdIns menyediakan Layanan yang tersedia didalam Situs dalam kondisi “<i>as is</i>” atau “<strong>sebagaimana adanya</strong>”. Pengguna memahami bahwa AdIns tidak memberikan pernyataan atau jaminan dalam bentuk apapun bahwa: <ol type="a">
               <li>Penggunaan Layanan yang tersedia di dalam Situs akan selalu tepat waktu, selalu bekerja tanpa gangguan, atau selalu bebas dari perubahan, penambahan, pengurangan, transmisi, kerusakan, kehilangan, pemindahan, penyembunyian yang diakibatkan oleh tindakan suatu pihak dengan sengaja dan tanpa hak atau melawan hukum;</li>
               <li>Layanan yang tersedia didalam Situs dapat tetap beroperasi dan digunakan bersamaan dengan perangkat atau sistem pihak lainnya yang bukan disediakan atau dimiliki oleh AdIns; dan/atau</li>
               <li>Layanan akan selalu memenuhi harapan Pengguna.</li>
