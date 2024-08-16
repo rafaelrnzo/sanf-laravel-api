@@ -11,5 +11,5 @@ class ResponseESignDocumentOTPDto extends CamelCaseDataTransferObject
     public string $email;
     public CarbonImmutable $expiredAt;
     public string $referenceNo;
-    public string $transactionNo;
+    public ?string $transactionNo;
 }

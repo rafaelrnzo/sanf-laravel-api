@@ -15,6 +15,8 @@ class ESignOTPModel extends AbstractModel
         'email',
         'msisdn',
         'expired_at',
+        'cooldown_end_at',
+        'suspend_end_at',
         'code',
         'reference_no',
         'transaction_no',

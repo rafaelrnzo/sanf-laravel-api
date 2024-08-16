@@ -4,7 +4,7 @@ namespace Sanf\Core\Modules\Contract\Exceptions;
 
 use NbsPhp\Core\Exceptions\ApiException;
 
-class ESignDocumentOTPThrottleException extends ApiException
+class ESignDocumentOTPCooldownException extends ApiException
 {
     protected $code = 'E_OTP_1';
 

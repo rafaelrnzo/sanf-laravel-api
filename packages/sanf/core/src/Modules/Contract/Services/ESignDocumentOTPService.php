@@ -5,12 +5,13 @@ namespace Sanf\Core\Modules\Contract\Services;
 use Carbon\CarbonImmutable;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Dto\RequestESignDocumentOTPDto;
-use Sanf\Core\Modules\Contract\Exceptions\ESignDocumentOTPThrottleException;
 use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentRepository;
 
 class ESignDocumentOTPService implements ApplicationServiceInterface
 {
-    public const INIT_VERSION = 1;
+    protected const INIT_VERSION = 1;
+    protected const COOLDOWN_TIME = 3;
+    protected const SUSPEND_TIME = 2;
 
     private AdInsESignDocumentOTPService $adInsOtpService;
     private EloquentESignDocumentRepository $eSignRepository;
@@ -29,8 +30,22 @@ class ESignDocumentOTPService implements ApplicationServiceInterface
         $msisdn = $this->parseMsisdnWithZeroFormat($dto->msisdn);
 
         $otpRecord = $this->eSignRepository->findOTPRequestBySanfIdAndRefNoWhereCodeIsNull($dto->profileXid, $dto->referenceNo);
-        if ($otpRecord && $otpRecord->expired_at > (CarbonImmutable::now()->format('Y-m-d H:i:s'))) {
-            throw new ESignDocumentOTPThrottleException();
+        $now = (CarbonImmutable::now()->format('Y-m-d H:i:s'));
+
+        if ($otpRecord && $otpRecord->expired_at > $now) {
+            return $otpRecord;
+        }
+
+        if ($otpRecord && $otpRecord->cooldown_end_at > $now) {
+            $cooldownEndAt = CarbonImmutable::parse($otpRecord->cooldown_end_at);
+
+            $otpRecord->expiredAt = $cooldownEndAt->timestamp;
+        }
+
+        if ($otpRecord && $otpRecord->suspend_end_at > $now) {
+            $suspendEndAt = CarbonImmutable::parse($otpRecord->suspend_end_at);
+
+            $otpRecord->expiredAt = $suspendEndAt->timestamp;
         }
 
         $dto->msisdn = $msisdn;
@@ -38,10 +53,38 @@ class ESignDocumentOTPService implements ApplicationServiceInterface
 
         $currentTimestamp = CarbonImmutable::now();
         if (is_null($otpRecord) === false) {
+            $attempt = $otpRecord->attempt + 1;
+
+            $cooldownEndAt = null;
+            $suspendEndAt = null;
+
+            if (is_null($otpRecord->cooldown_end_at) === false) {
+                $cooldownEndAt = CarbonImmutable::parse($otpRecord->cooldown_end_at);
+                if (is_null($otpRecord->suspend_end_at) === false) {
+                    $suspendEndAt = CarbonImmutable::parse($otpRecord->suspend_end_at);
+                    if ($suspendEndAt < $now) {
+                        $cooldownEndAt = null;
+                        $suspendEndAt = null;
+                    }
+                } else {
+                    if ($attempt >= self::SUSPEND_TIME) {
+                        $attempt = 0;
+                        $suspendEndAt = $otpResult->expiredAt->addMinutes(1439); // 1439
+                    }
+                }
+            } else {
+                if ($attempt >= self::COOLDOWN_TIME) {
+                    $attempt = 0;
+                    $cooldownEndAt = $otpResult->expiredAt->addMinutes(4); // 4
+                }
+            }
+
             $otpRecord = $this->eSignRepository->updateOTPRequest($otpRecord->id, [
                 'expired_at' => $otpResult->expiredAt,
                 'transaction_no' => $otpResult->transactionNo,
-                'attempt' => $otpRecord->attempt + 1,
+                'attempt' => $attempt,
+                'cooldown_end_at' => $cooldownEndAt,
+                'suspend_end_at' => $suspendEndAt,
                 'updated_at' => $currentTimestamp,
             ]);
         } else {
