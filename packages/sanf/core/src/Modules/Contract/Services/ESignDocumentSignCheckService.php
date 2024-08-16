@@ -55,7 +55,7 @@ class ESignDocumentSignCheckService implements ApplicationServiceInterface
 
         $statusSigning = array_map(
             function ($signer) use (&$totalSignedDocument) {
-                if ($signer->status === self::SIGNED) {
+                if ($signer->signStatus == self::SIGNED) {
                     $totalSignedDocument++;
                 }
 
@@ -67,7 +67,7 @@ class ESignDocumentSignCheckService implements ApplicationServiceInterface
         $assigneFilterByEmail = array_filter(
             $statusSigning,
             function ($assigne) use ($eSignDocumentAssignment) {
-                return strtolower($assigne->email) === $eSignDocumentAssignment->email;
+                return strtolower($assigne->email) == $eSignDocumentAssignment->email;
             }
         );
 
@@ -78,11 +78,11 @@ class ESignDocumentSignCheckService implements ApplicationServiceInterface
         $assigneStatus = array_values($assigneFilterByEmail)[0];
 
         $assigneDocumentStatus = $eSignDocumentAssignment->status_id;
-        if ($assigneStatus->signStatus === self::SIGNED) {
+        if ($assigneStatus->signStatus == self::SIGNED) {
             $assigneDocumentStatus = ESignContractStatusEnum::DONE;
         }
 
-        if ($assigneStatus->signStatus === self::FAILED) {
+        if ($assigneStatus->signStatus == self::FAILED) {
             $assigneDocumentStatus = ESignContractStatusEnum::FAILED;
         }
 
@@ -94,15 +94,22 @@ class ESignDocumentSignCheckService implements ApplicationServiceInterface
             ]
         );
 
-        if ($totalAssignment === $totalSignedDocument) {
-            $this->eSignRepository->updateDocument(
-                $eSignDocument->id,
-                [
-                'status_id' => ESignContractStatusEnum::COMPLETED,
-                'updated_at' => CarbonImmutable::now(),
-                ]
-            );
+        $documentStatus = $eSignDocument->status_id;
+        if ($totalSignedDocument > 0) {
+            $documentStatus = ESignContractStatusEnum::ON_PROGRESS;
         }
+
+        if ($totalAssignment === $totalSignedDocument) {
+            $documentStatus = ESignContractStatusEnum::COMPLETED;
+        }
+
+        $this->eSignRepository->updateDocument(
+            $eSignDocument->id,
+            [
+                'status_id' => $documentStatus,
+                'updated_at' => CarbonImmutable::now(),
+            ]
+        );
 
         return $statusSigning;
     }
