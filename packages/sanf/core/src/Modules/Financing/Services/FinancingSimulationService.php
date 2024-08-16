@@ -92,7 +92,7 @@ class FinancingSimulationService extends FinancingService implements Application
         $monthlyInterest = $dto->interestPercentage / 1200;
         $presentValueAnnuity = 1 - pow(1 + $monthlyInterest, -$dto->tenor);
 
-        $calc = $dto->financingAmount * $monthlyInterest / $presentValueAnnuity;
+        $calc = ceil($dto->financingAmount * $monthlyInterest / $presentValueAnnuity);
 
         return (object) [
             'financing_method_id' => $dto->financingMethodId,
@@ -106,7 +106,7 @@ class FinancingSimulationService extends FinancingService implements Application
     private function calculateFinancingFactoring(RequestFinancingSimulationDto $dto)
     {
         $diskontoAmount = $dto->invoiceAmount * (($dto->interestPercentage / 100) / 360) * $dto->tenor;
-        $disbursementAmount = $dto->invoiceAmount - $diskontoAmount - $dto->retentionAmount;
+        $disbursementAmount = ceil($dto->invoiceAmount - $diskontoAmount - $dto->retentionAmount);
 
         return (object) [
             'financing_method_id' => $dto->financingMethodId,
