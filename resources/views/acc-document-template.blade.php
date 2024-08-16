@@ -40,7 +40,11 @@
             height: 150px;
         }
 
-        .signer-info {
+        .first-signer-info {
+            margin-top: 2.8em;
+        }
+
+        .second-signer-info {
             margin-top: 7em;
         }
 
@@ -113,7 +117,8 @@
                 <tr>
                     <td>
                         <p>{{ $content['first_signer_company'] }}</p>
-                        <div class="signer-info">
+                        <p>[Dokumen ini dihasilkan secara digital dan tidak memerlukan tanda tangan basah]</p>
+                        <div class="first-signer-info">
                             <span>{{ $content['first_signer_name'] }}</span><br>
                             <span>{{ $content['first_signer_position'] }}</span>
                         </div>
@@ -122,7 +127,7 @@
                     </td>
                     <td>
                         <p>{{ $content['second_signer_company'] }}</p>
-                        <div class="signer-info">
+                        <div class="second-signer-info">
                             <span>{{ $content['second_signer_name'] }}</span><br>
                             <span>{{ $content['second_signer_position'] }}</span>
                         </div>
