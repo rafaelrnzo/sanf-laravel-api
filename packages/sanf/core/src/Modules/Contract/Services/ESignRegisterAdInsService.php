@@ -9,6 +9,7 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Dto\ESignRegisterFormDto;
 use Sanf\Core\Modules\Contract\Enums\ESignRegistrationStatusEnum;
 use Sanf\Core\Modules\Contract\Events\ESignAdsInsRegisterMailEvent;
+use Sanf\Core\Modules\Contract\Events\ESignAdsInsRegisterNotificationEvent;
 use Sanf\Core\Modules\Contract\Exceptions\ESignUserUniqueException;
 use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentRepository;
 
@@ -75,6 +76,7 @@ class ESignRegisterAdInsService implements ApplicationServiceInterface
             'name' => $dto->fullName,
         ];
         event(new ESignAdsInsRegisterMailEvent($bodyEmail));
+        event(new ESignAdsInsRegisterNotificationEvent($dto->userId));
 
         return $userAdInsRecord;
     }
