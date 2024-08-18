@@ -18,6 +18,7 @@ use Sanf\Core\Modules\Commodity\Listeners\SendNotificationRejectCommodityListene
 use Sanf\Core\Modules\Contract\Events\ESignAdsInsRegisterMailEvent;
 use Sanf\Core\Modules\Contract\Events\ESignAdsInsRegisterNotificationEvent;
 use Sanf\Core\Modules\Contract\Events\ESignDocumentDownloadEvent;
+use Sanf\Core\Modules\Contract\Events\ESignDocumentSignCompleteNotificationEvent;
 use Sanf\Core\Modules\Contract\Events\FinancingUnitLocationSubmissionAddedEvent;
 use Sanf\Core\Modules\Contract\Listeners\SendEmailDownloadESignDocumentListener;
 use Sanf\Core\Modules\Contract\Listeners\SendEmailESignAdInsRegisterListener;
@@ -144,6 +145,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         ESignAdsInsRegisterNotificationEvent::class => [
             SendNotificationESignAdInsRegisterListener::class,
+        ],
+        ESignDocumentSignCompleteNotificationEvent::class => [
+            SendNotificationESignDocumentSignCompleteListener::class,
         ],
     ];
 }

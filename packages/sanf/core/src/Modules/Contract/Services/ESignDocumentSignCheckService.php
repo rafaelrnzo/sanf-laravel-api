@@ -5,6 +5,7 @@ namespace Sanf\Core\Modules\Contract\Services;
 use Carbon\CarbonImmutable;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Enums\ESignContractStatusEnum;
+use Sanf\Core\Modules\Contract\Events\ESignDocumentSignCompleteNotificationEvent;
 use Sanf\Core\Modules\Contract\Exceptions\ESignDocumentNotFoundException;
 use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentRepository;
 
@@ -110,6 +111,10 @@ class ESignDocumentSignCheckService implements ApplicationServiceInterface
                 'updated_at' => CarbonImmutable::now(),
             ]
         );
+
+        if ($documentStatus === ESignContractStatusEnum::COMPLETED) {
+            event(new ESignDocumentSignCompleteNotificationEvent($dto->userId, $eSignDocument->document_name));
+        }
 
         return $statusSigning;
     }
