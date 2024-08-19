@@ -24,6 +24,7 @@ use Sanf\Core\Modules\Contract\Listeners\SendEmailDownloadESignDocumentListener;
 use Sanf\Core\Modules\Contract\Listeners\SendEmailESignAdInsRegisterListener;
 use Sanf\Core\Modules\Contract\Listeners\SendEmailRequestChangeFinancingUnitLocationListener;
 use Sanf\Core\Modules\Contract\Listeners\SendNotificationESignAdInsRegisterListener;
+use Sanf\Core\Modules\Contract\Listeners\SendNotificationESignDocumentSignCompleteListener;
 use Sanf\Core\Modules\Financing\Events\FinancingApplicationCreatedEvent;
 use Sanf\Core\Modules\Financing\Listeners\SendEmailNewFinancingApplicationListener;
 use Sanf\Core\Modules\Insurance\Events\InsuranceClaimSubmissionAddedEvent;

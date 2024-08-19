@@ -42,3 +42,6 @@ Route::group(['prefix' => 'v1/public'], function () {
 Route::group(['middleware' => ['http-logger', 'callback:tekenaja-provider']], function () {
     Route::post('v1/public/tekenaja/callback', ['as' => 'tekenaja.callback', 'uses' => 'Contract\ESignDocumentByExternalController@postCallback']);
 });
+
+//
+Route::post('v1/public/ad-ins/esign-hub/callback', ['as' => 'ad-ins.esign-hub.callback', 'uses' => 'Contract\ESignDocumentAdInsController@callback']);
