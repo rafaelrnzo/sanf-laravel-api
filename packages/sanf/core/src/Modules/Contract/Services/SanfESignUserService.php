@@ -72,7 +72,7 @@ class SanfESignUserService implements ApplicationServiceInterface
                 'identityNo' => $adInsUser->identity_no,
             ];
 
-            if ($adInsUser->statusId !== ESignRegistrationStatusEnum::COMPLETE) {
+            if ($adInsUser->status_id !== ESignRegistrationStatusEnum::COMPLETE) {
                 $registerStatus = $this->adInsRegisterCheckService->execute($dto);
 
                 $vendor = 'Vida';
