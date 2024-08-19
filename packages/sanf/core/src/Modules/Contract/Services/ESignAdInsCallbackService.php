@@ -49,11 +49,13 @@ final class ESignAdInsCallbackService implements ApplicationServiceInterface
     {
         try {
             $adInsUser = $this->eSignDocumentRepository->findUserByEmail($dto->email);
-            if ($adInsUser && $adInsUser->status_id !== ESignRegistrationStatusEnum::COMPLETE) {
-                $this->eSignDocumentRepository->updateUser($adInsUser->id, [
-                    'status_id' => ESignRegistrationStatusEnum::COMPLETE,
-                    'updated_at' => CarbonImmutable::now(),
-                ]);
+            if ($adInsUser) {
+                if ($adInsUser->status_id !== ESignRegistrationStatusEnum::COMPLETE) {
+                    $this->eSignDocumentRepository->updateUser($adInsUser->id, [
+                        'status_id' => ESignRegistrationStatusEnum::COMPLETE,
+                        'updated_at' => CarbonImmutable::now(),
+                    ]);
+                }
 
                 $bodyEmail = (object) [
                     'email' => $adInsUser->email,
