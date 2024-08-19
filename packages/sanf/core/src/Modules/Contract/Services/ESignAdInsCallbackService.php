@@ -62,7 +62,7 @@ final class ESignAdInsCallbackService implements ApplicationServiceInterface
                     'name' => $adInsUser->full_name,
                 ];
                 event(new ESignAdsInsRegisterMailEvent($bodyEmail));
-                event(new ESignAdsInsRegisterNotificationEvent($adInsUser->userId));
+                event(new ESignAdsInsRegisterNotificationEvent($adInsUser->user_id));
             }
         } catch (Exception $exception) {
             report($exception);
