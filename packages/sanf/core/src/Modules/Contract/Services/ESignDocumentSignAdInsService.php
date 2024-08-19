@@ -48,6 +48,11 @@ class ESignDocumentSignAdInsService implements ApplicationServiceInterface
             'updated_at' => CarbonImmutable::now(),
         ]);
 
+        $this->eSignRepository->updateDocument($eSignDocument->id, [
+            'status_id' => ESignContractStatusEnum::ON_PROGRESS,
+            'updated_at' => CarbonImmutable::now(),
+        ]);
+
         $otpRecord = $this->eSignRepository->findOTPRequestBySanfIdWhereCodeIsNull($dto->sanfId);
         if (is_null($otpRecord) === true) {
             throw new ESignDocumentOTPNotFoundException();
