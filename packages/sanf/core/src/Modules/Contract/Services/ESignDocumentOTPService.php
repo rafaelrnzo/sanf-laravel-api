@@ -40,12 +40,16 @@ class ESignDocumentOTPService implements ApplicationServiceInterface
             $cooldownEndAt = CarbonImmutable::parse($otpRecord->cooldown_end_at);
 
             $otpRecord->expiredAt = $cooldownEndAt->timestamp;
+
+            return $otpRecord;
         }
 
         if ($otpRecord && $otpRecord->suspend_end_at > $now) {
             $suspendEndAt = CarbonImmutable::parse($otpRecord->suspend_end_at);
 
             $otpRecord->expiredAt = $suspendEndAt->timestamp;
+
+            return $otpRecord;
         }
 
         $dto->msisdn = $msisdn;
