@@ -32,6 +32,7 @@ class EloquentPaginateFinancingMethodByFacilitySpecification
             ->select([
                 'financing_method.id',
                 'financing_method.name',
+                'financing_method.interest_rate',
                 'financing_method.created_at',
             ])
             ->leftJoin('financing_facility_method', 'financing_facility_method.method_id', '=', 'financing_method.id')
