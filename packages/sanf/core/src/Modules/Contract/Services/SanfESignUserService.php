@@ -43,6 +43,7 @@ class SanfESignUserService implements ApplicationServiceInterface
         $eSignSanfUserMapping = array_map(function ($item) use ($userSanfResponse) {
             return [
                 'email' => isset($item['EMAIL']) ? $item['EMAIL'] : $userSanfResponse->getEmail(),
+                'msisdn' => isset($item['MOBILE']) ? $item['MOBILE'] : $userSanfResponse->getPhoneNumber(),
                 'statusId' => ESignRegistrationStatusEnum::AVAILABLE,
             ];
         }, $eSignSanfUserResponse['data'])[0];
