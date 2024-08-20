@@ -64,6 +64,12 @@ class FinancingSimulationService extends FinancingService implements Application
     private function calculateFinancingLease(RequestFinancingSimulationDto $dto)
     {
         $installmentInMonthAmount = $this->calculateInstallmentInMonthAmount($dto);
+        $firstInstallmentAmount = $installmentInMonthAmount;
+
+        if ($dto->firstInstallmentType == FirstInstallmentTypeEnum::ADDB) {
+            $installmentInMonthAmount = 0;
+        }
+
         $insuranceInCreditAmount = ($dto->firstYearInsuranceAmount / 12) * ($dto->tenor - 12);
         $totalCreditAmount = ceil(($dto->unitAmount - $dto->downPaymentAmount) + $insuranceInCreditAmount);
         $firstPaymentAmount = ceil($dto->downPaymentAmount + $dto->firstYearInsuranceAmount + $dto->adminFeeAmount + $dto->provisionAmount + $installmentInMonthAmount);
