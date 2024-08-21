@@ -2,6 +2,7 @@
 
 namespace Sanf\Core\Modules\Contract\Services;
 
+use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
@@ -46,9 +47,9 @@ class SanfESignUserService implements ApplicationServiceInterface
                 'msisdn' => isset($item['MOBILE']) ? $item['MOBILE'] : $userSanfResponse->getPhoneNumber(),
                 'nik' => isset($item['NIK']) ? $item['NIK'] : $userSanfResponse->getIdentityNumber(),
                 'fullName' => isset($item['NAME']) ? $item['NAME'] : $userSanfResponse->getFullName(),
-                'dob' => isset($item['DOB']) ? $item['DOB'] : $userSanfResponse->getBirthdate(),
+                'dob' => isset($item['DOB']) ? Carbon::createFromFormat('d/m/Y', $item['DOB'])->format('Y-m-d') : $userSanfResponse->getBirthdate(),
                 'pob' => isset($item['POB']) ? $item['POB'] : null,
-                'gender' => isset($item['GENDER']) ? (int) $item['GENDER'] : $userSanfResponse->getGender(),
+                'gender' => isset($item['GENDER']) ? (int) ($item['GENDER'] == 'F') : $userSanfResponse->getGender(),
                 'address' => isset($item['ADDRESS']) ? $item['ADDRESS'] : $userSanfResponse->getAddress(),
                 'postalCode' => isset($item['ZIP_CODE']) ? (int) $item['ZIP_CODE'] : $userSanfResponse->getPostcode(),
                 'statusId' => ESignRegistrationStatusEnum::AVAILABLE,

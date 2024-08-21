@@ -16,7 +16,7 @@ class ResponseESignUserDto extends DataTransferObject
     public ?string $pob;
     public ?int $gender;
     public ?string $address;
-    public ?string $postalCode;
+    public ?int $postalCode;
     public ?string $province;
     public ?string $city;
     public ?string $district;
