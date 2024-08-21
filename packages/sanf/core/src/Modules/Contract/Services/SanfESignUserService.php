@@ -51,7 +51,7 @@ class SanfESignUserService implements ApplicationServiceInterface
                 'pob' => isset($item['POB']) ? $item['POB'] : null,
                 'gender' => isset($item['GENDER']) ? (int) ($item['GENDER'] == 'F') : $userSanfResponse->getGender(),
                 'address' => isset($item['ADDRESS']) ? $item['ADDRESS'] : $userSanfResponse->getAddress(),
-                'postalCode' => isset($item['ZIP_CODE']) ? (int) $item['ZIP_CODE'] : $userSanfResponse->getPostcode(),
+                'postalCode' => isset($item['ZIP_CODE']) ? (string) $item['ZIP_CODE'] : $userSanfResponse->getPostcode(),
                 'statusId' => ESignRegistrationStatusEnum::AVAILABLE,
             ];
         }, $eSignSanfUserResponse['data'])[0];
