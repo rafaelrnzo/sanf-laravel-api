@@ -13,7 +13,7 @@ class FinancingListTransformer extends TransformerAbstract
             'name' => (string) $item->name,
         ];
 
-        if ($item->interest_rate) {
+        if (optional($item)->interest_rate) {
             $transformer['interest_rate'] = (float) number_format($item->interest_rate, 2, '.', '');
         }
 
