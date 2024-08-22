@@ -358,7 +358,7 @@ class FinancingController extends RestApiController
         Guard $auth
     ) {
         $input = $this->validate($request, [
-            'financing_amount' => ['required', 'numeric'],
+            'financing_amount' => ['required', 'numeric', 'max:500000000'],
             'interest_percentage' => ['required', 'integer'],
             'tenor' => ['required', 'integer'],
             'is_send_email' => ['required', 'boolean'],
