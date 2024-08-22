@@ -28,6 +28,7 @@ class SendNotificationPlafondDisbursementSubmittedListener
                 'bowheer' => $content->bowheer,
                 'disbursementXid' => $content->disbursementXid,
                 'submissionXid' => $content->submissionXid,
+                'totalAmount' => 'Rp. ' . number_format($content->totalAmount, 0, ',', '.'),
             ];
             dispatch(new SendNotificationPlafondDisbursementSubmittedForCustomerJob($customerNotificationDto));
         }

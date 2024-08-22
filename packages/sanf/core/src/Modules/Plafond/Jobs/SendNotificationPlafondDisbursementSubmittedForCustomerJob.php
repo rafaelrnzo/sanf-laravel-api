@@ -31,7 +31,7 @@ class SendNotificationPlafondDisbursementSubmittedForCustomerJob implements Shou
     public function handle(SendNotificationPlafondDisbursementForCustomerUseCase $useCase)
     {
         $webPartnerUrl = config('web-partner.base_url') . "plafond/disbursements/{$this->dto->disbursementXid}/submissions/{$this->dto->submissionXid}";
-        $body = "<span><b>{$this->dto->client}</b> telah melakukan pengajuan dan membutuhkan review Anda. Periksa sekarang!</span>";
+        $body = "<span><b>{$this->dto->client}</b> telah melakukan pengajuan sejumlah {$this->dto->totalAmount} dan membutuhkan review Anda. Periksa sekarang!</span>";
         $notificationData = [
             'xid' => nano_id(),
             'notifiable_type' => 'bowheer_id',
