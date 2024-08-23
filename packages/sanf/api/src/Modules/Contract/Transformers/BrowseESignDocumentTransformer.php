@@ -8,9 +8,11 @@ class BrowseESignDocumentTransformer extends TransformerAbstract
 {
     public function transform($item)
     {
+        $documentName = $item->documentName ?? $item->documentId;
+
         return [
             'xid' => $item->xid,
-            'title' => $item->documentName ?? $item->documentId,
+            'title' => preg_replace('/^final-/', '', $documentName),
             'document_id' => $item->documentId,
             'reference_no' => $item->referenceNo,
             'status_id' => $item->statusId,
