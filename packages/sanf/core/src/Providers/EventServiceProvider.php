@@ -15,6 +15,8 @@ use Sanf\Core\Modules\Commodity\Events\CommodityUpdatedEvent;
 use Sanf\Core\Modules\Commodity\Listeners\SendEmailRequestApprovalCommodityListener;
 use Sanf\Core\Modules\Commodity\Listeners\SendNotificationApprovalCommodityListener;
 use Sanf\Core\Modules\Commodity\Listeners\SendNotificationRejectCommodityListener;
+use Sanf\Core\Modules\Contract\Events\AdInsDocumentSignCallbackEvent;
+use Sanf\Core\Modules\Contract\Events\AdInsRegisterActivationCallbackEvent;
 use Sanf\Core\Modules\Contract\Events\ESignAdsInsRegisterMailEvent;
 use Sanf\Core\Modules\Contract\Events\ESignAdsInsRegisterNotificationEvent;
 use Sanf\Core\Modules\Contract\Events\ESignDocumentDownloadEvent;
@@ -25,6 +27,8 @@ use Sanf\Core\Modules\Contract\Listeners\SendEmailESignAdInsRegisterListener;
 use Sanf\Core\Modules\Contract\Listeners\SendEmailRequestChangeFinancingUnitLocationListener;
 use Sanf\Core\Modules\Contract\Listeners\SendNotificationESignAdInsRegisterListener;
 use Sanf\Core\Modules\Contract\Listeners\SendNotificationESignDocumentSignCompleteListener;
+use Sanf\Core\Modules\Contract\Listeners\UpdateAdInsUserStatusListener;
+use Sanf\Core\Modules\Contract\Listeners\UpdateESignDocumentStatusListener;
 use Sanf\Core\Modules\Financing\Events\FinancingApplicationCreatedEvent;
 use Sanf\Core\Modules\Financing\Listeners\SendEmailNewFinancingApplicationListener;
 use Sanf\Core\Modules\Insurance\Events\InsuranceClaimSubmissionAddedEvent;
@@ -149,6 +153,12 @@ class EventServiceProvider extends ServiceProvider
         ],
         ESignDocumentSignCompleteNotificationEvent::class => [
             SendNotificationESignDocumentSignCompleteListener::class,
+        ],
+        AdInsRegisterActivationCallbackEvent::class => [
+            UpdateAdInsUserStatusListener::class,
+        ],
+        AdInsDocumentSignCallbackEvent::class => [
+            UpdateESignDocumentStatusListener::class,
         ],
     ];
 }
