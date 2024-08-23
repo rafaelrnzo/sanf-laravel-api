@@ -2,9 +2,6 @@
 
 namespace Sanf\Core\Modules\Contract\Services;
 
-use Carbon\CarbonImmutable;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
-use Illuminate\Support\Facades\Storage;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Enums\ESignContractStatusEnum;
 use Sanf\Core\Modules\Contract\Exceptions\ESignDocumentNotFoundException;
@@ -40,42 +37,10 @@ class ESignDocumentDownloadService implements ApplicationServiceInterface
 
         $documentBinary = base64_decode($downloadResult->documentFileBase64);
 
-        $filename = $eSignDocument->document_name ?? $dto->documentId;
-        $documentMetadata = $this->upload($documentBinary, $filename);
-
-        $this->eSignRepository->updateDocument($eSignDocument->id, [
-            'document_file' => $documentMetadata,
-            'updated_at' => CarbonImmutable::now(),
-        ]);
-
         if ($eSignDocument->status_id !== ESignContractStatusEnum::COMPLETED) {
-            $eSignDocumentSignCheckResult = $this->eSignDocumentSignCheckService->execute($dto);
+            $this->eSignDocumentSignCheckService->execute($dto);
         }
 
         return $documentBinary;
-    }
-
-    protected function upload(string $documentBinary, string $documentName)
-    {
-        $adInsDocumentPath = config('image-path.document_adins');
-        $filename = "{$documentName}.pdf";
-        $filePath = "{$adInsDocumentPath}{$filename}";
-
-        Storage::disk('minio_post')->put($filePath, $documentBinary, 'public');
-
-        $fileExist = Storage::disk('minio_post')->exists("$filePath");
-        if (is_null($fileExist) === true) {
-            throw new FileNotFoundException("{$adInsDocumentPath}");
-        }
-
-        $metadata = Storage::disk('minio_post')->getMetaData("$filePath");
-
-        return [
-            'file_name' => $filename,
-            'directory' => $adInsDocumentPath,
-            'path' => "$filePath",
-            'mime_type' => $metadata['mimetype'],
-            'size' => $metadata['size'],
-        ];
     }
 }
