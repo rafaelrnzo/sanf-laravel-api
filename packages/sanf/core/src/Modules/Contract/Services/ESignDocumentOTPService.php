@@ -37,17 +37,13 @@ class ESignDocumentOTPService implements ApplicationServiceInterface
         }
 
         if ($otpRecord && $otpRecord->cooldown_end_at > $now) {
-            $cooldownEndAt = CarbonImmutable::parse($otpRecord->cooldown_end_at);
-
-            $otpRecord->expiredAt = $cooldownEndAt->timestamp;
+            $otpRecord->expired_at = $otpRecord->cooldown_end_at;
 
             return $otpRecord;
         }
 
         if ($otpRecord && $otpRecord->suspend_end_at > $now) {
-            $suspendEndAt = CarbonImmutable::parse($otpRecord->suspend_end_at);
-
-            $otpRecord->expiredAt = $suspendEndAt->timestamp;
+            $otpRecord->expired_at = $otpRecord->suspend_end_at;
 
             return $otpRecord;
         }
