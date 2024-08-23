@@ -2,16 +2,15 @@
 
 namespace Sanf\External\Modules\Contract;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Validation\Rule;
+use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Database\TransactionalSessionInterface;
 use NbsPhp\Core\Services\TransactionalApplicationService;
 use Sanf\Core\Modules\Contract\Enums\AdInsCallbackTypeEnum;
 use Sanf\Core\Modules\Contract\Services\ESignAdInsCallbackService;
 
-class ESignDocumentAdInsController extends Controller
+class ESignDocumentAdInsController extends RestApiController
 {
     protected TransactionalSessionInterface $transactionalSession;
     protected ESignAdInsCallbackService $callbackService;
@@ -102,12 +101,11 @@ class ESignDocumentAdInsController extends Controller
         $transactionalService = new TransactionalApplicationService($this->callbackService, $this->transactionalSession);
         $transactionalService->execute($dto);
 
-        return response(
-            '{"status":{"code":0,"message":"Success"}}',
-            Response::HTTP_OK,
-            [
-                'Content-Type' => 'application/json',
-            ]
-        );
+        return response()->json([
+            'status' => [
+                'code' => 0,
+                'message' => 'Success',
+            ],
+        ]);
     }
 }
