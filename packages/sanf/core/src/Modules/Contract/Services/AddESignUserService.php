@@ -165,8 +165,8 @@ final class AddESignUserService implements ApplicationServiceInterface
                 }, $messages);
                 throw new TekenAjaInvalidParameterRegistrationException(implode('|', $response));
                 break;
-            default:
             case TekenAjaApiResponseErrorCodeEnum::SYSTEM_FAILURE:
+            default:
                 throw new TekenAjaExternalApiException($messages);
         }
     }
