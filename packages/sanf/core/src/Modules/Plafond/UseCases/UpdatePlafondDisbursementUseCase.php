@@ -4,8 +4,6 @@ namespace Sanf\Core\Modules\Plafond\UseCases;
 
 use Illuminate\Support\Facades\Storage;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use NbsPhp\Notification\Repositories\UserNotificationRepositoryInterface;
-use NbsPhp\Notification\Services\PushNotificationServiceInterface;
 use Sanf\Core\Modules\Plafond\Dtos\DisbursementAllocationFormRequest;
 use Sanf\Core\Modules\Plafond\Dtos\DisbursementDocumentFormRequest;
 use Sanf\Core\Modules\Plafond\Dtos\DisbursementInvoiceFormRequest;
@@ -24,25 +22,18 @@ use Sanf\Core\Modules\User\Repositories\ProfileRepositoryInterface;
 final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterface
 {
     private const DEFAULT_AMOUNT = 0.0;
-    private const DEFAULT_VERSION = 1;
 
     private $coreClientRepository;
     private $disbursementRepository;
-    private $userNotificationRepository;
-    private $pushNotificationService;
     private $submitToCoreUseCase;
 
     public function __construct(
         PlafondDisbursementRepositoryInterface $disbursementRepository,
         ProfileRepositoryInterface $coreClientRepository,
-        UserNotificationRepositoryInterface $userNotificationRepository,
-        PushNotificationServiceInterface $pushNotificationService,
         SubmitPlafondDisbursementCoreUseCase $submitToCoreUseCase
     ) {
         $this->coreClientRepository = $coreClientRepository;
         $this->disbursementRepository = $disbursementRepository;
-        $this->userNotificationRepository = $userNotificationRepository;
-        $this->pushNotificationService = $pushNotificationService;
         $this->submitToCoreUseCase = $submitToCoreUseCase;
     }
 
@@ -231,7 +222,7 @@ final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterf
                 'plafondId' => $formRequest->plafondId,
                 'disbursementId' => $disbursementModel->xid,
             ];
-            $submitToCore = $this->submitToCoreUseCase->execute($coreFormRequest);
+            $this->submitToCoreUseCase->execute($coreFormRequest);
         }
 
         $mailContent = (object) [

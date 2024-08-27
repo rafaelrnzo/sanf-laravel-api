@@ -12,7 +12,6 @@ use Sanf\Core\Modules\User\AuthModel;
 class ReadUploadRequestedDocumentService implements ApplicationServiceInterface
 {
     private AuthModel $userRepository;
-    private BrowseRequestedDocumentFromCoreService $coreService;
     private RequestedDocumentRepositoryInterface $requestedDocumentEloquentRepository;
 
     public function __construct(
