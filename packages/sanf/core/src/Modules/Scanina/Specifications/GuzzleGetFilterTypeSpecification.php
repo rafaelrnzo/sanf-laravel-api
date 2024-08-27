@@ -2,6 +2,7 @@
 
 namespace Sanf\Core\Modules\Scanina\Specifications;
 
+use NbsPhp\Core\Exceptions\UndefinedSwitchCaseException;
 use Sanf\Core\Modules\Scanina\Dtos\BrowseProductFilterRequestDto;
 use Sanf\Core\Modules\Scanina\Dtos\ScaninaProductFilterDto;
 use Sanf\Core\Modules\Scanina\Enums\ScaninaProductTypeEnum;
@@ -35,6 +36,10 @@ class GuzzleGetFilterTypeSpecification
                 break;
             case ScaninaProductTypeEnum::BUY:
                 $type = 'buy';
+                break;
+            default:
+                throw new UndefinedSwitchCaseException();
+                break;
         }
 
         $queryParam['type'] = $type;

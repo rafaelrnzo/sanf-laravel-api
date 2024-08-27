@@ -5,6 +5,7 @@ namespace Sanf\Core\Modules\RequestedDocument\Services;
 use Carbon\Carbon;
 use GuzzleHttp\Exception\GuzzleException;
 use NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException;
+use NbsPhp\Core\Exceptions\UndefinedSwitchCaseException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\RequestedDocument\Dtos\ListRequestedDocumentDto;
 use Sanf\Core\Modules\RequestedDocument\Enums\DocumentTypeEnum;
@@ -38,6 +39,9 @@ class BrowseRequestedDocumentFromCoreService implements ApplicationServiceInterf
                     break;
                 case DocumentTypeEnum::PERSONAL:
                     $type = DocumentTypeEnum::PERSONAL_LABEL;
+                    break;
+                default:
+                    throw new UndefinedSwitchCaseException();
                     break;
             }
 
@@ -89,6 +93,9 @@ class BrowseRequestedDocumentFromCoreService implements ApplicationServiceInterf
                     break;
                 case DocumentTypeEnum::PERSONAL_LABEL:
                     $documentType = DocumentTypeEnum::PERSONAL;
+                    break;
+                default:
+                    throw new UndefinedSwitchCaseException();
                     break;
             }
 

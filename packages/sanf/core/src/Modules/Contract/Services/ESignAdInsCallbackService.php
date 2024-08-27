@@ -2,6 +2,7 @@
 
 namespace Sanf\Core\Modules\Contract\Services;
 
+use NbsPhp\Core\Exceptions\UndefinedSwitchCaseException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Enums\AdInsCallbackTypeEnum;
 use Sanf\Core\Modules\Contract\Events\AdInsDocumentSignCallbackEvent;
@@ -37,6 +38,9 @@ final class ESignAdInsCallbackService implements ApplicationServiceInterface
                 break;
             case AdInsCallbackTypeEnum::DOCUMENT_SIGN_COMPLETE:
                 event(new AdInsDocumentSignCallbackEvent($dto));
+                break;
+            default:
+                throw new UndefinedSwitchCaseException();
                 break;
         }
 
