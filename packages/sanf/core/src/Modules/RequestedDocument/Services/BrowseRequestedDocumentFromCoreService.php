@@ -30,19 +30,21 @@ class BrowseRequestedDocumentFromCoreService implements ApplicationServiceInterf
     public function execute($dto = null)
     {
         try {
-            switch ($dto->document_type) {
-                case DocumentTypeEnum::CONTRACT:
-                    $type = DocumentTypeEnum::CONTRACT_LABEL;
-                    break;
-                case DocumentTypeEnum::SUBMISSION:
-                    $type = DocumentTypeEnum::SUBMISSION_LABEL;
-                    break;
-                case DocumentTypeEnum::PERSONAL:
-                    $type = DocumentTypeEnum::PERSONAL_LABEL;
-                    break;
-                default:
-                    throw new UndefinedSwitchCaseException();
-                    break;
+            if ($dto->document_type) {
+                switch ($dto->document_type) {
+                    case DocumentTypeEnum::CONTRACT:
+                        $type = DocumentTypeEnum::CONTRACT_LABEL;
+                        break;
+                    case DocumentTypeEnum::SUBMISSION:
+                        $type = DocumentTypeEnum::SUBMISSION_LABEL;
+                        break;
+                    case DocumentTypeEnum::PERSONAL:
+                        $type = DocumentTypeEnum::PERSONAL_LABEL;
+                        break;
+                    default:
+                        throw new UndefinedSwitchCaseException();
+                        break;
+                }
             }
 
             $sortBy = $dto->sort_by;
@@ -52,7 +54,7 @@ class BrowseRequestedDocumentFromCoreService implements ApplicationServiceInterf
 
             $arguments = (object) [
                 'profile_xid' => $dto->profile_xid,
-                //'document_type' => $type ?? null, TODO please fix filter document type at sanf core api
+                'document_type' => $type ?? null,
                 'skip' => $dto->skip,
                 'limit' => $dto->limit,
                 'order' => ucwords($sortBy),
