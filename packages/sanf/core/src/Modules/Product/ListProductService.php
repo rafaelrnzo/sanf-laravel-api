@@ -18,11 +18,13 @@ class ListProductService implements ApplicationServiceInterface
     {
         // prepare filter;
         $filter = [];
-        if ($dto->id)
+        if ($dto->id) {
             $filter += ['id' => "id = {$dto->id}"];
+        }
 
-        if ($dto->title)
+        if ($dto->title) {
             $filter += ['title' => "title like '%{$dto->title}%'"];
+        }
 
         // concat with 'and' separator;
         $search = implode(' and ', $filter);

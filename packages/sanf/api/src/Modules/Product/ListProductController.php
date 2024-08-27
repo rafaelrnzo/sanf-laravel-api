@@ -25,10 +25,18 @@ class ListProductController extends RestApiController
 
         // set property;
         $property = [];
-        if (isset($inputs['limit'])) $property += ['limit' => (int) $inputs['limit']];
-        if (isset($inputs['offset'])) $property += ['offset' => (int) $inputs['offset']];
-        if (isset($inputs['id'])) $property += ['id' => (int) $inputs['id']];
-        if (isset($inputs['title'])) $property += ['title' => $inputs['title']];
+        if (isset($inputs['limit'])) {
+            $property += ['limit' => (int) $inputs['limit']];
+        }
+        if (isset($inputs['offset'])) {
+            $property += ['offset' => (int) $inputs['offset']];
+        }
+        if (isset($inputs['id'])) {
+            $property += ['id' => (int) $inputs['id']];
+        }
+        if (isset($inputs['title'])) {
+            $property += ['title' => $inputs['title']];
+        }
 
         // set up dto;
         $dto = new ListProductRequestDto($property);
@@ -38,7 +46,6 @@ class ListProductController extends RestApiController
 
         // sent response;
         return fractal($result->list, ListProductTransformer::class)->serializeWith(new ArraySerializer());
-
     }
 
     private function validating(Request $request)
@@ -49,7 +56,8 @@ class ListProductController extends RestApiController
                 'max:20',
             ],
             'title' => [
-                'nullable', 'string',
+                'nullable',
+                'string',
                 'max:255',
             ],
             'limit' => [

@@ -26,8 +26,12 @@ class ListBranchController extends RestApiController
 
         // set property;
         $property = [];
-        if (isset($inputs['limit'])) $property += ['limit' => (int) $inputs['limit']];
-        if (isset($inputs['offset'])) $property += ['offset' => (int) $inputs['offset']];
+        if (isset($inputs['limit'])) {
+            $property += ['limit' => (int) $inputs['limit']];
+        }
+        if (isset($inputs['offset'])) {
+            $property += ['offset' => (int) $inputs['offset']];
+        }
 
         // set up dto;
         $dto = new ListBranchRequestDto($property);
