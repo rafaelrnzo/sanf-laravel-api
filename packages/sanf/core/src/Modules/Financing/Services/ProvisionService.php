@@ -14,6 +14,7 @@ class ProvisionService implements ApplicationServiceInterface
             $netToFinance = ($dto->unitAmount - $dto->downPaymentAmount) + $insuranceInCreditAmount;
 
             $dto->provisionAmount = ((1 / 100) * $netToFinance);
+            $dto->provisionAmount = ceil($dto->provisionAmount / 1000) * 1000;
 
             return $dto;
         }
@@ -22,6 +23,7 @@ class ProvisionService implements ApplicationServiceInterface
         $netToFinance = ($dto->unitAmount - $dto->downPaymentAmount) + $insuranceInCreditAmount;
 
         $dto->provisionAmount = ((1 / 100) * $netToFinance);
+        $dto->provisionAmount = ceil($dto->provisionAmount / 1000) * 1000;
 
         return $dto;
     }

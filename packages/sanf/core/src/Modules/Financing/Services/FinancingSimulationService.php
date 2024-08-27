@@ -63,15 +63,24 @@ class FinancingSimulationService extends FinancingService implements Application
 
     private function calculateFinancingLease(RequestFinancingSimulationDto $dto)
     {
-        $installmentInMonthAmount = $this->calculateInstallmentInMonthAmount($dto);
-
-        if ($dto->firstInstallmentType == FirstInstallmentTypeEnum::ADDB) {
-            $installmentInMonthAmount = 0;
-        }
 
         $insuranceInCreditAmount = ($dto->firstYearInsuranceAmount / 12) * ($dto->tenor - 12);
+        if ($dto->financingMethodId === FinancingMethodEnum::PEMBELIAN_ANGSURAN) {
+            $insuranceInCreditAmount = ((80 / 100) * $dto->firstYearInsuranceAmount / 12) * ($dto->tenor - 12);
+        }
+        $insuranceInCreditAmount = ceil($insuranceInCreditAmount / 1000) * 1000;
+
         $totalCreditAmount = ($dto->unitAmount - $dto->downPaymentAmount) + $insuranceInCreditAmount;
-        $firstPaymentAmount = $dto->firstYearInsuranceAmount + $dto->adminFeeAmount + $dto->provisionAmount + $installmentInMonthAmount;
+        $totalCreditAmount = ceil($totalCreditAmount / 1000) * 1000;
+
+        $installmentInMonthAmount = $this->calculateInstallmentInMonthAmount($dto, $totalCreditAmount);
+
+        $firsInstallmentAmount = $installmentInMonthAmount;
+        if ($dto->firstInstallmentType == FirstInstallmentTypeEnum::ADDB) {
+            $firsInstallmentAmount = 0;
+        }
+
+        $firstPaymentAmount = $dto->firstYearInsuranceAmount + $dto->adminFeeAmount + $dto->provisionAmount + $firsInstallmentAmount;
 
         return (object) [
             'financing_method_id' => $dto->financingMethodId,
@@ -84,11 +93,11 @@ class FinancingSimulationService extends FinancingService implements Application
             'first_year_insurance_amount' => (int) $dto->firstYearInsuranceAmount,
             'admin_fee_amount' => (int) $dto->adminFeeAmount,
             'provision_amount' => (int) $dto->provisionAmount,
-            'installment_per_month' => (int) number_format(round($installmentInMonthAmount), 2, '.', ''),
-            'credit_insurance_amount' => (int) number_format(round($insuranceInCreditAmount), 2, '.', ''),
-            'total_credit_amount' => (int) number_format(round($totalCreditAmount), 2, '.', ''),
-            'first_installment_amount' => (int) number_format(round($installmentInMonthAmount), 2, '.', ''),
-            'total_first_payment_amount' => (int) number_format(round($firstPaymentAmount), 2, '.', ''),
+            'installment_per_month' => (int) number_format($installmentInMonthAmount, 2, '.', ''),
+            'credit_insurance_amount' => (int) number_format($insuranceInCreditAmount, 2, '.', ''),
+            'total_credit_amount' => (int) number_format($totalCreditAmount, 2, '.', ''),
+            'first_installment_amount' => (int) number_format($firsInstallmentAmount, 2, '.', ''),
+            'total_first_payment_amount' => (int) number_format($firstPaymentAmount, 2, '.', ''),
         ];
     }
 
@@ -97,13 +106,14 @@ class FinancingSimulationService extends FinancingService implements Application
         $monthlyInterest = $dto->interestPercentage / 1200;
         $presentValueAnnuity = 1 - pow(1 + $monthlyInterest, -$dto->tenor);
 
-        $calc = round($dto->financingAmount * $monthlyInterest / $presentValueAnnuity);
+        $installmentInMonthAmount = $dto->financingAmount * $monthlyInterest / $presentValueAnnuity;
+        $installmentInMonthAmount = ceil($installmentInMonthAmount / 1000) * 1000;
 
         return (object) [
             'financing_method_id' => $dto->financingMethodId,
             'financing_amount' => (int) $dto->financingAmount,
             'tenor' => $dto->tenor,
-            'installment_per_month' => (int) number_format($calc, 2, '.', ''),
+            'installment_per_month' => (int) number_format($installmentInMonthAmount, 2, '.', ''),
             'interest_percentage' => (int) $dto->interestPercentage,
         ];
     }
@@ -111,7 +121,10 @@ class FinancingSimulationService extends FinancingService implements Application
     private function calculateFinancingFactoring(RequestFinancingSimulationDto $dto)
     {
         $diskontoAmount = $dto->invoiceAmount * (($dto->interestPercentage / 100) / 360) * $dto->tenor;
-        $disbursementAmount = round($dto->invoiceAmount - $diskontoAmount - $dto->retentionAmount);
+        $diskontoAmount = ceil($diskontoAmount / 1000) * 1000;
+
+        $disbursementAmount = $dto->invoiceAmount - $diskontoAmount - $dto->retentionAmount;
+        $disbursementAmount = ceil($disbursementAmount / 1000) * 1000;
 
         return (object) [
             'financing_method_id' => $dto->financingMethodId,
@@ -120,23 +133,23 @@ class FinancingSimulationService extends FinancingService implements Application
             'tenor' => $dto->tenor,
             'retention_amount' => (int) $dto->retentionAmount,
             'retention_percentage' => (int) $dto->retentionPercentage,
-            'diskonto_amount' => (int) number_format(round($diskontoAmount), 2, '.', ''),
+            'diskonto_amount' => (int) number_format($diskontoAmount, 2, '.', ''),
             'disbursement_amount' => (int) number_format($disbursementAmount, 2, '.', ''),
         ];
     }
 
-    private function calculateInstallmentInMonthAmount(RequestFinancingSimulationDto $dto)
+    private function calculateInstallmentInMonthAmount(RequestFinancingSimulationDto $dto, float $totalCreditAmount)
     {
         $monthlyInterest = $dto->interestPercentage / 1200;
 
         $presentValueAnnuity = 1 - pow(1 + $monthlyInterest, -$dto->tenor);
 
-        $monthlyPayment = $dto->unitAmount * $monthlyInterest / $presentValueAnnuity;
+        $monthlyPayment = $totalCreditAmount * $monthlyInterest / $presentValueAnnuity;
 
         if ($dto->firstInstallmentType == FirstInstallmentTypeEnum::ADDM) {
             $monthlyPayment = $monthlyPayment / (1 + $monthlyInterest);
         }
 
-        return $monthlyPayment;
+        return ceil($monthlyPayment / 1000) * 1000;
     }
 }
