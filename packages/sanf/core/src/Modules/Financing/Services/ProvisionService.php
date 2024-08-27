@@ -7,7 +7,6 @@ use Sanf\Core\Modules\Financing\Enums\FinancingMethodEnum;
 
 class ProvisionService implements ApplicationServiceInterface
 {
-    public function __construct() {}
 
     public function execute($dto = null)
     {
