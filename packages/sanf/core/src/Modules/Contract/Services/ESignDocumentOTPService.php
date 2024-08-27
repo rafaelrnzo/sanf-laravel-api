@@ -69,13 +69,13 @@ class ESignDocumentOTPService implements ApplicationServiceInterface
                 } else {
                     if ($attempt >= self::SUSPEND_TIME) {
                         $attempt = 0;
-                        $suspendEndAt = $otpResult->expiredAt->addMinutes(1439); // 1439
+                        $suspendEndAt = $otpResult->expiredAt->addMinutes(1440); // 1440
                     }
                 }
             } else {
                 if ($attempt >= self::COOLDOWN_TIME) {
                     $attempt = 0;
-                    $cooldownEndAt = $otpResult->expiredAt->addMinutes(4); // 4
+                    $cooldownEndAt = $otpResult->expiredAt->addMinutes(5); // 5
                 }
             }
 
