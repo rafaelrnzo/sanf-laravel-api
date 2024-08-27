@@ -81,7 +81,7 @@ sonarqube:lint:
   environment:
     name: development
   rules:
-    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
   when: manual
   tags:
     - nbs--docker-runner-xl
