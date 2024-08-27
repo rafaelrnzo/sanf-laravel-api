@@ -18,10 +18,12 @@ class EloquentMobileUserProvider extends EloquentUserProvider
     public function retrieveByCredentials(array $credentials)
     {
 
-        if (empty($credentials) ||
+        if (
+            empty($credentials) ||
             (count($credentials) === 1 &&
-                Str::contains($this->firstCredentialKey($credentials), 'password'))) {
-            return;
+                Str::contains($this->firstCredentialKey($credentials), 'password'))
+        ) {
+            return null;
         }
 
         // First we will add each credential element to the query as a where clause.

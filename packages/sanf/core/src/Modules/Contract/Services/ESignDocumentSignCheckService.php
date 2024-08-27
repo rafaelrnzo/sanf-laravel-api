@@ -29,6 +29,7 @@ class ESignDocumentSignCheckService implements ApplicationServiceInterface
 
     public function execute($dto = null)
     {
+        $statusSigning = null;
         $eSignDocument = $this->eSignRepository->findDocumentByDocId($dto->documentId);
         if (is_null($eSignDocument) === true) {
             throw new ESignDocumentNotFoundException();
@@ -48,7 +49,7 @@ class ESignDocumentSignCheckService implements ApplicationServiceInterface
         );
 
         if (is_null($adInsDocumentSignResult->statusSigning) === true) {
-            return;
+            return $statusSigning;
         }
 
         $totalAssignment = count($adInsDocumentSignResult->statusSigning->signer);

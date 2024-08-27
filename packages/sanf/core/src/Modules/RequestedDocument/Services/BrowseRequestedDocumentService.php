@@ -127,7 +127,7 @@ class BrowseRequestedDocumentService implements ApplicationServiceInterface
     private function emptyPage(ListRequestedDocumentDto $dto, array $data)
     {
         if (empty($data)) {
-            return;
+            return null;
         }
 
         return (object) [
