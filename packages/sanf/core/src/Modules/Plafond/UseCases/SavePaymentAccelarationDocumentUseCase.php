@@ -105,7 +105,7 @@ final class SavePaymentAccelarationDocumentUseCase implements ApplicationService
         $paymentAccDocumentEloquent = $this->paymentAccDocumentRepositoryInterface->findByPlafondId($dto->plafondId);
         if (is_null($paymentAccDocumentEloquent)) {
             $paymentAccDocumentData['xid'] = nano_id();
-            $paymentAccDocumentEloquent = $this->paymentAccDocumentRepositoryInterface->create($paymentAccDocumentData);
+            $this->paymentAccDocumentRepositoryInterface->create($paymentAccDocumentData);
         } else {
             $this->paymentAccDocumentRepositoryInterface->update($paymentAccDocumentEloquent->id, $paymentAccDocumentData);
         }
