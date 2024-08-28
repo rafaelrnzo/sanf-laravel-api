@@ -31,7 +31,7 @@ class UpdatePersonalProfileService implements ApplicationServiceInterface
             throw new UserNotFoundException();
         }
         $profile = $this->internalApiClient->findCustomerById($dto->customerId);
-        if($profile['data'][0]['ID_IDENTITY'] !== ProfileType::PERSONAL){
+        if ($profile['data'][0]['ID_IDENTITY'] !== ProfileType::PERSONAL) {
             throw new UserNotFoundException('Missmatch Type');
         }
         $this->internalApiClient->updateCustomer([
@@ -51,6 +51,7 @@ class UpdatePersonalProfileService implements ApplicationServiceInterface
             'kodepos' => $dto->postcode,
             'alamat' => $dto->address,
             'lama_usaha' => $dto->businessSince,
+            'picname' => $profile['data'][0]['PIC_NAME'],
         ]);
     }
 }
