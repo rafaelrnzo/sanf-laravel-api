@@ -24,9 +24,8 @@ class NanonetsProcessor extends Processor
                 throw new Exception('Something went wrong at Nanonets API');
             }
         } catch (ServerException $exception) {
+            throw $exception;
         } catch (Exception $exception) {
-            //TODO HANDLE EXCEPTION
-            dd($exception);
             throw $exception;
         }
 
