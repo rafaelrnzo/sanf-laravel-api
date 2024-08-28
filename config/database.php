@@ -68,6 +68,19 @@ return [
             'sslmode' => env('DB_SSL_MODE', 'prefer'),
         ],
 
+        'pgsql_sodium' => [
+            'driver' => 'pgsql',
+            'host' => env('DB_ENCRYPTED_HOST', '127.0.0.1'),
+            'port' => env('DB_ENCRYPTED_PORT', 5432),
+            'database' => env('DB_ENCRYPTED_DATABASE', 'forge'),
+            'username' => env('DB_ENCRYPTED_USERNAME', 'forge'),
+            'password' => env('DB_ENCRYPTED_PASSWORD', ''),
+            'charset' => env('DB_ENCRYPTED_CHARSET', 'utf8'),
+            'prefix' => env('DB_ENCRYPTED_PREFIX', ''),
+            'schema' => env('DB_ENCRYPTED_SCHEMA', 'public'),
+            'sslmode' => env('DB_ENCRYPTED_SSL_MODE', 'prefer'),
+        ],
+
         'sqlsrv' => [
             'driver' => 'sqlsrv',
             'host' => env('DB_HOST', 'localhost'),
@@ -93,6 +106,22 @@ return [
             'search_path' => implode(',', array_filter([env('DASHBOARD_DB_SCHEMA'), 'public'])),
             'sslmode' => 'prefer',
             'schema' => env('DASHBOARD_DB_SCHEMA', 'sanf_dashboard_sch'),
+        ],
+
+        'dashboard_db_sodium' => [
+            'driver' => 'pgsql',
+            'url' => env('DASHBOARD_DATABASE_ENCRYPTED_URL'),
+            'host' => env('DASHBOARD_DB_ENCRYPTED_HOST', env('DB_HOST', '127.0.0.1')),
+            'port' => env('DASHBOARD_DB_ENCRYPTED_PORT', env('DB_PORT', '5432')),
+            'database' => env('DASHBOARD_DB_ENCRYPTED_DATABASE', 'database'),
+            'username' => env('DASHBOARD_DB_ENCRYPTED_USERNAME', env('DB_USERNAME', 'postgres')),
+            'password' => env('DASHBOARD_DB_ENCRYPTED_PASSWORD', env('DB_PASSWORD', '')),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'search_path' => implode(',', array_filter([env('DASHBOARD_DB_ENCRYPTED_SCHEMA'), 'public'])),
+            'sslmode' => 'prefer',
+            'schema' => env('DASHBOARD_DB_ENCRYPTED_SCHEMA', 'sanf_dashboard_sch'),
         ],
 
     ],

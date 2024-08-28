@@ -77,6 +77,7 @@ $app->configure('fcm');
 $app->configure('notifications');
 $app->configure('http-logger');
 $app->configure('guzzle-logger');
+$app->configure('encryption');
 $app->alias('mailer', Illuminate\Mail\Mailer::class);
 $app->alias('mailer', Illuminate\Contracts\Mail\Mailer::class);
 $app->alias('mailer', Illuminate\Contracts\Mail\MailQueue::class);
