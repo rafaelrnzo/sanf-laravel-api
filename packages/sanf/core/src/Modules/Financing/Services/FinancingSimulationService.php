@@ -64,13 +64,13 @@ class FinancingSimulationService extends FinancingService implements Application
     private function calculateFinancingLease(RequestFinancingSimulationDto $dto)
     {
 
-        $insuranceInCreditAmount = ($dto->firstYearInsuranceAmount / 12) * ($dto->tenor - 12);
+        $insuranceInCreditAmount = round(($dto->firstYearInsuranceAmount / 12) * ($dto->tenor - 12));
         if ($dto->financingMethodId === FinancingMethodEnum::PEMBELIAN_ANGSURAN) {
-            $insuranceInCreditAmount = ((80 / 100) * $dto->firstYearInsuranceAmount / 12) * ($dto->tenor - 12);
+            $insuranceInCreditAmount = round(((80 / 100) * $dto->firstYearInsuranceAmount / 12) * ($dto->tenor - 12));
         }
         $insuranceInCreditAmount = ceil($insuranceInCreditAmount / 1000) * 1000;
 
-        $totalCreditAmount = ($dto->unitAmount - $dto->downPaymentAmount) + $insuranceInCreditAmount;
+        $totalCreditAmount = round(($dto->unitAmount - $dto->downPaymentAmount) + $insuranceInCreditAmount);
         $totalCreditAmount = ceil($totalCreditAmount / 1000) * 1000;
 
         $installmentInMonthAmount = $this->calculateInstallmentInMonthAmount($dto, $totalCreditAmount);
@@ -106,7 +106,7 @@ class FinancingSimulationService extends FinancingService implements Application
         $monthlyInterest = $dto->interestPercentage / 1200;
         $presentValueAnnuity = 1 - pow(1 + $monthlyInterest, -$dto->tenor);
 
-        $installmentInMonthAmount = $dto->financingAmount * $monthlyInterest / $presentValueAnnuity;
+        $installmentInMonthAmount = round($dto->financingAmount * $monthlyInterest / $presentValueAnnuity);
         $installmentInMonthAmount = ceil($installmentInMonthAmount / 1000) * 1000;
 
         return (object) [
@@ -120,10 +120,10 @@ class FinancingSimulationService extends FinancingService implements Application
 
     private function calculateFinancingFactoring(RequestFinancingSimulationDto $dto)
     {
-        $diskontoAmount = $dto->invoiceAmount * (($dto->interestPercentage / 100) / 360) * $dto->tenor;
+        $diskontoAmount = round($dto->invoiceAmount * (($dto->interestPercentage / 100) / 360) * $dto->tenor);
         $diskontoAmount = ceil($diskontoAmount / 1000) * 1000;
 
-        $disbursementAmount = $dto->invoiceAmount - $diskontoAmount - $dto->retentionAmount;
+        $disbursementAmount = round($dto->invoiceAmount - $diskontoAmount - $dto->retentionAmount);
         $disbursementAmount = ceil($disbursementAmount / 1000) * 1000;
 
         return (object) [
@@ -150,6 +150,6 @@ class FinancingSimulationService extends FinancingService implements Application
             $monthlyPayment = $monthlyPayment / (1 + $monthlyInterest);
         }
 
-        return ceil($monthlyPayment / 1000) * 1000;
+        return ceil(round($monthlyPayment) / 1000) * 1000;
     }
 }
