@@ -2,7 +2,6 @@
 
 namespace Sanf\Core\Migrations;
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 
 class MigrationPostgreSqlUtil
@@ -68,19 +67,5 @@ class MigrationPostgreSqlUtil
 
         $this->dbConnection
             ->statement("SELECT setval('{$sequenceName}', (SELECT MAX($column) FROM $table) + 1)");
-    }
-
-    public function foreignKeyName($table, $referenceTable, $referenceColumn)
-    {
-        return substr("{$table}_{$referenceTable}_{$referenceColumn}_foreign", 0, 63);
-    }
-
-    public function removeForeignKey($table, $referenceTable, $referenceColumn)
-    {
-        $foreignKeyName = $this->foreignKeyName($table, $referenceTable, $referenceColumn);
-
-        $this->dbConnection->table($table, function (Blueprint $queryTable) use ($foreignKeyName) {
-            $queryTable->dropForeign($foreignKeyName);
-        });
     }
 }
