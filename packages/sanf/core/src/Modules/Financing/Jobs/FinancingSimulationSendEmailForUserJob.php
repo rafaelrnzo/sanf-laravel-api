@@ -46,10 +46,10 @@ class FinancingSimulationSendEmailForUserJob implements ShouldQueue
             ))
             ->lineWithUrl(
                 __('Email ini dibuat secara otomatis mohon tidak membalas email ini, jika terdapat keluhan silahkan hubungi'),
-                [__('Sanf Customer Service'), $reportUrl]
+                [__('SANF Customer Service'), $reportUrl]
             )
             ->lineWithUrl(
-                __('.Jika Anda merasa tidak membuat request tersebut mohon abaikan email ini atau anda dapat'),
+                __('. Jika Anda merasa tidak membuat request tersebut mohon abaikan email ini atau anda dapat'),
                 [__('Laporkan email ini'), $reportUrl]
             );
 
