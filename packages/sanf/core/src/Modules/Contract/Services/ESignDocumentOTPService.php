@@ -27,67 +27,78 @@ class ESignDocumentOTPService implements ApplicationServiceInterface
      */
     public function execute($dto = null)
     {
+        $currentTimestamp = CarbonImmutable::now();
         $msisdn = $this->parseMsisdnWithZeroFormat($dto->msisdn);
 
         $otpRecord = $this->eSignRepository->findOTPRequestBySanfIdAndRefNoWhereCodeIsNull($dto->profileXid, $dto->referenceNo);
-        $now = (CarbonImmutable::now()->format('Y-m-d H:i:s'));
 
-        if ($otpRecord && $otpRecord->expired_at > $now) {
-            return $otpRecord;
-        }
-
-        if ($otpRecord && $otpRecord->cooldown_end_at > $now) {
-            $otpRecord->expired_at = $otpRecord->cooldown_end_at;
-
-            return $otpRecord;
-        }
-
-        if ($otpRecord && $otpRecord->suspend_end_at > $now) {
-            $otpRecord->expired_at = $otpRecord->suspend_end_at;
-
-            return $otpRecord;
-        }
-
-        $dto->msisdn = $msisdn;
-        $otpResult = $this->adInsOtpService->execute($dto);
-
-        $currentTimestamp = CarbonImmutable::now();
         if (is_null($otpRecord) === false) {
-            $attempt = $otpRecord->attempt + 1;
+            if ($otpRecord->expired_at > $currentTimestamp->format('Y-m-d H:i:s')) {
+                return $otpRecord;
+            }
+
+            if ($otpRecord->cooldown_end_at > $currentTimestamp->format('Y-m-d H:i:s')) {
+                $otpRecord->expired_at = $otpRecord->cooldown_end_at;
+
+                return $otpRecord;
+            }
+
+            if ($otpRecord->suspend_end_at > $currentTimestamp->format('Y-m-d H:i:s')) {
+                $otpRecord->expired_at = $otpRecord->suspend_end_at;
+
+                return $otpRecord;
+            }
+
+            $attempt = $otpRecord->attempt;
 
             $cooldownEndAt = null;
             $suspendEndAt = null;
+            $data = [];
 
             if (is_null($otpRecord->cooldown_end_at) === false) {
                 $cooldownEndAt = CarbonImmutable::parse($otpRecord->cooldown_end_at);
                 if (is_null($otpRecord->suspend_end_at) === false) {
                     $suspendEndAt = CarbonImmutable::parse($otpRecord->suspend_end_at);
-                    if ($suspendEndAt < $now) {
+                    if ($suspendEndAt < $currentTimestamp->format('Y-m-d H:i:s')) {
                         $cooldownEndAt = null;
                         $suspendEndAt = null;
                     }
                 } else {
                     if ($attempt >= self::SUSPEND_TIME) {
-                        $attempt = 0;
-                        $suspendEndAt = $otpResult->expiredAt->addMinutes(1440); // 1440
+                        $suspendEndAt = $currentTimestamp->addMinutes(1440); // 1440
+                        $data['expired_at'] = $suspendEndAt;
                     }
                 }
             } else {
                 if ($attempt >= self::COOLDOWN_TIME) {
-                    $attempt = 0;
-                    $cooldownEndAt = $otpResult->expiredAt->addMinutes(5); // 5
+                    $cooldownEndAt = $currentTimestamp->addMinutes(5); // 5
+                    $data['expired_at'] = $cooldownEndAt;
                 }
             }
 
-            $otpRecord = $this->eSignRepository->updateOTPRequest($otpRecord->id, [
-                'expired_at' => $otpResult->expiredAt,
-                'transaction_no' => $otpResult->transactionNo,
+            if ($cooldownEndAt && $attempt == self::COOLDOWN_TIME || $suspendEndAt && $attempt == self::SUSPEND_TIME) {
+                $attempt = 0;
+            } else {
+                $dto->msisdn = $msisdn;
+                $otpResult = $this->adInsOtpService->execute($dto);
+
+                $data['expired_at'] = $otpResult->expiredAt;
+                $data['transaction_no'] = $otpResult->transactionNo;
+                $attempt++;
+            }
+
+            $payload = array_merge($data, [
                 'attempt' => $attempt,
                 'cooldown_end_at' => $cooldownEndAt,
                 'suspend_end_at' => $suspendEndAt,
                 'updated_at' => $currentTimestamp,
             ]);
+
+            $otpRecord = $this->eSignRepository->updateOTPRequest($otpRecord->id, $payload);
         } else {
+            $dto->msisdn = $msisdn;
+            $otpResult = $this->adInsOtpService->execute($dto);
+
             $otpRecord = $this->eSignRepository->createOTPRequest([
                 'xid' => nano_id(),
                 'user_id' => $dto->userId,
