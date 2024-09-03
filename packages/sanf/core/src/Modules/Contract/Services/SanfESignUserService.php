@@ -75,8 +75,14 @@ class SanfESignUserService implements ApplicationServiceInterface
             $eSignSanfUserMapping['gender'] = (int) ($adInsUser->gender === self::MALE);
             $eSignSanfUserMapping['address'] = $adInsUser->address;
             $eSignSanfUserMapping['postcode'] = (string) $adInsUser->postal_code;
-            $eSignSanfUserMapping['provinceName'] = $adInsUser->province;
-            $eSignSanfUserMapping['cityName'] = $adInsUser->city;
+            if ($adInsUser->province !== $eSignSanfUserMapping['provinceName']) {
+                $eSignSanfUserMapping['provinceId'] = null;
+                $eSignSanfUserMapping['provinceName'] = $adInsUser->province;
+            }
+            if ($adInsUser->city !== $eSignSanfUserMapping['cityName']) {
+                $eSignSanfUserMapping['cityId'] = null;
+                $eSignSanfUserMapping['cityName'] = $adInsUser->city;
+            }
             $eSignSanfUserMapping['districtName'] = $adInsUser->district;
             $eSignSanfUserMapping['subdistrictName'] = $adInsUser->sub_district;
             $eSignSanfUserMapping['selfieFile'] = $adInsUser->selfie_file;
