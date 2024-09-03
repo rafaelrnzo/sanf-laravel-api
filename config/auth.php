@@ -40,7 +40,7 @@ return [
     ],
 
     'table_names' => [
-        'user_auth' => 'user_auth',
+        'user_auth' => 'user_auth_encrypted',
         'password_reset' => 'password_reset',
         'status' => 'user_status',
         'device_platform' => 'device_platform',

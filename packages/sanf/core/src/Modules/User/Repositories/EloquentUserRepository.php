@@ -30,4 +30,16 @@ class EloquentUserRepository extends AbstractEloquentRepository implements UserR
     {
         return $this->model->newQuery()->where('username', $email)->first();
     }
+
+    public function existsByEmailAndStatusIds(string $email, array $statusIds): bool
+    {
+        return $this->model->newQuery()
+            ->where('username', $email)
+            ->whereIn('status_id', $statusIds)
+            ->exists();
+    }
+
+    public function forceCreate(array $data) {
+        return $this->model->newQuery()->forceCreate($data);
+    }
 }

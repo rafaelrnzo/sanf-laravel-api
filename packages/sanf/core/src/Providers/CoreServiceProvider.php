@@ -119,7 +119,7 @@ use Sanf\Core\Modules\Survey\Repositories\SurveyRepositoryInterface;
 use Sanf\Core\Modules\Survey\Specifications\EloquentSurveySpecificationFactory;
 use Sanf\Core\Modules\Survey\Specifications\SurveySpecificationFactoryInterface;
 use Sanf\Core\Modules\User\Repositories\EloquentUserAuthLogRepository;
-use Sanf\Core\Modules\User\Repositories\EloquentUserRepository;
+use Sanf\Core\Modules\User\Repositories\EloquentUserEncryptedRepository;
 use Sanf\Core\Modules\User\Repositories\ProfileRepositoryInterface;
 use Sanf\Core\Modules\User\Repositories\RestProfileRepository;
 use Sanf\Core\Modules\User\Repositories\UserAuthLogRepositoryInterface;
@@ -174,7 +174,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(TransactionalSessionInterface::class, IlluminateSession::class);
 
         //REPOSITORY
-        $this->app->bind(UserRepositoryInterface::class, EloquentUserRepository::class);
+        $this->app->bind(UserRepositoryInterface::class, EloquentUserEncryptedRepository::class);
         $this->app->bind(AskUsTopicRepositoryInterface::class, EloquentAskUsTopicRepository::class);
         $this->app->bind(AskUsRepositoryInterface::class, EloquentAskUsRepository::class);
         $this->app->bind(ProductRepositoryInterface::class, EloquentProductRepository::class);

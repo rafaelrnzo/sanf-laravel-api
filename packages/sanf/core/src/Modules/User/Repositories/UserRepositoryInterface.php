@@ -9,4 +9,8 @@ interface UserRepositoryInterface
     public function findById($id);
 
     public function findByEmail($email);
+
+    public function existsByEmailAndStatusIds(string $email, array $statusIds): bool;
+
+    public function forceCreate(array $data);
 }
