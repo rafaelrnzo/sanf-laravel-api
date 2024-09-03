@@ -10,7 +10,7 @@ use NbsPhp\Core\Services\ActivateUserServiceInterface;
 use NbsPhp\Core\Services\LoginWithEmailAndPasswordService;
 use NbsPhp\Core\Services\ThrottleFailureService;
 use NbsPhp\Core\Services\VerifyEmailServiceInterface;
-use Sanf\Core\Modules\User\AuthModel;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Core\Modules\User\Services\ActivateUserAndRegisterInternalService;
 use Sanf\Core\Modules\User\Services\VerifyEmailAndRegisterInternalService;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
@@ -23,7 +23,7 @@ class AuthController extends \NbsPhp\Core\Controllers\AuthController
     protected $throttlingService;
 
     public function __construct(
-        AuthModel $userRepository,
+        UserRepositoryInterface $userRepository,
         SanfCoreApiClient $internalApiClient,
         IlluminateSession $transactionalSession
     ) {

@@ -118,7 +118,7 @@ use Sanf\Core\Modules\Survey\Repositories\EloquentSurveyRepository;
 use Sanf\Core\Modules\Survey\Repositories\SurveyRepositoryInterface;
 use Sanf\Core\Modules\Survey\Specifications\EloquentSurveySpecificationFactory;
 use Sanf\Core\Modules\Survey\Specifications\SurveySpecificationFactoryInterface;
-use Sanf\Core\Modules\User\Repositories\EloquentUserAuthLogRepository;
+use Sanf\Core\Modules\User\Repositories\EloquentUserAuthLogEncryptedRepository;
 use Sanf\Core\Modules\User\Repositories\EloquentUserEncryptedRepository;
 use Sanf\Core\Modules\User\Repositories\ProfileRepositoryInterface;
 use Sanf\Core\Modules\User\Repositories\RestProfileRepository;
@@ -202,7 +202,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(OnBoardingRepositoryInterface::class, EloquentOnBoardingRepository::class);
         $this->app->bind(FrequentlyAskQuestionRepositoryInterface::class, EloquentFrequentlyAskQuestionRepository::class);
         $this->app->bind(StaticContentRepositoryInterface::class, EloquentStaticContentRepository::class);
-        $this->app->bind(UserAuthLogRepositoryInterface::class, EloquentUserAuthLogRepository::class);
+        $this->app->bind(UserAuthLogRepositoryInterface::class, EloquentUserAuthLogEncryptedRepository::class);
         $this->app->bind(FinancingCategoryRepositoryInterface::class, EloquentFinancingCategoryRepository::class);
         $this->app->bind(ProductCartRepositoryInterface::class, EloquentProductCartRepository::class);
         $this->app->bind(ScaninaProductRepositoryInterface::class, GuzzleScaninaProductRepository::class);

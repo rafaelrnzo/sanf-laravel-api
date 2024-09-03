@@ -22,7 +22,7 @@ class RegisterByEmailService implements RegisterByEmailServiceInterface
      * RegisterByEmailService constructor.
      * @param $jwt
      */
-    public function __construct(JWTHelper $jwt, UserRepositoryInterface $repository) //TODO USE REPOSITORY
+    public function __construct(JWTHelper $jwt, UserRepositoryInterface $repository)
     {
         $this->jwt = $jwt;
         $this->repository = $repository;
@@ -44,7 +44,7 @@ class RegisterByEmailService implements RegisterByEmailServiceInterface
         }
 
         /** @var AuthEncryptedModel $user */
-        $user = $this->repository->forceCreate([
+        $user = $this->repository->create([
             'full_name' => $dto->fullName,
             'username' => $dto->email,
             'landline_number' => $dto->landlineNumber,

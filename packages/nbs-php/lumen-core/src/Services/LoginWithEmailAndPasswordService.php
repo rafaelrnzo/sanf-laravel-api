@@ -40,7 +40,7 @@ class LoginWithEmailAndPasswordService implements ApplicationServiceInterface
             throw new InvalidCredentialException();
         }
 
-        /** @var AuthModel $user */
+        /** @var \Sanf\Core\Modules\User\AuthEncryptedModel $user */
         $user = Auth::user();
 
         if ($user instanceof MustVerifyEmail && !$user->hasVerifiedEmail()) {

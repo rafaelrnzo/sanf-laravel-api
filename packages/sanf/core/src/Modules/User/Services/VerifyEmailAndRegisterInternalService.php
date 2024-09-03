@@ -4,8 +4,8 @@ namespace Sanf\Core\Modules\User\Services;
 
 use NbsPhp\Core\Database\TransactionalSessionInterface;
 use NbsPhp\Core\Services\VerifyEmailServiceInterface;
-use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Core\Modules\User\Enums\ProfileType;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
@@ -23,10 +23,9 @@ class VerifyEmailAndRegisterInternalService implements VerifyEmailServiceInterfa
      * RegisterByEmailService constructor.
      * @param $jwt
      */
-    //TODO USE REPOSITORY
     public function __construct(
         VerifyEmailServiceInterface $service,
-        AuthModel $repository,
+        UserRepositoryInterface $repository,
         SanfCoreApiClient $internalApiClient,
         TransactionalSessionInterface $transactionalSession
     ) {
@@ -62,13 +61,14 @@ class VerifyEmailAndRegisterInternalService implements VerifyEmailServiceInterfa
             $profile = (collect($userCoreAccount['data'])->where('ID_IDENTITY', ProfileType::PERSONAL)->first());
             $customerId = $profile['CUST_ID_SANF'];
 
-            /** @var AuthModel $user */
-            $user = $this->repository->newQuery()->find($user->id);
-            $user->update([
+            $this->repository->update([
                 'profile_type' => ProfileType::PERSONAL,
                 'xid' => $customerId,
                 'personal_xid' => $customerId,
-            ]);
+            ], $user->id);
+
+            /** @var \Sanf\Core\Modules\User\AuthEncryptedModel $user */
+            $user = $this->repository->findById($user->id);
 
             //TODO DTO
             return json_decode(json_encode($user));

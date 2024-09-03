@@ -156,7 +156,7 @@ return [
     'providers' => [
         'mobile-user-provider' => [
             'driver' => 'eloquent-mobile-user-provider',
-            'model' => \NbsPhp\Core\Models\AuthModel::class,
+            'model' => \Sanf\Core\Modules\User\AuthEncryptedModel::class,
         ],
         'mobile-client-user-provider' => [
             'client_id' => env('APP_CLIENT_ID'),

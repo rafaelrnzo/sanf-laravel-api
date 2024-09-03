@@ -3,8 +3,8 @@
 namespace NbsPhp\Core\Services;
 
 use NbsPhp\Core\Exceptions\UnauthorizedException;
-use NbsPhp\Core\Models\AuthModel;
 use NbsPhp\Core\Models\NeedSetupPasswordInterface;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class VerifyEmailService implements VerifyEmailServiceInterface
@@ -15,15 +15,15 @@ class VerifyEmailService implements VerifyEmailServiceInterface
      * VerifyEmailService constructor.
      * @param $repository
      */
-    public function __construct(AuthModel $repository) //TODO USE REPOSITORY
+    public function __construct(UserRepositoryInterface $repository)
     {
         $this->repository = $repository;
     }
 
     public function execute($dto = null)
     {
-        /** @var AuthModel $user */
-        $user = $this->repository->newQuery()->find($dto->userId);
+        /** @var \Sanf\Core\Modules\User\AuthEncryptedModel $user */
+        $user = $this->repository->findById($dto->userId);
         if (!$user) {
             throw new NotFoundHttpException();
         }

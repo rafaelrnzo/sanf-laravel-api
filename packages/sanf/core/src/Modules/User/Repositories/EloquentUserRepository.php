@@ -39,7 +39,14 @@ class EloquentUserRepository extends AbstractEloquentRepository implements UserR
             ->exists();
     }
 
-    public function forceCreate(array $data) {
+    public function create(array $data) {
         return $this->model->newQuery()->forceCreate($data);
+    }
+
+    public function update(array $data, $id): bool
+    {
+        return $this->model->newQuery()
+            ->whereId($id)
+            ->update($data);
     }
 }

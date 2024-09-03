@@ -9,10 +9,18 @@ use Sanf\Core\Modules\User\AuthEncryptedModel;
 class EloquentUserEncryptedRepository extends AbstractEloquentRepository implements UserRepositoryInterface
 {
     protected $model;
+    protected array $encryptedFields;
 
     public function __construct(AuthEncryptedModel $model)
     {
         $this->model = $model;
+        $this->encryptedFields = [
+            'username',
+            'full_name',
+            'landline_number',
+            'phone_number',
+            'company_name',
+        ];
     }
 
     public function query($specification)
@@ -29,7 +37,9 @@ class EloquentUserEncryptedRepository extends AbstractEloquentRepository impleme
 
     public function findByEmail($email)
     {
-        return $this->model->newQuery()->where('username', $email)->first();
+        $sodiumQuery = SodiumEncryption::query();
+
+        return $this->model->newQuery()->where($sodiumQuery->selectRaw('username'), $email)->first();
     }
 
     public function existsByEmailAndStatusIds(string $email, array $statusIds): bool
@@ -42,27 +52,19 @@ class EloquentUserEncryptedRepository extends AbstractEloquentRepository impleme
             ->exists();
     }
 
-    public function forceCreate(array $data) {
+    public function create(array $data) {
         $user = $this->model->newQuery()->forceCreate(
-            $this->reformatBeforeCreate($data)
+            $this->encryptBeforeCreate($data)
         );
 
         return $user->fresh();
     }
 
-    private function reformatBeforeCreate(array $data): array
+    private function encryptBeforeCreate(array $data): array
     {
-        $encryptedFields = [
-            'username',
-            'full_name',
-            'landline_number',
-            'phone_number',
-            'company_name',
-        ];
-
         $encryptor = SodiumEncryption::encryptor();
 
-        foreach ($encryptedFields as $field) {
+        foreach ($this->encryptedFields as $field) {
             if (!isset($data[$field])) {
                 continue;
             }
@@ -71,6 +73,28 @@ class EloquentUserEncryptedRepository extends AbstractEloquentRepository impleme
         }
 
         $data['nonce'] = $encryptor->nonce()->getNonceHex();
+
+        return $data;
+    }
+
+    public function update(array $data, $id): bool
+    {
+        return $this->model->newQuery()
+            ->whereId($id)
+            ->update($this->encryptBeforeUpdate($data, $id));
+    }
+
+    private function encryptBeforeUpdate(array $data, $id): array
+    {
+        $user = $this->model->newQuery()->find($id);
+
+        foreach ($this->encryptedFields as $field) {
+            if (!isset($data[$field])) {
+                continue;
+            }
+
+            $data[$field] = $user->encryptor()->encrypt($data[$field]);
+        }
 
         return $data;
     }

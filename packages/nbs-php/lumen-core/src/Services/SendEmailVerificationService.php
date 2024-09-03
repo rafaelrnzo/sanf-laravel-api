@@ -4,7 +4,8 @@ namespace NbsPhp\Core\Services;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use NbsPhp\Core\Exceptions\VerifyEmailFailedException;
-use NbsPhp\Core\Models\AuthModel;
+use Sanf\Core\Encryptions\SodiumEncryption;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 
 class SendEmailVerificationService implements ApplicationServiceInterface
 {
@@ -14,15 +15,20 @@ class SendEmailVerificationService implements ApplicationServiceInterface
      * VerifyEmailService constructor.
      * @param $repository
      */
-    public function __construct(AuthModel $repository) //TODO USE REPOSITORY
+    public function __construct(UserRepositoryInterface $repository)
     {
         $this->repository = $repository;
     }
 
     public function execute($dto = null)
     {
-        /** @var AuthModel $user */
-        $user = $this->repository->newQuery()->where('username', $dto->email)->first();
+        /** @var \Sanf\Core\Modules\User\AuthEncryptedModel $user */
+        $user = SodiumEncryption::query()->transaction(
+            function () use ($dto) {
+                return $this->repository->findByEmail($dto->email);
+            }
+        );
+
         if (!$user) {
             throw new VerifyEmailFailedException();
         }
