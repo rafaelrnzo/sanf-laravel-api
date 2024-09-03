@@ -47,11 +47,19 @@ class SanfESignUserService implements ApplicationServiceInterface
                 'msisdn' => isset($item['MOBILE']) ? $item['MOBILE'] : $userSanfResponse->getPhoneNumber(),
                 'nik' => isset($item['NIK']) ? $item['NIK'] : $userSanfResponse->getIdentityNumber(),
                 'fullName' => isset($item['NAME']) ? $item['NAME'] : $userSanfResponse->getFullName(),
-                'dob' => isset($item['DOB']) ? Carbon::createFromFormat('d/m/Y', $item['DOB'])->format('Y-m-d') : $userSanfResponse->getBirthdate(),
+                'dob' => isset($item['DOB']) ? Carbon::createFromFormat('Y/m/d', $item['DOB'])->format('Y-m-d') : $userSanfResponse->getBirthdate(),
                 'pob' => isset($item['POB']) ? $item['POB'] : null,
                 'gender' => isset($item['GENDER']) ? (int) ($item['GENDER'] == 'F') : $userSanfResponse->getGender(),
                 'address' => isset($item['ADDRESS']) ? $item['ADDRESS'] : $userSanfResponse->getAddress(),
-                'postalCode' => isset($item['ZIP_CODE']) ? (string) $item['ZIP_CODE'] : $userSanfResponse->getPostcode(),
+                'postcode' => isset($item['ZIP_CODE']) ? (string) $item['ZIP_CODE'] : $userSanfResponse->getPostcode(),
+                'countryId' => isset($item['NEGARA']) ? $item['NEGARA'] : $userSanfResponse->getCountryId(),
+                'countryName' => isset($item['ID_NEGARA']) ? $item['ID_NEGARA'] : $userSanfResponse->getCountryName(),
+                'provinceId' => isset($item['ID_PROVINSI']) ? $item['ID_PROVINSI'] : $userSanfResponse->getProvinceId(),
+                'provinceName' => isset($item['PROVINSI']) ? $item['PROVINSI'] : $userSanfResponse->getProvinceName(),
+                'cityId' => isset($item['ID_KOTA']) ? $item['ID_KOTA'] : $userSanfResponse->getCityId(),
+                'cityName' => isset($item['KOTA']) ? $item['KOTA'] : $userSanfResponse->getCityName(),
+                'districtName' => isset($item['KECAMATAN']) ? $item['KECAMATAN'] : $userSanfResponse->getDistrictName(),
+                'subdistrictName' => isset($item['KELURAHAN']) ? $item['KELURAHAN'] : $userSanfResponse->getSubdistrictName(),
                 'statusId' => ESignRegistrationStatusEnum::AVAILABLE,
             ];
         }, $eSignSanfUserResponse['data'])[0];
@@ -66,11 +74,11 @@ class SanfESignUserService implements ApplicationServiceInterface
             $eSignSanfUserMapping['pob'] = $adInsUser->place_of_birth;
             $eSignSanfUserMapping['gender'] = (int) ($adInsUser->gender === self::MALE);
             $eSignSanfUserMapping['address'] = $adInsUser->address;
-            $eSignSanfUserMapping['postalCode'] = (string) $adInsUser->postal_code;
-            $eSignSanfUserMapping['province'] = $adInsUser->province;
-            $eSignSanfUserMapping['city'] = $adInsUser->city;
-            $eSignSanfUserMapping['district'] = $adInsUser->district;
-            $eSignSanfUserMapping['subDistrict'] = $adInsUser->sub_district;
+            $eSignSanfUserMapping['postcode'] = (string) $adInsUser->postal_code;
+            $eSignSanfUserMapping['provinceName'] = $adInsUser->province;
+            $eSignSanfUserMapping['cityName'] = $adInsUser->city;
+            $eSignSanfUserMapping['districtName'] = $adInsUser->district;
+            $eSignSanfUserMapping['subdistrictName'] = $adInsUser->sub_district;
             $eSignSanfUserMapping['selfieFile'] = $adInsUser->selfie_file;
             $eSignSanfUserMapping['identityFile'] = $adInsUser->identity_file;
             $eSignSanfUserMapping['statusId'] = $adInsUser->status_id;
