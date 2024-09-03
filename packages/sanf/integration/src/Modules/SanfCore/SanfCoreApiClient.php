@@ -9,7 +9,6 @@ use NbsPhp\ApiWrapper\Api\Request;
 use Sanf\Core\Modules\Plafond\Dtos\PlafondDisbursementCoreFormRequest;
 use Sanf\Core\Modules\Plafond\Enums\PlafondTypeEnum;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
-use stdClass;
 
 class SanfCoreApiClient
 {
