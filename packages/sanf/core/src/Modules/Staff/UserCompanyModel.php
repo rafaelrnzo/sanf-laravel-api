@@ -3,7 +3,7 @@
 namespace Sanf\Core\Modules\Staff;
 
 use NbsPhp\Core\Models\AbstractModel;
-use Sanf\Core\Modules\User\AuthModel;
+use Sanf\Core\Modules\User\AuthEncryptedModel;
 
 class UserCompanyModel extends AbstractModel
 {
@@ -11,6 +11,6 @@ class UserCompanyModel extends AbstractModel
 
     public function user()
     {
-        return $this->belongsTo(AuthModel::class, 'user_id');
+        return $this->belongsTo(AuthEncryptedModel::class, 'user_id');
     }
 }

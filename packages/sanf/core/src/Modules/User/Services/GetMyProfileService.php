@@ -3,11 +3,11 @@
 namespace Sanf\Core\Modules\User\Services;
 
 use NbsPhp\Core\Exceptions\UserNotFoundException;
-use NbsPhp\Core\Models\AuthModel;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\User\Dtos\MyProfileDto;
 use Sanf\Core\Modules\User\Entities\ProfileEntityInterface;
 use Sanf\Core\Modules\User\Repositories\ProfileRepositoryInterface;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 
 class GetMyProfileService implements ApplicationServiceInterface
 {
@@ -19,7 +19,7 @@ class GetMyProfileService implements ApplicationServiceInterface
      * GetProfileService constructor.
      * @param $repository
      */
-    public function __construct(AuthModel $repository, ProfileRepositoryInterface $profileRepository) //TODO REPOSITORY
+    public function __construct(UserRepositoryInterface $repository, ProfileRepositoryInterface $profileRepository) //TODO REPOSITORY
     {
         $this->repository = $repository;
         $this->profileRepository = $profileRepository;
@@ -27,16 +27,24 @@ class GetMyProfileService implements ApplicationServiceInterface
 
     public function execute($dto = null)
     {
-        $user = $this->repository->findOrFail($dto->userId);
+        /** @var \Sanf\Core\Modules\User\AuthEncryptedModel $user */
+        $user = $this->repository->findById($dto->userId);
+
+        if (is_null($user)) {
+            throw new UserNotFoundException('User Not Found By Id');
+        }
+
         if (empty($user->xid) || empty($user->personal_xid)) {
             $profile = $this->profileRepository->findPersonalProfileByEmail($user->username);
             if (is_null($profile)) {
                 throw new UserNotFoundException('Personal Profile Not Found By Email');
             }
-            $user->xid = $profile->getCustomerId();
-            $user->personal_xid = $profile->getCustomerId();
-            $user->profile_type = $profile->getTypeId();
-            $user->save();
+
+            $this->repository->update([
+                'xid' => $profile->getCustomerId(),
+                'personal_xid' => $profile->getCustomerId(),
+                'profile_type' => $profile->getTypeId(),
+            ], $user->id);
         } else {
             $profile = $this->profileRepository->findById($user->personal_xid);
             if (is_null($profile)) {

@@ -5,8 +5,9 @@ namespace Sanf\Core\Modules\User\Services;
 use function collect;
 use Illuminate\Support\Facades\Log;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
-use NbsPhp\Core\Models\AuthModel;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
+use Sanf\Core\Encryptions\SodiumEncryption;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Integration\Exceptions\SanfInternalApiException;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
@@ -15,7 +16,7 @@ class GetListCustomerProfileService implements ApplicationServiceInterface
     protected $repository;
     protected $internalApiClient;
 
-    public function __construct(AuthModel $repository, SanfCoreApiClient $internalApiClient) //TODO REPOSITORY
+    public function __construct(UserRepositoryInterface $repository, SanfCoreApiClient $internalApiClient) //TODO REPOSITORY
     {
         $this->repository = $repository;
         $this->internalApiClient = $internalApiClient;
@@ -23,7 +24,9 @@ class GetListCustomerProfileService implements ApplicationServiceInterface
 
     public function execute($dto = null)// email, userId
     {
-        $user = $this->repository->newQuery()->where('username', $dto->email)->first();
+        $user = SodiumEncryption::query()->transaction(function () use ($dto) {
+            return $this->repository->findByEmail($dto->email);
+        });
         if (!$user) {
             throw new UserNotFoundException();
         }
