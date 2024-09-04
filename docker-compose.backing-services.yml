@@ -1,0 +1,24 @@
+version: '3.9'
+
+volumes:
+  bs-sanf-pgsql-sodium-data:
+    driver: local
+
+networks:
+    local-sanf-net:
+        driver: bridge
+
+services:
+  pgsql-sodium:
+    container_name: bs-sanf-pgsql-sodium
+    build: ./deployments/backing-services/pgsql-sodium
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${PGSQL_SODIUM_USERNAME}
+      - POSTGRES_PASSWORD=${PGSQL_SODIUM_PASSWORD}
+    ports:
+      - '${PGSQL_SODIUM_PORT:-5432}:5432'
+    volumes: 
+      - bs-sanf-pgsql-sodium-data:/var/lib/postgresql/data 
+    networks:
+      - local-sanf-net
