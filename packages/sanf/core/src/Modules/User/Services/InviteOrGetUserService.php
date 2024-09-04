@@ -11,10 +11,7 @@ class InviteOrGetUserService extends UserService implements ApplicationServiceIn
 {
     public function execute($dto = null)
     {
-        $user = $this->userRepository
-            ->newQuery()
-            ->where('username', $dto->email)
-            ->first();
+        $user = $this->userRepository->findByEmail($dto->email);
 
         if ($user) {
             if ($user instanceof NeedSetupPasswordInterface && $user->needActivation()) {
@@ -24,10 +21,9 @@ class InviteOrGetUserService extends UserService implements ApplicationServiceIn
             return $user;
         }
 
-        /** @var \NbsPhp\Core\Models\AuthModel $user */
+        /** @var \Sanf\Core\Modules\User\AuthEncryptedModel $user */
         $user = $this->userRepository
-            ->newQuery()
-            ->forceCreate([
+            ->create([
                 'full_name' => $dto->fullName,
                 'username' => $dto->email,
                 'password' => bcrypt(nano_id()),

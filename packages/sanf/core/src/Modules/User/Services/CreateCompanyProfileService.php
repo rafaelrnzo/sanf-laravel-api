@@ -3,8 +3,8 @@
 namespace Sanf\Core\Modules\User\Services;
 
 use NbsPhp\Core\Exceptions\UserNotFoundException;
-use NbsPhp\Core\Models\AuthModel;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class CreateCompanyProfileService implements ApplicationServiceInterface
@@ -16,7 +16,7 @@ class CreateCompanyProfileService implements ApplicationServiceInterface
      * GetProfileService constructor.
      * @param $repository
      */
-    public function __construct(AuthModel $repository, SanfCoreApiClient $internalApiClient) //TODO REPOSITORY
+    public function __construct(UserRepositoryInterface $repository, SanfCoreApiClient $internalApiClient) //TODO REPOSITORY
     {
         $this->repository = $repository;
         $this->internalApiClient = $internalApiClient;
@@ -24,7 +24,7 @@ class CreateCompanyProfileService implements ApplicationServiceInterface
 
     public function execute($dto = null)
     {
-        $user = $this->repository->newQuery()->find($dto->userId);
+        $user = $this->repository->findById($dto->userId);
         if (!$user) {
             throw new UserNotFoundException();
         }

@@ -4,7 +4,7 @@ namespace Sanf\Core\Modules\Staff;
 
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\User\AuthModel;
+use Sanf\Core\Encryptions\SodiumEncryption;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 
 class GetListCompanyStaffService extends StaffService implements ApplicationServiceInterface
@@ -17,20 +17,24 @@ class GetListCompanyStaffService extends StaffService implements ApplicationServ
         } catch (SanfInternalApiDataNotFoundException $exception) {
             $staffs = [];
         }
-        $user = $this->userRepository->newQuery()->find($dto->userId);
+        $user = $this->userRepository->findById($dto->userId);
         if (is_null($user)) {
             throw new UserNotFoundException();
         }
 
+        $sodiumQuery = SodiumEncryption::query();
+
         $activeStaffs = $this->staffRepository->getByCompanyXid($dto->xid);
         $activeStaffCollections = collect($activeStaffs);
         $data = collect($staffs)
-            ->map(function ($item) use ($activeStaffCollections, $user) {
+            ->map(function ($item) use ($activeStaffCollections, $user, $sodiumQuery) {
                 $email = strtolower($item['EMAIL'] ?? '');
                 $activeStaff = $activeStaffCollections->filter(function ($activeStaff) use ($email) {
                     return optional($activeStaff->user)->username === $email;
                 })->first();
-                $registeredUser = AuthModel::where('username', $email)->first();
+                $registeredUser = $sodiumQuery->transaction(function () use ($email) {
+                    return $this->userRepository->findByEmail($email);
+                });
                 $status = optional($registeredUser)->status;
 
                 return (object) [

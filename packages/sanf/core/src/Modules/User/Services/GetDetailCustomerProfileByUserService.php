@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use NbsPhp\Core\Exceptions\ForbiddenException;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\User\AuthModel;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class GetDetailCustomerProfileByUserService implements ApplicationServiceInterface
@@ -14,7 +14,7 @@ class GetDetailCustomerProfileByUserService implements ApplicationServiceInterfa
     protected $repository;
     protected $internalApiClient;
 
-    public function __construct(AuthModel $repository, SanfCoreApiClient $internalApiClient) //TODO REPOSITORY
+    public function __construct(UserRepositoryInterface $repository, SanfCoreApiClient $internalApiClient) //TODO REPOSITORY
     {
         $this->repository = $repository;
         $this->internalApiClient = $internalApiClient;
@@ -30,7 +30,7 @@ class GetDetailCustomerProfileByUserService implements ApplicationServiceInterfa
      */
     public function execute($dto = null)
     {
-        $user = $this->repository->newQuery()->find($dto->userId);
+        $user = $this->repository->findById($dto->userId);
         if (!$user) {
             throw new UserNotFoundException();
         }

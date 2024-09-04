@@ -18,7 +18,7 @@ class DeactivateCompanyStaffService extends StaffService implements ApplicationS
             throw new GeneralStaffException('Invalid Email Format');
         }
 
-        $user = $this->userRepository->newQuery()->where('username', $staff['EMAIL'])->first();
+        $user = $this->userRepository->findByEmail($staff['EMAIL']);
         if (is_null($user)) {
             throw new UserNotFoundException();
         }

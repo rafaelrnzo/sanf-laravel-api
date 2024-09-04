@@ -4,14 +4,14 @@ namespace Sanf\Core\Modules\User\Services;
 
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\User\AuthModel;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class GetUserMetadataAccountReceivableService extends UserService implements ApplicationServiceInterface
 {
     protected SanfCoreApiClient $internalApiClient;
 
-    public function __construct(AuthModel $userRepository, SanfCoreApiClient $internalApiClient)
+    public function __construct(UserRepositoryInterface $userRepository, SanfCoreApiClient $internalApiClient)
     {
         parent::__construct($userRepository);
         $this->internalApiClient = $internalApiClient;
@@ -19,7 +19,7 @@ class GetUserMetadataAccountReceivableService extends UserService implements App
 
     public function execute($dto = null)
     {
-        $user = $this->userRepository->newQuery()->find($dto->user_id);
+        $user = $this->userRepository->findById($dto->user_id);
         if (!$user) {
             throw new UserNotFoundException();
         }

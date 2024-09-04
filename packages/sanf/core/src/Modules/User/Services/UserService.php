@@ -2,7 +2,7 @@
 
 namespace Sanf\Core\Modules\User\Services;
 
-use Sanf\Core\Modules\User\AuthModel;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 
 class UserService
 {
@@ -12,7 +12,7 @@ class UserService
      * UserService constructor.
      * @param $userRepository
      */
-    public function __construct(AuthModel $userRepository)
+    public function __construct(UserRepositoryInterface $userRepository)
     {
         $this->userRepository = $userRepository;
     }
