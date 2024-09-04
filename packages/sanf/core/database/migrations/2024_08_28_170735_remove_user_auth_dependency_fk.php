@@ -25,6 +25,6 @@ class RemoveUserAuthDependencyFk extends Migration
      */
     public function down()
     {
-        //
+        // TODO: recreate foreign key
     }
 }

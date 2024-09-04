@@ -52,6 +52,15 @@ class EloquentUserEncryptedRepository extends AbstractEloquentRepository impleme
             ->exists();
     }
 
+    public function existsByEmail(string $email): bool
+    {
+        $sodiumQuery = SodiumEncryption::query();
+
+        return $this->model->newQuery()
+            ->where($sodiumQuery->selectRaw('username'), $email)
+            ->exists();
+    }
+
     public function create(array $data) {
         $user = $this->model->newQuery()->forceCreate(
             $this->encryptBeforeCreate($data)

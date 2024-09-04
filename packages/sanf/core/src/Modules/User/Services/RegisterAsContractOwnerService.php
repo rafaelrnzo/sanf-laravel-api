@@ -8,9 +8,11 @@ use NbsPhp\Core\Enum\UserStatus;
 use NbsPhp\Core\Exceptions\EmailAlreadyExistException;
 use NbsPhp\Core\Models\NeedSetupPasswordInterface;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
+use Sanf\Core\Encryptions\SodiumEncryption;
 use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Core\Modules\User\ContractOwnerNotFoundException;
 use Sanf\Core\Modules\User\Enums\EntityType;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class RegisterAsContractOwnerService implements ApplicationServiceInterface
@@ -22,7 +24,7 @@ class RegisterAsContractOwnerService implements ApplicationServiceInterface
      * VerifyEmailService constructor.
      * @param $repository
      */
-    public function __construct(AuthModel $repository, SanfCoreApiClient $internalApiClient) //TODO USE REPOSITORY
+    public function __construct(UserRepositoryInterface $repository, SanfCoreApiClient $internalApiClient) //TODO USE REPOSITORY
     {
         $this->repository = $repository;
         $this->internalApiClient = $internalApiClient;
@@ -37,12 +39,16 @@ class RegisterAsContractOwnerService implements ApplicationServiceInterface
             throw new ContractOwnerNotFoundException();
         }
 
-        if ($this->repository->where('username', $dto->email)->first()) {
+        $emailExists = SodiumEncryption::query()->transaction(function () use ($dto) {
+            return $this->repository->existsByEmail($dto->email);
+        });
+
+        if ($emailExists) {
             throw new EmailAlreadyExistException();
         }
 
         /** @var AuthModel $user */
-        $user = $this->repository->newQuery()->forceCreate([
+        $user = $this->repository->create([
             'entity_type_id' => EntityType::PERSONAL,
             'username' => $personalData['EMAIL_ADDR'],
             'password' => bcrypt(nano_id()), // set temporary random password

@@ -2,9 +2,9 @@
 
 namespace Sanf\Core\Modules\User\Repositories;
 
+use NbsPhp\Core\Repositories\AbstractEloquentRepository;
 use Sanf\Core\Encryptions\SodiumEncryption;
 use Sanf\Core\Modules\User\UserAuthLogEncryptedModel;
-use NbsPhp\Core\Repositories\AbstractEloquentRepository;
 
 class EloquentUserAuthLogEncryptedRepository extends AbstractEloquentRepository implements UserAuthLogRepositoryInterface
 {
@@ -87,7 +87,7 @@ class EloquentUserAuthLogEncryptedRepository extends AbstractEloquentRepository 
     public function update($fields, $specification = null)
     {
         $fields = $this->encryptBeforeUpdate($fields);
-        
+
         if (!is_null($specification)) {
             $model = $specification->buildQuery($this->model)->update($fields);
 
