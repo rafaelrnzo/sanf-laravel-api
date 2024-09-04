@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\Auth;
 use NbsPhp\Core\Enum\AuthProvider;
 use NbsPhp\Core\Exceptions\InvalidRefreshTokenException;
 use NbsPhp\Core\Jwt\JWTHelper;
-use NbsPhp\Core\Models\AuthModel;
 use NbsPhp\Core\Models\UserSessionModel;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 
 class UpdateSessionService implements ApplicationServiceInterface
 {
@@ -19,7 +19,7 @@ class UpdateSessionService implements ApplicationServiceInterface
      * GetProfileService constructor.
      * @param $repository
      */
-    public function __construct(JWTHelper $jwt, AuthModel $repository)
+    public function __construct(JWTHelper $jwt, UserRepositoryInterface $repository)
     {
         $this->jwt = $jwt;
         $this->repository = $repository;
@@ -41,7 +41,7 @@ class UpdateSessionService implements ApplicationServiceInterface
 
         //TODO SESSION REPOSITORY
         $session = UserSessionModel::query()->findOrFail($sessionId);
-        $user = $this->repository->find($session->user_id);
+        $user = $this->repository->findById($session->user_id);
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         $token = Auth::login($user);
 
