@@ -4,13 +4,13 @@ namespace Sanf\Core\Modules\Commodity\Services;
 
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use Sanf\Core\Modules\Commodity\Repositories\CommodityRepositoryInterface;
-use Sanf\Core\Modules\User\AuthModel;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 
 class CommodityByUserService extends CommodityService
 {
-    protected AuthModel $userRepository;
+    protected UserRepositoryInterface $userRepository;
 
-    public function __construct(CommodityRepositoryInterface $commodityRepository, AuthModel $userRepository)
+    public function __construct(CommodityRepositoryInterface $commodityRepository, UserRepositoryInterface $userRepository)
     {
         parent::__construct($commodityRepository);
         $this->userRepository = $userRepository;
@@ -18,7 +18,7 @@ class CommodityByUserService extends CommodityService
 
     protected function findUserOrFail($userId)
     {
-        $user = $this->userRepository->newQuery()->find($userId);
+        $user = $this->userRepository->findById($userId);
         if (!$user) {
             throw new UserNotFoundException();
         }

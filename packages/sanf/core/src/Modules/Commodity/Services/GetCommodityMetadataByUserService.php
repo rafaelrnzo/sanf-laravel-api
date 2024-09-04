@@ -6,7 +6,7 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Commodity\CommodityStatus;
 use Sanf\Core\Modules\Commodity\Repositories\CommodityRepositoryInterface;
 use Sanf\Core\Modules\Commodity\Specifications\CommoditySpecificationFactoryInterface;
-use Sanf\Core\Modules\User\AuthModel;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 
 class GetCommodityMetadataByUserService extends CommodityByUserService implements ApplicationServiceInterface
 {
@@ -14,7 +14,7 @@ class GetCommodityMetadataByUserService extends CommodityByUserService implement
 
     public function __construct(
         CommodityRepositoryInterface           $commodityRepository,
-        AuthModel                              $userRepository,
+        UserRepositoryInterface                $userRepository,
         CommoditySpecificationFactoryInterface $specificationFactory
     )
     {

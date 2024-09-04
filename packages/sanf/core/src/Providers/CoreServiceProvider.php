@@ -12,7 +12,7 @@ use Sanf\Core\Modules\Astra\ProductAstraRepositoryInterface;
 use Sanf\Core\Modules\Branch\BranchRepositoryInterface;
 use Sanf\Core\Modules\Branch\EloquentBranchRepository;
 use Sanf\Core\Modules\Commodity\Repositories\CommodityRepositoryInterface;
-use Sanf\Core\Modules\Commodity\Repositories\EloquentCommodityRepository;
+use Sanf\Core\Modules\Commodity\Repositories\EloquentCommodityEncryptedRepository;
 use Sanf\Core\Modules\Commodity\Specifications\CommoditySpecificationFactoryInterface;
 use Sanf\Core\Modules\Commodity\Specifications\EloquentCommoditySpecificationFactory;
 use Sanf\Core\Modules\ContactUs\AskUsRepositoryInterface;
@@ -184,7 +184,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(ProductAstraRepositoryInterface::class, EloquentProductAstraRepository::class);
         $this->app->bind(LocationRepositoryInterface::class, EloquentLocationRepository::class);
         $this->app->bind(ProjectRepositoryInterface::class, EloquentProjectRepository::class);
-        $this->app->bind(CommodityRepositoryInterface::class, EloquentCommodityRepository::class);
+        $this->app->bind(CommodityRepositoryInterface::class, EloquentCommodityEncryptedRepository::class);
         $this->app->bind(StaffRepositoryInterface::class, EloquentStaffRepository::class);
         $this->app->bind(FinancingMethodRepositoryInterface::class, EloquentFinancingMethodRepository::class);
         $this->app->bind(FinancingPrerequisiteRepositoryInterface::class, EloquentFinancingPrerequisiteRepository::class);
