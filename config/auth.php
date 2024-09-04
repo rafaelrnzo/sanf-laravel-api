@@ -197,7 +197,8 @@ return [
     'passwords' => [
         'mobile-password-reset' => [
             'provider' => 'mobile-user-provider',
-            'table' => 'password_reset',
+            'table' => 'password_reset_encrypted',
+            'connection' => 'pgsql_sodium',
             'expire' => 60,
             'throttle' => 1,
         ],
@@ -241,28 +242,28 @@ return [
                 'method' => 'post',
                 'uri' => "{$routePrefix}/request-forgot-password",
                 'name' => 'password.email',
-                'action' => "{$namespace}ForgotPasswordController@sendResetLinkEmail",
+                'action' => "Sanf\Api\Modules\User\Controllers\ForgotPasswordController@sendResetLinkEmail",
                 'middleware' => ['auth', 'http-logger'],
             ],
             [
                 'method' => 'post',
                 'uri' => "{$routePrefix}/reset-password",
                 'name' => 'password.update',
-                'action' => "{$namespace}ResetPasswordController@reset",
+                'action' => "Sanf\Api\Modules\User\Controllers\ResetPasswordController@reset",
                 'middleware' => ['http-logger'],
             ],
             [
                 'method' => 'get',
                 'uri' => 'pages/reset-password',
                 'name' => 'password.request',
-                'action' => "{$namespace}ResetPasswordController@showResetForm",
+                'action' => "Sanf\Api\Modules\User\Controllers\ResetPasswordController@showResetForm",
                 'middleware' => ['http-logger'],
             ],
             [
                 'method' => 'get',
                 'uri' => "{$routePrefix}/reset-password",
                 'name' => 'password.reset',
-                'action' => "{$namespace}ResetPasswordController@showResetForm",
+                'action' => "Sanf\Api\Modules\User\Controllers\ResetPasswordController@showResetForm",
                 'middleware' => ['auth', 'http-logger'],
             ],
             [

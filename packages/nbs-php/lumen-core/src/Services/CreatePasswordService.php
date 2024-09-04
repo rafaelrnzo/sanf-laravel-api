@@ -4,19 +4,28 @@ namespace NbsPhp\Core\Services;
 
 use Carbon\Carbon;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
-use NbsPhp\Core\Models\AuthModel;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 
 class CreatePasswordService implements ApplicationServiceInterface
 {
+    protected $repository;
+
+    public function __construct(UserRepositoryInterface $repository)
+    {
+        $this->repository = $repository;
+    }
+
     public function execute($dto = null): bool
     {
-        $user = AuthModel::find($dto->userId);
+        $user = $this->repository->findById($dto->userId);
+
         if(!$user){
             throw new UserNotFoundException();
         }
-        $user->password = bcrypt($dto->password);
-        $user->password_updated_at = Carbon::now();
 
-        return $user->save();
+        return $this->repository->update([
+            'password' => bcrypt($dto->password),
+            'password_updated_at' => Carbon::now(),
+        ], $user->id);
     }
 }

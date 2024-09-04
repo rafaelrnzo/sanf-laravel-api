@@ -128,6 +128,7 @@ use Sanf\Core\Modules\User\Specifications\EloquentUserAuthLogEncryptedSpecificat
 use Sanf\Core\Modules\User\Specifications\EloquentUserAuthSpecificationFactory;
 use Sanf\Core\Modules\User\Specifications\UserAuthLogSpecificationFactoryInterface;
 use Sanf\Core\Modules\User\Specifications\UserAuthSpecificationFactoryInterface;
+use Sanf\Core\Passwords\SodiumPasswordBrokerManager;
 
 class CoreServiceProvider extends ServiceProvider
 {
@@ -244,6 +245,11 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(ScaninaProductSpecificationInterface::class, GuzzleScaninaProductSpecification::class);
         $this->app->bind(ScaninaUserSpecificationInterface::class, GuzzleScaninaUserSpecification::class);
         $this->app->bind(ScaninaRegionSpecificationInterface::class, GuzzleScaninaRegionSpecification::class);
+
+        // Others
+        $this->app->bind('sodiumPasswordBrokerManager', function ($app) {
+            return new SodiumPasswordBrokerManager($app);
+        });
     }
 
     protected function registerViews()
