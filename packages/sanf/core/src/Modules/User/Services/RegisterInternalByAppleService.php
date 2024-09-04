@@ -4,8 +4,9 @@ namespace Sanf\Core\Modules\User\Services;
 
 use NbsPhp\Core\Enum\UserStatus;
 use NbsPhp\Core\Services\RegisterByAppleServiceInterface;
-use Sanf\Core\Modules\User\AuthModel;
+use Sanf\Core\Modules\User\AuthEncryptedModel;
 use Sanf\Core\Modules\User\Enums\ProfileType;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
@@ -22,7 +23,7 @@ class RegisterInternalByAppleService implements RegisterByAppleServiceInterface
      * @param $jwt
      */
     //TODO USE REPOSITORY
-    public function __construct(RegisterByAppleServiceInterface $service, AuthModel $repository, SanfCoreApiClient $internalApiClient)
+    public function __construct(RegisterByAppleServiceInterface $service, UserRepositoryInterface $repository, SanfCoreApiClient $internalApiClient)
     {
         $this->service = $service;
         $this->repository = $repository;
@@ -56,13 +57,15 @@ class RegisterInternalByAppleService implements RegisterByAppleServiceInterface
         $profile = (collect($userCoreAccount['data'])->where('ID_IDENTITY', ProfileType::PERSONAL)->first());
         $customerId = $profile['CUST_ID_SANF'];
 
-        /** @var AuthModel $user */
-        $user = $this->repository->newQuery()->find($user->id);
-        $user->update([
+        $this->repository->update([
             'profile_type' => ProfileType::PERSONAL,
             'xid' => $customerId,
             'personal_xid' => $customerId,
-        ]);
+        ], $user->id);
+
+        /** @var AuthEncryptedModel $user */
+        $user = $this->repository->findById($user->id);
+
         $user->token = optional($user)->token;
 
         //TODO DTO

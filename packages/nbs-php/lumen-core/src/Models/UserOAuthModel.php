@@ -4,6 +4,7 @@ namespace NbsPhp\Core\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Sanf\Core\Modules\User\AuthEncryptedModel;
 
 /**
  * @property int           $id
@@ -41,6 +42,6 @@ class UserOAuthModel extends AbstractModel
 
     public function user()
     {
-        return $this->belongsTo(AuthModel::class, 'user_id');
+        return $this->belongsTo(AuthEncryptedModel::class, 'user_id');
     }
 }

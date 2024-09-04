@@ -12,6 +12,8 @@ interface UserRepositoryInterface
 
     public function existsByEmailAndStatusIds(string $email, array $statusIds): bool;
 
+    public function findByEmailAndStatusIds(string $email, array $statusIds);
+
     public function existsByEmail(string $email): bool;
 
     public function create(array $data);

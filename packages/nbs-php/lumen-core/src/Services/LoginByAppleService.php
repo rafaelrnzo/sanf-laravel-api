@@ -13,11 +13,12 @@ use NbsPhp\Core\Exceptions\EmailUnverifiedException;
 use NbsPhp\Core\Exceptions\InvalidCredentialException;
 use NbsPhp\Core\Exceptions\OAuthUserNotBoundException;
 use NbsPhp\Core\Jwt\JWTHelper;
-use NbsPhp\Core\Models\AuthModel;
 use NbsPhp\Core\Models\UserOAuthModel;
 use NbsPhp\Core\Models\UserSessionModel;
+use Sanf\Core\Encryptions\SodiumEncryption;
 use Sanf\Core\Modules\User\Enums\UserAuthLogStatusEnum;
 use Sanf\Core\Modules\User\Repositories\UserAuthLogRepositoryInterface;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 
 class LoginByAppleService implements ApplicationServiceInterface
 {
@@ -28,7 +29,7 @@ class LoginByAppleService implements ApplicationServiceInterface
 
     public function __construct(
         JWTHelper $jwt,
-        AuthModel $repository,
+        UserRepositoryInterface $repository,
         UserAuthLogRepositoryInterface $logRepository
     ) {
         $this->jwt = $jwt;
@@ -50,6 +51,7 @@ class LoginByAppleService implements ApplicationServiceInterface
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             throw new OAuthUserNotBoundException('invalid email format');
         }
+
         //TODO USING REPO
         return DB::transaction(function () use ($dto, $email, $isPrivateEmail, $isEmailVerified, $providerId) {
             //MATCH WITH EXISTING USER BY SAME EMAIL
@@ -57,10 +59,12 @@ class LoginByAppleService implements ApplicationServiceInterface
             //ALSO SKIP IF EMAIL STILL NOT VERIFIED
             $user = null;
             if (!$isPrivateEmail || $isEmailVerified) {
-                $user = $this->repository->newQuery()
-                    ->where('username', $email)
-                    ->whereIn('status_id', [UserStatus::ACTIVE, UserStatus::NEED_ACTIVATION])
-                    ->first();
+                $user = SodiumEncryption::query()->transaction(function () use ($email) {
+                    return $this->repository->findByEmailAndStatusIds(
+                        $email,
+                        [UserStatus::ACTIVE, UserStatus::NEED_ACTIVATION]
+                    );
+                });
 
                 if ($user instanceof MustVerifyEmail && !$user->hasVerifiedEmail()) {
                     throw new EmailUnverifiedException();
