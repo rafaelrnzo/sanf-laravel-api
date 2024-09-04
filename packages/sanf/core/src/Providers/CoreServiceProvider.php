@@ -72,7 +72,7 @@ use Sanf\Core\Modules\Prepayment\Repositories\EloquentPrepaymentSubmissionReposi
 use Sanf\Core\Modules\Prepayment\Repositories\PrepaymentSubmissionRepositoryInterface;
 use Sanf\Core\Modules\Product\EloquentProductRepository;
 use Sanf\Core\Modules\Product\ProductRepositoryInterface;
-use Sanf\Core\Modules\Project\Repositories\EloquentProjectRepository;
+use Sanf\Core\Modules\Project\Repositories\EloquentProjectEncryptedRepository;
 use Sanf\Core\Modules\Project\Repositories\ProjectRepositoryInterface;
 use Sanf\Core\Modules\Project\Specifications\EloquentProjectSpecificationFactory;
 use Sanf\Core\Modules\Project\Specifications\ProjectSpecificationFactoryInterface;
@@ -183,7 +183,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(PromoRepositoryInterface::class, EloquentPromoRepository::class);
         $this->app->bind(ProductAstraRepositoryInterface::class, EloquentProductAstraRepository::class);
         $this->app->bind(LocationRepositoryInterface::class, EloquentLocationRepository::class);
-        $this->app->bind(ProjectRepositoryInterface::class, EloquentProjectRepository::class);
+        $this->app->bind(ProjectRepositoryInterface::class, EloquentProjectEncryptedRepository::class);
         $this->app->bind(CommodityRepositoryInterface::class, EloquentCommodityEncryptedRepository::class);
         $this->app->bind(StaffRepositoryInterface::class, EloquentStaffRepository::class);
         $this->app->bind(FinancingMethodRepositoryInterface::class, EloquentFinancingMethodRepository::class);

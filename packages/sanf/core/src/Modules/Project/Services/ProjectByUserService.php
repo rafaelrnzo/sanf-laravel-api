@@ -4,13 +4,13 @@ namespace Sanf\Core\Modules\Project\Services;
 
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use Sanf\Core\Modules\Project\Repositories\ProjectRepositoryInterface;
-use Sanf\Core\Modules\User\AuthModel;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 
 class ProjectByUserService extends ProjectService
 {
-    protected AuthModel $userRepository;
+    protected UserRepositoryInterface $userRepository;
 
-    public function __construct(ProjectRepositoryInterface $projectRepository, AuthModel $userRepository)
+    public function __construct(ProjectRepositoryInterface $projectRepository, UserRepositoryInterface $userRepository)
     {
         parent::__construct($projectRepository);
         $this->userRepository = $userRepository;
@@ -18,7 +18,7 @@ class ProjectByUserService extends ProjectService
 
     protected function findUserOrFail($userId)
     {
-        $user = $this->userRepository->newQuery()->find($userId);
+        $user = $this->userRepository->findById($userId);
         if (!$user) {
             throw new UserNotFoundException();
         }
