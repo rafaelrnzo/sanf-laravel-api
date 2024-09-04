@@ -4,7 +4,8 @@ namespace NbsPhp\Core\Services;
 
 use NbsPhp\Core\Exceptions\UserActivationFailedException;
 use NbsPhp\Core\Exceptions\UserAlreadyActivatedException;
-use NbsPhp\Core\Models\AuthModel;
+use Sanf\Core\Modules\User\AuthEncryptedModel;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 
 class ValidateUserActivatedService implements ActivateUserServiceInterface
 {
@@ -14,21 +15,21 @@ class ValidateUserActivatedService implements ActivateUserServiceInterface
      * VerifyEmailService constructor.
      * @param $repository
      */
-    public function __construct(AuthModel $repository) //TODO USE REPOSITORY
+    public function __construct(UserRepositoryInterface $repository)
     {
         $this->repository = $repository;
     }
 
     /**
      * @param $dto
-     * @return AuthModel
+     * @return AuthEncryptedModel
      * @throws UserActivationFailedException
      * @throws UserAlreadyActivatedException
      */
     public function execute($dto = null)
     {
-        /** @var AuthModel $user */
-        $user = $this->repository->newQuery()->find($dto->userId);
+        /** @var AuthEncryptedModel $user */
+        $user = $this->repository->findById($dto->userId);
         if (!$user) {
             throw new UserActivationFailedException('user activation: not found');
         }
