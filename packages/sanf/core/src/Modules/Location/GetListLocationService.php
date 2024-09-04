@@ -2,6 +2,8 @@
 
 namespace Sanf\Core\Modules\Location;
 
+use Sanf\Core\Encryptions\SodiumEncryption;
+
 class GetListLocationService
 {
     protected $repository;
@@ -13,7 +15,9 @@ class GetListLocationService
 
     public function execute($dto)
     {
-        $data = $this->repository->list($dto);
+        $data = SodiumEncryption::query()->transaction(function () use ($dto) {
+            return $this->repository->list($dto);
+        });
 
         return (object) [
             'data' => $data['lists'],

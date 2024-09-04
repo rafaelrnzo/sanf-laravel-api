@@ -56,7 +56,7 @@ use Sanf\Core\Modules\Invoice\Repositories\EloquentInvoiceCollectionSubmissionRe
 use Sanf\Core\Modules\Invoice\Repositories\InvoiceCollectionSubmissionRepositoryInterface;
 use Sanf\Core\Modules\Invoice\Specifications\EloquentInvoiceCollectionSubmissionSpecificationFactory;
 use Sanf\Core\Modules\Invoice\Specifications\InvoiceCollectionSubmissionSpecificationFactoryInterface;
-use Sanf\Core\Modules\Location\EloquentLocationRepository;
+use Sanf\Core\Modules\Location\EloquentLocationEncryptedRepository;
 use Sanf\Core\Modules\Location\LocationRepositoryInterface;
 use Sanf\Core\Modules\News\EloquentNewsRepository;
 use Sanf\Core\Modules\News\NewsRepositoryInterface;
@@ -182,7 +182,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(NewsRepositoryInterface::class, EloquentNewsRepository::class);
         $this->app->bind(PromoRepositoryInterface::class, EloquentPromoRepository::class);
         $this->app->bind(ProductAstraRepositoryInterface::class, EloquentProductAstraRepository::class);
-        $this->app->bind(LocationRepositoryInterface::class, EloquentLocationRepository::class);
+        $this->app->bind(LocationRepositoryInterface::class, EloquentLocationEncryptedRepository::class);
         $this->app->bind(ProjectRepositoryInterface::class, EloquentProjectEncryptedRepository::class);
         $this->app->bind(CommodityRepositoryInterface::class, EloquentCommodityEncryptedRepository::class);
         $this->app->bind(StaffRepositoryInterface::class, EloquentStaffRepository::class);
