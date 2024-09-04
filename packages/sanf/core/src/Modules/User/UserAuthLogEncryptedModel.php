@@ -17,4 +17,9 @@ class UserAuthLogEncryptedModel extends UserAuthLogModel
     {
         return $this->decyptor()->decrypt($this->attributes['created_by']);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(AuthEncryptedModel::class, 'user_id');
+    }
 }

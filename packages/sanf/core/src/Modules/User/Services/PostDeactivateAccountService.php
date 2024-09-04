@@ -7,28 +7,28 @@ use Illuminate\Support\Facades\Auth;
 use NbsPhp\Core\Exceptions\InvalidCredentialException;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Core\Modules\User\Dtos\PostDeactivateAccountDto;
 use Sanf\Core\Modules\User\Enums\UserAuthLogStatusEnum;
 use Sanf\Core\Modules\User\Exceptions\InvalidRequestDeletionAccountException;
 use Sanf\Core\Modules\User\Jobs\SendRequestDeletionAccountForAdminNotification;
 use Sanf\Core\Modules\User\Jobs\SendRequestDeletionAccountForUserNotification;
 use Sanf\Core\Modules\User\Repositories\UserAuthLogRepositoryInterface;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Core\Modules\User\Specifications\UserAuthLogSpecificationFactoryInterface;
 
 class PostDeactivateAccountService implements ApplicationServiceInterface
 {
-    protected AuthModel $repository;
+    protected UserRepositoryInterface $repository;
     public UserAuthLogRepositoryInterface $logRepository;
     private UserAuthLogSpecificationFactoryInterface $logSpecification;
 
     /**
      * GetProfileService constructor.
-     * @param AuthModel $repository
+     * @param UserRepositoryInterface $repository
      * @param UserAuthLogRepositoryInterface $logRepository
      */
     public function __construct(
-        AuthModel $repository,
+        UserRepositoryInterface $repository,
         UserAuthLogRepositoryInterface $logRepository,
         UserAuthLogSpecificationFactoryInterface $logSpecification
     ) {

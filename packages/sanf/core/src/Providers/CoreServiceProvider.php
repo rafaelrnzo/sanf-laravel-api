@@ -124,7 +124,7 @@ use Sanf\Core\Modules\User\Repositories\ProfileRepositoryInterface;
 use Sanf\Core\Modules\User\Repositories\RestProfileRepository;
 use Sanf\Core\Modules\User\Repositories\UserAuthLogRepositoryInterface;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
-use Sanf\Core\Modules\User\Specifications\EloquentUserAuthLogSpecificationFactory;
+use Sanf\Core\Modules\User\Specifications\EloquentUserAuthLogEncryptedSpecificationFactory;
 use Sanf\Core\Modules\User\Specifications\EloquentUserAuthSpecificationFactory;
 use Sanf\Core\Modules\User\Specifications\UserAuthLogSpecificationFactoryInterface;
 use Sanf\Core\Modules\User\Specifications\UserAuthSpecificationFactoryInterface;
@@ -235,7 +235,7 @@ class CoreServiceProvider extends ServiceProvider
         );
         $this->app->bind(
             UserAuthLogSpecificationFactoryInterface::class,
-            EloquentUserAuthLogSpecificationFactory::class
+            EloquentUserAuthLogEncryptedSpecificationFactory::class
         );
         $this->app->bind(FinancingCategorySpecificationFactoryInterface::class, EloquentFinancingCategorySpecificationFactory::class);
         $this->app->bind(UserAuthSpecificationFactoryInterface::class, EloquentUserAuthSpecificationFactory::class);
