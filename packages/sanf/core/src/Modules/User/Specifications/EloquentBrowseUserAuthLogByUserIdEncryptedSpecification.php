@@ -67,6 +67,7 @@ class EloquentBrowseUserAuthLogByUserIdEncryptedSpecification
                 'user_id',
                 'restore_expired_at',
                 'created_at',
+                'nonce',
             ])
             ->with([
                 'user' => function ($query) {
@@ -78,6 +79,7 @@ class EloquentBrowseUserAuthLogByUserIdEncryptedSpecification
                         'phone_number',
                         'personal_xid',
                         'company_name',
+                        'nonce',
                     ]);
                 },
             ])

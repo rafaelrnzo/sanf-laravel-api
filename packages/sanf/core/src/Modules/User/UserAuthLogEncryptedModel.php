@@ -8,14 +8,18 @@ class UserAuthLogEncryptedModel extends UserAuthLogModel
 {
     use SodiumEncryptionTrait;
 
+    protected $hidden = [
+        'nonce',
+    ];
+
     public function getEmailAttribute()
     {
-        return $this->decyptor()->decrypt($this->attributes['email']);
+        return $this->decryptor()->decrypt($this->attributes['email']);
     }
 
     public function getCreatedByAttribute()
     {
-        return $this->decyptor()->decrypt($this->attributes['created_by']);
+        return $this->decryptor()->decrypt($this->attributes['created_by']);
     }
 
     public function user()

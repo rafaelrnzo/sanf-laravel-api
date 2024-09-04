@@ -68,7 +68,7 @@ class PostDeactivateAccountService implements ApplicationServiceInterface
             'email' => $user->username,
             'personal_xid' => $user->personal_xid,
             'status_id' => UserAuthLogStatusEnum::SUBMIT,
-            'restore_expired_at' => Carbon::now()->addDays(),
+            'restore_expired_at' => (string) Carbon::now()->addDays(),
             'created_by' => json_encode([
                 'type' => 10,
                 'user_id' => $user->id,
