@@ -26,9 +26,11 @@ class EloquentAskUsEncryptedRepository implements AskUsRepositoryInterface
 
     public function save($data)
     {
-        return $this->model
+        $model = $this->model
             ->newQuery()
             ->forceCreate($this->encryptBeforeCreate($data));
+
+        return $model->fresh();
     }
 
     private function encryptBeforeCreate(array $data): array

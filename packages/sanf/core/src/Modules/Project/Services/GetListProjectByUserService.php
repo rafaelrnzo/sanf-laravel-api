@@ -6,7 +6,7 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Project\Dto\PaginateUserProjectDto;
 use Sanf\Core\Modules\Project\Repositories\ProjectRepositoryInterface;
 use Sanf\Core\Modules\Project\Specifications\ProjectSpecificationFactoryInterface;
-use Sanf\Core\Modules\User\AuthModel;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 
 class GetListProjectByUserService extends ProjectByUserService implements ApplicationServiceInterface
 {
@@ -14,7 +14,7 @@ class GetListProjectByUserService extends ProjectByUserService implements Applic
 
     public function __construct(
         ProjectRepositoryInterface $projectRepository,
-        AuthModel $userRepository,
+        UserRepositoryInterface $userRepository,
         ProjectSpecificationFactoryInterface $specificationFactory
     ) {
         parent::__construct($projectRepository, $userRepository);
