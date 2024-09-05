@@ -8,7 +8,7 @@ use League\Flysystem\FileNotFoundException;
 use NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\User\AuthModel;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Core\Modules\User\Services\UserService;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
@@ -21,10 +21,10 @@ class GetDetailSurveyByUserService extends UserService implements ApplicationSer
     protected SanfCoreApiClient $internalApiClient;
 
     /**
-     * @param AuthModel $userRepository
+     * @param UserRepositoryInterface $userRepository
      * @param SanfCoreApiClient $internalApiClient
      */
-    public function __construct(AuthModel $userRepository, SanfCoreApiClient $internalApiClient)
+    public function __construct(UserRepositoryInterface $userRepository, SanfCoreApiClient $internalApiClient)
     {
         parent::__construct($userRepository);
         $this->internalApiClient = $internalApiClient;
@@ -39,7 +39,7 @@ class GetDetailSurveyByUserService extends UserService implements ApplicationSer
      */
     public function execute($dto = null)
     {
-        $user = $this->userRepository->newQuery()->find($dto->userId);
+        $user = $this->userRepository->findById($dto->userId);
         if (!$user) {
             throw new UserNotFoundException();
         }

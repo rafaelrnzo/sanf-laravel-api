@@ -9,7 +9,7 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Survey\Dtos\PaginateAssigneeSurveyDto;
 use Sanf\Core\Modules\Survey\Repositories\SurveyRepositoryInterface;
 use Sanf\Core\Modules\Survey\Specifications\SurveySpecificationFactoryInterface;
-use Sanf\Core\Modules\User\AuthModel;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Core\Modules\User\Services\UserService;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
@@ -24,11 +24,11 @@ class GetListAssigneeSurveyService extends UserService implements ApplicationSer
     protected SurveySpecificationFactoryInterface $specificationFactory;
 
     /**
-     * @param AuthModel $userRepository
+     * @param UserRepositoryInterface $userRepository
      * @param SanfCoreApiClient $internalApiClient
      */
     public function __construct(
-        AuthModel $userRepository,
+        UserRepositoryInterface $userRepository,
         SanfCoreApiClient $internalApiClient,
         SurveyRepositoryInterface $surveyRepository,
         SurveySpecificationFactoryInterface $specificationFactory
@@ -48,7 +48,7 @@ class GetListAssigneeSurveyService extends UserService implements ApplicationSer
      */
     public function execute($dto = null)
     {
-        $user = $this->userRepository->newQuery()->find($dto->userId);
+        $user = $this->userRepository->findById($dto->userId);
         if (!$user) {
             throw new UserNotFoundException();
         }

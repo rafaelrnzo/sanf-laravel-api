@@ -114,7 +114,7 @@ use Sanf\Core\Modules\Staff\EloquentStaffRepository;
 use Sanf\Core\Modules\Staff\StaffRepositoryInterface;
 use Sanf\Core\Modules\Survey\Entities\EloquentSurveyFactoryEntity;
 use Sanf\Core\Modules\Survey\Entities\SurveyEntityFactoryInterface;
-use Sanf\Core\Modules\Survey\Repositories\EloquentSurveyRepository;
+use Sanf\Core\Modules\Survey\Repositories\EloquentSurveyEncryptedRepository;
 use Sanf\Core\Modules\Survey\Repositories\SurveyRepositoryInterface;
 use Sanf\Core\Modules\Survey\Specifications\EloquentSurveySpecificationFactory;
 use Sanf\Core\Modules\Survey\Specifications\SurveySpecificationFactoryInterface;
@@ -197,7 +197,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(FinancingUnitLocationSubmissionRepositoryInterface::class, EloquentFinancingUnitLocationSubmissionRepository::class);
         $this->app->bind(InvoiceCollectionSubmissionRepositoryInterface::class, EloquentInvoiceCollectionSubmissionRepository::class);
         $this->app->bind(InsuranceClaimSubmissionRepositoryInterface::class, EloquentInsuranceClaimSubmissionRepository::class);
-        $this->app->bind(SurveyRepositoryInterface::class, EloquentSurveyRepository::class);
+        $this->app->bind(SurveyRepositoryInterface::class, EloquentSurveyEncryptedRepository::class);
         $this->app->bind(ProfileRepositoryInterface::class, RestProfileRepository::class);
         $this->app->bind(ESignRepositoryInterface::class, EloquentESignRepository::class);
         $this->app->bind(OnBoardingRepositoryInterface::class, EloquentOnBoardingRepository::class);
