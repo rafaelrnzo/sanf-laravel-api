@@ -5,10 +5,10 @@ namespace Sanf\Core\Modules\User\Services;
 use Carbon\Carbon;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Core\Modules\User\Exceptions\PinResetCodeNotMatchException;
 use Sanf\Core\Modules\User\Exceptions\PinResetExpiredException;
 use Sanf\Core\Modules\User\Exceptions\PinResetInvalidException;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 
 class ResetPinService implements ApplicationServiceInterface
 {
@@ -18,14 +18,14 @@ class ResetPinService implements ApplicationServiceInterface
      * GetProfileService constructor.
      * @param $repository
      */
-    public function __construct(AuthModel $repository)
+    public function __construct(UserRepositoryInterface $repository)
     {
         $this->repository = $repository;
     }
 
     public function execute($dto = null)
     {
-        $user = $this->repository->newQuery()->find($dto->userId);
+        $user = $this->repository->findById($dto->userId);
         if (!$user) {
             throw new UserNotFoundException();
         }

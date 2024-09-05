@@ -6,9 +6,9 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Core\Modules\User\Exceptions\PinDoesntMatchException;
 use Sanf\Core\Modules\User\Exceptions\PinNewCodeReusedException;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 
 class UpdatePinService implements ApplicationServiceInterface
 {
@@ -18,14 +18,14 @@ class UpdatePinService implements ApplicationServiceInterface
      * GetProfileService constructor.
      * @param $repository
      */
-    public function __construct(AuthModel $repository)
+    public function __construct(UserRepositoryInterface $repository)
     {
         $this->repository = $repository;
     }
 
     public function execute($dto = null)
     {
-        $user = $this->repository->newQuery()->find($dto->userId);
+        $user = $this->repository->findById($dto->userId);
         if (!$user) {
             throw new UserNotFoundException();
         }
@@ -40,11 +40,11 @@ class UpdatePinService implements ApplicationServiceInterface
             throw new PinNewCodeReusedException();
         }
 
-        $user->update([
+        $this->repository->update([
             'pin' => bcrypt($dto->new_pin),
             'pin_updated_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
-        ]);
+        ], $user->id);
 
         return true;
     }
