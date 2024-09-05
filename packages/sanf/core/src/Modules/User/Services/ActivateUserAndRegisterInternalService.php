@@ -4,6 +4,7 @@ namespace Sanf\Core\Modules\User\Services;
 
 use NbsPhp\Core\Database\TransactionalSessionInterface;
 use NbsPhp\Core\Services\ActivateUserServiceInterface;
+use Sanf\Core\Encryptions\SodiumEncryption;
 use Sanf\Core\Modules\User\Enums\ProfileType;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
@@ -36,8 +37,13 @@ class ActivateUserAndRegisterInternalService implements ActivateUserServiceInter
 
     public function execute($dto = null)
     {
-        $operation = function () use ($dto) {
+        $sodiumQuery = SodiumEncryption::query();
+
+        $sodiumQuery->beginTransaction();
+
+        try {
             $user = $this->service->execute($dto);
+
             try {
                 $this->internalApiClient->registerPersonal(
                     $user->full_name,
@@ -62,12 +68,14 @@ class ActivateUserAndRegisterInternalService implements ActivateUserServiceInter
             /** @var \Sanf\Core\Modules\User\AuthEncryptedModel $user */
             $user = $this->repository->findById($user->id);
 
+            $sodiumQuery->commit();
+
             //TODO DTO
             return json_decode(json_encode($user));
-        };
-
-        return $this->transactionalSession->executeAtomically(
-            $operation->bindTo($this)
-        );
+        } catch (\Throwable $th) {
+            $sodiumQuery->rollBack();
+            report($th);
+            throw $th;
+        }
     }
 }

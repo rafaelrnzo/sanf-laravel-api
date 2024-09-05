@@ -17,7 +17,7 @@ use Sanf\Core\Modules\Commodity\Specifications\CommoditySpecificationFactoryInte
 use Sanf\Core\Modules\Commodity\Specifications\EloquentCommoditySpecificationFactory;
 use Sanf\Core\Modules\ContactUs\AskUsRepositoryInterface;
 use Sanf\Core\Modules\ContactUs\AskUsTopicRepositoryInterface;
-use Sanf\Core\Modules\ContactUs\EloquentAskUsRepository;
+use Sanf\Core\Modules\ContactUs\EloquentAskUsEncryptedRepository;
 use Sanf\Core\Modules\ContactUs\EloquentAskUsTopicRepository;
 use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentRepository;
 use Sanf\Core\Modules\Contract\Repositories\EloquentESignRepository;
@@ -177,7 +177,7 @@ class CoreServiceProvider extends ServiceProvider
         //REPOSITORY
         $this->app->bind(UserRepositoryInterface::class, EloquentUserEncryptedRepository::class);
         $this->app->bind(AskUsTopicRepositoryInterface::class, EloquentAskUsTopicRepository::class);
-        $this->app->bind(AskUsRepositoryInterface::class, EloquentAskUsRepository::class);
+        $this->app->bind(AskUsRepositoryInterface::class, EloquentAskUsEncryptedRepository::class);
         $this->app->bind(ProductRepositoryInterface::class, EloquentProductRepository::class);
         $this->app->bind(BranchRepositoryInterface::class, EloquentBranchRepository::class);
         $this->app->bind(NewsRepositoryInterface::class, EloquentNewsRepository::class);

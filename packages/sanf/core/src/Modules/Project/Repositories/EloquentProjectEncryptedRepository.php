@@ -60,17 +60,17 @@ class EloquentProjectEncryptedRepository extends AbstractEloquentRepository impl
     {
         $encryptor = SodiumEncryption::encryptor();
 
-        $data = array_map(function ($key, $value) use ($encryptor) {
+        foreach ($data as $key => $value) {
             if (in_array($key, $this->encryptedFields)) {
-                return $encryptor->encrypt($value);
+                $data[$key] = $encryptor->encrypt($value);
+                continue;
             }
 
             if (in_array($key, $this->encryptedJsonFields)) {
-                return $encryptor->encryptForJson($value);
+                $data[$key] = $encryptor->encryptForJson($value);
+                continue;
             }
-
-            return $value;
-        }, array_keys($data), array_values($data));
+        }
 
         $data['nonce'] = $encryptor->nonce()->getNonceHex();
 
@@ -98,17 +98,17 @@ class EloquentProjectEncryptedRepository extends AbstractEloquentRepository impl
 
         $encryptor = $model->encryptor();
 
-        $data = array_map(function ($key, $value) use ($encryptor) {
+        foreach ($data as $key => $value) {
             if (in_array($key, $this->encryptedFields)) {
-                return $encryptor->encrypt($value);
+                $data[$key] = $encryptor->encrypt($value);
+                continue;
             }
 
             if (in_array($key, $this->encryptedJsonFields)) {
-                return $encryptor->encryptForJson($value);
+                $data[$key] = $encryptor->encryptForJson($value);
+                continue;
             }
-
-            return $value;
-        }, array_keys($data), array_values($data));
+        }
 
         return $data;
     }
