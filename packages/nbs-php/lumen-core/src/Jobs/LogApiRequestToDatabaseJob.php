@@ -3,9 +3,9 @@
 namespace NbsPhp\Core\Jobs;
 
 use NbsPhp\Core\AbstractJob;
-use NbsPhp\Core\Models\ApiRequestLogModel;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Sanf\Core\Modules\HttpLog\Repositories\ApiRequestRepositoryInterface;
 
 class LogApiRequestToDatabaseJob extends AbstractJob
 {
@@ -36,10 +36,10 @@ class LogApiRequestToDatabaseJob extends AbstractJob
      *
      * @return void
      */
-    public function handle()
+    public function handle(ApiRequestRepositoryInterface $repository)
     {
         $censoredKeys = config('guzzle-logger.censor.bad-keys');
-        ApiRequestLogModel::create([
+        $repository->create([
             'user_id' => $this->userId,
             'request_id' => optional($this->request->getHeader('X-Request-ID'))[0],
             'status_code' => $this->response->getStatusCode(),

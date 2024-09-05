@@ -5,15 +5,22 @@ namespace NbsPhp\Core\Middleware;
 use Closure;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
-use NbsPhp\Core\Models\AuditHttpLogModel;
+use Sanf\Core\Modules\HttpLog\Repositories\AuditHttpLogRepositoryInterface;
 
 class HttpLoggerMiddleware
 {
+    protected $repository;
+
+    public function __construct(AuditHttpLogRepositoryInterface $repository)
+    {
+        $this->repository = $repository;
+    }
+
     /**
      * Handle an incoming request.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \Closure $next
+     * @param Closure $next
      * @return mixed
      */
     public function handle($request, Closure $next)
@@ -29,7 +36,7 @@ class HttpLoggerMiddleware
                 } catch (\Exception $exception) {
                     $userId = null;
                 }
-                AuditHttpLogModel::create([
+                $this->repository->create([
                     'user_id' => $userId,
                     'request_id' => $request->header('X-Request-ID'),
                     'method' => $request->method(),

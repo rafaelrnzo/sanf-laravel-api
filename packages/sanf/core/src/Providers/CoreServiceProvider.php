@@ -48,6 +48,10 @@ use Sanf\Core\Modules\Financing\Specifications\FinancingCategorySpecificationFac
 use Sanf\Core\Modules\Financing\Specifications\FinancingFacilitySpecificationFactoryInterface;
 use Sanf\Core\Modules\Financing\Specifications\FinancingMethodSpecificationFactoryInterface;
 use Sanf\Core\Modules\Financing\Specifications\FinancingPrerequisiteSpecificationFactoryInterface;
+use Sanf\Core\Modules\HttpLog\Repositories\ApiRequestRepositoryInterface;
+use Sanf\Core\Modules\HttpLog\Repositories\AuditHttpLogRepositoryInterface;
+use Sanf\Core\Modules\HttpLog\Repositories\EloquentApiRequestLogEncryptedRepository;
+use Sanf\Core\Modules\HttpLog\Repositories\EloquentAuditHttpLogEncryptedRepository;
 use Sanf\Core\Modules\Insurance\Repositories\EloquentInsuranceClaimSubmissionRepository;
 use Sanf\Core\Modules\Insurance\Repositories\InsuranceClaimSubmissionRepositoryInterface;
 use Sanf\Core\Modules\Insurance\Specifications\EloquentInsuranceClaimSubmissionSpecificationFactory;
@@ -216,6 +220,8 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(PlafondDisbursementRepositoryInterface::class, PlafondDisbursementEloquentRepository::class);
         $this->app->bind(PaymentAccelarationDocumentRepositoryInterface::class, PaymentAccelarationDocumentEloquentRepository::class);
         $this->app->bind(ESignRepositoryInterface::class, EloquentESignDocumentRepository::class);
+        $this->app->bind(AuditHttpLogRepositoryInterface::class, EloquentAuditHttpLogEncryptedRepository::class);
+        $this->app->bind(ApiRequestRepositoryInterface::class, EloquentApiRequestLogEncryptedRepository::class);
 
         //SPECIFICATION FACTORY
         $this->app->bind(ProjectSpecificationFactoryInterface::class, EloquentProjectSpecificationFactory::class);
