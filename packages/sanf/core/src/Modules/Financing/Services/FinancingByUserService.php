@@ -10,12 +10,12 @@ use Sanf\Core\Modules\Financing\Repositories\FinancingFacilityRepositoryInterfac
 use Sanf\Core\Modules\Financing\Repositories\FinancingMethodRepositoryInterface;
 use Sanf\Core\Modules\Financing\Repositories\FinancingPrerequisiteRepositoryInterface;
 use Sanf\Core\Modules\Financing\Specifications\FinancingApplicationSpecificationFactoryInterface;
-use Sanf\Core\Modules\User\AuthModel;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 
 class FinancingByUserService extends FinancingService
 {
     protected FinancingApplicationSpecificationFactoryInterface $financingSpecificationFactory;
-    protected AuthModel $userRepository;
+    protected UserRepositoryInterface $userRepository;
 
     public function __construct(
         FinancingApplicationRepositoryInterface $financingApplicationRepository,
@@ -23,7 +23,7 @@ class FinancingByUserService extends FinancingService
         FinancingPrerequisiteRepositoryInterface $financingPrerequisiteRepository,
         FinancingFacilityRepositoryInterface $financingFacilityRepository,
         FinancingApplicationSpecificationFactoryInterface $financingSpecificationFactory,
-        AuthModel $userRepository
+        UserRepositoryInterface $userRepository
     ) {
         parent::__construct(
             $financingApplicationRepository,
@@ -37,7 +37,7 @@ class FinancingByUserService extends FinancingService
 
     protected function findUserOrFail($userId)
     {
-        $user = $this->userRepository->newQuery()->find($userId);
+        $user = $this->userRepository->findById($userId);
         if (!$user) {
             throw new UserNotFoundException();
         }
