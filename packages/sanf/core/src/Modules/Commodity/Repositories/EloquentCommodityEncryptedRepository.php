@@ -53,7 +53,7 @@ class EloquentCommodityEncryptedRepository extends AbstractEloquentRepository im
     {
         $model = $this->model->newQuery()->forceCreate($this->encryptBeforeCreate($fields));
 
-        return $this->stripEloquentModel($model);
+        return $this->stripEloquentModel($model->fresh());
     }
 
     private function encryptBeforeCreate(array $data): array
