@@ -7,6 +7,8 @@ use Illuminate\Support\ServiceProvider;
 use NbsPhp\Core\Database\IlluminateSession;
 use NbsPhp\Core\Database\TransactionalSessionInterface;
 use Sanf\Core\CheckPicMiddleware;
+use Sanf\Core\Database\IlluminateMultipleSession;
+use Sanf\Core\Database\MultipleTransactionalSessionInterface;
 use Sanf\Core\Modules\Astra\EloquentProductAstraRepository;
 use Sanf\Core\Modules\Astra\ProductAstraRepositoryInterface;
 use Sanf\Core\Modules\Branch\BranchRepositoryInterface;
@@ -179,6 +181,7 @@ class CoreServiceProvider extends ServiceProvider
     public function registerBindings()
     {
         $this->app->bind(TransactionalSessionInterface::class, IlluminateSession::class);
+        $this->app->bind(MultipleTransactionalSessionInterface::class, IlluminateMultipleSession::class);
 
         //REPOSITORY
         $this->app->bind(UserRepositoryInterface::class, EloquentUserEncryptedRepository::class);
