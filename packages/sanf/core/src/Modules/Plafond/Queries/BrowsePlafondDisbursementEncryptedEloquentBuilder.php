@@ -1,0 +1,96 @@
+<?php
+
+namespace Sanf\Core\Modules\Plafond\Queries;
+
+use Sanf\Core\Encryptions\SodiumEncryption;
+use Sanf\Core\Modules\Plafond\Dtos\BrowsePlafondDisbursementEncryptedRequestDto;
+use Sanf\Core\Modules\Plafond\Enums\PlafondDisbursementStatusEnum;
+use Sanf\Core\Modules\Plafond\Models\PlafondDisbursementEncryptedModel;
+
+/**
+ * Need to wrap in sodium db transaction.
+ * Encrypted version of BrowsePlafondDisbursementEloquentBuilder.
+ *
+ * @see BrowsePlafondDisbursementEloquentBuilder
+ */
+class BrowsePlafondDisbursementEncryptedEloquentBuilder
+{
+    private BrowsePlafondDisbursementEncryptedRequestDto $dto;
+
+    /**
+     * @param BrowsePlafondDisbursementEncryptedRequestDto $dto
+     * @return mixed|Illuminate\Database\Eloquent\Builder
+     */
+    public function __construct($dto)
+    {
+        $this->dto = $dto;
+    }
+
+    /**
+     * @param PlafondDisbursementEncryptedModel $plafondDisbursementModel
+     * @return mixed|Illuminate\Database\Eloquent\Builder
+     */
+    public function build(PlafondDisbursementEncryptedModel $plafondDisbursementModel)
+    {
+        /** @var BrowsePlafondDisbursementEncryptedRequestDto $dto */
+        $dto = $this->dto;
+        switch ($dto->sortBy) {
+            case 'earliest':
+            case 'oldest':
+                $orderBy = 'created_at';
+                $orderDirection = 'ASC';
+                break;
+            case 'latest':
+            case 'newest':
+            default:
+                $orderBy = 'created_at';
+                $orderDirection = 'DESC';
+        }
+
+        $statusCondition = null;
+        if (in_array($dto->statusId, PlafondDisbursementStatusEnum::SUBMIT_TAB)) {
+            $statusCondition = PlafondDisbursementStatusEnum::SUBMIT_TAB;
+        }
+        if (in_array($dto->statusId, PlafondDisbursementStatusEnum::PROCESS_TAB)) {
+            $statusCondition = PlafondDisbursementStatusEnum::PROCESS_TAB;
+        }
+        if (in_array($dto->statusId, PlafondDisbursementStatusEnum::DONE_TAB)) {
+            $statusCondition = PlafondDisbursementStatusEnum::DONE_TAB;
+        }
+
+        $sodiumQuery = SodiumEncryption::query();
+
+        return $plafondDisbursementModel->newQuery()
+            ->orderBy($orderBy, $orderDirection)
+            ->with([
+                'disbursementRelation' => function ($query) {
+                    return $query->select([
+                        'id',
+                        'xid',
+                        'revision_notes',
+                        'created_at',
+                        'updated_at',
+                    ]);
+                },
+                'disbursementRelation.invoicesRelation',
+            ])
+            ->where('plafond_id', '=', $dto->plafondXid)
+            ->where('client_id', '=', $dto->profileXid)
+            ->when($statusCondition, function ($query) use ($statusCondition) {
+                return $query->whereIn('status_id', $statusCondition);
+            })
+            ->when($dto->keyword, function ($query) use ($dto, $sodiumQuery) {
+                return $query->where(function ($subQuery) use ($dto, $sodiumQuery) {
+                    return $subQuery->where('disbursement_no', 'ilike', "%{$dto->keyword}%")
+                        ->orWhere($sodiumQuery->selectRaw('client_mail'), 'ilike', "%{$dto->keyword}%")
+                        ->orWhere($sodiumQuery->selectRaw('customer_mail'), 'ilike', "%{$dto->keyword}%");
+                });
+            })
+            ->when($dto->skip, function ($query) use ($dto) {
+                return $query->skip($dto->skip);
+            })
+            ->when($dto->limit, function ($query) use ($dto) {
+                return $query->limit($dto->limit);
+            });
+    }
+}

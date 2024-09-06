@@ -11,7 +11,8 @@ use NbsPhp\Core\Services\TransactionalApplicationService;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
 use Sanf\Api\Modules\Plafond\Transformers\PlafondFactoringDisbursementSimpleTransformer;
 use Sanf\Api\Modules\Plafond\Transformers\PlafondFactoringDisbursementTransformer;
-use Sanf\Core\Modules\Plafond\Dtos\BrowsePlafondDisbursementRequestDto;
+use Sanf\Core\Encryptions\SodiumEncryption;
+use Sanf\Core\Modules\Plafond\Dtos\BrowsePlafondDisbursementEncryptedRequestDto;
 use Sanf\Core\Modules\Plafond\Dtos\DisbursementAllocationFormRequest;
 use Sanf\Core\Modules\Plafond\Dtos\DisbursementBowheerFormRequest;
 use Sanf\Core\Modules\Plafond\Dtos\DisbursementDocumentFormRequest;
@@ -41,7 +42,7 @@ class PlafondFactoringDisbursementController extends RestApiController
             'status_id' => ['nullable', 'integer', Rule::in(PlafondDisbursementStatusEnum::ALL_TAB)],
         ]);
 
-        $browsePlafondDisbursementRequestDto = new BrowsePlafondDisbursementRequestDto(
+        $browsePlafondDisbursementRequestDto = new BrowsePlafondDisbursementEncryptedRequestDto(
             array_merge($formData, [
                 'user_id' => $auth->id(),
                 'profile_xid' => $xid,
@@ -180,8 +181,20 @@ class PlafondFactoringDisbursementController extends RestApiController
             'created_at' => $request->get('created_at'),
         ]);
 
-        $transactionalService = new TransactionalApplicationService($addUseCase, $transactionalSession);
-        $transactionalService->execute($formRequest);
+        $sodiumQuery = SodiumEncryption::query();
+        $sodiumQuery->multipleBeginTransaction();
+
+        try {
+            $addUseCase->execute($formRequest);
+
+            $sodiumQuery->multipleCommit();
+        } catch (\Throwable $th) {
+            $sodiumQuery->multipleRollBack();
+
+            report($th);
+
+            throw $th;
+        }
 
         return $this->responseOk();
     }

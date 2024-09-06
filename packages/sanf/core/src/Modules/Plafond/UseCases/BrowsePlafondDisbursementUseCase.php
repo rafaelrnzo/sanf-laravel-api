@@ -4,9 +4,10 @@ namespace Sanf\Core\Modules\Plafond\UseCases;
 
 use Illuminate\Support\Facades\Log;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\Plafond\Dtos\BrowsePlafondDisbursementRequestDto;
+use Sanf\Core\Encryptions\SodiumEncryption;
+use Sanf\Core\Modules\Plafond\Dtos\BrowsePlafondDisbursementEncryptedRequestDto;
 use Sanf\Core\Modules\Plafond\Enums\PlafondDisbursementStatusEnum;
-use Sanf\Core\Modules\Plafond\Queries\BrowsePlafondDisbursementEloquentBuilder;
+use Sanf\Core\Modules\Plafond\Queries\BrowsePlafondDisbursementEncryptedEloquentBuilder;
 use Sanf\Core\Modules\Plafond\Repositories\PlafondDisbursementRepositoryInterface;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
@@ -24,12 +25,11 @@ final class BrowsePlafondDisbursementUseCase implements ApplicationServiceInterf
     }
 
     /**
-     * @param BrowsePlafondDisbursementRequestDto $dto
+     * @param BrowsePlafondDisbursementEncryptedRequestDto $dto
      */
     public function execute($dto = null)
     {
-        /* @var BrowsePlafondDisbursementRequestDto $dto */
-
+        /** @var BrowsePlafondDisbursementEncryptedRequestDto $dto */
         $plafondDisbursementsCoreCollection = collect([]);
         try {
             $plafondDisbursementsCore = $this->coreClient->getPlafondDisbursement($dto->profileXid, null);
@@ -53,7 +53,9 @@ final class BrowsePlafondDisbursementUseCase implements ApplicationServiceInterf
 
         $dto->limit = 1000;
         $dto->skip = 0;
-        $totalPlafondDisbursement = $this->disbursementRepository->count(new BrowsePlafondDisbursementEloquentBuilder($dto));
+        $totalPlafondDisbursement = SodiumEncryption::query()->transaction(function () use ($dto) {
+            return $this->disbursementRepository->count(new BrowsePlafondDisbursementEncryptedEloquentBuilder($dto));
+        });
         if ($totalPlafondDisbursement === 0) {
             return (object) [
                 'data' => [],
@@ -69,7 +71,9 @@ final class BrowsePlafondDisbursementUseCase implements ApplicationServiceInterf
 
         $dto->limit = 10;
         $dto->skip = 0;
-        $plafondDisbursements = $this->disbursementRepository->query(new BrowsePlafondDisbursementEloquentBuilder($dto));
+        $plafondDisbursements = SodiumEncryption::query()->transaction(function () use ($dto) {
+            return $this->disbursementRepository->query(new BrowsePlafondDisbursementEncryptedEloquentBuilder($dto));
+        });
         $plafondDisbursementsMap = array_map(function ($item) use ($plafondDisbursementsCoreCollection) {
             $plafondDisbursementsCore = $plafondDisbursementsCoreCollection->where('disbursementNo', '=', $item->disbursement_no)->first();
 

@@ -15,12 +15,12 @@ use Sanf\Core\Modules\Plafond\Queries\BrowsePlafondDisbursementEloquentBuilder;
 
 class PlafondDisbursementEloquentRepository extends AbstractEloquentRepository implements PlafondDisbursementRepositoryInterface
 {
-    private PlafondDisbursementModel $disbursementModel;
-    private PlafondDisbursementSubmissionModel $submissionModel;
-    private PlafondDisbursementInvoiceModel $invoiceModel;
-    private PlafondDisbursementInvoicePhotoModel $invoicePhotoModel;
-    private PlafondDisbursementAllocationModel $allocationModel;
-    private PlafondDisbursementDocumentModel $documentModel;
+    protected PlafondDisbursementModel $disbursementModel;
+    protected PlafondDisbursementSubmissionModel $submissionModel;
+    protected PlafondDisbursementInvoiceModel $invoiceModel;
+    protected PlafondDisbursementInvoicePhotoModel $invoicePhotoModel;
+    protected PlafondDisbursementAllocationModel $allocationModel;
+    protected PlafondDisbursementDocumentModel $documentModel;
 
     public function __construct(
         PlafondDisbursementModel $disbursementModel,
