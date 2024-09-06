@@ -19,6 +19,6 @@ class PrepaymentSubmissionModel extends AbstractModel
 
     public function histories()
     {
-        return $this->hasMany(PrepaymentSubmissionHistoryModel::class, 'submission_id');
+        return $this->hasMany(PrepaymentSubmissionHistoryEncryptedModel::class, 'submission_id');
     }
 }
