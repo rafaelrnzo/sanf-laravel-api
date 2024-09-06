@@ -30,7 +30,7 @@ use Sanf\Core\Modules\Contract\Specifications\EloquentESignDocumentSpecification
 use Sanf\Core\Modules\Contract\Specifications\EloquentFinancingUnitLocationSubmissionSpecificationFactory;
 use Sanf\Core\Modules\Contract\Specifications\ESignDocumentSpecificationFactoryInterface;
 use Sanf\Core\Modules\Contract\Specifications\FinancingUnitLocationSubmissionSpecificationFactoryInterface;
-use Sanf\Core\Modules\Financing\Repositories\EloquentFinancingApplicationRepository;
+use Sanf\Core\Modules\Financing\Repositories\EloquentFinancingApplicationEncryptedRepository;
 use Sanf\Core\Modules\Financing\Repositories\EloquentFinancingCategoryRepository;
 use Sanf\Core\Modules\Financing\Repositories\EloquentFinancingFacilityRepository;
 use Sanf\Core\Modules\Financing\Repositories\EloquentFinancingMethodRepository;
@@ -199,7 +199,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(FinancingMethodRepositoryInterface::class, EloquentFinancingMethodRepository::class);
         $this->app->bind(FinancingPrerequisiteRepositoryInterface::class, EloquentFinancingPrerequisiteRepository::class);
         $this->app->bind(FinancingFacilityRepositoryInterface::class, EloquentFinancingFacilityRepository::class);
-        $this->app->bind(FinancingApplicationRepositoryInterface::class, EloquentFinancingApplicationRepository::class);
+        $this->app->bind(FinancingApplicationRepositoryInterface::class, EloquentFinancingApplicationEncryptedRepository::class);
         $this->app->bind(PlafondTypeRepositoryInterface::class, EloquentPlafondTypeRepository::class);
         $this->app->bind(PlafondRepositoryInterface::class, GuzzleAndEloquentPlafondRepository::class);
         $this->app->bind(PrepaymentSubmissionRepositoryInterface::class, EloquentPrepaymentSubmissionRepository::class);

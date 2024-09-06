@@ -4,20 +4,20 @@ namespace Sanf\External\Modules\Financing\Controllers;
 
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
-use NbsPhp\Core\Database\TransactionalSessionInterface;
-use NbsPhp\Core\Services\TransactionalApplicationService;
 use Sanf\Api\Modules\Financing\Transformers\FinancingApplicationSimpleTransformer;
+use Sanf\Core\Database\MultipleTransactionalSessionInterface;
 use Sanf\Core\Modules\Financing\Dto\FinancingApplicationByScaninaRequestDto;
 use Sanf\Core\Modules\Financing\Dto\FinancingApplicationObjectByScaninaRequestDto;
 use Sanf\Core\Modules\Financing\Dto\FinancingApplicationPaymentByScaninaRequestDto;
 use Sanf\Core\Modules\Financing\Services\SubmitFinanceApplicationByScaninaUseCase;
+use Sanf\Core\Services\MultipleTransactionalApplicationService;
 use Spatie\Fractalistic\ArraySerializer;
 
 class FinancingApplicationController extends RestApiController
 {
     public function addByScanina(
         Request $request,
-        TransactionalSessionInterface $transactionalSession,
+        MultipleTransactionalSessionInterface $transactionalSession,
         SubmitFinanceApplicationByScaninaUseCase $submitUseCase
     ) {
         $inputs = $this->validate($request, [
@@ -65,7 +65,7 @@ class FinancingApplicationController extends RestApiController
             }, $inputs['objects']),
         ]);
 
-        $transactionalService = new TransactionalApplicationService($submitUseCase, $transactionalSession);
+        $transactionalService = new MultipleTransactionalApplicationService($submitUseCase, $transactionalSession);
         $responseDto = $transactionalService->execute($requestDto);
 
         return fractal($responseDto)

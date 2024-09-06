@@ -81,4 +81,22 @@ class SodiumEncryptor
     {
         return new SodiumQuery();
     }
+
+    public function encryptBulkData(array $data, array $fields = [], array $jsonFields = []): array
+    {
+        foreach ($data as $key => $value) {
+            if (in_array($key, $fields)) {
+                $data[$key] = $this->encrypt($value);
+                continue;
+            }
+
+            if (in_array($key, $jsonFields)) {
+                $data[$key] = $this->encryptForJson($value);
+            }
+        }
+
+        $data['nonce'] = $this->nonce()->getNonceHex();
+
+        return $data;
+    }
 }
