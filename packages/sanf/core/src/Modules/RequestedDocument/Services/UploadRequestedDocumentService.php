@@ -11,16 +11,16 @@ use Sanf\Core\Modules\RequestedDocument\Dtos\UploadRequestedDocumentDto;
 use Sanf\Core\Modules\RequestedDocument\Exceptions\RequestedDocumentNotFoundException;
 use Sanf\Core\Modules\RequestedDocument\Repositories\RequestedDocumentItemRepositoryInterface;
 use Sanf\Core\Modules\RequestedDocument\Repositories\RequestedDocumentRepositoryInterface;
-use Sanf\Core\Modules\User\AuthModel;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 
 class UploadRequestedDocumentService implements ApplicationServiceInterface
 {
-    private AuthModel $userRepository;
+    private UserRepositoryInterface $userRepository;
     private RequestedDocumentRepositoryInterface $eloquentRequestedDocRepository;
     private RequestedDocumentItemRepositoryInterface $eloquentRequestedDocItemRepository;
 
     public function __construct(
-        AuthModel $userRepository,
+        UserRepositoryInterface $userRepository,
         RequestedDocumentRepositoryInterface $eloquentRequestedDocRepository,
         RequestedDocumentItemRepositoryInterface $eloquentRequestedDocItemRepository
     ) {
@@ -66,7 +66,7 @@ class UploadRequestedDocumentService implements ApplicationServiceInterface
 
     private function getUser(string $user_id)
     {
-        $user = $this->userRepository->newQuery()->find($user_id);
+        $user = $this->userRepository->findById($user_id);
         if (!$user) {
             throw new UserNotFoundException();
         }

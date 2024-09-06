@@ -10,20 +10,20 @@ use Sanf\Core\Modules\Financing\Dto\BrowseFinancingApplicationDto;
 use Sanf\Core\Modules\Financing\Enums\FinancingStatusEnum;
 use Sanf\Core\Modules\Financing\Repositories\FinancingApplicationRepositoryInterface;
 use Sanf\Core\Modules\Financing\Specifications\FinancingApplicationSpecificationFactoryInterface;
-use Sanf\Core\Modules\User\AuthModel;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class BrowseFinancingApplicationByUserService implements ApplicationServiceInterface
 {
     protected FinancingApplicationRepositoryInterface $financingApplicationRepository;
     protected FinancingApplicationSpecificationFactoryInterface $financingSpecificationFactory;
-    protected AuthModel $userRepository;
+    protected UserRepositoryInterface $userRepository;
     protected SanfCoreApiClient $client;
 
     public function __construct(
         FinancingApplicationRepositoryInterface $financingApplicationRepository,
         FinancingApplicationSpecificationFactoryInterface $financingSpecificationFactory,
-        AuthModel $userRepository,
+        UserRepositoryInterface $userRepository,
         SanfCoreApiClient $client
     ) {
         $this->financingSpecificationFactory = $financingSpecificationFactory;
@@ -39,7 +39,7 @@ class BrowseFinancingApplicationByUserService implements ApplicationServiceInter
      */
     public function execute($dto = null)
     {
-        $user = $this->userRepository->newQuery()->find($dto->userId);
+        $user = $this->userRepository->findById($dto->userId);
         if (!$user) {
             throw new UserNotFoundException();
         }

@@ -7,15 +7,15 @@ use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\RequestedDocument\Exceptions\RequestedDocumentNotFoundException;
 use Sanf\Core\Modules\RequestedDocument\Repositories\RequestedDocumentRepositoryInterface;
-use Sanf\Core\Modules\User\AuthModel;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 
 class ReadUploadRequestedDocumentService implements ApplicationServiceInterface
 {
-    private AuthModel $userRepository;
+    private UserRepositoryInterface $userRepository;
     private RequestedDocumentRepositoryInterface $requestedDocumentEloquentRepository;
 
     public function __construct(
-        AuthModel $userRepository,
+        UserRepositoryInterface $userRepository,
         RequestedDocumentRepositoryInterface $requestedDocumentEloquentRepository
     ) {
         $this->userRepository = $userRepository;
@@ -48,7 +48,7 @@ class ReadUploadRequestedDocumentService implements ApplicationServiceInterface
 
     private function getUser($dto): void
     {
-        $user = $this->userRepository->newQuery()->find($dto->user_id);
+        $user = $this->userRepository->findById($dto->user_id);
         if (!$user) {
             throw new UserNotFoundException();
         }

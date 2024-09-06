@@ -12,19 +12,19 @@ use Sanf\Core\Modules\RequestedDocument\Exceptions\RequestedDocumentNotFoundExce
 use Sanf\Core\Modules\RequestedDocument\Exceptions\SubmitRequestedDocumentNotCompleteException;
 use Sanf\Core\Modules\RequestedDocument\Repositories\RequestedDocumentItemRepositoryInterface;
 use Sanf\Core\Modules\RequestedDocument\Repositories\RequestedDocumentRepositoryInterface;
-use Sanf\Core\Modules\User\AuthModel;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Integration\Exceptions\SanfInternalApiException;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class SubmitRequestedDocumentService implements ApplicationServiceInterface
 {
-    private AuthModel $userRepository;
+    private UserRepositoryInterface $userRepository;
     private RequestedDocumentRepositoryInterface $eloquentRequestedDocRepository;
     private RequestedDocumentItemRepositoryInterface $eloquentRequestedDocItemRepository;
     private SanfCoreApiClient $internalApiClient;
 
     public function __construct(
-        AuthModel $userRepository,
+        UserRepositoryInterface $userRepository,
         RequestedDocumentRepositoryInterface $eloquentRequestedDocRepository,
         RequestedDocumentItemRepositoryInterface $eloquentRequestedDocItemRepository,
         SanfCoreApiClient $internalApiClient
@@ -99,7 +99,7 @@ class SubmitRequestedDocumentService implements ApplicationServiceInterface
 
     private function getUser(string $user_id)
     {
-        $user = $this->userRepository->newQuery()->find($user_id);
+        $user = $this->userRepository->findById($user_id);
         if (!$user) {
             throw new UserNotFoundException();
         }
