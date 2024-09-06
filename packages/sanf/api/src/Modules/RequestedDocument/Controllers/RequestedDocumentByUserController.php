@@ -12,6 +12,7 @@ use NbsPhp\Core\Services\TransactionalApplicationService;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
 use Sanf\Api\Modules\RequestedDocument\Transformers\BrowseHistoryRequestedDocumentTransformer;
 use Sanf\Api\Modules\RequestedDocument\Transformers\BrowseRequestedDocumentTransformer;
+use Sanf\Core\Database\MultipleTransactionalSessionInterface;
 use Sanf\Core\Modules\RequestedDocument\Dtos\ListRequestedDocumentDto;
 use Sanf\Core\Modules\RequestedDocument\Dtos\UploadRequestedDocumentDto;
 use Sanf\Core\Modules\RequestedDocument\Enums\DocumentTypeEnum;
@@ -22,6 +23,7 @@ use Sanf\Core\Modules\RequestedDocument\Services\BrowseUploadRequestedDocumentSe
 use Sanf\Core\Modules\RequestedDocument\Services\ReadUploadRequestedDocumentService;
 use Sanf\Core\Modules\RequestedDocument\Services\SubmitRequestedDocumentService;
 use Sanf\Core\Modules\RequestedDocument\Services\UploadRequestedDocumentService;
+use Sanf\Core\Services\MultipleTransactionalApplicationService;
 
 final class RequestedDocumentByUserController extends RestApiController
 {
@@ -31,7 +33,7 @@ final class RequestedDocumentByUserController extends RestApiController
         Guard $auth,
         Request $request,
         $xid,
-        TransactionalSessionInterface $transactionalSession,
+        MultipleTransactionalSessionInterface $transactionalSession,
         BrowseRequestedDocumentService $service
     ) {
         $input = $this->validate($request, [
@@ -50,7 +52,7 @@ final class RequestedDocumentByUserController extends RestApiController
             ]
         );
 
-        $transactionalService = new TransactionalApplicationService($service, $transactionalSession);
+        $transactionalService = new MultipleTransactionalApplicationService($service, $transactionalSession);
         $result = $transactionalService->execute($dto);
 
         return fractal($result->data, BrowseRequestedDocumentTransformer::class)

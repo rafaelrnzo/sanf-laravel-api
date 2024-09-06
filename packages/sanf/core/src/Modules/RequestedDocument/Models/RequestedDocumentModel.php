@@ -23,6 +23,6 @@ class RequestedDocumentModel extends AbstractModel
 
     public function items()
     {
-        return $this->hasMany(RequestedDocumentItemModel::class, 'requested_document_id', 'id');
+        return $this->hasMany(RequestedDocumentItemEncryptedModel::class, 'requested_document_id', 'id');
     }
 }

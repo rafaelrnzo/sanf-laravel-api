@@ -12,18 +12,18 @@ use Sanf\Core\Modules\RequestedDocument\Dtos\ListRequestedDocumentDto;
 use Sanf\Core\Modules\RequestedDocument\Enums\RequestedDocumentStatusEnum;
 use Sanf\Core\Modules\RequestedDocument\Repositories\RequestedDocumentItemRepositoryInterface;
 use Sanf\Core\Modules\RequestedDocument\Repositories\RequestedDocumentRepositoryInterface;
-use Sanf\Core\Modules\User\AuthModel;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 
 class BrowseRequestedDocumentService implements ApplicationServiceInterface
 {
-    private AuthModel $userRepository;
+    private UserRepositoryInterface $userRepository;
     private BrowseRequestedDocumentFromCoreService $coreService;
     private BrowseRequestedDocumentFromDbService $dbService;
     private RequestedDocumentRepositoryInterface $requestedDocumentEloquentRepository;
     private RequestedDocumentItemRepositoryInterface $requestedDocItemEloquentRepository;
 
     public function __construct(
-        AuthModel $userRepository,
+        UserRepositoryInterface $userRepository,
         BrowseRequestedDocumentFromCoreService $coreService,
         BrowseRequestedDocumentFromDbService $dbService,
         RequestedDocumentRepositoryInterface $requestedDocumentEloquentRepository,
@@ -113,7 +113,7 @@ class BrowseRequestedDocumentService implements ApplicationServiceInterface
 
     private function getUser(?ListRequestedDocumentDto $dto): void
     {
-        $user = $this->userRepository->newQuery()->find($dto->user_id);
+        $user = $this->userRepository->findById($dto->user_id);
         if (!$user) {
             throw new UserNotFoundException();
         }

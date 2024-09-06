@@ -84,7 +84,7 @@ use Sanf\Core\Modules\Project\Specifications\EloquentProjectSpecificationFactory
 use Sanf\Core\Modules\Project\Specifications\ProjectSpecificationFactoryInterface;
 use Sanf\Core\Modules\Promo\EloquentPromoRepository;
 use Sanf\Core\Modules\Promo\PromoRepositoryInterface;
-use Sanf\Core\Modules\RequestedDocument\Repositories\EloquentRequestedDocumentItemRepository;
+use Sanf\Core\Modules\RequestedDocument\Repositories\EloquentRequestedDocumentItemEncryptedRepository;
 use Sanf\Core\Modules\RequestedDocument\Repositories\EloquentRequestedDocumentRepository;
 use Sanf\Core\Modules\RequestedDocument\Repositories\RequestedDocumentItemRepositoryInterface;
 use Sanf\Core\Modules\RequestedDocument\Repositories\RequestedDocumentRepositoryInterface;
@@ -222,7 +222,7 @@ class CoreServiceProvider extends ServiceProvider
 
         $this->app->bind(SurveyEntityFactoryInterface::class, EloquentSurveyFactoryEntity::class);
         $this->app->bind(RequestedDocumentRepositoryInterface::class, EloquentRequestedDocumentRepository::class);
-        $this->app->bind(RequestedDocumentItemRepositoryInterface::class, EloquentRequestedDocumentItemRepository::class);
+        $this->app->bind(RequestedDocumentItemRepositoryInterface::class, EloquentRequestedDocumentItemEncryptedRepository::class);
         $this->app->bind(PlafondDisbursementRepositoryInterface::class, PlafondDisbursementEncryptedEloquentRepository::class);
         $this->app->bind(PaymentAccelarationDocumentRepositoryInterface::class, PaymentAccelarationDocumentEloquentRepository::class);
         $this->app->bind(ESignRepositoryInterface::class, EloquentESignDocumentRepository::class);

@@ -48,7 +48,7 @@ class PlafondDisbursementEncryptedEloquentRepository extends PlafondDisbursement
 
     public function count($builder): int
     {
-        /** @var BrowsePlafondDisbursementEncryptedEloquentBuilder $builder */
+        /* @var BrowsePlafondDisbursementEncryptedEloquentBuilder $builder */
         return $builder->build($this->disbursementModel)->count();
     }
 
