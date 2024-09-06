@@ -5,19 +5,19 @@ namespace Sanf\External\Modules\Contract;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use NbsPhp\Core\Controllers\RestApiController;
-use NbsPhp\Core\Database\TransactionalSessionInterface;
-use NbsPhp\Core\Services\TransactionalApplicationService;
+use Sanf\Core\Database\MultipleTransactionalSessionInterface;
 use Sanf\Core\Modules\Contract\Enums\AdInsCallbackTypeEnum;
 use Sanf\Core\Modules\Contract\Events\ESignDocumentSignEvent;
 use Sanf\Core\Modules\Contract\Services\ESignAdInsCallbackService;
+use Sanf\Core\Services\MultipleTransactionalApplicationService;
 
 class ESignDocumentAdInsController extends RestApiController
 {
-    protected TransactionalSessionInterface $transactionalSession;
+    protected MultipleTransactionalSessionInterface $transactionalSession;
     protected ESignAdInsCallbackService $callbackService;
 
     public function __construct(
-        TransactionalSessionInterface $transactionalSession,
+        MultipleTransactionalSessionInterface $transactionalSession,
         ESignAdInsCallbackService $callbackService
     ) {
         $this->transactionalSession = $transactionalSession;
@@ -115,7 +115,7 @@ class ESignDocumentAdInsController extends RestApiController
         }
         $dto->callbackType = $input['callbackType'];
 
-        $transactionalService = new TransactionalApplicationService($this->callbackService, $this->transactionalSession);
+        $transactionalService = new MultipleTransactionalApplicationService($this->callbackService, $this->transactionalSession);
         $transactionalService->execute($dto);
 
         return response()->json([

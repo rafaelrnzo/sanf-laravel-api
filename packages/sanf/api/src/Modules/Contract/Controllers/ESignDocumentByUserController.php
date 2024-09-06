@@ -17,6 +17,7 @@ use Sanf\Api\Modules\Contract\Transformers\BrowseSubDistrictTransformer;
 use Sanf\Api\Modules\Contract\Transformers\ESignDocumentOTPTransformer;
 use Sanf\Api\Modules\Contract\Transformers\GenerateSignUrlTransformer;
 use Sanf\Api\Modules\Contract\Transformers\GetESignUserTransformer;
+use Sanf\Core\Database\MultipleTransactionalSessionInterface;
 use Sanf\Core\Modules\Contract\Dto\AddESignUserDto;
 use Sanf\Core\Modules\Contract\Dto\BrowseDistrictDto;
 use Sanf\Core\Modules\Contract\Dto\BrowseESignDocumentDto;
@@ -25,7 +26,6 @@ use Sanf\Core\Modules\Contract\Dto\BrowseSubDistrictDto;
 use Sanf\Core\Modules\Contract\Dto\RequestESignDocumentOTPDto;
 use Sanf\Core\Modules\Contract\Dto\UpdateESignDocumentStatusDto;
 use Sanf\Core\Modules\Contract\Enums\ESignContractStatusEnum;
-use Sanf\Core\Modules\Contract\Enums\ESignRegistrationStatusEnum;
 use Sanf\Core\Modules\Contract\Services\AddESignUserService;
 use Sanf\Core\Modules\Contract\Services\BrowseDistrictService;
 use Sanf\Core\Modules\Contract\Services\BrowseESignDocumentService;
@@ -40,6 +40,9 @@ use Sanf\Core\Modules\Contract\Services\ResendESignVerificationService;
 use Sanf\Core\Modules\Contract\Services\SendESignDocumentViaEmailService;
 use Sanf\Core\Modules\Contract\Services\SycnESignDocumentSignService;
 use Sanf\Core\Modules\Contract\Services\UpdateESignDocumentStatusService;
+use Sanf\Core\Services\MultipleTransactionalApplicationService;
+use Sanf\Core\ValidationRules\UserTekenajaUniqueEmailWithCompleteStatusRule;
+use Sanf\Core\ValidationRules\UserTekenajaUniqueNikWithCompleteStatusRule;
 use Spatie\Fractalistic\ArraySerializer;
 
 final class ESignDocumentByUserController extends RestApiController
@@ -90,7 +93,8 @@ final class ESignDocumentByUserController extends RestApiController
         Guard $auth,
         Request $request,
         $xid,
-        AddESignUserService $service
+        AddESignUserService $service,
+        MultipleTransactionalSessionInterface $transactionalSession
     ) {
         $input = $this->validate($request, [
             'email' => [
@@ -98,18 +102,14 @@ final class ESignDocumentByUserController extends RestApiController
                 'email',
                 'string',
                 'max:255',
-                Rule::unique('user_tekenaja', 'email')
-                    ->where('status_id', ESignRegistrationStatusEnum::COMPLETE)
-                    ->ignore($auth->id(), 'user_id'),
+                new UserTekenajaUniqueEmailWithCompleteStatusRule($auth->id()),
             ],
             'msisdn' => 'required|max:13|regex:/^[0-9]+$/',
             'nik' => [
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('user_tekenaja', 'nik')
-                    ->where('status_id', ESignRegistrationStatusEnum::COMPLETE)
-                    ->ignore($auth->id(), 'user_id'),
+                new UserTekenajaUniqueNikWithCompleteStatusRule($auth->id()),
             ],
             'full_name' => 'required|string|max:255',
             'pob' => 'required|string|max:255',
@@ -126,7 +126,8 @@ final class ESignDocumentByUserController extends RestApiController
 
         $dto = new AddESignUserDto($input + ['user_id' => $auth->id()]);
 
-        $service->execute($dto);
+        $transactionalService = new MultipleTransactionalApplicationService($service, $transactionalSession);
+        $transactionalService->execute($dto);
 
         return $this->responseOk();
     }

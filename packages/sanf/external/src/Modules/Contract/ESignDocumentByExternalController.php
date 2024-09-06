@@ -5,23 +5,23 @@ namespace Sanf\External\Modules\Contract;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use NbsPhp\Core\Controllers\RestApiController;
-use NbsPhp\Core\Database\TransactionalSessionInterface;
-use NbsPhp\Core\Services\TransactionalApplicationService;
+use Sanf\Core\Database\MultipleTransactionalSessionInterface;
 use Sanf\Core\Modules\Contract\Services\ESignUserDocumentCompleteService;
 use Sanf\Core\Modules\Contract\Services\ESignUserDocumentFailedService;
 use Sanf\Core\Modules\Contract\Services\ESignUserDocumentSignedService;
 use Sanf\Core\Modules\Contract\Services\ESignUserRegisteredService;
+use Sanf\Core\Services\MultipleTransactionalApplicationService;
 
 class ESignDocumentByExternalController extends RestApiController
 {
-    private TransactionalSessionInterface $transactionalSession;
+    private MultipleTransactionalSessionInterface $transactionalSession;
     private ESignUserRegisteredService $registerService;
     private ESignUserDocumentSignedService $signedDocumentService;
     private ESignUserDocumentFailedService $failedDocumentService;
     private ESignUserDocumentCompleteService $completeDocumentService;
 
     public function __construct(
-        TransactionalSessionInterface $transactionalSession,
+        MultipleTransactionalSessionInterface $transactionalSession,
         ESignUserRegisteredService $registerService,
         ESignUserDocumentSignedService $signedDocumentService,
         ESignUserDocumentFailedService $failedDocumentService,
@@ -101,28 +101,28 @@ class ESignDocumentByExternalController extends RestApiController
 
     private function postHasVerified(object $dto)
     {
-        $transactionalService = new TransactionalApplicationService($this->registerService, $this->transactionalSession);
+        $transactionalService = new MultipleTransactionalApplicationService($this->registerService, $this->transactionalSession);
 
         return $transactionalService->execute($dto);
     }
 
     private function postDocumentSigned(object $dto)
     {
-        $transactionalService = new TransactionalApplicationService($this->signedDocumentService, $this->transactionalSession);
+        $transactionalService = new MultipleTransactionalApplicationService($this->signedDocumentService, $this->transactionalSession);
 
         return $transactionalService->execute($dto);
     }
 
     private function postDocumentFailed(object $dto)
     {
-        $transactionalService = new TransactionalApplicationService($this->failedDocumentService, $this->transactionalSession);
+        $transactionalService = new MultipleTransactionalApplicationService($this->failedDocumentService, $this->transactionalSession);
 
         return $transactionalService->execute($dto);
     }
 
     private function postDocumentComplete(object $dto)
     {
-        $transactionalService = new TransactionalApplicationService($this->completeDocumentService, $this->transactionalSession);
+        $transactionalService = new MultipleTransactionalApplicationService($this->completeDocumentService, $this->transactionalSession);
 
         return $transactionalService->execute($dto);
     }

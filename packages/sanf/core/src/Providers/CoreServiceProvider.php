@@ -21,8 +21,8 @@ use Sanf\Core\Modules\ContactUs\AskUsRepositoryInterface;
 use Sanf\Core\Modules\ContactUs\AskUsTopicRepositoryInterface;
 use Sanf\Core\Modules\ContactUs\EloquentAskUsEncryptedRepository;
 use Sanf\Core\Modules\ContactUs\EloquentAskUsTopicRepository;
-use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentRepository;
-use Sanf\Core\Modules\Contract\Repositories\EloquentESignRepository;
+use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentEncryptedRepository;
+use Sanf\Core\Modules\Contract\Repositories\EloquentESignEncryptedRepository;
 use Sanf\Core\Modules\Contract\Repositories\EloquentFinancingUnitLocationSubmissionRepository;
 use Sanf\Core\Modules\Contract\Repositories\ESignRepositoryInterface;
 use Sanf\Core\Modules\Contract\Repositories\FinancingUnitLocationSubmissionRepositoryInterface;
@@ -208,7 +208,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(InsuranceClaimSubmissionRepositoryInterface::class, EloquentInsuranceClaimSubmissionRepository::class);
         $this->app->bind(SurveyRepositoryInterface::class, EloquentSurveyEncryptedRepository::class);
         $this->app->bind(ProfileRepositoryInterface::class, RestProfileRepository::class);
-        $this->app->bind(ESignRepositoryInterface::class, EloquentESignRepository::class);
+        $this->app->bind(ESignRepositoryInterface::class, EloquentESignEncryptedRepository::class);
         $this->app->bind(OnBoardingRepositoryInterface::class, EloquentOnBoardingRepository::class);
         $this->app->bind(FrequentlyAskQuestionRepositoryInterface::class, EloquentFrequentlyAskQuestionRepository::class);
         $this->app->bind(StaticContentRepositoryInterface::class, EloquentStaticContentRepository::class);
@@ -225,7 +225,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(RequestedDocumentItemRepositoryInterface::class, EloquentRequestedDocumentItemEncryptedRepository::class);
         $this->app->bind(PlafondDisbursementRepositoryInterface::class, PlafondDisbursementEncryptedEloquentRepository::class);
         $this->app->bind(PaymentAccelarationDocumentRepositoryInterface::class, PaymentAccelarationDocumentEncryptedEloquentRepository::class);
-        $this->app->bind(ESignRepositoryInterface::class, EloquentESignDocumentRepository::class);
+        $this->app->bind(ESignRepositoryInterface::class, EloquentESignDocumentEncryptedRepository::class);
         $this->app->bind(AuditHttpLogRepositoryInterface::class, EloquentAuditHttpLogEncryptedRepository::class);
         $this->app->bind(ApiRequestRepositoryInterface::class, EloquentApiRequestLogEncryptedRepository::class);
 
