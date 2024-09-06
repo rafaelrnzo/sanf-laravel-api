@@ -2,26 +2,27 @@
 
 namespace Sanf\Core\Modules\Plafond\Repositories;
 
+use Sanf\Core\Modules\Plafond\Models\PaymentAccelarationDocumentEncryptedModel;
 use Sanf\Core\Modules\Plafond\Models\PaymentAccelarationDocumentModel;
 
 interface PaymentAccelarationDocumentRepositoryInterface
 {
     /**
      * @param array $request
-     * @return PaymentAccelarationDocumentModel
+     * @return PaymentAccelarationDocumentModel|PaymentAccelarationDocumentEncryptedModel
      */
-    public function create(array $request): PaymentAccelarationDocumentModel;
+    public function create(array $request);
 
     /**
      * @param string $id
      * @param array $request
-     * @return PaymentAccelarationDocumentModel
+     * @return PaymentAccelarationDocumentModel|PaymentAccelarationDocumentEncryptedModel
      */
-    public function update(string $id, array $request): PaymentAccelarationDocumentModel;
+    public function update(string $id, array $request);
 
     /**
      * @param string $id
-     * @return PaymentAccelarationDocumentModel|null
+     * @return PaymentAccelarationDocumentModel|PaymentAccelarationDocumentEncryptedModel|null
      */
-    public function findByPlafondId(string $plafondId): ?PaymentAccelarationDocumentModel;
+    public function findByPlafondId(string $plafondId);
 }

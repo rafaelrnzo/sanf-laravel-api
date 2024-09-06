@@ -5,8 +5,8 @@ namespace Sanf\Api\Modules\Plafond\Controllers;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
-use NbsPhp\Core\Database\TransactionalSessionInterface;
 use NbsPhp\Core\Services\TransactionalApplicationService;
+use Sanf\Core\Database\IlluminateSodiumSession;
 use Sanf\Core\Modules\Plafond\UseCases\DownloadPaymentAccelarationDocumentUseCase;
 use Sanf\Core\Modules\Plafond\UseCases\SavePaymentAccelarationDocumentUseCase;
 use Sanf\Core\Modules\Plafond\UseCases\SendPaymentAccelarationDocumentUseCase;
@@ -55,7 +55,7 @@ class PlafondDocumentController extends RestApiController
         string $plafond_xid,
         Request $request,
         Guard $auth,
-        TransactionalSessionInterface $transactionalSession,
+        IlluminateSodiumSession $transactionalSession,
         SavePaymentAccelarationDocumentUseCase $saveUseCase
     ) {
         $this->validate($request, [

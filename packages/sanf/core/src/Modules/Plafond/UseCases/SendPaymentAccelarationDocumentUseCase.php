@@ -3,9 +3,9 @@
 namespace Sanf\Core\Modules\Plafond\UseCases;
 
 use NbsPhp\Core\Exceptions\UserNotFoundException;
-use NbsPhp\Core\Repositories\UserRepositoryInterface;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Plafond\Jobs\SendEmailPaymentAccelarationDocumentJob;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 
 final class SendPaymentAccelarationDocumentUseCase implements ApplicationServiceInterface
 {

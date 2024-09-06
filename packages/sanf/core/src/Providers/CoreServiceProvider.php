@@ -68,7 +68,7 @@ use Sanf\Core\Modules\News\EloquentNewsRepository;
 use Sanf\Core\Modules\News\NewsRepositoryInterface;
 use Sanf\Core\Modules\Plafond\Repositories\EloquentPlafondTypeRepository;
 use Sanf\Core\Modules\Plafond\Repositories\GuzzleAndEloquentPlafondRepository;
-use Sanf\Core\Modules\Plafond\Repositories\PaymentAccelarationDocumentEloquentRepository;
+use Sanf\Core\Modules\Plafond\Repositories\PaymentAccelarationDocumentEncryptedEloquentRepository;
 use Sanf\Core\Modules\Plafond\Repositories\PaymentAccelarationDocumentRepositoryInterface;
 use Sanf\Core\Modules\Plafond\Repositories\PlafondDisbursementEncryptedEloquentRepository;
 use Sanf\Core\Modules\Plafond\Repositories\PlafondDisbursementRepositoryInterface;
@@ -224,7 +224,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(RequestedDocumentRepositoryInterface::class, EloquentRequestedDocumentRepository::class);
         $this->app->bind(RequestedDocumentItemRepositoryInterface::class, EloquentRequestedDocumentItemEncryptedRepository::class);
         $this->app->bind(PlafondDisbursementRepositoryInterface::class, PlafondDisbursementEncryptedEloquentRepository::class);
-        $this->app->bind(PaymentAccelarationDocumentRepositoryInterface::class, PaymentAccelarationDocumentEloquentRepository::class);
+        $this->app->bind(PaymentAccelarationDocumentRepositoryInterface::class, PaymentAccelarationDocumentEncryptedEloquentRepository::class);
         $this->app->bind(ESignRepositoryInterface::class, EloquentESignDocumentRepository::class);
         $this->app->bind(AuditHttpLogRepositoryInterface::class, EloquentAuditHttpLogEncryptedRepository::class);
         $this->app->bind(ApiRequestRepositoryInterface::class, EloquentApiRequestLogEncryptedRepository::class);
