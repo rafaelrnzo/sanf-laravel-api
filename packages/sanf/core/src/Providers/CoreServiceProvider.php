@@ -88,13 +88,15 @@ use Sanf\Core\Modules\RequestedDocument\Repositories\RequestedDocumentItemReposi
 use Sanf\Core\Modules\RequestedDocument\Repositories\RequestedDocumentRepositoryInterface;
 use Sanf\Core\Modules\RequestedDocument\Specifications\EloquentRequestedDocumentSpecification;
 use Sanf\Core\Modules\RequestedDocument\Specifications\RequestedDocumentSpecificationInterface;
-use Sanf\Core\Modules\Scanina\Repositories\EloquentProductCartRepository;
+use Sanf\Core\Modules\Scanina\Repositories\EloquentProductCartEncryptedRepository;
+use Sanf\Core\Modules\Scanina\Repositories\EloquentScaninaUserRegistrationEncryptedRepository;
 use Sanf\Core\Modules\Scanina\Repositories\GuzzleScaninaProductRepository;
 use Sanf\Core\Modules\Scanina\Repositories\GuzzleScaninaRegionRepository;
 use Sanf\Core\Modules\Scanina\Repositories\GuzzleScaninaUserRepository;
 use Sanf\Core\Modules\Scanina\Repositories\ProductCartRepositoryInterface;
 use Sanf\Core\Modules\Scanina\Repositories\ScaninaProductRepositoryInterface;
 use Sanf\Core\Modules\Scanina\Repositories\ScaninaRegionRepositoryInterface;
+use Sanf\Core\Modules\Scanina\Repositories\ScaninaUserRegistrationRepositoryInterface;
 use Sanf\Core\Modules\Scanina\Repositories\ScaninaUserRepositoryInterface;
 use Sanf\Core\Modules\Scanina\Specifications\EloquentProductCartSpecification;
 use Sanf\Core\Modules\Scanina\Specifications\GuzzleScaninaProductSpecification;
@@ -209,7 +211,8 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(StaticContentRepositoryInterface::class, EloquentStaticContentRepository::class);
         $this->app->bind(UserAuthLogRepositoryInterface::class, EloquentUserAuthLogEncryptedRepository::class);
         $this->app->bind(FinancingCategoryRepositoryInterface::class, EloquentFinancingCategoryRepository::class);
-        $this->app->bind(ProductCartRepositoryInterface::class, EloquentProductCartRepository::class);
+        $this->app->bind(ProductCartRepositoryInterface::class, EloquentProductCartEncryptedRepository::class);
+        $this->app->bind(ScaninaUserRegistrationRepositoryInterface::class, EloquentScaninaUserRegistrationEncryptedRepository::class);
         $this->app->bind(ScaninaProductRepositoryInterface::class, GuzzleScaninaProductRepository::class);
         $this->app->bind(ScaninaUserRepositoryInterface::class, GuzzleScaninaUserRepository::class);
         $this->app->bind(ScaninaRegionRepositoryInterface::class, GuzzleScaninaRegionRepository::class);

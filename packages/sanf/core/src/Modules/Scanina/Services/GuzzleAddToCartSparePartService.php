@@ -3,7 +3,6 @@
 namespace Sanf\Core\Modules\Scanina\Services;
 
 use NbsPhp\Core\Exceptions\UserNotFoundException;
-use NbsPhp\Core\Models\AuthModel;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Api\Modules\Scanina\Events\ProductSparePartAddToCartEvent;
 use Sanf\Core\Modules\Scanina\Dtos\AddToCartRequestDto;
@@ -16,19 +15,20 @@ use Sanf\Core\Modules\Scanina\Repositories\ScaninaUserRepositoryInterface;
 use Sanf\Core\Modules\Scanina\Specifications\ScaninaProductSpecificationInterface;
 use Sanf\Core\Modules\Scanina\Specifications\ScaninaUserSpecificationInterface;
 use Sanf\Core\Modules\User\Repositories\ProfileRepositoryInterface;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 
 class GuzzleAddToCartSparePartService implements ApplicationServiceInterface
 {
     private ScaninaUserRepositoryInterface $repository;
     private ScaninaUserSpecificationInterface $specification;
-    private AuthModel $userRepository;
+    private UserRepositoryInterface $userRepository;
     private ProfileRepositoryInterface $profileRepository;
     private ScaninaProductRepositoryInterface $productRepository;
     private ScaninaProductSpecificationInterface $productSpecification;
     private ProductCartRepositoryInterface $productCartRepository;
 
     public function __construct(
-        AuthModel $userRepository,
+        UserRepositoryInterface $userRepository,
         ProfileRepositoryInterface $profileRepository,
         ScaninaUserRepositoryInterface $repository,
         ScaninaUserSpecificationInterface $specification,
@@ -47,7 +47,7 @@ class GuzzleAddToCartSparePartService implements ApplicationServiceInterface
 
     public function execute($dto = null)
     {
-        $user = $this->userRepository->findOrFail($dto->userId);
+        $user = $this->userRepository->findById($dto->userId);
         if (!$user) {
             throw new UserNotFoundException();
         }

@@ -5,23 +5,28 @@ namespace Sanf\Core\Modules\User\Services;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\User\AuthModel;
+use Sanf\Core\Encryptions\SodiumEncryption;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 final class BrowseCoreAccountAvailabilityService implements ApplicationServiceInterface
 {
-    protected AuthModel $userModel;
+    protected UserRepositoryInterface $userRepository;
     protected SanfCoreApiClient $coreClient;
 
-    public function __construct(AuthModel $userModel, SanfCoreApiClient $coreClient)
+    public function __construct(UserRepositoryInterface $userRepository, SanfCoreApiClient $coreClient)
     {
-        $this->userModel = $userModel;
+        $this->userRepository = $userRepository;
         $this->coreClient = $coreClient;
     }
 
     public function execute($email = null)
     {
-        $user = $this->userModel->newQuery()->where('username', $email)->first();
+        $user = SodiumEncryption::query()->transaction(
+            function () use ($email) {
+                return $this->userRepository->findByEmail($email);
+            }
+        );
         $hasMobileAccount = is_null($user) === false;
 
         $hasCoreAccount = false;

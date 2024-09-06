@@ -3,15 +3,15 @@
 namespace Sanf\Core\Modules\Scanina\Services;
 
 use NbsPhp\Core\Exceptions\UserNotFoundException;
-use NbsPhp\Core\Models\AuthModel;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Scanina\Dtos\PostUserRegisterRequestDto;
 use Sanf\Core\Modules\Scanina\Dtos\ScaninaUserRegisterRequestDto;
-use Sanf\Core\Modules\Scanina\Models\ScaninaUserRegistrationModel;
+use Sanf\Core\Modules\Scanina\Repositories\ScaninaUserRegistrationRepositoryInterface;
 use Sanf\Core\Modules\Scanina\Repositories\ScaninaUserRepositoryInterface;
 use Sanf\Core\Modules\Scanina\Specifications\ScaninaUserSpecificationInterface;
 use Sanf\Core\Modules\User\Enums\ProfileType;
 use Sanf\Core\Modules\User\Repositories\ProfileRepositoryInterface;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class GuzzleUserRegisterService implements ApplicationServiceInterface
@@ -19,30 +19,37 @@ class GuzzleUserRegisterService implements ApplicationServiceInterface
     public const PERSONAL = 1;
     public const COMPANY = 2;
 
-    private AuthModel $repository;
+    private UserRepositoryInterface $repository;
     private ScaninaUserRepositoryInterface $scaninaRepository;
     private ScaninaUserSpecificationInterface $specification;
     private ProfileRepositoryInterface $profileRepository;
     private SanfCoreApiClient $internalApiClient;
+    private ScaninaUserRegistrationRepositoryInterface $scaninaUserRegistrationRepository;
 
     public function __construct(
-        AuthModel $repository,
+        UserRepositoryInterface $repository,
         ProfileRepositoryInterface $profileRepository,
         SanfCoreApiClient $internalApiClient,
         ScaninaUserRepositoryInterface $scaninaRepository,
-        ScaninaUserSpecificationInterface $specification
+        ScaninaUserSpecificationInterface $specification,
+        ScaninaUserRegistrationRepositoryInterface $scaninaUserRegistrationRepository
     ) {
         $this->repository = $repository;
         $this->profileRepository = $profileRepository;
         $this->specification = $specification;
         $this->scaninaRepository = $scaninaRepository;
         $this->internalApiClient = $internalApiClient;
+        $this->scaninaUserRegistrationRepository = $scaninaUserRegistrationRepository;
     }
 
     public function execute($dto = null)
     {
         /** @var PostUserRegisterRequestDto $dto */
-        $user = $this->repository->findOrFail($dto->userId);
+        $user = $this->repository->findById($dto->userId);
+        if (!$user) {
+            throw new UserNotFoundException();
+        }
+
         if (empty($user->xid) || empty($user->personal_xid)) {
             $profile = $this->profileRepository->findPersonalProfileByEmail($user->username);
             if (is_null($profile)) {
@@ -89,8 +96,7 @@ class GuzzleUserRegisterService implements ApplicationServiceInterface
         unset($requestBodyDto['password']);
         unset($requestBodyDto['passwordConfirmation']);
 
-        // TODO use eloquent repository
-        ScaninaUserRegistrationModel::query()->forceCreate([
+        $this->scaninaUserRegistrationRepository->create([
             'xid' => nano_id(),
             'profile_xid' => $dto->xid,
             'email' => $user->username,

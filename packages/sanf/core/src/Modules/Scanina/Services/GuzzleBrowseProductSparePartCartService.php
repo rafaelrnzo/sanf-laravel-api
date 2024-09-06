@@ -4,23 +4,23 @@ namespace Sanf\Core\Modules\Scanina\Services;
 
 use Exception;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
-use NbsPhp\Core\Models\AuthModel;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Scanina\Dtos\ReadProductSparePartResponseDto;
 use Sanf\Core\Modules\Scanina\Exceptions\ScaninaProductNotFoundException;
 use Sanf\Core\Modules\Scanina\Repositories\ScaninaProductRepositoryInterface;
 use Sanf\Core\Modules\Scanina\Specifications\ScaninaProductSpecificationInterface;
 use Sanf\Core\Modules\User\Repositories\ProfileRepositoryInterface;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 
 class GuzzleBrowseProductSparePartCartService implements ApplicationServiceInterface
 {
-    private AuthModel $userRepository;
+    private UserRepositoryInterface $userRepository;
     private ProfileRepositoryInterface $profileRepository;
     private ScaninaProductRepositoryInterface $productRepository;
     private ScaninaProductSpecificationInterface $productSpecification;
 
     public function __construct(
-        AuthModel $userRepository,
+        UserRepositoryInterface $userRepository,
         ProfileRepositoryInterface $profileRepository,
         ScaninaProductRepositoryInterface $productRepository,
         ScaninaProductSpecificationInterface $productSpecification
@@ -33,7 +33,7 @@ class GuzzleBrowseProductSparePartCartService implements ApplicationServiceInter
 
     public function execute($dto = null)
     {
-        $user = $this->userRepository->findOrFail($dto->userId);
+        $user = $this->userRepository->findById($dto->userId);
         if (!$user) {
             throw new UserNotFoundException();
         }

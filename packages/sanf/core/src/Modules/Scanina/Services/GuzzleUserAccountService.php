@@ -3,21 +3,21 @@
 namespace Sanf\Core\Modules\Scanina\Services;
 
 use NbsPhp\Core\Exceptions\UserNotFoundException;
-use NbsPhp\Core\Models\AuthModel;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Scanina\Repositories\ScaninaUserRepositoryInterface;
 use Sanf\Core\Modules\Scanina\Specifications\ScaninaUserSpecificationInterface;
 use Sanf\Core\Modules\User\Repositories\ProfileRepositoryInterface;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 
 class GuzzleUserAccountService implements ApplicationServiceInterface
 {
     private ScaninaUserRepositoryInterface $repository;
     private ScaninaUserSpecificationInterface $specification;
-    private AuthModel $userRepository;
+    private UserRepositoryInterface $userRepository;
     private ProfileRepositoryInterface $profileRepository;
 
     public function __construct(
-        AuthModel $userRepository,
+        UserRepositoryInterface $userRepository,
         ProfileRepositoryInterface $profileRepository,
         ScaninaUserRepositoryInterface $repository,
         ScaninaUserSpecificationInterface $specification
@@ -30,7 +30,7 @@ class GuzzleUserAccountService implements ApplicationServiceInterface
 
     public function execute($dto = null)
     {
-        $user = $this->userRepository->findOrFail($dto->userId);
+        $user = $this->userRepository->findById($dto->userId);
         if (!$user) {
             throw new UserNotFoundException();
         }
