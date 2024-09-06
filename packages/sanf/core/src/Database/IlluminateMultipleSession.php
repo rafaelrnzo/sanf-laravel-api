@@ -13,6 +13,8 @@ class IlluminateMultipleSession implements MultipleTransactionalSessionInterface
         $sodiumQuery->multipleBeginTransaction();
 
         try {
+            $sodiumQuery->hideLogStatement();
+
             $result = $operation();
 
             $sodiumQuery->multipleCommit();

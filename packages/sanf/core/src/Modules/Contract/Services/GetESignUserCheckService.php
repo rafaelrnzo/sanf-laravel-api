@@ -4,7 +4,7 @@ namespace Sanf\Core\Modules\Contract\Services;
 
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\User\AuthModel;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Integration\Enums\TekenAjaApiResponseErrorCodeEnum;
 use Sanf\Integration\Exceptions\TekenAjaExternalApiException;
 use Sanf\Integration\Exceptions\TekenAjaInvalidParameterRegistrationException;
@@ -13,12 +13,12 @@ use Sanf\Integration\Modules\TekenAja\TekenAjaApiClient;
 
 final class GetESignUserCheckService implements ApplicationServiceInterface
 {
-    protected AuthModel $userRepository;
+    protected UserRepositoryInterface $userRepository;
     protected TekenAjaApiClient $client;
 
     public function __construct(
         TekenAjaApiClient $client,
-        AuthModel $userRepository
+        UserRepositoryInterface $userRepository
     ) {
         $this->userRepository = $userRepository;
         $this->client = $client;
@@ -31,7 +31,7 @@ final class GetESignUserCheckService implements ApplicationServiceInterface
      */
     public function execute($dto = null): bool
     {
-        $user = $this->userRepository->newQuery()->find($dto->userId);
+        $user = $this->userRepository->findById($dto->userId);
         if (!$user) {
             throw new UserNotFoundException();
         }

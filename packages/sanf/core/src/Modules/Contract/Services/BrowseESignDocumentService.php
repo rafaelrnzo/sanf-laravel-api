@@ -10,19 +10,19 @@ use Sanf\Core\Modules\Contract\Dtos\BrowseProcessFinancingUnitLocationSubmission
 use Sanf\Core\Modules\Contract\Enums\ESignContractStatusEnum;
 use Sanf\Core\Modules\Contract\Repositories\ESignRepositoryInterface;
 use Sanf\Core\Modules\Contract\Specifications\ESignDocumentSpecificationFactoryInterface;
-use Sanf\Core\Modules\User\AuthModel;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 final class BrowseESignDocumentService implements ApplicationServiceInterface
 {
-    protected AuthModel $userRepository;
+    protected UserRepositoryInterface $userRepository;
     protected ESignRepositoryInterface $eSignRepository;
     protected ESignDocumentSpecificationFactoryInterface $eSignDocumentSpecificationFactory;
     protected SanfCoreApiClient $client;
 
     public function __construct(
-        AuthModel $userRepository,
+        UserRepositoryInterface $userRepository,
         ESignRepositoryInterface $eSignRepository,
         ESignDocumentSpecificationFactoryInterface $eSignDocumentSpecificationFactory,
         SanfCoreApiClient $client
@@ -40,7 +40,7 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
     public function execute($dto = null): object
     {
         /** @var BrowseESignDocumentDto $dto */
-        $user = $this->userRepository->newQuery()->find($dto->user_id);
+        $user = $this->userRepository->findById($dto->user_id);
         if (!$user) {
             throw new UserNotFoundException();
         }

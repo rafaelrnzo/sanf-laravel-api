@@ -9,7 +9,6 @@ use NbsPhp\Core\Exceptions\EmailAlreadyExistException;
 use NbsPhp\Core\Models\NeedSetupPasswordInterface;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Encryptions\SodiumEncryption;
-use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Core\Modules\User\ContractOwnerNotFoundException;
 use Sanf\Core\Modules\User\Enums\EntityType;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
@@ -47,7 +46,7 @@ class RegisterAsContractOwnerService implements ApplicationServiceInterface
             throw new EmailAlreadyExistException();
         }
 
-        /** @var AuthModel $user */
+        /** @var \Sanf\Core\Modules\User\AuthEncryptedModel $user */
         $user = $this->repository->create([
             'entity_type_id' => EntityType::PERSONAL,
             'username' => $personalData['EMAIL_ADDR'],

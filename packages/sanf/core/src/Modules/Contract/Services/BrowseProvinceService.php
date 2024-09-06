@@ -6,17 +6,17 @@ use Carbon\Carbon;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Dto\BrowseProvinceDto;
-use Sanf\Core\Modules\User\AuthModel;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Integration\Modules\TekenAja\TekenAjaApiClient;
 
 final class BrowseProvinceService implements ApplicationServiceInterface
 {
-    protected AuthModel $userRepository;
+    protected UserRepositoryInterface $userRepository;
     protected TekenAjaApiClient $client;
 
     public function __construct(
         TekenAjaApiClient $client,
-        AuthModel $userRepository
+        UserRepositoryInterface $userRepository
     ) {
         $this->userRepository = $userRepository;
         $this->client = $client;
@@ -30,7 +30,7 @@ final class BrowseProvinceService implements ApplicationServiceInterface
     public function execute($dto = null): object
     {
         /** @var BrowseProvinceDto $dto */
-        $user = $this->userRepository->newQuery()->find($dto->user_id);
+        $user = $this->userRepository->findById($dto->user_id);
         if (!$user) {
             throw new UserNotFoundException();
         }

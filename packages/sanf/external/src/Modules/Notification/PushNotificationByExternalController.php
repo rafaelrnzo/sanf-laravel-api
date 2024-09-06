@@ -5,13 +5,19 @@ namespace Sanf\External\Modules\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use NbsPhp\Core\Controllers\RestApiController;
+use Sanf\Core\Database\MultipleTransactionalSessionInterface;
 use Sanf\Core\Modules\Notification\Dtos\SendPushNotificationByExternalRequestDto;
 use Sanf\Core\Modules\Notification\NotificationTypeEnum;
 use Sanf\Core\Modules\Notification\Services\SendPushNotificationByExternalService;
+use Sanf\Core\Services\MultipleTransactionalApplicationService;
 
 class PushNotificationByExternalController extends RestApiController
 {
-    public function postAdd(Request $request, SendPushNotificationByExternalService $service)
+    public function postAdd(
+        Request $request,
+        SendPushNotificationByExternalService $service,
+        MultipleTransactionalSessionInterface $transactionalSession
+    )
     {
         $input = $this->validate($request, [
             'is_notify_all' => 'boolean',
@@ -28,7 +34,9 @@ class PushNotificationByExternalController extends RestApiController
         ]);
         $input['type'] = new NotificationTypeEnum($input['type']);
         $dto = new SendPushNotificationByExternalRequestDto($input);
-        $service->execute($dto);
+
+        $transactionalService = new MultipleTransactionalApplicationService($service, $transactionalSession);
+        $transactionalService->execute($dto);
 
         return $this->responseOk();
     }

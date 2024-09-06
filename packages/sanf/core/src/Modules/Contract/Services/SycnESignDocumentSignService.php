@@ -7,18 +7,18 @@ use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Enums\ESignContractStatusEnum;
 use Sanf\Core\Modules\Contract\Repositories\ESignRepositoryInterface;
-use Sanf\Core\Modules\User\AuthModel;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 final class SycnESignDocumentSignService implements ApplicationServiceInterface
 {
-    protected AuthModel $userRepository;
+    protected UserRepositoryInterface $userRepository;
     protected ESignRepositoryInterface $eSignRepository;
     protected SanfCoreApiClient $client;
 
     public function __construct(
         ESignRepositoryInterface $eSignRepository,
-        AuthModel $userRepository,
+        UserRepositoryInterface $userRepository,
         SanfCoreApiClient $client
     ) {
         $this->eSignRepository = $eSignRepository;
@@ -49,7 +49,7 @@ final class SycnESignDocumentSignService implements ApplicationServiceInterface
 
             $document = $this->eSignRepository->findDocumentByDocId($data->documentId);
             if (!$document) {
-                $user = $this->userRepository->newQuery()->find($data->userId);
+                $user = $this->userRepository->findById($data->userId);
                 if (!$user) {
                     throw new UserNotFoundException();
                 }

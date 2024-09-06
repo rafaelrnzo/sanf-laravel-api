@@ -7,7 +7,7 @@ use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Exceptions\ESignDocumentNotFoundException;
 use Sanf\Core\Modules\Contract\Repositories\ESignRepositoryInterface;
-use Sanf\Core\Modules\User\AuthModel;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Integration\Enums\TekenAjaApiResponseErrorCodeEnum;
 use Sanf\Integration\Exceptions\TekenAjaExternalApiException;
 use Sanf\Integration\Exceptions\TekenAjaInvalidParameterRegistrationException;
@@ -15,12 +15,12 @@ use Sanf\Integration\Modules\TekenAja\TekenAjaApiClient;
 
 final class GenerateSignUrlService implements ApplicationServiceInterface
 {
-    protected AuthModel $userRepository;
+    protected UserRepositoryInterface $userRepository;
     protected ESignRepositoryInterface $eSignRepository;
     protected TekenAjaApiClient $client;
 
     public function __construct(
-        AuthModel $userRepository,
+        UserRepositoryInterface $userRepository,
         TekenAjaApiClient $client,
         ESignRepositoryInterface $eSignRepository
     ) {
@@ -38,7 +38,7 @@ final class GenerateSignUrlService implements ApplicationServiceInterface
      */
     public function execute($dto = null): object
     {
-        $user = $this->userRepository->newQuery()->find($dto->userId);
+        $user = $this->userRepository->findById($dto->userId);
         if (!$user) {
             throw new UserNotFoundException();
         }

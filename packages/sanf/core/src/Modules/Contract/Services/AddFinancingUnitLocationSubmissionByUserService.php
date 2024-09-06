@@ -20,7 +20,7 @@ final class AddFinancingUnitLocationSubmissionByUserService extends FinancingUni
      */
     public function execute($dto = null)
     {
-        $user = $this->userRepository->newQuery()->find($dto->userId);
+        $user = $this->userRepository->findById($dto->userId);
         if (!$user) {
             throw new UserNotFoundException();
         }

@@ -9,7 +9,7 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Dto\GetESignUserResponseDto;
 use Sanf\Core\Modules\Contract\Enums\ESignRegistrationStatusEnum;
 use Sanf\Core\Modules\Contract\Repositories\ESignRepositoryInterface;
-use Sanf\Core\Modules\User\AuthModel;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Integration\Enums\TekenAjaApiResponseErrorCodeEnum;
 use Sanf\Integration\Exceptions\TekenAjaExternalApiException;
 use Sanf\Integration\Exceptions\TekenAjaInvalidParameterRegistrationException;
@@ -18,14 +18,14 @@ use Sanf\Integration\Modules\TekenAja\TekenAjaApiClient;
 
 final class GetESignUserService implements ApplicationServiceInterface
 {
-    protected AuthModel $userRepository;
+    protected UserRepositoryInterface $userRepository;
     protected ESignRepositoryInterface $eSignRepository;
     protected SanfCoreApiClient $client;
     protected TekenAjaApiClient $clientTekenAja;
 
     public function __construct(
         ESignRepositoryInterface $eSignRepository,
-        AuthModel $userRepository,
+        UserRepositoryInterface $userRepository,
         SanfCoreApiClient $client,
         TekenAjaApiClient $clientTekenAja
     ) {
@@ -42,7 +42,7 @@ final class GetESignUserService implements ApplicationServiceInterface
      */
     public function execute($dto = null): object
     {
-        $user = $this->userRepository->newQuery()->find($dto->user_id);
+        $user = $this->userRepository->findById($dto->user_id);
         if (!$user) {
             throw new UserNotFoundException();
         }

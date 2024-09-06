@@ -6,7 +6,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\User\AuthModel;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Core\Modules\User\Services\UserService;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
@@ -14,7 +14,7 @@ class GetContractDetailService extends UserService implements ApplicationService
 {
     protected SanfCoreApiClient $internalApiClient;
 
-    public function __construct(AuthModel $userRepository, SanfCoreApiClient $internalApiClient)
+    public function __construct(UserRepositoryInterface $userRepository, SanfCoreApiClient $internalApiClient)
     {
         parent::__construct($userRepository);
         $this->internalApiClient = $internalApiClient;
@@ -29,7 +29,7 @@ class GetContractDetailService extends UserService implements ApplicationService
      */
     public function execute($dto = null)
     {
-        $user = $this->userRepository->newQuery()->find($dto->user_id);
+        $user = $this->userRepository->findById($dto->user_id);
         if (!$user) {
             throw new UserNotFoundException();
         }

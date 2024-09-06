@@ -6,17 +6,17 @@ use Carbon\Carbon;
 use NbsPhp\Core\Enum\UserStatus;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Core\Modules\User\Enums\UserAuthLogStatusEnum;
 use Sanf\Core\Modules\User\Exceptions\InvalidRequestDeletionAccountException;
 use Sanf\Core\Modules\User\Exceptions\RequestDeletionAccountNotFoundException;
 use Sanf\Core\Modules\User\Jobs\SendApprovalRequestDeletionAccountNotification;
 use Sanf\Core\Modules\User\Repositories\UserAuthLogRepositoryInterface;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Core\Modules\User\Specifications\UserAuthLogSpecificationFactoryInterface;
 
 class ApproveDeactivateAccountService implements ApplicationServiceInterface
 {
-    public AuthModel $repository;
+    public UserRepositoryInterface $repository;
     public UserAuthLogRepositoryInterface $logRepository;
     public UserAuthLogSpecificationFactoryInterface $logSpecification;
 
@@ -25,7 +25,7 @@ class ApproveDeactivateAccountService implements ApplicationServiceInterface
      * @param UserAuthLogRepositoryInterface $logRepository
      */
     public function __construct(
-        AuthModel $repository,
+        UserRepositoryInterface $repository,
         UserAuthLogRepositoryInterface $logRepository,
         UserAuthLogSpecificationFactoryInterface $logSpecification
     ) {
@@ -45,7 +45,7 @@ class ApproveDeactivateAccountService implements ApplicationServiceInterface
             throw new InvalidRequestDeletionAccountException();
         }
 
-        $user = $this->repository->newQuery()->find($userAccountRequest->user_id);
+        $user = $this->repository->findById($userAccountRequest->user_id);
         if (!$user) {
             throw new UserNotFoundException();
         }
@@ -60,12 +60,13 @@ class ApproveDeactivateAccountService implements ApplicationServiceInterface
             'created_by' => json_encode(array_merge($createdBy, ['type' => 20])),
         ]);
 
-        $user = $this->repository->newQuery()->findOrFail($userAccountRequest->user_id);
-        $user->update([
+        $this->repository->update([
             'status_id' => UserStatus::DEACTIVATE,
             'updated_at' => Carbon::now(),
             'deleted_at' => Carbon::now(),
-        ]);
+        ], $userAccountRequest->user_id);
+
+        $user = $this->repository->findById($userAccountRequest->user_id);
 
         if ($user->oauth) {
             $user->oauth->delete();

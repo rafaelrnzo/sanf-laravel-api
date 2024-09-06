@@ -4,17 +4,17 @@ namespace Sanf\Core\Modules\User\Services;
 
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\User\AuthModel;
 use Sanf\Core\Modules\User\Enums\UserAuthLogStatusEnum;
 use Sanf\Core\Modules\User\Exceptions\InvalidRequestDeletionAccountException;
 use Sanf\Core\Modules\User\Exceptions\RequestDeletionAccountNotFoundException;
 use Sanf\Core\Modules\User\Jobs\SendRejectRequestDeletionAccountNotification;
 use Sanf\Core\Modules\User\Repositories\UserAuthLogRepositoryInterface;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Core\Modules\User\Specifications\UserAuthLogSpecificationFactoryInterface;
 
 class RejectDeactivateAccountService implements ApplicationServiceInterface
 {
-    public AuthModel $repository;
+    public UserRepositoryInterface $repository;
     public UserAuthLogRepositoryInterface $logRepository;
     public UserAuthLogSpecificationFactoryInterface $logSpecification;
 
@@ -23,7 +23,7 @@ class RejectDeactivateAccountService implements ApplicationServiceInterface
      * @param UserAuthLogRepositoryInterface $logRepository
      */
     public function __construct(
-        AuthModel $repository,
+        UserRepositoryInterface $repository,
         UserAuthLogRepositoryInterface $logRepository,
         UserAuthLogSpecificationFactoryInterface $logSpecification
     ) {
@@ -43,7 +43,7 @@ class RejectDeactivateAccountService implements ApplicationServiceInterface
             throw new InvalidRequestDeletionAccountException();
         }
 
-        $user = $this->repository->newQuery()->find($userAccountRequest->user_id);
+        $user = $this->repository->findById($userAccountRequest->user_id);
         if (!$user) {
             throw new UserNotFoundException();
         }

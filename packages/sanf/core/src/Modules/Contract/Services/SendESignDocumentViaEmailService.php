@@ -8,16 +8,16 @@ use Sanf\Core\Modules\Contract\Events\ESignDocumentDownloadEvent;
 use Sanf\Core\Modules\Contract\Exceptions\ESignDocumentNotFoundException;
 use Sanf\Core\Modules\Contract\Exceptions\ESignUserNotRegisteredException;
 use Sanf\Core\Modules\Contract\Repositories\ESignRepositoryInterface;
-use Sanf\Core\Modules\User\AuthModel;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 
 final class SendESignDocumentViaEmailService implements ApplicationServiceInterface
 {
-    protected AuthModel $userRepository;
+    protected UserRepositoryInterface $userRepository;
     protected ESignRepositoryInterface $eSignRepository;
 
     public function __construct(
         ESignRepositoryInterface $eSignRepository,
-        AuthModel $userRepository
+        UserRepositoryInterface $userRepository
     ) {
         $this->eSignRepository = $eSignRepository;
         $this->userRepository = $userRepository;
@@ -30,7 +30,7 @@ final class SendESignDocumentViaEmailService implements ApplicationServiceInterf
      */
     public function execute($dto = null): bool
     {
-        $user = $this->userRepository->newQuery()->find($dto->userId);
+        $user = $this->userRepository->findById($dto->userId);
         if (!$user) {
             throw new UserNotFoundException();
         }

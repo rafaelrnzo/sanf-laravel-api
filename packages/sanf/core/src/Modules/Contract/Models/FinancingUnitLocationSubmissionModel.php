@@ -3,7 +3,7 @@
 namespace Sanf\Core\Modules\Contract\Models;
 
 use NbsPhp\Core\Models\AbstractModel;
-use Sanf\Core\Modules\User\AuthModel;
+use Sanf\Core\Modules\User\AuthEncryptedModel;
 
 class FinancingUnitLocationSubmissionModel extends AbstractModel
 {
@@ -11,7 +11,7 @@ class FinancingUnitLocationSubmissionModel extends AbstractModel
 
     public function user()
     {
-        return $this->belongsTo(AuthModel::class, 'user_id');
+        return $this->belongsTo(AuthEncryptedModel::class, 'user_id');
     }
 
     public function status()

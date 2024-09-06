@@ -132,8 +132,8 @@ use Sanf\Core\Modules\User\Repositories\ProfileRepositoryInterface;
 use Sanf\Core\Modules\User\Repositories\RestProfileRepository;
 use Sanf\Core\Modules\User\Repositories\UserAuthLogRepositoryInterface;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
+use Sanf\Core\Modules\User\Specifications\EloquentUserAuthEncryptedSpecificationFactory;
 use Sanf\Core\Modules\User\Specifications\EloquentUserAuthLogEncryptedSpecificationFactory;
-use Sanf\Core\Modules\User\Specifications\EloquentUserAuthSpecificationFactory;
 use Sanf\Core\Modules\User\Specifications\UserAuthLogSpecificationFactoryInterface;
 use Sanf\Core\Modules\User\Specifications\UserAuthSpecificationFactoryInterface;
 use Sanf\Core\Passwords\SodiumPasswordBrokerManager;
@@ -251,7 +251,7 @@ class CoreServiceProvider extends ServiceProvider
             EloquentUserAuthLogEncryptedSpecificationFactory::class
         );
         $this->app->bind(FinancingCategorySpecificationFactoryInterface::class, EloquentFinancingCategorySpecificationFactory::class);
-        $this->app->bind(UserAuthSpecificationFactoryInterface::class, EloquentUserAuthSpecificationFactory::class);
+        $this->app->bind(UserAuthSpecificationFactoryInterface::class, EloquentUserAuthEncryptedSpecificationFactory::class);
         $this->app->bind(RequestedDocumentSpecificationInterface::class, EloquentRequestedDocumentSpecification::class);
         $this->app->bind(ProductCartSpecificationInterface::class, EloquentProductCartSpecification::class);
         $this->app->bind(ScaninaProductSpecificationInterface::class, GuzzleScaninaProductSpecification::class);

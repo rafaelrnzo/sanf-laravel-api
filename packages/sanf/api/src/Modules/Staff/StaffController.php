@@ -5,13 +5,13 @@ namespace Sanf\Api\Modules\Staff;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
-use NbsPhp\Core\Database\TransactionalSessionInterface;
-use NbsPhp\Core\Services\TransactionalApplicationService;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
+use Sanf\Core\Database\MultipleTransactionalSessionInterface;
 use Sanf\Core\Modules\Staff\DeactivateCompanyStaffService;
 use Sanf\Core\Modules\Staff\GetListCompanyStaffService;
 use Sanf\Core\Modules\Staff\GetListInvitedCompanyStaffService;
 use Sanf\Core\Modules\Staff\InviteCompanyStaffAsUserService;
+use Sanf\Core\Services\MultipleTransactionalApplicationService;
 
 class StaffController extends RestApiController
 {
@@ -51,7 +51,7 @@ class StaffController extends RestApiController
         $xid,
         $no,
         InviteCompanyStaffAsUserService $service,
-        TransactionalSessionInterface $transactionalSession
+        MultipleTransactionalSessionInterface $transactionalSession
     ) {
         //TODO DTO
         $dto = (object) [
@@ -59,7 +59,7 @@ class StaffController extends RestApiController
             'xid' => $xid,
             'no' => $no,
         ];
-        $transactionalService = new TransactionalApplicationService($service, $transactionalSession);
+        $transactionalService = new MultipleTransactionalApplicationService($service, $transactionalSession);
         $transactionalService->execute($dto);
 
         return $this->responseOk();
