@@ -21,7 +21,7 @@ class CreateEsignDocumentAssigneeEncryptedTable extends Migration
             $table->string('xid')->nullable();
             $table->bigInteger('user_id')->unsigned();
             $table->binary('email');
-            $table->binary('document_id');
+            $table->string('document_id');
             $table->binary('document_sign_url')->nullable();
             $table->timestamps();
             $table->tinyInteger('status_id')->default(10);

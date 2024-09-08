@@ -53,7 +53,6 @@ class RemoveEsignDocumentTable extends Migration
                         array_merge(
                             $itemArr,
                             [
-                                'document_id' => $encryption->decrypt($item->document_id),
                                 'document_name' => $encryption->decrypt($item->document_name),
                                 'document_file' => $encryption->decrypt($item->document_file),
                                 'modified_by' => $encryption->decrypt($item->modified_by),

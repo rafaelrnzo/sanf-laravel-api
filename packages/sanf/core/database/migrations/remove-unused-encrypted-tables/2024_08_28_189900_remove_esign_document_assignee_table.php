@@ -52,7 +52,6 @@ class RemoveEsignDocumentAssigneeTable extends Migration
                             $itemArr,
                             [
                                 'email' => $encryption->decrypt($item->email),
-                                'document_id' => $encryption->decrypt($item->document_id),
                                 'document_sign_url' => $encryption->decrypt($item->document_sign_url),
                                 'reference_no' => $encryption->decrypt($item->reference_no),
                             ]

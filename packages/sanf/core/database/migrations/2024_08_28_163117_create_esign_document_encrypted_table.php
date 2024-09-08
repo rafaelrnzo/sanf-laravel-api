@@ -19,7 +19,7 @@ class CreateEsignDocumentEncryptedTable extends Migration
         Schema::connection(ConnectionDB::PG_SODIUM)->create('esign_document_encrypted', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('xid')->nullable();
-            $table->binary('document_id')->unique();
+            $table->string('document_id')->unique();
             $table->binary('document_name')->nullable();
             $table->binary('document_file')->nullable()->comment('json');
             $table->timestamp('expired_at');

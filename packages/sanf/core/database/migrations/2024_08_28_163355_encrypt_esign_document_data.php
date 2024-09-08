@@ -26,7 +26,6 @@ class EncryptEsignDocumentData extends Migration
                         array_merge(
                             (array) $item,
                             [
-                                'document_id' => $encryption->encrypt($item->document_id),
                                 'document_name' => $encryption->encrypt($item->document_name),
                                 'document_file' => $encryption->encrypt($item->document_file),
                                 'modified_by' => $encryption->encrypt($item->modified_by),

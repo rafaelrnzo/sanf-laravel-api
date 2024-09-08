@@ -27,7 +27,6 @@ class EncryptEsignDocumentAssigneeData extends Migration
                             (array) $item,
                             [
                                 'email' => $encryption->encrypt($item->email),
-                                'document_id' => $encryption->encrypt($item->document_id),
                                 'document_sign_url' => $encryption->encrypt($item->document_sign_url),
                                 'reference_no' => $encryption->encrypt($item->reference_no),
                                 'nonce' => $encryption->nonce()->getNonceHex(),
