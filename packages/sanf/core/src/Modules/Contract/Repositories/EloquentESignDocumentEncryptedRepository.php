@@ -57,7 +57,6 @@ class EloquentESignDocumentEncryptedRepository extends AbstractEloquentRepositor
             'identity_file',
         ];
         $this->esignDocumentEncryptedFields = [
-            'document_id',
             'document_name',
             'reference_no',
         ];
@@ -66,7 +65,6 @@ class EloquentESignDocumentEncryptedRepository extends AbstractEloquentRepositor
             'modified_by',
         ];
         $this->esignDocumentAssigneeEncryptedFields = [
-            'document_id',
             'document_name',
             'reference_no',
         ];
@@ -157,7 +155,7 @@ class EloquentESignDocumentEncryptedRepository extends AbstractEloquentRepositor
 
         $model = $this->eSignDocumentModel
             ->newQuery()
-            ->where($sodiumQuery->selectRaw('document_id'), '=', $documentId)
+            ->where('document_id', '=', $documentId)
             ->first();
 
         return $this->stripEloquentModel($model);
@@ -213,7 +211,7 @@ class EloquentESignDocumentEncryptedRepository extends AbstractEloquentRepositor
         $model = $this->eSignDocumentAssigneeModel
             ->newQuery()
             ->where('user_id', '=', $userId)
-            ->where($sodiumQuery->selectRaw('document_id'), '=', $documentId)
+            ->where('document_id', '=', $documentId)
             ->first();
 
         return $this->stripEloquentModel($model->fresh());

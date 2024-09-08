@@ -11,14 +11,14 @@ use Sanf\Core\Modules\Contract\Events\ESignDocumentSignEvent;
 use Sanf\Core\Modules\Contract\Exceptions\ESignDocumentNotFoundException;
 use Sanf\Core\Modules\Contract\Exceptions\ESignDocumentOTPNotFoundException;
 use Sanf\Core\Modules\Contract\Exceptions\ESignUserNotRegisteredException;
-use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentRepository;
+use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentEncryptedRepository;
 
 class ESignDocumentSignAdInsService implements ApplicationServiceInterface
 {
     private AdInsESignSignDocumentService $adInsSignDocumentService;
-    private EloquentESignDocumentRepository $eSignRepository;
+    private EloquentESignDocumentEncryptedRepository $eSignRepository;
 
-    public function __construct(AdInsESignSignDocumentService $adInsSignDocumentService, EloquentESignDocumentRepository $eSignRepository)
+    public function __construct(AdInsESignSignDocumentService $adInsSignDocumentService, EloquentESignDocumentEncryptedRepository $eSignRepository)
     {
         $this->adInsSignDocumentService = $adInsSignDocumentService;
         $this->eSignRepository = $eSignRepository;

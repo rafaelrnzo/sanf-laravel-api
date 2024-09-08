@@ -5,7 +5,7 @@ namespace Sanf\Core\Modules\Contract\Services;
 use Carbon\CarbonImmutable;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Dto\RequestESignDocumentOTPDto;
-use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentRepository;
+use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentEncryptedRepository;
 
 class ESignDocumentOTPService implements ApplicationServiceInterface
 {
@@ -14,9 +14,9 @@ class ESignDocumentOTPService implements ApplicationServiceInterface
     protected const SUSPEND_TIME = 2;
 
     private AdInsESignDocumentOTPService $adInsOtpService;
-    private EloquentESignDocumentRepository $eSignRepository;
+    private EloquentESignDocumentEncryptedRepository $eSignRepository;
 
-    public function __construct(AdInsESignDocumentOTPService $adInsOtpService, EloquentESignDocumentRepository $eSignRepository)
+    public function __construct(AdInsESignDocumentOTPService $adInsOtpService, EloquentESignDocumentEncryptedRepository $eSignRepository)
     {
         $this->adInsOtpService = $adInsOtpService;
         $this->eSignRepository = $eSignRepository;

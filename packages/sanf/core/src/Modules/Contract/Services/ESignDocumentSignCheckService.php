@@ -10,7 +10,7 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Enums\ESignContractStatusEnum;
 use Sanf\Core\Modules\Contract\Events\ESignDocumentSignCompleteNotificationEvent;
 use Sanf\Core\Modules\Contract\Exceptions\ESignDocumentNotFoundException;
-use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentRepository;
+use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentEncryptedRepository;
 use Sanf\Core\Modules\Contract\Specifications\ESignDocumentSpecificationFactoryInterface;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
@@ -23,14 +23,14 @@ class ESignDocumentSignCheckService implements ApplicationServiceInterface
 
     protected AdInsESignDocumentSignCheckService $adInsDocumentSignCheckService;
     protected AdInsESignDownloadDocumentService $adInsDownloadDocumentService;
-    protected EloquentESignDocumentRepository $eSignRepository;
+    protected EloquentESignDocumentEncryptedRepository $eSignRepository;
     protected ESignDocumentSpecificationFactoryInterface $eSignDocumentSpecificationFactory;
     protected SanfCoreApiClient $sanfCoreClient;
 
     public function __construct(
         AdInsESignDocumentSignCheckService $adInsDocumentSignCheckService,
         AdInsESignDownloadDocumentService $adInsDownloadDocumentService,
-        EloquentESignDocumentRepository $eSignRepository,
+        EloquentESignDocumentEncryptedRepository $eSignRepository,
         ESignDocumentSpecificationFactoryInterface $eSignDocumentSpecificationFactory,
         SanfCoreApiClient $sanfCoreClient
     ) {

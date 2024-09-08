@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use NbsPhp\Core\Controllers\RestApiController;
-use NbsPhp\Core\Database\TransactionalSessionInterface;
 use NbsPhp\Core\Services\TransactionalApplicationService;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
 use Sanf\Api\Modules\Contract\Transformers\BrowseDistrictTransformer;
@@ -17,6 +16,7 @@ use Sanf\Api\Modules\Contract\Transformers\BrowseSubDistrictTransformer;
 use Sanf\Api\Modules\Contract\Transformers\ESignDocumentOTPTransformer;
 use Sanf\Api\Modules\Contract\Transformers\GenerateSignUrlTransformer;
 use Sanf\Api\Modules\Contract\Transformers\GetESignUserTransformer;
+use Sanf\Core\Database\IlluminateSodiumSession;
 use Sanf\Core\Database\MultipleTransactionalSessionInterface;
 use Sanf\Core\Modules\Contract\Dto\AddESignUserDto;
 use Sanf\Core\Modules\Contract\Dto\BrowseDistrictDto;
@@ -65,7 +65,8 @@ final class ESignDocumentByUserController extends RestApiController
         $xid,
         BrowseESignDocumentService $service,
         SycnESignDocumentSignService $syncService,
-        TransactionalSessionInterface $transactionalSession
+        MultipleTransactionalSessionInterface $transactionalSession,
+        IlluminateSodiumSession $sodiumTransactionalSession
     ) {
         $input = $this->validate($request, [
             'status_id' => ['nullable', 'integer', Rule::in(ESignContractStatusEnum::ALL)],
@@ -80,9 +81,10 @@ final class ESignDocumentByUserController extends RestApiController
         $dto->sort_by = Str::title($dto->sort_by);
         $dto->user_id = $auth->id();
 
-        $result = $service->execute($dto);
+        $sodiumTransactionalService = new TransactionalApplicationService($service, $sodiumTransactionalSession);
+        $result = $sodiumTransactionalService->execute($dto);
 
-        $transactionalService = new TransactionalApplicationService($syncService, $transactionalSession);
+        $transactionalService = new MultipleTransactionalApplicationService($syncService, $transactionalSession);
         $transactionalService->execute($result);
 
         return fractal($result->data, BrowseESignDocumentTransformer::class)
@@ -278,7 +280,7 @@ final class ESignDocumentByUserController extends RestApiController
         $xid,
         $document_id,
         UpdateESignDocumentStatusService $service,
-        TransactionalSessionInterface $transactionalSession
+        MultipleTransactionalSessionInterface $transactionalSession
     ) {
         $input = $this->validate($request, [
             'email' => 'required|email|max:255',
@@ -290,7 +292,7 @@ final class ESignDocumentByUserController extends RestApiController
             'userId' => $auth->id(),
         ]);
 
-        $transactionalService = new TransactionalApplicationService($service, $transactionalSession);
+        $transactionalService = new MultipleTransactionalApplicationService($service, $transactionalSession);
         $transactionalService->execute($dto);
 
         return $this->responseOk();
@@ -301,7 +303,8 @@ final class ESignDocumentByUserController extends RestApiController
         Request $request,
         $xid,
         $document_id,
-        SendESignDocumentViaEmailService $service
+        SendESignDocumentViaEmailService $service,
+        IlluminateSodiumSession $transactionalSession
     ) {
         $input = $this->validate($request, [
             'email' => 'required|email|max:255',
@@ -313,7 +316,8 @@ final class ESignDocumentByUserController extends RestApiController
             'userId' => $auth->id(),
         ];
 
-        $service->execute($dto);
+        $transactionalService = new TransactionalApplicationService($service, $transactionalSession);
+        $transactionalService->execute($dto);
 
         return $this->responseOk();
     }
@@ -323,7 +327,7 @@ final class ESignDocumentByUserController extends RestApiController
         Request $request,
         $xid,
         ESignDocumentOTPService $eSignOTPService,
-        TransactionalSessionInterface $transactionalSession
+        MultipleTransactionalSessionInterface $transactionalSession
     ) {
         $bodyRequest = $this->validate($request, [
             'email' => ['required', 'email', 'max:255'],
@@ -347,7 +351,7 @@ final class ESignDocumentByUserController extends RestApiController
 
         $dto = new RequestESignDocumentOTPDto($bodyRequest);
 
-        $transactionalService = new TransactionalApplicationService($eSignOTPService, $transactionalSession);
+        $transactionalService = new MultipleTransactionalApplicationService($eSignOTPService, $transactionalSession);
         $result = $transactionalService->execute($dto);
 
         return fractal($result, ESignDocumentOTPTransformer::class)
@@ -359,7 +363,7 @@ final class ESignDocumentByUserController extends RestApiController
         $xid,
         $document_id,
         ESignDocumentDownloadService $eSignDocumentDownloadService,
-        TransactionalSessionInterface $transactionalSession
+        MultipleTransactionalSessionInterface $transactionalSession
     ) {
         $dto = (object) [
             'userId' => $auth->id(),
@@ -369,7 +373,7 @@ final class ESignDocumentByUserController extends RestApiController
 
         return $this->streamDownload(
             function () use ($eSignDocumentDownloadService, $transactionalSession, $dto) {
-            $transactionalService = new TransactionalApplicationService($eSignDocumentDownloadService, $transactionalSession);
+            $transactionalService = new MultipleTransactionalApplicationService($eSignDocumentDownloadService, $transactionalSession);
                 echo $transactionalService->execute($dto);
             },
             "{$dto->documentId}.pdf"

@@ -2,14 +2,13 @@
 
 namespace Sanf\Core\Database;
 
-use Illuminate\Support\Facades\DB;
 use NbsPhp\Core\Database\TransactionalSessionInterface;
-use Sanf\Core\Constants\ConnectionDB;
+use Sanf\Core\Encryptions\SodiumEncryption;
 
 class IlluminateSodiumSession implements TransactionalSessionInterface
 {
     public function executeAtomically(callable $operation)
     {
-        return DB::connection(ConnectionDB::PG_SODIUM)->transaction($operation);
+        return SodiumEncryption::query()->transaction($operation);
     }
 }

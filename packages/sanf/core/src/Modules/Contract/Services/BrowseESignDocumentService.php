@@ -73,7 +73,7 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
 
             $existingNonSubmitDocumentId = [];
             $data = array_map(function ($item) use ($dto, $user, &$existingNonSubmitDocumentId) {
-                $file = is_string($item->document_file) ? json_decode($item->document_file) : $item->document_file;
+                $file = is_string($item->e_sign_document->document_file) ? json_decode($item->e_sign_document->document_file) : $item->e_sign_document->document_file;
 
                 if ($item->assignee_status_id !== ESignContractStatusEnum::SUBMITTED) {
                     $existingNonSubmitDocumentId[] = $item->document_id;
@@ -81,12 +81,12 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
 
                 return (object) [
                     'xid' => $item->xid,
-                    'documentName' => $item->document_name,
+                    'documentName' => $item->e_sign_document->document_name,
                     'documentId' => $item->document_id,
-                    'referenceNo' => $item->reference_no,
+                    'referenceNo' => $item->e_sign_document->reference_no,
                     'documentFile' => $file,
                     'statusId' => $item->assignee_status_id,
-                    'expiredAt' => Carbon::make($item->expired_at),
+                    'expiredAt' => Carbon::make($item->e_sign_document->expired_at),
                     'createdAt' => Carbon::make($item->created_at),
                     'userId' => $dto->user_id,
                     'email' => $user->username,
@@ -135,16 +135,16 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
             );
 
             $data = array_map(function ($item) use ($dto, $user) {
-                $file = is_string($item->document_file) ? json_decode($item->document_file) : $item->document_file;
+                $file = is_string($item->e_sign_document->document_file) ? json_decode($item->e_sign_document->document_file) : $item->e_sign_document->document_file;
 
                 return (object) [
                     'xid' => $item->xid,
-                    'documentName' => $item->document_name,
+                    'documentName' => $item->e_sign_document->document_name,
                     'documentId' => $item->document_id,
-                    'referenceNo' => $item->reference_no,
+                    'referenceNo' => $item->e_sign_document->reference_no,
                     'documentFile' => $file,
                     'statusId' => ($item->status_id === ESignContractStatusEnum::ON_PROGRESS && $item->assignee_status_id === ESignContractStatusEnum::DONE) ? ESignContractStatusEnum::ON_PROGRESS : $item->assignee_status_id,
-                    'expiredAt' => Carbon::make($item->expired_at),
+                    'expiredAt' => Carbon::make($item->e_sign_document->expired_at),
                     'createdAt' => Carbon::make($item->created_at),
                     'userId' => $dto->user_id,
                     'email' => $user->username,

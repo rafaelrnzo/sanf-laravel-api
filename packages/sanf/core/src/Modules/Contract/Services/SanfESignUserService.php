@@ -8,14 +8,14 @@ use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Dto\ResponseESignUserDto;
 use Sanf\Core\Modules\Contract\Enums\ESignRegistrationStatusEnum;
-use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentRepository;
+use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentEncryptedRepository;
 use Sanf\Core\Modules\User\Repositories\RestProfileRepository;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class SanfESignUserService implements ApplicationServiceInterface
 {
     public const MALE = 'M';
-    protected EloquentESignDocumentRepository $eSignDocumentRepository;
+    protected EloquentESignDocumentEncryptedRepository $eSignDocumentRepository;
     protected RestProfileRepository $sanfProfileRepository;
     protected SanfCoreApiClient $sanfCoreClient;
     protected AdInsESignRegisterCheckService $adInsRegisterCheckService;
@@ -23,7 +23,7 @@ class SanfESignUserService implements ApplicationServiceInterface
     public function __construct(
         RestProfileRepository $sanfProfileRepository,
         SanfCoreApiClient $sanfCoreClient,
-        EloquentESignDocumentRepository $eSignDocumentRepository,
+        EloquentESignDocumentEncryptedRepository $eSignDocumentRepository,
         AdInsESignRegisterCheckService $adInsRegisterCheckService
     ) {
         $this->sanfProfileRepository = $sanfProfileRepository;

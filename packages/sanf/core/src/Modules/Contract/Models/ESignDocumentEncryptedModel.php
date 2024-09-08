@@ -28,11 +28,6 @@ class ESignDocumentEncryptedModel extends AbstractModel
         'nonce',
     ];
 
-    public function getDocumentIdAttribute()
-    {
-        return $this->decryptor()->decrypt($this->attributes['document_id']);
-    }
-
     public function getDocumentNameAttribute()
     {
         return $this->decryptor()->decrypt($this->attributes['document_name']);

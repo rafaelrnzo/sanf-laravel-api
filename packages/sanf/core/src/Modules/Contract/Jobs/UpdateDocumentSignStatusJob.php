@@ -6,10 +6,11 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Sanf\Core\Encryptions\SodiumEncryption;
 use Illuminate\Support\Facades\DB;
 use Sanf\Core\Modules\Contract\Enums\ESignContractStatusEnum;
 use Sanf\Core\Modules\Contract\Exceptions\ESignDocumentNotFoundException;
-use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentRepository;
+use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentEncryptedRepository;
 use Sanf\Core\Modules\Contract\Services\ESignDocumentSignCheckService;
 
 class UpdateDocumentSignStatusJob implements ShouldQueue
@@ -32,7 +33,7 @@ class UpdateDocumentSignStatusJob implements ShouldQueue
 
     public function handle(
         ESignDocumentSignCheckService $eSignDocumentSignCheckService,
-        EloquentESignDocumentRepository $eSignRepository
+        EloquentESignDocumentEncryptedRepository $eSignRepository
     ) {
         $dto = $this->request;
 

@@ -5,14 +5,14 @@ namespace Sanf\Api\Modules\Contract\Controllers;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
-use NbsPhp\Core\Database\TransactionalSessionInterface;
-use NbsPhp\Core\Services\TransactionalApplicationService;
 use Sanf\Api\Modules\Contract\Transformers\ResponseESignUserTransformer;
+use Sanf\Core\Database\MultipleTransactionalSessionInterface;
 use Sanf\Core\Modules\Contract\Dto\RequestESignDocumentSignDto;
 use Sanf\Core\Modules\Contract\Dto\RequestESignRegisterFormDto;
 use Sanf\Core\Modules\Contract\Services\ESignDocumentSignAdInsService;
 use Sanf\Core\Modules\Contract\Services\ESignRegisterAdInsService;
 use Sanf\Core\Modules\Contract\Services\SanfESignUserService;
+use Sanf\Core\Services\MultipleTransactionalApplicationService;
 use Spatie\Fractalistic\ArraySerializer;
 
 class ESignDocumentV2Controller extends RestApiController
@@ -20,7 +20,7 @@ class ESignDocumentV2Controller extends RestApiController
     public function getUser(
         string $xid,
         SanfESignUserService $eSignSanfUserService,
-        TransactionalSessionInterface $transactionalSession,
+        MultipleTransactionalSessionInterface $transactionalSession,
         Guard $auth
     ) {
         $dto = (object) [
@@ -28,7 +28,7 @@ class ESignDocumentV2Controller extends RestApiController
             'userId' => $auth->id(),
         ];
 
-        $transactionalService = new TransactionalApplicationService($eSignSanfUserService, $transactionalSession);
+        $transactionalService = new MultipleTransactionalApplicationService($eSignSanfUserService, $transactionalSession);
         $eSignSanfUser = $transactionalService->execute($dto);
 
         return fractal($eSignSanfUser, ResponseESignUserTransformer::class)
@@ -39,7 +39,7 @@ class ESignDocumentV2Controller extends RestApiController
         Request $request,
         $xid,
         ESignRegisterAdInsService $eSignRegisterAdinsService,
-        TransactionalSessionInterface $transactionalSession,
+        MultipleTransactionalSessionInterface $transactionalSession,
         Guard $auth
     ) {
         $input = $this->validate($request, [
@@ -95,7 +95,7 @@ class ESignDocumentV2Controller extends RestApiController
 
         $dto = new RequestESignRegisterFormDto($input);
 
-        $transactionalService = new TransactionalApplicationService($eSignRegisterAdinsService, $transactionalSession);
+        $transactionalService = new MultipleTransactionalApplicationService($eSignRegisterAdinsService, $transactionalSession);
         $transactionalService->execute($dto);
 
         return $this->responseOk();
@@ -106,7 +106,7 @@ class ESignDocumentV2Controller extends RestApiController
         $xid,
         $document_id,
         ESignDocumentSignAdInsService $eSignRegisterAdinsService,
-        TransactionalSessionInterface $transactionalSession,
+        MultipleTransactionalSessionInterface $transactionalSession,
         Guard $auth
     ) {
         $input = $this->validate($request, [
@@ -140,7 +140,7 @@ class ESignDocumentV2Controller extends RestApiController
 
         $dto = new RequestESignDocumentSignDto($input);
 
-        $transactionalService = new TransactionalApplicationService($eSignRegisterAdinsService, $transactionalSession);
+        $transactionalService = new MultipleTransactionalApplicationService($eSignRegisterAdinsService, $transactionalSession);
         $transactionalService->execute($dto);
 
         return $this->responseOk();

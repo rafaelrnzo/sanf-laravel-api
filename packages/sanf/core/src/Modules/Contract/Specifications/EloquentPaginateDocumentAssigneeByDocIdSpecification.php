@@ -3,6 +3,8 @@
 namespace Sanf\Core\Modules\Contract\Specifications;
 
 use Carbon\Carbon;
+use Sanf\Core\Encryptions\SodiumEncryption;
+use Sanf\Core\Modules\Contract\Models\ESignDocumentAssigneeEncryptedModel;
 use Sanf\Core\Modules\Contract\Models\ESignDocumentAssigneeModel;
 
 class EloquentPaginateDocumentAssigneeByDocIdSpecification
@@ -42,50 +44,68 @@ class EloquentPaginateDocumentAssigneeByDocIdSpecification
         $this->timestamp = $timestamp;
     }
 
-    public function buildQuery(ESignDocumentAssigneeModel $model)
+    /**
+     * @param ESignDocumentAssigneeModel|ESignDocumentAssigneeEncryptedModel $model
+     * @return mixed|\Illuminate\Database\Eloquent\Builder
+     */
+    public function buildQuery($model)
     {
         switch ($this->sortBy) {
             case 'earliest':
             case 'oldest':
-                $orderBy = 'esign_document_assignee.created_at';
+                $orderBy = 'created_at';
                 $orderDirection = 'ASC';
                 break;
             case 'latest':
             case 'newest':
             default:
-                $orderBy = 'esign_document_assignee.created_at';
+                $orderBy = 'created_at';
                 $orderDirection = 'DESC';
         }
 
+        $sodiumQuery = SodiumEncryption::query();
+
+        $esignDocumentBuilder = function ($query) use ($sodiumQuery) {
+            $query->select([
+                'document_id',
+                'document_name',
+                'document_file',
+                'expired_at',
+                'status_id',
+                'reference_no',
+                'nonce',
+            ])
+                ->when($this->statusId, function ($query) {
+                    $query->where('status_id', '=', $this->statusId);
+                })
+                ->when($this->keyword, function ($query) use ($sodiumQuery) {
+                    $query->where(function ($query) use ($sodiumQuery) {
+                        $query->where($sodiumQuery->selectRaw('document_name'), 'ILIKE', '%' . $this->keyword . '%')
+                            ->orWhere('document_id', 'ILIKE', '%' . $this->keyword . '%');
+                    });
+                });
+        };
+
         return $model->newQuery()
             ->select([
-                'esign_document_assignee.id',
-                'esign_document_assignee.xid',
-                'esign_document_assignee.email',
-                'esign_document_assignee.user_id',
-                'esign_document_assignee.created_at',
-                'esign_document_assignee.reference_no',
-
-                'esign_document.document_id',
-                'esign_document.document_name',
-                'esign_document.document_file',
-                'esign_document.expired_at',
-                'esign_document.status_id',
+                'id',
+                'xid',
+                'email',
+                'user_id',
+                'created_at',
+                'document_id',
+                'nonce',
             ])
-            ->join('esign_document', 'esign_document.document_id', '=', 'esign_document_assignee.document_id')
-            ->where('esign_document_assignee.document_id', '=', $this->documentId)
+            ->with(['eSignDocument' => $esignDocumentBuilder])
+            ->whereHas('eSignDocument', $esignDocumentBuilder)
+            ->where('document_id', '=', $this->documentId)
             ->orderBy($orderBy, $orderDirection)
-            ->when($this->statusId, function ($query) {
-                return $query->where('esign_document.status_id', $this->statusId);
-            })->when($this->keyword, function ($query) {
-                return $query->where('esign_document.document_name', 'ILIKE', '%' . $this->keyword . '%')
-                    ->orWhere('esign_document_assignee.document_id', 'ILIKE', '%' . $this->keyword . '%');
-            })->when($this->skip, function ($query) {
+            ->when($this->skip, function ($query) {
                 return $query->skip($this->skip);
             })->when($this->limit, function ($query) {
                 return $query->limit($this->limit);
             })->when($this->timestamp, function ($query) {
-                return $query->where('esign_document_assignee.created_at', '>', Carbon::createFromTimestamp($this->timestamp));
+                return $query->where('created_at', '>', Carbon::createFromTimestamp($this->timestamp));
             });
     }
 }

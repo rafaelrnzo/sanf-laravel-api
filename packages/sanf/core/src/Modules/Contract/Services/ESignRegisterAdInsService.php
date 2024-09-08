@@ -10,18 +10,18 @@ use Sanf\Core\Modules\Contract\Dto\ESignRegisterFormDto;
 use Sanf\Core\Modules\Contract\Enums\ESignRegistrationStatusEnum;
 use Sanf\Core\Modules\Contract\Events\AdInsRegisterActivationEvent;
 use Sanf\Core\Modules\Contract\Exceptions\ESignUserUniqueException;
-use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentRepository;
+use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentEncryptedRepository;
 
 class ESignRegisterAdInsService implements ApplicationServiceInterface
 {
     public const MALE = 1;
 
     protected AdInsESignRegisterService $adInsRegisterService;
-    protected EloquentESignDocumentRepository $eSignRepository;
+    protected EloquentESignDocumentEncryptedRepository $eSignRepository;
 
     public function __construct(
         AdInsESignRegisterService $adInsRegisterService,
-        EloquentESignDocumentRepository $eSignRepository
+        EloquentESignDocumentEncryptedRepository $eSignRepository
     ) {
         $this->adInsRegisterService = $adInsRegisterService;
         $this->eSignRepository = $eSignRepository;

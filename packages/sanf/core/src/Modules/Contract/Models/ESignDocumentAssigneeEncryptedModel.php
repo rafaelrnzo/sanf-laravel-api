@@ -35,11 +35,6 @@ class ESignDocumentAssigneeEncryptedModel extends AbstractModel
         return $this->decryptor()->decrypt($this->attributes['email']);
     }
 
-    public function getDocumentIdAttribute()
-    {
-        return $this->decryptor()->decrypt($this->attributes['document_id']);
-    }
-
     public function getDocumentSignUrlAttribute()
     {
         return $this->decryptor()->decrypt($this->attributes['document_sign_url']);

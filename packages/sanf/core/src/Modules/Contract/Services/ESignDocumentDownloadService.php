@@ -5,18 +5,18 @@ namespace Sanf\Core\Modules\Contract\Services;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Enums\ESignContractStatusEnum;
 use Sanf\Core\Modules\Contract\Exceptions\ESignDocumentNotFoundException;
-use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentRepository;
+use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentEncryptedRepository;
 
 class ESignDocumentDownloadService implements ApplicationServiceInterface
 {
     protected ESignDocumentSignCheckService $eSignDocumentSignCheckService;
     protected AdInsESignDownloadDocumentService $adInsDownloadDocumentService;
-    protected EloquentESignDocumentRepository $eSignRepository;
+    protected EloquentESignDocumentEncryptedRepository $eSignRepository;
 
     public function __construct(
         ESignDocumentSignCheckService $eSignDocumentSignCheckService,
         AdInsESignDownloadDocumentService $adInsDownloadDocumentService,
-        EloquentESignDocumentRepository $eSignRepository
+        EloquentESignDocumentEncryptedRepository $eSignRepository
     ) {
         $this->eSignDocumentSignCheckService = $eSignDocumentSignCheckService;
         $this->adInsDownloadDocumentService = $adInsDownloadDocumentService;

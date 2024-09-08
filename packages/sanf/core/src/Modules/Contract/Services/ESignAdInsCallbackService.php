@@ -7,18 +7,18 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Enums\AdInsCallbackTypeEnum;
 use Sanf\Core\Modules\Contract\Events\AdInsDocumentSignCallbackEvent;
 use Sanf\Core\Modules\Contract\Events\AdInsRegisterActivationCallbackEvent;
-use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentRepository;
+use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentEncryptedRepository;
 use Sanf\Core\Modules\Contract\Specifications\ESignDocumentSpecificationFactoryInterface;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 final class ESignAdInsCallbackService implements ApplicationServiceInterface
 {
-    protected EloquentESignDocumentRepository $eSignDocumentRepository;
+    protected EloquentESignDocumentEncryptedRepository $eSignDocumentRepository;
     protected ESignDocumentSpecificationFactoryInterface $eSignDocumentSpecificationFactory;
     protected SanfCoreApiClient $sanfCoreClient;
 
     public function __construct(
-        EloquentESignDocumentRepository $eSignDocumentRepository,
+        EloquentESignDocumentEncryptedRepository $eSignDocumentRepository,
         ESignDocumentSpecificationFactoryInterface $eSignDocumentSpecificationFactory,
         SanfCoreApiClient $sanfCoreClient
     ) {
