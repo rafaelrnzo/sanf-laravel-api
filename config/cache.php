@@ -44,6 +44,12 @@ return [
             'connection' => env('CACHE_DATABASE_CONNECTION', null),
         ],
 
+        'database_sodium' => [
+            'driver' => 'database_sodium',
+            'table' => env('CACHE_DATABASE_TABLE', 'cache_encrypted'),
+            'connection' => env('CACHE_DATABASE_CONNECTION', 'pgsql_sodium'),
+        ],
+
         'file' => [
             'driver' => 'file',
             'path' => storage_path('framework/cache/data'),

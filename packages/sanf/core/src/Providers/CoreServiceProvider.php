@@ -3,9 +3,11 @@
 namespace Sanf\Core\Providers;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;
 use NbsPhp\Core\Database\IlluminateSession;
 use NbsPhp\Core\Database\TransactionalSessionInterface;
+use Sanf\Core\Caches\DatabaseSodiumStore;
 use Sanf\Core\CheckPicMiddleware;
 use Sanf\Core\Database\IlluminateMultipleSession;
 use Sanf\Core\Database\MultipleTransactionalSessionInterface;
@@ -152,6 +154,10 @@ class CoreServiceProvider extends ServiceProvider
 
         Auth::provider('eloquent-mobile-user-provider', function ($app, array $config) {
             return new EloquentMobileUserProvider($app['hash'], $config['model']);
+        });
+
+        Cache::extend('database_sodium', function ($app, array $config) {
+            return Cache::repository(new DatabaseSodiumStore($app, $config));
         });
     }
 
