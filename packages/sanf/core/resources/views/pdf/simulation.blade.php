@@ -161,9 +161,10 @@
                         <tr>
                             <td align="left">
                                 @php
-                                    setlocale(LC_ALL, "id_ID.UTF-8", "id_ID.UTF-8");
+                                    $date = new DateTime();
+                                    $formatter = new IntlDateFormatter('id_ID', IntlDateFormatter::FULL, IntlDateFormatter::NONE, 'Asia/Jakarta', IntlDateFormatter::GREGORIAN, 'EEEE, dd MMMM yyyy');
                                 @endphp
-                                {{ strftime("%A, %d %B %Y") }}
+                                {{ $formatter->format($date) }}
                             </td>
                         </tr>
                         <tr>
