@@ -25,13 +25,13 @@ class ResponseESignUserTransformer extends TransformerAbstract
                 'country_id' => $item->countryId,
                 'country_name' => $item->countryName,
             ],
-            'province' => empty(trim($item->provinceId)) ? null : [
+            'province' => [
                 'country_id' => $item->countryId,
                 'country_name' => $item->countryName,
                 'province_id' => $item->provinceId,
                 'province_name' => $item->provinceName,
             ],
-            'city' => empty(trim($item->cityId)) ? null : [
+            'city' => [
                 'country_id' => $item->countryId,
                 'province_id' => $item->provinceId,
                 'city_id' => $item->cityId,

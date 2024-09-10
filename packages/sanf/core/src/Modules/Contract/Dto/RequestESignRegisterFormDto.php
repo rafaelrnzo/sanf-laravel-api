@@ -17,7 +17,9 @@ class RequestESignRegisterFormDto extends CamelCaseDataTransferObject
     public int $gender;
     public string $address;
     public string $postalCode;
+    public string $provinceId;
     public string $province;
+    public string $cityId;
     public string $city;
     public string $district;
     public string $subDistrict;
