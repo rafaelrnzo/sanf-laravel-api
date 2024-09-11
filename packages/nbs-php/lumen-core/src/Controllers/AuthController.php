@@ -72,7 +72,7 @@ class AuthController extends RestApiController
         $devicePlatformId = (int) $request->input('device.device_platform_id');
         if (in_array($devicePlatformId, [DevicePlatform::ANDROID, DevicePlatform::IOS])) {
             $validated += $this->validate($request, [
-                $prefix . 'notification_token' => ['required', 'string'],
+                $prefix . 'notification_token' => ['nullable', 'string'],
                 $prefix . 'notification_channel_id' => ['required', 'integer'],
                 $prefix . 'metadata' => ['required'],
                 $prefix . 'metadata.manufacturer' => ['required', 'string'],
