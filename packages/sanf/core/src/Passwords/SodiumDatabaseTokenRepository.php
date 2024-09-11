@@ -84,7 +84,7 @@ class SodiumDatabaseTokenRepository extends DatabaseTokenRepository
     {
         $record = SodiumEncryption::query()->transaction(
             function (SodiumQuery $sodiumQuery) use ($user) {
-                (array) $this->getTable()
+                return (array) $this->getTable()
                     ->where(
                         $sodiumQuery->selectRaw('email'),
                         $user->getEmailForPasswordReset()

@@ -29,7 +29,7 @@ class SodiumEncryptor
             return new SodiumNonce(hex2bin(substr($nonce, 2)), $nonce);
         }
 
-        $nonce = stream_get_contents($nonce);
+        $nonce = stream_get_contents($nonce, -1, 0);
 
         return new SodiumNonce($nonce, '\x' . bin2hex($nonce));
     }
