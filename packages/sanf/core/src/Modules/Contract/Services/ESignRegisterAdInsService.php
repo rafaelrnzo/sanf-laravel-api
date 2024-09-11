@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Dto\ESignRegisterFormDto;
 use Sanf\Core\Modules\Contract\Enums\ESignRegistrationStatusEnum;
+use Sanf\Core\Modules\Contract\Events\AdInsRegisterActivationEvent;
 use Sanf\Core\Modules\Contract\Exceptions\ESignUserUniqueException;
 use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentRepository;
 
@@ -18,8 +19,10 @@ class ESignRegisterAdInsService implements ApplicationServiceInterface
     protected AdInsESignRegisterService $adInsRegisterService;
     protected EloquentESignDocumentRepository $eSignRepository;
 
-    public function __construct(AdInsESignRegisterService $adInsRegisterService, EloquentESignDocumentRepository $eSignRepository)
-    {
+    public function __construct(
+        AdInsESignRegisterService $adInsRegisterService,
+        EloquentESignDocumentRepository $eSignRepository
+    ) {
         $this->adInsRegisterService = $adInsRegisterService;
         $this->eSignRepository = $eSignRepository;
     }
@@ -70,6 +73,8 @@ class ESignRegisterAdInsService implements ApplicationServiceInterface
         $dto->password = Crypt::decryptString($encryptedPassword);
 
         $this->adInsRegisterService->execute($dto);
+
+        event(new AdInsRegisterActivationEvent($dto));
 
         return $userAdInsRecord;
     }

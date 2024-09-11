@@ -15,7 +15,7 @@ use Sanf\Core\Modules\Contract\Events\ESignAdsInsRegisterNotificationEvent;
 use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentRepository;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
-class UpdateAdInsUserStatusJob implements ShouldQueue
+class UpdateAdInsUserStatusByCallbackJob implements ShouldQueue
 {
     use InteractsWithQueue;
     use Queueable;
@@ -42,16 +42,9 @@ class UpdateAdInsUserStatusJob implements ShouldQueue
         DB::transaction(function () use ($dto, $eSignDocumentRepository, $sanfCoreClient) {
             try {
                 $adInsUser = $eSignDocumentRepository->findUserByEmail($dto->email);
-                $sanfCoreClient->updateESignUserStatus($adInsUser->email);
-            } catch (Exception $exception) {
-                report($exception);
-            }
-        });
-
-        DB::transaction(function () use ($dto, $eSignDocumentRepository) {
-            try {
-                $adInsUser = $eSignDocumentRepository->findUserByEmail($dto->email);
                 if ($adInsUser && $adInsUser->status_id !== ESignRegistrationStatusEnum::COMPLETE) {
+                    $sanfCoreClient->updateESignUserStatus($adInsUser->email);
+
                     $eSignDocumentRepository->updateUser($adInsUser->id, [
                         'status_id' => ESignRegistrationStatusEnum::COMPLETE,
                         'updated_at' => CarbonImmutable::now(),

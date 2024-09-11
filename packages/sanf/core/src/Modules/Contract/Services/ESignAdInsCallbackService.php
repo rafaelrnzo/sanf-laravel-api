@@ -34,9 +34,8 @@ final class ESignAdInsCallbackService implements ApplicationServiceInterface
                 event(new AdInsRegisterActivationCallbackEvent($dto));
                 break;
             case AdInsCallbackTypeEnum::SIGNING_COMPLETE:
-                event(new AdInsDocumentSignCallbackEvent($dto));
-                break;
             case AdInsCallbackTypeEnum::DOCUMENT_SIGN_COMPLETE:
+            case AdInsCallbackTypeEnum::ALL_DOCUMENT_SIGN_COMPLETE:
                 event(new AdInsDocumentSignCallbackEvent($dto));
                 break;
             default:

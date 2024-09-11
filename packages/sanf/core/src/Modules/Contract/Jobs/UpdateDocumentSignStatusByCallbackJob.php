@@ -20,7 +20,7 @@ use Sanf\Core\Modules\Contract\Services\AdInsESignDownloadDocumentService;
 use Sanf\Core\Modules\Contract\Specifications\ESignDocumentSpecificationFactoryInterface;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
-class UpdateDocumentSignStatusJob implements ShouldQueue
+class UpdateDocumentSignStatusByCallbackJob implements ShouldQueue
 {
     use InteractsWithQueue;
     use Queueable;
@@ -54,7 +54,16 @@ class UpdateDocumentSignStatusJob implements ShouldQueue
             $sanfCoreClient
         ) {
             try {
-                $eSignDocument = $eSignDocumentRepository->findDocumentByDocId($dto->documentId);
+                $eSignDocument = null;
+
+                if (empty($dto->documentId) === false) {
+                    $eSignDocument = $eSignDocumentRepository->findDocumentByDocId($dto->documentId);
+                }
+
+                if (empty($dto->refNo) === false) {
+                    $eSignDocument = $eSignDocumentRepository->findDocumentByRefNo($dto->refNo);
+                }
+
                 if (is_null($eSignDocument) === true) {
                     throw new ESignDocumentNotFoundException();
                 }
@@ -86,36 +95,40 @@ class UpdateDocumentSignStatusJob implements ShouldQueue
                     }
                 }
 
-                if ($dto->callbackType === AdInsCallbackTypeEnum::DOCUMENT_SIGN_COMPLETE) {
-                    if ($eSignDocument->status_id !== ESignContractStatusEnum::COMPLETED) {
-                        $downloadResult = $adInsDownloadDocumentService->execute($dto);
-                        if (is_null($downloadResult->documentFileBase64) === true) {
-                            throw new ESignDocumentNotFoundException();
-                        }
+                if (in_array($dto->callbackType, [
+                    AdInsCallbackTypeEnum::DOCUMENT_SIGN_COMPLETE,
+                    AdInsCallbackTypeEnum::ALL_DOCUMENT_SIGN_COMPLETE,
+                ]) && $eSignDocument->status_id !== ESignContractStatusEnum::COMPLETED) {
 
-                        $documentBinary = base64_decode($downloadResult->documentFileBase64);
+                    $downloadResult = $adInsDownloadDocumentService->execute($dto);
 
-                        $filename = $eSignDocument->document_name ?? $dto->documentId;
-                        $documentMetadata = $this->upload($documentBinary, $filename);
-
-                        $sanfCoreClient->updateESignDocumentStatus($eSignDocument->document_id);
-
-                        $sanfCoreClient->updateESignDocumentFile($eSignDocument->document_id, $filename, $documentMetadata['path']);
-
-                        $eSignDocumentRepository->updateDocument($eSignDocument->id, [
-                            'document_name' => $documentMetadata['file_name'],
-                            'document_file' => $documentMetadata,
-                            'status_id' => ESignContractStatusEnum::COMPLETED,
-                            'updated_at' => CarbonImmutable::now(),
-                        ]);
-                        $assigmentsDocument = $eSignDocumentRepository->documentAssigneeQuery(
-                            $eSignDocumentSpecificationFactory->paginateDocumentAssigneeByDocId($eSignDocument->document_id, null, null)
-                        );
-
-                        foreach ($assigmentsDocument as $eSignDocumentAssignment) {
-                            event(new ESignDocumentSignCompleteNotificationEvent($eSignDocumentAssignment->user_id, $eSignDocument->document_name));
-                        }
+                    if (is_null($downloadResult->documentFileBase64) === true) {
+                        throw new ESignDocumentNotFoundException();
                     }
+
+                    $documentBinary = base64_decode($downloadResult->documentFileBase64);
+
+                    $filename = $eSignDocument->document_name ?? $dto->documentId;
+                    $documentMetadata = $this->upload($documentBinary, $filename);
+
+                    $eSignDocumentRepository->updateDocument($eSignDocument->id, [
+                        'document_name' => $documentMetadata['file_name'],
+                        'document_file' => $documentMetadata,
+                        'status_id' => ESignContractStatusEnum::COMPLETED,
+                        'updated_at' => CarbonImmutable::now(),
+                    ]);
+
+                    $assigmentsDocument = $eSignDocumentRepository->documentAssigneeQuery(
+                        $eSignDocumentSpecificationFactory->paginateDocumentAssigneeByDocId($eSignDocument->document_id, null, null)
+                    );
+
+                    foreach ($assigmentsDocument as $eSignDocumentAssignment) {
+                        event(new ESignDocumentSignCompleteNotificationEvent($eSignDocumentAssignment->user_id, $eSignDocument->document_name));
+                    }
+
+                    $this->updateDocumentCoreStatus($sanfCoreClient, $eSignDocument->document_id);
+
+                    $this->updateDocumentCoreFile($sanfCoreClient, $eSignDocument->document_id, $filename, $documentMetadata['path']);
                 }
             } catch (Exception $exception) {
                 report($exception);
@@ -146,5 +159,23 @@ class UpdateDocumentSignStatusJob implements ShouldQueue
             'mime_type' => $metadata['mimetype'],
             'size' => $metadata['size'],
         ];
+    }
+
+    protected function updateDocumentCoreStatus(SanfCoreApiClient $sanfCoreClient, string $documentId)
+    {
+        try {
+            $sanfCoreClient->updateESignDocumentStatus($documentId);
+        } catch (Exception $exception) {
+            report($exception);
+        }
+    }
+
+    protected function updateDocumentCoreFile(SanfCoreApiClient $sanfCoreClient, string $documentId, string $filename, string $path)
+    {
+        try {
+            $sanfCoreClient->updateESignDocumentFile($documentId, $filename, $path);
+        } catch (Exception $exception) {
+            report($exception);
+        }
     }
 }

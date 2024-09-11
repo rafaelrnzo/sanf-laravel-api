@@ -29,7 +29,7 @@ class ESignDocumentSignCheckService implements ApplicationServiceInterface
 
     public function execute($dto = null)
     {
-        $statusSigning = null;
+        $statusSigning = [];
         $eSignDocument = $this->eSignRepository->findDocumentByDocId($dto->documentId);
         if (is_null($eSignDocument) === true) {
             throw new ESignDocumentNotFoundException();

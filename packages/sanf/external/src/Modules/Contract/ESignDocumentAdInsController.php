@@ -36,6 +36,7 @@ class ESignDocumentAdInsController extends RestApiController
                     AdInsCallbackTypeEnum::ACTIVATION_COMPLETE,
                     AdInsCallbackTypeEnum::SIGNING_COMPLETE,
                     AdInsCallbackTypeEnum::DOCUMENT_SIGN_COMPLETE,
+                    AdInsCallbackTypeEnum::ALL_DOCUMENT_SIGN_COMPLETE,
                 ]),
             ],
             'data' => [
@@ -75,6 +76,15 @@ class ESignDocumentAdInsController extends RestApiController
                     ]);
                 }),
             ],
+            'data.refNo' => [
+                'string',
+                'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/',
+                Rule::requiredIf(function () use ($request) {
+                    return in_array($request->callbackType, [
+                        AdInsCallbackTypeEnum::ALL_DOCUMENT_SIGN_COMPLETE,
+                    ]);
+                }),
+            ],
         ]);
 
         if ($input['callbackType'] === AdInsCallbackTypeEnum::ACTIVATION_COMPLETE) {
@@ -94,6 +104,12 @@ class ESignDocumentAdInsController extends RestApiController
         if ($input['callbackType'] === AdInsCallbackTypeEnum::DOCUMENT_SIGN_COMPLETE) {
             $dto = (object) [
                 'documentId' => $input['data']['documentId'],
+            ];
+        }
+
+        if ($input['callbackType'] === AdInsCallbackTypeEnum::ALL_DOCUMENT_SIGN_COMPLETE) {
+            $dto = (object) [
+                'refNo' => $input['data']['refNo'],
             ];
         }
         $dto->callbackType = $input['callbackType'];

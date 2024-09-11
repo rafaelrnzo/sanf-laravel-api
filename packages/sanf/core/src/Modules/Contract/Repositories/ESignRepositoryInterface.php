@@ -18,6 +18,8 @@ interface ESignRepositoryInterface
 
     public function findDocumentByDocId(string $documentId);
 
+    public function findDocumentByRefNo(string $refNo);
+
     public function createDocument(array $data);
 
     public function updateDocument(int $id, array $data);

@@ -17,6 +17,7 @@ use Sanf\Core\Modules\Commodity\Listeners\SendNotificationApprovalCommodityListe
 use Sanf\Core\Modules\Commodity\Listeners\SendNotificationRejectCommodityListener;
 use Sanf\Core\Modules\Contract\Events\AdInsDocumentSignCallbackEvent;
 use Sanf\Core\Modules\Contract\Events\AdInsRegisterActivationCallbackEvent;
+use Sanf\Core\Modules\Contract\Events\AdInsRegisterActivationEvent;
 use Sanf\Core\Modules\Contract\Events\ESignAdsInsRegisterMailEvent;
 use Sanf\Core\Modules\Contract\Events\ESignAdsInsRegisterNotificationEvent;
 use Sanf\Core\Modules\Contract\Events\ESignDocumentDownloadEvent;
@@ -27,8 +28,9 @@ use Sanf\Core\Modules\Contract\Listeners\SendEmailESignAdInsRegisterListener;
 use Sanf\Core\Modules\Contract\Listeners\SendEmailRequestChangeFinancingUnitLocationListener;
 use Sanf\Core\Modules\Contract\Listeners\SendNotificationESignAdInsRegisterListener;
 use Sanf\Core\Modules\Contract\Listeners\SendNotificationESignDocumentSignCompleteListener;
+use Sanf\Core\Modules\Contract\Listeners\UpdateAdInsUserStatusByCallbackListener;
 use Sanf\Core\Modules\Contract\Listeners\UpdateAdInsUserStatusListener;
-use Sanf\Core\Modules\Contract\Listeners\UpdateESignDocumentStatusListener;
+use Sanf\Core\Modules\Contract\Listeners\UpdateESignDocumentStatusByCallbackListener;
 use Sanf\Core\Modules\Financing\Events\FinancingApplicationCreatedEvent;
 use Sanf\Core\Modules\Financing\Listeners\SendEmailNewFinancingApplicationListener;
 use Sanf\Core\Modules\Insurance\Events\InsuranceClaimSubmissionAddedEvent;
@@ -155,10 +157,13 @@ class EventServiceProvider extends ServiceProvider
             SendNotificationESignDocumentSignCompleteListener::class,
         ],
         AdInsRegisterActivationCallbackEvent::class => [
-            UpdateAdInsUserStatusListener::class,
+            UpdateAdInsUserStatusByCallbackListener::class,
         ],
         AdInsDocumentSignCallbackEvent::class => [
-            UpdateESignDocumentStatusListener::class,
+            UpdateESignDocumentStatusByCallbackListener::class,
+        ],
+        AdInsRegisterActivationEvent::class => [
+            UpdateAdInsUserStatusListener::class,
         ],
     ];
 }

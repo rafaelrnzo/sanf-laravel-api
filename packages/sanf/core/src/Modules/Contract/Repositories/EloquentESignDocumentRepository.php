@@ -102,6 +102,16 @@ class EloquentESignDocumentRepository extends AbstractEloquentRepository impleme
         return $this->stripEloquentModel($model);
     }
 
+    public function findDocumentByRefNo(string $refNo)
+    {
+        $model = $this->eSignDocumentModel
+            ->newQuery()
+            ->where('reference_no', '=', $refNo)
+            ->first();
+
+        return $this->stripEloquentModel($model);
+    }
+
     public function createDocument(array $data)
     {
         $model = $this->eSignDocumentModel
