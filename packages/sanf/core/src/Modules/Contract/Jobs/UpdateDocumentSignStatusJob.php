@@ -41,7 +41,9 @@ class UpdateDocumentSignStatusJob implements ShouldQueue
         }
 
         if ($eSignDocument->status_id !== ESignContractStatusEnum::COMPLETED) {
-            $eSignDocumentSignCheckService->execute($dto);
+            DB::transaction(function () use ($dto, $eSignDocumentSignCheckService) {
+                $eSignDocumentSignCheckService->execute($dto);
+            });
         }
     }
 }

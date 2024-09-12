@@ -3,12 +3,16 @@
 namespace Sanf\Core\Modules\Contract\Services;
 
 use Carbon\CarbonImmutable;
+use Exception;
+use Illuminate\Support\Facades\Storage;
+use League\Flysystem\FileNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\Contract\Enums\AdInsCallbackTypeEnum;
 use Sanf\Core\Modules\Contract\Enums\ESignContractStatusEnum;
-use Sanf\Core\Modules\Contract\Events\AdInsDocumentSignCallbackEvent;
+use Sanf\Core\Modules\Contract\Events\ESignDocumentSignCompleteNotificationEvent;
 use Sanf\Core\Modules\Contract\Exceptions\ESignDocumentNotFoundException;
 use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentRepository;
+use Sanf\Core\Modules\Contract\Specifications\ESignDocumentSpecificationFactoryInterface;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class ESignDocumentSignCheckService implements ApplicationServiceInterface
 {
@@ -18,14 +22,23 @@ class ESignDocumentSignCheckService implements ApplicationServiceInterface
     protected const SIGN_IN = 3;
 
     protected AdInsESignDocumentSignCheckService $adInsDocumentSignCheckService;
+    protected AdInsESignDownloadDocumentService $adInsDownloadDocumentService;
     protected EloquentESignDocumentRepository $eSignRepository;
+    protected ESignDocumentSpecificationFactoryInterface $eSignDocumentSpecificationFactory;
+    protected SanfCoreApiClient $sanfCoreClient;
 
     public function __construct(
         AdInsESignDocumentSignCheckService $adInsDocumentSignCheckService,
-        EloquentESignDocumentRepository $eSignRepository
+        AdInsESignDownloadDocumentService $adInsDownloadDocumentService,
+        EloquentESignDocumentRepository $eSignRepository,
+        ESignDocumentSpecificationFactoryInterface $eSignDocumentSpecificationFactory,
+        SanfCoreApiClient $sanfCoreClient
     ) {
         $this->adInsDocumentSignCheckService = $adInsDocumentSignCheckService;
+        $this->adInsDownloadDocumentService = $adInsDownloadDocumentService;
         $this->eSignRepository = $eSignRepository;
+        $this->eSignDocumentSpecificationFactory = $eSignDocumentSpecificationFactory;
+        $this->sanfCoreClient = $sanfCoreClient;
     }
 
     public function execute($dto = null)
@@ -115,10 +128,73 @@ class ESignDocumentSignCheckService implements ApplicationServiceInterface
         );
 
         if ($documentStatus === ESignContractStatusEnum::COMPLETED) {
-            $dto->callbackType = AdInsCallbackTypeEnum::DOCUMENT_SIGN_COMPLETE;
-            event(new AdInsDocumentSignCallbackEvent($dto));
+            $downloadResult = $this->adInsDownloadDocumentService->execute($dto);
+
+            if (is_null($downloadResult->documentFileBase64) === true) {
+                throw new ESignDocumentNotFoundException();
+            }
+
+            $documentBinary = base64_decode($downloadResult->documentFileBase64);
+
+            $filename = $eSignDocument->document_name ?? $dto->documentId;
+            $documentMetadata = $this->upload($documentBinary, $filename);
+
+            $assigmentsDocument = $this->eSignRepository->documentAssigneeQuery(
+                $this->eSignDocumentSpecificationFactory->paginateDocumentAssigneeByDocId($eSignDocument->document_id, null, null)
+            );
+
+            foreach ($assigmentsDocument as $eSignDocumentAssignment) {
+                event(new ESignDocumentSignCompleteNotificationEvent($eSignDocumentAssignment->user_id, $eSignDocument->document_name));
+            }
+
+            $this->updateDocumentCoreStatus($this->sanfCoreClient, $eSignDocument->document_id);
+
+            $this->updateDocumentCoreFile($this->sanfCoreClient, $eSignDocument->document_id, $filename, $documentMetadata['path']);
         }
 
         return $statusSigning;
+    }
+
+    protected function upload(string $documentBinary, string $documentName)
+    {
+        $adInsDocumentPath = config('image-path.document_adins');
+        $slugDocumentName = preg_replace('/[^A-Za-z0-9-]+/', '-', strtolower(trim(pathinfo($documentName, PATHINFO_FILENAME))));
+        $filename = "final-{$slugDocumentName}.pdf";
+        $filePath = "{$adInsDocumentPath}{$filename}";
+
+        Storage::disk('minio_post')->put($filePath, $documentBinary, 'public');
+
+        $fileExist = Storage::disk('minio_post')->exists("$filePath");
+        if (is_null($fileExist) === true) {
+            throw new FileNotFoundException("{$adInsDocumentPath}");
+        }
+
+        $metadata = Storage::disk('minio_post')->getMetaData("$filePath");
+
+        return [
+            'file_name' => $filename,
+            'directory' => $adInsDocumentPath,
+            'path' => "$filePath",
+            'mime_type' => $metadata['mimetype'],
+            'size' => $metadata['size'],
+        ];
+    }
+
+    protected function updateDocumentCoreStatus(SanfCoreApiClient $sanfCoreClient, string $documentId)
+    {
+        try {
+            $sanfCoreClient->updateESignDocumentStatus($documentId);
+        } catch (Exception $exception) {
+            report($exception);
+        }
+    }
+
+    protected function updateDocumentCoreFile(SanfCoreApiClient $sanfCoreClient, string $documentId, string $filename, string $path)
+    {
+        try {
+            $sanfCoreClient->updateESignDocumentFile($documentId, $filename, $path);
+        } catch (Exception $exception) {
+            report($exception);
+        }
     }
 }
