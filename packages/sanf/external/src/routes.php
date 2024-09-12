@@ -24,6 +24,8 @@ Route::group(['prefix' => 'v1/external', 'middleware' => ['basic-auth-config:cor
     Route::post('users', ['as' => 'users.add', 'uses' => 'User\Controllers\CoreAccountController@addByScanina']);
     Route::post('users/availabilities', ['as' => 'users.availabilities', 'uses' => 'User\Controllers\CoreAccountController@browseByScanina']);
     Route::post('users/financing-application', ['as' => 'users.financing-application.add', 'uses' => 'Financing\Controllers\FinancingApplicationController@addByScanina']);
+
+    Route::post('esign/check', ['as' => 'users.e-sign.check', 'uses' => 'Contract\ESignDocumentAdInsController@check']);
 });
 
 Route::group(['prefix' => 'v1/public'], function () {
