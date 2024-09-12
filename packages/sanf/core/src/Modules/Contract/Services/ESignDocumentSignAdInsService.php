@@ -7,6 +7,7 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Dto\RequestESignDocumentSignDto;
 use Sanf\Core\Modules\Contract\Enums\ESignContractStatusEnum;
 use Sanf\Core\Modules\Contract\Enums\ESignRegistrationStatusEnum;
+use Sanf\Core\Modules\Contract\Events\ESignDocumentSignEvent;
 use Sanf\Core\Modules\Contract\Exceptions\ESignDocumentNotFoundException;
 use Sanf\Core\Modules\Contract\Exceptions\ESignDocumentOTPNotFoundException;
 use Sanf\Core\Modules\Contract\Exceptions\ESignUserNotRegisteredException;
@@ -63,6 +64,10 @@ class ESignDocumentSignAdInsService implements ApplicationServiceInterface
         ]);
         $dto->password = $userAdInsRecord->code;
 
-        return $this->adInsSignDocumentService->execute($dto);
+        $adInsSignDocumentServiceResult = $this->adInsSignDocumentService->execute($dto);
+
+        event(new ESignDocumentSignEvent($dto));
+
+        return $adInsSignDocumentServiceResult;
     }
 }

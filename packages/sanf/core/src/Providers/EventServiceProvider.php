@@ -22,7 +22,9 @@ use Sanf\Core\Modules\Contract\Events\ESignAdsInsRegisterMailEvent;
 use Sanf\Core\Modules\Contract\Events\ESignAdsInsRegisterNotificationEvent;
 use Sanf\Core\Modules\Contract\Events\ESignDocumentDownloadEvent;
 use Sanf\Core\Modules\Contract\Events\ESignDocumentSignCompleteNotificationEvent;
+use Sanf\Core\Modules\Contract\Events\ESignDocumentSignEvent;
 use Sanf\Core\Modules\Contract\Events\FinancingUnitLocationSubmissionAddedEvent;
+use Sanf\Core\Modules\Contract\Listeners\CheckStatusESignDocumentListener;
 use Sanf\Core\Modules\Contract\Listeners\SendEmailDownloadESignDocumentListener;
 use Sanf\Core\Modules\Contract\Listeners\SendEmailESignAdInsRegisterListener;
 use Sanf\Core\Modules\Contract\Listeners\SendEmailRequestChangeFinancingUnitLocationListener;
@@ -164,6 +166,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         AdInsRegisterActivationEvent::class => [
             UpdateAdInsUserStatusListener::class,
+        ],
+        ESignDocumentSignEvent::class => [
+            CheckStatusESignDocumentListener::class,
         ],
     ];
 }
