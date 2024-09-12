@@ -139,6 +139,12 @@ class ESignDocumentSignCheckService implements ApplicationServiceInterface
             $filename = $eSignDocument->document_name ?? $dto->documentId;
             $documentMetadata = $this->upload($documentBinary, $filename);
 
+            $this->eSignRepository->updateDocument($eSignDocument->id, [
+                'document_name' => $documentMetadata['file_name'],
+                'document_file' => $documentMetadata,
+                'updated_at' => CarbonImmutable::now(),
+            ]);
+
             $assigmentsDocument = $this->eSignRepository->documentAssigneeQuery(
                 $this->eSignDocumentSpecificationFactory->paginateDocumentAssigneeByDocId($eSignDocument->document_id, null, null)
             );
