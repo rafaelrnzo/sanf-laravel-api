@@ -4,6 +4,7 @@ namespace Sanf\Core\Modules\Contract\Jobs;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Sanf\Core\Modules\Contract\Enums\ESignContractStatusEnum;
