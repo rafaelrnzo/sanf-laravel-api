@@ -67,7 +67,7 @@ class EloquentFinancingApplicationEncryptedRepository extends AbstractEloquentRe
             $model->objects()->saveMany($financingObjects);
 
             $fieldFinancingHistory['application_id'] = $model->id;
-            $fieldFinancingHistory = SodiumEncryption::encryptor()->encryptBulkData($fieldFinancingHistory, ['created_by']);
+            $fieldFinancingHistory = SodiumEncryption::encryptor()->encryptMultipleData($fieldFinancingHistory, ['created_by']);
 
             $model->history()->create($fieldFinancingHistory);
 
@@ -87,7 +87,7 @@ class EloquentFinancingApplicationEncryptedRepository extends AbstractEloquentRe
 
     private function encryptBeforeCreate(array $data): array
     {
-        return SodiumEncryption::encryptor()->encryptBulkData($data, [], $this->encryptedJsonFields);
+        return SodiumEncryption::encryptor()->encryptMultipleData($data, [], $this->encryptedJsonFields);
     }
 
     public function update($fields, $specification = null)
@@ -109,7 +109,7 @@ class EloquentFinancingApplicationEncryptedRepository extends AbstractEloquentRe
     {
         $model = $this->model->newQuery()->find($id);
 
-        return $model->encryptor()->encryptBulkData($data, [], $this->encryptedJsonFields);
+        return $model->encryptor()->encryptMultipleData($data, [], $this->encryptedJsonFields);
     }
 
     public function remove($specification)

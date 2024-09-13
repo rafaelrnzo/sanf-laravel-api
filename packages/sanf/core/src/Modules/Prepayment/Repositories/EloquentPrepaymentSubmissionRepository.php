@@ -26,7 +26,7 @@ class EloquentPrepaymentSubmissionRepository extends AbstractEloquentRepository 
             $this->historyModel
                 ->newQuery()
                 ->forceCreate(
-                    SodiumEncryption::encryptor()->encryptBulkData(
+                    SodiumEncryption::encryptor()->encryptMultipleData(
                         [
                             'submission_id' => $model->id,
                             'status_id' => $model->status_id,

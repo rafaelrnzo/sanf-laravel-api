@@ -36,7 +36,7 @@ class PaymentAccelarationDocumentEncryptedEloquentRepository extends AbstractElo
     public function create(array $request): PaymentAccelarationDocumentEncryptedModel
     {
         $model = $this->model->query()->create(
-            SodiumEncryption::encryptor()->encryptBulkData($request, $this->encryptedFields)
+            SodiumEncryption::encryptor()->encryptMultipleData($request, $this->encryptedFields)
         );
 
         return $model->fresh();
@@ -52,7 +52,7 @@ class PaymentAccelarationDocumentEncryptedEloquentRepository extends AbstractElo
         $model = $this->model->query()->find($id);
 
         $model->update(
-            $model->encryptor()->encryptBulkData($request, $this->encryptedFields)
+            $model->encryptor()->encryptMultipleData($request, $this->encryptedFields)
         );
 
         return $model->fresh();

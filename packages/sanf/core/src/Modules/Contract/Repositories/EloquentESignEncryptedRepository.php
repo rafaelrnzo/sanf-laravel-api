@@ -92,7 +92,7 @@ class EloquentESignEncryptedRepository extends AbstractEloquentRepository implem
 
     public function createUser(array $data)
     {
-        $data = SodiumEncryption::encryptor()->encryptBulkData($data, $this->userTekenajaEncryptedFields, $this->userTekenajaEncryptedJsonFields);
+        $data = SodiumEncryption::encryptor()->encryptMultipleData($data, $this->userTekenajaEncryptedFields, $this->userTekenajaEncryptedJsonFields);
 
         $model = $this->userTekenAjaModel
             ->newQuery()
@@ -105,7 +105,7 @@ class EloquentESignEncryptedRepository extends AbstractEloquentRepository implem
     {
         $model = $this->findUserById($id);
 
-        $data = $model->encryptor()->encryptBulkData($data, $this->userTekenajaEncryptedFields, $this->userTekenajaEncryptedJsonFields);
+        $data = $model->encryptor()->encryptMultipleData($data, $this->userTekenajaEncryptedFields, $this->userTekenajaEncryptedJsonFields);
 
         $model->update($data);
 
@@ -131,7 +131,7 @@ class EloquentESignEncryptedRepository extends AbstractEloquentRepository implem
 
     public function createDocument(array $data)
     {
-        $data = SodiumEncryption::encryptor()->encryptBulkData($data, $this->esignDocumentEncryptedFields, $this->esignDocumentEncryptedJsonFields);
+        $data = SodiumEncryption::encryptor()->encryptMultipleData($data, $this->esignDocumentEncryptedFields, $this->esignDocumentEncryptedJsonFields);
 
         $model = $this->eSignDocumentModel
             ->newQuery()
@@ -144,7 +144,7 @@ class EloquentESignEncryptedRepository extends AbstractEloquentRepository implem
     {
         $model = $this->findDocumentById($id);
 
-        $data = $model->encryptor()->encryptBulkData($data, $this->esignDocumentEncryptedFields, $this->esignDocumentEncryptedJsonFields);
+        $data = $model->encryptor()->encryptMultipleData($data, $this->esignDocumentEncryptedFields, $this->esignDocumentEncryptedJsonFields);
 
         $model->update($data);
 
@@ -187,7 +187,7 @@ class EloquentESignEncryptedRepository extends AbstractEloquentRepository implem
 
     public function createDocumentAssignee(array $data)
     {
-        $data = SodiumEncryption::encryptor()->encryptBulkData($data, $this->esignDocumentAssigneeEncryptedFields);
+        $data = SodiumEncryption::encryptor()->encryptMultipleData($data, $this->esignDocumentAssigneeEncryptedFields);
 
         $model = $this->eSignDocumentAssigneeModel
             ->newQuery()
@@ -200,7 +200,7 @@ class EloquentESignEncryptedRepository extends AbstractEloquentRepository implem
     {
         $model = $this->findDocumentAssigneeById($id);
 
-        $data = $model->encryptor()->encryptBulkData($data, $this->esignDocumentAssigneeEncryptedFields);
+        $data = $model->encryptor()->encryptMultipleData($data, $this->esignDocumentAssigneeEncryptedFields);
 
         $model->update($data);
 

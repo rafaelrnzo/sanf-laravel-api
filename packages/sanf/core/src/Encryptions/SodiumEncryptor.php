@@ -82,7 +82,7 @@ class SodiumEncryptor
         return new SodiumQuery();
     }
 
-    public function encryptBulkData(array $data, array $fields = [], array $jsonFields = []): array
+    public function encryptMultipleData(array $data, array $fields = [], array $jsonFields = []): array
     {
         foreach ($data as $key => $value) {
             if (in_array($key, $fields)) {
