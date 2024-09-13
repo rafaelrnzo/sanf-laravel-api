@@ -8,14 +8,14 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\FileNotFoundException;
+use Sanf\Core\Encryptions\SodiumEncryption;
 use Sanf\Core\Modules\Contract\Enums\AdInsCallbackTypeEnum;
 use Sanf\Core\Modules\Contract\Enums\ESignContractStatusEnum;
 use Sanf\Core\Modules\Contract\Events\ESignDocumentSignCompleteNotificationEvent;
 use Sanf\Core\Modules\Contract\Exceptions\ESignDocumentNotFoundException;
-use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentRepository;
+use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentEncryptedRepository;
 use Sanf\Core\Modules\Contract\Services\AdInsESignDownloadDocumentService;
 use Sanf\Core\Modules\Contract\Specifications\ESignDocumentSpecificationFactoryInterface;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
@@ -39,14 +39,14 @@ class UpdateDocumentSignStatusByCallbackJob implements ShouldQueue
     }
 
     public function handle(
-        EloquentESignDocumentRepository $eSignDocumentRepository,
+        EloquentESignDocumentEncryptedRepository $eSignDocumentRepository,
         ESignDocumentSpecificationFactoryInterface $eSignDocumentSpecificationFactory,
         AdInsESignDownloadDocumentService $adInsDownloadDocumentService,
         SanfCoreApiClient $sanfCoreClient
     ) {
         $dto = $this->request;
 
-        DB::transaction(function () use (
+        SodiumEncryption::query()->transaction(function () use (
             $dto,
             $eSignDocumentRepository,
             $eSignDocumentSpecificationFactory,

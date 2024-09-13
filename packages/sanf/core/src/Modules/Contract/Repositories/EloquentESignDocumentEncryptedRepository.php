@@ -151,11 +151,21 @@ class EloquentESignDocumentEncryptedRepository extends AbstractEloquentRepositor
 
     public function findDocumentByDocId(string $documentId)
     {
+        $model = $this->eSignDocumentModel
+            ->newQuery()
+            ->where('document_id', '=', $documentId)
+            ->first();
+
+        return $this->stripEloquentModel($model);
+    }
+
+    public function findDocumentByRefNo(string $refNo)
+    {
         $sodiumQuery = SodiumEncryption::query();
 
         $model = $this->eSignDocumentModel
             ->newQuery()
-            ->where('document_id', '=', $documentId)
+            ->where($sodiumQuery->selectRaw('reference_no'), '=', $refNo)
             ->first();
 
         return $this->stripEloquentModel($model);

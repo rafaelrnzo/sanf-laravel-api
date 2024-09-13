@@ -48,7 +48,7 @@ class UpdateAdInsUserStatusJob implements ShouldQueue
             }
         });
 
-        DB::transaction(function () use ($dto, $eSignDocumentRepository) {
+        SodiumEncryption::query()->transaction(function () use ($dto, $eSignDocumentRepository) {
             try {
                 $adInsUser = $eSignDocumentRepository->findUserByEmail($dto->email);
                 if ($adInsUser && $adInsUser->status_id !== ESignRegistrationStatusEnum::COMPLETE) {

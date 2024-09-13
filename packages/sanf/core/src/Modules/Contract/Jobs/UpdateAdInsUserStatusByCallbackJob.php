@@ -8,11 +8,11 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\DB;
+use Sanf\Core\Encryptions\SodiumEncryption;
 use Sanf\Core\Modules\Contract\Enums\ESignRegistrationStatusEnum;
 use Sanf\Core\Modules\Contract\Events\ESignAdsInsRegisterMailEvent;
 use Sanf\Core\Modules\Contract\Events\ESignAdsInsRegisterNotificationEvent;
-use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentRepository;
+use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentEncryptedRepository;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class UpdateAdInsUserStatusByCallbackJob implements ShouldQueue
@@ -34,12 +34,12 @@ class UpdateAdInsUserStatusByCallbackJob implements ShouldQueue
     }
 
     public function handle(
-        EloquentESignDocumentRepository $eSignDocumentRepository,
+        EloquentESignDocumentEncryptedRepository $eSignDocumentRepository,
         SanfCoreApiClient $sanfCoreClient
     ) {
         $dto = $this->request;
 
-        DB::transaction(function () use ($dto, $eSignDocumentRepository, $sanfCoreClient) {
+        SodiumEncryption::query()->transaction(function () use ($dto, $eSignDocumentRepository, $sanfCoreClient) {
             try {
                 $adInsUser = $eSignDocumentRepository->findUserByEmail($dto->email);
                 if ($adInsUser && $adInsUser->status_id !== ESignRegistrationStatusEnum::COMPLETE) {
