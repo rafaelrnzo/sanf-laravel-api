@@ -143,7 +143,7 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
                     'documentId' => $item->document_id,
                     'referenceNo' => $item->e_sign_document->reference_no,
                     'documentFile' => $file,
-                    'statusId' => ($item->status_id === ESignContractStatusEnum::ON_PROGRESS && $item->assignee_status_id === ESignContractStatusEnum::DONE) ? ESignContractStatusEnum::ON_PROGRESS : $item->assignee_status_id,
+                    'statusId' => ($item->e_sign_document->status_id === ESignContractStatusEnum::ON_PROGRESS && $item->assignee_status_id === ESignContractStatusEnum::DONE) ? ESignContractStatusEnum::ON_PROGRESS : $item->assignee_status_id,
                     'expiredAt' => Carbon::make($item->e_sign_document->expired_at),
                     'createdAt' => Carbon::make($item->created_at),
                     'userId' => $dto->user_id,
