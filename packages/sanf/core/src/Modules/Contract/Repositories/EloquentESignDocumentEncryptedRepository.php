@@ -137,6 +137,10 @@ class EloquentESignDocumentEncryptedRepository extends AbstractEloquentRepositor
     {
         $model = $this->findUserById($id);
 
+        if (is_null($model)) {
+            return null;
+        }
+
         $data = $model->encryptor()->encryptMultipleData($data, $this->userAdinsEncryptedFields, $this->userAdinsEncryptedJsonFields);
 
         $model->update($data);
@@ -186,6 +190,10 @@ class EloquentESignDocumentEncryptedRepository extends AbstractEloquentRepositor
     {
         $model = $this->findDocumentById($id);
 
+        if (is_null($model)) {
+            return null;
+        }
+
         $data = $model->encryptor()->encryptMultipleData($data, $this->esignDocumentEncryptedFields, $this->esignDocumentEncryptedJsonFields);
 
         $model->update($data);
@@ -216,15 +224,13 @@ class EloquentESignDocumentEncryptedRepository extends AbstractEloquentRepositor
 
     public function findDocumentAssigneeByDocId(int $userId, string $documentId)
     {
-        $sodiumQuery = SodiumEncryption::query();
-
         $model = $this->eSignDocumentAssigneeModel
             ->newQuery()
             ->where('user_id', '=', $userId)
             ->where('document_id', '=', $documentId)
             ->first();
 
-        return $this->stripEloquentModel($model->fresh());
+        return $this->stripEloquentModel($model);
     }
 
     public function createDocumentAssignee(array $data)
@@ -241,6 +247,10 @@ class EloquentESignDocumentEncryptedRepository extends AbstractEloquentRepositor
     public function updateDocumentAssignee(int $id, array $data)
     {
         $model = $this->findDocumentAssigneeById($id);
+
+        if (is_null($model)) {
+            return null;
+        }
 
         $data = $model->encryptor()->encryptMultipleData($data, $this->esignDocumentAssigneeEncryptedFields);
 
@@ -292,6 +302,10 @@ class EloquentESignDocumentEncryptedRepository extends AbstractEloquentRepositor
     public function updateOTPRequest(int $id, array $data)
     {
         $model = $this->findOTPRequestById($id);
+
+        if (is_null($model)) {
+            return null;
+        }
 
         $data = $model->encryptor()->encryptMultipleData($data, $this->eSignOTPEncryptedFields);
 

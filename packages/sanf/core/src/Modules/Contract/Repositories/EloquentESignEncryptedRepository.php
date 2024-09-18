@@ -105,6 +105,10 @@ class EloquentESignEncryptedRepository extends AbstractEloquentRepository implem
     {
         $model = $this->findUserById($id);
 
+        if (is_null($model)) {
+            return null;
+        }
+
         $data = $model->encryptor()->encryptMultipleData($data, $this->userTekenajaEncryptedFields, $this->userTekenajaEncryptedJsonFields);
 
         $model->update($data);
@@ -143,6 +147,10 @@ class EloquentESignEncryptedRepository extends AbstractEloquentRepository implem
     public function updateDocument(int $id, array $data)
     {
         $model = $this->findDocumentById($id);
+
+        if (is_null($model)) {
+            return null;
+        }
 
         $data = $model->encryptor()->encryptMultipleData($data, $this->esignDocumentEncryptedFields, $this->esignDocumentEncryptedJsonFields);
 
@@ -199,6 +207,10 @@ class EloquentESignEncryptedRepository extends AbstractEloquentRepository implem
     public function updateDocumentAssignee(int $id, array $data)
     {
         $model = $this->findDocumentAssigneeById($id);
+
+        if (is_null($model)) {
+            return null;
+        }
 
         $data = $model->encryptor()->encryptMultipleData($data, $this->esignDocumentAssigneeEncryptedFields);
 
