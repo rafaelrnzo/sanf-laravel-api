@@ -6,7 +6,7 @@ use NbsPhp\Core\Repositories\AbstractEloquentRepository;
 use Sanf\Core\Encryptions\SodiumEncryption;
 use Sanf\Core\Modules\Plafond\Exceptions\PlafondDisbursementNotFoundException;
 use Sanf\Core\Modules\Plafond\Exceptions\PlafondDisbursementSubmissionNotFoundException;
-use Sanf\Core\Modules\Plafond\Models\PlafondDisbursementAllocationModel;
+use Sanf\Core\Modules\Plafond\Models\PlafondDisbursementAllocationEncryptedModel;
 use Sanf\Core\Modules\Plafond\Models\PlafondDisbursementDocumentModel;
 use Sanf\Core\Modules\Plafond\Models\PlafondDisbursementEncryptedModel;
 use Sanf\Core\Modules\Plafond\Models\PlafondDisbursementInvoiceModel;
@@ -20,17 +20,18 @@ class PlafondDisbursementEncryptedEloquentRepository extends AbstractEloquentRep
     protected PlafondDisbursementSubmissionEncryptedModel $submissionModel;
     protected PlafondDisbursementInvoiceModel $invoiceModel;
     protected PlafondDisbursementInvoicePhotoModel $invoicePhotoModel;
-    protected PlafondDisbursementAllocationModel $allocationModel;
+    protected PlafondDisbursementAllocationEncryptedModel $allocationModel;
     protected PlafondDisbursementDocumentModel $documentModel;
     protected array $encryptedFieldsDisbursement;
     protected array $encryptedFieldsSubmission;
+    protected array $encryptedFieldsAllocation;
 
     public function __construct(
         PlafondDisbursementEncryptedModel $disbursementModel,
         PlafondDisbursementSubmissionEncryptedModel $submissionModel,
         PlafondDisbursementInvoiceModel $invoiceModel,
         PlafondDisbursementInvoicePhotoModel $invoicePhotoModel,
-        PlafondDisbursementAllocationModel $allocationModel,
+        PlafondDisbursementAllocationEncryptedModel $allocationModel,
         PlafondDisbursementDocumentModel $documentModel
     ) {
         $this->disbursementModel = $disbursementModel;
@@ -49,6 +50,12 @@ class PlafondDisbursementEncryptedEloquentRepository extends AbstractEloquentRep
         $this->encryptedFieldsSubmission = [
             'allocation_snapshot',
             'user_updated_by',
+        ];
+        $this->encryptedFieldsAllocation = [
+            'owner',
+            'provider',
+            'account_no',
+            'notes',
         ];
     }
 
@@ -154,11 +161,15 @@ class PlafondDisbursementEncryptedEloquentRepository extends AbstractEloquentRep
 
     /**
      * @param array $request
-     * @return PlafondDisbursementAllocationModel
+     * @return PlafondDisbursementAllocationEncryptedModel
      */
-    public function createAllocation(array $request): PlafondDisbursementAllocationModel
+    public function createAllocation(array $request): PlafondDisbursementAllocationEncryptedModel
     {
-        return $this->allocationModel->query()->create($request);
+        $request = SodiumEncryption::encryptor()->encryptMultipleData($request, $this->encryptedFieldsAllocation);
+
+        $model = $this->allocationModel->query()->create($request);
+
+        return $model->fresh();
     }
 
     /**

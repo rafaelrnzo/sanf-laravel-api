@@ -2,6 +2,7 @@
 
 namespace Sanf\Core\Modules\Plafond\Repositories;
 
+use Sanf\Core\Modules\Plafond\Models\PlafondDisbursementAllocationEncryptedModel;
 use Sanf\Core\Modules\Plafond\Models\PlafondDisbursementAllocationModel;
 use Sanf\Core\Modules\Plafond\Models\PlafondDisbursementDocumentModel;
 use Sanf\Core\Modules\Plafond\Models\PlafondDisbursementInvoiceModel;
@@ -42,9 +43,9 @@ interface PlafondDisbursementRepositoryInterface
 
     /**
      * @param array $request
-     * @return PlafondDisbursementAllocationModel
+     * @return PlafondDisbursementAllocationModel|PlafondDisbursementAllocationEncryptedModel
      */
-    public function createAllocation(array $request): PlafondDisbursementAllocationModel;
+    public function createAllocation(array $request);
 
     /**
      * @param array $request

@@ -50,7 +50,7 @@ class PlafondDisbursementSubmissionEncryptedModel extends AbstractModel
 
     public function allocationsRelation()
     {
-        return $this->hasMany(PlafondDisbursementAllocationModel::class, 'submission_id', 'id');
+        return $this->hasMany(PlafondDisbursementAllocationEncryptedModel::class, 'submission_id', 'id');
     }
 
     public function documentsRelation()
