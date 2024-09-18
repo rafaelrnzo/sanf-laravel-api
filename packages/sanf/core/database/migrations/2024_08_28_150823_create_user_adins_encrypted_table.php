@@ -41,6 +41,8 @@ class CreateUserAdinsEncryptedTable extends Migration
             $table->string('transaction_no')->nullable();
             $table->timestamps();
             $table->binary('nonce');
+            $table->string('province_id')->nullable();
+            $table->string('city_id')->nullable();
         });
     }
 
