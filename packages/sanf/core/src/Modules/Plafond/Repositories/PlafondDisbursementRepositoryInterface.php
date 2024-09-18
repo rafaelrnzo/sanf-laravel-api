@@ -7,6 +7,7 @@ use Sanf\Core\Modules\Plafond\Models\PlafondDisbursementDocumentModel;
 use Sanf\Core\Modules\Plafond\Models\PlafondDisbursementInvoiceModel;
 use Sanf\Core\Modules\Plafond\Models\PlafondDisbursementInvoicePhotoModel;
 use Sanf\Core\Modules\Plafond\Models\PlafondDisbursementModel;
+use Sanf\Core\Modules\Plafond\Models\PlafondDisbursementSubmissionEncryptedModel;
 use Sanf\Core\Modules\Plafond\Models\PlafondDisbursementSubmissionModel;
 
 interface PlafondDisbursementRepositoryInterface
@@ -29,15 +30,15 @@ interface PlafondDisbursementRepositoryInterface
 
     /**
      * @param array $request
-     * @return PlafondDisbursementSubmissionModel
+     * @return PlafondDisbursementSubmissionModel|PlafondDisbursementSubmissionEncryptedModel
      */
-    public function createSubmission(array $request): PlafondDisbursementSubmissionModel;
+    public function createSubmission(array $request);
 
     /**
      * @param array $request
-     * @return PlafondDisbursementSubmissionModel
+     * @return PlafondDisbursementSubmissionModel|PlafondDisbursementSubmissionEncryptedModel
      */
-    public function updateSubmission(int $id, array $request): PlafondDisbursementSubmissionModel;
+    public function updateSubmission(int $id, array $request);
 
     /**
      * @param array $request

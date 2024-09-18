@@ -45,6 +45,11 @@ class PlafondDisbursementEncryptedModel extends PlafondDisbursementModel
         'nonce',
     ];
 
+    public function disbursementRelation()
+    {
+        return $this->hasOne(PlafondDisbursementSubmissionEncryptedModel::class, 'xid', 'plafond_submission_xid');
+    }
+
     public function getClientNameAttribute()
     {
         return $this->decryptor()->decrypt($this->attributes['client_name']);

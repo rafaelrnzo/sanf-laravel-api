@@ -2,23 +2,32 @@
 
 namespace Sanf\Core\Modules\Plafond\Repositories;
 
+use NbsPhp\Core\Repositories\AbstractEloquentRepository;
 use Sanf\Core\Encryptions\SodiumEncryption;
 use Sanf\Core\Modules\Plafond\Exceptions\PlafondDisbursementNotFoundException;
+use Sanf\Core\Modules\Plafond\Exceptions\PlafondDisbursementSubmissionNotFoundException;
 use Sanf\Core\Modules\Plafond\Models\PlafondDisbursementAllocationModel;
 use Sanf\Core\Modules\Plafond\Models\PlafondDisbursementDocumentModel;
 use Sanf\Core\Modules\Plafond\Models\PlafondDisbursementEncryptedModel;
 use Sanf\Core\Modules\Plafond\Models\PlafondDisbursementInvoiceModel;
 use Sanf\Core\Modules\Plafond\Models\PlafondDisbursementInvoicePhotoModel;
-use Sanf\Core\Modules\Plafond\Models\PlafondDisbursementSubmissionModel;
+use Sanf\Core\Modules\Plafond\Models\PlafondDisbursementSubmissionEncryptedModel;
 use Sanf\Core\Modules\Plafond\Queries\BrowsePlafondDisbursementEncryptedEloquentBuilder;
 
-class PlafondDisbursementEncryptedEloquentRepository extends PlafondDisbursementEloquentRepository
+class PlafondDisbursementEncryptedEloquentRepository extends AbstractEloquentRepository implements PlafondDisbursementRepositoryInterface
 {
-    protected array $encryptedFields;
+    protected PlafondDisbursementEncryptedModel $disbursementModel;
+    protected PlafondDisbursementSubmissionEncryptedModel $submissionModel;
+    protected PlafondDisbursementInvoiceModel $invoiceModel;
+    protected PlafondDisbursementInvoicePhotoModel $invoicePhotoModel;
+    protected PlafondDisbursementAllocationModel $allocationModel;
+    protected PlafondDisbursementDocumentModel $documentModel;
+    protected array $encryptedFieldsDisbursement;
+    protected array $encryptedFieldsSubmission;
 
     public function __construct(
         PlafondDisbursementEncryptedModel $disbursementModel,
-        PlafondDisbursementSubmissionModel $submissionModel,
+        PlafondDisbursementSubmissionEncryptedModel $submissionModel,
         PlafondDisbursementInvoiceModel $invoiceModel,
         PlafondDisbursementInvoicePhotoModel $invoicePhotoModel,
         PlafondDisbursementAllocationModel $allocationModel,
@@ -30,25 +39,36 @@ class PlafondDisbursementEncryptedEloquentRepository extends PlafondDisbursement
         $this->invoicePhotoModel = $invoicePhotoModel;
         $this->allocationModel = $allocationModel;
         $this->documentModel = $documentModel;
-        $this->encryptedFields = [
+
+        $this->encryptedFieldsDisbursement = [
             'client_name',
             'client_mail',
             'customer_name',
             'customer_mail',
         ];
+        $this->encryptedFieldsSubmission = [
+            'allocation_snapshot',
+            'user_updated_by',
+        ];
     }
 
+    /**
+     * @param BrowsePlafondDisbursementEncryptedEloquentBuilder $builder
+     * @return object
+     */
     public function query($builder)
     {
-        /** @var BrowsePlafondDisbursementEncryptedEloquentBuilder $builder */
         $disbursementCollection = $builder->build($this->disbursementModel)->get();
 
         return $this->stripEloquentModel($disbursementCollection);
     }
 
+    /**
+     * @param BrowsePlafondDisbursementEncryptedEloquentBuilder $builder
+     * @return int
+     */
     public function count($builder): int
     {
-        /* @var BrowsePlafondDisbursementEncryptedEloquentBuilder $builder */
         return $builder->build($this->disbursementModel)->count();
     }
 
@@ -58,24 +78,11 @@ class PlafondDisbursementEncryptedEloquentRepository extends PlafondDisbursement
      */
     public function createDisbursement(array $request): PlafondDisbursementEncryptedModel
     {
-        $model = $this->disbursementModel->query()->create($this->encryptBeforeCreate($request));
+        $request = SodiumEncryption::encryptor()->encryptMultipleData($request, $this->encryptedFieldsDisbursement);
+
+        $model = $this->disbursementModel->query()->create($request);
 
         return $model->fresh();
-    }
-
-    private function encryptBeforeCreate(array $data): array
-    {
-        $encryptor = SodiumEncryption::encryptor();
-
-        foreach ($data as $key => $value) {
-            if (in_array($key, $this->encryptedFields)) {
-                $data[$key] = $encryptor->encrypt($value);
-            }
-        }
-
-        $data['nonce'] = $encryptor->nonce()->getNonceHex();
-
-        return $data;
     }
 
     /**
@@ -89,22 +96,78 @@ class PlafondDisbursementEncryptedEloquentRepository extends PlafondDisbursement
             throw new PlafondDisbursementNotFoundException();
         }
 
-        $disbursementRecord->update($this->encryptBeforeUpdate($request, $disbursementRecord));
+        $request = $disbursementRecord->encryptor()->encryptMultipleData($request, $this->encryptedFieldsDisbursement);
+
+        $disbursementRecord->update($request);
 
         return $disbursementRecord->fresh();
     }
 
-    private function encryptBeforeUpdate(array $data, $model): array
+    /**
+     * @param array $request
+     * @return PlafondDisbursementSubmissionEncryptedModel
+     */
+    public function createSubmission(array $request): PlafondDisbursementSubmissionEncryptedModel
     {
-        $encryptor = $model->encryptor();
+        $request = SodiumEncryption::encryptor()->encryptMultipleData($request, $this->encryptedFieldsSubmission);
 
-        foreach ($data as $key => $value) {
-            if (in_array($key, $this->encryptedFields)) {
-                $data[$key] = $encryptor->encrypt($value);
-            }
+        $model = $this->submissionModel->query()->create($request);
+
+        return $model->fresh();
+    }
+
+    /**
+     * @param array $request
+     * @return PlafondDisbursementSubmissionEncryptedModel
+     */
+    public function updateSubmission(int $id, array $request): PlafondDisbursementSubmissionEncryptedModel
+    {
+        $submissionRecord = $this->submissionModel->query()->find($id);
+        if (is_null($submissionRecord)) {
+            throw new PlafondDisbursementSubmissionNotFoundException();
         }
 
-        return $data;
+        $request = $submissionRecord->encryptor()->encryptMultipleData($request, $this->encryptedFieldsSubmission);
+
+        $submissionRecord->update($request);
+
+        return $submissionRecord->fresh();
+    }
+
+    /**
+     * @param array $request
+     * @return PlafondDisbursementInvoiceModel
+     */
+    public function createInvoice(array $request): PlafondDisbursementInvoiceModel
+    {
+        return $this->invoiceModel->query()->create($request);
+    }
+
+    /**
+     * @param array $request
+     * @return PlafondDisbursementInvoicePhotoModel
+     */
+    public function createInvoicePhoto(array $request): PlafondDisbursementInvoicePhotoModel
+    {
+        return $this->invoicePhotoModel->query()->create($request);
+    }
+
+    /**
+     * @param array $request
+     * @return PlafondDisbursementAllocationModel
+     */
+    public function createAllocation(array $request): PlafondDisbursementAllocationModel
+    {
+        return $this->allocationModel->query()->create($request);
+    }
+
+    /**
+     * @param array $request
+     * @return PlafondDisbursementDocumentModel
+     */
+    public function createDocument(array $request): PlafondDisbursementDocumentModel
+    {
+        return $this->documentModel->query()->create($request);
     }
 
     /**
