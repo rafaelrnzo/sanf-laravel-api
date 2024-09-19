@@ -248,6 +248,7 @@ final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterf
             'disbursementXid' => $disbursementModel->xid,
             'submissionXid' => $submissionXid,
             'customerReview' => $formRequest->customerReview,
+            'totalAmount' => $formRequest->totalInvoiceAmount,
         ];
 
         event(new PlafondDisbursementSubmittedMailEvent($mailContent));
