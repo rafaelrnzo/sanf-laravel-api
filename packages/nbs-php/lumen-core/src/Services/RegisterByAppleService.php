@@ -5,7 +5,6 @@ namespace NbsPhp\Core\Services;
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use NbsPhp\Core\Enum\AuthProvider;
 use NbsPhp\Core\Enum\EntityType;
 use NbsPhp\Core\Enum\OAuthProvider;
@@ -13,20 +12,28 @@ use NbsPhp\Core\Enum\UserStatus;
 use NbsPhp\Core\Exceptions\OAuthEmailRequiredException;
 use NbsPhp\Core\Exceptions\OAuthUserAlreadyBoundException;
 use NbsPhp\Core\Jwt\JWTHelper;
-use NbsPhp\Core\Models\AuthModel;
-use NbsPhp\Core\Models\UserOAuthModel;
 use NbsPhp\Core\Models\UserSessionModel;
+use Sanf\Core\Encryptions\SodiumEncryption;
+use Sanf\Core\Modules\User\AuthEncryptedModel;
+use Sanf\Core\Modules\User\Repositories\UserOAuthEncryptedRepositoryInterface;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 
 class RegisterByAppleService implements RegisterByAppleServiceInterface
 {
     protected $jwt;
 
-    protected $repository;
+    protected $userRepository;
+    protected $userOAuthRepository;
 
-    public function __construct(JWTHelper $jwt, AuthModel $repository) //TODO USE REPOSITORY
+    public function __construct(
+        JWTHelper $jwt,
+        UserRepositoryInterface $userRepository,
+        UserOAuthEncryptedRepositoryInterface $userOAuthRepository
+    )
     {
         $this->jwt = $jwt;
-        $this->repository = $repository;
+        $this->userRepository = $userRepository;
+        $this->userOAuthRepository = $userOAuthRepository;
     }
 
     public function execute($dto = null)
@@ -39,23 +46,24 @@ class RegisterByAppleService implements RegisterByAppleServiceInterface
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             throw new OAuthEmailRequiredException('invalid email format');
         }
-        //TODO REPOSITORY
-        $user = DB::transaction(function () use ($dto, $email, $providerId, $isEmailVerified, $isPrivateEmail) {
-            $userOAuth = UserOAuthModel::with('user')
-                ->where([
-                    'provider' => OAuthProvider::APPLE,
-                    'provider_id' => $providerId,
-                ])
-                ->first();
+
+        $sodiumQuery = SodiumEncryption::query();
+
+        $sodiumQuery->multipleBeginTransaction();
+
+        try {
+            $sodiumQuery->hideLogStatement();
+
+            $userOAuth = $this->userOAuthRepository->findByProvider(OAuthProvider::APPLE, $providerId);
 
             if ($userOAuth) {
                 throw new OAuthUserAlreadyBoundException();
             }
 
-            /** @var AuthModel $user */
-            $user = $this->repository->newQuery()->where('username', $email)->first();
+            /** @var AuthEncryptedModel $user */
+            $user = $this->userRepository->findByEmail($email);
             if (is_null($user)) {
-                $user = $this->repository->newQuery()->forceCreate([
+                $user = $this->userRepository->create([
                     'full_name' => $dto->fullName,
                     'username' => $email,
                     'landline_number' => $dto->landlineNumber,
@@ -66,7 +74,7 @@ class RegisterByAppleService implements RegisterByAppleServiceInterface
                 ]);
             }
 
-            UserOAuthModel::forceCreate([
+            $this->userOAuthRepository->create([
                 'user_id' => $user->id,
                 'name' => $dto->fullName,
                 'provider' => OAuthProvider::APPLE,
@@ -74,8 +82,13 @@ class RegisterByAppleService implements RegisterByAppleServiceInterface
                 'provider_token' => $dto->providerToken,
             ]);
 
-            return $user;
-        });
+            $sodiumQuery->multipleCommit();
+
+        } catch (\Throwable $th) {
+            $sodiumQuery->multipleRollBack();
+
+            throw $th;
+        }
 
         if ($user instanceof MustVerifyEmail && !$user->hasVerifiedEmail()) {
             $user->sendEmailVerificationNotification();

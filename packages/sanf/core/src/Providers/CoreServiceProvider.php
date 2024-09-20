@@ -130,9 +130,11 @@ use Sanf\Core\Modules\Survey\Specifications\EloquentSurveySpecificationFactory;
 use Sanf\Core\Modules\Survey\Specifications\SurveySpecificationFactoryInterface;
 use Sanf\Core\Modules\User\Repositories\EloquentUserAuthLogEncryptedRepository;
 use Sanf\Core\Modules\User\Repositories\EloquentUserEncryptedRepository;
+use Sanf\Core\Modules\User\Repositories\EloquentUserOAuthEncryptedRepository;
 use Sanf\Core\Modules\User\Repositories\ProfileRepositoryInterface;
 use Sanf\Core\Modules\User\Repositories\RestProfileRepository;
 use Sanf\Core\Modules\User\Repositories\UserAuthLogRepositoryInterface;
+use Sanf\Core\Modules\User\Repositories\UserOAuthEncryptedRepositoryInterface;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Core\Modules\User\Specifications\EloquentUserAuthEncryptedSpecificationFactory;
 use Sanf\Core\Modules\User\Specifications\EloquentUserAuthLogEncryptedSpecificationFactory;
@@ -234,6 +236,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(ESignRepositoryInterface::class, EloquentESignDocumentEncryptedRepository::class);
         $this->app->bind(AuditHttpLogRepositoryInterface::class, EloquentAuditHttpLogEncryptedRepository::class);
         $this->app->bind(ApiRequestRepositoryInterface::class, EloquentApiRequestLogEncryptedRepository::class);
+        $this->app->bind(UserOAuthEncryptedRepositoryInterface::class, EloquentUserOAuthEncryptedRepository::class);
 
         //SPECIFICATION FACTORY
         $this->app->bind(ProjectSpecificationFactoryInterface::class, EloquentProjectSpecificationFactory::class);
