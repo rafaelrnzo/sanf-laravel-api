@@ -15,7 +15,7 @@ use NbsPhp\Core\Jwt\JWTHelper;
 use NbsPhp\Core\Models\UserSessionModel;
 use Sanf\Core\Encryptions\SodiumEncryption;
 use Sanf\Core\Modules\User\AuthEncryptedModel;
-use Sanf\Core\Modules\User\Repositories\UserOAuthEncryptedRepositoryInterface;
+use Sanf\Core\Modules\User\Repositories\UserOAuthRepositoryInterface;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 
 class RegisterByGoogleService implements RegisterByGoogleServiceInterface
@@ -28,7 +28,7 @@ class RegisterByGoogleService implements RegisterByGoogleServiceInterface
     public function __construct(
         JWTHelper $jwt,
         UserRepositoryInterface $userRepository,
-        UserOAuthEncryptedRepositoryInterface $userOAuthRepository
+        UserOAuthRepositoryInterface $userOAuthRepository
     )
     {
         $this->jwt = $jwt;

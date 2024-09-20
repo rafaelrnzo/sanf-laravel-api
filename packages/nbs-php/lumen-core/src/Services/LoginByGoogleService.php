@@ -13,11 +13,11 @@ use NbsPhp\Core\Exceptions\EmailUnverifiedException;
 use NbsPhp\Core\Exceptions\InvalidCredentialException;
 use NbsPhp\Core\Exceptions\OAuthUserNotBoundException;
 use NbsPhp\Core\Jwt\JWTHelper;
-use NbsPhp\Core\Models\UserOAuthModel;
 use NbsPhp\Core\Models\UserSessionModel;
 use Sanf\Core\Encryptions\SodiumEncryption;
 use Sanf\Core\Modules\User\Enums\UserAuthLogStatusEnum;
 use Sanf\Core\Modules\User\Repositories\UserAuthLogRepositoryInterface;
+use Sanf\Core\Modules\User\Repositories\UserOAuthRepositoryInterface;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 
 class LoginByGoogleService implements ApplicationServiceInterface
@@ -26,15 +26,18 @@ class LoginByGoogleService implements ApplicationServiceInterface
 
     protected $repository;
     protected UserAuthLogRepositoryInterface $logRepository;
+    protected UserOAuthRepositoryInterface $userOAuthRepository;
 
     public function __construct(
         JWTHelper $jwt,
         UserRepositoryInterface $repository,
-        UserAuthLogRepositoryInterface $logRepository
+        UserAuthLogRepositoryInterface $logRepository,
+        UserOAuthRepositoryInterface $userOAuthRepository
     ) {
         $this->jwt = $jwt;
         $this->repository = $repository;
         $this->logRepository = $logRepository;
+        $this->userOAuthRepository = $userOAuthRepository;
     }
 
     /**
@@ -71,17 +74,13 @@ class LoginByGoogleService implements ApplicationServiceInterface
                 }
             }
 
-            $userOAuth = UserOAuthModel::with('user')
-                ->where([
-                    'provider' => OAuthProvider::GOOGLE,
-                    'provider_id' => $providerId,
-                ])
-                ->first();
+            $userOAuth = $this->userOAuthRepository->findByProvider(OAuthProvider::GOOGLE, $providerId);
+
             if (!$user && !$userOAuth) {
                 throw new OAuthUserNotBoundException();
             }
             if ($user && !$userOAuth) {
-                $userOAuth = UserOAuthModel::forceCreate([
+                $userOAuth = $this->userOAuthRepository->create([
                     'user_id' => $user->id,
                     'name' => $name,
                     'provider' => OAuthProvider::GOOGLE,
@@ -91,10 +90,10 @@ class LoginByGoogleService implements ApplicationServiceInterface
             }
 
             $user = $userOAuth->user;
-            $userOAuth->update([
+            $this->userOAuthRepository->update([
                 'name' => $name,
                 'provider_token' => $dto->providerToken,
-            ]);
+            ], $userOAuth->id);
 
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             $token = Auth::login($user);

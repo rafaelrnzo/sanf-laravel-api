@@ -13,11 +13,11 @@ use NbsPhp\Core\Exceptions\EmailUnverifiedException;
 use NbsPhp\Core\Exceptions\InvalidCredentialException;
 use NbsPhp\Core\Exceptions\OAuthUserNotBoundException;
 use NbsPhp\Core\Jwt\JWTHelper;
-use NbsPhp\Core\Models\UserOAuthModel;
 use NbsPhp\Core\Models\UserSessionModel;
 use Sanf\Core\Encryptions\SodiumEncryption;
 use Sanf\Core\Modules\User\Enums\UserAuthLogStatusEnum;
 use Sanf\Core\Modules\User\Repositories\UserAuthLogRepositoryInterface;
+use Sanf\Core\Modules\User\Repositories\UserOAuthRepositoryInterface;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 
 class LoginByAppleService implements ApplicationServiceInterface
@@ -26,15 +26,18 @@ class LoginByAppleService implements ApplicationServiceInterface
 
     protected $repository;
     protected UserAuthLogRepositoryInterface $logRepository;
+    protected UserOAuthRepositoryInterface $userOAuthRepository;
 
     public function __construct(
         JWTHelper $jwt,
         UserRepositoryInterface $repository,
-        UserAuthLogRepositoryInterface $logRepository
+        UserAuthLogRepositoryInterface $logRepository,
+        UserOAuthRepositoryInterface $userOAuthRepository
     ) {
         $this->jwt = $jwt;
         $this->repository = $repository;
         $this->logRepository = $logRepository;
+        $this->userOAuthRepository = $userOAuthRepository;
     }
 
     /**
@@ -52,7 +55,6 @@ class LoginByAppleService implements ApplicationServiceInterface
             throw new OAuthUserNotBoundException('invalid email format');
         }
 
-        //TODO USING REPO
         return DB::transaction(function () use ($dto, $email, $isPrivateEmail, $isEmailVerified, $providerId) {
             //MATCH WITH EXISTING USER BY SAME EMAIL
             //SKIP IF EMAIL PRIVATE BECAUSE EMAIL NOT REAL FROM RELAY DOMAIN i.e: n7*****jh5@privaterelay.appleid.com
@@ -70,17 +72,14 @@ class LoginByAppleService implements ApplicationServiceInterface
                     throw new EmailUnverifiedException();
                 }
             }
-            $userOAuth = UserOAuthModel::with('user')
-                ->where([
-                    'provider' => OAuthProvider::APPLE,
-                    'provider_id' => $providerId,
-                ])
-                ->first();
+
+            $userOAuth = $this->userOAuthRepository->findByProvider(OAuthProvider::APPLE, $providerId);
+
             if (!$user && !$userOAuth) {
                 throw new OAuthUserNotBoundException();
             }
             if ($user && !$userOAuth) {
-                $userOAuth = UserOAuthModel::forceCreate([
+                $userOAuth = $this->userOAuthRepository->create([
                     'user_id' => $user->id,
                     'provider' => OAuthProvider::APPLE,
                     'provider_id' => $providerId,
@@ -89,9 +88,9 @@ class LoginByAppleService implements ApplicationServiceInterface
             }
 
             $user = $userOAuth->user;
-            $userOAuth->update([
+            $this->userOAuthRepository->update([
                 'provider_token' => $dto->providerToken,
-            ]);
+            ], $userOAuth->id);
 
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             $token = Auth::login($user);
