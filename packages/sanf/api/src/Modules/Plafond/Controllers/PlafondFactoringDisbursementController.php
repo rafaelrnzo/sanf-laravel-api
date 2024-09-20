@@ -7,10 +7,10 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Database\TransactionalSessionInterface;
-use NbsPhp\Core\Services\TransactionalApplicationService;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
 use Sanf\Api\Modules\Plafond\Transformers\PlafondFactoringDisbursementSimpleTransformer;
 use Sanf\Api\Modules\Plafond\Transformers\PlafondFactoringDisbursementTransformer;
+use Sanf\Core\Database\MultipleTransactionalSessionInterface;
 use Sanf\Core\Encryptions\SodiumEncryption;
 use Sanf\Core\Modules\Plafond\Dtos\BrowsePlafondDisbursementEncryptedRequestDto;
 use Sanf\Core\Modules\Plafond\Dtos\DisbursementAllocationFormRequest;
@@ -24,6 +24,7 @@ use Sanf\Core\Modules\Plafond\UseCases\AddPlafondDisbursementUseCase;
 use Sanf\Core\Modules\Plafond\UseCases\BrowsePlafondDisbursementUseCase;
 use Sanf\Core\Modules\Plafond\UseCases\ReadPlafondDisbursementUseCase;
 use Sanf\Core\Modules\Plafond\UseCases\UpdatePlafondDisbursementUseCase;
+use Sanf\Core\Services\MultipleTransactionalApplicationService;
 
 class PlafondFactoringDisbursementController extends RestApiController
 {
@@ -205,7 +206,7 @@ class PlafondFactoringDisbursementController extends RestApiController
         string $plafond_xid,
         string $disbursement_xid,
         Request $request,
-        TransactionalSessionInterface $transactionalSession,
+        MultipleTransactionalSessionInterface $transactionalSession,
         UpdatePlafondDisbursementUseCase $updateUseCase
     ) {
         $this->validate($request, [
@@ -304,7 +305,7 @@ class PlafondFactoringDisbursementController extends RestApiController
             'created_at' => $request->get('created_at'),
         ]);
 
-        $transactionalService = new TransactionalApplicationService($updateUseCase, $transactionalSession);
+        $transactionalService = new MultipleTransactionalApplicationService($updateUseCase, $transactionalSession);
         $transactionalService->execute($formRequest);
 
         return $this->responseOk();
