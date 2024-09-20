@@ -11,6 +11,7 @@ use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use NbsPhp\Notification\Repositories\UserNotificationRepositoryInterface;
 use NbsPhp\Notification\Services\PushNotificationServiceInterface;
+use Sanf\Core\Encryptions\SodiumEncryption;
 use Sanf\Core\Modules\Notification\Dtos\AddPushNotificationByExternalRequestDto;
 use Sanf\Core\Modules\Notification\Dtos\AddPushNotificationByExternalResponseDto;
 use Sanf\Core\Modules\Notification\Exceptions\NotificationInvalidException;
@@ -44,7 +45,10 @@ final class AddPushNotificationByExternalService implements ApplicationServiceIn
      */
     public function execute($dto = null)
     {
-        $user = $this->userRepository->findByEmail(strtolower($dto->email));
+        $user = SodiumEncryption::query()->transaction(function () use ($dto) {
+            return $this->userRepository->findByEmail(strtolower($dto->email));
+        });
+
         if (!$user) {
             throw new UserNotFoundException();
         }
