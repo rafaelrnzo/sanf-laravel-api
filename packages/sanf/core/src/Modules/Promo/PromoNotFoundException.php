@@ -1,6 +1,6 @@
 <?php
 
-namespace Sanf\Api\Modules\Promo;
+namespace Sanf\Core\Modules\Promo;
 
 use NbsPhp\Core\Exceptions\ApiException;
 
