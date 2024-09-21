@@ -7,6 +7,7 @@ use NbsPhp\Core\Dto\DeviceInfoRequestDto;
 use NbsPhp\Core\Dto\SocialLoginRequestDto;
 use NbsPhp\Core\Dto\SocialRegisterRequestDto;
 use NbsPhp\Core\Enum\DevicePlatform;
+use NbsPhp\Core\Exceptions\EmptyEmailAtAppleAccountException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use NbsPhp\Core\Services\LoginByAppleService;
 use NbsPhp\Core\Services\LoginByGoogleService;
@@ -148,6 +149,11 @@ class OAuthController extends RestApiController
 
     public function registerApple(Request $request, RegisterByAppleServiceInterface $service)
     {
+        $email = $request->get('email');
+        if (empty($email)) {
+            throw new EmptyEmailAtAppleAccountException();
+        }
+
         return $this->registerSocialPlatform($request, $service);
     }
 

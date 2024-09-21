@@ -10,6 +10,7 @@ use NbsPhp\Core\Enum\AuthProvider;
 use NbsPhp\Core\Enum\OAuthProvider;
 use NbsPhp\Core\Enum\UserStatus;
 use NbsPhp\Core\Exceptions\EmailUnverifiedException;
+use NbsPhp\Core\Exceptions\EmptyEmailAtAppleAccountException;
 use NbsPhp\Core\Exceptions\InvalidCredentialException;
 use NbsPhp\Core\Exceptions\OAuthUserNotBoundException;
 use NbsPhp\Core\Jwt\JWTHelper;
@@ -47,7 +48,12 @@ class LoginByAppleService implements ApplicationServiceInterface
     public function execute($dto = null)
     {
         $jwtPayload = $this->jwt::verifyAppleIdToken($dto->providerToken);
-        $email = $jwtPayload['email'];
+
+        $email = $jwtPayload['email'] ?? null;
+        if (empty($email)) {
+            throw new EmptyEmailAtAppleAccountException();
+        }
+
         $providerId = $jwtPayload['sub'];
         $isEmailVerified = $jwtPayload['email_verified'] ?? false;
         $isPrivateEmail = $jwtPayload['is_private_email'] ?? true;
