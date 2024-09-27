@@ -85,6 +85,7 @@ class ProfileController extends RestApiController
             'postcode' => ['required', 'string'],
             'address' => ['required', 'string'],
             'business_since' => ['nullable', 'string'],
+            'pic_name' => ['nullable', 'string'],
         ]);
         $dto = (object) [
             'userId' => $auth->id(),
@@ -100,6 +101,7 @@ class ProfileController extends RestApiController
             'postcode' => $input['postcode'],
             'address' => $input['address'],
             'businessSince' => $input['business_since'] ?? null,
+            'picName' => $input['pic_name'] ?? null,
         ];
         $service->execute($dto);
 

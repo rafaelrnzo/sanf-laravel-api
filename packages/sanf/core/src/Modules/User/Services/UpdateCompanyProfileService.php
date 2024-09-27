@@ -47,7 +47,7 @@ class UpdateCompanyProfileService implements ApplicationServiceInterface
             'kodepos' => $dto->postcode,
             'alamat' => $dto->address,
             'lama_usaha' => $dto->businessSince,
-            'picname' => $profile['data'][0]['PIC_NAME'],
+            'picname' => $dto->picName ?? $profile['data'][0]['PIC_NAME'],
         ]);
     }
 }
