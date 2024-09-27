@@ -3,6 +3,7 @@
 namespace Sanf\Core\Modules\Contract\Specifications;
 
 use Sanf\Core\Modules\Contract\Enums\FinancingUnitLocationSubmissionStatusEnum;
+use Sanf\Core\Modules\Contract\Models\FinancingUnitLocationSubmissionEncryptedModel;
 use Sanf\Core\Modules\Contract\Models\FinancingUnitLocationSubmissionModel;
 
 final class EloquentWhereContractNumberAndIsProcess
@@ -18,7 +19,11 @@ final class EloquentWhereContractNumberAndIsProcess
         $this->contractNo = $contractNo;
     }
 
-    public function buildQuery(FinancingUnitLocationSubmissionModel $model)
+    /**
+     * @param FinancingUnitLocationSubmissionModel|FinancingUnitLocationSubmissionEncryptedModel $model
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function buildQuery($model)
     {
         return $model->newQuery()
             ->where('user_id', $this->userId)

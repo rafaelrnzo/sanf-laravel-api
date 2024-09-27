@@ -3,6 +3,7 @@
 namespace Sanf\Core\Modules\Contract\Specifications;
 
 use Carbon\Carbon;
+use Sanf\Core\Modules\Contract\Models\FinancingUnitLocationSubmissionEncryptedModel;
 use Sanf\Core\Modules\Contract\Models\FinancingUnitLocationSubmissionModel;
 
 final class EloquentPaginateFinancingUnitLocationSubmissionByUserSpecification
@@ -33,7 +34,11 @@ final class EloquentPaginateFinancingUnitLocationSubmissionByUserSpecification
         $this->timestamp = $timestamp;
     }
 
-    public function buildQuery(FinancingUnitLocationSubmissionModel $model)
+    /**
+     * @param FinancingUnitLocationSubmissionModel|FinancingUnitLocationSubmissionEncryptedModel $model
+     * @return mixed|\Illuminate\Database\Eloquent\Builder
+     */
+    public function buildQuery($model)
     {
         switch ($this->sortBy) {
             case 'earliest':
