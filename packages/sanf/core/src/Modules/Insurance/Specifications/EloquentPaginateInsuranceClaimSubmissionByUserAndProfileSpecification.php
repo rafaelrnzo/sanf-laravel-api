@@ -3,6 +3,7 @@
 namespace Sanf\Core\Modules\Insurance\Specifications;
 
 use Carbon\Carbon;
+use Sanf\Core\Modules\Insurance\Models\InsuranceClaimSubmissionEncryptedModel;
 use Sanf\Core\Modules\Insurance\Models\InsuranceClaimSubmissionModel;
 
 final class EloquentPaginateInsuranceClaimSubmissionByUserAndProfileSpecification
@@ -39,7 +40,11 @@ final class EloquentPaginateInsuranceClaimSubmissionByUserAndProfileSpecificatio
         $this->timestamp = $timestamp;
     }
 
-    public function buildQuery(InsuranceClaimSubmissionModel $model)
+    /**
+     * @param InsuranceClaimSubmissionModel|InsuranceClaimSubmissionEncryptedModel $model
+     * @return mixed
+     */
+    public function buildQuery($model)
     {
         switch ($this->sortBy) {
             case 'earliest':

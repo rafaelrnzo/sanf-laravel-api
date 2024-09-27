@@ -2,6 +2,7 @@
 
 namespace Sanf\Core\Modules\Insurance\Specifications;
 
+use Sanf\Core\Modules\Insurance\Models\InsuranceClaimSubmissionEncryptedModel;
 use Sanf\Core\Modules\Insurance\Models\InsuranceClaimSubmissionModel;
 
 final class EloquentWhereInsuranceClaimSubmissionBySerialNoAndUserAndStatusSpecification
@@ -17,7 +18,11 @@ final class EloquentWhereInsuranceClaimSubmissionBySerialNoAndUserAndStatusSpeci
         $this->status = $status;
     }
 
-    public function buildQuery(InsuranceClaimSubmissionModel $model)
+    /**
+     * @param InsuranceClaimSubmissionModel|InsuranceClaimSubmissionEncryptedModel $model
+     * @return mixed
+     */
+    public function buildQuery($model)
     {
         $query = $model->newQuery()
             ->where('user_id', $this->userId)

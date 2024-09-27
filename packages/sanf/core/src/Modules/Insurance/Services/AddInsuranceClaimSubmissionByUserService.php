@@ -67,7 +67,7 @@ final class AddInsuranceClaimSubmissionByUserService extends InsuranceClaimSubmi
             'description' => $dto->description,
         ]);
 
-        $entity->user = $user;
+        $entity->user = (object) $user->toArray();
         $entity->profile = $this->findProfileOrFail($dto->profileXid);
         event(new InsuranceClaimSubmissionAddedEvent($entity));
 
