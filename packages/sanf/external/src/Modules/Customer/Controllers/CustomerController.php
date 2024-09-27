@@ -3,15 +3,17 @@
 namespace Sanf\External\Modules\Customer\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use NbsPhp\Core\Controllers\RestApiController;
+use Sanf\Core\Database\IlluminateFullMultipleSession;
+use Sanf\Core\Services\MultipleTransactionalApplicationService;
 use Sanf\Dashboard\Modules\User\UseCases\CreateCustomerFromCoreUseCase;
 
 class CustomerController extends RestApiController
 {
     public function postAdd(
         Request $request,
-        CreateCustomerFromCoreUseCase $createUseCase
+        CreateCustomerFromCoreUseCase $createUseCase,
+        IlluminateFullMultipleSession $transactionalSession
     ) {
         $this->validate($request, [
             'bowheer.id' => ['required', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
@@ -27,9 +29,8 @@ class CustomerController extends RestApiController
             'code' => $request->get('bowheer')['code'],
         ];
 
-        DB::connection('dashboard_db')->transaction(function () use ($formRequest, $createUseCase) {
-            $result = $createUseCase->execute($formRequest);
-        });
+        $transactionalService = new MultipleTransactionalApplicationService($createUseCase, $transactionalSession);
+        $result = $transactionalService->execute($formRequest);
 
         return $this->responseOk();
     }

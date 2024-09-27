@@ -5,11 +5,11 @@ namespace Sanf\Dashboard\Modules\User\UseCases;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Dashboard\Modules\Role\Repositories\RoleEloquentRepository;
+use Sanf\Dashboard\Modules\Role\Repositories\RoleEncryptedEloquentRepository;
 use Sanf\Dashboard\Modules\User\Events\AccountBindingCreatedByCoreNotificationEvent;
 use Sanf\Dashboard\Modules\User\Exceptions\AccountExistException;
-use Sanf\Dashboard\Modules\User\Repositories\CustomerBindingEloquentRepository;
-use Sanf\Dashboard\Modules\User\Repositories\UserEloquentRepository;
+use Sanf\Dashboard\Modules\User\Repositories\CustomerBindingEncryptedEloquentRepository;
+use Sanf\Dashboard\Modules\User\Repositories\UserEncryptedEloquentRepository;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 final class CreateCustomerFromCoreUseCase implements ApplicationServiceInterface
@@ -19,9 +19,9 @@ final class CreateCustomerFromCoreUseCase implements ApplicationServiceInterface
     private $accountBindingDashboardRepository;
 
     public function __construct(
-        UserEloquentRepository $userDashboardRepository,
-        RoleEloquentRepository $roleDashboardRepository,
-        CustomerBindingEloquentRepository $accountBindingDashboardRepository
+        UserEncryptedEloquentRepository $userDashboardRepository,
+        RoleEncryptedEloquentRepository $roleDashboardRepository,
+        CustomerBindingEncryptedEloquentRepository $accountBindingDashboardRepository
     ) {
         $this->userDashboardRepository = $userDashboardRepository;
         $this->roleDashboardRepository = $roleDashboardRepository;
