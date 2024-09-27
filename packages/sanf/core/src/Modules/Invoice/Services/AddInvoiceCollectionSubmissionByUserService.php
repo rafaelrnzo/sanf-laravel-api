@@ -33,7 +33,7 @@ final class AddInvoiceCollectionSubmissionByUserService extends InvoiceCollectio
                 'brand_type_model' => $financingUnit->brandTypeModel,
             ]);
 
-            $entity->user = $user;
+            $entity->user = (object) $user->toArray();
             $entities[] = $entity;
         }
 
