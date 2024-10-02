@@ -10,5 +10,5 @@ class SocialLoginRequestDto extends DataTransferObject
 
     public DeviceInfoRequestDto $device;
 
-    public string $email = null;
+    public ?string $email;
 }
