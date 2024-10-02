@@ -49,7 +49,7 @@ class LoginByAppleService implements ApplicationServiceInterface
     {
         $jwtPayload = $this->jwt::verifyAppleIdToken($dto->providerToken);
 
-        $email = $jwtPayload['email'] ?? null;
+        $email = $jwtPayload['email'] ?? $dto->email;
         if (empty($email)) {
             throw new EmptyEmailAtAppleAccountException();
         }

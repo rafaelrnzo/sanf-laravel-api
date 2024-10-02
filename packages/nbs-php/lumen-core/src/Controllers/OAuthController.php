@@ -27,6 +27,7 @@ class OAuthController extends RestApiController
     {
         $validated = $this->validate($request, [
             'auth_token' => ['required', 'string'],
+            'email' => ['nullable', 'email'],
         ]);
 
         $validated += $this->validateDeviceInformation($request, 'device.');
@@ -76,6 +77,7 @@ class OAuthController extends RestApiController
                 'notificationChannelId' => $input['device']['notification_channel_id'],
                 'metadata' => $input['device']['metadata'],
             ]),
+            'email' => $input['email'] ?? null,
         ]);
     }
 
