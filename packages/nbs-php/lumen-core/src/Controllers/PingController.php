@@ -3,7 +3,6 @@
 namespace NbsPhp\Core\Controllers;
 
 use PragmaRX\Health\Service;
-use PragmaRX\Health\Support\Resource;
 
 class PingController extends RestApiController
 {

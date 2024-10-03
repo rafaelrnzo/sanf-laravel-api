@@ -7,6 +7,6 @@ targets:
   - "query speed":
       type: "raw_query"
       connection: "default"
-      query: "select * from user_auth u join password_reset pr on pr.email = u.username order by u.created_at desc"
+      query: "select created_at from audit_http_log u order by u.created_at desc limit 1"
       maximum_time: 1
       error_message: "Query took %sms when it should have last at most %sms"

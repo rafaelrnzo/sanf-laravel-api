@@ -1,6 +1,6 @@
 <?php
 
-namespace PragmaRX\Health;
+namespace NbsPhp\Core\Providers;
 
 use Event;
 use Illuminate\Console\Scheduling\Schedule;

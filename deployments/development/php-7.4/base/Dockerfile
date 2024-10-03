@@ -13,6 +13,7 @@ RUN apt-get update \
         procps \
         supervisor \
         nginx \
+        procps \
         $BUILD_PACKAGES
 
 RUN docker-php-ext-configure intl \
