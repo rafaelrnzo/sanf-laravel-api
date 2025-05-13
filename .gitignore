@@ -10,3 +10,6 @@ Homestead.json
 Homestead.yaml
 vendor/
 xdebug/
+
+supervisord*
+.cache/

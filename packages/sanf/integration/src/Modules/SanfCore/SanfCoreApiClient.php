@@ -1357,7 +1357,10 @@ class SanfCoreApiClient
                 'percepatan_doc' => array_map(function ($document) {
                     return (array) $document;
                 }, $dto->percepatan_doc),
-                'pendukung_doc' => array_map(function ($document) {
+                'invoice_doc' => array_map(function ($document) {
+                    return (array) $document;
+                }, $dto->invoice_doc),
+		'pendukung_doc' => array_map(function ($document) {
                     return (array) $document;
                 }, $dto->pendukung_doc),
                 'created_at' => $dto->created_at,

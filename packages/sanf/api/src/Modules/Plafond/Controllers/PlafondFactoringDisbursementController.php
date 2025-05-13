@@ -89,7 +89,7 @@ class PlafondFactoringDisbursementController extends RestApiController
         $this->validate($request, [
             'bouwheer.id' => ['required', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
             'bouwheer.name' => ['required', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
-            'bouwheer.email' => ['required', 'email', 'max:32'],
+            'bouwheer.email' => ['required', 'email'],
             'bouwheer.code' => ['required', 'string', 'max:32'],
             'bouwheer.cust_id' => ['nullable', 'string', 'max:32'],
             'invoices' => ['required', 'array'],
@@ -212,7 +212,7 @@ class PlafondFactoringDisbursementController extends RestApiController
         $this->validate($request, [
             'bouwheer.id' => ['required', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
             'bouwheer.name' => ['required', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
-            'bouwheer.email' => ['required', 'email', 'max:32'],
+            'bouwheer.email' => ['required', 'email'],
             'bouwheer.code' => ['required', 'string', 'max:32'],
             'bouwheer.cust_id' => ['nullable', 'string', 'max:32'],
             'invoices' => ['required', 'array'],

@@ -50,13 +50,13 @@ final class SubmitPlafondDisbursementCoreUseCase implements ApplicationServiceIn
         $paymentAccDocument = [];
         if (!is_null($disbursementData->disbursement_relation->payment_acc_doc_path)) {
             $paymentAccDocument = (object) [
-                'percepatan_name' => $disbursementData->disbursement_relation->payment_acc_doc_origin_name,
+                'percepatan_name' => $disbursementData->disbursement_relation->payment_acc_doc_file_name,
                 'percepatan_path' => config('image-path.plafond.disbursement.payment_acc_document'),
             ];
         }
         if ($disbursementData->status_id === PlafondDisbursementStatusEnum::REVISION && !is_null($disbursementData->disbursement_relation->payment_acc_web_doc_path)) {
             $paymentAccDocument = (object) [
-                'percepatan_name' => $disbursementData->disbursement_relation->payment_acc_web_doc_origin_name,
+                'percepatan_name' => $disbursementData->disbursement_relation->payment_acc_web_doc_file_name,
                 'percepatan_path' => config('image-path.plafond.disbursement.payment_acc_document'),
             ];
         }
@@ -71,6 +71,7 @@ final class SubmitPlafondDisbursementCoreUseCase implements ApplicationServiceIn
             'amount' => $this->getTotalAmount($disbursementData->client_amount, $disbursementData->customer_amount, $disbursementData->admin_amount),
             'invoices' => $this->mapInvoices($disbursementData->disbursement_relation->invoices_relation),
             'allocations' => $this->mapAllocations($disbursementData->disbursement_relation->allocations_relation),
+	    'invoice_doc' => $this->mapInvoiceDocuments($disbursementData->disbursement_relation->invoices_relation),
             'percepatan_doc' => !empty($paymentAccDocument) ? [$paymentAccDocument] : null,
             'pendukung_doc' => $this->mapOtherDocuments($disbursementData->disbursement_relation->documents_relation),
             'created_at' => unix_timestamp($disbursementData->created_at),
@@ -136,8 +137,18 @@ final class SubmitPlafondDisbursementCoreUseCase implements ApplicationServiceIn
     {
         return array_map(function ($document) {
             return (object) [
-                'pendukung_name' => $document->origin_name,
+                'pendukung_name' => $document->file_name,
                 'pendukung_path' => config('image-path.plafond.disbursement.other_document'),
+            ];
+        }, $documents);
+    }
+
+    public function mapInvoiceDocuments(array $documents): array
+    {
+        return array_map(function ($document) {
+            return (object) [
+                'invoice_name' => $document->file_name,
+                'invoice_path' => config('image-path.plafond.disbursement.invoice_document'),
             ];
         }, $documents);
     }

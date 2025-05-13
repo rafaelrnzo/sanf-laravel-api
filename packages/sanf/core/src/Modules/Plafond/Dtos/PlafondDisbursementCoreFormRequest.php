@@ -16,6 +16,7 @@ final class PlafondDisbursementCoreFormRequest extends FlexibleDataTransferObjec
     public array $invoices;
     public array $allocations;
     public ?array $percepatan_doc;
+    public ?array $invoice_doc;
     public array $pendukung_doc;
     public int $created_at;
 }
