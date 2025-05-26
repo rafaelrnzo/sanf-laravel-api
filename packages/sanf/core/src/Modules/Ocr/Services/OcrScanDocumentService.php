@@ -7,12 +7,14 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Ocr\Dtos\OcrScanDocumentResponseDto;
 use Sanf\Core\Modules\Plafond\Dtos\InvoicePlafondUploadDocumentRequestDto;
 use Sanf\Integration\Modules\Nanonets\NanonetsClient;
+use Sanf\Integration\Modules\Fineksi\FineksiClient;
 
 final class OcrScanDocumentService implements ApplicationServiceInterface
 {
-    protected NanonetsClient $client;
+    //protected NanonetsClient $client;
+    protected FineksiClient $client;
 
-    public function __construct(NanonetsClient $client)
+    public function __construct(FineksiClient $client)
     {
         $this->client = $client;
     }
@@ -33,7 +35,26 @@ final class OcrScanDocumentService implements ApplicationServiceInterface
 
         try {
             $uploadResponse = $this->client->scanDocument($dto->file);
-            $latestDataResult = $uploadResponse->result;
+	    $headerData = [];
+            $financialData = [];
+            foreach ($uploadResponse->data->documents as $key => $value) {
+                $headerData = $value->header->invoice_details;
+                $financialData = $value->header->financial_details;
+            }
+
+            return new OcrScanDocumentResponseDto([
+                'invoiceNo' => $headerData->invoice_id ?? '',
+                'invoiceDate' => $headerData->invoice_date ?? '',
+                'invoiceAmount' => strval($financialData->subtotal_amount ?? ''),
+                'taxAmount' => strval($financialData->income_tax_amount ?? ''),
+                'vatAmount' => strval($financialData->total_tax_amount ?? ''),
+                'backhargeAmount' => '', //$filterScannerData['backcharge'] ?? '',
+                'otherAmount' => '', //$filterScannerData['others'] ?? '',
+                'totalAmount' => strval($financialData->total_amount ?? ''),
+            ]);
+
+	    /*Old Script
+	    $latestDataResult = $uploadResponse->result;
 
             $filterScannerData = [];
             foreach ($latestDataResult[0]->prediction as $key => $scanner) {
@@ -49,7 +70,7 @@ final class OcrScanDocumentService implements ApplicationServiceInterface
                 'backhargeAmount' => $filterScannerData['backcharge'] ?? '',
                 'otherAmount' => $filterScannerData['others'] ?? '',
                 'totalAmount' => $filterScannerData['total_after_tax'] ?? '',
-            ]);
+            ]);*/
         } catch (Exception $exception) {
             report($exception->getMessage());
         }
