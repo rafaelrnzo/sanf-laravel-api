@@ -26,4 +26,4 @@ development:deploy:
   rules:
     - if: $CI_COMMIT_BRANCH == "develop"
   tags:
-    - nbs--docker-runner-xl
+    - m.micro
