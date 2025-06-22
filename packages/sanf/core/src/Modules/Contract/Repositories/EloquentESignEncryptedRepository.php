@@ -57,8 +57,8 @@ class EloquentESignEncryptedRepository extends AbstractEloquentRepository implem
             'modified_by',
         ];
         $this->esignDocumentAssigneeEncryptedFields = [
-            'document_id',
-            'document_name',
+            'email',
+            'document_sign_url',
             'reference_no',
         ];
     }

@@ -65,7 +65,8 @@ class EloquentESignDocumentEncryptedRepository extends AbstractEloquentRepositor
             'modified_by',
         ];
         $this->esignDocumentAssigneeEncryptedFields = [
-            'document_name',
+            'email',
+            'document_sign_url',
             'reference_no',
         ];
         $this->eSignOTPEncryptedFields = [
