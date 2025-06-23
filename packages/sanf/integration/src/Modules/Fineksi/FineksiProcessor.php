@@ -12,9 +12,8 @@ class FineksiProcessor extends Processor
 {
     public static function handle(Request $request, callable $next): Response
     {
-        
         $request->headers(['x-client-id' => config('fineksi-api.client_id')]);
-        $request->headers(['x-client-secret' => config('fineksi-api.client_secret')]); 
+        $request->headers(['x-client-secret' => config('fineksi-api.client_secret')]);
         $request->headers(['Content-Type' => 'application/json']);
 
         try {

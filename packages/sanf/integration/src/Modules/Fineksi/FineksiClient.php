@@ -24,9 +24,9 @@ class FineksiClient
         $base64File = base64_encode(file_get_contents($file->getPathname()));
 
         $response = Request::route('document.scan.fineksi', $this->client)
-             ->json([
-                'filedata' => $base64File
-             ])
+            ->json([
+                'filedata' => $base64File,
+            ])
             ->send();
 
         return $response->json(false);

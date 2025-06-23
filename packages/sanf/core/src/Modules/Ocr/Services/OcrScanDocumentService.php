@@ -6,7 +6,6 @@ use Exception;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Ocr\Dtos\OcrScanDocumentResponseDto;
 use Sanf\Core\Modules\Plafond\Dtos\InvoicePlafondUploadDocumentRequestDto;
-use Sanf\Integration\Modules\Nanonets\NanonetsClient;
 use Sanf\Integration\Modules\Fineksi\FineksiClient;
 
 final class OcrScanDocumentService implements ApplicationServiceInterface
@@ -35,7 +34,7 @@ final class OcrScanDocumentService implements ApplicationServiceInterface
 
         try {
             $uploadResponse = $this->client->scanDocument($dto->file);
-	    $headerData = [];
+            $headerData = [];
             $financialData = [];
             foreach ($uploadResponse->data->documents as $key => $value) {
                 $headerData = $value->header->invoice_details;
@@ -53,8 +52,8 @@ final class OcrScanDocumentService implements ApplicationServiceInterface
                 'totalAmount' => strval($financialData->total_amount ?? ''),
             ]);
 
-	    /*Old Script
-	    $latestDataResult = $uploadResponse->result;
+            /*Old Script
+            $latestDataResult = $uploadResponse->result;
 
             $filterScannerData = [];
             foreach ($latestDataResult[0]->prediction as $key => $scanner) {

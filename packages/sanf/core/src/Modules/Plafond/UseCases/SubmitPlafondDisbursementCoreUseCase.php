@@ -71,7 +71,7 @@ final class SubmitPlafondDisbursementCoreUseCase implements ApplicationServiceIn
             'amount' => $this->getTotalAmount($disbursementData->client_amount, $disbursementData->customer_amount, $disbursementData->admin_amount),
             'invoices' => $this->mapInvoices($disbursementData->disbursement_relation->invoices_relation),
             'allocations' => $this->mapAllocations($disbursementData->disbursement_relation->allocations_relation),
-	    'invoice_doc' => $this->mapInvoiceDocuments($disbursementData->disbursement_relation->invoices_relation),
+            'invoice_doc' => $this->mapInvoiceDocuments($disbursementData->disbursement_relation->invoices_relation),
             'percepatan_doc' => !empty($paymentAccDocument) ? [$paymentAccDocument] : null,
             'pendukung_doc' => $this->mapOtherDocuments($disbursementData->disbursement_relation->documents_relation),
             'created_at' => unix_timestamp($disbursementData->created_at),
