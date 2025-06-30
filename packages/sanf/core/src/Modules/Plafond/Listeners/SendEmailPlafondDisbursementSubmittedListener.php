@@ -24,6 +24,8 @@ class SendEmailPlafondDisbursementSubmittedListener
             'Nomor Pengajuan' => $content->disbursementNo,
             'Jumlah Invoice' => $content->invoiceCount,
             'Total Nilai Invoice' => 'Rp. ' . number_format($content->totalAmount, 0, ',', '.'),
+            //'Nomor Surat' => $content->paymentAccDocumentNo,
+            //'Tanggal Surat' => date_localized($content->paymentAccDocumentDate, '%d %B %Y'),
         ];
 
         dispatch(new SendEmailPlafondDisbursementSubmittedForClientJob($clientPayload, [$content->email->client]));
@@ -37,6 +39,8 @@ class SendEmailPlafondDisbursementSubmittedListener
                 'Tanggal Pengajuan' => date_localized($content->createdAt, '%d %B %Y'),
                 'Jumlah Invoice' => $content->invoiceCount,
                 'Total Invoice' => 'Rp. ' . number_format($content->totalAmount, 0, ',', '.'),
+                //'Nomor Surat' => $content->paymentAccDocumentNo,
+                //'Tanggal Surat' => date_localized($content->paymentAccDocumentDate, '%d %B %Y'),
             ];
 
             dispatch(new SendEmailPlafondDisbursementSubmittedForCustomerJob($customerPayload, [$content->email->customer]));

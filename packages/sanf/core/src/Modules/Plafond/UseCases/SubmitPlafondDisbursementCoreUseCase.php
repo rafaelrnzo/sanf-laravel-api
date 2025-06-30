@@ -47,6 +47,7 @@ final class SubmitPlafondDisbursementCoreUseCase implements ApplicationServiceIn
 
         $disbursementData = $plafondDisbursements[0];
 
+        // TODO: Confirm field name to send percepatan document_no and document_date
         $paymentAccDocument = [];
         if (!is_null($disbursementData->disbursement_relation->payment_acc_doc_path)) {
             $paymentAccDocument = (object) [

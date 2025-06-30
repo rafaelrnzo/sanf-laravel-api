@@ -181,6 +181,8 @@ final class AddPlafondDisbursementUseCase implements ApplicationServiceInterface
                     'email' => $userGuzzleEntity->getEmail(),
                 ],
             ]),
+            'payment_acc_doc_no' => $formRequest->paymentAccDocument->no,
+            'payment_acc_doc_date' => $formRequest->paymentAccDocument->date,
         ]);
 
         foreach ($allocationsInput as $allocation) {
@@ -235,6 +237,8 @@ final class AddPlafondDisbursementUseCase implements ApplicationServiceInterface
             'createdAt' => $disbursementModel->created_at,
             'webPartnerUrl' => config('web-partner.base_url') . "plafond/disbursements/{$disbursementXid}/submissions/{$submissionXid}",
             'customerReview' => $formRequest->customerReview,
+            'paymentAccDocumentNo' => $formRequest->paymentAccDocument->no,
+            'paymentAccDocumentDate' => $formRequest->paymentAccDocument->date,
         ];
         $notificationContent = (object) [
             'userId' => $formRequest->userId,

@@ -17,6 +17,7 @@ use Sanf\Core\Modules\Plafond\Dtos\DisbursementAllocationFormRequest;
 use Sanf\Core\Modules\Plafond\Dtos\DisbursementBowheerFormRequest;
 use Sanf\Core\Modules\Plafond\Dtos\DisbursementDocumentFormRequest;
 use Sanf\Core\Modules\Plafond\Dtos\DisbursementInvoiceFormRequest;
+use Sanf\Core\Modules\Plafond\Dtos\PaymentAccDocumentFormRequest;
 use Sanf\Core\Modules\Plafond\Dtos\PlafondDisbursementFormRequest;
 use Sanf\Core\Modules\Plafond\Dtos\ReadPlafondDisbursementRequestDto;
 use Sanf\Core\Modules\Plafond\Enums\PlafondDisbursementStatusEnum;
@@ -121,6 +122,8 @@ class PlafondFactoringDisbursementController extends RestApiController
             'payment_acc_document' => ['nullable', 'array'],
             'payment_acc_document.file_name' => ['nullable', 'string'],
             'payment_acc_document.origin_name' => ['nullable', 'string'],
+            'payment_acc_document.no' => ['nullable', 'required_with:payment_acc_document.file_name', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
+            'payment_acc_document.date' => ['nullable', 'required_with:payment_acc_document.file_name', 'date_format:Y-m-d'],
             'other_document' => ['nullable', 'array'],
             'other_document.*.file_name' => ['required', 'string'],
             'other_document.*.origin_name' => ['required', 'string'],
@@ -168,9 +171,11 @@ class PlafondFactoringDisbursementController extends RestApiController
                     'order_no' => $allocation['order_no'],
                 ]);
             }, $request->get('allocations')),
-            'payment_acc_document' => new DisbursementDocumentFormRequest([
+            'payment_acc_document' => new PaymentAccDocumentFormRequest([
                 'name' => $request->get('payment_acc_document')['file_name'] ?? null,
                 'origin' => $request->get('payment_acc_document')['origin_name'] ?? null,
+                'no' => $request->input('payment_acc_document.no'),
+                'date' => $request->input('payment_acc_document.date'),
             ]),
             'other_document' => array_map(function ($document) {
                 return new DisbursementDocumentFormRequest([
@@ -244,6 +249,8 @@ class PlafondFactoringDisbursementController extends RestApiController
             'payment_acc_document' => ['nullable', 'array'],
             'payment_acc_document.file_name' => ['nullable', 'string'],
             'payment_acc_document.origin_name' => ['nullable', 'string'],
+            'payment_acc_document.no' => ['nullable', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
+            'payment_acc_document.date' => ['nullable', 'date_format:Y-m-d'],
             'other_document' => ['nullable', 'array'],
             'other_document.*.file_name' => ['required', 'string'],
             'other_document.*.origin_name' => ['required', 'string'],
@@ -291,9 +298,11 @@ class PlafondFactoringDisbursementController extends RestApiController
                     'order_no' => $allocation['order_no'],
                 ]);
             }, $request->get('allocations')),
-            'payment_acc_document' => new DisbursementDocumentFormRequest([
+            'payment_acc_document' => new PaymentAccDocumentFormRequest([
                 'name' => $request->get('payment_acc_document')['file_name'] ?? null,
                 'origin' => $request->get('payment_acc_document')['origin_name'] ?? null,
+                'no' => $request->input('payment_acc_document.no'),
+                'date' => $request->input('payment_acc_document.date'),
             ]),
             'other_document' => array_map(function ($document) {
                 return new DisbursementDocumentFormRequest([

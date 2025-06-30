@@ -37,6 +37,8 @@ class PlafondDisbursementSubmissionEncryptedModel extends AbstractModel
         'revision_notes',
         'user_updated_by',
         'nonce',
+        'payment_acc_doc_no',
+        'payment_acc_doc_date',
     ];
 
     protected $hidden = [

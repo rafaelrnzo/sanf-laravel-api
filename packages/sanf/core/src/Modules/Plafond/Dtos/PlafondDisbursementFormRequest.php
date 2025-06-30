@@ -14,7 +14,7 @@ final class PlafondDisbursementFormRequest extends CamelCaseDataTransferObject
     public $invoices;
     public float $totalInvoiceAmount;
     public $allocations;
-    public DisbursementDocumentFormRequest $paymentAccDocument;
+    public PaymentAccDocumentFormRequest $paymentAccDocument;
     public $otherDocument;
     public bool $customerReview;
     public int $createdAt;

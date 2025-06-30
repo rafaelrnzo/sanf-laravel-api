@@ -33,6 +33,8 @@ class PlafondDisbursementSubmissionModel extends AbstractModel
         'updated_at',
         'revision_notes',
         'user_updated_by',
+        'payment_acc_doc_no',
+        'payment_acc_doc_date',
     ];
 
     public function invoicesRelation()
