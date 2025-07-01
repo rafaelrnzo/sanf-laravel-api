@@ -146,6 +146,8 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::post('users/profiles/{xid}/plafonds/factorings/{plafond_xid}/payment-accelaration-document/email', ['as' => 'v1.plafond.payment-accelaration-document.email', 'uses' => 'Plafond\Controllers\PlafondDocumentController@sendPaymentAccelarationDocument']);
     Route::post('users/profiles/{xid}/plafonds/factorings/{plafond_xid}/payment-accelaration-document/print', ['as' => 'v1.plafond.payment-accelaration-document.print', 'uses' => 'Plafond\Controllers\PlafondDocumentController@printPaymentAccelarationDocument']);
     Route::get('users/profiles/{xid}/plafonds/factorings/{plafond_xid}/payment-accelaration-document/download', ['as' => 'v1.plafond.payment-accelaration-document.print', 'uses' => 'Plafond\Controllers\PlafondDocumentController@downloadPaymentAccelarationDocument']);
+    // CR 2025
+    Route::post('users/profiles/{xid}/plafonds/payment-accelaration-document/scan-upload', ['as' => 'v1.plafonds.payment-accelaration-document.scan-upload', 'uses' => 'Plafond\Controllers\PaymentAccDocController@scanOCRUploadDocument']);
 
     // E-SIGN
     Route::get('users/profiles/{xid}/contracts/esign-user', ['as' => 'users.contracts.esign-user', 'uses' => 'Contract\Controllers\ESignDocumentByUserController@getUser']);
