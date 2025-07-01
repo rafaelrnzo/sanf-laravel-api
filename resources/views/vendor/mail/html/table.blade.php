@@ -4,7 +4,7 @@
         <thead>
             <tr align="left">
                 @foreach($tableHead as $th)
-                    <th>{{ $th['label'] }}</th>
+                    <th>{{ is_array($th) ? $th['label'] : $th }}</th>
                 @endforeach
             </tr>
         </thead>
@@ -15,7 +15,7 @@
             @for($i = 0; $i < count($tableBody); $i++)
             <tr align="left">
                 @foreach($tableHead as $target)
-                    <td>{{ $tableBody[$i][$target['targetData']] }}</td>
+                    <td>{{ is_array($target) ? $tableBody[$i][$target['targetData']] : $tableBody[$i][$target] }}</td>
                 @endforeach
             </tr>
             @endfor
