@@ -35,13 +35,6 @@ class MailLayout2Columns extends BaseMail
     public $emailTableBody = [];
 
     /**
-     * Bank sections for the message (if applicable).
-     *
-     * @var array
-     **/
-    public $bankSections = [];
-
-    /**
      * The text / label for the action.
      *
      * @var string
@@ -110,20 +103,12 @@ class MailLayout2Columns extends BaseMail
         return $this;
     }
 
-    public function writeBankSections($sections = [])
-    {
-        $this->bankSections = $sections;
-
-        return $this;
-    }
-
     public function toArray()
     {
         return [
-            'content'      => $this->emailContent,
-            'tableHead'    => $this->emailTableHeader,
-            'tableBody'    => $this->emailTableBody,
-            'bankSections' => $this->bankSections,
+            'content'   => $this->emailContent,
+            'tableHead' => $this->emailTableHeader,
+            'tableBody' => $this->emailTableBody,
         ];
     }
 

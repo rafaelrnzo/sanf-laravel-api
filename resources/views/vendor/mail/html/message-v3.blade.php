@@ -59,34 +59,6 @@
             @endif
             {{--END EMAIL TABLE CONTENT--}}
 
-            {{--START BANK SECTIONS--}}
-            @isset($bankSections)
-            @if(!empty($bankSections))
-            <div class="content-block">
-                @foreach($bankSections as $section)
-                <div style="margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; background-color: #f8f9fa;">
-                    <h4 style="font-family: sans-serif; font-size: 16px; font-weight: bold; margin: 0 0 10px 0; color: #333;">
-                        {{ $section['title'] }}
-                    </h4>
-                    <table role="presentation" border="0" cellpadding="5" cellspacing="0" style="width: 100%;">
-                        @foreach($section['data'] as $key => $value)
-                        <tr>
-                            <td style="font-family: sans-serif; font-size: 14px; font-weight: bold; width: 40%; padding: 5px 0; color: #555;">
-                                {{ $key }}
-                            </td>
-                            <td style="font-family: sans-serif; font-size: 14px; padding: 5px 0; color: #333;">
-                                {{ $value }}
-                            </td>
-                        </tr>
-                        @endforeach
-                    </table>
-                </div>
-                @endforeach
-            </div>
-            @endif
-            @endisset
-            {{--END BANK SECTIONS--}}
-
             {{--START OUTRO MESSAGE--}}
             @isset($outroLines)
             @component('mail::words')
