@@ -47,18 +47,21 @@ final class SubmitPlafondDisbursementCoreUseCase implements ApplicationServiceIn
 
         $disbursementData = $plafondDisbursements[0];
 
-        // TODO: Confirm field name to send percepatan document_no and document_date
         $paymentAccDocument = [];
         if (!is_null($disbursementData->disbursement_relation->payment_acc_doc_path)) {
             $paymentAccDocument = (object) [
                 'percepatan_name' => $disbursementData->disbursement_relation->payment_acc_doc_file_name,
                 'percepatan_path' => config('image-path.plafond.disbursement.payment_acc_document'),
+                'percepatan_number' => $formRequest->paymentAccDocument->no ?? null,
+                'percepatan_date' => $formRequest->paymentAccDocument->date ?? null,
             ];
         }
         if ($disbursementData->status_id === PlafondDisbursementStatusEnum::REVISION && !is_null($disbursementData->disbursement_relation->payment_acc_web_doc_path)) {
             $paymentAccDocument = (object) [
                 'percepatan_name' => $disbursementData->disbursement_relation->payment_acc_web_doc_file_name,
                 'percepatan_path' => config('image-path.plafond.disbursement.payment_acc_document'),
+                'percepatan_number' => $formRequest->paymentAccDocument->no ?? null,
+                'percepatan_date' => $formRequest->paymentAccDocument->date ?? null,
             ];
         }
 
