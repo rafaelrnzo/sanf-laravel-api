@@ -104,14 +104,15 @@ final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterf
         $invoicesInput = [];
         $invoiceFileSequence = 0;
         foreach ($formRequest->invoices as $invoiceIndex => $invoice) {
+            $movedInvoiceFile = $this->invoiceDocumentMovingFile($invoice->fileName, "Invoice-$customerId", ++$invoiceFileSequence);
             /* @var DisbursementInvoiceFormRequest $invoice */
             $invoicesInput[$invoiceIndex] = [
                 'xid' => nano_id(),
                 'plafond_disbursement_id' => $disbursementModel->id,
                 'origin_name' => $invoice->originName,
-                'file_name' => $invoice->fileName,
+                'file_name' => $movedInvoiceFile['file_name'] ?? $invoice->fileName,
                 'path' => config('image-path.plafond.disbursement.invoice_document'),
-                'metadata' => json_encode($this->invoiceDocumentMovingFile($invoice->fileName, "Invoice-$customerId", ++$invoiceFileSequence)),
+                'metadata' => json_encode($movedInvoiceFile),
                 'document_no' => $invoice->invoiceNo,
                 'document_date' => $invoice->invoiceDate,
                 'invoice_amount' => $invoice->invoiceAmount,
@@ -128,14 +129,15 @@ final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterf
             ];
 
             foreach ($invoice->photos as $photoIndex => $photo) {
+                $movedInvoicePhotoFile = $this->invoiceDocumentMovingFile($photo->name, "Invoice-$customerId", ++$invoiceFileSequence);
                 /* @var DisbursementDocumentFormRequest $photo */
                 $invoicesInput[$invoiceIndex]['photos'][] = [
                     'xid' => nano_id(),
                     'plafond_disbursement_id' => $disbursementModel->id,
                     'origin_name' => $photo->origin,
-                    'file_name' => $photo->name,
+                    'file_name' => $movedInvoicePhotoFile['file_name'] ?? $photo->name,
                     'path' => config('image-path.plafond.disbursement.invoice_document'),
-                    'metadata' => json_encode($this->invoiceDocumentMovingFile($photo->name, "Invoice-$customerId", ++$invoiceFileSequence)),
+                    'metadata' => json_encode($movedInvoicePhotoFile),
                     'order_no' => $photoIndex + 1,
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => null,
@@ -146,14 +148,15 @@ final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterf
 
         $documentsInput = [];
         foreach ($formRequest->otherDocument as $documentIndex => $document) {
+            $movedOtherDocumentFile = $this->otherDocumentMovingFile($document->name, "FilePendukung-$customerId", $documentIndex + 1);
             /* @var DisbursementDocumentFormRequest $document */
             $documentsInput[] = [
                 'xid' => nano_id(),
                 'plafond_disbursement_id' => $disbursementModel->id,
                 'origin_name' => $document->origin,
-                'file_name' => $document->name,
+                'file_name' => $movedOtherDocumentFile['file_name'] ?? $document->name,
                 'path' => config('image-path.plafond.disbursement.other_document'),
-                'metadata' => json_encode($this->otherDocumentMovingFile($document->name, "FilePendukung-$customerId", $documentIndex + 1)),
+                'metadata' => json_encode($movedOtherDocumentFile),
                 'order_no' => $documentIndex + 1,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => null,
@@ -171,7 +174,7 @@ final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterf
             'allocation_snapshot' => json_encode($allocationsInput),
             'other_doc_snapshot' => json_encode($documentsInput),
             'payment_acc_doc_origin_name' => $formRequest->paymentAccDocument->origin,
-            'payment_acc_doc_file_name' => $formRequest->paymentAccDocument->name,
+            'payment_acc_doc_file_name' => $paymentAccDocument['file_name'] ?? $formRequest->paymentAccDocument->name,
             'payment_acc_doc_path' => $paymentAccDocument['path'] ?? null,
             'payment_acc_doc_metadata' => json_encode($paymentAccDocument),
             'status_id' => $disbursementSubmissionStatus->getValue(),
