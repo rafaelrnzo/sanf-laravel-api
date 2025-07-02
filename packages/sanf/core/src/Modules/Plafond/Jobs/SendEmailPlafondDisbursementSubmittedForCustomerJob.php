@@ -17,16 +17,18 @@ class SendEmailPlafondDisbursementSubmittedForCustomerJob implements ShouldQueue
 
     protected $data;
     protected $recipients;
+    protected $customerReview;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($data, $recipients)
+    public function __construct($data, $recipients, $customerReview = false)
     {
         $this->data = $data;
         $this->recipients = $recipients;
+        $this->customerReview = $customerReview;
     }
 
     public function handle()
@@ -38,7 +40,9 @@ class SendEmailPlafondDisbursementSubmittedForCustomerJob implements ShouldQueue
         unset($this->data['url']);
 
         $adminMail = config('sanf-mobile.mail_to_admin');
+        $marketingMail = explode(',', config('sanf-mobile.mail_to.marketing'));
         $reportUrl = "mailto:{$adminMail}?subject=Laporan Pengajuan Pencairan Plafon";
+
         $mailable = (new MailLayout2Columns())
             ->subject('Pengajuan Pencairan Plafon')
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
@@ -68,6 +72,13 @@ class SendEmailPlafondDisbursementSubmittedForCustomerJob implements ShouldQueue
                 [__('Laporkan email ini'), $reportUrl]
             );
 
-        return Mail::to($this->recipients)->send($mailable);
+        if ($this->customerReview) {
+            return Mail::to($this->recipients)
+                ->cc($marketingMail)
+                ->send($mailable);
+        } else {
+            return Mail::to($marketingMail)
+                ->send($mailable);
+        }
     }
 }
