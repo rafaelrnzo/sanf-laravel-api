@@ -259,13 +259,13 @@
         <!-- Content -->
         <div class="content">
             <div class="greeting">
-                Kepada Tim {{ $companyName ?? 'PT MENARA TERUS MAKMUR' }}
+                Kepada Tim {{ $companyName ?? 'PT NAMA PERUSAHAAN' }}
             </div>
 
             <div class="section">
                 <p>Selamat siang,</p>
                 <p>Sebelumnya kami ucapkan terima kasih atas kesempatan SANF dapat menjalin kerjasama dalam pembiayaan
-                    Invoice Financing Supplier dengan {{ $companyName ?? 'PT MENARA TERUS MAKMUR' }} dan PT CGS
+                    Invoice Financing Supplier dengan {{ $companyName ?? 'PT NAMA PERUSAHAAN' }} dan PT CGS
                     INDONESIA, berikut terlampir dokumen invoice yang diajukan untuk PT CGS INDONESIA. Mohon dibantu
                     untuk verifikasi dan memberikan persetujuan terkait beberapa poin di bawah:</p>
             </div>
@@ -273,7 +273,7 @@
             <ol class="numbered-list">
                 <li>
                     <strong>Persetujuan atas Surat Permohonan Percepatan Pembayaran ("Terlampir") dari PT CGS INDONESIA
-                        selaku salah satu Supplier PT {{ $companyName ?? 'MENARA TERUS MAKMUR' }}.</strong>
+                        selaku salah satu Supplier PT {{ $companyName ?? 'NAMA PERUSAHAAN' }}.</strong>
                 </li>
 
                 <li>
@@ -354,7 +354,7 @@
                 </li>
 
                 <li>
-                    <strong>PT {{ $companyName ?? 'MENARA TERUS MAKMUR' }} akan melakukan pembayaran atas Invoice yang
+                    <strong>PT {{ $companyName ?? 'NAMA PERUSAHAAN' }} akan melakukan pembayaran atas Invoice yang
                         disetujui (Detail Nomor 2) dan akan dibayarkan secara tepat waktu sesuai Tanggal Jatuh Tempo
                         melalui Pembayaran transfer kepada nomor Virtual Account dengan rincian sebagai
                         berikut:</strong>
