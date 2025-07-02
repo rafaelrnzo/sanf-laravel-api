@@ -11,6 +11,7 @@ use Sanf\Core\Modules\Plafond\Dtos\PlafondDisbursementFormRequest;
 use Sanf\Core\Modules\Plafond\Enums\PlafondDisbursementStatusEnum;
 use Sanf\Core\Modules\Plafond\Events\PlafondDisbursementSubmittedMailEvent;
 use Sanf\Core\Modules\Plafond\Events\PlafondDisbursementSubmittedNotificationEvent;
+use Sanf\Core\Modules\Plafond\Repositories\PaymentAccelarationDocumentRepositoryInterface;
 use Sanf\Core\Modules\Plafond\Repositories\PlafondDisbursementRepositoryInterface;
 use Sanf\Core\Modules\User\Exceptions\ProfileNotFoundException;
 use Sanf\Core\Modules\User\Repositories\ProfileRepositoryInterface;
@@ -23,15 +24,18 @@ final class AddPlafondDisbursementUseCase implements ApplicationServiceInterface
     private $coreClientRepository;
     private $disbursementRepository;
     private $submitToCoreUseCase;
+    private $paymentAccDocRepository;
 
     public function __construct(
         PlafondDisbursementRepositoryInterface $disbursementRepository,
         ProfileRepositoryInterface $coreClientRepository,
-        SubmitPlafondDisbursementCoreUseCase $submitToCoreUseCase
+        SubmitPlafondDisbursementCoreUseCase $submitToCoreUseCase,
+        PaymentAccelarationDocumentRepositoryInterface $paymentAccDocRepository
     ) {
         $this->coreClientRepository = $coreClientRepository;
         $this->disbursementRepository = $disbursementRepository;
         $this->submitToCoreUseCase = $submitToCoreUseCase;
+        $this->paymentAccDocRepository = $paymentAccDocRepository;
     }
 
     /**
@@ -230,6 +234,15 @@ final class AddPlafondDisbursementUseCase implements ApplicationServiceInterface
             $submitToCore = $this->submitToCoreUseCase->execute($coreFormRequest);
         }
 
+        $companyInfo = $this->paymentAccDocRepository->getCompanyInfoForEmail(
+            $formRequest->clientId,
+            $formRequest->plafondId
+        );
+
+        $invoiceTableData = $this->prepareInvoiceTableData($invoicesInput);
+
+        $bankSections = $this->prepareBankSections($companyInfo['company_name'] ?? $userGuzzleEntity->getFullName());
+
         $mailContent = (object) [
             'fullName' => $userGuzzleEntity->getFullName(),
             'email' => (object) [
@@ -237,6 +250,7 @@ final class AddPlafondDisbursementUseCase implements ApplicationServiceInterface
                 'customer' => $formRequest->bouwheer->email,
             ],
             'bowheer' => $formRequest->bouwheer,
+            'company_info' => $companyInfo,
             'disbursementNo' => $disbursementNo,
             'invoiceCount' => count($invoicesInput),
             'totalAmount' => $formRequest->totalInvoiceAmount,
@@ -245,6 +259,9 @@ final class AddPlafondDisbursementUseCase implements ApplicationServiceInterface
             'customerReview' => $formRequest->customerReview,
             'paymentAccDocumentNo' => $formRequest->paymentAccDocument->no,
             'paymentAccDocumentDate' => $formRequest->paymentAccDocument->date,
+            'invoices' => $invoiceTableData,
+            'bank_sections' => $bankSections,
+            'plafond_id' => $formRequest->plafondId,
         ];
         $notificationContent = (object) [
             'userId' => $formRequest->userId,
@@ -352,5 +369,63 @@ final class AddPlafondDisbursementUseCase implements ApplicationServiceInterface
         }
 
         return "{$month}{$year}" . str_pad((string) $count + 1, $width, '0', STR_PAD_LEFT);
+    }
+
+    /**
+     * Prepare invoice data for email table.
+     * @param array $invoicesInput
+     * @return array
+     */
+    private function prepareInvoiceTableData(array $invoicesInput): array
+    {
+        $tableData = [];
+
+        foreach ($invoicesInput as $index => $invoice) {
+            $tableData[] = [
+                'no' => $index + 1,
+                'customer' => $invoice['customer_name'] ?? 'N/A',
+                'tanggal_invoice' => date('d M Y', strtotime($invoice['document_date'])),
+                'due_date' => date('d M Y', strtotime($invoice['due_at'])),
+                'no_invoice' => $invoice['document_no'],
+                'dpp' => 'Rp. ' . number_format($invoice['invoice_amount'], 0, ',', '.'),
+                'ppn' => 'Rp. ' . number_format($invoice['vat_amount'], 0, ',', '.'),
+                'pph23' => 'Rp. ' . number_format($invoice['tax_amount'], 0, ',', '.'),
+                'total' => 'Rp. ' . number_format($invoice['total_amount'], 0, ',', '.'),
+            ];
+        }
+
+        return $tableData;
+    }
+
+    /**
+     * Prepare bank sections for email.
+     * @param string $companyName
+     * @return array
+     */
+    private function prepareBankSections(string $companyName): array
+    {
+        return [
+            [
+                'title' => 'PT Surya Artha Nusantara Finance (SANF)',
+                'data' => [
+                    'Nomor Rekening' => '6077615704545',
+                    'Atas Nama' => $companyName,
+                ],
+            ],
+            [
+                'title' => 'BANK PERMATA',
+                'data' => [
+                    'Nomor Rekening/Virtual Account' => '6876200000447201',
+                    'Atas Nama' => $companyName . ' QQ PT Surya Artha Nusantara Finance',
+                ],
+            ],
+            [
+                'title' => 'BANK MANDIRI',
+                'data' => [
+                    'Nomor Rekening/Virtual Account' => '8890253000008472',
+                    'Atas Nama' => $companyName . ' QQ PT Surya Artha Nusantara Finance',
+                ],
+            ],
+        ];
     }
 }

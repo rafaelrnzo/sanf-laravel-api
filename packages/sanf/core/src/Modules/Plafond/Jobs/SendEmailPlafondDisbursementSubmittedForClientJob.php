@@ -32,7 +32,7 @@ class SendEmailPlafondDisbursementSubmittedForClientJob implements ShouldQueue
     public function handle()
     {
         $appUrl = config('app.url');
-        
+
         if (isset($this->data['to'])) {
             unset($this->data['to']);
         }

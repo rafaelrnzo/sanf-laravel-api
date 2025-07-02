@@ -25,4 +25,18 @@ interface PaymentAccelarationDocumentRepositoryInterface
      * @return PaymentAccelarationDocumentModel|PaymentAccelarationDocumentEncryptedModel|null
      */
     public function findByPlafondId(string $plafondId);
+
+    /**
+     * @param string $clientId
+     * @param string $plafondId
+     * @return PaymentAccelarationDocumentModel|PaymentAccelarationDocumentEncryptedModel|null
+     */
+    public function findByClientIdAndPlafondId(string $clientId, string $plafondId);
+
+    /**
+     * @param string $clientId
+     * @param string $plafondId
+     * @return array|null
+     */
+    public function getCompanyInfoForEmail(string $clientId, string $plafondId): ?array;
 }

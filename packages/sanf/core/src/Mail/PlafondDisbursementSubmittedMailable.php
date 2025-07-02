@@ -12,13 +12,16 @@ class PlafondDisbursementSubmittedMailable extends Mailable
 
     protected $data;
     protected $appUrl;
+    protected $pdfAttachment;
 
     public function __construct(
         array $data,
-        string $appUrl
+        string $appUrl,
+        ?string $pdfAttachment = null
     ) {
         $this->data = $data;
         $this->appUrl = $appUrl;
+        $this->pdfAttachment = $pdfAttachment;
     }
 
     public function build()
@@ -35,59 +38,14 @@ class PlafondDisbursementSubmittedMailable extends Mailable
             ['label' => 'DPP', 'targetData' => 'dpp'],
             ['label' => 'PPN', 'targetData' => 'ppn'],
             ['label' => 'PPH23', 'targetData' => 'pph23'],
-            ['label' => 'Total', 'targetData' => 'total']
+            ['label' => 'Total', 'targetData' => 'total'],
         ];
 
-        $tableData = [
-            [
-                'no' => '1',
-                'customer' => 'PT CGS INDONESIA',
-                'tanggal_invoice' => '30 Apr 2025',
-                'due_date' => '19 July 25',
-                'no_invoice' => '5150914-05-24',
-                'dpp' => 'Rp. 138,778,000',
-                'ppn' => 'Rs. 13,652,662',
-                'pph23' => 'Rp 2,775,564',
-                'total' => 'Rp. 151,248,238'
-            ],
-            [
-                'no' => '2',
-                'customer' => 'PT CGS INDONESIA',
-                'tanggal_invoice' => '30 Apr 2025',
-                'due_date' => '19 July 25',
-                'no_invoice' => '5150915-05-24',
-                'dpp' => 'Rp. 138,778,000',
-                'ppn' => 'Rs. 13,652,662',
-                'pph23' => 'Rp 2,775,564',
-                'total' => 'Rp. 151,248,238'
-            ]
-        ];
+        $tableData = $this->data['invoices'] ?? [];
 
-        $bankSections = [
-            [
-                'title' => 'PT Surya Artha Nusantara Finance (SANF)',
-                'data' => [
-                    'Nomor Rekening' => '6077615704545',
-                    'Atas Nama' => 'PT CGS INDONESIA'
-                ]
-            ],
-            [
-                'title' => 'BANK PERMATA',
-                'data' => [
-                    'Nomor Rekening/Virtual Account' => '6876200000447201',
-                    'Atas Nama' => 'PT CGS INDONESIA QQ PT Surya Artha Nusantara Finance'
-                ]
-            ],
-            [
-                'title' => 'BANK MANDIRI',
-                'data' => [
-                    'Nomor Rekening/Virtual Account' => '8890253000008472',
-                    'Atas Nama' => 'PT CGS INDONESIA QQ PT Surya Artha Nusantara Finance'
-                ]
-            ]
-        ];
+        $bankSections = $this->data['bank_sections'] ?? [];
 
-        return $this->subject('Pengajuan Percepatan Pembayaran')
+        $mailable = $this->subject('Pengajuan Percepatan Pembayaran')
             ->view('core::mail.html.plafond-disbursement-submitted', [
                 'data' => $this->data,
                 'appUrl' => $this->appUrl,
@@ -97,6 +55,22 @@ class PlafondDisbursementSubmittedMailable extends Mailable
                 'reportUrl' => $reportUrl,
                 'leftLogo' => asset('assets/png/sanf-logo-blue.png'),
                 'rightLogo' => asset('assets/png/sanf-tagline.png'),
+                'recipientName' => $this->data['company_info']['bowheer_name'] ?? $this->data['fullName'] ?? 'N/A',
+                'companyName' => $this->data['company_info']['company_name'] ?? 'N/A',
+                'clientName' => $this->data['fullName'] ?? 'N/A',
+                'disbursementNo' => $this->data['Nomor Pengajuan'] ?? $this->data['disbursementNo'] ?? 'N/A',
+                'submissionDate' => $this->data['Tanggal Pengajuan'] ?? date('d F Y'),
+                'invoiceCount' => $this->data['Jumlah Invoice'] ?? count($tableData),
+                'totalAmount' => $this->data['Total Nilai Invoice'] ?? 'Rp. 0',
             ]);
+
+        if ($this->pdfAttachment && file_exists($this->pdfAttachment)) {
+            $mailable->attach($this->pdfAttachment, [
+                'as' => "Surat-Percepatan-Plafond-{$this->data['plafond_id']}.pdf",
+                'mime' => 'application/pdf',
+            ]);
+        }
+
+        return $mailable;
     }
 }
