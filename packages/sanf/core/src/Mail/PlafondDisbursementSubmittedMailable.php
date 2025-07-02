@@ -55,18 +55,18 @@ class PlafondDisbursementSubmittedMailable extends Mailable
                 'reportUrl' => $reportUrl,
                 'leftLogo' => asset('assets/png/sanf-logo-blue.png'),
                 'rightLogo' => asset('assets/png/sanf-tagline.png'),
-                'recipientName' => $this->data['company_info']['bowheer_name'] ?? $this->data['fullName'] ?? 'Nama Bowheer',
-                'companyName' => $this->data['company_info']['company_name'] ?? 'Nama Perusahaan',
+                'recipientName' => $this->data['fullName'] ?? 'Nama Penerima',
+                'companyName' => $this->data['Nama Perusahaan Bowheer'] ?? 'Nama Perusahaan',
                 'clientName' => $this->data['fullName'] ?? 'Nama Client',
-                'disbursementNo' => $this->data['Nomor Pengajuan'] ?? $this->data['disbursementNo'] ?? '-',
-                'submissionDate' => $this->data['Tanggal Pengajuan'] ?? date('d F Y'),
+                'disbursementNo' => $this->data['Nomor Pengajuan'] ?? '-',
+                'submissionDate' => isset($this->data['Tanggal Pengajuan']) ? date('d F Y', strtotime($this->data['Tanggal Pengajuan'])) : date('d F Y'),
                 'invoiceCount' => $this->data['Jumlah Invoice'] ?? count($tableData),
                 'totalAmount' => $this->data['Total Nilai Invoice'] ?? 'Rp. 0',
             ]);
 
         if ($this->pdfAttachment && file_exists($this->pdfAttachment)) {
             $mailable->attach($this->pdfAttachment, [
-                'as' => "Surat-Percepatan-Plafond-{$this->data['plafond_id']}.pdf",
+                'as' => "Surat-Percepatan-Plafond-{$this->data['plafondId']}.pdf",
                 'mime' => 'application/pdf',
             ]);
         }

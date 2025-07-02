@@ -20,10 +20,13 @@ class SendEmailPlafondDisbursementSubmittedListener
         $clientPayload = [
             'to' => $content->fullName,
             'Tanggal Pengajuan' => date_localized($content->createdAt, '%d %B %Y'),
-            'Nama Perusahaan (Bowheer)' => $content->bowheer->name,
+            'Nama Perusahaan Bowheer' => $content->bowheer->name,
             'Nomor Pengajuan' => $content->disbursementNo,
             'Jumlah Invoice' => $content->invoiceCount,
             'Total Nilai Invoice' => 'Rp. ' . number_format($content->totalAmount, 0, ',', '.'),
+            'invoices' => $content->invoices,
+            'bank_sections' => $content->bank_sections,
+            'plafondId' => $content->plafond_id,
             //'Nomor Surat' => $content->paymentAccDocumentNo,
             //'Tanggal Surat' => date_localized($content->paymentAccDocumentDate, '%d %B %Y'),
         ];
