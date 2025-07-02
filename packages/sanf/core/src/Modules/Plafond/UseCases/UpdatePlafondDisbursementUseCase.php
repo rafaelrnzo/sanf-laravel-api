@@ -2,6 +2,7 @@
 
 namespace Sanf\Core\Modules\Plafond\UseCases;
 
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Plafond\Dtos\DisbursementAllocationFormRequest;
@@ -70,6 +71,7 @@ final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterf
         $disbursementStatus = (new PlafondDisbursementStatusEnum(PlafondDisbursementStatusEnum::SUBMIT));
         $disbursementSubmissionStatus = (new PlafondDisbursementStatusEnum(PlafondDisbursementStatusEnum::SUBMIT));
         $version = $disbursementData->version + 1;
+        $customerId = $userGuzzleEntity->getCustomerId();
 
         $disbursementModel = $this->disbursementRepository->updateDisbursement($disbursementData->id, [
             'plafond_submission_xid' => $submissionXid,
@@ -100,6 +102,7 @@ final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterf
         }
 
         $invoicesInput = [];
+        $invoiceFileSequence = 0;
         foreach ($formRequest->invoices as $invoiceIndex => $invoice) {
             /* @var DisbursementInvoiceFormRequest $invoice */
             $invoicesInput[$invoiceIndex] = [
@@ -108,7 +111,7 @@ final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterf
                 'origin_name' => $invoice->originName,
                 'file_name' => $invoice->fileName,
                 'path' => config('image-path.plafond.disbursement.invoice_document'),
-                'metadata' => json_encode($this->invoiceDocumentMovingFile($invoice->fileName)),
+                'metadata' => json_encode($this->invoiceDocumentMovingFile($invoice->fileName, "Invoice-$customerId", ++$invoiceFileSequence)),
                 'document_no' => $invoice->invoiceNo,
                 'document_date' => $invoice->invoiceDate,
                 'invoice_amount' => $invoice->invoiceAmount,
@@ -132,7 +135,7 @@ final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterf
                     'origin_name' => $photo->origin,
                     'file_name' => $photo->name,
                     'path' => config('image-path.plafond.disbursement.invoice_document'),
-                    'metadata' => json_encode($this->invoiceDocumentMovingFile($photo->name)),
+                    'metadata' => json_encode($this->invoiceDocumentMovingFile($photo->name, "Invoice-$customerId", ++$invoiceFileSequence)),
                     'order_no' => $photoIndex + 1,
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => null,
@@ -150,7 +153,7 @@ final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterf
                 'origin_name' => $document->origin,
                 'file_name' => $document->name,
                 'path' => config('image-path.plafond.disbursement.other_document'),
-                'metadata' => json_encode($this->otherDocumentMovingFile($document->name)),
+                'metadata' => json_encode($this->otherDocumentMovingFile($document->name, "FilePendukung-$customerId", $documentIndex + 1)),
                 'order_no' => $documentIndex + 1,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => null,
@@ -158,7 +161,7 @@ final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterf
 
             ];
         }
-        $paymentAccDocument = ($formRequest->paymentAccDocument->origin) ? $this->paymentAccDocumentMovingFile($formRequest) : [];
+        $paymentAccDocument = ($formRequest->paymentAccDocument->origin) ? $this->paymentAccDocumentMovingFile($formRequest, "Percepatan-$customerId") : [];
         $submissionModel = $this->disbursementRepository->createSubmission([
             'xid' => $submissionXid,
             'plafond_disbursement_id' => $disbursementModel->id,
@@ -265,21 +268,28 @@ final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterf
      * @param string $filename
      * @param string $temporaryPath
      * @param string $path
+     * @param string $newFileName @since CR2025 normalisasi nama file
+     * @param int $sequence @since CR2025 nomor urut
      * @return array
      */
-    protected function moveFile(string $filename, string $temporaryPath, string $path)
+    protected function moveFile(string $filename, string $temporaryPath, string $path, string $newFileName, int $sequence)
     {
         $fileExist = Storage::disk('minio_post')->exists("{$temporaryPath}{$filename}");
         if ($fileExist) {
-            Storage::disk('minio_post')->move("{$temporaryPath}{$filename}", "{$path}{$filename}");
+            $fileTimestamp = Carbon::now('Asia/Jakarta')->format('YmdHis');
+            $fileExtension = pathinfo($filename, PATHINFO_EXTENSION);
+            $newFileName .= "-$sequence-$fileTimestamp.$fileExtension"; // Invoice-8624PROSM-123-20250702125959.pdf
+            Storage::disk('minio_post')->move("{$temporaryPath}{$filename}", "{$path}{$newFileName}");
+        } else {
+            $newFileName = $filename;
         }
 
-        $metadata = Storage::disk('minio_post')->getMetaData("{$path}{$filename}");
+        $metadata = Storage::disk('minio_post')->getMetaData("{$path}{$newFileName}");
 
         return [
-            'file_name' => $filename,
+            'file_name' => $newFileName,
             'directory' => $path,
-            'path' => "{$path}{$filename}",
+            'path' => "{$path}{$newFileName}",
             'mime_type' => $metadata['mimetype'],
             'size' => $metadata['size'],
         ];
@@ -287,38 +297,43 @@ final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterf
 
     /**
      * @param PlafondDisbursementFormRequest $formRequest
+     * @param string $newFileName @since CR2025 normalisasi nama file
      * @return array
      */
-    private function paymentAccDocumentMovingFile(PlafondDisbursementFormRequest $formRequest)
+    private function paymentAccDocumentMovingFile(PlafondDisbursementFormRequest $formRequest, string $newFileName)
     {
         $temporaryPath = config('image-path.temp');
         $path = config('image-path.plafond.disbursement.payment_acc_document');
         $filename = $formRequest->paymentAccDocument->name;
 
-        return $this->moveFile($filename, $temporaryPath, $path);
+        return $this->moveFile($filename, $temporaryPath, $path, $newFileName, 1);
     }
 
     /**
      * @param string $filename
+     * @param string $newFileName @since CR2025 normalisasi nama file
+     * @param int $sequence @since CR2025 nomor urut
      * @return array
      */
-    private function invoiceDocumentMovingFile(string $filename)
+    private function invoiceDocumentMovingFile(string $filename, string $newFileName, int $sequence)
     {
         $temporaryPath = config('image-path.temp');
         $path = config('image-path.plafond.disbursement.invoice_document');
 
-        return $this->moveFile($filename, $temporaryPath, $path);
+        return $this->moveFile($filename, $temporaryPath, $path, $newFileName, $sequence);
     }
 
     /**
      * @param string $filename
+     * @param string $newFileName @since CR2025 normalisasi nama file
+     * @param int $sequence @since CR2025 nomor urut
      * @return array
      */
-    private function otherDocumentMovingFile(string $filename)
+    private function otherDocumentMovingFile(string $filename, string $newFileName, int $sequence)
     {
         $temporaryPath = config('image-path.temp');
         $path = config('image-path.plafond.disbursement.other_document');
 
-        return $this->moveFile($filename, $temporaryPath, $path);
+        return $this->moveFile($filename, $temporaryPath, $path, $newFileName, $sequence);
     }
 }
