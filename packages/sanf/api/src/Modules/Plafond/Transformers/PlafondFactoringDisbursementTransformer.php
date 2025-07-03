@@ -16,6 +16,8 @@ final class PlafondFactoringDisbursementTransformer extends TransformerAbstract
                 'file_name' => $dto->disbursement_relation->payment_acc_doc_file_name,
                 'origin_name' => $dto->disbursement_relation->payment_acc_doc_origin_name,
                 'path' => file_get_temp_url($dto->disbursement_relation->payment_acc_doc_path),
+                'document_no' => $dto->disbursement_relation->payment_acc_doc_no,
+                'document_date' => $dto->disbursement_relation->payment_acc_doc_date,
             ];
         }
 
@@ -24,6 +26,8 @@ final class PlafondFactoringDisbursementTransformer extends TransformerAbstract
                 'file_name' => $dto->disbursement_relation->payment_acc_web_doc_file_name,
                 'origin_name' => $dto->disbursement_relation->payment_acc_web_doc_origin_name,
                 'path' => file_get_temp_url($dto->disbursement_relation->payment_acc_web_doc_path),
+                'document_no' => $dto->disbursement_relation->payment_acc_doc_no,
+                'document_date' => $dto->disbursement_relation->payment_acc_doc_date,
             ];
         }
 
