@@ -243,8 +243,50 @@ final class AddPlafondDisbursementUseCase implements ApplicationServiceInterface
         $invoiceTableData = $this->prepareInvoiceTableData($invoicesInput, $clientName);
 
         $sanfBankData = $this->getSanfBankData();
-        
+
         $clientBankData = $this->getClientBankDataFromAllocations($allocationsInput);
+
+        $paymentAccDocumentAttachment = null;
+        if (!empty($paymentAccDocument)) {
+            $paymentAccDocumentAttachment = [
+                'path' => $paymentAccDocument['path'] ?? null,
+                'file_name' => $paymentAccDocument['file_name'] ?? $formRequest->paymentAccDocument->name,
+                'origin_name' => $formRequest->paymentAccDocument->origin,
+                'mime_type' => $paymentAccDocument['mime_type'] ?? 'application/pdf',
+            ];
+        }
+
+        $invoiceDocuments = [];
+        $invoicePhotos = [];
+        foreach ($invoicesInput as $invoice) {
+            $invoiceDocuments[] = [
+                'path' => $invoice['path'] . $invoice['file_name'],
+                'file_name' => $invoice['file_name'],
+                'origin_name' => $invoice['origin_name'],
+                'mime_type' => json_decode($invoice['metadata'], true)['mime_type'] ?? 'application/pdf',
+            ];
+
+            if (isset($invoice['photos'])) {
+                foreach ($invoice['photos'] as $photo) {
+                    $invoicePhotos[] = [
+                        'path' => $photo['path'] . $photo['file_name'],
+                        'file_name' => $photo['file_name'],
+                        'origin_name' => $photo['origin_name'],
+                        'mime_type' => json_decode($photo['metadata'], true)['mime_type'] ?? 'image/jpeg',
+                    ];
+                }
+            }
+        }
+
+        $otherDocuments = [];
+        foreach ($documentsInput as $document) {
+            $otherDocuments[] = [
+                'path' => $document['path'] . $document['file_name'],
+                'file_name' => $document['file_name'],
+                'origin_name' => $document['origin_name'],
+                'mime_type' => json_decode($document['metadata'], true)['mime_type'] ?? 'application/pdf',
+            ];
+        }
 
         $mailContent = (object) [
             'fullName' => $clientName,
@@ -266,6 +308,10 @@ final class AddPlafondDisbursementUseCase implements ApplicationServiceInterface
             'targetBankForSanf' => $sanfBankData,
             'targetBankForClient' => $clientBankData,
             'plafond_id' => $formRequest->plafondId,
+            'payment_acc_document' => $paymentAccDocumentAttachment,
+            'invoice_documents' => $invoiceDocuments,
+            'invoice_photos' => $invoicePhotos,
+            'other_documents' => $otherDocuments,
         ];
         $notificationContent = (object) [
             'userId' => $formRequest->userId,
@@ -408,13 +454,13 @@ final class AddPlafondDisbursementUseCase implements ApplicationServiceInterface
     private function getSanfBankData(): array
     {
         $sanfCompanyConfig = config('additional.company');
-        
+
         return [
             [
-                'title' => ($sanfCompanyConfig['company_prefix'] ?? 'PT') . ' ' . ($sanfCompanyConfig['company_name'] ?? 'Surya Artha Nusantara Finance') . ' (' . ($sanfCompanyConfig['company_initials'] ?? 'SANF') . ')',
+                'title' => strtoupper($sanfCompanyConfig['bank_provider'] ?? 'BANK SURYA ARTHA NUSANTARA FINANCE'),
                 'Nomor Rekening' => $sanfCompanyConfig['bank_account_no'] ?? '1270004589980',
-                'Atas Nama' => $companyConfig['bank_owner'] ?? 'PT Surya Artha Nusantara Finance',
-            ]
+                'Atas Nama' => $sanfCompanyConfig['bank_owner'] ?? 'PT Surya Artha Nusantara Finance',
+            ],
         ];
     }
 

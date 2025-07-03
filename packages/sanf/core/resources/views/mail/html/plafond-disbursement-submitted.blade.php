@@ -74,7 +74,6 @@
             content: counter(list-counter) ".";
             position: absolute;
             left: 0;
-            font-weight: bold;
         }
 
         .table-container {
@@ -91,8 +90,6 @@
 
         .data-table th {
             background-color: #f0f0f0;
-            color: #000;
-            font-weight: bold;
             padding: 8px 6px;
             text-align: center;
             border: 1px solid #000;
@@ -114,16 +111,6 @@
             margin-bottom: 15px;
             border: 1px solid #000;
             background-color: #fff;
-        }
-
-        .bank-title {
-            font-weight: bold;
-            font-size: 12px;
-            color: #000;
-            background-color: #f0f0f0;
-            padding: 8px 12px;
-            border-bottom: 1px solid #000;
-            margin: 0;
         }
 
         .bank-info {
@@ -271,13 +258,13 @@
 
             <ol class="numbered-list">
                 <li>
-                    <strong>Persetujuan atas Surat Permohonan Percepatan Pembayaran ("Terlampir") dari {{ $clientName ?? 'NAMA CLIENT' }}
-                        selaku salah satu Supplier {{ $bowheerName ?? 'NAMA BOWHEER' }}.</strong>
+                    Persetujuan atas Surat Permohonan Percepatan Pembayaran ("Terlampir") dari {{ $clientName ?? 'NAMA CLIENT' }}
+                        selaku salah satu Supplier {{ $bowheerName ?? 'NAMA BOWHEER' }}.
                 </li>
 
                 <li>
-                    <strong>Persetujuan atas invoice-invoice dengan nilai sebagaimana tercantum dalam tabel dibawah ini
-                        telah disetujui dan diverifikasi kebenarannya:</strong>
+                    Persetujuan atas invoice-invoice dengan nilai sebagaimana tercantum dalam tabel dibawah ini
+                        telah disetujui dan diverifikasi kebenarannya:
 
                     @if (!empty($tableData))
                         <div class="table-container">
@@ -310,16 +297,23 @@
                     @endif
                 </li>
 
-                <li>
-                    <strong>{{ $sanfName ?? 'PT Surya Artha Nusantara Finance' }} ({{ $initialSanf ?? 'SANF' }}) akan melakukan pembayaran Invoice dipercepat (Detail
+                {{-- <li>
+                    {{ $sanfName ?? 'PT Surya Artha Nusantara Finance' }} ({{ $initialSanf ?? 'SANF' }}) akan melakukan pembayaran Invoice dipercepat (Detail
                         Nomor 2) kepada {{ $clientName ?? 'NAMA CLIENT' }} setelah dikurangi diskonto, melalui transfer dengan rincian
-                        sebagai berikut:</strong>
+                        sebagai berikut:
 
                     @if (!empty($targetBankForSanf))
                         @foreach ($targetBankForSanf as $bankSection)
                             <div class="bank-section">
-                                <div class="bank-title">{{ $bankSection['title'] ?? 'NAMA BANK' }}</div>
                                 <div class="bank-info">
+                                    <div class="bank-row">
+                                        <div class="bank-label">
+                                            Nama Bank
+                                        </div>
+                                        <div class="bank-value">
+                                            {{ $bankSection['title'] ?? 'NAMA BANK' }}
+                                        </div>
+                                    </div>
                                     <div class="bank-row">
                                         <div class="bank-label">Nomor Rekening</div>
                                         <div class="bank-value">
@@ -338,19 +332,26 @@
                             Kesalahan dalam memuat data bank SANF.
                         </div>
                     @endif
-                </li>
+                </li> --}}
 
                 <li>
-                    <strong>{{ $bowheerName ?? 'NAMA BOWHEER' }} akan melakukan pembayaran atas Invoice yang
+                    {{ $bowheerName ?? 'NAMA BOWHEER' }} akan melakukan pembayaran atas Invoice yang
                         disetujui (Detail Nomor 2) dan akan dibayarkan secara tepat waktu sesuai Tanggal Jatuh Tempo
                         melalui Pembayaran transfer kepada nomor Virtual Account dengan rincian sebagai
-                        berikut:</strong>
+                        berikut:
 
                     @if (!empty($targetBankForClient))
                         @foreach ($targetBankForClient as $bankSection)
                             <div class="bank-section">
-                                <div class="bank-title">{{ $bankSection['title'] ?? 'NAMA BANK' }}</div>
                                 <div class="bank-info">
+                                    <div class="bank-row">
+                                        <div class="bank-label">
+                                            Nama Bank
+                                        </div>
+                                        <div class="bank-value">
+                                            {{ $bankSection['title'] ?? 'NAMA BANK' }}
+                                        </div>
+                                    </div>
                                     <div class="bank-row">
                                         <div class="bank-label">Nomor Rekening</div>
                                         <div class="bank-value">
@@ -376,7 +377,7 @@
                 <p>Demikian permohonan kami atas konfirmasi beberapa persetujuan Invoice Financing {{ $bowheerName ?? 'NAMA BOWHEER' }}.
                     Terima kasih atas bantuan dan waktunya.</p>
 
-                <p><strong>Best regards,</strong><br>
+                <p>Best regards,<br>
                     Customer Relation<br>
                     {{ $sanfName ?? 'PT Surya Artha Nusantara Finance' }}
             </div>

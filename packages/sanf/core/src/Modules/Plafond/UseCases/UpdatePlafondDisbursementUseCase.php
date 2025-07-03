@@ -16,8 +16,8 @@ use Sanf\Core\Modules\Plafond\Events\PlafondDisbursementSubmittedNotificationEve
 use Sanf\Core\Modules\Plafond\Exceptions\PlafondDisbursementIsNotRevisionException;
 use Sanf\Core\Modules\Plafond\Exceptions\PlafondDisbursementNotFoundException;
 use Sanf\Core\Modules\Plafond\Queries\ReadPlafondDisbursementEloquentBuilder;
-use Sanf\Core\Modules\Plafond\Repositories\PlafondDisbursementRepositoryInterface;
 use Sanf\Core\Modules\Plafond\Repositories\PaymentAccelarationDocumentRepositoryInterface;
+use Sanf\Core\Modules\Plafond\Repositories\PlafondDisbursementRepositoryInterface;
 use Sanf\Core\Modules\User\Exceptions\ProfileNotFoundException;
 use Sanf\Core\Modules\User\Repositories\ProfileRepositoryInterface;
 
@@ -245,8 +245,50 @@ final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterf
         $invoiceTableData = $this->prepareInvoiceTableData($invoicesInput, $formRequest->bouwheer->name);
 
         $sanfBankData = $this->getSanfBankData();
-        
+
         $clientBankData = $this->getClientBankDataFromAllocations($allocationsInput);
+
+        $paymentAccDocumentAttachment = null;
+        if (!empty($paymentAccDocument)) {
+            $paymentAccDocumentAttachment = [
+                'path' => $paymentAccDocument['path'] ?? null,
+                'file_name' => $paymentAccDocument['file_name'] ?? $formRequest->paymentAccDocument->name,
+                'origin_name' => $formRequest->paymentAccDocument->origin,
+                'mime_type' => $paymentAccDocument['mime_type'] ?? 'application/pdf',
+            ];
+        }
+
+        $invoiceDocuments = [];
+        $invoicePhotos = [];
+        foreach ($invoicesInput as $invoice) {
+            $invoiceDocuments[] = [
+                'path' => $invoice['path'] . $invoice['file_name'],
+                'file_name' => $invoice['file_name'],
+                'origin_name' => $invoice['origin_name'],
+                'mime_type' => json_decode($invoice['metadata'], true)['mime_type'] ?? 'application/pdf',
+            ];
+
+            if (isset($invoice['photos'])) {
+                foreach ($invoice['photos'] as $photo) {
+                    $invoicePhotos[] = [
+                        'path' => $photo['path'] . $photo['file_name'],
+                        'file_name' => $photo['file_name'],
+                        'origin_name' => $photo['origin_name'],
+                        'mime_type' => json_decode($photo['metadata'], true)['mime_type'] ?? 'image/jpeg',
+                    ];
+                }
+            }
+        }
+
+        $otherDocuments = [];
+        foreach ($documentsInput as $document) {
+            $otherDocuments[] = [
+                'path' => $document['path'] . $document['file_name'],
+                'file_name' => $document['file_name'],
+                'origin_name' => $document['origin_name'],
+                'mime_type' => json_decode($document['metadata'], true)['mime_type'] ?? 'application/pdf',
+            ];
+        }
 
         $mailContent = (object) [
             'fullName' => $userGuzzleEntity->getFullName(),
@@ -268,6 +310,10 @@ final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterf
             'targetBankForSanf' => $sanfBankData,
             'targetBankForClient' => $clientBankData,
             'plafond_id' => $formRequest->plafondId,
+            'payment_acc_document' => $paymentAccDocumentAttachment,
+            'invoice_documents' => $invoiceDocuments,
+            'invoice_photos' => $invoicePhotos,
+            'other_documents' => $otherDocuments,
         ];
         $notificationContent = (object) [
             'userId' => $formRequest->userId,
@@ -392,13 +438,13 @@ final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterf
     private function getSanfBankData(): array
     {
         $companyConfig = config('additional.company');
-        
+
         return [
             [
                 'title' => ($companyConfig['company_prefix'] ?? 'PT') . ' ' . ($companyConfig['company_name'] ?? 'Surya Artha Nusantara Finance') . ' (' . ($companyConfig['company_initials'] ?? 'SANF') . ')',
                 'Nomor Rekening' => $companyConfig['bank_account_no'] ?? '1270004589980',
                 'Atas Nama' => $companyConfig['bank_owner'] ?? 'PT Surya Artha Nusantara Finance',
-            ]
+            ],
         ];
     }
 

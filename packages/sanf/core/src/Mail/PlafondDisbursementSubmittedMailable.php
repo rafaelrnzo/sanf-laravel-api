@@ -5,6 +5,7 @@ namespace Sanf\Core\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Storage;
 
 class PlafondDisbursementSubmittedMailable extends Mailable
 {
@@ -71,6 +72,69 @@ class PlafondDisbursementSubmittedMailable extends Mailable
                 'as' => "Surat-Percepatan-Plafond-{$this->data['plafond_id']}.pdf",
                 'mime' => 'application/pdf',
             ]);
+        }
+
+        if (isset($this->data['payment_acc_document']) && !empty($this->data['payment_acc_document'])) {
+            $paymentDoc = $this->data['payment_acc_document'];
+            $paymentDocPath = $paymentDoc['path'] ?? null;
+
+            if ($paymentDocPath && Storage::disk('minio_post')->exists($paymentDocPath)) {
+                $mailable->attachData(
+                    Storage::disk('minio_post')->get($paymentDocPath),
+                    $paymentDoc['origin_name'] ?? $paymentDoc['file_name'] ?? 'Payment-Acceleration-Document.pdf',
+                    [
+                        'mime' => $paymentDoc['mime_type'] ?? 'application/pdf',
+                    ]
+                );
+            }
+        }
+
+        if (isset($this->data['invoice_documents']) && !empty($this->data['invoice_documents'])) {
+            foreach ($this->data['invoice_documents'] as $invoiceDoc) {
+                $invoiceDocPath = $invoiceDoc['path'] ?? null;
+
+                if ($invoiceDocPath && Storage::disk('minio_post')->exists($invoiceDocPath)) {
+                    $mailable->attachData(
+                        Storage::disk('minio_post')->get($invoiceDocPath),
+                        $invoiceDoc['origin_name'] ?? $invoiceDoc['file_name'] ?? 'Invoice-Document.pdf',
+                        [
+                            'mime' => $invoiceDoc['mime_type'] ?? 'application/pdf',
+                        ]
+                    );
+                }
+            }
+        }
+
+        if (isset($this->data['invoice_photos']) && !empty($this->data['invoice_photos'])) {
+            foreach ($this->data['invoice_photos'] as $invoicePhoto) {
+                $invoicePhotoPath = $invoicePhoto['path'] ?? null;
+
+                if ($invoicePhotoPath && Storage::disk('minio_post')->exists($invoicePhotoPath)) {
+                    $mailable->attachData(
+                        Storage::disk('minio_post')->get($invoicePhotoPath),
+                        $invoicePhoto['origin_name'] ?? $invoicePhoto['file_name'] ?? 'Invoice-Photo.jpg',
+                        [
+                            'mime' => $invoicePhoto['mime_type'] ?? 'image/jpeg',
+                        ]
+                    );
+                }
+            }
+        }
+
+        if (isset($this->data['other_documents']) && !empty($this->data['other_documents'])) {
+            foreach ($this->data['other_documents'] as $otherDoc) {
+                $otherDocPath = $otherDoc['path'] ?? null;
+
+                if ($otherDocPath && Storage::disk('minio_post')->exists($otherDocPath)) {
+                    $mailable->attachData(
+                        Storage::disk('minio_post')->get($otherDocPath),
+                        $otherDoc['origin_name'] ?? $otherDoc['file_name'] ?? 'Supporting-Document.pdf',
+                        [
+                            'mime' => $otherDoc['mime_type'] ?? 'application/pdf',
+                        ]
+                    );
+                }
+            }
         }
 
         return $mailable;
