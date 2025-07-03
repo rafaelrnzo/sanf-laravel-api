@@ -18,17 +18,13 @@ class SendEmailPlafondDisbursementSubmittedListener
         $content = $event->content;
 
         $clientPayload = [
-            'to' => $content->fullName,
-            'Tanggal Pengajuan' => date_localized($content->createdAt, '%d %B %Y'),
-            'Nama Perusahaan Bowheer' => $content->bowheer->name,
-            'Nomor Pengajuan' => $content->disbursementNo,
-            'Jumlah Invoice' => $content->invoiceCount,
-            'Total Nilai Invoice' => 'Rp. ' . number_format($content->totalAmount, 0, ',', '.'),
+            'fullName' => $content->fullName,
+            'bowheer' => $content->bowheer,
+            'company_info' => $content->company_info,
             'invoices' => $content->invoices,
-            'bank_sections' => $content->bank_sections,
-            'plafondId' => $content->plafond_id,
-            //'Nomor Surat' => $content->paymentAccDocumentNo,
-            //'Tanggal Surat' => date_localized($content->paymentAccDocumentDate, '%d %B %Y'),
+            'targetBankForSanf' => $content->targetBankForSanf,
+            'targetBankForClient' => $content->targetBankForClient,
+            'plafond_id' => $content->plafond_id,
         ];
 
         dispatch(new SendEmailPlafondDisbursementSubmittedForClientJob($clientPayload, [$content->email->client]));

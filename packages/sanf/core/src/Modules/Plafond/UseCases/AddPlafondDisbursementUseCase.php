@@ -54,13 +54,14 @@ final class AddPlafondDisbursementUseCase implements ApplicationServiceInterface
         $disbursementStatus = ($formRequest->customerReview) ? (new PlafondDisbursementStatusEnum(PlafondDisbursementStatusEnum::SUBMIT)) : (new PlafondDisbursementStatusEnum(PlafondDisbursementStatusEnum::DONE));
         $submissionXid = nano_id();
         $customerId = $userGuzzleEntity->getCustomerId();
+        $clientName = $userGuzzleEntity->getFullName();
 
         $disbursementModel = $this->disbursementRepository->createDisbursement([
             'xid' => $disbursementXid,
             'plafond_id' => $formRequest->plafondId,
             'disbursement_no' => $disbursementNo,
             'client_id' => $userGuzzleEntity->getCustomerId(),
-            'client_name' => $userGuzzleEntity->getFullName(),
+            'client_name' => $clientName,
             'client_mail' => $userGuzzleEntity->getEmail(),
             'customer_id' => $formRequest->bouwheer->custId ?? $userGuzzleEntity->getCustomerId(),
             'customer_bowheer_id' => $formRequest->bouwheer->id,
@@ -239,12 +240,14 @@ final class AddPlafondDisbursementUseCase implements ApplicationServiceInterface
             $formRequest->plafondId
         );
 
-        $invoiceTableData = $this->prepareInvoiceTableData($invoicesInput);
+        $invoiceTableData = $this->prepareInvoiceTableData($invoicesInput, $clientName);
 
-        $bankSections = $this->prepareBankSections($companyInfo['company_name'] ?? $userGuzzleEntity->getFullName());
+        $sanfBankData = $this->getSanfBankData();
+        
+        $clientBankData = $this->getClientBankDataFromAllocations($allocationsInput);
 
         $mailContent = (object) [
-            'fullName' => $userGuzzleEntity->getFullName(),
+            'fullName' => $clientName,
             'email' => (object) [
                 'client' => $userGuzzleEntity->getEmail(),
                 'customer' => $formRequest->bouwheer->email,
@@ -260,13 +263,14 @@ final class AddPlafondDisbursementUseCase implements ApplicationServiceInterface
             'paymentAccDocumentNo' => $formRequest->paymentAccDocument->no,
             'paymentAccDocumentDate' => $formRequest->paymentAccDocument->date,
             'invoices' => $invoiceTableData,
-            'bank_sections' => $bankSections,
+            'targetBankForSanf' => $sanfBankData,
+            'targetBankForClient' => $clientBankData,
             'plafond_id' => $formRequest->plafondId,
         ];
         $notificationContent = (object) [
             'userId' => $formRequest->userId,
             'clientId' => $formRequest->clientId,
-            'client' => $userGuzzleEntity->getFullName(),
+            'client' => $clientName,
             'bowheerId' => $formRequest->bouwheer->id,
             'bowheer' => $formRequest->bouwheer->name,
             'disbursementXid' => $disbursementXid,
@@ -374,16 +378,17 @@ final class AddPlafondDisbursementUseCase implements ApplicationServiceInterface
     /**
      * Prepare invoice data for email table.
      * @param array $invoicesInput
+     * @param string $clientName
      * @return array
      */
-    private function prepareInvoiceTableData(array $invoicesInput): array
+    private function prepareInvoiceTableData(array $invoicesInput, string $clientName): array
     {
         $tableData = [];
 
         foreach ($invoicesInput as $index => $invoice) {
             $tableData[] = [
                 'no' => $index + 1,
-                'customer' => $invoice['customer_name'] ?? 'N/A',
+                'customer' => $clientName,
                 'tanggal_invoice' => date('d M Y', strtotime($invoice['document_date'])),
                 'due_date' => date('d M Y', strtotime($invoice['due_at'])),
                 'no_invoice' => $invoice['document_no'],
@@ -398,34 +403,45 @@ final class AddPlafondDisbursementUseCase implements ApplicationServiceInterface
     }
 
     /**
-     * Prepare bank sections for email.
-     * @param string $companyName
      * @return array
      */
-    private function prepareBankSections(string $companyName): array
+    private function getSanfBankData(): array
     {
+        $sanfCompanyConfig = config('additional.company');
+        
         return [
             [
-                'title' => 'PT Surya Artha Nusantara Finance (SANF)',
-                'data' => [
-                    'Nomor Rekening' => '6077615704545',
-                    'Atas Nama' => $companyName,
-                ],
-            ],
-            [
-                'title' => 'BANK PERMATA',
-                'data' => [
-                    'Nomor Rekening/Virtual Account' => '6876200000447201',
-                    'Atas Nama' => $companyName . ' QQ PT Surya Artha Nusantara Finance',
-                ],
-            ],
-            [
-                'title' => 'BANK MANDIRI',
-                'data' => [
-                    'Nomor Rekening/Virtual Account' => '8890253000008472',
-                    'Atas Nama' => $companyName . ' QQ PT Surya Artha Nusantara Finance',
-                ],
-            ],
+                'title' => ($sanfCompanyConfig['company_prefix'] ?? 'PT') . ' ' . ($sanfCompanyConfig['company_name'] ?? 'Surya Artha Nusantara Finance') . ' (' . ($sanfCompanyConfig['company_initials'] ?? 'SANF') . ')',
+                'Nomor Rekening' => $sanfCompanyConfig['bank_account_no'] ?? '1270004589980',
+                'Atas Nama' => $companyConfig['bank_owner'] ?? 'PT Surya Artha Nusantara Finance',
+            ]
         ];
+    }
+
+    /**
+     * @param array $allocationsInput
+     * @return array
+     */
+    private function getClientBankDataFromAllocations(array $allocationsInput): array
+    {
+        $bankSections = [];
+        $groupedAllocations = [];
+
+        foreach ($allocationsInput as $allocation) {
+            $key = $allocation['provider'] . '_' . $allocation['account_no'];
+            if (!isset($groupedAllocations[$key])) {
+                $groupedAllocations[$key] = $allocation;
+            }
+        }
+
+        foreach ($groupedAllocations as $allocation) {
+            $bankSections[] = [
+                'title' => strtoupper($allocation['provider']),
+                'Nomor Rekening' => $allocation['account_no'],
+                'Atas Nama' => $allocation['owner'],
+            ];
+        }
+
+        return $bankSections;
     }
 }

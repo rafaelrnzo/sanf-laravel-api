@@ -17,6 +17,7 @@ use Sanf\Core\Modules\Plafond\Exceptions\PlafondDisbursementIsNotRevisionExcepti
 use Sanf\Core\Modules\Plafond\Exceptions\PlafondDisbursementNotFoundException;
 use Sanf\Core\Modules\Plafond\Queries\ReadPlafondDisbursementEloquentBuilder;
 use Sanf\Core\Modules\Plafond\Repositories\PlafondDisbursementRepositoryInterface;
+use Sanf\Core\Modules\Plafond\Repositories\PaymentAccelarationDocumentRepositoryInterface;
 use Sanf\Core\Modules\User\Exceptions\ProfileNotFoundException;
 use Sanf\Core\Modules\User\Repositories\ProfileRepositoryInterface;
 
@@ -27,15 +28,18 @@ final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterf
     private $coreClientRepository;
     private $disbursementRepository;
     private $submitToCoreUseCase;
+    private $paymentAccDocRepository;
 
     public function __construct(
         PlafondDisbursementRepositoryInterface $disbursementRepository,
         ProfileRepositoryInterface $coreClientRepository,
-        SubmitPlafondDisbursementCoreUseCase $submitToCoreUseCase
+        SubmitPlafondDisbursementCoreUseCase $submitToCoreUseCase,
+        PaymentAccelarationDocumentRepositoryInterface $paymentAccDocRepository
     ) {
         $this->coreClientRepository = $coreClientRepository;
         $this->disbursementRepository = $disbursementRepository;
         $this->submitToCoreUseCase = $submitToCoreUseCase;
+        $this->paymentAccDocRepository = $paymentAccDocRepository;
     }
 
     /**
@@ -233,6 +237,17 @@ final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterf
             $this->submitToCoreUseCase->execute($coreFormRequest);
         }
 
+        $companyInfo = $this->paymentAccDocRepository->getCompanyInfoForEmail(
+            $formRequest->clientId,
+            $formRequest->plafondId
+        );
+
+        $invoiceTableData = $this->prepareInvoiceTableData($invoicesInput, $formRequest->bouwheer->name);
+
+        $sanfBankData = $this->getSanfBankData();
+        
+        $clientBankData = $this->getClientBankDataFromAllocations($allocationsInput);
+
         $mailContent = (object) [
             'fullName' => $userGuzzleEntity->getFullName(),
             'email' => (object) [
@@ -240,6 +255,7 @@ final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterf
                 'customer' => $formRequest->bouwheer->email,
             ],
             'bowheer' => $formRequest->bouwheer,
+            'company_info' => $companyInfo,
             'disbursementNo' => $disbursementNo,
             'invoiceCount' => count($invoicesInput),
             'totalAmount' => $formRequest->totalInvoiceAmount,
@@ -248,6 +264,10 @@ final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterf
             'customerReview' => $formRequest->customerReview,
             'paymentAccDocumentNo' => $formRequest->paymentAccDocument->no,
             'paymentAccDocumentDate' => $formRequest->paymentAccDocument->date,
+            'invoices' => $invoiceTableData,
+            'targetBankForSanf' => $sanfBankData,
+            'targetBankForClient' => $clientBankData,
+            'plafond_id' => $formRequest->plafondId,
         ];
         $notificationContent = (object) [
             'userId' => $formRequest->userId,
@@ -338,5 +358,75 @@ final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterf
         $path = config('image-path.plafond.disbursement.other_document');
 
         return $this->moveFile($filename, $temporaryPath, $path, $newFileName, $sequence);
+    }
+
+    /**
+     * @param array $invoicesInput
+     * @param string $clientName
+     * @return array
+     */
+    private function prepareInvoiceTableData(array $invoicesInput, string $clientName): array
+    {
+        $tableData = [];
+
+        foreach ($invoicesInput as $index => $invoice) {
+            $tableData[] = [
+                'no' => $index + 1,
+                'customer' => $clientName,
+                'tanggal_invoice' => date('d M Y', strtotime($invoice['document_date'])),
+                'due_date' => date('d M Y', strtotime($invoice['due_at'])),
+                'no_invoice' => $invoice['document_no'],
+                'dpp' => 'Rp. ' . number_format($invoice['invoice_amount'], 0, ',', '.'),
+                'ppn' => 'Rp. ' . number_format($invoice['vat_amount'], 0, ',', '.'),
+                'pph23' => 'Rp. ' . number_format($invoice['tax_amount'], 0, ',', '.'),
+                'total' => 'Rp. ' . number_format($invoice['total_amount'], 0, ',', '.'),
+            ];
+        }
+
+        return $tableData;
+    }
+
+    /**
+     * @return array
+     */
+    private function getSanfBankData(): array
+    {
+        $companyConfig = config('additional.company');
+        
+        return [
+            [
+                'title' => ($companyConfig['company_prefix'] ?? 'PT') . ' ' . ($companyConfig['company_name'] ?? 'Surya Artha Nusantara Finance') . ' (' . ($companyConfig['company_initials'] ?? 'SANF') . ')',
+                'Nomor Rekening' => $companyConfig['bank_account_no'] ?? '1270004589980',
+                'Atas Nama' => $companyConfig['bank_owner'] ?? 'PT Surya Artha Nusantara Finance',
+            ]
+        ];
+    }
+
+    /**
+     * @param array $allocationsInput
+     * @return array
+     */
+    private function getClientBankDataFromAllocations(array $allocationsInput): array
+    {
+        $bankSections = [];
+        $groupedAllocations = [];
+
+        // Group allocations by provider and account_no to avoid duplicates
+        foreach ($allocationsInput as $allocation) {
+            $key = $allocation['provider'] . '_' . $allocation['account_no'];
+            if (!isset($groupedAllocations[$key])) {
+                $groupedAllocations[$key] = $allocation;
+            }
+        }
+
+        foreach ($groupedAllocations as $allocation) {
+            $bankSections[] = [
+                'title' => strtoupper($allocation['provider']),
+                'Nomor Rekening' => $allocation['account_no'],
+                'Atas Nama' => $allocation['owner'],
+            ];
+        }
+
+        return $bankSections;
     }
 }

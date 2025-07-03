@@ -259,21 +259,20 @@
         <!-- Content -->
         <div class="content">
             <div class="greeting">
-                Kepada Tim {{ $companyName ?? 'PT NAMA PERUSAHAAN' }}
+                Kepada Tim {{ $bowheerName ?? 'NAMA BOWHEER' }}
             </div>
 
             <div class="section">
                 <p>Selamat siang,</p>
-                <p>Sebelumnya kami ucapkan terima kasih atas kesempatan SANF dapat menjalin kerjasama dalam pembiayaan
-                    Invoice Financing Supplier dengan {{ $companyName ?? 'PT NAMA PERUSAHAAN' }} dan PT CGS
-                    INDONESIA, berikut terlampir dokumen invoice yang diajukan untuk PT CGS INDONESIA. Mohon dibantu
+                <p>Sebelumnya kami ucapkan terima kasih atas kesempatan {{ $initialSanf ?? 'SANF' }} dapat menjalin kerjasama dalam pembiayaan
+                    Invoice Financing Supplier dengan {{ $bowheerName ?? 'NAMA BOWHEER' }} dan {{ $clientName ?? 'NAMA CLIENT' }}, berikut terlampir dokumen invoice yang diajukan untuk {{ $clientName ?? 'NAMA CLIENT' }}. Mohon dibantu
                     untuk verifikasi dan memberikan persetujuan terkait beberapa poin di bawah:</p>
             </div>
 
             <ol class="numbered-list">
                 <li>
-                    <strong>Persetujuan atas Surat Permohonan Percepatan Pembayaran ("Terlampir") dari PT CGS INDONESIA
-                        selaku salah satu Supplier PT {{ $companyName ?? 'NAMA PERUSAHAAN' }}.</strong>
+                    <strong>Persetujuan atas Surat Permohonan Percepatan Pembayaran ("Terlampir") dari {{ $clientName ?? 'NAMA CLIENT' }}
+                        selaku salah satu Supplier {{ $bowheerName ?? 'NAMA BOWHEER' }}.</strong>
                 </li>
 
                 <li>
@@ -301,7 +300,7 @@
                                         <tr>
                                             <td colspan="{{ count($tableHeaders) }}"
                                                 style="text-align: center; color: #666;">
-                                                Tidak ada data invoice tersedia
+                                                Kesalahan dalam memuat data invoice.
                                             </td>
                                         </tr>
                                     @endforelse
@@ -312,108 +311,74 @@
                 </li>
 
                 <li>
-                    <strong>PT Surya Artha Nusantara Finance (SANF) akan melakukan pembayaran Invoice dipercepat (Detail
-                        Nomor 2) kepada PT CGS INDONESIA setelah dikurangi diskonto, melalui transfer dengan rincian
+                    <strong>{{ $sanfName ?? 'PT Surya Artha Nusantara Finance' }} ({{ $initialSanf ?? 'SANF' }}) akan melakukan pembayaran Invoice dipercepat (Detail
+                        Nomor 2) kepada {{ $clientName ?? 'NAMA CLIENT' }} setelah dikurangi diskonto, melalui transfer dengan rincian
                         sebagai berikut:</strong>
 
-                    @if (!empty($bankSections))
-                        @foreach ($bankSections as $index => $section)
-                            @if ($index === 0)
-                                <div class="bank-section">
-                                    <div class="bank-title">{{ $section['title'] ?? 'BANK PERMATA' }}</div>
-                                    <div class="bank-info">
-                                        <div class="bank-row">
-                                            <div class="bank-label">Nomor Rekening</div>
-                                            <div class="bank-value">
-                                                {{ $section['data']['Nomor Rekening'] ?? '00701570456' }}</div>
-                                        </div>
-                                        <div class="bank-row">
-                                            <div class="bank-label">Atas Nama</div>
-                                            <div class="bank-value">
-                                                {{ $section['data']['Atas Nama'] ?? 'PT CGS INDONESIA' }}</div>
-                                        </div>
+                    @if (!empty($targetBankForSanf))
+                        @foreach ($targetBankForSanf as $bankSection)
+                            <div class="bank-section">
+                                <div class="bank-title">{{ $bankSection['title'] ?? 'NAMA BANK' }}</div>
+                                <div class="bank-info">
+                                    <div class="bank-row">
+                                        <div class="bank-label">Nomor Rekening</div>
+                                        <div class="bank-value">
+                                            {{ $bankSection['Nomor Rekening'] ?? 'NOMOR REKENING' }}</div>
+                                    </div>
+                                    <div class="bank-row">
+                                        <div class="bank-label">Atas Nama</div>
+                                        <div class="bank-value">
+                                            {{ $bankSection['Atas Nama'] ?? 'ATAS NAMA' }}</div>
                                     </div>
                                 </div>
-                            @endif
+                            </div>
                         @endforeach
                     @else
                         <div class="bank-section">
-                            <div class="bank-title">BANK PERMATA</div>
-                            <div class="bank-info">
-                                <div class="bank-row">
-                                    <div class="bank-label">Nomor Rekening</div>
-                                    <div class="bank-value">00701570456</div>
-                                </div>
-                                <div class="bank-row">
-                                    <div class="bank-label">Atas Nama</div>
-                                    <div class="bank-value">PT CGS INDONESIA</div>
-                                </div>
-                            </div>
+                            Kesalahan dalam memuat data bank SANF.
                         </div>
                     @endif
                 </li>
 
                 <li>
-                    <strong>PT {{ $companyName ?? 'NAMA PERUSAHAAN' }} akan melakukan pembayaran atas Invoice yang
+                    <strong>{{ $bowheerName ?? 'NAMA BOWHEER' }} akan melakukan pembayaran atas Invoice yang
                         disetujui (Detail Nomor 2) dan akan dibayarkan secara tepat waktu sesuai Tanggal Jatuh Tempo
                         melalui Pembayaran transfer kepada nomor Virtual Account dengan rincian sebagai
                         berikut:</strong>
 
-                    @if (!empty($bankSections))
-                        @foreach ($bankSections as $index => $section)
-                            @if ($index > 0)
-                                <div class="bank-section">
-                                    <div class="bank-title">{{ $section['title'] }}</div>
-                                    <div class="bank-info">
-                                        @foreach ($section['data'] as $key => $value)
-                                            <div class="bank-row">
-                                                <div class="bank-label">{{ $key }}</div>
-                                                <div class="bank-value">{{ $value }}</div>
-                                            </div>
-                                        @endforeach
+                    @if (!empty($targetBankForClient))
+                        @foreach ($targetBankForClient as $bankSection)
+                            <div class="bank-section">
+                                <div class="bank-title">{{ $bankSection['title'] ?? 'NAMA BANK' }}</div>
+                                <div class="bank-info">
+                                    <div class="bank-row">
+                                        <div class="bank-label">Nomor Rekening</div>
+                                        <div class="bank-value">
+                                            {{ $bankSection['Nomor Rekening'] ?? 'NOMOR REKENING' }}</div>
+                                    </div>
+                                    <div class="bank-row">
+                                        <div class="bank-label">Atas Nama</div>
+                                        <div class="bank-value">
+                                            {{ $bankSection['Atas Nama'] ?? 'ATAS NAMA' }}</div>
                                     </div>
                                 </div>
-                            @endif
+                            </div>
                         @endforeach
                     @else
                         <div class="bank-section">
-                            <div class="bank-title">BANK PERMATA</div>
-                            <div class="bank-info">
-                                <div class="bank-row">
-                                    <div class="bank-label">Nomor Rekening/Virtual Account</div>
-                                    <div class="bank-value">8876200000447201</div>
-                                </div>
-                                <div class="bank-row">
-                                    <div class="bank-label">Atas Nama</div>
-                                    <div class="bank-value">PT CGS INDONESIA QQ PT Surya Artha Nusantara Finance</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="bank-section">
-                            <div class="bank-title">BANK MANDIRI</div>
-                            <div class="bank-info">
-                                <div class="bank-row">
-                                    <div class="bank-label">Nomor Rekening/Virtual Account</div>
-                                    <div class="bank-value">8890932600000472</div>
-                                </div>
-                                <div class="bank-row">
-                                    <div class="bank-label">Atas Nama</div>
-                                    <div class="bank-value">PT CGS INDONESIA QQ PT Surya Artha Nusantara Finance</div>
-                                </div>
-                            </div>
+                            Kesalahan dalam memuat data bank client.
                         </div>
                     @endif
                 </li>
             </ol>
 
             <div class="signature-section">
-                <p>Demikian permohonan kami atas konfirmasi beberapa persetujuan Invoice Financing PT CGS INDONESIA.
+                <p>Demikian permohonan kami atas konfirmasi beberapa persetujuan Invoice Financing {{ $bowheerName ?? 'NAMA BOWHEER' }}.
                     Terima kasih atas bantuan dan waktunya.</p>
 
                 <p><strong>Best regards,</strong><br>
                     Customer Relation<br>
-                    PT. Surya Artha Nusantara Finance</p>
+                    {{ $sanfName ?? 'PT Surya Artha Nusantara Finance' }}
             </div>
         </div>
 
@@ -421,10 +386,10 @@
         <div class="footer">
             <div class="footer-text">
                 <p>Email ini dibuat secara otomatis mohon tidak membalas email ini, jika terdapat keluhan silahkan
-                    hubungi <a href="#">SANF Care</a>.</p>
+                    hubungi <a href="#">{{$sanfInitial . ' Care'}}</a>.</p>
                 <p>Jika anda merasa tidak membuat request tersebut mohon abaikan email ini atau anda dapat <a
                         href="{{ $reportUrl }}">Laporkan email ini</a>.</p>
-                <p>&copy; {{ date('Y') }} PT. Surya Artha Nusantara Finance. All rights reserved.</p>
+                <p>&copy; {{ date('Y') }} {{$sanfName}}. All rights reserved.</p>
             </div>
         </div>
     </div>

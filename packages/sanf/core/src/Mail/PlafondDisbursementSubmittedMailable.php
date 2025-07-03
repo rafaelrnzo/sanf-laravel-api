@@ -42,31 +42,33 @@ class PlafondDisbursementSubmittedMailable extends Mailable
         ];
 
         $tableData = $this->data['invoices'] ?? [];
+        $targetBankForSanf = $this->data['targetBankForSanf'] ?? [];
+        $targetBankForClient = $this->data['targetBankForClient'] ?? [];
 
-        $bankSections = $this->data['bank_sections'] ?? [];
+        $sanfCompanyConfig = config('additional.company');
+        $sanfName = ($sanfCompanyConfig['company_prefix'] ?? 'PT') . ' ' . ($sanfCompanyConfig['company_name'] ?? 'Surya Artha Nusantara Finance');
+        $sanfInitial = $sanfCompanyConfig['company_initials'] ?? 'SANF';
 
         $mailable = $this->subject('Pengajuan Percepatan Pembayaran')
             ->view('core::mail.html.plafond-disbursement-submitted', [
-                'data' => $this->data,
-                'appUrl' => $this->appUrl,
                 'tableHeaders' => $tableHeaders,
                 'tableData' => $tableData,
-                'bankSections' => $bankSections,
+                'targetBankForSanf' => $targetBankForSanf,
+                'targetBankForClient' => $targetBankForClient,
                 'reportUrl' => $reportUrl,
                 'leftLogo' => asset('assets/png/sanf-logo-blue.png'),
                 'rightLogo' => asset('assets/png/sanf-tagline.png'),
                 'recipientName' => $this->data['fullName'] ?? 'Nama Penerima',
-                'companyName' => $this->data['Nama Perusahaan Bowheer'] ?? 'Nama Perusahaan',
-                'clientName' => $this->data['fullName'] ?? 'Nama Client',
-                'disbursementNo' => $this->data['Nomor Pengajuan'] ?? '-',
-                'submissionDate' => isset($this->data['Tanggal Pengajuan']) ? date('d F Y', strtotime($this->data['Tanggal Pengajuan'])) : date('d F Y'),
-                'invoiceCount' => $this->data['Jumlah Invoice'] ?? count($tableData),
-                'totalAmount' => $this->data['Total Nilai Invoice'] ?? 'Rp. 0',
+                'clientName' => $this->data['company_info']['company_name'] ?? $this->data['fullName'] ?? 'Nama Client',
+                'bowheerName' => $this->data['bowheer']->name ?? 'Nama Bowheer',
+                'sanfName' => $sanfName,
+                'initialSanf' => $sanfInitial,
+                'sanfInitial' => $sanfInitial,
             ]);
 
         if ($this->pdfAttachment && file_exists($this->pdfAttachment)) {
             $mailable->attach($this->pdfAttachment, [
-                'as' => "Surat-Percepatan-Plafond-{$this->data['plafondId']}.pdf",
+                'as' => "Surat-Percepatan-Plafond-{$this->data['plafond_id']}.pdf",
                 'mime' => 'application/pdf',
             ]);
         }
