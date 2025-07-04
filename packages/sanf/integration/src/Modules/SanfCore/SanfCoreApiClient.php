@@ -705,6 +705,22 @@ class SanfCoreApiClient
         return $response->json();
     }
 
+    public function getPlafondFactoringV2($customerId, $plafondCode = PlafondTypeEnum::FACTORING)
+    {
+        $response = Request::route('plafond.factoring.v2', $this->client)
+            ->queryParams([
+                'skip' => self::DEFAULT_SKIP,
+                'limit' => self::DEFAULT_LIMIT,
+            ])
+            ->pathParams([
+                'cust_id' => $customerId,
+                'plafond_code' => $plafondCode,
+            ])
+            ->send();
+
+        return $response->json();
+    }
+
     /**
      * @return array|stdClass|null
      * @throws EndpointNotDefinedException

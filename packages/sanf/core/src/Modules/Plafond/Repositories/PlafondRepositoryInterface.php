@@ -15,4 +15,6 @@ interface PlafondRepositoryInterface
     public function getByProfileAndType($profileXid, $typeId): ?PlafondEntityInterface;
 
     public function submitApplication($profileXid, $typeId, $code, $amount, $notes);
+
+    public function getPlafondFactoringV2ByProfile($xid, $plafondCode = '003'): array;
 }
