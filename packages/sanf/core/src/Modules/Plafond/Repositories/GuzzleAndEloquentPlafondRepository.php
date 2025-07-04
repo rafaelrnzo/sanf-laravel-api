@@ -2,6 +2,7 @@
 
 namespace Sanf\Core\Modules\Plafond\Repositories;
 
+use Sanf\Core\Modules\Plafond\Entities\GuzzlePlafondFactoringV2Entity;
 use Sanf\Core\Modules\Plafond\Entities\PlafondEntityFactoringFactory;
 use Sanf\Core\Modules\Plafond\Entities\PlafondEntityFactory;
 use Sanf\Core\Modules\Plafond\Entities\PlafondEntityHistoryFactory;
@@ -9,7 +10,6 @@ use Sanf\Core\Modules\Plafond\Entities\PlafondEntityInterface;
 use Sanf\Core\Modules\Plafond\Models\PlafondTypeModel;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
-use Sanf\Core\Modules\Plafond\Entities\GuzzlePlafondFactoringV2Entity;
 
 class GuzzleAndEloquentPlafondRepository implements PlafondRepositoryInterface
 {
@@ -76,6 +76,7 @@ class GuzzleAndEloquentPlafondRepository implements PlafondRepositoryInterface
             return [];
         }
     }
+
     public function getPlafondFactoringV2ByProfile($xid, $plafondCode = '003'): array
     {
         try {

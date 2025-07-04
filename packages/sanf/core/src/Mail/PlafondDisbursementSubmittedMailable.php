@@ -43,8 +43,8 @@ class PlafondDisbursementSubmittedMailable extends Mailable
         ];
 
         $tableData = $this->data['invoices'] ?? [];
-        $targetBankForSanf = $this->data['targetBankForSanf'] ?? [];
-        $targetBankForClient = $this->data['targetBankForClient'] ?? [];
+        $clientTargetBank = $this->data['clientTargetBank'] ?? [];
+        $allocationsTargetBank = $this->data['allocationsTargetBank'] ?? [];
 
         $sanfCompanyConfig = config('additional.company');
         $sanfName = ($sanfCompanyConfig['company_prefix'] ?? 'PT') . ' ' . ($sanfCompanyConfig['company_name'] ?? 'Surya Artha Nusantara Finance');
@@ -54,8 +54,8 @@ class PlafondDisbursementSubmittedMailable extends Mailable
             ->view('core::mail.html.plafond-disbursement-submitted', [
                 'tableHeaders' => $tableHeaders,
                 'tableData' => $tableData,
-                'targetBankForSanf' => $targetBankForSanf,
-                'targetBankForClient' => $targetBankForClient,
+                'clientTargetBank' => $clientTargetBank,
+                'allocationsTargetBank' => $allocationsTargetBank,
                 'reportUrl' => $reportUrl,
                 'leftLogo' => asset('assets/png/sanf-logo-blue.png'),
                 'rightLogo' => asset('assets/png/sanf-tagline.png'),

@@ -9,10 +9,12 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Financing\Exceptions\FinancingApplicationLimitExceedException;
 use Sanf\Core\Modules\Plafond\Dtos\PlafondDisbursementFormRequest;
 use Sanf\Core\Modules\Plafond\Enums\PlafondDisbursementStatusEnum;
+use Sanf\Core\Modules\Plafond\Enums\PlafondTypeEnum;
 use Sanf\Core\Modules\Plafond\Events\PlafondDisbursementSubmittedMailEvent;
 use Sanf\Core\Modules\Plafond\Events\PlafondDisbursementSubmittedNotificationEvent;
 use Sanf\Core\Modules\Plafond\Repositories\PaymentAccelarationDocumentRepositoryInterface;
 use Sanf\Core\Modules\Plafond\Repositories\PlafondDisbursementRepositoryInterface;
+use Sanf\Core\Modules\Plafond\Repositories\PlafondRepositoryInterface;
 use Sanf\Core\Modules\User\Exceptions\ProfileNotFoundException;
 use Sanf\Core\Modules\User\Repositories\ProfileRepositoryInterface;
 
@@ -25,17 +27,20 @@ final class AddPlafondDisbursementUseCase implements ApplicationServiceInterface
     private $disbursementRepository;
     private $submitToCoreUseCase;
     private $paymentAccDocRepository;
+    private $plafondRepository;
 
     public function __construct(
         PlafondDisbursementRepositoryInterface $disbursementRepository,
         ProfileRepositoryInterface $coreClientRepository,
         SubmitPlafondDisbursementCoreUseCase $submitToCoreUseCase,
-        PaymentAccelarationDocumentRepositoryInterface $paymentAccDocRepository
+        PaymentAccelarationDocumentRepositoryInterface $paymentAccDocRepository,
+        PlafondRepositoryInterface $plafondRepository
     ) {
         $this->coreClientRepository = $coreClientRepository;
         $this->disbursementRepository = $disbursementRepository;
         $this->submitToCoreUseCase = $submitToCoreUseCase;
         $this->paymentAccDocRepository = $paymentAccDocRepository;
+        $this->plafondRepository = $plafondRepository;
     }
 
     /**
@@ -242,9 +247,9 @@ final class AddPlafondDisbursementUseCase implements ApplicationServiceInterface
 
         $invoiceTableData = $this->prepareInvoiceTableData($invoicesInput, $clientName);
 
-        $sanfBankData = $this->getSanfBankData();
+        $clientBankData = $this->getClientBankData($customerId, PlafondTypeEnum::FACTORING);
 
-        $clientBankData = $this->getClientBankDataFromAllocations($allocationsInput);
+        $allocationsBankData = $this->getClientBankDataFromAllocations($allocationsInput);
 
         $paymentAccDocumentAttachment = null;
         if (!empty($paymentAccDocument)) {
@@ -305,8 +310,8 @@ final class AddPlafondDisbursementUseCase implements ApplicationServiceInterface
             'paymentAccDocumentNo' => $formRequest->paymentAccDocument->no,
             'paymentAccDocumentDate' => $formRequest->paymentAccDocument->date,
             'invoices' => $invoiceTableData,
-            'targetBankForSanf' => $sanfBankData,
-            'targetBankForClient' => $clientBankData,
+            'clientTargetBank' => $clientBankData,
+            'allocationsTargetBank' => $allocationsBankData,
             'plafond_id' => $formRequest->plafondId,
             'payment_acc_document' => $paymentAccDocumentAttachment,
             'invoice_documents' => $invoiceDocuments,
@@ -451,17 +456,34 @@ final class AddPlafondDisbursementUseCase implements ApplicationServiceInterface
     /**
      * @return array
      */
-    private function getSanfBankData(): array
+    private function getClientBankData($customerId, $plafondCode): array
     {
-        $sanfCompanyConfig = config('additional.company');
+        $plafonds = $this->plafondRepository->getPlafondFactoringV2ByProfile($customerId, $plafondCode);
 
-        return [
-            [
-                'title' => strtoupper($sanfCompanyConfig['bank_provider'] ?? 'BANK SURYA ARTHA NUSANTARA FINANCE'),
-                'Nomor Rekening' => $sanfCompanyConfig['bank_account_no'] ?? '1270004589980',
-                'Atas Nama' => $sanfCompanyConfig['bank_owner'] ?? 'PT Surya Artha Nusantara Finance',
-            ],
-        ];
+        $bankSections = [];
+        $groupedBanks = [];
+
+        foreach ($plafonds as $plafond) {
+            $virtualAccounts = $plafond->getVirtualAccounts();
+
+            foreach ($virtualAccounts as $virtualAccount) {
+                $key = $virtualAccount->getDescription() . '_' . $virtualAccount->getVaId();
+
+                if (!isset($groupedBanks[$key])) {
+                    $groupedBanks[$key] = [
+                        'title' => strtoupper($virtualAccount->getDescription()),
+                        'Nomor Rekening' => $virtualAccount->getVaId(),
+                        'Atas Nama' => $virtualAccount->getAccountName(),
+                    ];
+                }
+            }
+        }
+
+        foreach ($groupedBanks as $bank) {
+            $bankSections[] = $bank;
+        }
+
+        return $bankSections;
     }
 
     /**

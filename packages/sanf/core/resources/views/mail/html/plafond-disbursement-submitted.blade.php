@@ -297,13 +297,13 @@
                     @endif
                 </li>
 
-                {{-- <li>
+                <li>
                     {{ $sanfName ?? 'PT Surya Artha Nusantara Finance' }} ({{ $initialSanf ?? 'SANF' }}) akan melakukan pembayaran Invoice dipercepat (Detail
                         Nomor 2) kepada {{ $clientName ?? 'NAMA CLIENT' }} setelah dikurangi diskonto, melalui transfer dengan rincian
                         sebagai berikut:
 
-                    @if (!empty($targetBankForSanf))
-                        @foreach ($targetBankForSanf as $bankSection)
+                    @if (!empty($allocationsTargetBank))
+                        @foreach ($allocationsTargetBank as $bankSection)
                             <div class="bank-section">
                                 <div class="bank-info">
                                     <div class="bank-row">
@@ -332,7 +332,7 @@
                             Kesalahan dalam memuat data bank SANF.
                         </div>
                     @endif
-                </li> --}}
+                </li>
 
                 <li>
                     {{ $bowheerName ?? 'NAMA BOWHEER' }} akan melakukan pembayaran atas Invoice yang
@@ -340,8 +340,8 @@
                         melalui Pembayaran transfer kepada nomor Virtual Account dengan rincian sebagai
                         berikut:
 
-                    @if (!empty($targetBankForClient))
-                        @foreach ($targetBankForClient as $bankSection)
+                    @if (!empty($clientTargetBank))
+                        @foreach ($clientTargetBank as $bankSection)
                             <div class="bank-section">
                                 <div class="bank-info">
                                     <div class="bank-row">

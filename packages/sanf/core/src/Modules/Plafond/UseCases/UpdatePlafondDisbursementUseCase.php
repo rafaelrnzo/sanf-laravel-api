@@ -11,6 +11,7 @@ use Sanf\Core\Modules\Plafond\Dtos\DisbursementInvoiceFormRequest;
 use Sanf\Core\Modules\Plafond\Dtos\PlafondDisbursementFormRequest;
 use Sanf\Core\Modules\Plafond\Dtos\ReadPlafondDisbursementRequestDto;
 use Sanf\Core\Modules\Plafond\Enums\PlafondDisbursementStatusEnum;
+use Sanf\Core\Modules\Plafond\Enums\PlafondTypeEnum;
 use Sanf\Core\Modules\Plafond\Events\PlafondDisbursementSubmittedMailEvent;
 use Sanf\Core\Modules\Plafond\Events\PlafondDisbursementSubmittedNotificationEvent;
 use Sanf\Core\Modules\Plafond\Exceptions\PlafondDisbursementIsNotRevisionException;
@@ -18,6 +19,7 @@ use Sanf\Core\Modules\Plafond\Exceptions\PlafondDisbursementNotFoundException;
 use Sanf\Core\Modules\Plafond\Queries\ReadPlafondDisbursementEloquentBuilder;
 use Sanf\Core\Modules\Plafond\Repositories\PaymentAccelarationDocumentRepositoryInterface;
 use Sanf\Core\Modules\Plafond\Repositories\PlafondDisbursementRepositoryInterface;
+use Sanf\Core\Modules\Plafond\Repositories\PlafondRepositoryInterface;
 use Sanf\Core\Modules\User\Exceptions\ProfileNotFoundException;
 use Sanf\Core\Modules\User\Repositories\ProfileRepositoryInterface;
 
@@ -29,17 +31,20 @@ final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterf
     private $disbursementRepository;
     private $submitToCoreUseCase;
     private $paymentAccDocRepository;
+    private $plafondRepository;
 
     public function __construct(
         PlafondDisbursementRepositoryInterface $disbursementRepository,
         ProfileRepositoryInterface $coreClientRepository,
         SubmitPlafondDisbursementCoreUseCase $submitToCoreUseCase,
-        PaymentAccelarationDocumentRepositoryInterface $paymentAccDocRepository
+        PaymentAccelarationDocumentRepositoryInterface $paymentAccDocRepository,
+        PlafondRepositoryInterface $plafondRepository
     ) {
         $this->coreClientRepository = $coreClientRepository;
         $this->disbursementRepository = $disbursementRepository;
         $this->submitToCoreUseCase = $submitToCoreUseCase;
         $this->paymentAccDocRepository = $paymentAccDocRepository;
+        $this->plafondRepository = $plafondRepository;
     }
 
     /**
@@ -244,9 +249,9 @@ final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterf
 
         $invoiceTableData = $this->prepareInvoiceTableData($invoicesInput, $formRequest->bouwheer->name);
 
-        $sanfBankData = $this->getSanfBankData();
+        $clientBankData = $this->getClientBankData($customerId, PlafondTypeEnum::FACTORING);
 
-        $clientBankData = $this->getClientBankDataFromAllocations($allocationsInput);
+        $allocationsBankData = $this->getClientBankDataFromAllocations($allocationsInput);
 
         $paymentAccDocumentAttachment = null;
         if (!empty($paymentAccDocument)) {
@@ -307,8 +312,8 @@ final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterf
             'paymentAccDocumentNo' => $formRequest->paymentAccDocument->no,
             'paymentAccDocumentDate' => $formRequest->paymentAccDocument->date,
             'invoices' => $invoiceTableData,
-            'targetBankForSanf' => $sanfBankData,
-            'targetBankForClient' => $clientBankData,
+            'clientTargetBank' => $clientBankData,
+            'allocationsTargetBank' => $allocationsBankData,
             'plafond_id' => $formRequest->plafondId,
             'payment_acc_document' => $paymentAccDocumentAttachment,
             'invoice_documents' => $invoiceDocuments,
@@ -435,17 +440,34 @@ final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterf
     /**
      * @return array
      */
-    private function getSanfBankData(): array
+    private function getClientBankData($customerId, $plafondCode): array
     {
-        $companyConfig = config('additional.company');
+        $plafonds = $this->plafondRepository->getPlafondFactoringV2ByProfile($customerId, $plafondCode);
 
-        return [
-            [
-                'title' => ($companyConfig['company_prefix'] ?? 'PT') . ' ' . ($companyConfig['company_name'] ?? 'Surya Artha Nusantara Finance') . ' (' . ($companyConfig['company_initials'] ?? 'SANF') . ')',
-                'Nomor Rekening' => $companyConfig['bank_account_no'] ?? '1270004589980',
-                'Atas Nama' => $companyConfig['bank_owner'] ?? 'PT Surya Artha Nusantara Finance',
-            ],
-        ];
+        $bankSections = [];
+        $groupedBanks = [];
+
+        foreach ($plafonds as $plafond) {
+            $virtualAccounts = $plafond->getVirtualAccounts();
+
+            foreach ($virtualAccounts as $virtualAccount) {
+                $key = $virtualAccount->getDescription() . '_' . $virtualAccount->getVaId();
+
+                if (!isset($groupedBanks[$key])) {
+                    $groupedBanks[$key] = [
+                        'title' => strtoupper($virtualAccount->getDescription()),
+                        'Nomor Rekening' => $virtualAccount->getVaId(),
+                        'Atas Nama' => $virtualAccount->getAccountName(),
+                    ];
+                }
+            }
+        }
+
+        foreach ($groupedBanks as $bank) {
+            $bankSections[] = $bank;
+        }
+
+        return $bankSections;
     }
 
     /**
@@ -457,7 +479,6 @@ final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterf
         $bankSections = [];
         $groupedAllocations = [];
 
-        // Group allocations by provider and account_no to avoid duplicates
         foreach ($allocationsInput as $allocation) {
             $key = $allocation['provider'] . '_' . $allocation['account_no'];
             if (!isset($groupedAllocations[$key])) {
