@@ -7,6 +7,7 @@ use Sanf\Core\Modules\Plafond\Entities\PlafondEntityFactoringFactory;
 use Sanf\Core\Modules\Plafond\Entities\PlafondEntityFactory;
 use Sanf\Core\Modules\Plafond\Entities\PlafondEntityHistoryFactory;
 use Sanf\Core\Modules\Plafond\Entities\PlafondEntityInterface;
+use Sanf\Core\Modules\Plafond\Enums\PlafondTypeEnum;
 use Sanf\Core\Modules\Plafond\Models\PlafondTypeModel;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
@@ -77,7 +78,7 @@ class GuzzleAndEloquentPlafondRepository implements PlafondRepositoryInterface
         }
     }
 
-    public function getPlafondFactoringV2ByProfile($xid, $plafondCode = '003'): array
+    public function getPlafondFactoringV2ByProfile($xid, $plafondCode = PlafondTypeEnum::FACTORING): array
     {
         try {
             $response = $this->client->getPlafondFactoringV2($xid, $plafondCode);

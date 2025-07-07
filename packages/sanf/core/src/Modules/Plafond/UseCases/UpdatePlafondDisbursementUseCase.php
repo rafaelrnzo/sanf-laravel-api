@@ -291,7 +291,7 @@ final class UpdatePlafondDisbursementUseCase implements ApplicationServiceInterf
                 'path' => $document['path'] . $document['file_name'],
                 'file_name' => $document['file_name'],
                 'origin_name' => $document['origin_name'],
-                'mime_type' => json_decode($document['metadata'], true)['mime_type'] ?? 'application/pdf',
+                'mime_type' => json_decode($document['metadata'], true)['mime_type'] ?? null,
             ];
         }
 

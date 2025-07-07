@@ -3,6 +3,7 @@
 namespace Sanf\Core\Modules\Plafond\Repositories;
 
 use Sanf\Core\Modules\Plafond\Entities\PlafondEntityInterface;
+use Sanf\Core\Modules\Plafond\Enums\PlafondTypeEnum;
 
 interface PlafondRepositoryInterface
 {
@@ -16,5 +17,5 @@ interface PlafondRepositoryInterface
 
     public function submitApplication($profileXid, $typeId, $code, $amount, $notes);
 
-    public function getPlafondFactoringV2ByProfile($xid, $plafondCode = '003'): array;
+    public function getPlafondFactoringV2ByProfile($xid, $plafondCode = PlafondTypeEnum::FACTORING): array;
 }

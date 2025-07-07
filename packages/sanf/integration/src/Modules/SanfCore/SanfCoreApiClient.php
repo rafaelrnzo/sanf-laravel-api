@@ -707,7 +707,7 @@ class SanfCoreApiClient
 
     public function getPlafondFactoringV2($customerId, $plafondCode = PlafondTypeEnum::FACTORING)
     {
-        $response = Request::route('plafond.factoring.v2', $this->client)
+        $response = Request::route('v2.plafond.factoring', $this->client)
             ->queryParams([
                 'skip' => self::DEFAULT_SKIP,
                 'limit' => self::DEFAULT_LIMIT,

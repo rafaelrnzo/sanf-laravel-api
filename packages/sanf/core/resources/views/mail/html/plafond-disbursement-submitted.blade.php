@@ -280,7 +280,7 @@
                                     @forelse ($tableData as $row)
                                         <tr>
                                             @foreach ($tableHeaders as $header)
-                                                <td>{{ $row[$header['targetData']] ?? '-' }}</td>
+                                                <td>{{ $row[$header['targetData']] ?? '?' }}</td>
                                             @endforeach
                                         </tr>
                                     @empty
