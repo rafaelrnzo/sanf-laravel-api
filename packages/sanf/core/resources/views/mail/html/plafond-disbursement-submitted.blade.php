@@ -5,395 +5,334 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pengajuan Percepatan Pembayaran</title>
+</head>
+
+<body
+    style="margin: 0; padding: 0; font-family: Gilroy, sans-serif; font-size: 16px; font-weight: 500; line-height: 1.5; color: #232227; background-color: #F2F2F2;">
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
+        style="background-color: #F2F2F2; padding: 32px;">
+        <tr>
+            <td align="center" style="padding: 20px 10px;">
+                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
+                    style="background-color: #F7FAFD; border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
+
+                    <tr>
+                        <td style="padding: 32px;">
+                            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                                <tr>
+                                    <td align="left" width="50%">
+                                        <a href="{{ config('app.url') }}">
+                                            <img src="{{ $leftLogo }}" alt="SANFIND Logo"
+                                                style="max-width: 150px; height: auto;" />
+                                        </a>
+                                    </td>
+                                    <td align="right" width="50%">
+                                        <a href="{{ config('app.url') }}">
+                                            <img src="{{ $rightLogo }}" alt="SANFIND Tagline"
+                                                style="max-width: 150px; height: auto;" />
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 0 40px 40px 40px;">
+
+                            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                                <tr>
+                                    <td
+                                        style="font-size: 20px; font-weight: 700; line-height: 1.7; margin-bottom: 20px; padding-bottom: 20px;">
+                                        Kepada Tim {{ $bowheerName ?? 'NAMA BOWHEER' }}
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                                <tr>
+                                    <td style="padding-bottom: 20px;">
+                                        <p style="margin: 0 0 15px 0;">Selamat siang,</p>
+                                        <p style="margin: 0;">Sebelumnya kami ucapkan terima kasih atas kesempatan
+                                            {{ $initialSanf ?? 'SANF' }} dapat menjalin kerjasama dalam pembiayaan
+                                            Invoice Financing Supplier dengan {{ $bowheerName ?? 'NAMA BOWHEER' }} dan
+                                            {{ $clientName ?? 'NAMA CLIENT' }}, berikut terlampir dokumen invoice yang
+                                            diajukan untuk {{ $clientName ?? 'NAMA CLIENT' }}. Mohon dibantu untuk
+                                            verifikasi dan memberikan persetujuan terkait beberapa poin di bawah:</p>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                                <tr>
+                                    <td style="padding-bottom: 20px;">
+                                        <table role="presentation" cellpadding="0" cellspacing="0" border="0"
+                                            width="100%">
+                                            <tr>
+                                                <td width="25" style="vertical-align: top;">1.
+                                                </td>
+                                                <td style="vertical-align: top;">
+                                                    Persetujuan atas Surat Permohonan Percepatan Pembayaran
+                                                    ("Terlampir") dari {{ $clientName ?? 'NAMA CLIENT' }} selaku salah
+                                                    satu Supplier {{ $bowheerName ?? 'NAMA BOWHEER' }}.
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td style="padding-bottom: 20px;">
+                                        <table role="presentation" cellpadding="0" cellspacing="0" border="0"
+                                            width="100%">
+                                            <tr>
+                                                <td width="25" style="vertical-align: top;">2.
+                                                </td>
+                                                <td style="vertical-align: top;">
+                                                    <p style="margin: 0 0 15px 0;">Persetujuan atas invoice-invoice
+                                                        dengan nilai sebagaimana tercantum dalam tabel dibawah ini telah
+                                                        disetujui dan diverifikasi kebenarannya:</p>
+
+                                                    @if (!empty($tableData))
+                                                        <table role="presentation" cellpadding="0" cellspacing="0"
+                                                            border="1" width="100%"
+                                                            style="border-collapse: collapse; border: 1px solid #777; margin: 15px 0;">
+                                                            <thead>
+                                                                <tr>
+                                                                    @foreach ($tableHeaders as $header)
+                                                                        <th
+                                                                            style="background-color: #E9E9E9; padding: 8px 6px; text-align: center; border: 1px solid #777; font-size: 12px; font-weight: 400;">
+                                                                            {{ $header['label'] }}
+                                                                        </th>
+                                                                    @endforeach
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @forelse ($tableData as $index => $row)
+                                                                    <tr>
+                                                                        @foreach ($tableHeaders as $header)
+                                                                            <td
+                                                                                style="padding: 6px; border: 1px solid #777; font-size: 11px; text-align: center; font-weight: 400;">
+                                                                                {{ $row[$header['targetData']] ?? '?' }}
+                                                                            </td>
+                                                                        @endforeach
+                                                                    </tr>
+                                                                @empty
+                                                                    <tr>
+                                                                        <td colspan="{{ count($tableHeaders) }}"
+                                                                            style="text-align: center; color: #666666; padding: 15px; border: 1px solid #777; font-weight: 400; font-size: 12px;">
+                                                                            Kesalahan dalam memuat data invoice.
+                                                                        </td>
+                                                                    </tr>
+                                                                @endforelse
+                                                            </tbody>
+                                                        </table>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td style="padding-bottom: 20px;">
+                                        <table role="presentation" cellpadding="0" cellspacing="0" border="0"
+                                            width="100%">
+                                            <tr>
+                                                <td width="25" style="vertical-align: top;">3.
+                                                </td>
+                                                <td style="vertical-align: top;">
+                                                    <p style="margin: 0 0 15px 0;">
+                                                        {{ $sanfName ?? 'PT Surya Artha Nusantara Finance' }}
+                                                        ({{ $initialSanf ?? 'SANF' }}) akan melakukan pembayaran
+                                                        Invoice dipercepat (Detail Nomor 2) kepada
+                                                        {{ $clientName ?? 'NAMA CLIENT' }} setelah dikurangi diskonto,
+                                                        melalui transfer dengan rincian sebagai berikut:</p>
+
+                                                    @if (!empty($allocationsTargetBank))
+                                                        @foreach ($allocationsTargetBank as $bankSection)
+                                                            <table role="presentation" cellpadding="0" cellspacing="0"
+                                                                width="100%"
+                                                                style="border-collapse: collapse; border-top: 1px solid #000000; border-left: 1px solid #000000; border-bottom: 1px solid #000000; border-right: 1px solid #000000; margin-bottom: 15px;">
+                                                                <tr>
+                                                                    <td
+                                                                        style="font-weight: 400; color: #000000; padding: 8px 12px; background-color: #f9f9f9; width: 30%;">
+                                                                        Nama Bank
+                                                                    </td>
+                                                                    <td
+                                                                        style="color: #000000; font-weight: 500; padding: 8px 12px; background-color: #ffffff;">
+                                                                        {{ $bankSection['title'] ?? 'NAMA BANK' }}
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td
+                                                                        style="font-weight: 400; color: #000000; padding: 8px 12px; background-color: #f9f9f9; border-top: 1px solid #000000;">
+                                                                        Nomor Rekening
+                                                                    </td>
+                                                                    <td
+                                                                        style="color: #000000; font-weight: 500; padding: 8px 12px; background-color: #ffffff; border-top: 1px solid #000000;">
+                                                                        {{ $bankSection['Nomor Rekening'] ?? 'NOMOR REKENING' }}
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td
+                                                                        style="font-weight: 400; color: #000000; padding: 8px 12px; background-color: #f9f9f9; border-top: 1px solid #000000;">
+                                                                        Atas Nama
+                                                                    </td>
+                                                                    <td
+                                                                        style="color: #000000; font-weight: 500; padding: 8px 12px; background-color: #ffffff; border-top: 1px solid #000000;">
+                                                                        {{ $bankSection['Atas Nama'] ?? 'ATAS NAMA' }}
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        @endforeach
+                                                    @else
+                                                        <div
+                                                            style="border: 1px solid #000000; padding: 15px; background-color: #f9f9f9;">
+                                                            Kesalahan dalam memuat data bank SANF.
+                                                        </div>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td style="padding-bottom: 20px;">
+                                        <table role="presentation" cellpadding="0" cellspacing="0" border="0"
+                                            width="100%">
+                                            <tr>
+                                                <td width="25" style="vertical-align: top;">4.
+                                                </td>
+                                                <td style="vertical-align: top;">
+                                                    <p style="margin: 0 0 15px 0;">
+                                                        {{ $bowheerName ?? 'NAMA BOWHEER' }} akan melakukan pembayaran
+                                                        atas Invoice yang disetujui (Detail Nomor 2) dan akan dibayarkan
+                                                        secara tepat waktu sesuai Tanggal Jatuh Tempo melalui Pembayaran
+                                                        transfer kepada nomor Virtual Account dengan rincian sebagai
+                                                        berikut:</p>
+
+                                                    @if (!empty($clientTargetBank))
+                                                        @foreach ($clientTargetBank as $bankSection)
+                                                            <table role="presentation" cellpadding="0" cellspacing="0"
+                                                                width="100%"
+                                                                style="border-collapse: collapse; border-top: 1px solid #000000; border-left: 1px solid #000000; border-bottom: 1px solid #000000; border-right: 1px solid #000000; margin-bottom: 15px;">
+                                                                <tr>
+                                                                    <td
+                                                                        style="font-weight: 400; color: #000000; padding: 8px 12px; background-color: #f9f9f9; width: 30%;">
+                                                                        Nama Bank
+                                                                    </td>
+                                                                    <td
+                                                                        style="color: #000000; font-weight: 500; padding: 8px 12px; background-color: #ffffff;">
+                                                                        {{ $bankSection['title'] ?? 'NAMA BANK' }}
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td
+                                                                        style="font-weight: 400; color: #000000; padding: 8px 12px; background-color: #f9f9f9; border-top: 1px solid #000000;">
+                                                                        Nomor Rekening
+                                                                    </td>
+                                                                    <td
+                                                                        style="color: #000000; font-weight: 500; padding: 8px 12px; background-color: #ffffff; border-top: 1px solid #000000;">
+                                                                        {{ $bankSection['Nomor Rekening'] ?? 'NOMOR REKENING' }}
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td
+                                                                        style="font-weight: 400; color: #000000; padding: 8px 12px; background-color: #f9f9f9; border-top: 1px solid #000000;">
+                                                                        Atas Nama
+                                                                    </td>
+                                                                    <td
+                                                                        style="color: #000000; font-weight: 500; padding: 8px 12px; background-color: #ffffff; border-top: 1px solid #000000;">
+                                                                        {{ $bankSection['Atas Nama'] ?? 'ATAS NAMA' }}
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        @endforeach
+                                                    @else
+                                                        <div
+                                                            style="border: 1px solid #000000; padding: 15px; background-color: #f9f9f9;">
+                                                            Kesalahan dalam memuat data bank client.
+                                                        </div>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <table role="presentation" cellpadding="0" cellspacing="0" border="0"
+                                width="100%">
+                                <tr>
+                                    <td style="padding-top: 30px;">
+                                        <p style="margin: 0 0 15px 0;">Demikian permohonan kami atas konfirmasi
+                                            beberapa persetujuan Invoice Financing
+                                            {{ $bowheerName ?? 'NAMA BOWHEER' }}. Terima kasih atas bantuan dan
+                                            waktunya.</p>
+
+                                        <p style="margin: 0;">
+                                            Best regards,<br>
+                                            Customer Relation<br>
+                                            {{ $sanfName ?? 'PT Surya Artha Nusantara Finance' }}
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td
+                            style="background-color: #f8f9fa; padding: 30px; text-align: center; border-top: 1px solid #e0e0e0;">
+                            <table role="presentation" cellpadding="0" cellspacing="0" border="0"
+                                width="100%">
+                                <tr>
+                                    <td style="text-align: center;">
+                                        <p
+                                            style="font-size: 12px; color: #666666; line-height: 1.5; margin: 0 0 10px 0;">
+                                            Email ini dibuat secara otomatis mohon tidak membalas email ini, jika
+                                            terdapat keluhan silahkan hubungi
+                                            <a href="#"
+                                                style="color: #3498db; text-decoration: none;">{{ $sanfInitial . ' Care' }}</a>.
+                                        </p>
+                                        <p
+                                            style="font-size: 12px; color: #666666; line-height: 1.5; margin: 0 0 10px 0;">
+                                            Jika anda merasa tidak membuat request tersebut mohon abaikan email ini atau
+                                            anda dapat
+                                            <a href="{{ $reportUrl }}"
+                                                style="color: #3498db; text-decoration: none;">Laporkan email ini</a>.
+                                        </p>
+                                        <p style="font-size: 12px; color: #666666; line-height: 1.5; margin: 0;">
+                                            &copy; {{ date('Y') }} {{ $sanfName }}. All rights reserved.
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                </table>
+            </td>
+        </tr>
+    </table>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-
-        .header {
-            padding-left: 32px;
-            padding-right: 32px;
-        }
-
-        .email-container {
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-
-        .content {
-            padding: 40px;
-        }
-
-        .greeting {
-            font-size: 18px;
-            font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 20px;
-        }
-
-        .section {
-            margin-bottom: 30px;
-        }
-
-        .section-title {
-            font-weight: 600;
-            font-size: 16px;
-            color: #2c3e50;
-            margin-bottom: 15px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #3498db;
-        }
-
-        .signature-section {
-            margin-top: 30px;
-            line-height: 1.6;
-        }
-
-        .numbered-list {
-            counter-reset: list-counter;
-            list-style: none;
-            padding: 0;
-        }
-
-        .numbered-list li {
-            counter-increment: list-counter;
-            margin-bottom: 20px;
-            position: relative;
-            padding-left: 25px;
-        }
-
-        .numbered-list li:before {
-            content: counter(list-counter) ".";
-            position: absolute;
-            left: 0;
-        }
-
-        .table-container {
-            margin: 15px 0;
-            border: 1px solid #000;
-        }
-
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: #fff;
-            font-size: 11px;
-        }
-
-        .data-table th {
-            background-color: #f0f0f0;
-            padding: 8px 6px;
-            text-align: center;
-            border: 1px solid #000;
-            font-size: 11px;
-        }
-
-        .data-table td {
-            padding: 6px;
-            border: 1px solid #000;
-            font-size: 11px;
-            text-align: center;
-        }
-
-        .data-table tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        .bank-section {
-            margin-bottom: 15px;
-            border: 1px solid #000;
-            background-color: #fff;
-        }
-
-        .bank-info {
-            padding: 0;
-        }
-
-        .bank-row {
-            display: flex;
-            border-bottom: 1px solid #000;
-            padding: 0;
-        }
-
-        .bank-row:last-child {
-            border-bottom: none;
-        }
-
-        .bank-label {
-            font-weight: normal;
-            color: #000;
-            flex: 1;
-            padding: 8px 12px;
-            border-right: 1px solid #000;
-            background-color: #f9f9f9;
-        }
-
-        .bank-value {
-            color: #000;
-            font-weight: normal;
-            flex: 2;
-            padding: 8px 12px;
-            background-color: #fff;
-        }
-
-        .footer {
-            background-color: #f8f9fa;
-            padding: 30px;
-            text-align: center;
-            border-top: 1px solid #e0e0e0;
-        }
-
-        .footer-text {
-            font-size: 12px;
-            color: #666;
-            line-height: 1.5;
-        }
-
-        .footer-text a {
-            color: #3498db;
-            text-decoration: none;
-        }
-
-        .footer-text a:hover {
-            text-decoration: underline;
-        }
-
-        .highlight {
-            background-color: #fff3cd;
-            padding: 15px;
-            border-left: 4px solid #ffc107;
-            margin: 15px 0;
-            border-radius: 4px;
-        }
-
-        .info-section {
-            background-color: #e3f2fd;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-        }
-
-        .info-title {
-            font-weight: 600;
-            color: #1565c0;
-            margin-bottom: 10px;
-        }
-
-        .info-content {
-            color: #424242;
-            font-size: 14px;
-        }
-
-        @media (max-width: 600px) {
-            body {
-                padding: 10px;
+        @media only screen and (max-width: 600px) {
+            .mobile-padding {
+                padding: 10px !important;
             }
 
-            .content {
-                padding: 20px;
+            .mobile-font-size {
+                font-size: 14px !important;
             }
 
-            .data-table {
-                font-size: 12px;
-            }
-
-            .data-table th,
-            .data-table td {
-                padding: 8px 6px;
-            }
-
-            .bank-row {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 5px;
-            }
-
-            .bank-value {
-                text-align: left;
+            .mobile-table-font {
+                font-size: 10px !important;
             }
         }
     </style>
-</head>
-
-<body>
-    <div class="email-container">
-        <!-- Header -->
-        <div class="header">
-            <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
-                <tr>
-                    <td align="left" width="50%">
-                        <a href="{{ config('app.url') }}">
-                            <img src="{{ $leftLogo }}" alt="SANFIND Logo" class="tb-50" />
-                        </a>
-                    </td>
-                    <td align="right" width="50%">
-                        <a href="{{ config('app.url') }}">
-                            <img src="{{ $rightLogo }}" alt="SANFIND Tagline" class="tb-50" />
-                        </a>
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <!-- Content -->
-        <div class="content">
-            <div class="greeting">
-                Kepada Tim {{ $bowheerName ?? 'NAMA BOWHEER' }}
-            </div>
-
-            <div class="section">
-                <p>Selamat siang,</p>
-                <p>Sebelumnya kami ucapkan terima kasih atas kesempatan {{ $initialSanf ?? 'SANF' }} dapat menjalin kerjasama dalam pembiayaan
-                    Invoice Financing Supplier dengan {{ $bowheerName ?? 'NAMA BOWHEER' }} dan {{ $clientName ?? 'NAMA CLIENT' }}, berikut terlampir dokumen invoice yang diajukan untuk {{ $clientName ?? 'NAMA CLIENT' }}. Mohon dibantu
-                    untuk verifikasi dan memberikan persetujuan terkait beberapa poin di bawah:</p>
-            </div>
-
-            <ol class="numbered-list">
-                <li>
-                    Persetujuan atas Surat Permohonan Percepatan Pembayaran ("Terlampir") dari {{ $clientName ?? 'NAMA CLIENT' }}
-                        selaku salah satu Supplier {{ $bowheerName ?? 'NAMA BOWHEER' }}.
-                </li>
-
-                <li>
-                    Persetujuan atas invoice-invoice dengan nilai sebagaimana tercantum dalam tabel dibawah ini
-                        telah disetujui dan diverifikasi kebenarannya:
-
-                    @if (!empty($tableData))
-                        <div class="table-container">
-                            <table class="data-table">
-                                <thead>
-                                    <tr>
-                                        @foreach ($tableHeaders as $header)
-                                            <th>{{ $header['label'] }}</th>
-                                        @endforeach
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse ($tableData as $row)
-                                        <tr>
-                                            @foreach ($tableHeaders as $header)
-                                                <td>{{ $row[$header['targetData']] ?? '?' }}</td>
-                                            @endforeach
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="{{ count($tableHeaders) }}"
-                                                style="text-align: center; color: #666;">
-                                                Kesalahan dalam memuat data invoice.
-                                            </td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
-                    @endif
-                </li>
-
-                <li>
-                    {{ $sanfName ?? 'PT Surya Artha Nusantara Finance' }} ({{ $initialSanf ?? 'SANF' }}) akan melakukan pembayaran Invoice dipercepat (Detail
-                        Nomor 2) kepada {{ $clientName ?? 'NAMA CLIENT' }} setelah dikurangi diskonto, melalui transfer dengan rincian
-                        sebagai berikut:
-
-                    @if (!empty($allocationsTargetBank))
-                        @foreach ($allocationsTargetBank as $bankSection)
-                            <div class="bank-section">
-                                <div class="bank-info">
-                                    <div class="bank-row">
-                                        <div class="bank-label">
-                                            Nama Bank
-                                        </div>
-                                        <div class="bank-value">
-                                            {{ $bankSection['title'] ?? 'NAMA BANK' }}
-                                        </div>
-                                    </div>
-                                    <div class="bank-row">
-                                        <div class="bank-label">Nomor Rekening</div>
-                                        <div class="bank-value">
-                                            {{ $bankSection['Nomor Rekening'] ?? 'NOMOR REKENING' }}</div>
-                                    </div>
-                                    <div class="bank-row">
-                                        <div class="bank-label">Atas Nama</div>
-                                        <div class="bank-value">
-                                            {{ $bankSection['Atas Nama'] ?? 'ATAS NAMA' }}</div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    @else
-                        <div class="bank-section">
-                            Kesalahan dalam memuat data bank SANF.
-                        </div>
-                    @endif
-                </li>
-
-                <li>
-                    {{ $bowheerName ?? 'NAMA BOWHEER' }} akan melakukan pembayaran atas Invoice yang
-                        disetujui (Detail Nomor 2) dan akan dibayarkan secara tepat waktu sesuai Tanggal Jatuh Tempo
-                        melalui Pembayaran transfer kepada nomor Virtual Account dengan rincian sebagai
-                        berikut:
-
-                    @if (!empty($clientTargetBank))
-                        @foreach ($clientTargetBank as $bankSection)
-                            <div class="bank-section">
-                                <div class="bank-info">
-                                    <div class="bank-row">
-                                        <div class="bank-label">
-                                            Nama Bank
-                                        </div>
-                                        <div class="bank-value">
-                                            {{ $bankSection['title'] ?? 'NAMA BANK' }}
-                                        </div>
-                                    </div>
-                                    <div class="bank-row">
-                                        <div class="bank-label">Nomor Rekening</div>
-                                        <div class="bank-value">
-                                            {{ $bankSection['Nomor Rekening'] ?? 'NOMOR REKENING' }}</div>
-                                    </div>
-                                    <div class="bank-row">
-                                        <div class="bank-label">Atas Nama</div>
-                                        <div class="bank-value">
-                                            {{ $bankSection['Atas Nama'] ?? 'ATAS NAMA' }}</div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    @else
-                        <div class="bank-section">
-                            Kesalahan dalam memuat data bank client.
-                        </div>
-                    @endif
-                </li>
-            </ol>
-
-            <div class="signature-section">
-                <p>Demikian permohonan kami atas konfirmasi beberapa persetujuan Invoice Financing {{ $bowheerName ?? 'NAMA BOWHEER' }}.
-                    Terima kasih atas bantuan dan waktunya.</p>
-
-                <p>Best regards,<br>
-                    Customer Relation<br>
-                    {{ $sanfName ?? 'PT Surya Artha Nusantara Finance' }}
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <div class="footer">
-            <div class="footer-text">
-                <p>Email ini dibuat secara otomatis mohon tidak membalas email ini, jika terdapat keluhan silahkan
-                    hubungi <a href="#">{{$sanfInitial . ' Care'}}</a>.</p>
-                <p>Jika anda merasa tidak membuat request tersebut mohon abaikan email ini atau anda dapat <a
-                        href="{{ $reportUrl }}">Laporkan email ini</a>.</p>
-                <p>&copy; {{ date('Y') }} {{$sanfName}}. All rights reserved.</p>
-            </div>
-        </div>
-    </div>
 </body>
 
 </html>

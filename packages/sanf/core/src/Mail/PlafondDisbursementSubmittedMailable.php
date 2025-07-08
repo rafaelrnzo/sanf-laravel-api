@@ -54,7 +54,7 @@ class PlafondDisbursementSubmittedMailable extends Mailable
                 'clientTargetBank' => $clientTargetBank,
                 'allocationsTargetBank' => $allocationsTargetBank,
                 'reportUrl' => $reportUrl,
-                'leftLogo' => asset('assets/png/sanf-logo-blue.png'),
+                'leftLogo' => asset('assets/png/sanf-logo-blue-new.png'),
                 'rightLogo' => asset('assets/png/sanf-tagline.png'),
                 'recipientName' => $this->data['fullName'] ?? 'Nama Penerima',
                 'clientName' => $this->data['company_info']['company_name'] ?? $this->data['fullName'] ?? 'Nama Client',
