@@ -63,6 +63,7 @@ class EloquentPaginateUserActiveEncryptedSpecification
                 'phone_number',
                 'personal_xid',
                 'company_name',
+                'nonce',
             ])
             ->whereNotIn('id', $excludeIds)
             ->when($keyword, function ($query) use ($keyword, $sodiumQuery) {
