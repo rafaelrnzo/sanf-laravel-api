@@ -31,7 +31,6 @@ class SendEmailInvoiceCollectionSubmissionForUserJob implements ShouldQueue
     {
         $data = [
             'Tanggal Pengajuan' => date_localized($this->data[0]->created_at, '%d %B %Y'),
-            'Tanggal Pengambilan' => date_localized($this->data[0]->pickup_date, '%d %B %Y'),
         ];
 
         $tableData = [];
@@ -59,8 +58,8 @@ class SendEmailInvoiceCollectionSubmissionForUserJob implements ShouldQueue
                     'joinToIndex' => 2,
                     'html' => '<p style="text-align: center;">
                         <em>
-                            *Pastikan anda hadir pada tanggal yang sudah anda tentukan jika tidak maka pengajuan akan berstatus
-                            “Ditolak” dan anda bisa mengambil lagi dengan mengajukan ulang.
+                            *Penerbitan faktur akan diproses dalam waktu 30 hari sejak pengajuan Anda dikirimkan, sesuai dengan
+                            ketentuan POJK. Silakan periksa status pengajuan Anda secara berkala di aplikasi SANFind.
                         </em>
                     <p>',
                 ],

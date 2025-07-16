@@ -43,7 +43,7 @@ final class BrowseInvoiceCollectionSubmissionByUserService extends InvoiceCollec
                 'status' => $item->status,
                 'contractNo' => $item->contract_no,
                 'serialNo' => $item->serial_no,
-                'pickupDate' => CarbonImmutable::make($item->pickup_date),
+                'pickupDate' => isset($item->pickup_date) ? CarbonImmutable::make($item->pickup_date) : null,
                 'brandTypeModel' => $item->brand_type_model,
                 'year' => $item->year,
                 'createdAt' => $item->created_at,

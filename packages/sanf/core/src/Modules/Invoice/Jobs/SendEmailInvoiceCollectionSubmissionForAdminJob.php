@@ -33,7 +33,6 @@ class SendEmailInvoiceCollectionSubmissionForAdminJob implements ShouldQueue
     {
         $data = [
             'Tanggal Pengajuan' => date_localized($this->data[0]->created_at, '%d %B %Y'),
-            'Tanggal Pengambilan' => date_localized($this->data[0]->pickup_date, '%d %B %Y'),
         ];
 
         $tableData = [];

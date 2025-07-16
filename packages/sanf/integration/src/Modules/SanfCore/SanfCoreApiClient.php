@@ -1178,6 +1178,53 @@ class SanfCoreApiClient
     }
 
     /**
+     * @param $customerId
+     * @param $skip
+     * @param $limit
+     * @param $order
+     * @param int|null $timestamp causes error, unused
+     * @param string|null $keyword
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     * @example
+     * {
+     * "status": true,
+     * "code": "S_GetData",
+     * "message": "Success",
+     * "total": 14,
+     * "count": 10,
+     * "data": [
+     * {
+     * "AGREE_NO": "31312000685",
+     * "SERIAL_NO": "J60151",
+     * "BTM": "KOMATSU EXCAVATOR PC200-8 J60151",
+     * "YEAR": "2013",
+     * "TIMESTAMP": "01-03-2016",
+     * "ROWINDEX": "1"
+     * },
+     * ]
+     * }
+     */
+    public function getFinancingUnitOfInvoiceCollectionV2($customerId, $skip, $limit, $order, ?int $timestamp, ?string $keyword)
+    {
+        $response = Request::route('v2.invoice-collections.financing-units.list', $this->client)
+            ->pathParams([
+                'cust_id' => $customerId,
+            ])
+            ->queryParams([
+                'skip' => $skip ?? self::DEFAULT_SKIP,
+                'limit' => $limit ?? self::DEFAULT_LIMIT,
+                'order' => $order ?? self::DEFAULT_ORDER,
+                'timestamp' => $timestamp, // error core, unused
+                'param' => $keyword,
+            ])
+            ->send();
+
+        return $response->json(false);
+    }
+
+    /**
      * @param string $email
      * @return array|stdClass|null
      * @throws EndpointNotDefinedException

@@ -28,9 +28,9 @@ final class InvoiceCollectionSubmissionByUserController extends RestApiControlle
             'keyword' => ['nullable', 'string', 'max:255'],
         ]);
         $dto = new BrowseInvoiceCollectionSubmissionByUserRequestDto($input + [
-                'userId' => $auth->id(),
-                'profileXid' => $xid,
-            ]);
+            'userId' => $auth->id(),
+            'profileXid' => $xid,
+        ]);
         $result = $service->execute($dto);
 
         return fractal($result->data, new MyInvoiceCollectionSubmissionSimpleTransformer())
@@ -40,7 +40,7 @@ final class InvoiceCollectionSubmissionByUserController extends RestApiControlle
     public function postAdd(Guard $auth, Request $request, $xid, AddInvoiceCollectionSubmissionByUserService $service)
     {
         $input = $this->validate($request, [
-            'pickup_date' => ['required', 'string', 'date_format:Y-m-d'],
+            'pickup_date' => ['nullable', 'string', 'date_format:Y-m-d'],
             'financing_units' => ['required', 'array'],
             'financing_units.*.contract_no' => ['required', 'string'],
             'financing_units.*.serial_no' => ['required', 'string'],
@@ -51,7 +51,7 @@ final class InvoiceCollectionSubmissionByUserController extends RestApiControlle
             return new FinancingUnitRequestDto($item);
         }, $input['financing_units']);
         $dto = new AddInvoiceCollectionSubmissionByUserRequestDto([
-            'pickupDate' => CarbonImmutable::createFromFormat('Y-m-d', $input['pickup_date']),
+            'pickupDate' => isset($input['pickup_date']) ? CarbonImmutable::createFromFormat('Y-m-d', $input['pickup_date']) : null,
             'financing_units' => $financingUnits,
             'profileXid' => $xid,
             'userId' => $auth->id(),

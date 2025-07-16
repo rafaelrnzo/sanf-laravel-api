@@ -26,7 +26,7 @@ final class AddInvoiceCollectionSubmissionByUserService extends InvoiceCollectio
                 'batch_no' => $batchNo,
                 'status_id' => InvoiceCollectionSubmissionStatusEnum::PROCESSED,
                 'user_id' => $dto->userId,
-                'pickup_date' => $dto->pickupDate,
+                'pickup_date' => $dto->pickupDate ?? null,
                 'contract_no' => $financingUnit->contractNo,
                 'serial_no' => $financingUnit->serialNo,
                 'year' => $financingUnit->year,

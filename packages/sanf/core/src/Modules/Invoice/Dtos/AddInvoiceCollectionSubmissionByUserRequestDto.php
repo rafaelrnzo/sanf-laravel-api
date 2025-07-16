@@ -8,6 +8,10 @@ class AddInvoiceCollectionSubmissionByUserRequestDto extends CamelCaseDataTransf
 {
     public int $userId;
     public string $profileXid;
-    public \DateTimeImmutable $pickupDate;
+
+    /**
+     * @since CR2025 Changed to nullable
+     */
+    public ?\DateTimeImmutable $pickupDate;
     public array $financingUnits;
 }
