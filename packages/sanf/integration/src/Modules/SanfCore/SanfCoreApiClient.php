@@ -721,6 +721,22 @@ class SanfCoreApiClient
         return $response->json();
     }
 
+    public function getPlafondBowheerV2($customerId, $bowheerCode)
+    {
+        $response = Request::route('v2.plafond.bowheer', $this->client)
+            ->queryParams([
+                'skip' => self::DEFAULT_SKIP,
+                'limit' => self::DEFAULT_LIMIT,
+            ])
+            ->pathParams([
+                'cust_id' => $customerId,
+                'bowheer_code' => $bowheerCode,
+            ])
+            ->send();
+
+        return $response->json();
+    }
+
     /**
      * @return array|stdClass|null
      * @throws EndpointNotDefinedException

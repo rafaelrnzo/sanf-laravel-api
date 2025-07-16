@@ -44,6 +44,7 @@ Route::group(config('sanf-api.url'), [SanfCoreApiProcessor::class], function () 
 
     // V2
     Route::get('v2.plafond.factoring', '/V2/plafond/detail_factoring/{cust_id}/{plafond_code}');
+    Route::get('v2.plafond.bowheer', '/V2/plafond/bowheer_list/{cust_id}/{bowheer_code}');
 
     Route::get('bowheer.browse', '/Plafond/Bowheerlist');
 

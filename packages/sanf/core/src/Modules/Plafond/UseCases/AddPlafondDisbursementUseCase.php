@@ -293,13 +293,33 @@ final class AddPlafondDisbursementUseCase implements ApplicationServiceInterface
             ];
         }
 
+        $customerMail = $formRequest->bouwheer->email;
+        $bowheerName = $formRequest->bouwheer->name;
+
+        if (!$formRequest->customerReview) {
+            $marketingMail = explode(',', config('sanf-mobile.mail_to.marketing'));
+
+            $bowheerFromCore = $this->plafondRepository->getPlafondBowheerV2(
+                $formRequest->bouwheer->custId ?? $userGuzzleEntity->getCustomerId(),
+                $formRequest->bouwheer->code
+            );
+
+            $ccMails = $marketingMail;
+            if (!empty($bowheerFromCore)) {
+                $customerMail = $bowheerFromCore->getBowheerEmail() ?: $customerMail;
+                $bowheerName = $bowheerFromCore->getBowheerNameForEmail() ?: $bowheerName;
+                $ccMails = array_merge($bowheerFromCore->getBowheerEmailCc() ?? [], $marketingMail);
+            }
+        }
+
         $mailContent = (object) [
             'fullName' => $clientName,
             'email' => (object) [
                 'client' => $userGuzzleEntity->getEmail(),
-                'customer' => $formRequest->bouwheer->email,
+                'customer' => $customerMail,
             ],
             'bowheer' => $formRequest->bouwheer,
+            'bowheerName' => $bowheerName,
             'company_info' => $companyInfo,
             'disbursementNo' => $disbursementNo,
             'invoiceCount' => count($invoicesInput),
@@ -317,6 +337,7 @@ final class AddPlafondDisbursementUseCase implements ApplicationServiceInterface
             'invoice_documents' => $invoiceDocuments,
             'invoice_photos' => $invoicePhotos,
             'other_documents' => $otherDocuments,
+            'ccMails' => $ccMails ?? [],
         ];
         $notificationContent = (object) [
             'userId' => $formRequest->userId,

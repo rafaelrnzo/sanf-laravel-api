@@ -58,7 +58,7 @@ class PlafondDisbursementSubmittedMailable extends Mailable
                 'rightLogo' => asset('assets/png/sanf-tagline.png'),
                 'recipientName' => $this->data['fullName'] ?? 'Nama Penerima',
                 'clientName' => $this->data['company_info']['company_name'] ?? $this->data['fullName'] ?? 'Nama Client',
-                'bowheerName' => $this->data['bowheer']->name ?? 'Nama Bowheer',
+                'bowheerName' => $this->data['bowheerName'] ?? 'Nama Bowheer',
                 'sanfName' => $sanfName,
                 'initialSanf' => $sanfInitial,
                 'sanfInitial' => $sanfInitial,

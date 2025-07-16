@@ -2,6 +2,7 @@
 
 namespace Sanf\Core\Modules\Plafond\Repositories;
 
+use Sanf\Core\Modules\Plafond\Entities\GuzzlePlafondBowheerV2Entity;
 use Sanf\Core\Modules\Plafond\Entities\GuzzlePlafondFactoringV2Entity;
 use Sanf\Core\Modules\Plafond\Entities\PlafondEntityFactoringFactory;
 use Sanf\Core\Modules\Plafond\Entities\PlafondEntityFactory;
@@ -88,6 +89,17 @@ class GuzzleAndEloquentPlafondRepository implements PlafondRepositoryInterface
             }, $response['data']);
         } catch (SanfInternalApiDataNotFoundException $exception) {
             return [];
+        }
+    }
+
+    public function getPlafondBowheerV2($customerId, $bowheerCode): ?GuzzlePlafondBowheerV2Entity
+    {
+        try {
+            $response = $this->client->getPlafondBowheerV2($customerId, $bowheerCode);
+
+            return new GuzzlePlafondBowheerV2Entity((array) $response['data']);
+        } catch (SanfInternalApiDataNotFoundException $exception) {
+            return null;
         }
     }
 
