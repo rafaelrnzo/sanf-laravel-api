@@ -19,7 +19,7 @@ final class MyInvoiceCollectionSubmissionSimpleTransformer extends TransformerAb
             'status' => fractal($dto->status, new InvoiceCollectionSubmissionStatusTransformer()),
             'created_at' => unix_timestamp($dto->createdAt),
             'updated_at' => unix_timestamp($dto->updatedAt),
-            'submission_date' => Carbon::createFromImmutable($dto->createdAt)->format('Y-m-d'),
+            'submission_date' => optional(Carbon::make($dto->createdAt))->format('Y-m-d'),
         ];
     }
 }
