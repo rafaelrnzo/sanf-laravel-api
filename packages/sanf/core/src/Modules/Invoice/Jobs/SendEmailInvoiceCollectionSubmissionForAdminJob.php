@@ -65,7 +65,7 @@ class SendEmailInvoiceCollectionSubmissionForAdminJob implements ShouldQueue
                 ['joinToIndex' => 2, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08); margin: 5px 0;">'],
                 [
                     'joinToIndex' => 3,
-                    'html' => '<p style="color: #232227; font-size: 14px;"><strong>Daftar Pengembalian Invoice</strong><p>',
+                    'html' => '<p style="color: #232227; font-size: 14px;"><strong>Daftar Pengambilan Invoice</strong><p>',
                 ],
             ])
             ->writeTableHead([

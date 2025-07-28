@@ -63,7 +63,7 @@ class SendEmailInvoiceCollectionSubmissionForUserJob implements ShouldQueue
                         </em>
                     <p>',
                 ],
-                ['joinToIndex' => 3, 'html' => '<p style="color: #232227; font-size: 14px;"><strong>Daftar Pengembalian Invoice</strong><p>'],
+                ['joinToIndex' => 3, 'html' => '<p style="color: #232227; font-size: 14px;"><strong>Daftar Pengambilan Invoice</strong><p>'],
             ])
             ->writeTableHead([
                 [
@@ -84,8 +84,9 @@ class SendEmailInvoiceCollectionSubmissionForUserJob implements ShouldQueue
                 ],
             ])
             ->writeTableBody($tableData)
-            ->line(
-                __('Email ini dibuat secara otomatis mohon tidak membalas email ini, jika terdapat keluhan silahkan hubungi Sanf Customer Service')
+            ->lineWithUrl(
+                __('Email ini dibuat secara otomatis mohon tidak membalas email ini, jika terdapat keluhan silahkan hubungi'),
+                [__('SANF Customer Service'), $reportUrl]
             )
             ->lineWithUrl(
                 __('. Jika Anda merasa tidak membuat request tersebut mohon abaikan email ini atau anda dapat'),
