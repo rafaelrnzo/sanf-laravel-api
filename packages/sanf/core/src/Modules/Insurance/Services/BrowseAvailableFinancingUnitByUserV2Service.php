@@ -7,15 +7,14 @@ use Sanf\Core\Modules\Insurance\Dtos\BrowseFinancingUnitByUserResponseDto;
 use Sanf\Core\Modules\Insurance\Enums\InsuranceClaimSubmissionStatusEnum;
 use Sanf\Core\Modules\Insurance\Repositories\InsuranceClaimSubmissionRepositoryInterface;
 use Sanf\Core\Modules\Insurance\Specifications\InsuranceClaimSubmissionSpecificationFactoryInterface;
-use Sanf\Core\Modules\Invoice\Dtos\BrowseFinancingUnitByUserRequestDto;
+use Sanf\Core\Modules\Invoice\Dtos\BrowseFinancingUnitByUserV2RequestDto;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 /**
- * @deprecated CR2025
- * @see BrowseAvailableFinancingUnitByUserV2Service
+ * @since CR2025
  */
-final class BrowseAvailableFinancingUnitByUserService implements ApplicationServiceInterface
+final class BrowseAvailableFinancingUnitByUserV2Service implements ApplicationServiceInterface
 {
     protected SanfCoreApiClient $apiClient;
     protected InsuranceClaimSubmissionRepositoryInterface $insuranceClaimSubmissionRepository;
@@ -36,18 +35,17 @@ final class BrowseAvailableFinancingUnitByUserService implements ApplicationServ
     }
 
     /**
-     * @param BrowseFinancingUnitByUserRequestDto $dto
+     * @param BrowseFinancingUnitByUserV2RequestDto $dto
      * @return BrowseFinancingUnitByUserResponseDto
      */
     public function execute($dto = null)
     {
         try {
-            $result = $this->apiClient->getFinancingUnitOfInsurance(
+            $result = $this->apiClient->getFinancingUnitOfInsuranceV2(
                 $dto->profileXid,
                 $dto->skip,
                 $dto->limit,
                 $dto->sortBy,
-                $dto->timestamp,
                 $dto->keyword
             );
         } catch (SanfInternalApiDataNotFoundException $exception) {
@@ -70,6 +68,8 @@ final class BrowseAvailableFinancingUnitByUserService implements ApplicationServ
                 'serialNo' => $item->SERIAL_NO,
                 'brandTypeModel' => $item->BTM,
                 'year' => $item->YEAR ?? '',
+                'cityId' => $item->CITY_ID ?? null,
+                'cityName' => $item->CITY_NAME ?? null,
             ];
         }, $result->data);
 

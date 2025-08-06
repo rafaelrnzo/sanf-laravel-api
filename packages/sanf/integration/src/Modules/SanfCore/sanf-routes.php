@@ -70,6 +70,7 @@ Route::group(config('sanf-api.url'), [SanfCoreApiProcessor::class], function () 
     Route::get('invoice-collections.financing-units.list', '/PengambilanInv');
     Route::get('v2.invoice-collections.financing-units.list', '/V2/invoice/{cust_id}'); // V2 CR2025
     Route::get('insurances.financing-units.list', '/Insurance');
+    Route::get('v2.insurances.financing-units.list', '/V2/insurance/{cust_id}'); // V2 CR2025
 
     Route::get('assignee-survey', '/SelfSurvei/offline');
     Route::post('surveys.add', '/SelfSurvei');

@@ -1139,6 +1139,47 @@ class SanfCoreApiClient
      * @param $skip
      * @param $limit
      * @param $order
+     * @param string|null $keyword
+     * @return array|stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     * @example
+     * {
+     * "AGREE_NO": "31007000578",
+     * "SERIAL_NO": "JNBCWB45AAAL02507",
+     * "BTM": "NISSAN DUMP TRUCK CWB45ALDN",
+     * "POLIS_NO": "030510000077",
+     * "YEAR": "2010",
+     * "CITY_ID": "0015401",
+     * "CITY_NAME": "KUTAI",
+     * "EMAIL_PROVIDER": "care@abb.ac.id",
+     * "EMAIL_CC": "service@sanf.co.id,faris.aizy@sanf.co.id",
+     * "TIMESTAMP": "15-07-2010",
+     * "ROWINDEX": "1"
+     * },
+     */
+    public function getFinancingUnitOfInsuranceV2($customerId, $skip, $limit, $order, ?string $keyword)
+    {
+        $response = Request::route('v2.insurances.financing-units.list', $this->client)
+            ->pathParams([
+                'cust_id' => $customerId,
+            ])
+            ->queryParams([
+                'skip' => $skip ?? self::DEFAULT_SKIP,
+                'limit' => $limit ?? self::DEFAULT_LIMIT,
+                'order' => $order ?? self::DEFAULT_ORDER,
+                'param' => $keyword,
+            ])
+            ->send();
+
+        return $response->json(false);
+    }
+
+    /**
+     * @param $customerId
+     * @param $skip
+     * @param $limit
+     * @param $order
      * @param int|null $timestamp
      * @param string|null $keyword
      * @return array|stdClass|null

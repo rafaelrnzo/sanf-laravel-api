@@ -5,10 +5,9 @@ namespace Sanf\Api\Modules\Insurance\Transformers;
 use League\Fractal\TransformerAbstract;
 
 /**
- * @deprecated CR2025
- * @see FinancingUnitV2Transformer
+ * @since CR2025
  */
-final class FinancingUnitTransformer extends TransformerAbstract
+final class FinancingUnitV2Transformer extends TransformerAbstract
 {
     public function transform($dto)
     {
@@ -18,6 +17,8 @@ final class FinancingUnitTransformer extends TransformerAbstract
             'serial_no' => $dto->serialNo,
             'brand_type_model' => $dto->brandTypeModel,
             'year' => $dto->year,
+            'city_id' => $dto->cityId,
+            'city_name' => $dto->cityName,
         ];
     }
 }
