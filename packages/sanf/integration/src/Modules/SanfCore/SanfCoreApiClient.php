@@ -1092,6 +1092,45 @@ class SanfCoreApiClient
     }
 
     /**
+     * @param int $skip
+     * @param int $limit
+     * @param ?string $order
+     * @param ?string $keyword
+     * @return object|null
+     * @since CR2025
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     * @example {
+     * "COUNTRY_ID": "001",
+     * "CITY_ID": "0013406",
+     * "STATE_ID": "00134",
+     * "DESCRIPTION": "PESISIR SELATAN",
+     * "F_ACTIVE": "Y",
+     * "USER_UPD": "HKY",
+     * "DATE_UPD": "01-OCT-19",
+     * "TIME_UPD": "131708",
+     * "CITY_OJK": "3406",
+     * "MAP_CITY": null,
+     * "CITY_SLIK": "3406",
+     * "CITY_TABLEAU": "PAINAN",
+     * "F_AAB": "Y",
+     * "ROWINDEX": "1"
+     * },
+     */
+    public function getCitiesV2(int $skip = self::DEFAULT_SKIP, int $limit = self::DEFAULT_LIMIT, ?string $order = null, string $keyword = '')
+    {
+        return Request::route('v2.location.all-cities', $this->client)
+            ->queryParams([
+                'skip' => $skip,
+                'limit' => $limit,
+                'order' => $order,
+                'keyword' => $keyword,
+            ])
+            ->send()
+            ->json(false);
+    }
+
+    /**
      * @param $customerId
      * @param $skip
      * @param $limit
@@ -1141,6 +1180,7 @@ class SanfCoreApiClient
      * @param $order
      * @param string|null $keyword
      * @return array|stdClass|null
+     * @since CR2025
      * @throws EndpointNotDefinedException
      * @throws GuzzleException
      * @example

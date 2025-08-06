@@ -66,6 +66,7 @@ Route::group(config('sanf-api.url'), [SanfCoreApiProcessor::class], function () 
     Route::get('contracts.financing-unit-submission.item', '/UnitPembiayaan/detail');
 
     Route::get('location.all-cities', '/Address/allcity');
+    Route::get('v2.location.all-cities', '/V2/insurance/city'); // V2 CR2025
 
     Route::get('invoice-collections.financing-units.list', '/PengambilanInv');
     Route::get('v2.invoice-collections.financing-units.list', '/V2/invoice/{cust_id}'); // V2 CR2025
