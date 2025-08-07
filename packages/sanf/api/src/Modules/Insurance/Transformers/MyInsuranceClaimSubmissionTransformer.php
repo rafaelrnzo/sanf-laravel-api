@@ -21,6 +21,8 @@ final class MyInsuranceClaimSubmissionTransformer extends TransformerAbstract
             'description' => $dto->description,
             'image_files' => fractal($dto->imageFiles, PrivateAssetFileSimpleTransformer::class)->serializeWith(new ArraySerializer()),
             'status' => fractal($dto->status, new InsuranceClaimSubmissionStatusTransformer()),
+            'completeness_documents' => isset($dto->completenessDocuments) ? explode(',', $dto->completenessDocuments) : null,
+            'completeness_note' => $dto->completenessNote,
             'created_at' => unix_timestamp($dto->createdAt),
             'updated_at' => unix_timestamp($dto->updatedAt),
         ];

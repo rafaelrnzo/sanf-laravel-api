@@ -18,6 +18,17 @@ class ReadInsuranceClaimSubmissionByUserResponseDto extends CamelCaseDataTransfe
     public \DateTimeImmutable $incidentDate;
     public string $description;
     public array $imageFiles;
+
+    /**
+     * @since CR2025
+     */
+    public ?string $completenessDocuments;
+
+    /**
+     * @since CR2025
+     */
+    public ?string $completenessNote;
+
     public \DateTimeImmutable $createdAt;
     public \DateTimeImmutable $updatedAt;
 }

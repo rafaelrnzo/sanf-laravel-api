@@ -34,6 +34,8 @@ final class ReadInsuranceClaimSubmissionByUserService extends InsuranceClaimSubm
             'incidentDate' => CarbonImmutable::make($entity->incident_date),
             'description' => $entity->description,
             'imageFiles' => $entity->image_files,
+            'completenessDocuments' => $entity->completeness_documents,
+            'completenessNote' => $entity->completeness_note,
             'createdAt' => CarbonImmutable::make($entity->created_at),
             'updatedAt' => CarbonImmutable::make($entity->updated_at),
         ]);
