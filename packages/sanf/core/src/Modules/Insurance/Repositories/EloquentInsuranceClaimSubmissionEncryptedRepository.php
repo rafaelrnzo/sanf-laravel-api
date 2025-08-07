@@ -12,6 +12,7 @@ class EloquentInsuranceClaimSubmissionEncryptedRepository extends AbstractEloque
 {
     protected InsuranceClaimSubmissionEncryptedModel $model;
     protected InsuranceClaimSubmissionHistoryEncryptedModel $historyModel;
+    protected array $encryptedFieldsSubmission;
     protected array $encryptedJsonFieldsSubmission;
     protected array $encryptedJsonFieldsSubmissionHistory;
 
@@ -20,6 +21,10 @@ class EloquentInsuranceClaimSubmissionEncryptedRepository extends AbstractEloque
         $this->model = $model;
         $this->historyModel = $historyModel;
 
+        $this->encryptedFieldsSubmission = [
+            'pic_name',
+            'pic_phone_number',
+        ];
         $this->encryptedJsonFieldsSubmission = [
             'location_metadata',
         ];
@@ -52,7 +57,7 @@ class EloquentInsuranceClaimSubmissionEncryptedRepository extends AbstractEloque
     public function add($fields)
     {
         $model = DB::transaction(function () use ($fields) {
-            $fields = SodiumEncryption::encryptor()->encryptMultipleData($fields, [], $this->encryptedJsonFieldsSubmission);
+            $fields = SodiumEncryption::encryptor()->encryptMultipleData($fields, $this->encryptedFieldsSubmission, $this->encryptedJsonFieldsSubmission);
 
             $model = $this->model->newQuery()->forceCreate($fields);
 
@@ -82,7 +87,7 @@ class EloquentInsuranceClaimSubmissionEncryptedRepository extends AbstractEloque
             return null;
         }
 
-        $fields = $model->encryptor()->encryptMultipleData($fields, [], $this->encryptedJsonFieldsSubmission);
+        $fields = $model->encryptor()->encryptMultipleData($fields, $this->encryptedFieldsSubmission, $this->encryptedJsonFieldsSubmission);
 
         $this->model->newQuery()->whereId($fields['id'])->update($fields);
 

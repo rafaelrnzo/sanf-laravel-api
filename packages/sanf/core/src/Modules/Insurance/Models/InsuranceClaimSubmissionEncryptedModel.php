@@ -36,4 +36,14 @@ class InsuranceClaimSubmissionEncryptedModel extends AbstractModel
     {
         return json_decode($this->decryptor()->decrypt($this->attributes['location_metadata']));
     }
+
+    public function getPicNameAttribute()
+    {
+        return $this->decryptor()->decrypt($this->attributes['pic_name']);
+    }
+
+    public function getPicPhoneNumberAttribute()
+    {
+        return $this->decryptor()->decrypt($this->attributes['pic_phone_number']);
+    }
 }

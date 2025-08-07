@@ -240,6 +240,8 @@ Route::group(['prefix' => 'v2', 'middleware' => 'auth'], function () {
     Route::get('users/profiles/{xid}/financing-units-invoice-collection', ['as' => 'v2.users.invoice-collection-financing-units.browse', 'uses' => 'Invoice\Controllers\FinancingUnitByUserV2Controller@getBrowse']);
 
     Route::get('cities', ['as' => 'v2.all-cities.list', 'uses' => 'Location\CoreLocationV2Controller@getCities']);
+
+    Route::post('users/profiles/{xid}/insurance-claim-submissions', ['as' => 'v2.users.insurance-claim-submissions.add', 'uses' => 'Insurance\Controllers\InsuranceClaimSubmissionByUserController@postAddV2']);
 });
 
 // SCANINA INTEGRATION

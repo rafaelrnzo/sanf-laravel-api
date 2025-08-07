@@ -70,6 +70,8 @@ final class BrowseAvailableFinancingUnitByUserV2Service implements ApplicationSe
                 'year' => $item->YEAR ?? '',
                 'cityId' => $item->CITY_ID ?? null,
                 'cityName' => $item->CITY_NAME ?? null,
+                'emailProvider' => $item->EMAIL_PROVIDER,
+                'emailCc' => $item->EMAIL_CC ?? null,
             ];
         }, $result->data);
 

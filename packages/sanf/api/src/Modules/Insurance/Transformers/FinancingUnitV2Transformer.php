@@ -2,6 +2,7 @@
 
 namespace Sanf\Api\Modules\Insurance\Transformers;
 
+use Illuminate\Support\Str;
 use League\Fractal\TransformerAbstract;
 
 /**
@@ -18,7 +19,9 @@ final class FinancingUnitV2Transformer extends TransformerAbstract
             'brand_type_model' => $dto->brandTypeModel,
             'year' => $dto->year,
             'city_id' => $dto->cityId,
-            'city_name' => $dto->cityName,
+            'city_name' => Str::title($dto->cityName),
+            'email_provider' => $dto->emailProvider,
+            'email_cc' => $dto->emailCc,
         ];
     }
 }
