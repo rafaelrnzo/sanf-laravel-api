@@ -7,6 +7,22 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{ config('app.name') }}</title>
     <style>
+        @font-face {
+            font-family: 'Gilroy';
+            src: url('/assets/fonts/Gilroy-Regular.woff2') format('woff2'),
+                url('/assets/fonts/Gilroy-Regular.woff') format('woff');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Gilroy';
+            src: url('/assets/fonts/Gilroy-Bold.woff2') format('woff2'),
+                url('/assets/fonts/Gilroy-Bold.woff') format('woff');
+            font-weight: 700;
+            font-style: normal;
+        }
+
         * {
             -webkit-box-sizing: border-box;
             -moz-box-sizing: border-box;
@@ -31,7 +47,7 @@
             display: flex;
             height: 100vh;
             margin: 0;
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-family: Gilroy, sans-serif;
             font-size: 14px;
             line-height: 1.42857143;
             color: #333;
