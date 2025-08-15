@@ -41,4 +41,14 @@ return [
     'plafond.disbursement.status.DONE' => 'Admin Review',
     'plafond.disbursement.status.REJECT' => 'Ditolak',
     'plafond.disbursement.status.APPROVE' => 'Disetujui',
+    'pdc_hold_status' => [
+        'PROCESSED' => 'Diproses',
+        'REJECTED' => 'Ditolak',
+        'ACCEPTED' => 'Disetujui',
+    ],
+    'pdc_hold_type'=> [
+        'MULTI_GIRO' => 'Multi Giro',
+        'MULTI_CONTRACT' => 'Multi Kontrak',
+        'RESUME' => 'Lanjutkan PDC',
+    ],
 ];

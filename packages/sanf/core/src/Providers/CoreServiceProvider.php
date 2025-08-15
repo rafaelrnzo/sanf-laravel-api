@@ -68,6 +68,12 @@ use Sanf\Core\Modules\Location\EloquentLocationEncryptedRepository;
 use Sanf\Core\Modules\Location\LocationRepositoryInterface;
 use Sanf\Core\Modules\News\EloquentNewsRepository;
 use Sanf\Core\Modules\News\NewsRepositoryInterface;
+use Sanf\Core\Modules\PdcHold\Repositories\PdcHoldEloquentRepository;
+use Sanf\Core\Modules\PdcHold\Repositories\PdcHoldGiroEloquentRepository;
+use Sanf\Core\Modules\PdcHold\Repositories\PdcHoldGiroRepositoryInterface;
+use Sanf\Core\Modules\PdcHold\Repositories\PdcHoldRepositoryInterface;
+use Sanf\Core\Modules\PdcHold\Specifications\EloquentPdcHoldSubmissionSpecificationFactory;
+use Sanf\Core\Modules\PdcHold\Specifications\PdcHoldSubmissionSpecificationFactoryInterface;
 use Sanf\Core\Modules\Plafond\Repositories\EloquentPlafondTypeRepository;
 use Sanf\Core\Modules\Plafond\Repositories\GuzzleAndEloquentPlafondRepository;
 use Sanf\Core\Modules\Plafond\Repositories\PaymentAccelarationDocumentEncryptedEloquentRepository;
@@ -238,6 +244,10 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(ApiRequestRepositoryInterface::class, EloquentApiRequestLogEncryptedRepository::class);
         $this->app->bind(UserOAuthRepositoryInterface::class, EloquentUserOAuthEncryptedRepository::class);
 
+        // CR2025
+        $this->app->bind(PdcHoldRepositoryInterface::class, PdcHoldEloquentRepository::class);
+        $this->app->bind(PdcHoldGiroRepositoryInterface::class, PdcHoldGiroEloquentRepository::class);
+
         //SPECIFICATION FACTORY
         $this->app->bind(ProjectSpecificationFactoryInterface::class, EloquentProjectSpecificationFactory::class);
         $this->app->bind(CommoditySpecificationFactoryInterface::class, EloquentCommoditySpecificationFactory::class);
@@ -266,6 +276,8 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(ScaninaProductSpecificationInterface::class, GuzzleScaninaProductSpecification::class);
         $this->app->bind(ScaninaUserSpecificationInterface::class, GuzzleScaninaUserSpecification::class);
         $this->app->bind(ScaninaRegionSpecificationInterface::class, GuzzleScaninaRegionSpecification::class);
+        // CR 2025
+        $this->app->bind(PdcHoldSubmissionSpecificationFactoryInterface::class, EloquentPdcHoldSubmissionSpecificationFactory::class);
 
         // Others
         $this->app->bind('sodiumPasswordBrokerManager', function ($app) {

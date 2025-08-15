@@ -224,6 +224,14 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     // Ad-Ins e-SignHub
     Route::post('users/profiles/{xid}/contracts/esign-otp', ['as' => 'users.contracts.esign-otp', 'uses' => 'Contract\Controllers\ESignDocumentByUserController@requestOtp']);
     Route::get('users/profiles/{xid}/contracts/esign-files/{document_id}/download', ['as' => 'users.contracts.esign-files.download', 'uses' => 'Contract\Controllers\ESignDocumentByUserController@downloadDocument']);
+
+    // PDC HOLD GIRO (CR 2025)
+    Route::get('pdc-hold-reasons', ['as' => 'v1.pdc-hold-reasons.browse', 'uses' => 'PdcHold\Controllers\PdcHoldReasonController@getList']);
+    Route::post('users/profiles/{xid}/pdc-hold-multi-giro', ['as' => 'v1.pdc-hold-multi-giro.add', 'uses' => 'PdcHold\Controllers\PdcHoldController@postAddMultiGiro']);
+    Route::post('users/profiles/{xid}/pdc-hold-multi-contract', ['as' => 'v1.pdc-hold-multi-contract.add', 'uses' => 'PdcHold\Controllers\PdcHoldController@postAddMultiContract']);
+    Route::post('users/profiles/{xid}/pdc-resume', ['as' => 'v1.pdc-resume.add', 'uses' => 'PdcHold\Controllers\PdcHoldController@postResume']);
+    Route::get('users/profiles/{xid}/pdc-holds', ['as' => 'v1.pdc-hold.browse', 'uses' => 'PdcHold\Controllers\PdcHoldController@getBrowse']);
+    Route::get('users/profiles/{xid}/pdc-holds/{submissionXid}', ['as' => 'users.pdc-hold.read', 'uses' => 'PdcHold\Controllers\PdcHoldController@getRead']);
 });
 
 Route::group(['prefix' => 'v2', 'middleware' => 'auth'], function () {
