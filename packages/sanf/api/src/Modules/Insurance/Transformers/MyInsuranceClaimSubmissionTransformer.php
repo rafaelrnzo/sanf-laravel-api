@@ -3,7 +3,7 @@
 namespace Sanf\Api\Modules\Insurance\Transformers;
 
 use League\Fractal\TransformerAbstract;
-use Sanf\Api\Modules\Asset\PrivateAssetFileSimpleTransformer;
+use Sanf\Api\Modules\Asset\PrivateAssetFileSnakCaseTransformer;
 use Spatie\Fractalistic\ArraySerializer;
 
 final class MyInsuranceClaimSubmissionTransformer extends TransformerAbstract
@@ -19,7 +19,7 @@ final class MyInsuranceClaimSubmissionTransformer extends TransformerAbstract
             'location_metadata' => $dto->locationMetadata,
             'incident_date' => $dto->incidentDate->format('Y-m-d'),
             'description' => $dto->description,
-            'image_files' => fractal($dto->imageFiles, PrivateAssetFileSimpleTransformer::class)->serializeWith(new ArraySerializer()),
+            'image_files' => fractal($dto->imageFiles, PrivateAssetFileSnakCaseTransformer::class)->serializeWith(new ArraySerializer()),
             'status' => fractal($dto->status, new InsuranceClaimSubmissionStatusTransformer()),
             'completeness_documents' => isset($dto->completenessDocuments) ? explode(',', $dto->completenessDocuments) : null,
             'completeness_note' => $dto->completenessNote,
