@@ -13,6 +13,7 @@ final class PdcHoldTypeEnum extends Enum
     const MULTI_CONTRACT = 2;
     const RESUME = 3;
     const ALL_TYPES = [self::MULTI_GIRO, self::MULTI_CONTRACT, self::RESUME];
+    const RESUMABLE = [self::MULTI_GIRO, self::MULTI_CONTRACT];
 
     public function getLabel()
     {

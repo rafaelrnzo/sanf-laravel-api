@@ -43,6 +43,7 @@ class PdcHoldController extends RestApiController
             'sort_by' => ['nullable', 'string'],
             'status_id' => ['nullable', 'integer', Rule::in(PdcHoldStatusEnum::ALL_STATUS)],
             'type' => ['nullable', 'integer', Rule::in(PdcHoldTypeEnum::ALL_TYPES)],
+            'resumable' => ['nullable', 'boolean'],
         ]);
 
         $dto = new BrowsePdcHoldSubmissionByUserRequestDto($input + [

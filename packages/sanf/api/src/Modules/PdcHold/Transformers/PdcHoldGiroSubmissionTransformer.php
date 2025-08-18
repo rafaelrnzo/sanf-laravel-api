@@ -2,6 +2,7 @@
 
 namespace Sanf\Api\Modules\PdcHold\Transformers;
 
+use Illuminate\Support\Carbon;
 use League\Fractal\TransformerAbstract;
 
 /**
@@ -17,7 +18,7 @@ final class PdcHoldGiroSubmissionTransformer extends TransformerAbstract
             'pdc_no' => $dto->pdc_no,
             'amount' => $dto->amount,
             'currency_type' => $dto->currency_type,
-            'giro_date' => date_localized($dto->giro_date, '%d %B %Y'),
+            'giro_date' => Carbon::make($dto->giro_date)->format('Y-m-d'),
             'pdc_type' => $dto->pdc_type,
             'created_at' => unix_timestamp($dto->created_at),
             'updated_at' => unix_timestamp($dto->updated_at),

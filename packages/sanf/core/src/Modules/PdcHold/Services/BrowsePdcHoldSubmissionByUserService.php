@@ -32,10 +32,10 @@ final class BrowsePdcHoldSubmissionByUserService implements ApplicationServiceIn
     public function execute($dto = null)
     {
         $result = $this->pdcHoldRepository->query(
-            $this->pdcHoldSubmissionSpecificationFactory->paginateByUserAndProfile($dto->userId, $dto->profileXid, $dto->statusId, $dto->type, $dto->sortBy, $dto->skip, $dto->limit)
+            $this->pdcHoldSubmissionSpecificationFactory->paginateByUserAndProfile($dto->userId, $dto->profileXid, $dto->statusId, $dto->type, $dto->resumable, $dto->sortBy, $dto->skip, $dto->limit)
         );
         $total = $this->pdcHoldRepository->size(
-            $this->pdcHoldSubmissionSpecificationFactory->paginateByUserAndProfile($dto->userId, $dto->profileXid, $dto->statusId, $dto->type)
+            $this->pdcHoldSubmissionSpecificationFactory->paginateByUserAndProfile($dto->userId, $dto->profileXid, $dto->statusId, $dto->type, $dto->resumable)
         );
 
         $data = array_map(function ($item) {

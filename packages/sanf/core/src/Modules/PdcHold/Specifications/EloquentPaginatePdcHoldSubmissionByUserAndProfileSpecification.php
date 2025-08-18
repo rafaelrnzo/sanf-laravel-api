@@ -2,6 +2,8 @@
 
 namespace Sanf\Core\Modules\PdcHold\Specifications;
 
+use Sanf\Core\Modules\PdcHold\Enums\PdcHoldStatusEnum;
+use Sanf\Core\Modules\PdcHold\Enums\PdcHoldTypeEnum;
 use Sanf\Core\Modules\PdcHold\Models\PdcHoldGiroModel;
 
 /**
@@ -13,16 +15,18 @@ final class EloquentPaginatePdcHoldSubmissionByUserAndProfileSpecification
     private string $customerId;
     private ?int $statusId;
     private ?int $type;
+    private ?bool $resumable;
     private ?string $sortBy;
     private ?int $skip;
     private ?int $limit;
 
-    public function __construct(int $userId, string $customerId, ?int $statusId, ?int $type, ?string $sortBy, ?int $skip, ?int $limit)
+    public function __construct(int $userId, string $customerId, ?int $statusId, ?int $type, ?bool $resumable, ?string $sortBy, ?int $skip, ?int $limit)
     {
         $this->userId = $userId;
         $this->customerId = $customerId;
         $this->statusId = $statusId;
         $this->type = $type;
+        $this->resumable = $resumable;
         $this->sortBy = $sortBy;
         $this->skip = $skip;
         $this->limit = $limit;
@@ -51,6 +55,10 @@ final class EloquentPaginatePdcHoldSubmissionByUserAndProfileSpecification
             ->where('user_id', $this->userId)
             ->where('customer_id', $this->customerId)
             ->orderBy($orderBy, $orderDirection)
+            ->when($this->resumable, function ($query) {
+                return $query->where('status_id', PdcHoldStatusEnum::ACCEPTED)
+                    ->whereIn('type', PdcHoldTypeEnum::RESUMABLE);
+            })
             ->when($this->statusId, function ($query) {
                 return $query->where('status_id', $this->statusId);
             })

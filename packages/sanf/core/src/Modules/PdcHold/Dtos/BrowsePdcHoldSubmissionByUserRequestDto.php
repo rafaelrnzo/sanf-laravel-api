@@ -16,4 +16,5 @@ class BrowsePdcHoldSubmissionByUserRequestDto extends CamelCaseDataTransferObjec
     public ?int $skip;
     public ?int $limit;
     public ?string $sortBy;
+    public $resumable;
 }
