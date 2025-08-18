@@ -9,31 +9,21 @@ use Sanf\Core\Modules\PdcHold\Dtos\AddPdcHoldMultiContractByUserRequestDto;
 use Sanf\Core\Modules\PdcHold\Dtos\PdcHoldMultiContractRequestDto;
 use Sanf\Core\Modules\PdcHold\Enums\PdcHoldStatusEnum;
 use Sanf\Core\Modules\PdcHold\Enums\PdcHoldTypeEnum;
-use Sanf\Core\Modules\PdcHold\Repositories\PdcHoldGiroRepositoryInterface;
-use Sanf\Core\Modules\PdcHold\Repositories\PdcHoldRepositoryInterface;
+use Sanf\Core\Modules\PdcHold\Events\PdcHoldMultiContractSubmittedEvent;
 
 /**
  * @since CR2025
  */
-final class AddPdcHoldMultiContractByUserService implements ApplicationServiceInterface
+final class AddPdcHoldMultiContractByUserService extends PdcHoldByUserService implements ApplicationServiceInterface
 {
-    protected PdcHoldRepositoryInterface $pdcHoldRepository;
-    protected PdcHoldGiroRepositoryInterface $pdcHoldGiroRepository;
-
-    public function __construct(
-        PdcHoldRepositoryInterface $pdcHoldRepository,
-        PdcHoldGiroRepositoryInterface $pdcHoldGiroRepository
-    ) {
-        $this->pdcHoldRepository = $pdcHoldRepository;
-        $this->pdcHoldGiroRepository = $pdcHoldGiroRepository;
-    }
-
     /**
      * @param AddPdcHoldMultiContractByUserRequestDto $dto
      * @return AddPdcHoldByUserResponseDto
      */
     public function execute($dto = null)
     {
+        $user = $this->findUserOrFail($dto->userId);
+
         $entity = DB::transaction(function () use ($dto) {
             $pdcHoldXid = nano_id();
             $status = new PdcHoldStatusEnum(PdcHoldStatusEnum::PROCESSED);
@@ -51,10 +41,10 @@ final class AddPdcHoldMultiContractByUserService implements ApplicationServiceIn
                 'status' => $status->getLabel(),
             ]);
 
-            $giros = [];
+            $giros_amount = [];
             /** @var PdcHoldMultiContractRequestDto $giro */
             foreach ($dto->multiContract as $giro) {
-                $giro = $this->pdcHoldGiroRepository->add([
+                $this->pdcHoldGiroRepository->add([
                     'xid' => nano_id(),
                     'pdc_hold_id' => $entity->id,
                     'pdc_resume_id' => null,
@@ -67,16 +57,16 @@ final class AddPdcHoldMultiContractByUserService implements ApplicationServiceIn
                     'pdc_type' => $giro->pdcType,
                 ]);
 
-                $giros[] = $giro;
+                $giros_amount[$giro->contractNo] = ($giros_amount[$giro->contractNo] ?? 0) + $giro->amount;
             }
 
-            $entity->giros = $giros;
+            $entity->giros_amount = $giros_amount;
 
             return $entity;
         });
 
         if ($entity) {
-            // event(new PdcHoldMultiContractSubmittedEvent($entity));
+            event(new PdcHoldMultiContractSubmittedEvent($entity, $user));
         }
 
         return new AddPdcHoldByUserResponseDto([

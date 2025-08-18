@@ -9,31 +9,21 @@ use Sanf\Core\Modules\PdcHold\Dtos\AddPdcHoldMultiGiroByUserRequestDto;
 use Sanf\Core\Modules\PdcHold\Dtos\PdcHoldMultiGiroRequestDto;
 use Sanf\Core\Modules\PdcHold\Enums\PdcHoldStatusEnum;
 use Sanf\Core\Modules\PdcHold\Enums\PdcHoldTypeEnum;
-use Sanf\Core\Modules\PdcHold\Repositories\PdcHoldGiroRepositoryInterface;
-use Sanf\Core\Modules\PdcHold\Repositories\PdcHoldRepositoryInterface;
+use Sanf\Core\Modules\PdcHold\Events\PdcHoldMultiGiroSubmittedEvent;
 
 /**
  * @since CR2025
  */
-final class AddPdcHoldMultiGiroByUserService implements ApplicationServiceInterface
+final class AddPdcHoldMultiGiroByUserService extends PdcHoldByUserService implements ApplicationServiceInterface
 {
-    protected PdcHoldRepositoryInterface $pdcHoldRepository;
-    protected PdcHoldGiroRepositoryInterface $pdcHoldGiroRepository;
-
-    public function __construct(
-        PdcHoldRepositoryInterface $pdcHoldRepository,
-        PdcHoldGiroRepositoryInterface $pdcHoldGiroRepository
-    ) {
-        $this->pdcHoldRepository = $pdcHoldRepository;
-        $this->pdcHoldGiroRepository = $pdcHoldGiroRepository;
-    }
-
     /**
      * @param AddPdcHoldMultiGiroByUserRequestDto $dto
      * @return AddPdcHoldByUserResponseDto
      */
     public function execute($dto = null)
     {
+        $user = $this->findUserOrFail($dto->userId);
+
         $entity = DB::transaction(function () use ($dto) {
             $pdcHoldXid = nano_id();
             $status = new PdcHoldStatusEnum(PdcHoldStatusEnum::PROCESSED);
@@ -54,7 +44,7 @@ final class AddPdcHoldMultiGiroByUserService implements ApplicationServiceInterf
             $giros = [];
             /** @var PdcHoldMultiGiroRequestDto $giro */
             foreach ($dto->multiGiro as $giro) {
-                $giro = $this->pdcHoldGiroRepository->add([
+                $addedGiro = $this->pdcHoldGiroRepository->add([
                     'xid' => nano_id(),
                     'pdc_hold_id' => $entity->id,
                     'pdc_resume_id' => null,
@@ -67,16 +57,22 @@ final class AddPdcHoldMultiGiroByUserService implements ApplicationServiceInterf
                     'pdc_type' => $giro->pdcType,
                 ]);
 
-                $giros[] = $giro;
+                $giros[] = (object) [
+                    'pdc_no' => $addedGiro->pdc_no,
+                    'amount' => $addedGiro->amount,
+                    'giro_date' => $addedGiro->giro_date,
+                    'pdc_type' => $addedGiro->pdc_type,
+                ];
             }
 
+            $entity->contract_no = $dto->contractNo;
             $entity->giros = $giros;
 
             return $entity;
         });
 
         if ($entity) {
-            // event(new PdcHoldMultiGiroSubmittedEvent($entity));
+            event(new PdcHoldMultiGiroSubmittedEvent($entity, $user));
         }
 
         return new AddPdcHoldByUserResponseDto([
