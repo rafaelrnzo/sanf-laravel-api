@@ -37,9 +37,10 @@ class GetPostDatedChequeDetailService extends UserService implements Application
         }
 
         try {
-            $response = $this->internalApiClient->getPdcDetail(
+            $response = $this->internalApiClient->getPdcGiroByContractV2(
                 $dto->profile_xid,
                 $dto->contract_no,
+                $dto->keyword,
                 $dto->limit,
                 $dto->skip,
                 $dto->sort_by
@@ -57,6 +58,11 @@ class GetPostDatedChequeDetailService extends UserService implements Application
                         'name' => $item->STATUS ?? null,
                     ],
                 ];
+            });
+
+            // @TODO: remove once keyword (giroNo) implemented from core
+            $data = $data->filter(function ($item) use ($dto) {
+                return stripos($item->pdc_no, $dto->keyword) !== false;
             });
         } catch (SanfInternalApiDataNotFoundException $exception) {
             return (object) [

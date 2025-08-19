@@ -971,6 +971,7 @@ class SanfCoreApiClient
     }
 
     /**
+     * @deprecated CR2025 @see self::giroContractV2()
      * @return array|stdClass|null
      * @throws EndpointNotDefinedException
      * @throws GuzzleException
@@ -1007,6 +1008,45 @@ class SanfCoreApiClient
     }
 
     /**
+     * @return \stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     * @example
+     * {
+     * "status": true,
+     * "code": "S_GetData",
+     * "message": "Success",
+     * "total": 24,
+     * "count": 10,
+     * "data": [
+     * {
+     * "AGREE_NO": "30804001268",
+     * "CURR_ID": "IDR",
+     * "DT_GL": "07-05-2008",
+     * "ROWINDEX": "1"
+     * },
+     * ]
+     * }
+     */
+    public function getPdcContractV2($customerId, $limit, $skip, $sort_by, $keyword = null)
+    {
+        $response = Request::route('v2.contracts.pdc', $this->client)
+            ->pathParams([
+                'cust_id' => $customerId,
+            ])
+            ->queryParams([
+                'contrak_no' => $keyword,
+                'skip' => $skip,
+                'limit' => $limit,
+                'order' => $sort_by,
+            ])
+            ->send();
+
+        return $response->json(false);
+    }
+
+    /**
+     * @deprecated CR2025 @see self::giroByContractV2()
      * @return array|stdClass|null
      * @throws EndpointNotDefinedException
      * @throws GuzzleException
@@ -1022,6 +1062,57 @@ class SanfCoreApiClient
             ->queryParams([
                 'cust_id' => $customerId,
                 'contrak_no' => $contractNo,
+                'skip' => $skip,
+                'limit' => $limit,
+                'order' => $sortBy,
+            ])
+            ->send();
+
+        return $response->json(false);
+    }
+
+    /**
+     * @return \stdClass|null
+     * @throws EndpointNotDefinedException
+     * @throws GuzzleException
+     * @example
+     * {
+     * "status": true,
+     * "code": "S_GetData",
+     * "message": "Success",
+     * "total": 20,
+     * "count": 10,
+     * "data": [
+     * {
+     * "CUST_ID": "2010000284",
+     * "AGREE_NO": "10801000539",
+     * "PDC_DUE_DT": "16-JUL-09",
+     * "PDC_NO": "BI861019",
+     * "CURR_ID": "IDR",
+     * "PDC_AMT": "164050000",
+     * "PDC_TYPE": "Angsuran",
+     * "STATUS_ID": "6",
+     * "STATUS": "CAIR",
+     * "ROWINDEX": "1"
+     * }
+     * ]
+     * }
+     */
+    public function getPdcGiroByContractV2(
+        $customerId,
+        $regNo,
+        $giroNo,
+        $limit,
+        $skip,
+        $sortBy
+    ) {
+        $response = Request::route('v2.contracts.pdc.detail', $this->client)
+            ->pathParams([
+                'cust_id' => $customerId,
+                'reg_no' => $regNo,
+            ])
+            ->queryParams([
+                // 'giro_no' => $giroNo, // TBC
                 'skip' => $skip,
                 'limit' => $limit,
                 'order' => $sortBy,
