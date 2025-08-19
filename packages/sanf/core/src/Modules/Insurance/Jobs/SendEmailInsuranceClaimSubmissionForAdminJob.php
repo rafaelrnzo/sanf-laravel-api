@@ -57,12 +57,6 @@ class SendEmailInsuranceClaimSubmissionForAdminJob implements ShouldQueue
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
             ->rightLogo(asset('assets/png/sanf-tagline.png'))
             ->banner(asset('assets/png/email-verification.png'))
-            ->greeting(__('Halo Admin SANFIND!')) // @TODO: wording for insurance provider
-            ->line(
-                __(
-                    'Pengguna atas nama <strong>“' . $this->data->user->full_name . '”</strong> telah mengajukan klaim asuransi, berikut kami lampirkan detailnya'
-                )
-            )
             ->writeContent($data)
             ->generateSeparator([
                 ['joinToIndex' => 1, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08); margin: 5px 0;">'],
@@ -72,6 +66,29 @@ class SendEmailInsuranceClaimSubmissionForAdminJob implements ShouldQueue
                 ],
                 ['joinToIndex' => 9, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08); margin: 5px 0;">'],
             ]);
+
+        if ($this->isDefaultCity) {
+            $adminMail = config('sanf-mobile.mail_to_admin');
+            $reportUrl = "mailto:{$adminMail}?subject=Laporan Pengajuan Klaim Asuransi";
+
+            $mailable = $mailable->greeting('Dengan hormat,')
+                ->line('Bersama email ini, kami informasikan bahwa pengguna atas nama <strong>' . $this->data->user->full_name . '</strong> telah mengajukan klaim asuransi, berikut kami lampirkan detail informasi dibawah ini:')
+                ->lineWithUrl(
+                    __('Email ini dibuat secara otomatis mohon tidak membalas email ini, jika terdapat keluhan silahkan hubungi'),
+                    [__('SANF Customer Service'), $reportUrl]
+                )
+                ->lineWithUrl(
+                    __('. Jika Anda merasa tidak membuat request tersebut mohon abaikan email ini atau anda dapat'),
+                    [__('Laporkan email ini'), $reportUrl]
+                );
+        } else {
+            $mailable = $mailable->greeting(__('Halo Admin SANFIND!'))
+                ->line(
+                    __(
+                        'Pengguna atas nama <strong>“' . $this->data->user->full_name . '”</strong> telah mengajukan klaim asuransi, berikut kami lampirkan detailnya'
+                    )
+                );
+        }
 
         foreach ($this->data->image_files as $imageFile) {
             $mailable->attachFromStorage($imageFile->path);
