@@ -8,6 +8,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 use Sanf\Core\Mail\MailLayout2Columns;
+use Sanf\Core\Modules\Contract\Enums\CurrencyTypeEnum;
 use Sanf\Core\Modules\PdcHold\Enums\PdcHoldTypeEnum;
 
 /**
@@ -47,9 +48,12 @@ class SendEmailPdcHoldMultiGiroSubmissionForAdminJob implements ShouldQueue
 
         $tableData = [];
         foreach ($this->data->giros as $datum) {
+            $currencyType = CurrencyTypeEnum::search($datum->currency_type);
+            $currency = $currencyType ? (CurrencyTypeEnum::from($currencyType)->getSymbol() ?? $datum->currency_type) : $datum->currency_type;
+
             $tableData[] = [
                 'pdc_no' => $datum->pdc_no,
-                'amount' => 'Rp. ' . number_format($datum->amount, 0, ',', '.'),
+                'amount' => $currency . ' ' . number_format($datum->amount, 0, ',', '.'),
                 'giro_date' => date_localized($datum->giro_date, '%d %B %Y'),
                 'pdc_type' => $datum->pdc_type,
             ];

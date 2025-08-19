@@ -8,6 +8,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 use Sanf\Core\Mail\MailLayout2Columns;
+use Sanf\Core\Modules\Contract\Enums\CurrencyTypeEnum;
 use Sanf\Core\Modules\PdcHold\Enums\PdcHoldTypeEnum;
 
 /**
@@ -41,11 +42,15 @@ class SendEmailPdcHoldMultiContractSubmissionForUserJob implements ShouldQueue
         ];
 
         $tableData = [];
-        foreach ($this->data->giros_amount as $contract_no => $amount) {
-            $tableData[] = [
-                'contract_no' => $contract_no,
-                'amount' => 'Rp. ' . number_format($amount, 0, ',', '.'),
-            ];
+        foreach ($this->data->giros_amount as $currency_type => $contracts) {
+            foreach ($contracts as $contract_no => $amount) {
+                $currencyType = CurrencyTypeEnum::search($currency_type);
+                $currency = $currencyType ? (CurrencyTypeEnum::from($currencyType)->getSymbol() ?? $currency_type) : $currency_type;
+                $tableData[] = [
+                    'contract_no' => $contract_no,
+                    'amount' => $currency . ' ' . number_format($amount, 0, ',', '.'),
+                ];
+            }
         }
 
         $adminMail = config('sanf-mobile.mail_to_admin');

@@ -57,7 +57,7 @@ final class AddPdcHoldMultiContractByUserService extends PdcHoldByUserService im
                     'pdc_type' => $giro->pdcType,
                 ]);
 
-                $giros_amount[$giro->contractNo] = ($giros_amount[$giro->contractNo] ?? 0) + $giro->amount;
+                $giros_amount[$giro->currencyType][$giro->contractNo] = ($giros_amount[$giro->currencyType][$giro->contractNo] ?? 0) + $giro->amount;
             }
 
             $entity->giros_amount = $giros_amount;

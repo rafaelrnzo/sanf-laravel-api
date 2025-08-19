@@ -62,6 +62,7 @@ final class AddPdcHoldMultiGiroByUserService extends PdcHoldByUserService implem
                     'amount' => $addedGiro->amount,
                     'giro_date' => $addedGiro->giro_date,
                     'pdc_type' => $addedGiro->pdc_type,
+                    'currency_type' => $addedGiro->currency_type,
                 ];
             }
 

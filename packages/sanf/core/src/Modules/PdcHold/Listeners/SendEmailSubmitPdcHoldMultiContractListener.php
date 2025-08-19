@@ -6,6 +6,9 @@ use NbsPhp\Core\Event;
 use Sanf\Core\Modules\PdcHold\Jobs\SendEmailPdcHoldMultiContractSubmissionForAdminJob;
 use Sanf\Core\Modules\PdcHold\Jobs\SendEmailPdcHoldMultiContractSubmissionForUserJob;
 
+/**
+ * @since CR2025
+ */
 class SendEmailSubmitPdcHoldMultiContractListener extends Event
 {
     /**
