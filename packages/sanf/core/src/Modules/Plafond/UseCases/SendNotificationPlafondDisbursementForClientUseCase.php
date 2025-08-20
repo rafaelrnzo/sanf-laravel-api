@@ -9,18 +9,22 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use NbsPhp\Notification\Repositories\UserNotificationRepositoryInterface;
 use NbsPhp\Notification\Services\PushNotificationServiceInterface;
 use Sanf\Core\Modules\Notification\Exceptions\NotificationInvalidException;
+use Sanf\Dashboard\Modules\Notification\Repositories\SanfindUserFcmNotificationEloquentRepository;
 
 class SendNotificationPlafondDisbursementForClientUseCase implements ApplicationServiceInterface
 {
     private $userNotificationRepository;
     private $pushNotificationService;
+    private $sanfindUserFcmNotificationRepository;
 
     public function __construct(
         UserNotificationRepositoryInterface $userNotificationRepository,
-        PushNotificationServiceInterface $pushNotificationService
+        PushNotificationServiceInterface $pushNotificationService,
+        SanfindUserFcmNotificationEloquentRepository $sanfindUserFcmNotificationRepository
     ) {
         $this->userNotificationRepository = $userNotificationRepository;
         $this->pushNotificationService = $pushNotificationService;
+        $this->sanfindUserFcmNotificationRepository = $sanfindUserFcmNotificationRepository;
     }
 
     public function execute($dto = null)
@@ -33,6 +37,16 @@ class SendNotificationPlafondDisbursementForClientUseCase implements Application
         }
 
         $fcmTokens = $this->userNotificationRepository->getFcmTokens($userId);
+
+        if ($userId && !empty($dto['dashboardNotification'])) {
+            $customerWebFcmToken = $this->sanfindUserFcmNotificationRepository->findLatest([
+                'sanfind_userid' => $userId,
+            ]);
+
+            if (!empty($customerWebFcmToken->token)) {
+                $fcmTokens[] = $customerWebFcmToken->token;
+            }
+        }
 
         try {
             $this->userNotificationRepository->create([

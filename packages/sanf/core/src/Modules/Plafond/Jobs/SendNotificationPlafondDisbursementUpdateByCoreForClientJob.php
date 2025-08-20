@@ -41,6 +41,8 @@ class SendNotificationPlafondDisbursementUpdateByCoreForClientJob implements Sho
             $subtitle = $this->dto->client ?? __('Gagal pencairan plafond');
             $body = "Pengajuan atas nama {$this->dto->bowheer} telah ditolak oleh SANF, Silahkan cek untuk melihat detailnya.";
         }
+        // e.g. http://partner.sanf.co.id/sanfind_users/profiles/8624PROSM/plafonds/factoring/2012400518/disbursements/yAg_DPSMCfzFxeSJTru5Z
+        $webPartnerUrl = config('web-partner.base_url') . "sanfind_users/{$this->dto->clientId}/plafonds/factoring/{$this->dto->plafondId}/disbursements/{$this->dto->disbursementXid}";
 
         $dto = [
             'userId' => $this->dto->userId ?? null,
@@ -53,7 +55,9 @@ class SendNotificationPlafondDisbursementUpdateByCoreForClientJob implements Sho
                 'screen' => "plafond_approved|{$this->dto->plafondId}/{$this->dto->disbursementXid}",
                 'published_at' => Carbon::now(),
                 'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
+                'link' => $webPartnerUrl,
             ],
+            'dashboardNotification' => true,
         ];
 
         return $useCase->execute($dto);
