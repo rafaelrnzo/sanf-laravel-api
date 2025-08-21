@@ -26,6 +26,9 @@ Route::group(['prefix' => 'v1/external', 'middleware' => ['basic-auth-config:cor
     Route::post('users/financing-application', ['as' => 'users.financing-application.add', 'uses' => 'Financing\Controllers\FinancingApplicationController@addByScanina']);
 
     Route::post('esign/check', ['as' => 'users.e-sign.check', 'uses' => 'Contract\ESignDocumentAdInsController@check']);
+
+    // CR2025
+    Route::post('pdc-hold-submissions', ['as' => 'pdc-hold-submissions.update', 'uses' => 'PdcHold\Controllers\PdcHoldController@updateStatus']);
 });
 
 Route::group(['prefix' => 'v1/public'], function () {

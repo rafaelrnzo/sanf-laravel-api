@@ -14,8 +14,24 @@ final class PdcHoldStatusEnum extends Enum
     const REJECTED = 30;
     const ALL_STATUS = [self::PROCESSED, self::ACCEPTED, self::REJECTED];
 
+    public const CORE_APPROVAL = 'DISETUJUI';
+    public const CORE_REJECTED = 'DITOLAK';
+    public const ALL_CORE_STATUS = [self::CORE_APPROVAL, self::CORE_REJECTED];
+
     public function getLabel()
     {
         return __('core::constant.pdc_hold_status.' . $this->getKey());
+    }
+
+    public static function fromCore(string $value): ?self
+    {
+        switch ($value) {
+            case self::CORE_APPROVAL:
+                return new self(self::ACCEPTED);
+            case self::CORE_REJECTED:
+                return new self(self::REJECTED);
+        }
+
+        return null;
     }
 }

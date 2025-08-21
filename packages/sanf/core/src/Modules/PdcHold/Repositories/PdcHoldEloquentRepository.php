@@ -3,6 +3,7 @@
 namespace Sanf\Core\Modules\PdcHold\Repositories;
 
 use NbsPhp\Core\Repositories\AbstractEloquentRepository;
+use Sanf\Core\Modules\PdcHold\Enums\PdcHoldStatusEnum;
 use Sanf\Core\Modules\PdcHold\Models\PdcHoldModel;
 
 /**
@@ -49,5 +50,18 @@ class PdcHoldEloquentRepository extends AbstractEloquentRepository implements Pd
         }
 
         return $this->pdcHoldModel->newQuery()->select('id')->count();
+    }
+
+    public function updateStatus(string $xid, PdcHoldStatusEnum $status): bool
+    {
+        $updated = $this->pdcHoldModel
+            ->newQuery()
+            ->where('xid', $xid)
+            ->update([
+                'status_id' => $status->getValue(),
+                'status' => $status->getLabel(),
+            ]);
+
+        return (bool) $updated;
     }
 }

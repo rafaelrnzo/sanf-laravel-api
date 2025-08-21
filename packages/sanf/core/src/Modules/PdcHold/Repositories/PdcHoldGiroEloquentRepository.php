@@ -50,4 +50,28 @@ class PdcHoldGiroEloquentRepository extends AbstractEloquentRepository implement
             ->where('xid', $xid)
             ->update($fields);
     }
+
+    public function deletePastHolds(int $pdc_resume_id, string $customer_id, string $contract_no, string $pdc_no)
+    {
+        return $this->pdcHoldGiroModel->newQuery()
+            ->where('customer_id', $customer_id)
+            ->where('contract_no', $contract_no)
+            ->where('pdc_no', $pdc_no)
+            ->where(function ($query) use ($pdc_resume_id) {
+                $query->whereNull('pdc_resume_id')
+                    ->orWhere('pdc_resume_id', '<>', $pdc_resume_id);
+            })
+            ->delete();
+    }
+
+    public function deletePendingHolds(int $pdc_hold_id, string $customer_id, string $contract_no, string $pdc_no)
+    {
+        return $this->pdcHoldGiroModel->newQuery()
+            ->where('pdc_hold_id', '<>', $pdc_hold_id)
+            ->whereNull('pdc_resume_id')
+            ->where('customer_id', $customer_id)
+            ->where('contract_no', $contract_no)
+            ->where('pdc_no', $pdc_no)
+            ->delete();
+    }
 }
