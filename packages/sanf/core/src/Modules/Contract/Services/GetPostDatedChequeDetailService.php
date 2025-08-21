@@ -42,7 +42,7 @@ class GetPostDatedChequeDetailService extends UserService implements Application
                 [$dto->contract_no],
                 null,
                 null,
-                null,
+                $dto->status_id,
                 $dto->limit,
                 $dto->skip,
                 $dto->sort_by

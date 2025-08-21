@@ -23,4 +23,8 @@ class PostDatedChequeDto extends DataTransferObject
      */
     public ?string $keyword;
 
+    /**
+     * @since CR2025
+     */
+    public ?int $status_id;
 }

@@ -65,6 +65,7 @@ final class PostDatedChequeByUserController extends RestApiController
             'skip' => ['nullable', 'integer', 'max:2147483647'],
             'limit' => ['nullable', 'integer', 'max:2147483647'],
             'sort_by' => ['nullable', 'in:earliest,latest'],
+            'status_id' => ['nullable', 'integer', Rule::in(CorePdcStatusEnum::values())], // @since CR2025
         ]);
 
         $dto = new PostDatedChequeDto($input + ['profile_xid' => $xid]);

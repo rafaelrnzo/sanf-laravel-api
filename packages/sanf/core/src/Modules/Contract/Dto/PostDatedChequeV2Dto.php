@@ -5,8 +5,6 @@ namespace Sanf\Core\Modules\Contract\Dto;
 use Spatie\DataTransferObject\DataTransferObject;
 
 /**
- * From SANF Core.
- *
  * @since CR2025
  */
 class PostDatedChequeV2Dto extends DataTransferObject
