@@ -45,8 +45,8 @@ class GetPostDatedChequeDetailV2Service extends UserService implements Applicati
             $response = $this->internalApiClient->getPdcGiroByContractV2(
                 $dto->profile_xid,
                 $dto->contract_no,
-                $dto->date_start,
-                $dto->date_end,
+                optional($dto->date_start)->format('Y-m-d'),
+                optional($dto->date_end)->format('Y-m-d'),
                 $dto->status_id,
                 $dto->limit,
                 $dto->skip,
