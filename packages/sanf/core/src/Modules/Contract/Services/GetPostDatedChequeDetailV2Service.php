@@ -6,13 +6,18 @@ use GuzzleHttp\Exception\GuzzleException;
 use NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\Contract\Dto\PostDatedChequeDto;
+use Sanf\Core\Modules\Contract\Dto\PostDatedChequeV2Dto;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Core\Modules\User\Services\UserService;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
-class GetPostDatedChequeDetailService extends UserService implements ApplicationServiceInterface
+/**
+ * From SANF Core.
+ *
+ * @since CR2025
+ */
+class GetPostDatedChequeDetailV2Service extends UserService implements ApplicationServiceInterface
 {
     protected SanfCoreApiClient $internalApiClient;
 
@@ -23,7 +28,7 @@ class GetPostDatedChequeDetailService extends UserService implements Application
     }
 
     /**
-     * @param PostDatedChequeDto $dto
+     * @param PostDatedChequeV2Dto $dto
      * @return object
      * @throws UserNotFoundException
      * @throws GuzzleException
@@ -37,9 +42,12 @@ class GetPostDatedChequeDetailService extends UserService implements Application
         }
 
         try {
-            $response = $this->internalApiClient->getPdcDetail(
+            $response = $this->internalApiClient->getPdcGiroByContractV2(
                 $dto->profile_xid,
                 $dto->contract_no,
+                $dto->date_start,
+                $dto->date_end,
+                $dto->status_id,
                 $dto->limit,
                 $dto->skip,
                 $dto->sort_by
@@ -48,6 +56,7 @@ class GetPostDatedChequeDetailService extends UserService implements Application
             $data = collect($response->data)->map(function ($item) {
                 return (object) [
                     'pdc_no' => $item->PDC_NO ?? null,
+                    'contract_no' => $item->AGREE_NO ?? null,
                     'amount' => $item->PDC_AMT ?? 0,
                     'currency_type' => $item->CURR_ID ?? null,
                     'submitted_date' => $item->PDC_DUE_DT ?? null,

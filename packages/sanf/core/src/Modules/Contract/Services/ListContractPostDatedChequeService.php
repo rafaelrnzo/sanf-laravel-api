@@ -42,7 +42,9 @@ class ListContractPostDatedChequeService extends UserService implements Applicat
                 $dto->limit,
                 $dto->skip,
                 $dto->sort_by,
-                $dto->keyword
+                $dto->keyword,
+                $dto->date_start,
+                $dto->date_end,
             );
             $data = collect($response->data)->map(function ($item) {
                 return (object) [

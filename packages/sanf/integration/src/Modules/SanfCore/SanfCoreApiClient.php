@@ -1028,7 +1028,7 @@ class SanfCoreApiClient
      * ]
      * }
      */
-    public function getPdcContractV2($customerId, $limit, $skip, $sort_by, $keyword = null)
+    public function getPdcContractV2($customerId, $limit, $skip, $sort_by, $keyword = null, $date_min = null, $date_max = null)
     {
         $response = Request::route('v2.contracts.pdc', $this->client)
             ->pathParams([
@@ -1039,6 +1039,8 @@ class SanfCoreApiClient
                 'skip' => $skip,
                 'limit' => $limit,
                 'order' => $sort_by,
+                'date_min' => $date_min,
+                'date_max' => $date_max,
             ])
             ->send();
 
@@ -1046,7 +1048,6 @@ class SanfCoreApiClient
     }
 
     /**
-     * @deprecated CR2025 @see self::giroByContractV2()
      * @return array|stdClass|null
      * @throws EndpointNotDefinedException
      * @throws GuzzleException
@@ -1080,14 +1081,14 @@ class SanfCoreApiClient
      * "status": true,
      * "code": "S_GetData",
      * "message": "Success",
-     * "total": 20,
+     * "total": 74,
      * "count": 10,
      * "data": [
      * {
      * "CUST_ID": "2010000284",
      * "AGREE_NO": "10801000539",
-     * "PDC_DUE_DT": "16-JUL-09",
-     * "PDC_NO": "BI861019",
+     * "PDC_DUE_DT": "2009-05-16",
+     * "PDC_NO": "BI861017",
      * "CURR_ID": "IDR",
      * "PDC_AMT": "164050000",
      * "PDC_TYPE": "Angsuran",
@@ -1100,8 +1101,10 @@ class SanfCoreApiClient
      */
     public function getPdcGiroByContractV2(
         $customerId,
-        $regNo,
-        $giroNo,
+        array $agree_no,
+        $date_min,
+        $date_max,
+        $status_id,
         $limit,
         $skip,
         $sortBy
@@ -1109,10 +1112,12 @@ class SanfCoreApiClient
         $response = Request::route('v2.contracts.pdc.detail', $this->client)
             ->pathParams([
                 'cust_id' => $customerId,
-                'reg_no' => $regNo,
             ])
             ->queryParams([
-                // 'giro_no' => $giroNo, // TBC
+                'agree_no' => $agree_no,
+                'date_min' => $date_min,
+                'date_max' => $date_max,
+                'status_id' => $status_id,
                 'skip' => $skip,
                 'limit' => $limit,
                 'order' => $sortBy,

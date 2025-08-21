@@ -63,7 +63,7 @@ Route::group(config('sanf-api.url'), [SanfCoreApiProcessor::class], function () 
     Route::get('contracts.pdc', '/PDC');
     Route::get('v2.contracts.pdc', '/V2/giro/kontrak/{cust_id}'); // V2 CR2025
     Route::get('contracts.pdc.detail', '/PDC/detail');
-    Route::get('v2.contracts.pdc.detail', '/V2/giro/giroByKontrak/{cust_id}/{reg_no}'); // V2 CR2025
+    Route::get('v2.contracts.pdc.detail', '/V2/giro/giroByKontrak/{cust_id}'); // V2 CR2025
     Route::get('contracts.financing-unit-submission', '/UnitPembiayaan');
     Route::get('contracts.financing-unit-submission.item', '/UnitPembiayaan/detail');
 

@@ -232,6 +232,7 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::post('users/profiles/{xid}/pdc-resume', ['as' => 'v1.pdc-resume.add', 'uses' => 'PdcHold\Controllers\PdcHoldController@postResume']);
     Route::get('users/profiles/{xid}/pdc-holds', ['as' => 'v1.pdc-hold.browse', 'uses' => 'PdcHold\Controllers\PdcHoldController@getBrowse']);
     Route::get('users/profiles/{xid}/pdc-holds/{submissionXid}', ['as' => 'users.pdc-hold.read', 'uses' => 'PdcHold\Controllers\PdcHoldController@getRead']);
+    Route::post('users/profiles/{xid}/giro-post-dated-cheques', ['as' => 'users.giro-pdc.browse', 'uses' => 'Contract\Controllers\PostDatedChequeByUserController@getPDCV2']);
 });
 
 Route::group(['prefix' => 'v2', 'middleware' => 'auth'], function () {
