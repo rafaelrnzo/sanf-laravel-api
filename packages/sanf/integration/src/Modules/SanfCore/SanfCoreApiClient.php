@@ -1048,6 +1048,7 @@ class SanfCoreApiClient
     }
 
     /**
+     * @deprecated CR2025 @see self::getPdcGiroByContractV2()
      * @return array|stdClass|null
      * @throws EndpointNotDefinedException
      * @throws GuzzleException

@@ -61,6 +61,7 @@ final class PostDatedChequeByUserController extends RestApiController
         GetPostDatedChequeDetailService $service
     ) {
         $input = $this->validate($request, [
+            'keyword' => ['nullable', 'string', 'max:255'], // @since CR2025
             'skip' => ['nullable', 'integer', 'max:2147483647'],
             'limit' => ['nullable', 'integer', 'max:2147483647'],
             'sort_by' => ['nullable', 'in:earliest,latest'],
@@ -92,7 +93,7 @@ final class PostDatedChequeByUserController extends RestApiController
             'date_end' => ['nullable', 'string', 'date_format:Y-m-d'],
             // in body
             'contract_no' => ['nullable', 'array'],
-            'contract_no.*' => ['string', 'integer'],
+            'contract_no.*' => ['string', 'alpha_num'],
         ]);
 
         if (isset($input['date_start'])) {

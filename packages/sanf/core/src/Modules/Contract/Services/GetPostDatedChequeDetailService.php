@@ -37,9 +37,12 @@ class GetPostDatedChequeDetailService extends UserService implements Application
         }
 
         try {
-            $response = $this->internalApiClient->getPdcDetail(
+            $response = $this->internalApiClient->getPdcGiroByContractV2(
                 $dto->profile_xid,
-                $dto->contract_no,
+                [$dto->contract_no],
+                null,
+                null,
+                null,
                 $dto->limit,
                 $dto->skip,
                 $dto->sort_by
@@ -58,6 +61,13 @@ class GetPostDatedChequeDetailService extends UserService implements Application
                     ],
                 ];
             });
+
+            if (!empty($dto->keyword) && $dto->keyword !== '') {
+                // workaround filter giro no after change to V2
+                $data = $data->filter(function ($item) use ($dto) {
+                    return stripos($item->pdc_no, $dto->keyword) !== false;
+                });
+            }
         } catch (SanfInternalApiDataNotFoundException $exception) {
             return (object) [
                 'data' => [],
