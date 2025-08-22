@@ -40,6 +40,10 @@ class SendPushNotificationByExternalService implements ApplicationServiceInterfa
         // Create event send push notification;
         $contents = [];
         foreach ($users as $user) {
+            $dashboardWebData = $dto->dashboardWebData;
+            if (isset($dashboardWebData['guard_type']) && $dashboardWebData['guard_type'] == 'sanfind_user') {
+                $dashboardWebData['user_id'] ??= $user->id;
+            }
             $contents[] = new AddPushNotificationByExternalRequestDto([
                 'id' => nano_id(),
                 'type' => $dto->type,
@@ -50,6 +54,7 @@ class SendPushNotificationByExternalService implements ApplicationServiceInterfa
                 'screen' => $dto->screen,
                 'body' => $dto->body,
                 'published_at' => $dto->publishedAt,
+                'dashboard_web_data' => $dashboardWebData,
             ]);
         }
 

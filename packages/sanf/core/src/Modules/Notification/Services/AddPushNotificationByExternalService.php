@@ -16,12 +16,14 @@ use Sanf\Core\Modules\Notification\Dtos\AddPushNotificationByExternalRequestDto;
 use Sanf\Core\Modules\Notification\Dtos\AddPushNotificationByExternalResponseDto;
 use Sanf\Core\Modules\Notification\Exceptions\NotificationInvalidException;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
+use Sanf\Dashboard\Modules\Notification\Repositories\SanfindUserFcmNotificationEloquentRepository;
 
 final class AddPushNotificationByExternalService implements ApplicationServiceInterface
 {
     protected PushNotificationServiceInterface $pushNotificationService;
     protected UserRepositoryInterface $userRepository;
     protected UserNotificationRepositoryInterface $userNotificationRepository;
+    protected SanfindUserFcmNotificationEloquentRepository $sanfindUserFcmNotificationRepository;
 
     /**
      * AddPushNotificationByExternalService constructor.
@@ -32,11 +34,13 @@ final class AddPushNotificationByExternalService implements ApplicationServiceIn
     public function __construct(
         PushNotificationServiceInterface $pushNotificationService,
         UserRepositoryInterface $userRepository,
-        UserNotificationRepositoryInterface $userNotificationRepository
+        UserNotificationRepositoryInterface $userNotificationRepository,
+        SanfindUserFcmNotificationEloquentRepository $sanfindUserFcmNotificationRepository
     ) {
         $this->pushNotificationService = $pushNotificationService;
         $this->userRepository = $userRepository;
         $this->userNotificationRepository = $userNotificationRepository;
+        $this->sanfindUserFcmNotificationRepository = $sanfindUserFcmNotificationRepository;
     }
 
     /**
@@ -76,6 +80,20 @@ final class AddPushNotificationByExternalService implements ApplicationServiceIn
                 throw new NotificationInvalidException('ID not unique');
             }
             throw $exception;
+        }
+
+        if (
+            !empty($dto->dashboardWebData['guard_type'])
+            && !empty($dto->dashboardWebData['user_id'])
+            && $dto->dashboardWebData['guard_type'] == 'sanfind_user') {
+            $customerWebFcmToken = $this->sanfindUserFcmNotificationRepository->findLatest([
+                'sanfind_userid' => $dto->dashboardWebData['user_id'],
+            ]);
+
+            if (!empty($customerWebFcmToken->token)) {
+                $fcmTokens[] = $customerWebFcmToken->token;
+                $data['link'] = $dto->dashboardWebData['link'] ?? null;
+            }
         }
 
         foreach (array_unique($fcmTokens) as $fcmToken) {

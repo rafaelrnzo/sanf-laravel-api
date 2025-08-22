@@ -31,6 +31,7 @@ class PushNotificationByExternalController extends RestApiController
             'screen' => 'nullable|string|max:255',
             'body' => 'nullable|string|max:65535',
             'published_at' => 'nullable|integer|max:99999999999',
+            'dashboard_web_data' => 'nullable|array', // @since CR2025
         ]);
         $input['type'] = new NotificationTypeEnum($input['type']);
         $dto = new SendPushNotificationByExternalRequestDto($input);

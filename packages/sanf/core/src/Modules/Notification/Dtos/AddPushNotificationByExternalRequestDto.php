@@ -16,4 +16,5 @@ class AddPushNotificationByExternalRequestDto extends CamelCaseDataTransferObjec
     public string $subtitle;
     public string $body;
     public int $publishedAt;
+    public ?array $dashboardWebData; // @since CR2025.
 }
