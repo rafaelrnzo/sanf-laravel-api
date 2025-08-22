@@ -28,7 +28,8 @@ php-cs-fixer:lint:
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
   tags:
-    - m.large
+    # - m.large
+    - m.medium
 
 php-stan:lint:
   stage: lint
@@ -59,7 +60,8 @@ php-stan:lint:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
   when: manual
   tags:
-    - m.large
+    # - m.large
+    - m.medium
 
 sonarqube:lint:
   stage: lint
@@ -84,4 +86,5 @@ sonarqube:lint:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
   when: manual
   tags:
-    - m.large
+    # - m.large
+    - m.medium

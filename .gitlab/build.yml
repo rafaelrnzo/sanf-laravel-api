@@ -21,7 +21,8 @@ lib:build:
         - "composer.json"
         - "composer.lock"
   tags:
-    - m.large
+    # - m.large
+    - m.medium
 
 runtime:build:
   stage: build
@@ -40,7 +41,8 @@ runtime:build:
       changes:
         - "deployments/development/php-7.4/base/Dockerfile"
   tags:
-    - m.large
+    # - m.large
+    - m.medium
 
 app:dev:build:
   stage: build
@@ -71,7 +73,8 @@ app:dev:build:
   rules:
     - if: $CI_COMMIT_BRANCH == "develop"
   tags:
-    - m.large
+    # - m.large
+    - m.medium
 
 worker:dev:build:
   stage: build
@@ -100,5 +103,6 @@ worker:dev:build:
   rules:
     - if: $CI_COMMIT_BRANCH == "develop"
   tags:
-    - m.large
+    # - m.large
+    - m.medium
 
