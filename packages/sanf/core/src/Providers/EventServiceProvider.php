@@ -43,8 +43,10 @@ use Sanf\Core\Modules\Notification\Events\NotifiedUserByExternalEvent;
 use Sanf\Core\Modules\Notification\Listeners\SendPushNotificationByExternalListener;
 use Sanf\Core\Modules\PdcHold\Events\PdcHoldMultiContractSubmittedEvent;
 use Sanf\Core\Modules\PdcHold\Events\PdcHoldMultiGiroSubmittedEvent;
+use Sanf\Core\Modules\PdcHold\Events\PdcHoldSubmissionUpdateByCoreNotificationEvent;
 use Sanf\Core\Modules\PdcHold\Listeners\SendEmailSubmitPdcHoldMultiContractListener;
 use Sanf\Core\Modules\PdcHold\Listeners\SendEmailSubmitPdcHoldMultiGiroListener;
+use Sanf\Core\Modules\PdcHold\Listeners\SendNotificationPdcHoldSubmissionUpdateByCoreListener;
 use Sanf\Core\Modules\Plafond\Events\PlafondDisbursementSubmittedMailEvent;
 use Sanf\Core\Modules\Plafond\Events\PlafondDisbursementSubmittedNotificationEvent;
 use Sanf\Core\Modules\Plafond\Events\PlafondDisbursementUpdateByCoreNotificationEvent;
@@ -179,6 +181,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         PdcHoldMultiContractSubmittedEvent::class => [
             SendEmailSubmitPdcHoldMultiContractListener::class,
+        ],
+        PdcHoldSubmissionUpdateByCoreNotificationEvent::class => [
+            SendNotificationPdcHoldSubmissionUpdateByCoreListener::class,
         ],
     ];
 }

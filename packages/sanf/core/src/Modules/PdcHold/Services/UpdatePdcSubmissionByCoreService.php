@@ -9,6 +9,7 @@ use Sanf\Core\Modules\PdcHold\Dtos\ReadPdcHoldSubmissionByUserResponseDto;
 use Sanf\Core\Modules\PdcHold\Dtos\UpdateStatusPdcSubmissionByCoreRequestDto;
 use Sanf\Core\Modules\PdcHold\Enums\PdcHoldStatusEnum;
 use Sanf\Core\Modules\PdcHold\Enums\PdcHoldTypeEnum;
+use Sanf\Core\Modules\PdcHold\Events\PdcHoldSubmissionUpdateByCoreNotificationEvent;
 use Sanf\Core\Modules\PdcHold\Exceptions\PdcHoldGiroNotFoundException;
 use Sanf\Core\Modules\PdcHold\Exceptions\PdcHoldNotFoundException;
 use Sanf\Core\Modules\PdcHold\Repositories\PdcHoldGiroRepositoryInterface;
@@ -89,7 +90,15 @@ final class UpdatePdcSubmissionByCoreService implements ApplicationServiceInterf
         $pdcType = new PdcHoldTypeEnum($entity->type);
         $giros = $entity->type === PdcHoldTypeEnum::RESUME ? $entity->resume_giros : $entity->giros;
 
-        // @TODO: Send notification to mobile
+        $notificationContent = (object) [
+            'userId' => $entity->user_id ?? null,
+            'customerId' => $entity->customer_id,
+            'type' => $entity->type,
+            'pdcHoldXid' => $entity->xid,
+            'statusId' => $entity->status_id,
+        ];
+
+        event(new PdcHoldSubmissionUpdateByCoreNotificationEvent($notificationContent));
 
         return new ReadPdcHoldSubmissionByUserResponseDto([
             'id' => $entity->id,
