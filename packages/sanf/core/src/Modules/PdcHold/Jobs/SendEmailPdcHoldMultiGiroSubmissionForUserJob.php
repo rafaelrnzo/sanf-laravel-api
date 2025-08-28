@@ -57,7 +57,7 @@ class SendEmailPdcHoldMultiGiroSubmissionForUserJob implements ShouldQueue
 
         $adminMail = config('sanf-mobile.mail_to_admin');
         $reportUrl = "mailto:{$adminMail}?subject=Laporan Pengajuan Hold PDC";
-        $invoiceSubmission = (new MailLayout2Columns())
+        $pdcHoldSubmission = (new MailLayout2Columns())
             ->subject('Pengajuan Hold PDC')
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
             ->rightLogo(asset('assets/png/sanf-tagline.png'))
@@ -66,7 +66,7 @@ class SendEmailPdcHoldMultiGiroSubmissionForUserJob implements ShouldQueue
             ->line(__('<p style="text-align: center">Berikut kami lampirkan data untuk pengajuan Hold PDC Anda</p>'))
             ->writeContent($data)
             ->generateSeparator([
-                ['joinToIndex' => 4, 'html' => '<p style="color: #232227; font-size: 14px;"><strong>Daftar Kontrak Anda</strong><p>'],
+                ['joinToIndex' => 4, 'html' => '<p style="color: #232227; font-size: 14px;"><strong>Daftar Giro Anda</strong><p>'],
             ])
             ->writeTableHead([
                 [
@@ -105,6 +105,6 @@ class SendEmailPdcHoldMultiGiroSubmissionForUserJob implements ShouldQueue
                 [__('laporkan email ini'), $reportUrl]
             );
 
-        return Mail::to($this->recipient->email)->send($invoiceSubmission);
+        return Mail::to($this->recipient->email)->send($pdcHoldSubmission);
     }
 }
