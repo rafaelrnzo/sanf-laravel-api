@@ -15,5 +15,6 @@ class NotificationModel extends AbstractModel
         'notifiable_id',
         'body',
         'url',
+        'title',
     ];
 }

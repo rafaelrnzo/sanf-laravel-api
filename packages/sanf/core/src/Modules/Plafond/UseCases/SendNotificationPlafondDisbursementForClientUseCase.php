@@ -9,6 +9,7 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use NbsPhp\Notification\Repositories\UserNotificationRepositoryInterface;
 use NbsPhp\Notification\Services\PushNotificationServiceInterface;
 use Sanf\Core\Modules\Notification\Exceptions\NotificationInvalidException;
+use Sanf\Dashboard\Modules\Notification\Repositories\NotificationEloquentRepository;
 use Sanf\Dashboard\Modules\Notification\Repositories\SanfindUserFcmNotificationEloquentRepository;
 
 class SendNotificationPlafondDisbursementForClientUseCase implements ApplicationServiceInterface
@@ -16,15 +17,18 @@ class SendNotificationPlafondDisbursementForClientUseCase implements Application
     private $userNotificationRepository;
     private $pushNotificationService;
     private $sanfindUserFcmNotificationRepository;
+    private $notificationDashboardRepository;
 
     public function __construct(
         UserNotificationRepositoryInterface $userNotificationRepository,
         PushNotificationServiceInterface $pushNotificationService,
-        SanfindUserFcmNotificationEloquentRepository $sanfindUserFcmNotificationRepository
+        SanfindUserFcmNotificationEloquentRepository $sanfindUserFcmNotificationRepository,
+        NotificationEloquentRepository $notificationEloquentRepository
     ) {
         $this->userNotificationRepository = $userNotificationRepository;
         $this->pushNotificationService = $pushNotificationService;
         $this->sanfindUserFcmNotificationRepository = $sanfindUserFcmNotificationRepository;
+        $this->notificationDashboardRepository = $notificationEloquentRepository;
     }
 
     public function execute($dto = null)
@@ -55,6 +59,10 @@ class SendNotificationPlafondDisbursementForClientUseCase implements Application
                 'user_id' => $userId,
                 'data' => $data,
             ]);
+
+            if (!empty($dto['dashboardNotification'])) {
+                $this->notificationDashboardRepository->create($dto['dashboardNotification']);
+            }
         } catch (QueryException $exception) {
             if ($exception->getCode() == '23505') {
                 throw new NotificationInvalidException('ID not unique');

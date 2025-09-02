@@ -36,10 +36,12 @@ class SendNotificationPlafondDisbursementUpdateByCoreForClientJob implements Sho
             $title = __('Pencairan Plafond Disetujui');
             $subtitle = $this->dto->client ?? __('Sukses pencairan plafond');
             $body = "Pengajuan atas nama {$this->dto->bowheer} telah disetujui oleh SANF, Silahkan cek untuk melihat detailnya.";
+            $bodyHtml = "<span>Pengajuan atas nama <b>{$this->dto->bowheer}</b> telah <b>disetujui</b> oleh SANF, Silahkan cek untuk melihat detailnya.</span>";
         } else {
             $title = __('Pencairan Plafond Ditolak');
             $subtitle = $this->dto->client ?? __('Gagal pencairan plafond');
             $body = "Pengajuan atas nama {$this->dto->bowheer} telah ditolak oleh SANF, Silahkan cek untuk melihat detailnya.";
+            $bodyHtml = "<span>Pengajuan atas nama <b>{$this->dto->bowheer}</b> telah <b>ditolak</b> oleh SANF, Silahkan cek untuk melihat detailnya.</span>";
         }
         // e.g. http://partner.sanf.co.id/sanfind_users/profiles/8624PROSM/plafonds/factoring/2012400518/disbursements/yAg_DPSMCfzFxeSJTru5Z
         $webPartnerUrl = config('web-partner.base_url') . "sanfind_users/{$this->dto->clientId}/plafonds/factoring/{$this->dto->plafondId}/disbursements/{$this->dto->disbursementXid}";
@@ -57,7 +59,14 @@ class SendNotificationPlafondDisbursementUpdateByCoreForClientJob implements Sho
                 'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
                 'link' => $webPartnerUrl,
             ],
-            'dashboardNotification' => true,
+            'dashboardNotification' => [
+                'xid' => nano_id(),
+                'notifiable_type' => 'customer_id',
+                'notifiable_id' => $this->dto->clientId,
+                'body' => $bodyHtml,
+                'url' => $webPartnerUrl,
+                'title' => $title,
+            ],
         ];
 
         return $useCase->execute($dto);
