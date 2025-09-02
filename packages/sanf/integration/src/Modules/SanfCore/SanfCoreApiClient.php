@@ -1016,13 +1016,14 @@ class SanfCoreApiClient
      * "status": true,
      * "code": "S_GetData",
      * "message": "Success",
-     * "total": 24,
-     * "count": 10,
+     * "total": 8,
+     * "count": 8,
      * "data": [
      * {
-     * "AGREE_NO": "30804001268",
+     * "AGREE_NO": "31902000228",
      * "CURR_ID": "IDR",
-     * "DT_GL": "07-05-2008",
+     * "DT_GL": "2019-03-29",
+     * "PDC_DUE_DT": "2022-12-25",
      * "ROWINDEX": "1"
      * },
      * ]

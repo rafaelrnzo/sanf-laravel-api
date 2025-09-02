@@ -51,6 +51,7 @@ class ListContractPostDatedChequeService extends UserService implements Applicat
                     'contract_no' => $item->AGREE_NO ?? null,
                     'currency_type' => $item->CURR_ID ?? null,
                     'created_at' => $item->DT_GL ?? null,
+                    'due_at' => $item->PDC_DUE_DT ?? null,
                 ];
             });
         } catch (SanfInternalApiDataNotFoundException $exception) {

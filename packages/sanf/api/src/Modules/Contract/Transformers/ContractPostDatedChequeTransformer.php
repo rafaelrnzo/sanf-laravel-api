@@ -13,6 +13,7 @@ class ContractPostDatedChequeTransformer extends TransformerAbstract
             'contract_no' => (string) $item->contract_no,
             'currency_type' => (string) $item->currency_type,
             'created_at' => ($item->created_at) ? Carbon::parse($item->created_at)->unix() : null,
+            'due_at' => ($item->due_at) ? Carbon::parse($item->due_at)->unix() : null,
         ];
     }
 }
