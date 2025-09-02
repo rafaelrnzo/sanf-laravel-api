@@ -30,6 +30,9 @@ use NbsPhp\Core\Models\AbstractModel;
  */
 class PdcHoldModel extends AbstractModel
 {
+    const XID_LENGTH = 10;
+    const XID_ALPHABET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
     protected $table = 'pdc_hold';
 
     protected $fillable = [

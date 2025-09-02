@@ -10,6 +10,7 @@ use Sanf\Core\Modules\PdcHold\Dtos\PdcHoldMultiGiroRequestDto;
 use Sanf\Core\Modules\PdcHold\Enums\PdcHoldStatusEnum;
 use Sanf\Core\Modules\PdcHold\Enums\PdcHoldTypeEnum;
 use Sanf\Core\Modules\PdcHold\Events\PdcHoldMultiGiroSubmittedEvent;
+use Sanf\Core\Modules\PdcHold\Models\PdcHoldModel;
 
 /**
  * @since CR2025
@@ -25,7 +26,7 @@ final class AddPdcHoldMultiGiroByUserService extends PdcHoldByUserService implem
         $user = $this->findUserOrFail($dto->userId);
 
         $entity = DB::transaction(function () use ($dto) {
-            $pdcHoldXid = nano_id();
+            $pdcHoldXid = app()->make('nanoid')->formatedId(PdcHoldModel::XID_ALPHABET, PdcHoldModel::XID_LENGTH);
             $status = new PdcHoldStatusEnum(PdcHoldStatusEnum::PROCESSED);
 
             $entity = $this->pdcHoldRepository->add([

@@ -10,6 +10,7 @@ use Sanf\Core\Modules\PdcHold\Enums\PdcHoldStatusEnum;
 use Sanf\Core\Modules\PdcHold\Enums\PdcHoldTypeEnum;
 use Sanf\Core\Modules\PdcHold\Exceptions\PdcHoldGiroNotFoundException;
 use Sanf\Core\Modules\PdcHold\Models\PdcHoldGiroModel;
+use Sanf\Core\Modules\PdcHold\Models\PdcHoldModel;
 use Sanf\Core\Modules\PdcHold\Repositories\PdcHoldGiroRepositoryInterface;
 use Sanf\Core\Modules\PdcHold\Repositories\PdcHoldRepositoryInterface;
 
@@ -36,7 +37,7 @@ final class ResumePdcByUserService implements ApplicationServiceInterface
     public function execute($dto = null)
     {
         $entity = DB::transaction(function () use ($dto) {
-            $pdcHoldXid = nano_id();
+            $pdcHoldXid = app()->make('nanoid')->formatedId(PdcHoldModel::XID_ALPHABET, PdcHoldModel::XID_LENGTH);
             $status = new PdcHoldStatusEnum(PdcHoldStatusEnum::PROCESSED);
 
             $holdGiros = $this->pdcHoldGiroRepository->findToResume($dto->giroXids, $dto->profileXid);

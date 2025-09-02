@@ -21,7 +21,7 @@ class PdcHoldController extends RestApiController
     ) {
         $input = $this->validate($request, [
             'metadata.cust_id' => ['required', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
-            'metadata.pdc_hold_xid' => ['required', 'string', 'max:128', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
+            'metadata.pdc_hold_xid' => ['required', 'string', 'max:32', 'regex:/^[0-9a-zA-Z-_\/()@,.\h]+$/'],
             'payload.status' => ['required', 'string', Rule::in(PdcHoldStatusEnum::ALL_CORE_STATUS)],
         ]);
 
