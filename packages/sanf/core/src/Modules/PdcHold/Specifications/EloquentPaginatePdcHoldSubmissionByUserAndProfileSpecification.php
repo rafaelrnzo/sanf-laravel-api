@@ -56,7 +56,7 @@ final class EloquentPaginatePdcHoldSubmissionByUserAndProfileSpecification
                 'contracts_count' => PdcHoldGiroModel::query()
                     ->selectRaw('COUNT(DISTINCT "contract_no")')
                     ->whereColumn('pdc_hold_giros.pdc_hold_id', $model->getQualifiedKeyName())
-                    ->limit(1)
+                    ->limit(1),
             ])
             ->withCount(['giros'])
             ->where('user_id', $this->userId)
