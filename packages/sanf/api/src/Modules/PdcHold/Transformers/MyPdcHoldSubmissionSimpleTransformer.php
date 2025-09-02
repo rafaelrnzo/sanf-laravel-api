@@ -19,6 +19,7 @@ final class MyPdcHoldSubmissionSimpleTransformer extends TransformerAbstract
             'date_start' => Carbon::make($dto->dateStart)->format('Y-m-d'),
             'date_end' => $dto->dateEnd ? Carbon::make($dto->dateEnd)->format('Y-m-d') : null,
             'giro_count' => $dto->giroCount,
+            'contract_count' => $dto->contractCount,
             'created_at' => unix_timestamp($dto->createdAt),
             'updated_at' => unix_timestamp($dto->updatedAt),
         ];

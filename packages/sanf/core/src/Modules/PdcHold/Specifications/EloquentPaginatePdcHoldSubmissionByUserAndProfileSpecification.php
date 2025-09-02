@@ -5,6 +5,7 @@ namespace Sanf\Core\Modules\PdcHold\Specifications;
 use Sanf\Core\Modules\PdcHold\Enums\PdcHoldStatusEnum;
 use Sanf\Core\Modules\PdcHold\Enums\PdcHoldTypeEnum;
 use Sanf\Core\Modules\PdcHold\Models\PdcHoldGiroModel;
+use Sanf\Core\Modules\PdcHold\Models\PdcHoldModel;
 
 /**
  * @since CR2025
@@ -33,7 +34,7 @@ final class EloquentPaginatePdcHoldSubmissionByUserAndProfileSpecification
     }
 
     /**
-     * @param PdcHoldGiroModel $model
+     * @param PdcHoldModel $model
      */
     public function build($model)
     {
@@ -51,7 +52,13 @@ final class EloquentPaginatePdcHoldSubmissionByUserAndProfileSpecification
         }
 
         $query = $model->newQuery()
-            ->withCount('giros')
+            ->addSelect([
+                'contracts_count' => PdcHoldGiroModel::query()
+                    ->selectRaw('COUNT(DISTINCT "contract_no")')
+                    ->whereColumn('pdc_hold_giros.pdc_hold_id', $model->getQualifiedKeyName())
+                    ->limit(1)
+            ])
+            ->withCount(['giros'])
             ->where('user_id', $this->userId)
             ->where('customer_id', $this->customerId)
             ->orderBy($orderBy, $orderDirection)

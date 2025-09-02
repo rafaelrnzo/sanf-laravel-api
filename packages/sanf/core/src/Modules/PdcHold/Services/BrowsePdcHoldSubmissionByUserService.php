@@ -52,6 +52,7 @@ final class BrowsePdcHoldSubmissionByUserService implements ApplicationServiceIn
                 'dateStart' => $item->date_start,
                 'dateEnd' => $item->date_end,
                 'giroCount' => $item->giros_count,
+                'contractCount' => $item->contracts_count,
                 'createdAt' => $item->created_at,
                 'updatedAt' => $item->updated_at,
             ];
