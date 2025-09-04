@@ -10,7 +10,7 @@ use NbsPhp\Notification\Services\PushNotificationServiceInterface;
 use Sanf\Core\Modules\Notification\Exceptions\NotificationInvalidException;
 use Sanf\Dashboard\Modules\Notification\Repositories\FcmNotificationEloquentRepository;
 use Sanf\Dashboard\Modules\Notification\Repositories\NotificationEloquentRepository;
-use Sanf\Dashboard\Modules\User\Repositories\UserEloquentRepository;
+use Sanf\Dashboard\Modules\User\Repositories\UserEncryptedEloquentRepository;
 
 class SendNotificationPlafondDisbursementForCustomerUseCase implements ApplicationServiceInterface
 {
@@ -20,7 +20,7 @@ class SendNotificationPlafondDisbursementForCustomerUseCase implements Applicati
     private $pushNotificationService;
 
     public function __construct(
-        UserEloquentRepository $userDashboardRepository,
+        UserEncryptedEloquentRepository $userDashboardRepository,
         NotificationEloquentRepository $notificationEloquentRepository,
         FcmNotificationEloquentRepository $fcmNotificationEloquentRepository,
         PushNotificationServiceInterface $pushNotificationService

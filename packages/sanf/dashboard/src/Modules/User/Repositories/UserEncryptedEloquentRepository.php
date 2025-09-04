@@ -60,6 +60,7 @@ class UserEncryptedEloquentRepository extends AbstractEloquentRepository
     {
         $userAuthModel = $this->userAuthModel
             ->newQuery()
+            ->whereHas('bindingAccount', fn ($q) => $q->where('BowheerId', '=', $bowheerId))
             ->with([
                 'bindingAccount' => function ($query) use ($bowheerId) {
                     return $query->where('BowheerId', '=', $bowheerId);
@@ -68,7 +69,6 @@ class UserEncryptedEloquentRepository extends AbstractEloquentRepository
                     return $query->where('expiresAt', '>=', Carbon::now());
                 },
             ])
-            ->has('bindingAccount')
             ->first();
 
         return $this->stripEloquentModel($userAuthModel);
