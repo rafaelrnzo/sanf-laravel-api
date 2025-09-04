@@ -36,6 +36,8 @@ class SendEmailPlafondDisbursementSubmittedForClientJob implements ShouldQueue
 
         $adminMail = config('sanf-mobile.mail_to_admin');
         $reportUrl = "mailto:{$adminMail}?subject=Laporan Pengajuan Pencairan Plafon";
+        $customerServiceMail = config('sanf-mobile.mail_to.customer_service');
+        $customerServiceUrl = "mailto:{$customerServiceMail}?subject=Keluhan Pengajuan Pencairan Plafon";
         $mailable = (new MailLayout2Columns())
             ->subject('Pengajuan Pencairan Plafon')
             ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
@@ -52,8 +54,9 @@ class SendEmailPlafondDisbursementSubmittedForClientJob implements ShouldQueue
             ->generateSeparator([
                 ['joinToIndex' => 1, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08);">'],
             ])
-            ->line(
-                __('Email ini dibuat secara otomatis mohon tidak membalas email ini, jika terdapat keluhan silahkan hubungi Sanf Customer Service')
+            ->lineWithUrl(
+                __('Email ini dibuat secara otomatis mohon tidak membalas email ini, jika terdapat keluhan silahkan hubungi'),
+                [__('SANF Care'), $customerServiceUrl]
             )
             ->lineWithUrl(
                 __('. Jika Anda merasa tidak membuat request tersebut mohon abaikan email ini atau anda dapat'),
