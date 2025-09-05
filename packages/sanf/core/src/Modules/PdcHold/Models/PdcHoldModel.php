@@ -23,6 +23,7 @@ use NbsPhp\Core\Models\AbstractModel;
  *
  * @property-read PdcHoldReasonModel $reason
  * @property-read Collection|PdcHoldGiroModel[] $giros
+ * @property-read Collection|PdcHoldGiroModel[] $giros_no_resume
  *
  * @since CR2025
  *
@@ -61,6 +62,12 @@ class PdcHoldModel extends AbstractModel
     public function giros(): HasMany
     {
         return $this->hasMany(PdcHoldGiroModel::class, 'pdc_hold_id');
+    }
+
+    public function giros_no_resume(): HasMany
+    {
+        return $this->hasMany(PdcHoldGiroModel::class, 'pdc_hold_id')
+            ->whereNull('pdc_resume_id');
     }
 
     public function resume_giros(): HasMany

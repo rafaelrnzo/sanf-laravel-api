@@ -75,8 +75,13 @@ final class UpdatePdcSubmissionByCoreService implements ApplicationServiceInterf
                     {
                         $this->pdcHoldGiroRepository->deletePendingHolds($pdcHoldSubmission->id, $pdcHoldSubmission->customer_id, $pendingGiro->contract_no, $pendingGiro->pdc_no);
                     }
-                    // @TODO: Delete orphan submissions (i.e. pdc holds with no giros)
                 }
+
+                // Delete orphan submissions (i.e. pdc holds with no giros)
+                $this->pdcHoldRepository->destroyNotHavingGiros([
+                    ['customer_id', '=', $dto->custId],
+                    ['type', '<>', PdcHoldTypeEnum::RESUME],
+                ]);
             }
 
             if ($statusUpdated) {
@@ -88,7 +93,7 @@ final class UpdatePdcSubmissionByCoreService implements ApplicationServiceInterf
         });
 
         $pdcType = new PdcHoldTypeEnum($entity->type);
-        $giros = $entity->type === PdcHoldTypeEnum::RESUME ? $entity->resume_giros : $entity->giros;
+        $giros = $entity->type === PdcHoldTypeEnum::RESUME ? $entity->resume_giros : $entity->giros_no_resume;
 
         $notificationContent = (object) [
             'userId' => $entity->user_id ?? null,

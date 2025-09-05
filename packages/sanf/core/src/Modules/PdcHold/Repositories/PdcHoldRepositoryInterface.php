@@ -18,4 +18,6 @@ interface PdcHoldRepositoryInterface
     public function size($specification = null);
 
     public function updateStatus(string $xid, PdcHoldStatusEnum $status): bool;
+
+    public function destroyNotHavingGiros(array $filters): int;
 }

@@ -9,7 +9,7 @@ use NbsPhp\Core\Models\AbstractModel;
 /**
  * @property-read int $id
  * @property string $xid
- * @property int $pdc_hold_id
+ * @property ?int $pdc_hold_id
  * @property ?int $pdc_resume_id
  * @property string $customer_id
  * @property string $contract_no
@@ -19,7 +19,7 @@ use NbsPhp\Core\Models\AbstractModel;
  * @property Carbon|string $giro_date
  * @property ?string $pdc_type
  *
- * @property-read PdcHoldModel $pdc_hold
+ * @property-read ?PdcHoldModel $pdc_hold
  * @property-read ?PdcHoldModel $pdc_resume
  *
  * @since CR2025

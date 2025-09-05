@@ -70,7 +70,7 @@ class PdcHoldGiroEloquentRepository extends AbstractEloquentRepository implement
             ->where('pdc_hold_id', '<>', $pdc_hold_id)
             ->whereNull('pdc_resume_id')
             ->whereHas('pdc_hold', function ($query) {
-                $query->where('status_id', PdcHoldStatusEnum::PROCESSED);
+                $query->where('status_id', '<>', PdcHoldStatusEnum::ACCEPTED);
             })
             ->where('customer_id', $customer_id)
             ->where('contract_no', $contract_no)

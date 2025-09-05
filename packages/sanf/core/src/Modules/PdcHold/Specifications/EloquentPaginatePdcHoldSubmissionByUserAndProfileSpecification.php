@@ -53,12 +53,18 @@ final class EloquentPaginatePdcHoldSubmissionByUserAndProfileSpecification
 
         $query = $model->newQuery()
             ->addSelect([
-                'contracts_count' => PdcHoldGiroModel::query()
+                'contracts_hold_count' => PdcHoldGiroModel::query()
                     ->selectRaw('COUNT(DISTINCT "contract_no")')
                     ->whereColumn('pdc_hold_giros.pdc_hold_id', $model->getQualifiedKeyName())
                     ->limit(1),
             ])
-            ->withCount(['giros'])
+            ->addSelect([
+                'contracts_resume_count' => PdcHoldGiroModel::query()
+                    ->selectRaw('COUNT(DISTINCT "contract_no")')
+                    ->whereColumn('pdc_hold_giros.pdc_resume_id', $model->getQualifiedKeyName())
+                    ->limit(1),
+            ])
+            ->withCount(['giros_no_resume', 'resume_giros'])
             ->where('user_id', $this->userId)
             ->where('customer_id', $this->customerId)
             ->orderBy($orderBy, $orderDirection)

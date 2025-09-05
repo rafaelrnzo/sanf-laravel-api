@@ -29,7 +29,7 @@ class PdcHoldEloquentRepository extends AbstractEloquentRepository implements Pd
     {
         $model = $this->pdcHoldModel->newQuery()
             ->where('xid', $xid)
-            ->with('giros')
+            ->with('giros_no_resume')
             ->with('resume_giros')
             ->first();
 
@@ -63,5 +63,12 @@ class PdcHoldEloquentRepository extends AbstractEloquentRepository implements Pd
             ]);
 
         return (bool) $updated;
+    }
+
+    public function destroyNotHavingGiros(array $filters): int
+    {
+        return $this->pdcHoldModel->query()->whereDoesntHave('giros')
+            ->where($filters)
+            ->delete();
     }
 }
