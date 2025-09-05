@@ -7,6 +7,7 @@ use NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Dto\PostDatedChequeV2Dto;
+use Sanf\Core\Modules\PdcHold\Repositories\PdcHoldGiroRepositoryInterface;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Core\Modules\User\Services\UserService;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
@@ -20,11 +21,16 @@ use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 class GetPostDatedChequeDetailV2Service extends UserService implements ApplicationServiceInterface
 {
     protected SanfCoreApiClient $internalApiClient;
+    protected PdcHoldGiroRepositoryInterface $pdcHoldGiroRepository;
 
-    public function __construct(UserRepositoryInterface $userRepository, SanfCoreApiClient $internalApiClient)
-    {
+    public function __construct(
+        UserRepositoryInterface $userRepository,
+        SanfCoreApiClient $internalApiClient,
+        PdcHoldGiroRepositoryInterface $pdcHoldGiroRepository
+    ) {
         parent::__construct($userRepository);
         $this->internalApiClient = $internalApiClient;
+        $this->pdcHoldGiroRepository = $pdcHoldGiroRepository;
     }
 
     /**
@@ -53,8 +59,34 @@ class GetPostDatedChequeDetailV2Service extends UserService implements Applicati
                 $dto->sort_by
             );
 
-            $data = collect($response->data)->map(function ($item) {
-                return (object) [
+            $alreadySubmitted = $this->pdcHoldGiroRepository->getSubmitted([
+                'id',
+                'pdc_hold_id',
+                'pdc_resume_id',
+                'customer_id',
+                'contract_no',
+                'pdc_no',
+                'pdc_type',
+            ], [
+                ['customer_id', '=', $dto->profile_xid],
+            ]);
+
+            $data = [];
+
+            foreach ($response->data as $item) {
+                if (
+                    isset($item->PDC_NO, $item->AGREE_NO, $item->PDC_TYPE)
+                    && $alreadySubmitted
+                    ->where('pdc_no', $item->PDC_NO)
+                    ->where('contract_no', $item->AGREE_NO)
+                    ->where('pdc_type', $item->PDC_TYPE)
+                    ->isNotEmpty()
+                ) {
+                    // Is submitted, skip this
+                    continue;
+                }
+
+                $data[] = (object) [
                     'pdc_no' => $item->PDC_NO ?? null,
                     'contract_no' => $item->AGREE_NO ?? null,
                     'amount' => $item->PDC_AMT ?? 0,
@@ -66,7 +98,7 @@ class GetPostDatedChequeDetailV2Service extends UserService implements Applicati
                         'name' => $item->STATUS ?? null,
                     ],
                 ];
-            });
+            }
         } catch (SanfInternalApiDataNotFoundException $exception) {
             return (object) [
                 'data' => [],

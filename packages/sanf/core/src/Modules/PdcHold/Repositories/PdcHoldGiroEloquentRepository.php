@@ -2,6 +2,7 @@
 
 namespace Sanf\Core\Modules\PdcHold\Repositories;
 
+use Illuminate\Database\Eloquent\Collection;
 use NbsPhp\Core\Repositories\AbstractEloquentRepository;
 use Sanf\Core\Modules\PdcHold\Enums\PdcHoldStatusEnum;
 use Sanf\Core\Modules\PdcHold\Enums\PdcHoldTypeEnum;
@@ -64,6 +65,9 @@ class PdcHoldGiroEloquentRepository extends AbstractEloquentRepository implement
             ->delete();
     }
 
+    /**
+     * Delete All non accepted submissions (processed, rejected).
+     */
     public function deletePendingHolds(int $pdc_hold_id, string $customer_id, string $contract_no, string $pdc_no)
     {
         return $this->pdcHoldGiroModel->newQuery()
@@ -76,5 +80,19 @@ class PdcHoldGiroEloquentRepository extends AbstractEloquentRepository implement
             ->where('contract_no', $contract_no)
             ->where('pdc_no', $pdc_no)
             ->delete();
+    }
+
+    /**
+     * Get All submitted (processed, accepted).
+     */
+    public function getSubmitted(array $fields, array $filters): Collection
+    {
+        return $this->pdcHoldGiroModel->newQuery()
+            ->select($fields)
+            ->whereHas('pdc_hold', function ($query) {
+                return $query->where('status_id', '<>', PdcHoldStatusEnum::REJECTED);
+            })
+            ->where($filters)
+            ->get();
     }
 }
