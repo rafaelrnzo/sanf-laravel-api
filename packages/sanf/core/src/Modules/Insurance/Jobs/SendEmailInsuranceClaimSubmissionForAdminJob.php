@@ -39,18 +39,19 @@ class SendEmailInsuranceClaimSubmissionForAdminJob implements ShouldQueue
         /** @var ProfileEntityInterface $profile */
         $profile = $this->data->profile;
         $data = [
-            'Tanggal Pengajuan' => date_localized($this->data->created_at, '%d %B %Y'),
             'Serial Number' => $this->data->serial_no,
-            'No Polis' => $this->data->polis_no,
-            'Data Unit' => $this->data->brand_type_model,
             'Tahun Kendaraan' => $this->data->year,
+            'Data Unit' => $this->data->brand_type_model,
+            'No Polis' => $this->data->polis_no,
+            'Nama Customer' => $this->data->user->full_name,
+            'Lokasi Kejadian' => $this->data->location_metadata->city_name,
+            'Tanggal Kejadian' => date_localized($this->data->incident_date, '%d %B %Y'),
             'Nama PIC' => $this->data->pic_name,
             'No.Handphone PIC' => $this->data->pic_phone_number,
-            'Lokasi Pertanggungan' => $this->data->location_metadata->city_name,
-            'Tanggal Kejadian' => date_localized($this->data->incident_date, '%d %B %Y'),
-            'Keterangan' => $this->data->description,
-            'No Telepon PIC' => $profile->getPhoneNumber(),
             'Email PIC' => $profile->getEmail(),
+            'Keterangan' => $this->data->description,
+            // 'Tanggal Pengajuan' => date_localized($this->data->created_at, '%d %B %Y'),
+            // 'No Telepon PIC' => $profile->getPhoneNumber(),
         ];
         $mailable = (new MailLayout2Columns())
             ->subject('Pengajuan Klaim Asuransi ' . $this->data->user->full_name)
@@ -59,12 +60,11 @@ class SendEmailInsuranceClaimSubmissionForAdminJob implements ShouldQueue
             ->banner(asset('assets/png/email-verification.png'))
             ->writeContent($data)
             ->generateSeparator([
-                ['joinToIndex' => 1, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08); margin: 5px 0;">'],
                 [
-                    'joinToIndex' => 2,
+                    'joinToIndex' => 0,
                     'html' => '<p style="color: #232227; font-size: 14px;"><strong>Detail Klaim Asuransi</strong></p>',
                 ],
-                ['joinToIndex' => 9, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08); margin: 5px 0;">'],
+                ['joinToIndex' => 8, 'html' => '<hr style="border: 1px solid rgba(3, 37, 126, 0.08); margin: 5px 0;">'],
             ]);
 
         if ($this->isDefaultCity) {
