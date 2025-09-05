@@ -15,6 +15,7 @@ class ReadPdcHoldSubmissionByUserResponseDto extends CamelCaseDataTransferObject
     public object $type;
     public \DateTimeImmutable $dateStart;
     public ?\DateTimeImmutable $dateEnd;
+    public ?string $reasonValue;
     public array $giros;
     public \DateTimeImmutable $createdAt;
     public \DateTimeImmutable $updatedAt;

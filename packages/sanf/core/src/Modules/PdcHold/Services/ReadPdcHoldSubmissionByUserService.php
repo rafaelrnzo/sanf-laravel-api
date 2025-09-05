@@ -34,7 +34,7 @@ final class ReadPdcHoldSubmissionByUserService implements ApplicationServiceInte
         }
 
         $pdcType = new PdcHoldTypeEnum($entity->type);
-        $giros = $entity->type === PdcHoldTypeEnum::RESUME ? $entity->resume_giros : $entity->giros;
+        $giros = $entity->type === PdcHoldTypeEnum::RESUME ? $entity->resume_giros : $entity->giros_no_resume;
 
         return new ReadPdcHoldSubmissionByUserResponseDto([
             'id' => $entity->id,
@@ -46,6 +46,7 @@ final class ReadPdcHoldSubmissionByUserService implements ApplicationServiceInte
             'type' => $pdcType,
             'dateStart' => CarbonImmutable::make($entity->date_start),
             'dateEnd' => CarbonImmutable::make($entity->date_end),
+            'reasonValue' => $entity->reason_value,
             'giros' => $giros,
             'createdAt' => CarbonImmutable::make($entity->created_at),
             'updatedAt' => CarbonImmutable::make($entity->updated_at),

@@ -44,6 +44,7 @@ class SendEmailPdcHoldMultiGiroSubmissionForAdminJob implements ShouldQueue
             'Tanggal Pengajuan' => date_localized($this->data->created_at, '%A, %d %B %Y'),
             'Tanggal Penundaan' => date_localized($this->data->date_start, '%d %B %Y') . ' - ' . date_localized($this->data->date_end, '%d %B %Y'),
             'Nomor Kontrak' => $this->data->contract_no,
+            'Alasan' => $this->data->reason_value,
         ];
 
         $tableData = [];
@@ -77,7 +78,7 @@ class SendEmailPdcHoldMultiGiroSubmissionForAdminJob implements ShouldQueue
             ->writeContent($data)
             ->generateSeparator([
                 [
-                    'joinToIndex' => 4,
+                    'joinToIndex' => 5,
                     'html' => '<p style="color: #232227; font-size: 14px;"><strong>Daftar Giro Anda</strong><p>',
                 ],
             ])

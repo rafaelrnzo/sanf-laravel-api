@@ -110,6 +110,7 @@ final class UpdatePdcSubmissionByCoreService implements ApplicationServiceInterf
             'type' => $pdcType,
             'dateStart' => CarbonImmutable::make($entity->date_start),
             'dateEnd' => CarbonImmutable::make($entity->date_end),
+            'reasonValue' => $entity->reason_value,
             'giros' => $giros,
             'createdAt' => CarbonImmutable::make($entity->created_at),
             'updatedAt' => CarbonImmutable::make($entity->updated_at),

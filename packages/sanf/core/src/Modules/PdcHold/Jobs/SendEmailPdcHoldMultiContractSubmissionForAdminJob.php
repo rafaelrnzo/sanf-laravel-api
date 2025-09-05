@@ -43,6 +43,7 @@ class SendEmailPdcHoldMultiContractSubmissionForAdminJob implements ShouldQueue
             'Jenis Pengajuan' => $pdcHoldType->getLabel(),
             'Tanggal Pengajuan' => date_localized($this->data->created_at, '%A, %d %B %Y'),
             'Tanggal Penundaan' => date_localized($this->data->date_start, '%B %Y'),
+            'Alasan' => $this->data->reason_value,
         ];
 
         $tableData = [];
@@ -75,7 +76,7 @@ class SendEmailPdcHoldMultiContractSubmissionForAdminJob implements ShouldQueue
             ->writeContent($data)
             ->generateSeparator([
                 [
-                    'joinToIndex' => 3,
+                    'joinToIndex' => 4,
                     'html' => '<p style="color: #232227; font-size: 14px;"><strong>Daftar Kontrak Anda</strong><p>',
                 ],
             ])
