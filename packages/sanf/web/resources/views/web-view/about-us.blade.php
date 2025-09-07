@@ -5,8 +5,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet"
-          href="https://cdn.rawgit.com/mfd/09b70eb47474836f25a21660282ce0fd/raw/e06a670afcb2b861ed2ac4a1ef752d062ef6b46b/Gilroy.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Questrial&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xz/fonts@1/serve/hk-grotesk.min.css">
     <title>About Us</title>
 </head>
@@ -54,7 +55,7 @@
     }
 
     .sf-title {
-        font-family: Gilroy, sans-serif;
+        font-family: "Questrial", sans-serif;
         font-style: normal;
         font-weight: bold;
         font-size: 16px;
@@ -64,7 +65,7 @@
     }
 
     .sf-text {
-        font-family: Gilroy, sans-serif;
+        font-family: "Questrial", sans-serif;
         font-style: normal;
         font-weight: normal;
         font-size: 14px;
@@ -117,7 +118,7 @@
     }
 
     .sf-list-style {
-        font-family: Gilroy, sans-serif;
+        font-family: "Questrial", sans-serif;
         font-weight: 400;
         font-style: normal;
         font-size: 14px;

@@ -8,8 +8,10 @@
     <title>@yield('title', 'FAQ')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href='https://fonts.googleapis.com/css?family=DM Sans' rel='stylesheet'>
-    <link href="https://fonts.cdnfonts.com/css/gilroy-bold" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Questrial&display=swap" rel="stylesheet">
     <style>
         .btn-custom {
             color: #fff;
@@ -29,7 +31,7 @@
         }
 
         body {
-            font-family: 'Gilroy-Medium', sans-serif;
+            font-family: "Questrial", sans-serif;
             font-style: normal;
             font-weight: 600;
             color: #4E568C;
@@ -78,7 +80,7 @@
         }
 
         h1.container-title {
-            font-family: 'Gilroy-Medium', sans-serif;
+            font-family: "Questrial", sans-serif;
             font-style: normal;
             font-weight: 700;
             font-size: 16px;
@@ -87,7 +89,7 @@
         }
 
         input[type=search] {
-            font-family: 'Gilroy-Medium', sans-serif;
+            font-family: "Questrial", sans-serif;
             border-top-left-radius: 0.625rem;
             border-bottom-left-radius: 0.625rem;
             padding-top: 0.625rem;
@@ -106,7 +108,7 @@
             gap: 1rem;
             border-radius: 0.75rem;
             overflow: hidden;
-            font-family: Gilroy-Regular, sans-serif;
+            font-family: "Questrial", sans-serif;
             font-weight: 700;
         }
 

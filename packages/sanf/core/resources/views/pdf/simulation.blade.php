@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;700&display=swap");
-        @import url("https://fonts.googleapis.com/css2?family=Gilroy:wght@100;300;400;700&display=swap");
+        @import url('https://fonts.googleapis.com/css2?family=Questrial&display=swap');
         /*All the styling goes here*/
 
         body {
@@ -104,7 +104,7 @@
         }
 
         .font-weight-normal {
-            font-family: "Gilroy", sans-serif;
+            font-family: "Questrial", sans-serif;
             font-style: normal;
             font-weight: 400;
             font-size: 14px;
@@ -113,7 +113,7 @@
         }
 
         .font-weight-bold {
-            font-family: "Gilroy", sans-serif;
+            font-family: "Questrial", sans-serif;
             font-style: normal;
             font-weight: 600;
             font-size: 14px;

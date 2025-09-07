@@ -53,11 +53,11 @@ class SendEmailActivationAccountBindingByCoreJob implements ShouldQueue
             ))
             ->action(__('Activate my acocunt'), $verifyUrl)
             ->lineWithUrl(
-                '<div style="color: #232227; font-size: 13px; font-family: Gilroy; font-weight: 500; line-height: 15px; word-wrap: break-word">Atau Anda dapat klik link berikut untuk memverifikasi akun</div>',
+                '<div style="color: #232227; font-size: 13px; font-family: Questrial; font-weight: 500; line-height: 15px; word-wrap: break-word">Atau Anda dapat klik link berikut untuk memverifikasi akun</div>',
                 [$verifyUrl, $verifyUrl]
             )
             ->lineWithUrl(
-                '<div style="color: #999BAC; font-size: 13px; font-family: Gilroy; font-weight: 500; line-height: 16px; word-wrap: break-word">Note: Tautan berlaku ' . $expireInDays . ' hari sejak pengiriman</div>',
+                '<div style="color: #999BAC; font-size: 13px; font-family: Questrial; font-weight: 500; line-height: 16px; word-wrap: break-word">Note: Tautan berlaku ' . $expireInDays . ' hari sejak pengiriman</div>',
                 ['', '']
             )
             ->lineWithUrl(

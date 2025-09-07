@@ -8,7 +8,7 @@
 </head>
 
 <body
-    style="margin: 0; padding: 0; font-family: Gilroy, sans-serif; font-size: 16px; font-weight: 500; line-height: 1.5; color: #232227; background-color: #F2F2F2;">
+    style="margin: 0; padding: 0; font-family: Questrial, sans-serif; font-size: 16px; font-weight: 500; line-height: 1.5; color: #232227; background-color: #F2F2F2;">
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
         style="background-color: #F2F2F2; padding: 32px;">
         <tr>

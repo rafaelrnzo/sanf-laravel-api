@@ -7,7 +7,7 @@
     <title>Permohonan Percepatan Pembayaran</title>
     <style>
         body {
-            font-family: Gilroy, sans-serif;
+            font-family: "Questrial", sans-serif;
             font-size: 12px;
             display: flex;
             justify-content: center;
