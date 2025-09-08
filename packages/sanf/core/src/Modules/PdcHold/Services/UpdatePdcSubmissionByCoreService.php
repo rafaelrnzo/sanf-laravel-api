@@ -10,7 +10,6 @@ use Sanf\Core\Modules\PdcHold\Dtos\UpdateStatusPdcSubmissionByCoreRequestDto;
 use Sanf\Core\Modules\PdcHold\Enums\PdcHoldStatusEnum;
 use Sanf\Core\Modules\PdcHold\Enums\PdcHoldTypeEnum;
 use Sanf\Core\Modules\PdcHold\Events\PdcHoldSubmissionUpdateByCoreNotificationEvent;
-use Sanf\Core\Modules\PdcHold\Exceptions\PdcHoldGiroNotFoundException;
 use Sanf\Core\Modules\PdcHold\Exceptions\PdcHoldNotFoundException;
 use Sanf\Core\Modules\PdcHold\Repositories\PdcHoldGiroRepositoryInterface;
 use Sanf\Core\Modules\PdcHold\Repositories\PdcHoldRepositoryInterface;
@@ -39,7 +38,6 @@ final class UpdatePdcSubmissionByCoreService implements ApplicationServiceInterf
     {
         $entity = DB::transaction(function () use ($dto) {
             $status = PdcHoldStatusEnum::fromCore($dto->status);
-            $status_id = optional($status)->getValue();
 
             $pdcHoldSubmission = $this->pdcHoldRepository->findByXid($dto->pdcHoldXid);
 
@@ -48,41 +46,6 @@ final class UpdatePdcSubmissionByCoreService implements ApplicationServiceInterf
             }
 
             $statusUpdated = $this->pdcHoldRepository->updateStatus($dto->pdcHoldXid, $status);
-
-            if ($status_id == PdcHoldStatusEnum::ACCEPTED) {
-                if ($pdcHoldSubmission->type == PdcHoldTypeEnum::RESUME) {
-                    if (empty($pdcHoldSubmission->resume_giros)) {
-                        throw new PdcHoldGiroNotFoundException();
-                    }
-
-                    foreach ($pdcHoldSubmission->resume_giros as $giroToResume)
-                    {
-                        // delete all hold giros that was submitted to hold
-                        $this->pdcHoldGiroRepository->deletePastHolds($pdcHoldSubmission->id, $pdcHoldSubmission->customer_id, $giroToResume->contract_no, $giroToResume->pdc_no);
-                    }
-                } else {
-                    // Collect common contract no & pdc_no first
-                    $pendingGiros = collect($pdcHoldSubmission->giros)
-                        ->unique(fn ($item) => $item->contract_no . '|' . $item->pdc_no)
-                        ->all();
-
-                    if (empty($pendingGiros)) {
-                        throw new PdcHoldGiroNotFoundException();
-                    }
-
-                    // delete all pending hold giro
-                    foreach ($pendingGiros as $pendingGiro)
-                    {
-                        $this->pdcHoldGiroRepository->deletePendingHolds($pdcHoldSubmission->id, $pdcHoldSubmission->customer_id, $pendingGiro->contract_no, $pendingGiro->pdc_no);
-                    }
-                }
-
-                // Delete orphan submissions (i.e. pdc holds with no giros)
-                $this->pdcHoldRepository->destroyNotHavingGiros([
-                    ['customer_id', '=', $dto->custId],
-                    ['type', '<>', PdcHoldTypeEnum::RESUME],
-                ]);
-            }
 
             if ($statusUpdated) {
                 $pdcHoldSubmission->status_id = $status->getValue();
