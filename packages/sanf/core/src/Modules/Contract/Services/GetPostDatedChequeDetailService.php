@@ -76,7 +76,8 @@ class GetPostDatedChequeDetailService extends UserService implements Application
             foreach ($response->data as $item) {
                 if (isset($item->PDC_NO)) {
                     if (
-                        $alreadySubmitted
+                        $isForPdcHold
+                        && isset($alreadySubmitted)
                         && isset($item->AGREE_NO, $item->PDC_TYPE)
                         && $alreadySubmitted
                         ->where('pdc_no', $item->PDC_NO)

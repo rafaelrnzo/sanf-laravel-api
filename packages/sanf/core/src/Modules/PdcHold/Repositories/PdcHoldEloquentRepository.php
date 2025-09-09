@@ -31,6 +31,7 @@ class PdcHoldEloquentRepository extends AbstractEloquentRepository implements Pd
             ->where('xid', $xid)
             ->with('giros_no_resume')
             ->with('resume_giros')
+            ->withCount('giros_in_resume')
             ->first();
 
         return $this->stripEloquentModel($model);

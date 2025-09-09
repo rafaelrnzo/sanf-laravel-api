@@ -6,6 +6,7 @@ use Carbon\CarbonImmutable;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\PdcHold\Dtos\ReadPdcHoldSubmissionByUserRequestDto;
 use Sanf\Core\Modules\PdcHold\Dtos\ReadPdcHoldSubmissionByUserResponseDto;
+use Sanf\Core\Modules\PdcHold\Enums\PdcHoldStatusEnum;
 use Sanf\Core\Modules\PdcHold\Enums\PdcHoldTypeEnum;
 use Sanf\Core\Modules\PdcHold\Exceptions\PdcHoldNotFoundException;
 use Sanf\Core\Modules\PdcHold\Repositories\PdcHoldRepositoryInterface;
@@ -47,6 +48,7 @@ final class ReadPdcHoldSubmissionByUserService implements ApplicationServiceInte
             'dateStart' => CarbonImmutable::make($entity->date_start),
             'dateEnd' => CarbonImmutable::make($entity->date_end),
             'reasonValue' => $entity->reason_value,
+            'isResumable' => in_array($entity->type, PdcHoldTypeEnum::RESUMABLE) && empty($entity->giros_in_resume_count) && $entity->status_id == PdcHoldStatusEnum::ACCEPTED,
             'giros' => $giros,
             'createdAt' => CarbonImmutable::make($entity->created_at),
             'updatedAt' => CarbonImmutable::make($entity->updated_at),

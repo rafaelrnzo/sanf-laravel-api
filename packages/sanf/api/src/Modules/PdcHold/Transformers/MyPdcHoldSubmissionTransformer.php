@@ -20,6 +20,7 @@ final class MyPdcHoldSubmissionTransformer extends TransformerAbstract
             'date_start' => Carbon::make($dto->dateStart)->format('Y-m-d'),
             'date_end' => $dto->dateEnd ? Carbon::make($dto->dateEnd)->format('Y-m-d') : null,
             'reason' => $dto->reasonValue,
+            'is_resumable' => $dto->isResumable ?? false,
             'giros' => fractal($dto->giros, new PdcHoldGiroSubmissionTransformer)->serializeWith(new ArraySerializer()),
             'created_at' => unix_timestamp($dto->createdAt),
             'updated_at' => unix_timestamp($dto->updatedAt),
