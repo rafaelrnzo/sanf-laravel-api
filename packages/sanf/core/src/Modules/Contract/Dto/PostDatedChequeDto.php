@@ -27,4 +27,14 @@ class PostDatedChequeDto extends DataTransferObject
      * @since CR2025
      */
     public ?int $status_id;
+
+    /**
+     * @since CR2025
+     */
+    public ?\DateTimeImmutable $date_start;
+
+    /**
+     * @since CR2025
+     */
+    public ?\DateTimeImmutable $date_end;
 }

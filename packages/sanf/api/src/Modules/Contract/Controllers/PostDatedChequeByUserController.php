@@ -66,7 +66,16 @@ final class PostDatedChequeByUserController extends RestApiController
             'limit' => ['nullable', 'integer', 'max:2147483647'],
             'sort_by' => ['nullable', 'in:earliest,latest'],
             'status_id' => ['nullable', 'integer', Rule::in(CorePdcStatusEnum::values())], // @since CR2025
+            'date_start' => ['nullable', 'string', 'date_format:Y-m-d'],  // @since CR2025
+            'date_end' => ['nullable', 'string', 'date_format:Y-m-d'], // @since CR2025
         ]);
+
+        if (isset($input['date_start'])) {
+            $input['date_start'] = CarbonImmutable::make($input['date_start']);
+        }
+        if (isset($input['date_end'])) {
+            $input['date_end'] = CarbonImmutable::make($input['date_end']);
+        }
 
         $dto = new PostDatedChequeDto($input + ['profile_xid' => $xid]);
         $dto->sort_by = Str::title($dto->sort_by);
