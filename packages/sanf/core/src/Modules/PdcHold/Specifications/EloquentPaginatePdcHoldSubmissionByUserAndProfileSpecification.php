@@ -51,6 +51,37 @@ final class EloquentPaginatePdcHoldSubmissionByUserAndProfileSpecification
                 $orderDirection = 'DESC';
         }
 
+        if ($this->resumable) {
+            $query = $model->newQuery()
+                ->addSelect([
+                    'contracts_hold_count' => PdcHoldGiroModel::query()
+                        ->selectRaw('COUNT(DISTINCT "contract_no")')
+                        ->whereColumn('pdc_hold_giros.pdc_hold_id', $model->getQualifiedKeyName())
+                        ->limit(1),
+                ])
+                ->whereDoesntHave('giros_in_resume')
+                ->withCount(['giros_no_resume'])
+                ->where('user_id', $this->userId)
+                ->where('customer_id', $this->customerId)
+                ->orderBy($orderBy, $orderDirection)
+                ->where('status_id', PdcHoldStatusEnum::ACCEPTED)
+                ->whereIn('type', PdcHoldTypeEnum::RESUMABLE)
+                ->when($this->statusId, function ($query) {
+                    return $query->where('status_id', $this->statusId);
+                })
+                ->when($this->type, function ($query) {
+                    return $query->where('type', $this->type);
+                })
+                ->when($this->skip, function ($query) {
+                    return $query->skip($this->skip);
+                })
+                ->when($this->limit, function ($query) {
+                    return $query->limit($this->limit);
+                });
+
+            return $query;
+        }
+
         $query = $model->newQuery()
             ->addSelect([
                 'contracts_hold_count' => PdcHoldGiroModel::query()
@@ -68,10 +99,6 @@ final class EloquentPaginatePdcHoldSubmissionByUserAndProfileSpecification
             ->where('user_id', $this->userId)
             ->where('customer_id', $this->customerId)
             ->orderBy($orderBy, $orderDirection)
-            ->when($this->resumable, function ($query) {
-                return $query->where('status_id', PdcHoldStatusEnum::ACCEPTED)
-                    ->whereIn('type', PdcHoldTypeEnum::RESUMABLE);
-            })
             ->when($this->statusId, function ($query) {
                 return $query->where('status_id', $this->statusId);
             })

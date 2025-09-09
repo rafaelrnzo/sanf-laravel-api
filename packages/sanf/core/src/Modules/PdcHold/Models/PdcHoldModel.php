@@ -70,6 +70,12 @@ class PdcHoldModel extends AbstractModel
             ->whereNull('pdc_resume_id');
     }
 
+    public function giros_in_resume(): HasMany
+    {
+        return $this->hasMany(PdcHoldGiroModel::class, 'pdc_hold_id')
+            ->whereNotNull('pdc_resume_id');
+    }
+
     public function resume_giros(): HasMany
     {
         return $this->hasMany(PdcHoldGiroModel::class, 'pdc_resume_id');
