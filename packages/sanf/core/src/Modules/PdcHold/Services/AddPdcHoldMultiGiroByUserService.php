@@ -26,7 +26,7 @@ final class AddPdcHoldMultiGiroByUserService extends PdcHoldByUserService implem
         $user = $this->findUserOrFail($dto->userId);
 
         $entity = DB::transaction(function () use ($dto) {
-            $pdcHoldXid = app()->make('nanoid')->formatedId(PdcHoldModel::XID_ALPHABET, config('additional.pdc_hold.xid_length'));
+            $pdcHoldXid = app()->make('nanoid')->formatedId(PdcHoldModel::XID_ALPHABET, (int) config('additional.pdc_hold.xid_length', PdcHoldModel::XID_LENGTH));
             $status = new PdcHoldStatusEnum(PdcHoldStatusEnum::PROCESSED);
 
             $entity = $this->pdcHoldRepository->add([
