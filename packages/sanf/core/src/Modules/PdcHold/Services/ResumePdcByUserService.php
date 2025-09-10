@@ -37,7 +37,7 @@ final class ResumePdcByUserService implements ApplicationServiceInterface
     public function execute($dto = null)
     {
         $entity = DB::transaction(function () use ($dto) {
-            $pdcHoldXid = app()->make('nanoid')->formatedId(PdcHoldModel::XID_ALPHABET, PdcHoldModel::XID_LENGTH);
+            $pdcHoldXid = app()->make('nanoid')->formatedId(PdcHoldModel::XID_ALPHABET, config('additional.pdc_hold.xid_length'));
             $status = new PdcHoldStatusEnum(PdcHoldStatusEnum::PROCESSED);
 
             $holdGiros = $this->pdcHoldGiroRepository->findToResume($dto->giroXids, $dto->profileXid);

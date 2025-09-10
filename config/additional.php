@@ -19,4 +19,7 @@ return [
         //'bank_owner' => env('COMPANY_BANK_OWNER', 'PT Surya Artha Nusantara Finance'), // Bank On Behalf Of
         //'bank_id' => env('COMPANY_BANK_ID', '0'), // Bank ID in SANF Core
     ],
+    'pdc_hold' => [
+        'xid_length' => env('PDC_HOLD_XID_LENGTH', 10),
+    ],
 ];
