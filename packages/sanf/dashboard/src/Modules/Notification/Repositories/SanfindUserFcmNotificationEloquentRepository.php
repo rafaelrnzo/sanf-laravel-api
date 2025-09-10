@@ -18,7 +18,7 @@ class SanfindUserFcmNotificationEloquentRepository extends AbstractEloquentRepos
         $this->fcmSessionModel = $fcmSessionModel;
     }
 
-    public function findLatest(array $filters, array $columns = ['*'])
+    public function findActive(array $filters, array $columns = ['*'])
     {
         $now = Carbon::now();
 
@@ -27,6 +27,6 @@ class SanfindUserFcmNotificationEloquentRepository extends AbstractEloquentRepos
             ->where($filters)
             ->where('expiresAt', '>', $now)
             ->orderByDesc($this->fcmSessionModel->getCreatedAtColumn())
-            ->first();
+            ->get();
     }
 }

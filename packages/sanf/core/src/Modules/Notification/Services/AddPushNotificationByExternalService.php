@@ -85,14 +85,17 @@ final class AddPushNotificationByExternalService implements ApplicationServiceIn
         if (
             !empty($dto->dashboardWebData['guard_type'])
             && !empty($dto->dashboardWebData['user_id'])
-            && $dto->dashboardWebData['guard_type'] == 'sanfind_user') {
-            $customerWebFcmToken = $this->sanfindUserFcmNotificationRepository->findLatest([
+            && $dto->dashboardWebData['guard_type'] == 'sanfind_user'
+        ) {
+            $customerWebFcmTokens = $this->sanfindUserFcmNotificationRepository->findActive([
                 'sanfind_userid' => $dto->dashboardWebData['user_id'],
             ]);
 
-            if (!empty($customerWebFcmToken->token)) {
-                $fcmTokens[] = $customerWebFcmToken->token;
-                $data['link'] = $dto->dashboardWebData['link'] ?? null;
+            foreach ($customerWebFcmTokens as $customerWebFcmToken) {
+                if (!empty($customerWebFcmToken->token)) {
+                    $fcmTokens[] = $customerWebFcmToken->token;
+                    $data['link'] = $dto->dashboardWebData['link'] ?? null;
+                }
             }
         }
 

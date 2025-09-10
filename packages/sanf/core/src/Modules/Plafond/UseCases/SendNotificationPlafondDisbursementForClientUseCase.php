@@ -43,12 +43,14 @@ class SendNotificationPlafondDisbursementForClientUseCase implements Application
         $fcmTokens = $this->userNotificationRepository->getFcmTokens($userId);
 
         if ($userId && !empty($dto['dashboardNotification'])) {
-            $customerWebFcmToken = $this->sanfindUserFcmNotificationRepository->findLatest([
+            $customerWebFcmTokens = $this->sanfindUserFcmNotificationRepository->findActive([
                 'sanfind_userid' => $userId,
             ]);
 
-            if (!empty($customerWebFcmToken->token)) {
-                $fcmTokens[] = $customerWebFcmToken->token;
+            foreach ($customerWebFcmTokens as $customerWebFcmToken) {
+                if (!empty($customerWebFcmToken->token)) {
+                    $fcmTokens[] = $customerWebFcmToken->token;
+                }
             }
         }
 
