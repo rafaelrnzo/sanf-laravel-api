@@ -60,8 +60,8 @@ class SendEmailPlafondDisbursementSubmittedListener
                 'invoice_documents' => $content->invoice_documents ?? [],
                 'invoice_photos' => $content->invoice_photos ?? [],
                 'other_documents' => $content->other_documents ?? [],
-                //'Nomor Surat' => $content->paymentAccDocumentNo,
-                //'Tanggal Surat' => date_localized($content->paymentAccDocumentDate, '%d %B %Y'),
+                'Nomor Surat' => $content->paymentAccDocumentNo,
+                'Tanggal Surat' => date_localized($content->paymentAccDocumentDate, '%d %B %Y'),
             ];
             dispatch(new SendEmailPlafondDisbursementSubmittedForCustomerNoPartnerJob(
                 $customerPayload,

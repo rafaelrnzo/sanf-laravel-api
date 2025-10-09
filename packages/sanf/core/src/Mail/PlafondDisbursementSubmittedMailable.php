@@ -62,6 +62,8 @@ class PlafondDisbursementSubmittedMailable extends Mailable
                 'sanfName' => $sanfName,
                 'initialSanf' => $sanfInitial,
                 'sanfInitial' => $sanfInitial,
+                'paymentAccDocumentNo' => $this->data['Nomor Surat'] ?? '-',
+                'paymentAccDocumentDate' => $this->data['Tanggal Surat'] ?? '-',
             ]);
 
         if (!empty($this->data['payment_acc_document'])) {

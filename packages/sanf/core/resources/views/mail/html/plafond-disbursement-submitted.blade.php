@@ -72,9 +72,7 @@
                                                 <td width="25" style="vertical-align: top;">1.
                                                 </td>
                                                 <td style="vertical-align: top;">
-                                                    Persetujuan atas Surat Permohonan Percepatan Pembayaran
-                                                    ("Terlampir") dari {{ $clientName ?? 'NAMA CLIENT' }} selaku salah
-                                                    satu Supplier {{ $bowheerName ?? 'NAMA BOWHEER' }}.
+                                                    Persetujuan atas Surat Permohonan Percepatan Pembayaran Nomor {{ $paymentAccDocumentNo ?? 'XXXX' }} pada tanggal {{ $paymentAccDocumentDate ?? 'XXXX' }} dari {{ $clientName ?? 'NAMA CLIENT' }} selaku salah satu Supplier {{ $bowheerName ?? 'NAMA BOWHEER' }}.
                                                 </td>
                                             </tr>
                                         </table>
