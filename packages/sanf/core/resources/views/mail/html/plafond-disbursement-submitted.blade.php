@@ -57,7 +57,7 @@
                                             {{ $initialSanf ?? 'SANF' }} dapat menjalin kerjasama dalam pembiayaan
                                             Invoice Financing Supplier dengan {{ $bowheerName ?? 'NAMA BOWHEER' }} dan
                                             {{ $clientName ?? 'NAMA CLIENT' }}, berikut terlampir dokumen invoice yang
-                                            diajukan untuk {{ $clientName ?? 'NAMA CLIENT' }}. Mohon dibantu untuk
+                                            diajukan untuk {{ $bowheerName ?? 'NAMA BOWHEER' }}. Mohon dibantu untuk
                                             verifikasi dan memberikan persetujuan terkait beberapa poin di bawah:</p>
                                     </td>
                                 </tr>
