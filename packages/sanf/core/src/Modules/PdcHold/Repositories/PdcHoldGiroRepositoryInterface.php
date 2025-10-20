@@ -20,4 +20,6 @@ interface PdcHoldGiroRepositoryInterface
     public function deletePendingHolds(int $pdc_hold_id, string $customer_id, string $contract_no, string $pdc_no);
 
     public function getSubmitted(array $fileds, array $filters): Collection;
+
+    public function getSubmittedWithSubmissions(array $fields, $filters): Collection;
 }

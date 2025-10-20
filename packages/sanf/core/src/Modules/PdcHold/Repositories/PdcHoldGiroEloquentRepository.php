@@ -95,4 +95,19 @@ class PdcHoldGiroEloquentRepository extends AbstractEloquentRepository implement
             ->where($filters)
             ->get();
     }
+
+    /**
+     * Get All submitted (processed, accepted).
+     */
+    public function getSubmittedWithSubmissions(array $fields, $filters): Collection
+    {
+        return $this->pdcHoldGiroModel->newQuery()
+            ->select($fields)
+            ->whereHas('pdc_hold', function ($query) {
+                return $query->where('status_id', '<>', PdcHoldStatusEnum::REJECTED);
+            })
+            ->with('pdc_hold', 'pdc_resume')
+            ->where($filters)
+            ->get();
+    }
 }

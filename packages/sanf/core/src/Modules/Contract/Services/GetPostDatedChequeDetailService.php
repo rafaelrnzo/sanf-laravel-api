@@ -7,6 +7,7 @@ use NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Dto\PostDatedChequeDto;
+use Sanf\Core\Modules\PdcHold\Enums\PdcHoldStatusEnum;
 use Sanf\Core\Modules\PdcHold\Repositories\PdcHoldGiroRepositoryInterface;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Core\Modules\User\Services\UserService;
@@ -57,7 +58,7 @@ class GetPostDatedChequeDetailService extends UserService implements Application
             $isForPdcHold = isset($dto->date_start, $dto->date_end); // Not neat, but mobile use same endpoint
 
             if ($isForPdcHold) {
-                $alreadySubmitted = $this->pdcHoldGiroRepository->getSubmitted([
+                $alreadySubmitted = $this->pdcHoldGiroRepository->getSubmittedWithSubmissions([
                     'id',
                     'pdc_hold_id',
                     'pdc_resume_id',
@@ -65,6 +66,7 @@ class GetPostDatedChequeDetailService extends UserService implements Application
                     'contract_no',
                     'pdc_no',
                     'pdc_type',
+                    'created_at',
                 ], [
                     ['customer_id', '=', $dto->profile_xid],
                 ]);
@@ -79,14 +81,17 @@ class GetPostDatedChequeDetailService extends UserService implements Application
                         $isForPdcHold
                         && isset($alreadySubmitted)
                         && isset($item->AGREE_NO, $item->PDC_TYPE)
-                        && $alreadySubmitted
+                        && $submitted = $alreadySubmitted
                         ->where('pdc_no', $item->PDC_NO)
                         ->where('contract_no', $item->AGREE_NO)
                         ->where('pdc_type', $item->PDC_TYPE)
-                        ->isNotEmpty()
+                        ->sortByDesc('created_at')
+                        ->first()
                     ) {
-                        // Is submitted, skip this
-                        continue;
+                        if (!isset($submitted->pdc_resume) || $submitted->pdc_resume->status_id !== PdcHoldStatusEnum::ACCEPTED) {
+                            // Is submitted, skip this
+                            continue;
+                        }
                     }
 
                     // workaround filter giro no after change to V2
