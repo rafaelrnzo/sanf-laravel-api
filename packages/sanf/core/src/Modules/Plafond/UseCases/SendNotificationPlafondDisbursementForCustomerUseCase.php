@@ -48,7 +48,7 @@ class SendNotificationPlafondDisbursementForCustomerUseCase implements Applicati
         $user = $this->userDashboardRepository->findUserAuthByBowheerId($dto['bowheerId']);
         $tokens = array_map(function ($fcmSession) {
             return $fcmSession->token;
-        }, $user->fcm_tokens ?? []);
+        }, $user->fcmTokens ?? []);
 
         foreach (array_unique($tokens) as $token) {
             try {
