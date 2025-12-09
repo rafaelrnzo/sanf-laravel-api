@@ -22,6 +22,7 @@ class CreatePaymentTable extends Migration
             $table->decimal('amount', 20, 2);
             $table->string('currency', 10)->default('IDR');
             $table->enum('status', ['PENDING', 'SUCCESS', 'FAILED', 'EXPIRED', 'CANCELLED'])->default('PENDING');
+            $table->enum('category', ['INSTALLMENT_BILL', 'DOWN_PAYMENT_BILL']);
             $table->jsonb('payment_detail');
             $table->dateTime('expired_at');
             $table->timestamp('paid_at')->nullable();

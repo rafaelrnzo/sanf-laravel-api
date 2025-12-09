@@ -15,13 +15,14 @@ use Sanf\Core\Modules\Installment\Models\InstallmentModel;
  * @property float $amount
  * @property string $currency
  * @property string|\Sanf\Core\Modules\Payment\Enums\PaymentStatusEnum $status
+ * @property string|\Sanf\Core\Modules\Payment\Enums\PaymentCategoryEnum $category
  * @property array $payment_detail
  * @property \Carbon\Carbon $due_date
  * @property \Carbon\Carbon|null $paid_at
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|InstallmentModel[] $installments
- * @property-read MidtransTransactionModel|null $midtransTransaction
+ * @property-read \Illuminate\Database\Eloquent\Collection|MidtransTransactionModel[] $midtransTransactions
  */
 class PaymentModel extends AbstractModel
 {
@@ -37,6 +38,7 @@ class PaymentModel extends AbstractModel
         'amount',
         'currency',
         'status',
+        'category',
         'payment_detail',
         'due_date',
         'paid_at',
@@ -59,8 +61,8 @@ class PaymentModel extends AbstractModel
         );
     }
 
-    public function midtransTransaction()
+    public function midtransTransactions()
     {
-        return $this->hasOne(MidtransTransactionModel::class, 'payment_id');
+        return $this->hasMany(MidtransTransactionModel::class, 'payment_id');
     }
 }
