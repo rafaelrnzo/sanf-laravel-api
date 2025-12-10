@@ -14,6 +14,8 @@ class BrowseESignDocumentTransformer extends TransformerAbstract
             'xid' => $item->xid,
             'title' => preg_replace('/^final-/', '', $documentName),
             'document_id' => $item->documentId,
+            'catategory_id' => $item->catategoryId ?? null,
+            'catategory_desc' => $item->catategoryDesc ?? null,
             'reference_no' => $item->referenceNo,
             'status_id' => $item->statusId,
             'expired_at' => ($item->expiredAt) ? unix_timestamp($item->expiredAt) : null,

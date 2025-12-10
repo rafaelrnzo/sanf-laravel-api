@@ -1487,6 +1487,17 @@ class SanfCoreApiClient
         return $response->json();
     }
 
+    public function browseESignDocumentV2(string $email, string $keyword = null)
+    {
+        $response = Request::route('v2.e-sign.document.browse', $this->client)
+            ->pathParams(['email' => $email])
+            ->queryParams([
+                'filter' => $keyword ?? '',
+            ])->send();
+
+        return $response->json();
+    }
+
     public function browseESignDocument(string $email, string $keyword = null)
     {
         $response = Request::route('e-sign.document.browse', $this->client)

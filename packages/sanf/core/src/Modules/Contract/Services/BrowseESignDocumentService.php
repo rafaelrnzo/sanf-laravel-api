@@ -49,7 +49,7 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
                 'data' => [],
             ];
             try {
-                $result = $this->client->browseESignDocument($user->username, $dto->keyword);
+                $result = $this->client->browseESignDocumentV2($user->username, $dto->keyword);
             } catch (SanfInternalApiDataNotFoundException $exception) {
                 $result['data'] = [];
             }
@@ -57,6 +57,8 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
             $mapping = array_map(function ($item) {
                 return (object) [
                     'documentName' => $item['FILE_NAME'] ?? null,
+                    'catategoryId' => $item['DOC_ID'] ?? null,
+                    'catategoryDesc' => $item['DOC_DESC'] ?? null,
                     'documentId' => $item['DOC_ID_TEKENAJA'] ?? null,
                     'referenceNo' => $item['REFERENCE_NO'] ?? null,
                     'expiredAt' => isset($item['EXPIRATION_DATE']) ? Carbon::createFromFormat('d/m/Y', $item['EXPIRATION_DATE'])->endOfDay() : null,
@@ -88,6 +90,8 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
                     'statusId' => $item->assignee_status_id,
                     'expiredAt' => Carbon::make($item->e_sign_document->expired_at),
                     'createdAt' => Carbon::make($item->created_at),
+                    'catategoryId' => null,
+                    'catategoryDesc' => null,
                     'userId' => $dto->user_id,
                     'email' => $user->username,
                 ];
@@ -114,6 +118,8 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
                     'expiredAt' => $newDocument->expiredAt,
                     'statusId' => ESignContractStatusEnum::SUBMITTED,
                     'createdAt' => $newDocument->createdAt,
+                    'catategoryId' => $newDocument->catategoryId,
+                    'catategoryDesc' => $newDocument->catategoryDesc,
                     'userId' => $dto->user_id,
                     'email' => $user->username,
                 ];
@@ -146,6 +152,8 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
                     'statusId' => ($item->e_sign_document->status_id === ESignContractStatusEnum::ON_PROGRESS && $item->assignee_status_id === ESignContractStatusEnum::DONE) ? ESignContractStatusEnum::ON_PROGRESS : $item->assignee_status_id,
                     'expiredAt' => Carbon::make($item->e_sign_document->expired_at),
                     'createdAt' => Carbon::make($item->created_at),
+                    'catategoryId' => null,
+                    'catategoryDesc' => null,
                     'userId' => $dto->user_id,
                     'email' => $user->username,
                 ];
