@@ -52,6 +52,10 @@ class GetContractDetailService extends UserService implements ApplicationService
             'total_penalty_amount' => $data->TOTAL_DENDA ?? 0,
             'total_paid_amount' => $data->TERBAYAR ?? 0,
             'total_outstanding_amount' => $data->TAGIHAN_SISA ?? 0,
+            'principal_amount' => $data->POKOK_HUTANG ?? 0,
+            'interest_amount' => $data->BUNGA ?? 0,
+            'down_payment_amount' => $data->DP ?? 0,
+            'total_bill_amount' => $data->TOTAL_TAGIHAN ?? 0,
             'due_at' => $data->DT_DUE ?? null,
             'installment_count' => $data->ANGSURAN_KE ?? 0,
             'financing' => (object) [

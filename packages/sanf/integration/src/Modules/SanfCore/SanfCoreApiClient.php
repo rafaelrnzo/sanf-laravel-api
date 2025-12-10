@@ -920,6 +920,18 @@ class SanfCoreApiClient
         return $response->json(false);
     }
 
+    public function getContractDetailV2($user_id, $contract_no)
+    {
+        $response = Request::route('v2.contracts.detail', $this->client)
+            ->pathParams([
+                'cust_id' => $user_id,
+                'contrak_no' => $contract_no,
+            ])
+            ->send();
+
+        return $response->json(false);
+    }
+
     /**
      * @return array|stdClass|null
      * @throws EndpointNotDefinedException
