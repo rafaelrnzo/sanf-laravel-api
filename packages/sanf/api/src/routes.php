@@ -303,4 +303,5 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth']], function () {
 
 // CR 2 2025
 Route::group(['prefix' => 'v2', 'middleware' => ['auth', InjectUserIdFromPathMiddleware::class]], function () {
+    Route::get('users/profiles/{xid}/spare_part_disbursements', ['as' => 'v2.users.spare_part_disbursements', 'uses' => 'Disbursement\Controllers\SparePartDisbursementController@list']);
 });

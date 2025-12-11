@@ -32,6 +32,8 @@ use Sanf\Core\Modules\Contract\Specifications\EloquentESignDocumentSpecification
 use Sanf\Core\Modules\Contract\Specifications\EloquentFinancingUnitLocationSubmissionSpecificationFactory;
 use Sanf\Core\Modules\Contract\Specifications\ESignDocumentSpecificationFactoryInterface;
 use Sanf\Core\Modules\Contract\Specifications\FinancingUnitLocationSubmissionSpecificationFactoryInterface;
+use Sanf\Core\Modules\Disbursement\Repositories\SparePartDisbursementEloquentRepository;
+use Sanf\Core\Modules\Disbursement\Repositories\SparePartDisbursementRepositoryInterface;
 use Sanf\Core\Modules\Financing\Repositories\EloquentFinancingApplicationEncryptedRepository;
 use Sanf\Core\Modules\Financing\Repositories\EloquentFinancingCategoryRepository;
 use Sanf\Core\Modules\Financing\Repositories\EloquentFinancingFacilityRepository;
@@ -247,6 +249,9 @@ class CoreServiceProvider extends ServiceProvider
         // CR2025
         $this->app->bind(PdcHoldRepositoryInterface::class, PdcHoldEloquentRepository::class);
         $this->app->bind(PdcHoldGiroRepositoryInterface::class, PdcHoldGiroEloquentRepository::class);
+        
+        // CR 2 2025
+        $this->app->bind(SparePartDisbursementRepositoryInterface::class, SparePartDisbursementEloquentRepository::class);
 
         //SPECIFICATION FACTORY
         $this->app->bind(ProjectSpecificationFactoryInterface::class, EloquentProjectSpecificationFactory::class);
