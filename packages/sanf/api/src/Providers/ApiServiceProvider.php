@@ -36,7 +36,9 @@ class ApiServiceProvider extends ServiceProvider
 
     public function registerBindings()
     {
-//        $this->app->bind(FooRepositoryInterface::class, EloquentFooRepository::class);
+        $this->app->routeMiddleware([
+            'inject-user-id' => \Sanf\Api\Middleware\InjectUserIdFromPathMiddleware::class,
+        ]);
    }
 
     protected function registerViews()

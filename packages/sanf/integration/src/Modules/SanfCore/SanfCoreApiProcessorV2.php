@@ -14,8 +14,17 @@ class SanfCoreApiProcessorV2 extends Processor
 {
     public static function handle(Request $request, callable $next): Response
     {
-        $request->auth([config('sanf-api-v2.client_id'), config('sanf-api-v2.client_secret')]);
-        $request->headers(['X-Request-ID' => app('request')->header('X-Request-ID')]);
+        $clientId = config('sanf-api-v2.client_id');
+        $clientSecret = config('sanf-api-v2.client_secret');
+        $userId = app('request')->attributes->get('internal_sanf_user_id') ?? app('request')->input('internal_sanf_user_id');
+
+        $plainAuth = implode(';', [$clientId, $clientSecret, $userId]);
+        $encodedAuth = base64_encode($plainAuth);
+
+        $request->headers([
+            'X-Request-ID' => app('request')->header('X-Request-ID'),
+            'Authorization' => 'Basic ' . $encodedAuth
+        ]);
         try {
             $response = $next($request);
             $result = $response->json();

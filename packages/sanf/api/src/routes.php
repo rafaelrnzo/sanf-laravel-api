@@ -12,6 +12,7 @@
 */
 
 use Illuminate\Support\Facades\Route;
+use Sanf\Api\Middleware\InjectUserIdFromPathMiddleware;
 
 // ONLY PIC ROUTES
 Route::group(['prefix' => 'v1', 'middleware' => ['auth']], function () {
@@ -298,4 +299,8 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth']], function () {
     Route::get('scanina/products/services/categories', ['as' => 'scanina.product.service.category.browse', 'uses' => \Scanina\Controllers\Product\BrowseProductServiceCategoryController::class]);
     Route::get('scanina/products/services/{xid}', ['as' => 'scanina.product.service.read', 'uses' => \Scanina\Controllers\Product\ReadProductServiceController::class]);
     Route::get('scanina/products/services/{xid}/reviews', ['as' => 'scanina.product.service.review.browse', 'uses' => \Scanina\Controllers\Product\BrowseReviewProductServiceController::class]);
+});
+
+// CR 2 2025
+Route::group(['prefix' => 'v2', 'middleware' => ['auth', InjectUserIdFromPathMiddleware::class]], function () {
 });
