@@ -51,4 +51,20 @@ return [
         'MULTI_CONTRACT' => 'Multi Kontrak',
         'RESUME' => 'Lanjutkan PDC',
     ],
+    'spare_part_disbursement' => [
+        'status' => [
+            'WAITING_CUSTOMER' => 'Waiting Customer',
+            'NEED_REVIEW' => 'Need Review',
+            'WAITING_VALIDATION' => 'Waiting Validation',
+            'PAYMENT_COMPLETED' => 'Payment Completed',
+            'REJECTED' => 'Rejected',
+            'CANCELED' => 'Canceled',
+        ],
+        'invoice-status' => [
+            'WAITING_PAYMENT' => 'Waiting Payment',
+            'PAYMENT_COMPLETED' => 'Payment Completed',
+            'REJECTED' => 'Rejected',
+            'APPROVED' => 'Approved',
+        ],
+    ],
 ];

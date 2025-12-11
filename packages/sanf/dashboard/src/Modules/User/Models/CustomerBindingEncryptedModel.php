@@ -6,6 +6,14 @@ use NbsPhp\Core\Models\AbstractModel;
 use Sanf\Core\Constants\ConnectionDB;
 use Sanf\Core\Traits\SodiumEncryptionTrait;
 
+/**
+ * @property string $BowheerId
+ * @property string $BowheerEmail
+ * @property string $BowheerName
+ * @property string $BowheerCode
+ * @property int $userAuthId
+ * @property ?array $partnerProfile
+ */
 class CustomerBindingEncryptedModel extends AbstractModel
 {
     use SodiumEncryptionTrait;
@@ -28,6 +36,7 @@ class CustomerBindingEncryptedModel extends AbstractModel
         'createdAt',
         'updatedAt',
         'nonce',
+        'partnerProfile',
     ];
 
     protected $hidden = [
@@ -54,6 +63,11 @@ class CustomerBindingEncryptedModel extends AbstractModel
     public function getModifiedByAttribute()
     {
         return $this->decryptor()->decrypt($this->attributes['modifiedBy']);
+    }
+
+    public function getPartnerProfileAttribute()
+    {
+        return json_decode($this->decryptor()->decrypt($this->attributes['partnerProfile']));
     }
 
     public function toArray()

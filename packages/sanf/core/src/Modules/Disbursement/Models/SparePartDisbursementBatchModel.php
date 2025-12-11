@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Sanf\Core\Constants\ConnectionDB;
+use Sanf\Core\Traits\SodiumEncryptionTrait;
 
 /**
  * Spare Part Disbursement Batch.
@@ -22,16 +23,19 @@ use Sanf\Core\Constants\ConnectionDB;
  * @property float $total_valid_invoice_amount
  * @property string $status
  * @property bool $is_validated
+ * @property ?string $bank_id
+ * @property ?string $bank_account_number (encrypted)
+ * @property ?string $bank_provider (encrypted)
+ * @property ?string $bank_owner (encrypted)
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property int $version
  * @property-read \Illuminate\Database\Eloquent\Collection|SparePartDisbursementModel[] $disbursements
  * @property-read \Illuminate\Database\Eloquent\Collection|SparePartDisbursementDocumentModel[] $documents
- * @property-read ?SparePartDisbursementBankAccountModel $bankAccount
  */
 class SparePartDisbursementBatchModel extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, SodiumEncryptionTrait;
 
     protected $connection = ConnectionDB::PG_SQL_CMS;
     protected $table = 'spare_part_disbursement_batch';
@@ -47,6 +51,10 @@ class SparePartDisbursementBatchModel extends Model
         'total_valid_invoice_amount',
         'status',
         'is_validated',
+        'bank_id',
+        'bank_account_number',
+        'bank_provider',
+        'bank_owner',
         'version',
     ];
 
@@ -60,6 +68,10 @@ class SparePartDisbursementBatchModel extends Model
         'updated_at' => 'datetime',
     ];
 
+    protected $hidden = [
+        'nonce',
+    ];
+
     public function disbursements(): HasMany
     {
         return $this->hasMany(SparePartDisbursementModel::class, 'disbursement_batch_id');
@@ -70,8 +82,18 @@ class SparePartDisbursementBatchModel extends Model
         return $this->hasMany(SparePartDisbursementDocumentModel::class, 'disbursement_batch_id');
     }
 
-    public function bankAccount(): HasOne
+    public function getBankAccountNumberAttribute()
     {
-        return $this->hasOne(SparePartDisbursementBankAccountModel::class, 'disbursement_batch_id');
+        return $this->decryptor()->decrypt($this->attributes['bank_account_number']);
+    }
+
+    public function getBankProviderAttribute()
+    {
+        return $this->decryptor()->decrypt($this->attributes['bank_provider']);
+    }
+
+    public function getBankOwnerAttribute()
+    {
+        return $this->decryptor()->decrypt($this->attributes['bank_owner']);
     }
 }
