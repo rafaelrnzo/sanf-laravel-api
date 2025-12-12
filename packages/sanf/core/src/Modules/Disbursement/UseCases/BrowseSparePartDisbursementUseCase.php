@@ -36,7 +36,7 @@ final class BrowseSparePartDisbursementUseCase implements ApplicationServiceInte
                 SparePartDisbursementStatusEnum::REJECTED,
                 SparePartDisbursementStatusEnum::CANCELED,
             ];
-        } else if ($payload->listType == 'NEED_APPROVAL') {
+        } elseif ($payload->listType == 'NEED_APPROVAL') {
             $payload->statusIds = [
                 SparePartDisbursementStatusEnum::WAITING_CUSTOMER,
                 SparePartDisbursementStatusEnum::NEED_REVIEW,
@@ -54,7 +54,7 @@ final class BrowseSparePartDisbursementUseCase implements ApplicationServiceInte
         $dataCore = collect($responseCore->data)->keyBy('batch_id');
 
         $data->transform(function (&$item) use ($dataCore) {
-            /** 
+            /**
              * @var SanfCoreSparePartDisbursementEntity $core
              * @var SparePartDisbursementModel $item
              */

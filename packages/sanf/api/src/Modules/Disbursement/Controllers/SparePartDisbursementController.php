@@ -32,7 +32,7 @@ class SparePartDisbursementController extends RestApiController
                     SparePartDisbursementStatusEnum::PAYMENT_COMPLETED,
                     SparePartDisbursementStatusEnum::REJECTED,
                     SparePartDisbursementStatusEnum::CANCELED,
-                ])
+                ]),
             ],
         ]);
 
@@ -65,7 +65,7 @@ class SparePartDisbursementController extends RestApiController
                 Rule::in([
                     SparePartDisbursementStatusEnum::WAITING_CUSTOMER,
                     SparePartDisbursementStatusEnum::NEED_REVIEW,
-                ])
+                ]),
             ],
         ]);
 

@@ -40,11 +40,10 @@ class SanfCoreApiClientV2
         $jsonResponse = $response->json();
 
         $jsonResponse['data'] = array_map(
-            fn($item) => new SanfCoreSparePartDisbursementEntity($item),
+            fn ($item) => new SanfCoreSparePartDisbursementEntity($item),
             $jsonResponse['data']
         );
 
         return new SanfCoreV2ListResponse($jsonResponse);
     }
-
 }

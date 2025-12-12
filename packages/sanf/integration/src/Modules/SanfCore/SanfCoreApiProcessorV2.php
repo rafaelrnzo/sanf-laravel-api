@@ -23,7 +23,7 @@ class SanfCoreApiProcessorV2 extends Processor
 
         $request->headers([
             'X-Request-ID' => app('request')->header('X-Request-ID'),
-            'Authorization' => 'Basic ' . $encodedAuth
+            'Authorization' => 'Basic ' . $encodedAuth,
         ]);
         try {
             $response = $next($request);

@@ -5,7 +5,6 @@ namespace Sanf\Core\Modules\Disbursement\Repositories;
 use Illuminate\Support\Collection;
 use NbsPhp\Core\Repositories\AbstractEloquentRepository;
 use Sanf\Core\Modules\Disbursement\Models\SparePartDisbursementModel;
-use Sanf\Core\Modules\Disbursement\Repositories\SparePartDisbursementRepositoryInterface;
 
 class SparePartDisbursementEloquentRepository extends AbstractEloquentRepository implements SparePartDisbursementRepositoryInterface
 {

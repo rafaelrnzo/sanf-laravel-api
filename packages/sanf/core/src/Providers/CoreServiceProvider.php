@@ -249,7 +249,7 @@ class CoreServiceProvider extends ServiceProvider
         // CR2025
         $this->app->bind(PdcHoldRepositoryInterface::class, PdcHoldEloquentRepository::class);
         $this->app->bind(PdcHoldGiroRepositoryInterface::class, PdcHoldGiroEloquentRepository::class);
-        
+
         // CR 2 2025
         $this->app->bind(SparePartDisbursementRepositoryInterface::class, SparePartDisbursementEloquentRepository::class);
 
