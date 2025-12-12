@@ -20,7 +20,8 @@ class SparePartDisbursementEloquentRepository extends AbstractEloquentRepository
     public function listQuery(object $params)
     {
         $plafondXid = $params->plafondXid;
-        $statusIds = $params->statusIds;
+        $statusIds = $params->statusIds ?? [];
+        $statusId = $params->statusId;
         $keyword = $params->keyword;
 
         return $this->disbursementModel->newQuery()
@@ -30,6 +31,9 @@ class SparePartDisbursementEloquentRepository extends AbstractEloquentRepository
             })
             ->when(!empty($statusIds), function ($query) use ($statusIds) {
                 return $query->whereIn('status_id', $statusIds);
+            })
+            ->when($statusId, function ($query, $statusId) {
+                return $query->where('status_id', $statusId);
             })
             ->when($keyword, function ($query, $keyword) {
                 return $query->where('disbursement_no', 'ilike', "%{$keyword}%");

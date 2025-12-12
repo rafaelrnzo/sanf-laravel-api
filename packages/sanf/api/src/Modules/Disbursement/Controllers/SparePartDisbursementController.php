@@ -38,6 +38,40 @@ class SparePartDisbursementController extends RestApiController
 
         $payload = new BrowseSparePartDisbursementPayload(array_merge($formData, [
             'profile_xid' => $xid,
+            'list_type' => 'HISTORICAL',
+        ]));
+
+        $response = $useCase->execute($payload);
+
+        return fractal($response->data)
+            ->transformWith(SparePartDisbursementTransformer::class)
+            ->paginateWith(new LazyPaginatorAdapter($response->paginate));
+    }
+
+    public function pendingList(
+        string $xid,
+        Request $request,
+        BrowseSparePartDisbursementUseCase $useCase
+    ) {
+        $formData = $this->validate($request, [
+            'skip' => ['nullable', 'integer'],
+            'limit' => ['nullable', 'integer'],
+            'sort_by' => ['nullable', 'string'],
+            'keyword' => ['nullable', 'string'],
+            'plafond_xid' => ['nullable', 'string'],
+            'status_id' => [
+                'nullable',
+                'integer',
+                Rule::in([
+                    SparePartDisbursementStatusEnum::WAITING_CUSTOMER,
+                    SparePartDisbursementStatusEnum::NEED_REVIEW,
+                ])
+            ],
+        ]);
+
+        $payload = new BrowseSparePartDisbursementPayload(array_merge($formData, [
+            'profile_xid' => $xid,
+            'list_type' => 'NEED_APPROVAL',
         ]));
 
         $response = $useCase->execute($payload);

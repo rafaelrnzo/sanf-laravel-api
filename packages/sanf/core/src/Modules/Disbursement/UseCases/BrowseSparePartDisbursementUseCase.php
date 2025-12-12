@@ -29,12 +29,19 @@ final class BrowseSparePartDisbursementUseCase implements ApplicationServiceInte
      */
     public function execute($payload = null)
     {
-        $payload->statusIds = [
-            SparePartDisbursementStatusEnum::WAITING_VALIDATION,
-            SparePartDisbursementStatusEnum::PAYMENT_COMPLETED,
-            SparePartDisbursementStatusEnum::REJECTED,
-            SparePartDisbursementStatusEnum::CANCELED,
-        ];
+        if ($payload->listType == 'HISTORICAL') {
+            $payload->statusIds = [
+                SparePartDisbursementStatusEnum::WAITING_VALIDATION,
+                SparePartDisbursementStatusEnum::PAYMENT_COMPLETED,
+                SparePartDisbursementStatusEnum::REJECTED,
+                SparePartDisbursementStatusEnum::CANCELED,
+            ];
+        } else if ($payload->listType == 'NEED_APPROVAL') {
+            $payload->statusIds = [
+                SparePartDisbursementStatusEnum::WAITING_CUSTOMER,
+                SparePartDisbursementStatusEnum::NEED_REVIEW,
+            ];
+        }
 
         $data = $this->repository->list($payload);
 
