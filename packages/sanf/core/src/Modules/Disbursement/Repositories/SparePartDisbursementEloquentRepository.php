@@ -2,22 +2,32 @@
 
 namespace Sanf\Core\Modules\Disbursement\Repositories;
 
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use NbsPhp\Core\Repositories\AbstractEloquentRepository;
+use Sanf\Core\Modules\Disbursement\Enums\SparePartDisbursementStatusEnum;
+use Sanf\Core\Modules\Disbursement\Models\SparePartDisbursementBatchModel;
+use Sanf\Core\Modules\Disbursement\Models\SparePartDisbursementDocumentModel;
 use Sanf\Core\Modules\Disbursement\Models\SparePartDisbursementInvoiceModel;
 use Sanf\Core\Modules\Disbursement\Models\SparePartDisbursementModel;
 
 class SparePartDisbursementEloquentRepository extends AbstractEloquentRepository implements SparePartDisbursementRepositoryInterface
 {
     protected SparePartDisbursementModel $disbursementModel;
+    protected SparePartDisbursementBatchModel $disbursementBatchModel;
     protected SparePartDisbursementInvoiceModel $invoiceModel;
+    protected SparePartDisbursementDocumentModel $documentModel;
 
     public function __construct(
         SparePartDisbursementModel $disbursementModel,
-        SparePartDisbursementInvoiceModel $invoiceModel
+        SparePartDisbursementInvoiceModel $invoiceModel,
+        SparePartDisbursementBatchModel $disbursementBatchModel,
+        SparePartDisbursementDocumentModel $documentModel
     ) {
         $this->disbursementModel = $disbursementModel;
         $this->invoiceModel = $invoiceModel;
+        $this->disbursementBatchModel = $disbursementBatchModel;
+        $this->documentModel = $documentModel;
     }
 
     public function listQuery(object $params)
@@ -88,8 +98,55 @@ class SparePartDisbursementEloquentRepository extends AbstractEloquentRepository
         return $this->disbursementModel->newQuery()->where($filters)->first();
     }
 
+    public function update(array $filters, array $data): bool
+    {
+        $model = $this->disbursementModel->newQuery()->where($filters)->first();
+
+        return $model->update($data);
+    }
+
     public function findInvoice(array $filters): ?SparePartDisbursementInvoiceModel
     {
         return $this->invoiceModel->newQuery()->where($filters)->first();
+    }
+
+    public function listInvoice(array $filters): Collection
+    {
+        return $this->invoiceModel->newQuery()->where($filters)->get();
+    }
+
+    public function rejectInvoices(array $filters, array $invoiceXids): int
+    {
+        return $this->invoiceModel->newQuery()
+            ->where($filters)
+            ->whereIn('xid', $invoiceXids)
+            ->update([
+                'status_id' => SparePartDisbursementStatusEnum::REJECTED,
+                'updated_at' => Carbon::now(),
+            ]);
+    }
+
+    public function approveInvoicesWithExclusion(array $filters, array $excludeInvoiceXids): int
+    {
+        return $this->invoiceModel->newQuery()
+            ->where($filters)
+            ->whereNotIn('xid', $excludeInvoiceXids)
+            ->update([
+                'status_id' => SparePartDisbursementStatusEnum::APPROVED,
+                'updated_at' => Carbon::now(),
+            ]);
+    }
+
+    public function findBatch(array $filters): ?SparePartDisbursementBatchModel
+    {
+        return $this->disbursementBatchModel->newQuery()->where($filters)->first();
+    }
+
+    public function listUploadedDocument(array $filters): Collection
+    {
+        return $this->documentModel->newQuery()
+            ->where($filters)
+            ->whereNotNull('doc_file')
+            ->get();
     }
 }

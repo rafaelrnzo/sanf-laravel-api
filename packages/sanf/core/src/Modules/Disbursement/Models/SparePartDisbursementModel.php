@@ -40,6 +40,8 @@ use Sanf\Dashboard\Modules\User\Models\CustomerBindingEncryptedModel;
  * @property-read \Illuminate\Database\Eloquent\Collection|SparePartDisbursementInvoiceModel[] $invoices
  * @property-read \Illuminate\Database\Eloquent\Collection|SparePartDisbursementInvoiceModel[] $validInvoices
  * @property-read ?CustomerBindingEncryptedModel $supplier
+ * @property ?string $customer_confirmed_at
+ * @property ?string $note
  */
 class SparePartDisbursementModel extends Model
 {
@@ -68,6 +70,8 @@ class SparePartDisbursementModel extends Model
         'validation_status_message',
         'status_id',
         'version',
+        'customer_confirmed_at',
+        'note',
     ];
 
     protected $casts = [
@@ -78,6 +82,7 @@ class SparePartDisbursementModel extends Model
         'status_id' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'customer_confirmed_at' => 'datetime',
     ];
 
     public function batch(): BelongsTo

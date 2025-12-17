@@ -10,6 +10,7 @@ use Sanf\Integration\Modules\SanfCore\Entities\SanfCoreInstallmentSummaryEntity;
 use Sanf\Integration\Modules\SanfCore\Entities\SanfCorePlafondSparePartEntity;
 use Sanf\Integration\Modules\SanfCore\Entities\SanfCoreSparePartDisbursementDetailEntity;
 use Sanf\Integration\Modules\SanfCore\Entities\SanfCoreSparePartDisbursementEntity;
+use Sanf\Integration\Modules\SanfCore\Payloads\SanfCoreSubmitSparePartFinancingPayload;
 use Sanf\Integration\Responses\SanfCoreV2ListResponse;
 
 class SanfCoreApiClientV2
@@ -71,6 +72,15 @@ class SanfCoreApiClientV2
         } catch (SanfInternalApiDataNotFoundException $e) {
             return null;
         }
+    }
+
+    public function submitSparePartFinancing(SanfCoreSubmitSparePartFinancingPayload $payload)
+    {
+        $response = Request::route('spare-part-disbursement.list', $this->client)
+            ->json($payload->toArray())
+            ->send();
+
+        return $response->json();
     }
 
     // Contract =============================

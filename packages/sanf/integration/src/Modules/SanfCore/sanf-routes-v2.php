@@ -7,6 +7,7 @@ Route::group(config('sanf-api-v2.url'), [SanfCoreApiProcessorV2::class], functio
     // Spare Part Disbursement
     Route::get('sanf-internal-v2.spare-part-disbursement.list', '/api/sparepart_financing/invoice');
     Route::get('sanf-internal-v2.spare-part-disbursement.detail', '/api/sparepart_financing/invoice/{batchId}/{customerId}');
+    Route::get('sanf-internal-v2.spare-part-financing.submit', '/api/sparepart_financing/invoice/submit');
 
     // Contract
     Route::get('sanf-internal-v2.contract.detail', '/api/kontrak/detail/{contractNumber}');

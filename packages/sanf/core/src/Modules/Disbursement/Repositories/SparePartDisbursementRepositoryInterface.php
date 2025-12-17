@@ -3,6 +3,7 @@
 namespace Sanf\Core\Modules\Disbursement\Repositories;
 
 use Illuminate\Support\Collection;
+use Sanf\Core\Modules\Disbursement\Models\SparePartDisbursementBatchModel;
 use Sanf\Core\Modules\Disbursement\Models\SparePartDisbursementInvoiceModel;
 use Sanf\Core\Modules\Disbursement\Models\SparePartDisbursementModel;
 
@@ -18,5 +19,17 @@ interface SparePartDisbursementRepositoryInterface
 
     public function find(array $filters): ?SparePartDisbursementModel;
 
+    public function update(array $filters, array $data): bool;
+
+    public function listInvoice(array $filters): Collection;
+
     public function findInvoice(array $filters): ?SparePartDisbursementInvoiceModel;
+
+    public function rejectInvoices(array $filters, array $invoiceXids): int;
+
+    public function approveInvoicesWithExclusion(array $filters, array $excludeInvoiceXids): int;
+
+    public function findBatch(array $filters): ?SparePartDisbursementBatchModel;
+
+    public function listUploadedDocument(array $filters): Collection;
 }

@@ -4,19 +4,15 @@ namespace Sanf\Core\Modules\Disbursement\UseCases;
 
 use Sanf\Core\Modules\Disbursement\Models\SparePartDisbursementInvoiceModel;
 use Sanf\Core\Modules\Disbursement\Repositories\SparePartDisbursementRepositoryInterface;
-use Sanf\Integration\Modules\SanfCore\SanfCoreApiClientV2;
 
 final class FindSparePartDisbursementInvoiceUseCase
 {
     protected SparePartDisbursementRepositoryInterface $repository;
-    protected SanfCoreApiClientV2 $sanfCoreApiClient;
 
     public function __construct(
-        SparePartDisbursementRepositoryInterface $repository,
-        SanfCoreApiClientV2 $sanfCoreApiClient
+        SparePartDisbursementRepositoryInterface $repository
     ) {
         $this->repository = $repository;
-        $this->sanfCoreApiClient = $sanfCoreApiClient;
     }
 
     public function execute(string $profileXid, string $disbursementXid, string $invoiceXid): ?SparePartDisbursementInvoiceModel
