@@ -35,7 +35,7 @@ class SanfCoreApiClientV2
         $page,
         $per_page
     ) {
-        $response = Request::route('spare-part-disbursement.list', $this->client)
+        $response = Request::route('sanf-internal-v2.spare-part-disbursement.list', $this->client)
             ->queryParams([
                 'page' => $page,
                 'per_page' => $per_page,
@@ -57,7 +57,7 @@ class SanfCoreApiClientV2
         $customerId
     ): ?SanfCoreSparePartDisbursementDetailEntity {
         try {
-            $response = Request::route('spare-part-disbursement.detail', $this->client)
+            $response = Request::route('sanf-internal-v2.spare-part-disbursement.detail', $this->client)
                 ->pathParams([
                         'batchId' => $batchId,
                         'customerId' => $customerId,
@@ -77,7 +77,7 @@ class SanfCoreApiClientV2
     public function getContractDetail(string $contractNumber): ?SanfCoreContractDetailEntity
     {
         try {
-            $response = Request::route('contract.detail', $this->client)
+            $response = Request::route('sanf-internal-v2.contract.detail', $this->client)
                 ->pathParams(['contractNumber' => $contractNumber])
                 ->send();
 
@@ -95,7 +95,7 @@ class SanfCoreApiClientV2
         $page,
         $per_page
     ) {
-        $response = Request::route('plafond.spare-part.list', $this->client)
+        $response = Request::route('sanf-internal-v2.plafond.spare-part.list', $this->client)
             ->queryParams([
                 'page' => $page,
                 'per_page' => $per_page,
