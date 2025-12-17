@@ -5,6 +5,7 @@ namespace Sanf\Integration\Modules\SanfCore;
 use GuzzleHttp\Client;
 use NbsPhp\ApiWrapper\Api\Request;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
+use Sanf\Integration\Modules\SanfCore\Entities\SanfCoreContractDetailEntity;
 use Sanf\Integration\Modules\SanfCore\Entities\SanfCoreSparePartDisbursementDetailEntity;
 use Sanf\Integration\Modules\SanfCore\Entities\SanfCoreSparePartDisbursementEntity;
 use Sanf\Integration\Responses\SanfCoreV2ListResponse;
@@ -64,6 +65,21 @@ class SanfCoreApiClientV2
             $jsonResponse = $response->json();
 
             return new SanfCoreSparePartDisbursementDetailEntity($jsonResponse['data']);
+        } catch (SanfInternalApiDataNotFoundException $e) {
+            return null;
+        }
+    }
+
+    public function getContractDetail(string $contractNumber): ?SanfCoreContractDetailEntity
+    {
+        try {
+            $response = Request::route('contract.detail', $this->client)
+                ->pathParams(['contractNumber' => $contractNumber])
+                ->send();
+
+            $jsonResponse = $response->json();
+
+            return SanfCoreContractDetailEntity::fromLowercaseKeys($jsonResponse['data']);
         } catch (SanfInternalApiDataNotFoundException $e) {
             return null;
         }

@@ -58,7 +58,6 @@ Route::group(config('sanf-api.url'), [SanfCoreApiProcessor::class], function () 
     Route::get('contract.account-receivable', '/Kontrak/DashboardDetail');
     Route::get('contracts', '/Kontrak');
     Route::get('contracts.detail', '/Kontrak/DetailKontrak');
-    Route::get('v2.contracts.detail', '/v2/kontrak/detail/{cust_id}/{no_kontrak}'); // V2 CR2025
     Route::get('contracts.financing-unit.item', '/Kontrak/ItemKontrak');
     Route::get('contracts.financing-unit.invoice', '/Kontrak/TagihanKontrak');
     Route::get('contracts.pdc', '/PDC');

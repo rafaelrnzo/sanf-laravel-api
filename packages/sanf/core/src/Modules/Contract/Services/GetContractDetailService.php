@@ -9,15 +9,22 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Core\Modules\User\Services\UserService;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClientV2;
 
 class GetContractDetailService extends UserService implements ApplicationServiceInterface
 {
     protected SanfCoreApiClient $internalApiClient;
+    protected SanfCoreApiClientV2 $internalApiClientV2;
 
-    public function __construct(UserRepositoryInterface $userRepository, SanfCoreApiClient $internalApiClient)
+    public function __construct(
+        UserRepositoryInterface $userRepository,
+        SanfCoreApiClient $internalApiClient,
+        SanfCoreApiClientV2 $internalApiClientV2
+    )
     {
         parent::__construct($userRepository);
         $this->internalApiClient = $internalApiClient;
+        $this->internalApiClientV2 = $internalApiClientV2;
     }
 
     /**
@@ -34,8 +41,7 @@ class GetContractDetailService extends UserService implements ApplicationService
             throw new UserNotFoundException();
         }
 
-        $response = $this->internalApiClient->getContractDetail($dto->profile_xid, $dto->contract_no);
-        $data = $response->data[$response->count - 1];
+        $data = $this->internalApiClientV2->getContractDetail($dto->contract_no);
 
         return (object) [
             'contract_at' => $data->TGL_KONTRAK ?? null,

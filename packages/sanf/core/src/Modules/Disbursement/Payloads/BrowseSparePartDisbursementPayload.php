@@ -14,7 +14,8 @@ class BrowseSparePartDisbursementPayload extends CamelCaseDataTransferObject
     public ?string $keyword;
     public ?int $statusId;
     /**
-     * @var string $listType HISTORICAL | NEED_APPROVAL
+     * HISTORICAL | NEED_APPROVAL.
+     * @var string
      */
     public string $listType;
 }
