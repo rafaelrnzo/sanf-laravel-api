@@ -4,9 +4,9 @@ namespace Sanf\Integration\Modules\SanfCore;
 
 use GuzzleHttp\Client;
 use NbsPhp\ApiWrapper\Api\Request;
+use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 use Sanf\Integration\Modules\SanfCore\Entities\SanfCoreSparePartDisbursementDetailEntity;
 use Sanf\Integration\Modules\SanfCore\Entities\SanfCoreSparePartDisbursementEntity;
-use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 use Sanf\Integration\Responses\SanfCoreV2ListResponse;
 
 class SanfCoreApiClientV2
@@ -42,7 +42,7 @@ class SanfCoreApiClientV2
         $jsonResponse = $response->json();
 
         $jsonResponse['data'] = array_map(
-            fn($item) => new SanfCoreSparePartDisbursementEntity($item),
+            fn ($item) => new SanfCoreSparePartDisbursementEntity($item),
             $jsonResponse['data']
         );
 

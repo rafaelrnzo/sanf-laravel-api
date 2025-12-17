@@ -59,11 +59,7 @@ return [
             'PAYMENT_COMPLETED' => 'Payment Completed',
             'REJECTED' => 'Rejected',
             'CANCELED' => 'Canceled',
-        ],
-        'invoice-status' => [
             'WAITING_PAYMENT' => 'Waiting Payment',
-            'PAYMENT_COMPLETED' => 'Payment Completed',
-            'REJECTED' => 'Rejected',
             'APPROVED' => 'Approved',
         ],
     ],

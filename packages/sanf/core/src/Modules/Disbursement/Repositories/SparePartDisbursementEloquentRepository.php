@@ -4,16 +4,20 @@ namespace Sanf\Core\Modules\Disbursement\Repositories;
 
 use Illuminate\Support\Collection;
 use NbsPhp\Core\Repositories\AbstractEloquentRepository;
+use Sanf\Core\Modules\Disbursement\Models\SparePartDisbursementInvoiceModel;
 use Sanf\Core\Modules\Disbursement\Models\SparePartDisbursementModel;
 
 class SparePartDisbursementEloquentRepository extends AbstractEloquentRepository implements SparePartDisbursementRepositoryInterface
 {
     protected SparePartDisbursementModel $disbursementModel;
+    protected SparePartDisbursementInvoiceModel $invoiceModel;
 
     public function __construct(
-        SparePartDisbursementModel $disbursementModel
+        SparePartDisbursementModel $disbursementModel,
+        SparePartDisbursementInvoiceModel $invoiceModel
     ) {
         $this->disbursementModel = $disbursementModel;
+        $this->invoiceModel = $invoiceModel;
     }
 
     public function listQuery(object $params)
@@ -82,5 +86,10 @@ class SparePartDisbursementEloquentRepository extends AbstractEloquentRepository
     public function find(array $filters): ?SparePartDisbursementModel
     {
         return $this->disbursementModel->newQuery()->where($filters)->first();
+    }
+
+    public function findInvoice(array $filters): ?SparePartDisbursementInvoiceModel
+    {
+        return $this->invoiceModel->newQuery()->where($filters)->first();
     }
 }

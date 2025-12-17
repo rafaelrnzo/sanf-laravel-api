@@ -3,6 +3,7 @@
 namespace Sanf\Core\Modules\Disbursement\Repositories;
 
 use Illuminate\Support\Collection;
+use Sanf\Core\Modules\Disbursement\Models\SparePartDisbursementInvoiceModel;
 use Sanf\Core\Modules\Disbursement\Models\SparePartDisbursementModel;
 
 interface SparePartDisbursementRepositoryInterface
@@ -16,4 +17,6 @@ interface SparePartDisbursementRepositoryInterface
     public function listCount(object $params): int;
 
     public function find(array $filters): ?SparePartDisbursementModel;
+
+    public function findInvoice(array $filters): ?SparePartDisbursementInvoiceModel;
 }

@@ -34,7 +34,7 @@ final class SparePartDisbursementDetailTransformer extends TransformerAbstract
                 'email' => optional($supplier)->BowheerEmail,
                 'type' => optional($partnerProfile)->tipe_supplier,
             ],
-            'invoices' => $model->validInvoices->map(fn(SparePartDisbursementInvoiceModel $item) => [
+            'invoices' => $model->validInvoices->map(fn (SparePartDisbursementInvoiceModel $item) => [
                 'invoice_xid' => $item->xid,
                 'invoice_no' => $item->invoice_number,
                 'invoice_date' => nullable_unix_timestamp($item->invoice_date),

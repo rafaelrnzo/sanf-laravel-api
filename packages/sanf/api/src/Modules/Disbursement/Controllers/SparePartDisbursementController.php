@@ -8,10 +8,12 @@ use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Exceptions\ResourceNotFoundException;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
 use Sanf\Api\Modules\Disbursement\Transformers\SparePartDisbursementDetailTransformer;
+use Sanf\Api\Modules\Disbursement\Transformers\SparePartDisbursementInvoiceDetailTransformer;
 use Sanf\Api\Modules\Disbursement\Transformers\SparePartDisbursementTransformer;
 use Sanf\Core\Modules\Disbursement\Enums\SparePartDisbursementStatusEnum;
 use Sanf\Core\Modules\Disbursement\Payloads\BrowseSparePartDisbursementPayload;
 use Sanf\Core\Modules\Disbursement\UseCases\BrowseSparePartDisbursementUseCase;
+use Sanf\Core\Modules\Disbursement\UseCases\FindSparePartDisbursementInvoiceUseCase;
 use Sanf\Core\Modules\Disbursement\UseCases\FindSparePartDisbursementUseCase;
 
 class SparePartDisbursementController extends RestApiController
@@ -96,5 +98,20 @@ class SparePartDisbursementController extends RestApiController
         }
 
         return fractal($response, new SparePartDisbursementDetailTransformer());
+    }
+
+    public function invoiceDetail(
+        string $xid,
+        string $disbursementXid,
+        string $invoiceXid,
+        FindSparePartDisbursementInvoiceUseCase $useCase
+    ) {
+        $response = $useCase->execute($xid, $disbursementXid, $invoiceXid);
+
+        if ($response === null) {
+            throw new ResourceNotFoundException();
+        }
+
+        return fractal($response, new SparePartDisbursementInvoiceDetailTransformer());
     }
 }
