@@ -9,5 +9,5 @@ class SanfCoreV2ListResponse extends FlexibleDataTransferObject
     public ?string $status;
     public ?string $message;
     public array $data;
-    public SanfCoreV2MetaResponse $meta;
+    public ?SanfCoreV2MetaResponse $meta;
 }

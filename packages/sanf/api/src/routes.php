@@ -303,8 +303,12 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth']], function () {
 
 // CR 2 2025
 Route::group(['prefix' => 'v2', 'middleware' => ['auth', InjectUserIdFromPathMiddleware::class]], function () {
+    // Spare Part Disbursement
     Route::get('users/profiles/{xid}/spare_part_disbursements', ['as' => 'v2.users.spare_part_disbursements.list', 'uses' => 'Disbursement\Controllers\SparePartDisbursementController@list']);
     Route::get('users/profiles/{xid}/spare_part_disbursements/pending', ['as' => 'v2.users.spare_part_disbursements.pending-list', 'uses' => 'Disbursement\Controllers\SparePartDisbursementController@pendingList']);
     Route::get('users/profiles/{xid}/spare_part_disbursements/{disbursementXid}', ['as' => 'v2.users.spare_part_disbursements.detail', 'uses' => 'Disbursement\Controllers\SparePartDisbursementController@detail']);
     Route::get('users/profiles/{xid}/spare_part_disbursements/{disbursementXid}/invoices/{invoiceXid}', ['as' => 'v2.users.spare_part_disbursements.invoices.detail', 'uses' => 'Disbursement\Controllers\SparePartDisbursementController@invoiceDetail']);
+
+    // Plafond
+    Route::get('users/profiles/{xid}/plafonds/spare-part', ['as' => 'v2.users.plafonds.spare-part', 'uses' => 'Plafond\Controllers\PlafondController@browsePlafondSparePart']);
 });

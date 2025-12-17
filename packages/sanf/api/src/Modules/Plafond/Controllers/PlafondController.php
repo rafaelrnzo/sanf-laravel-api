@@ -10,12 +10,14 @@ use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
 use Sanf\Api\Modules\Plafond\Transformers\PlafondFactoringTransformer;
 use Sanf\Api\Modules\Plafond\Transformers\PlafondHistoryTransformer;
 use Sanf\Api\Modules\Plafond\Transformers\PlafondSimpleTransformer;
+use Sanf\Api\Modules\Plafond\Transformers\PlafondSparePartTransformer;
 use Sanf\Api\Modules\Plafond\Transformers\PlafondTransformer;
 use Sanf\Api\Modules\Plafond\Transformers\PlafondTypeListTransformer;
 use Sanf\Core\Modules\Plafond\Dtos\AddPlafondRequestDto;
 use Sanf\Core\Modules\Plafond\Dtos\BrowsePlafondByProfileRequestDto;
 use Sanf\Core\Modules\Plafond\Dtos\BrowsePlafondFactoringRequestDto;
 use Sanf\Core\Modules\Plafond\Dtos\BrowsePlafondHistoryByUserRequestDto;
+use Sanf\Core\Modules\Plafond\Dtos\BrowsePlafondSparePartRequestDto;
 use Sanf\Core\Modules\Plafond\Dtos\ReadPlafondByProfileAndTypeRequestDto;
 use Sanf\Core\Modules\Plafond\Enums\PlafondTypeEnum;
 use Sanf\Core\Modules\Plafond\Services\ApplyIncreasePlafondByUserService;
@@ -23,6 +25,7 @@ use Sanf\Core\Modules\Plafond\Services\ApplyNewPlafondByUserService;
 use Sanf\Core\Modules\Plafond\Services\BrowsePlafondByUserService;
 use Sanf\Core\Modules\Plafond\Services\BrowsePlafondFactoringService;
 use Sanf\Core\Modules\Plafond\Services\BrowsePlafondHistoryByUserService;
+use Sanf\Core\Modules\Plafond\Services\BrowsePlafondSparePartService;
 use Sanf\Core\Modules\Plafond\Services\ListPlafondTypeService;
 use Sanf\Core\Modules\Plafond\Services\ReadPlafondByUserAndTypeService;
 use Sanf\Core\Modules\User\Services\GetDetailCustomerProfileByUserService;
@@ -100,8 +103,7 @@ class PlafondController extends RestApiController
             'profileXid' => $xid,
         ]);
 
-        // TODO: also handle for spare part type
-        if ($typeId === PlafondTypeEnum::FACTORING) {
+        if (in_array($typeId, [PlafondTypeEnum::FACTORING, PlafondTypeEnum::SPAREPART])) {
             throw new BadRequestHttpException('Please update your apps');
         }
 
@@ -197,6 +199,25 @@ class PlafondController extends RestApiController
 
         return fractal($result->data)
             ->transformWith(PlafondFactoringTransformer::class)
+            ->paginateWith(new LazyPaginatorAdapter($result->paginate));
+    }
+
+    public function browsePlafondSparePart(
+        $xid,
+        Request $request,
+        BrowsePlafondSparePartService $service
+    ) {
+        $input = $this->validate($request, [
+            'skip' => ['nullable', 'integer'],
+            'limit' => ['nullable', 'integer'],
+            'sort_by' => ['nullable', 'string'],
+        ]);
+
+        $dto = new BrowsePlafondSparePartRequestDto($input + ['profileXid' => $xid]);
+        $result = $service->execute($dto);
+
+        return fractal($result->data)
+            ->transformWith(PlafondSparePartTransformer::class)
             ->paginateWith(new LazyPaginatorAdapter($result->paginate));
     }
 }

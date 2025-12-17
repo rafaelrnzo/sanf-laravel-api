@@ -10,4 +10,7 @@ Route::group(config('sanf-api-v2.url'), [SanfCoreApiProcessorV2::class], functio
 
     // contract
     Route::get('contract.detail', '/api/kontrak/detail/{contractNumber}');
+
+    // plafond
+    Route::get('plafond.spare-part.list', '/api/plafond/list_sparepart');
 });
