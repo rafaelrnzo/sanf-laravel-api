@@ -13,4 +13,7 @@ Route::group(config('sanf-api-v2.url'), [SanfCoreApiProcessorV2::class], functio
 
     // Plafond
     Route::get('sanf-internal-v2.plafond.spare-part.list', '/api/plafond/list_sparepart');
+
+    // Installment
+    Route::get('sanf-internal-v2.installment.summary', '/api/tagihan/summary');
 });

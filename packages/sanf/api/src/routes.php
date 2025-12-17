@@ -311,4 +311,7 @@ Route::group(['prefix' => 'v2', 'middleware' => ['auth', InjectUserIdFromPathMid
 
     // Plafond
     Route::get('users/profiles/{xid}/plafonds/spare-part', ['as' => 'v2.users.plafonds.spare-part', 'uses' => 'Plafond\Controllers\PlafondController@browsePlafondSparePart']);
+
+    // Installment
+    Route::get('users/profiles/{xid}/installments/summary', ['as' => 'v2.users.installments.summary', 'uses' => 'Installment\Controllers\InstallmentController@summary']);
 });

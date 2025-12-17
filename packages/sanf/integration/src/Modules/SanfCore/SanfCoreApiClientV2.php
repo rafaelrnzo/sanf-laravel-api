@@ -6,6 +6,7 @@ use GuzzleHttp\Client;
 use NbsPhp\ApiWrapper\Api\Request;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 use Sanf\Integration\Modules\SanfCore\Entities\SanfCoreContractDetailEntity;
+use Sanf\Integration\Modules\SanfCore\Entities\SanfCoreInstallmentSummaryEntity;
 use Sanf\Integration\Modules\SanfCore\Entities\SanfCorePlafondSparePartEntity;
 use Sanf\Integration\Modules\SanfCore\Entities\SanfCoreSparePartDisbursementDetailEntity;
 use Sanf\Integration\Modules\SanfCore\Entities\SanfCoreSparePartDisbursementEntity;
@@ -110,5 +111,20 @@ class SanfCoreApiClientV2
         );
 
         return new SanfCoreV2ListResponse($jsonResponse);
+    }
+
+    // Installment =========================
+
+    public function getInstallmentSummary(): ?SanfCoreInstallmentSummaryEntity
+    {
+        try {
+            $response = Request::route('sanf-internal-v2.installment.summary', $this->client)->send();
+
+            $jsonResponse = $response->json();
+
+            return new SanfCoreInstallmentSummaryEntity($jsonResponse['data']);
+        } catch (SanfInternalApiDataNotFoundException $e) {
+            return null;
+        }
     }
 }
