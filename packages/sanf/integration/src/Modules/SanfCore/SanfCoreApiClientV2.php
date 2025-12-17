@@ -27,7 +27,7 @@ class SanfCoreApiClientV2
         ]);
     }
 
-    // Spare Part Disbursement / Spare Part Financing
+    // Spare Part Disbursement / Spare Part Financing ============
 
     public function getSparePartDisbursementList(
         $page,
@@ -69,6 +69,8 @@ class SanfCoreApiClientV2
             return null;
         }
     }
+
+    // Contract =============================
 
     public function getContractDetail(string $contractNumber): ?SanfCoreContractDetailEntity
     {

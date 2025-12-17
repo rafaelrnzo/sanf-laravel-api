@@ -49,7 +49,7 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
                 'data' => [],
             ];
             try {
-                $result = $this->client->browseESignDocumentV2($user->username, $dto->keyword);
+                $result = $this->client->browseESignDocument($user->username, $dto->keyword);
             } catch (SanfInternalApiDataNotFoundException $exception) {
                 $result['data'] = [];
             }
