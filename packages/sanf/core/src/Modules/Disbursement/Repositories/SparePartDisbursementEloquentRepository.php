@@ -78,4 +78,9 @@ class SparePartDisbursementEloquentRepository extends AbstractEloquentRepository
     {
         return $this->listQuery($params)->count();
     }
+
+    public function find(array $filters): ?SparePartDisbursementModel
+    {
+        return $this->disbursementModel->newQuery()->where($filters)->first();
+    }
 }

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Sanf\Core\Constants\ConnectionDB;
+use Sanf\Core\Modules\Disbursement\Enums\SparePartDisbursementStatusEnum;
 use Sanf\Dashboard\Modules\User\Models\CustomerBindingEncryptedModel;
 
 /**
@@ -37,6 +38,7 @@ use Sanf\Dashboard\Modules\User\Models\CustomerBindingEncryptedModel;
  * @property-read SparePartDisbursementBatchModel $batch
  * @property-read SparePartDisbursementStatusModel $status
  * @property-read \Illuminate\Database\Eloquent\Collection|SparePartDisbursementInvoiceModel[] $invoices
+ * @property-read \Illuminate\Database\Eloquent\Collection|SparePartDisbursementInvoiceModel[] $validInvoices
  * @property-read ?CustomerBindingEncryptedModel $supplier
  */
 class SparePartDisbursementModel extends Model
@@ -91,6 +93,12 @@ class SparePartDisbursementModel extends Model
     public function invoices(): HasMany
     {
         return $this->hasMany(SparePartDisbursementInvoiceModel::class, 'disbursement_id');
+    }
+
+    public function validInvoices(): HasMany
+    {
+        return $this->hasMany(SparePartDisbursementInvoiceModel::class, 'disbursement_id')
+            ->where('status_id', '!=', SparePartDisbursementStatusEnum::REJECTED);
     }
 
     public function supplier()

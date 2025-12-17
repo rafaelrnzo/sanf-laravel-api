@@ -100,6 +100,7 @@ class PlafondController extends RestApiController
             'profileXid' => $xid,
         ]);
 
+        // TODO: also handle for spare part type
         if ($typeId === PlafondTypeEnum::FACTORING) {
             throw new BadRequestHttpException('Please update your apps');
         }

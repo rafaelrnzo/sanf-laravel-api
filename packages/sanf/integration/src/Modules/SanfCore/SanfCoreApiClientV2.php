@@ -4,7 +4,9 @@ namespace Sanf\Integration\Modules\SanfCore;
 
 use GuzzleHttp\Client;
 use NbsPhp\ApiWrapper\Api\Request;
-use Sanf\Integration\Entities\SanfCoreSparePartDisbursementEntity;
+use Sanf\Integration\Modules\SanfCore\Entities\SanfCoreSparePartDisbursementDetailEntity;
+use Sanf\Integration\Modules\SanfCore\Entities\SanfCoreSparePartDisbursementEntity;
+use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 use Sanf\Integration\Responses\SanfCoreV2ListResponse;
 
 class SanfCoreApiClientV2
@@ -32,18 +34,38 @@ class SanfCoreApiClientV2
     ) {
         $response = Request::route('spare-part-disbursement.list', $this->client)
             ->queryParams([
-                    'page' => $page,
-                    'per_page' => $per_page,
-                ])
+                'page' => $page,
+                'per_page' => $per_page,
+            ])
             ->send();
 
         $jsonResponse = $response->json();
 
         $jsonResponse['data'] = array_map(
-            fn ($item) => new SanfCoreSparePartDisbursementEntity($item),
+            fn($item) => new SanfCoreSparePartDisbursementEntity($item),
             $jsonResponse['data']
         );
 
         return new SanfCoreV2ListResponse($jsonResponse);
+    }
+
+    public function getSparePartDisbursementDetail(
+        $batchId,
+        $customerId
+    ): ?SanfCoreSparePartDisbursementDetailEntity {
+        try {
+            $response = Request::route('spare-part-disbursement.detail', $this->client)
+                ->pathParams([
+                        'batchId' => $batchId,
+                        'customerId' => $customerId,
+                    ])
+                ->send();
+
+            $jsonResponse = $response->json();
+
+            return new SanfCoreSparePartDisbursementDetailEntity($jsonResponse['data']);
+        } catch (SanfInternalApiDataNotFoundException $e) {
+            return null;
+        }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Sanf\Integration\Entities;
+namespace Sanf\Integration\Modules\SanfCore\Entities;
 
 use Spatie\DataTransferObject\FlexibleDataTransferObject;
 

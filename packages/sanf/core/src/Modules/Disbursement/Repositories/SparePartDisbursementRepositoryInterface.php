@@ -14,4 +14,6 @@ interface SparePartDisbursementRepositoryInterface
     public function list(object $params): Collection;
 
     public function listCount(object $params): int;
+
+    public function find(array $filters): ?SparePartDisbursementModel;
 }

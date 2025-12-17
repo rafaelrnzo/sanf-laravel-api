@@ -4,9 +4,10 @@ namespace Sanf\Api\Modules\Disbursement\Transformers;
 
 use League\Fractal\TransformerAbstract;
 use Sanf\Core\Modules\Disbursement\Enums\SparePartDisbursementStatusEnum;
+use Sanf\Core\Modules\Disbursement\Models\SparePartDisbursementInvoiceModel;
 use Sanf\Core\Modules\Disbursement\Models\SparePartDisbursementModel;
 
-final class SparePartDisbursementTransformer extends TransformerAbstract
+final class SparePartDisbursementDetailTransformer extends TransformerAbstract
 {
     public function transform(SparePartDisbursementModel $model)
     {
@@ -33,7 +34,15 @@ final class SparePartDisbursementTransformer extends TransformerAbstract
                 'email' => optional($supplier)->BowheerEmail,
                 'type' => optional($partnerProfile)->tipe_supplier,
             ],
-            'invoice_count' => $model->valid_invoice_count,
+            'invoices' => $model->validInvoices->map(fn(SparePartDisbursementInvoiceModel $item) => [
+                'invoice_xid' => $item->xid,
+                'invoice_no' => $item->invoice_number,
+                'invoice_date' => nullable_unix_timestamp($item->invoice_date),
+                'total_amount' => $item->invoice_amount,
+                'currency' => config('payment.currency'),
+                'status_id' => $item->status_id,
+                'status_desc' => SparePartDisbursementStatusEnum::from($item->status_id)->getLabel(),
+            ]),
             'created_at' => nullable_unix_timestamp($createdAt),
             'updated_at' => nullable_unix_timestamp($updatedAt),
         ];

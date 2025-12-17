@@ -2,16 +2,15 @@
 
 namespace Sanf\Core\Modules\Disbursement\UseCases;
 
-use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Constants\Pagination;
 use Sanf\Core\Modules\Disbursement\Enums\SparePartDisbursementStatusEnum;
 use Sanf\Core\Modules\Disbursement\Models\SparePartDisbursementModel;
 use Sanf\Core\Modules\Disbursement\Payloads\BrowseSparePartDisbursementPayload;
 use Sanf\Core\Modules\Disbursement\Repositories\SparePartDisbursementRepositoryInterface;
-use Sanf\Integration\Entities\SanfCoreSparePartDisbursementEntity;
+use Sanf\Integration\Modules\SanfCore\Entities\SanfCoreSparePartDisbursementEntity;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClientV2;
 
-final class BrowseSparePartDisbursementUseCase implements ApplicationServiceInterface
+final class BrowseSparePartDisbursementUseCase
 {
     protected SparePartDisbursementRepositoryInterface $repository;
     protected SanfCoreApiClientV2 $sanfCoreApiClient;
@@ -24,10 +23,7 @@ final class BrowseSparePartDisbursementUseCase implements ApplicationServiceInte
         $this->sanfCoreApiClient = $sanfCoreApiClient;
     }
 
-    /**
-     * @param BrowseSparePartDisbursementPayload $payload
-     */
-    public function execute($payload = null)
+    public function execute(BrowseSparePartDisbursementPayload $payload)
     {
         if ($payload->listType == 'HISTORICAL') {
             $payload->statusIds = [

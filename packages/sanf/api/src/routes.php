@@ -305,4 +305,5 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth']], function () {
 Route::group(['prefix' => 'v2', 'middleware' => ['auth', InjectUserIdFromPathMiddleware::class]], function () {
     Route::get('users/profiles/{xid}/spare_part_disbursements', ['as' => 'v2.users.spare_part_disbursements.list', 'uses' => 'Disbursement\Controllers\SparePartDisbursementController@list']);
     Route::get('users/profiles/{xid}/spare_part_disbursements/pending', ['as' => 'v2.users.spare_part_disbursements.pending-list', 'uses' => 'Disbursement\Controllers\SparePartDisbursementController@pendingList']);
+    Route::get('users/profiles/{xid}/spare_part_disbursements/{disbursementXid}', ['as' => 'v2.users.spare_part_disbursements.detail', 'uses' => 'Disbursement\Controllers\SparePartDisbursementController@detail']);
 });

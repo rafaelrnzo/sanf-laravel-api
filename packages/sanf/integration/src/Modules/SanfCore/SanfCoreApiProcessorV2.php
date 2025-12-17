@@ -2,6 +2,7 @@
 
 namespace Sanf\Integration\Modules\SanfCore;
 
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
 use Illuminate\Support\Facades\Log;
 use NbsPhp\ApiWrapper\Api\Processor;
@@ -25,19 +26,24 @@ class SanfCoreApiProcessorV2 extends Processor
             'X-Request-ID' => app('request')->header('X-Request-ID'),
             'Authorization' => 'Basic ' . $encodedAuth,
         ]);
+
         try {
             $response = $next($request);
             $result = $response->json();
+
             if (is_null($result)) {
                 Log::error($response->getContents());
                 throw new \Exception('API CORE ERROR');
             }
-            if ($result['status'] === false) {
-                if ($result['code'] === 'E_EmptyData') {
-                    throw new SanfInternalApiDataNotFoundException($result['message']);
-                }
-                throw new SanfInternalApiException($result['message']);
+        } catch (ClientException $exception) {
+            $response = $exception->getResponse();
+            $bodyResponse = json_decode((string) $response->getBody(), true);
+
+            if ($response->getStatusCode() === \Symfony\Component\HttpFoundation\Response::HTTP_NOT_FOUND) {
+                throw new SanfInternalApiDataNotFoundException($bodyResponse['message']);
             }
+
+            throw new SanfInternalApiException($bodyResponse['message']);
         } catch (ServerException $exception) {
             //TODO HANDLE EXCEPTION
             report($exception);

@@ -148,6 +148,21 @@ if (!function_exists('unix_timestamp')) {
     }
 }
 
+if (!function_exists('nullable_unix_timestamp')) {
+    /**
+     * @param string|null $date
+     * @return string|null
+     */
+    function nullable_unix_timestamp($date)
+    {
+        if (empty($date)) {
+            return null;
+        }
+
+        return optional(Carbon::make($date))->timestamp;
+    }
+}
+
 if (!function_exists('redirect_with_session')) {
     /**
      * Get an instance of the redirector.
