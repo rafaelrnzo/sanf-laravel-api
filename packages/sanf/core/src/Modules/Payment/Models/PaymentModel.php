@@ -23,6 +23,7 @@ use Sanf\Core\Modules\Installment\Models\InstallmentModel;
  * @property \Carbon\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|InstallmentModel[] $installments
  * @property-read \Illuminate\Database\Eloquent\Collection|MidtransTransactionModel[] $midtransTransactions
+ * @property array $status_log
  */
 class PaymentModel extends AbstractModel
 {
@@ -49,6 +50,7 @@ class PaymentModel extends AbstractModel
         'payment_detail' => 'array',
         'due_date' => 'datetime',
         'paid_at' => 'datetime',
+        'status_log' => 'array',
     ];
 
     public function installments()
