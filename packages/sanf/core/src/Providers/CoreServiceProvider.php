@@ -70,6 +70,8 @@ use Sanf\Core\Modules\Location\EloquentLocationEncryptedRepository;
 use Sanf\Core\Modules\Location\LocationRepositoryInterface;
 use Sanf\Core\Modules\News\EloquentNewsRepository;
 use Sanf\Core\Modules\News\NewsRepositoryInterface;
+use Sanf\Core\Modules\Payment\Repositories\PaymentPreviewEloquentRepository;
+use Sanf\Core\Modules\Payment\Repositories\PaymentPreviewRepositoryInterface;
 use Sanf\Core\Modules\PdcHold\Repositories\PdcHoldEloquentRepository;
 use Sanf\Core\Modules\PdcHold\Repositories\PdcHoldGiroEloquentRepository;
 use Sanf\Core\Modules\PdcHold\Repositories\PdcHoldGiroRepositoryInterface;
@@ -252,6 +254,7 @@ class CoreServiceProvider extends ServiceProvider
 
         // CR 2 2025
         $this->app->bind(SparePartDisbursementRepositoryInterface::class, SparePartDisbursementEloquentRepository::class);
+        $this->app->bind(PaymentPreviewRepositoryInterface::class, PaymentPreviewEloquentRepository::class);
 
         //SPECIFICATION FACTORY
         $this->app->bind(ProjectSpecificationFactoryInterface::class, EloquentProjectSpecificationFactory::class);

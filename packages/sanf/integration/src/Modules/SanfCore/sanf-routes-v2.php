@@ -17,4 +17,5 @@ Route::group(config('sanf-api-v2.url'), [SanfCoreApiProcessorV2::class], functio
 
     // Installment
     Route::get('sanf-internal-v2.installment.summary', '/api/tagihan/summary');
+    Route::get('sanf-internal-v2.installment.list', '/api/tagihan/list');
 });
