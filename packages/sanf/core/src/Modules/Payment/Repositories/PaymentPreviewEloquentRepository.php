@@ -16,4 +16,9 @@ final class PaymentPreviewEloquentRepository implements PaymentPreviewRepository
     {
         return $this->model->newQuery()->updateOrCreate($attributes, $data);
     }
+
+    public function find(array $filters): ?PaymentPreviewModel
+    {
+        return $this->model->newQuery()->where($filters)->first();
+    }
 }

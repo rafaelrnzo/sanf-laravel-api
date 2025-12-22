@@ -104,7 +104,7 @@ final class ValidatePaymentInstallmentUseCase
             $contractNumber = $installment->no_kontrak;
             $dueDate = $installment->jatuh_tempo;
 
-            if (!$contractNumber || !$dueDate || $installment->status_pembayaran_id === InstallmentPaymentStatusEnum::PAID) {
+            if (!$contractNumber || !$dueDate || $installment->status_pembayaran_id === InstallmentPaymentStatusEnum::LUNAS) {
                 continue;
             }
 

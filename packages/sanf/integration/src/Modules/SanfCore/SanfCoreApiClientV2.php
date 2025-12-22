@@ -6,6 +6,8 @@ use GuzzleHttp\Client;
 use NbsPhp\ApiWrapper\Api\Request;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 use Sanf\Integration\Modules\SanfCore\Entities\SanfCoreContractDetailEntity;
+use Sanf\Integration\Modules\SanfCore\Entities\SanfCoreInstallmentDetailEntity;
+use Sanf\Integration\Modules\SanfCore\Entities\SanfCoreInstallmentDetailOverdueEntity;
 use Sanf\Integration\Modules\SanfCore\Entities\SanfCoreInstallmentEntity;
 use Sanf\Integration\Modules\SanfCore\Entities\SanfCoreInstallmentSummaryEntity;
 use Sanf\Integration\Modules\SanfCore\Entities\SanfCorePlafondSparePartEntity;
@@ -62,9 +64,9 @@ class SanfCoreApiClientV2
         try {
             $response = Request::route('sanf-internal-v2.spare-part-disbursement.detail', $this->client)
                 ->pathParams([
-                        'batchId' => $batchId,
-                        'customerId' => $customerId,
-                    ])
+                    'batchId' => $batchId,
+                    'customerId' => $customerId,
+                ])
                 ->send();
 
             $jsonResponse = $response->json();
@@ -160,5 +162,32 @@ class SanfCoreApiClientV2
         );
 
         return new SanfCoreV2ListResponse($jsonResponse);
+    }
+
+    /**
+     * @param string $no_kontrak
+     * @param string $jatuh_tempo 'Y-m-d' format
+     * @return SanfCoreInstallmentDetailEntity|null
+     */
+    public function getInstallmentDetail(string $no_kontrak, string $jatuh_tempo): ?SanfCoreInstallmentDetailEntity
+    {
+        try {
+            $response = Request::route('sanf-internal-v2.installment.detail', $this->client)
+                ->pathParams(compact('no_kontrak', 'jatuh_tempo'))
+                ->send();
+
+            $jsonResponse = $response->json();
+
+            if (!empty($jsonResponse['data']['overdue'])) {
+                $jsonResponse['data']['overdue'] = array_map(
+                    fn ($item) => new SanfCoreInstallmentDetailOverdueEntity($item),
+                    $jsonResponse['data']['overdue']
+                );
+            }
+
+            return new SanfCoreInstallmentDetailEntity($jsonResponse['data']);
+        } catch (SanfInternalApiDataNotFoundException $e) {
+            return null;
+        }
     }
 }

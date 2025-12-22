@@ -317,5 +317,6 @@ Route::group(['prefix' => 'v2', 'middleware' => ['auth', InjectUserIdFromPathMid
     Route::get('users/profiles/{xid}/installments/summary', ['as' => 'v2.users.installments.summary', 'uses' => 'Installment\Controllers\InstallmentController@summary']);
 
     // Payment
-    Route::post('users/profiles/{xid}/payments/installments/preview', ['as' => 'v2.users.payments.installments.preview', 'uses' => 'Payment\Controllers\PaymentPreviewController@create']);
+    Route::post('users/profiles/{xid}/payments/installments/preview', ['as' => 'v2.users.payments.installments.preview.create', 'uses' => 'Payment\Controllers\PaymentPreviewController@create']);
+    Route::get('users/profiles/{xid}/payments/installments/preview', ['as' => 'v2.users.payments.installments.preview.show', 'uses' => 'Payment\Controllers\PaymentPreviewController@show']);
 });
