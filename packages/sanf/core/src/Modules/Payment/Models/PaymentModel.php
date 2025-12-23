@@ -5,6 +5,10 @@ namespace Sanf\Core\Modules\Payment\Models;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use NbsPhp\Core\Models\AbstractModel;
 use Sanf\Core\Modules\Installment\Models\InstallmentModel;
+use Sanf\Core\Modules\Payment\Entities\PaymentDetailEntity;
+use Sanf\Core\Modules\Payment\Entities\PaymentStatusLogItemEntity;
+use Sanf\Core\Modules\Payment\Entities\PaymentUserSnapshotEntity;
+use Sanf\Core\Traits\SodiumEncryptionTrait;
 
 /**
  * @property int $id
@@ -16,18 +20,19 @@ use Sanf\Core\Modules\Installment\Models\InstallmentModel;
  * @property string $currency
  * @property string|\Sanf\Core\Modules\Payment\Enums\PaymentStatusEnum $status
  * @property string|\Sanf\Core\Modules\Payment\Enums\PaymentCategoryEnum $category
- * @property array $payment_detail
+ * @property PaymentDetailEntity $payment_detail
  * @property \Carbon\Carbon $due_date
  * @property \Carbon\Carbon|null $paid_at
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|InstallmentModel[] $installments
  * @property-read \Illuminate\Database\Eloquent\Collection|MidtransTransactionModel[] $midtransTransactions
- * @property array $status_log
+ * @property PaymentStatusLogItemEntity[] $status_log
+ * @property PaymentUserSnapshotEntity $user_snapshot
  */
 class PaymentModel extends AbstractModel
 {
-    use SoftDeletes;
+    use SoftDeletes, SodiumEncryptionTrait;
 
     protected $table = 'payment';
 
@@ -43,6 +48,9 @@ class PaymentModel extends AbstractModel
         'payment_detail',
         'due_date',
         'paid_at',
+        'status_log',
+        'user_snapshot',
+        'nonce',
     ];
 
     protected $casts = [
@@ -53,6 +61,30 @@ class PaymentModel extends AbstractModel
         'status_log' => 'array',
     ];
 
+    protected $hidden = [
+        'nonce',
+    ];
+
+    public function getPaymentDetailAttribute($value)
+    {
+        return new PaymentDetailEntity($value);
+    }
+
+    public function getStatusLogAttribute($value)
+    {
+        return array_map(
+            fn ($item) => new PaymentStatusLogItemEntity($item),
+            $value ?? []
+        );
+    }
+
+    public function getUserSnapshotAttribute()
+    {
+        $snapshot = $this->decryptor()->decrypt($this->attributes['user_snapshot']);
+
+        return new PaymentUserSnapshotEntity(json_decode($snapshot, true));
+    }
+
     public function installments()
     {
         return $this->belongsToMany(
@@ -60,7 +92,10 @@ class PaymentModel extends AbstractModel
             'payment_installment',
             'payment_id',
             'installment_id'
-        );
+        )
+        ->using(PaymentInstallmentPivot::class)
+        ->withPivot(['installment_snapshot'])
+        ->withTimestamps();
     }
 
     public function midtransTransactions()

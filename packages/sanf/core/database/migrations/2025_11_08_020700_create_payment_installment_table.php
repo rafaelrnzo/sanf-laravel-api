@@ -16,6 +16,8 @@ class CreatePaymentInstallmentTable extends Migration
         Schema::create('payment_installment', function (Blueprint $table) {
             $table->unsignedBigInteger('payment_id');
             $table->unsignedBigInteger('installment_id');
+            $table->jsonb('installment_snapshot');
+            $table->timestamps();
 
             $table->primary(['payment_id', 'installment_id']);
 

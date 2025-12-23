@@ -14,4 +14,12 @@ use Sanf\Core\Modules\Installment\Models\InstallmentModel;
 class PaymentInstallmentPivot extends Pivot
 {
     protected $table = 'payment_installment';
+
+    protected $fillable = [
+        'installment_snapshot',
+    ];
+
+    protected $casts = [
+        'installment_snapshot' => 'array',
+    ];
 }

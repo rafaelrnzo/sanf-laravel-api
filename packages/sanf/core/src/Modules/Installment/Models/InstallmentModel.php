@@ -8,12 +8,11 @@ use Sanf\Core\Modules\Payment\Models\PaymentModel;
 /**
  * @property int $id
  * @property string $xid
- * @property int $disbursement_id
- * @property string $disbursement_xid
+ * @property string $contract_no
  * @property \Carbon\Carbon $due_date
  * @property float $amount
+ * @property int $version
  * @property string|\Sanf\Core\Modules\Installment\Enums\InstallmentStatusEnum $status
- * @property int|null $sequence_number
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|PaymentModel[] $payments
@@ -24,18 +23,17 @@ class InstallmentModel extends AbstractModel
 
     protected $fillable = [
         'xid',
-        'disbursement_id',
-        'disbursement_xid',
+        'contract_no',
         'due_date',
         'amount',
         'status',
-        'sequence_number',
+        'version',
     ];
 
     protected $casts = [
         'due_date' => 'datetime',
         'amount' => 'float',
-        'sequence_number' => 'integer',
+        'version' => 'integer',
     ];
 
     public function payments()

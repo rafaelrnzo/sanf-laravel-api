@@ -16,18 +16,20 @@ class CreatePaymentTable extends Migration
         Schema::create('payment', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('xid', 32)->unique();
-            $table->unsignedBigInteger('user_auth_id');
-            $table->unsignedBigInteger('disbursement_id')->index()->comment('spare_part_disbursement.id');
-            $table->string('disbursement_xid', 32)->index()->comment('spare_part_disbursement.xid');
+            $table->unsignedBigInteger('user_auth_id')->index();
+            $table->string('user_profile_xid', 100)->index();
             $table->decimal('amount', 20, 2);
             $table->string('currency', 10)->default('IDR');
             $table->enum('status', ['PENDING', 'SUCCESS', 'FAILED', 'EXPIRED', 'CANCELLED'])->default('PENDING');
-            $table->enum('category', ['INSTALLMENT_BILL', 'DOWN_PAYMENT_BILL']);
+            $table->string('category', 100)->index();
             $table->jsonb('payment_detail');
             $table->dateTime('expired_at');
             $table->timestamp('paid_at')->nullable();
+            $table->jsonb('status_log')->nullable();
+            $table->binary('user_snapshot')->comment('JSON snapshot');
             $table->timestamps();
             $table->softDeletes();
+            $table->binary('nonce');
         });
     }
 

@@ -16,16 +16,15 @@ class CreateInstallmentTable extends Migration
         Schema::create('installment', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('xid', 32)->unique();
-            $table->unsignedBigInteger('disbursement_id')->index()->comment('spare_part_disbursement.id');
-            $table->string('disbursement_xid', 32)->index()->comment('spare_part_disbursement.xid');
-            $table->dateTime('due_date');
+            $table->string('contract_no', 100)->index();
+            $table->timestampTz('due_date')->index();
             $table->decimal('amount', 20, 2);
-            $table->enum('status', ['ACTIVE', 'WAITING_PAYMENT', 'PAID'])->default('ACTIVE');
-            $table->unsignedInteger('sequence_number')->nullable();
+            $table->enum('status', ['ACTIVE', 'WAITING_PAYMENT', 'PAID'])->default('ACTIVE')->index();
+            $table->unsignedBigInteger('version')->default(1);
             $table->timestamps();
             $table->softDeletes();
 
-            $table->unique(['disbursement_id', 'sequence_number']);
+            $table->unique(['contract_no', 'due_date']);
         });
     }
 
