@@ -9,4 +9,5 @@ class ValidatePaymentInstallmentResponse extends DataTransferObject
     public array $validInstallments;
 
     public array $invalidInstallments;
+    public array $unexistsInstallments;
 }

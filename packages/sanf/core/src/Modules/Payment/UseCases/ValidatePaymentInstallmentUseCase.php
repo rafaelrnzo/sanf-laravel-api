@@ -38,6 +38,7 @@ final class ValidatePaymentInstallmentUseCase
         $pendingNextInstallments = [];
         $validInstallmentIdxs = [];
         $invalidInstallmentIdxs = [];
+        $unexistsInstallments = [];
 
         foreach ($installments as $installmentIdx => $installment) {
             $contractNumber = $installment->contract_no;
@@ -59,6 +60,10 @@ final class ValidatePaymentInstallmentUseCase
 
             if ($existsInNext || $existsInCurrent) {
                 $validInstallmentIdxs[] = $installmentIdx;
+            }
+
+            if (!$existsInNext && !$existsInCurrent) {
+                $unexistsInstallments[] = $installment;
             }
         }
 
@@ -89,6 +94,7 @@ final class ValidatePaymentInstallmentUseCase
         return new ValidatePaymentInstallmentResponse([
             'validInstallments' => $validInstallments,
             'invalidInstallments' => $invalidInstallments,
+            'unexistsInstallments' => $unexistsInstallments,
         ]);
     }
 

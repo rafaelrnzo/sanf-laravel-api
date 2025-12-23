@@ -4,7 +4,7 @@ namespace Sanf\Core\Modules\Payment\Responses;
 
 use Spatie\DataTransferObject\DataTransferObject;
 
-class PaymentPreviewOutstandingInstallmentResponse extends DataTransferObject
+class PaymentCalculationOutstandingInstallmentResponse extends DataTransferObject
 {
     public int $due_date;
     public float $total;

@@ -4,7 +4,7 @@ namespace Sanf\Core\Modules\Payment\Responses;
 
 use Spatie\DataTransferObject\DataTransferObject;
 
-class PaymentPreviewInstallmentResponse extends DataTransferObject
+class PaymentCalculationInstallmentResponse extends DataTransferObject
 {
     public string $contract_no; //": "21KON98123",
     public int $due_date; //": 1765238400,
@@ -17,7 +17,7 @@ class PaymentPreviewInstallmentResponse extends DataTransferObject
     public string $financing_type_desc; //": "Harian",
 
     /**
-     * @var array|PaymentPreviewOutstandingInstallmentResponse[]
+     * @var array|PaymentCalculationOutstandingInstallmentResponse[]
      */
     public $outstanding_installments;
 }

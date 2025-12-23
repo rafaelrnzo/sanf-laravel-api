@@ -58,6 +58,8 @@ use Sanf\Core\Modules\HttpLog\Repositories\ApiRequestRepositoryInterface;
 use Sanf\Core\Modules\HttpLog\Repositories\AuditHttpLogRepositoryInterface;
 use Sanf\Core\Modules\HttpLog\Repositories\EloquentApiRequestLogEncryptedRepository;
 use Sanf\Core\Modules\HttpLog\Repositories\EloquentAuditHttpLogEncryptedRepository;
+use Sanf\Core\Modules\Installment\Repositories\InstallmentEloquentRepository;
+use Sanf\Core\Modules\Installment\Repositories\InstallmentRepositoryInterface;
 use Sanf\Core\Modules\Insurance\Repositories\EloquentInsuranceClaimSubmissionEncryptedRepository;
 use Sanf\Core\Modules\Insurance\Repositories\InsuranceClaimSubmissionRepositoryInterface;
 use Sanf\Core\Modules\Insurance\Specifications\EloquentInsuranceClaimSubmissionSpecificationFactory;
@@ -70,8 +72,10 @@ use Sanf\Core\Modules\Location\EloquentLocationEncryptedRepository;
 use Sanf\Core\Modules\Location\LocationRepositoryInterface;
 use Sanf\Core\Modules\News\EloquentNewsRepository;
 use Sanf\Core\Modules\News\NewsRepositoryInterface;
+use Sanf\Core\Modules\Payment\Repositories\PaymentEloquentRepository;
 use Sanf\Core\Modules\Payment\Repositories\PaymentPreviewEloquentRepository;
 use Sanf\Core\Modules\Payment\Repositories\PaymentPreviewRepositoryInterface;
+use Sanf\Core\Modules\Payment\Repositories\PaymentRepositoryInterface;
 use Sanf\Core\Modules\PdcHold\Repositories\PdcHoldEloquentRepository;
 use Sanf\Core\Modules\PdcHold\Repositories\PdcHoldGiroEloquentRepository;
 use Sanf\Core\Modules\PdcHold\Repositories\PdcHoldGiroRepositoryInterface;
@@ -255,6 +259,8 @@ class CoreServiceProvider extends ServiceProvider
         // CR 2 2025
         $this->app->bind(SparePartDisbursementRepositoryInterface::class, SparePartDisbursementEloquentRepository::class);
         $this->app->bind(PaymentPreviewRepositoryInterface::class, PaymentPreviewEloquentRepository::class);
+        $this->app->bind(PaymentRepositoryInterface::class, PaymentEloquentRepository::class);
+        $this->app->bind(InstallmentRepositoryInterface::class, InstallmentEloquentRepository::class);
 
         //SPECIFICATION FACTORY
         $this->app->bind(ProjectSpecificationFactoryInterface::class, EloquentProjectSpecificationFactory::class);

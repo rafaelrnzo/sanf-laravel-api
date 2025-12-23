@@ -4,37 +4,26 @@ namespace Sanf\Core\Modules\Payment\UseCases;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
-use Sanf\Core\Modules\Payment\Enums\PaymentPreviewPlatformEnum;
-use Sanf\Core\Modules\Payment\Repositories\PaymentPreviewRepositoryInterface;
-use Sanf\Core\Modules\Payment\Responses\PaymentPreviewInstallmentResponse;
-use Sanf\Core\Modules\Payment\Responses\PaymentPreviewOutstandingInstallmentResponse;
-use Sanf\Core\Modules\Payment\Responses\PaymentPreviewResponse;
+use Sanf\Core\Modules\Payment\Payloads\PaymentInstallmentCalculationPayload;
+use Sanf\Core\Modules\Payment\Responses\PaymentCalculationInstallmentResponse;
+use Sanf\Core\Modules\Payment\Responses\PaymentCalculationOutstandingInstallmentResponse;
+use Sanf\Core\Modules\Payment\Responses\PaymentInstallmentCalculationResponse;
 use Sanf\Integration\Modules\SanfCore\Entities\SanfCoreInstallmentDetailOverdueEntity;
 use Sanf\Integration\Modules\SanfCore\Enums\InstallmentPaymentStatusEnum;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClientV2;
 
-final class GetPaymentPreviewUseCase
+final class BuildPaymentInstallmentCalculationUseCase
 {
-    protected PaymentPreviewRepositoryInterface $repository;
     protected SanfCoreApiClientV2 $sanfCoreApiClient;
 
     public function __construct(
-        PaymentPreviewRepositoryInterface $repository,
         SanfCoreApiClientV2 $sanfCoreApiClient
     ) {
-        $this->repository = $repository;
         $this->sanfCoreApiClient = $sanfCoreApiClient;
     }
 
-    public function execute(string $profileXid, ?float $customAmount, ?float $customPenaltyAmount): PaymentPreviewResponse
+    public function execute(PaymentInstallmentCalculationPayload $payload): PaymentInstallmentCalculationResponse
     {
-        $filters = [
-            'user_profile_xid' => $profileXid,
-            'platform' => PaymentPreviewPlatformEnum::MOBILE,
-        ];
-
-        $data = $this->repository->find($filters);
-
         $installmentsResult = [];
         $coreTimeZone = SanfCoreApiClientV2::DEFAULT_TIMEZONE;
         $totalDiscount = 0;
@@ -42,14 +31,18 @@ final class GetPaymentPreviewUseCase
         $subtotalAllInstallments = 0;
         $totalPenaltyFee = 0;
 
-        foreach ($data->installments as $instalment) {
-            $dueDate = Carbon::make($instalment->due_date)->format('Y-m-d');
+        foreach ($payload->installments as $instalment) {
+            $dueDate = Carbon::createFromTimestamp($instalment->due_date)->format('Y-m-d');
 
-            $installmentDetail = Cache::remember(
-                "CORE::TAGIHAN_DETAIL:{$profileXid},{$instalment->contract_no},{$dueDate}",
-                Carbon::now()->addMinute(),
-                fn () => $this->sanfCoreApiClient->getInstallmentDetail($instalment->contract_no, $dueDate)
-            );
+            if ($payload->preferCache) {
+                $installmentDetail = Cache::remember(
+                    "CORE::TAGIHAN_DETAIL:{$payload->profileXid},{$instalment->contract_no},{$dueDate}",
+                    Carbon::now()->addMinute(),
+                    fn () => $this->sanfCoreApiClient->getInstallmentDetail($instalment->contract_no, $dueDate)
+                );
+            } else {
+                $installmentDetail = $this->sanfCoreApiClient->getInstallmentDetail($instalment->contract_no, $dueDate);
+            }
 
             if ($installmentDetail === null || $installmentDetail->tagihan->status_pembayaran_id == InstallmentPaymentStatusEnum::LUNAS) {
                 continue;
@@ -73,7 +66,7 @@ final class GetPaymentPreviewUseCase
                 $installmentDetail->tagihan->denda
             );
 
-            $installmentsResult[] = new PaymentPreviewInstallmentResponse([
+            $installmentsResult[] = new PaymentCalculationInstallmentResponse([
                 'contract_no' => $installmentDetail->kontrak->no_kontrak,
                 'due_date' => Carbon::parse($installmentDetail->tagihan->jatuh_tempo, $coreTimeZone)->endOfDay()->timestamp,
                 'total_amount' => $totalAmount,
@@ -84,19 +77,21 @@ final class GetPaymentPreviewUseCase
                 'financing_type_id' => $installmentDetail->kontrak->tipe_pembayaran_id,
                 'financing_type_desc' => $installmentDetail->kontrak->tipe_pembayaran_desc,
                 'outstanding_installments' => array_map(
-                    fn (SanfCoreInstallmentDetailOverdueEntity $item) => new PaymentPreviewOutstandingInstallmentResponse([
-                                'due_date' => Carbon::parse($item->due_date, $coreTimeZone)->endOfDay()->timestamp,
-                                'total' => $item->total_overdue,
-                                'principal_loan' => $item->pokok_hutang,
-                                'interest_amount' => $item->bunga,
-                                'penalty_fee' => $item->denda,
-                            ]),
+                    fn (SanfCoreInstallmentDetailOverdueEntity $item) => new PaymentCalculationOutstandingInstallmentResponse([
+                        'due_date' => Carbon::parse($item->due_date, $coreTimeZone)->endOfDay()->timestamp,
+                        'total' => $item->total_overdue,
+                        'principal_loan' => $item->pokok_hutang,
+                        'interest_amount' => $item->bunga,
+                        'penalty_fee' => $item->denda,
+                    ]),
                     $installmentDetail->overdue ?? []
                 ),
             ]);
         }
 
         $customSubtotalInstallment = 0;
+        $customAmount = $payload->customAmount;
+        $customPenaltyAmount = $payload->customPenaltyAmount;
 
         if (count($installmentsResult) === 1) {
             if (!empty($customPenaltyAmount)) {
@@ -112,7 +107,7 @@ final class GetPaymentPreviewUseCase
 
         $totalPayment = ($customSubtotalInstallment ?: $subtotalAllInstallments) - $totalDiscount + $adminFee;
 
-        return new PaymentPreviewResponse([
+        return new PaymentInstallmentCalculationResponse([
             'total_payment' => $totalPayment,
             'subtotal_all_installment' => $subtotalAllInstallments,
             'discount' => $totalDiscount,

@@ -5,10 +5,12 @@ namespace Sanf\Core\Modules\Payment\Responses;
 use Sanf\Core\Traits\CastsNumericDtoProperties;
 use Spatie\DataTransferObject\DataTransferObject;
 
-class PaymentPreviewResponse extends DataTransferObject
+class CreateInstallmentPaymentPayload extends DataTransferObject
 {
     use CastsNumericDtoProperties;
 
+    public int $userAuthId;
+    public string $userProfileXid;
     public float $total_payment;
     public float $subtotal_all_installment;
     public float $discount;
@@ -18,7 +20,7 @@ class PaymentPreviewResponse extends DataTransferObject
     public string $currency;
 
     /**
-     * @var array|PaymentPreviewInstallmentResponse[]
+     * @var array|PaymentCalculationInstallmentResponse[]
      */
-    public $installments;
+    public array $installments;
 }
