@@ -1,6 +1,6 @@
 <?php
 
-namespace Sanf\Api\Modules\Disbursement\Contstants;
+namespace Sanf\Api\Modules\Disbursement\Constants;
 
 class SparePartDisbursementApprovalAction
 {

@@ -9,7 +9,7 @@ use Illuminate\Validation\Rule;
 use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Exceptions\ResourceNotFoundException;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
-use Sanf\Api\Modules\Disbursement\Contstants\SparePartDisbursementApprovalAction;
+use Sanf\Api\Modules\Disbursement\Constants\SparePartDisbursementApprovalAction;
 use Sanf\Api\Modules\Disbursement\Transformers\SparePartDisbursementDetailTransformer;
 use Sanf\Api\Modules\Disbursement\Transformers\SparePartDisbursementInvoiceDetailTransformer;
 use Sanf\Api\Modules\Disbursement\Transformers\SparePartDisbursementTransformer;

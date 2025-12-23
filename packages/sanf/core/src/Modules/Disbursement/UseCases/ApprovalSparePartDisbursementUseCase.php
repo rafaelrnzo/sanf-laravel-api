@@ -4,7 +4,7 @@ namespace Sanf\Core\Modules\Disbursement\UseCases;
 
 use Illuminate\Support\Carbon;
 use NbsPhp\Core\Exceptions\ResourceNotFoundException;
-use Sanf\Api\Modules\Disbursement\Contstants\SparePartDisbursementApprovalAction;
+use Sanf\Api\Modules\Disbursement\Constants\SparePartDisbursementApprovalAction;
 use Sanf\Core\Modules\Asset\NbsFile;
 use Sanf\Core\Modules\Disbursement\Enums\SparePartDisbursementStatusEnum;
 use Sanf\Core\Modules\Disbursement\Models\SparePartDisbursementDocumentModel;
@@ -34,7 +34,7 @@ final class ApprovalSparePartDisbursementUseCase
     {
         $disbursement = $this->repository->find([
             'xid' => $payload->disbursementXid,
-            'customer_id' => $payload->profileXid,
+            'customer_id_sanfind' => $payload->profileXid,
         ]);
 
         if ($disbursement === null) {
@@ -45,7 +45,7 @@ final class ApprovalSparePartDisbursementUseCase
             $this->repository->rejectInvoices(
                 [
                     'disbursement_xid' => $payload->disbursementXid,
-                    'customer_id' => $payload->profileXid,
+                    'customer_id_sanfind' => $payload->profileXid,
                 ],
                 $payload->invoiceXids,
             );
@@ -53,7 +53,7 @@ final class ApprovalSparePartDisbursementUseCase
             $this->repository->approveInvoicesWithExclusion(
                 [
                     'disbursement_xid' => $payload->disbursementXid,
-                    'customer_id' => $payload->profileXid,
+                    'customer_id_sanfind' => $payload->profileXid,
                 ],
                 $payload->invoiceXids,
             );
@@ -73,7 +73,7 @@ final class ApprovalSparePartDisbursementUseCase
         $this->repository->approveInvoicesWithExclusion(
             [
                 'disbursement_xid' => $payload->disbursementXid,
-                'customer_id' => $payload->profileXid,
+                'customer_id_sanfind' => $payload->profileXid,
             ],
             [],
         );
@@ -88,7 +88,7 @@ final class ApprovalSparePartDisbursementUseCase
 
         $invoices = $this->repository->listInvoice([
             'disbursement_xid' => $payload->disbursementXid,
-            'customer_id' => $payload->profileXid,
+            'customer_id_sanfind' => $payload->profileXid,
         ]);
 
         $disbursementBatch = $this->repository->findBatch([
@@ -103,14 +103,14 @@ final class ApprovalSparePartDisbursementUseCase
             new SanfCoreSubmitSparePartFinancingPayload([
                 'BATCH_ID' => $disbursement->batch_number,
                 'SUPPLIER_ID' => $disbursement->supplier_id,
-                'INVOICE' => $invoices->map(fn ($item) => $this->mappingInvoice($item)),
+                'INVOICE' => $invoices->map(fn ($item) => $this->mappingInvoice($item))->toArray(),
                 'BANK_ACCOUNT' => new SanfCoreSubmitSparePartFinancingBankAccountPayload([
                     'BANK_ID' => $disbursementBatch->bank_id,
                     'OWNER' => $disbursementBatch->bank_owner,
                     'PROVIDER' => $disbursementBatch->bank_provider,
                     'ACCOUNT_NUMBER' => $disbursementBatch->bank_account_number,
                 ]),
-                'DOCUMENTS' => $documents->map(fn ($item) => $this->mappingDocument($item)),
+                'DOCUMENTS' => $documents->map(fn ($item) => $this->mappingDocument($item))->toArray(),
             ])
         );
     }
@@ -126,7 +126,7 @@ final class ApprovalSparePartDisbursementUseCase
         }
 
         return new SanfCoreSubmitSparePartFinancingInvoicePayload([
-            'CUST_ID' => $invoice->customer_id,
+            'CUST_ID' => $invoice->customer_id_sanfind,
             'NO_INVOICE' => $invoice->invoice_number,
             'TANGGAL_INVOICE' => $invoice->invoice_date,
             'CURRENCY' => config('payment.currency'),

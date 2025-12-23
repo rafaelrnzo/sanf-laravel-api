@@ -17,6 +17,7 @@ use Sanf\Core\Constants\ConnectionDB;
  * @property int $disbursement_batch_id
  * @property string $disbursement_batch_xid
  * @property string $customer_id
+ * @property string $customer_id_sanfind
  * @property ?string $customer_name
  * @property string $invoice_number
  * @property \Carbon\Carbon $invoice_date
@@ -46,6 +47,7 @@ class SparePartDisbursementInvoiceModel extends Model
         'disbursement_batch_id',
         'disbursement_batch_xid',
         'customer_id',
+        'customer_id_sanfind',
         'customer_name',
         'invoice_number',
         'invoice_date',

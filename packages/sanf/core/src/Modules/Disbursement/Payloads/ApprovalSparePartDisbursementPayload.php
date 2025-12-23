@@ -8,7 +8,10 @@ class ApprovalSparePartDisbursementPayload extends DataTransferObject
 {
     public string $profileXid;
     public string $disbursementXid;
-    /** @var string APPROVE_ALL | REJECT_SELECTED */
+    /**
+     * APPROVE_ALL | REJECT_SELECTED.
+     * @var string
+     */
     public string $action;
     /** @var array|string|null */
     public $invoiceXids;

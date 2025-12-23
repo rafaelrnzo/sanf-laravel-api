@@ -34,6 +34,7 @@ final class SparePartDisbursementTransformer extends TransformerAbstract
                 'type' => optional($partnerProfile)->tipe_supplier,
             ],
             'invoice_count' => $model->valid_invoice_count,
+            'plafond_xid' => $model->plafond_no,
             'created_at' => nullable_unix_timestamp($createdAt),
             'updated_at' => nullable_unix_timestamp($updatedAt),
         ];

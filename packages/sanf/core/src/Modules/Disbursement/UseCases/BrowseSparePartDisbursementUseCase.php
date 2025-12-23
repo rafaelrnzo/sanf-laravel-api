@@ -31,11 +31,11 @@ final class BrowseSparePartDisbursementUseCase
                 SparePartDisbursementStatusEnum::PAYMENT_COMPLETED,
                 SparePartDisbursementStatusEnum::REJECTED,
                 SparePartDisbursementStatusEnum::CANCELED,
+                SparePartDisbursementStatusEnum::NEED_REVIEW,
             ];
         } elseif ($payload->listType == 'NEED_APPROVAL') {
             $payload->statusIds = [
                 SparePartDisbursementStatusEnum::WAITING_CUSTOMER,
-                SparePartDisbursementStatusEnum::NEED_REVIEW,
             ];
         }
 

@@ -38,7 +38,7 @@ class SparePartDisbursementEloquentRepository extends AbstractEloquentRepository
         $keyword = $params->keyword;
 
         return $this->disbursementModel->newQuery()
-            ->where('customer_id', '=', $params->profileXid)
+            ->where('customer_id_sanfind', '=', $params->profileXid)
             ->when($plafondXid, function ($query, $plafondXid) {
                 $query->where('plafond_no', $plafondXid);
             })

@@ -308,6 +308,7 @@ Route::group(['prefix' => 'v2', 'middleware' => ['auth', InjectUserIdFromPathMid
     Route::get('users/profiles/{xid}/spare-part-disbursements/pending', ['as' => 'v2.users.spare-part-disbursements.pending-list', 'uses' => 'Disbursement\Controllers\SparePartDisbursementController@pendingList']);
     Route::get('users/profiles/{xid}/spare-part-disbursements/{disbursementXid}', ['as' => 'v2.users.spare-part-disbursements.detail', 'uses' => 'Disbursement\Controllers\SparePartDisbursementController@detail']);
     Route::get('users/profiles/{xid}/spare-part-disbursements/{disbursementXid}/invoices/{invoiceXid}', ['as' => 'v2.users.spare-part-disbursements.invoices.detail', 'uses' => 'Disbursement\Controllers\SparePartDisbursementController@invoiceDetail']);
+    Route::post('users/profiles/{xid}/spare-part-disbursements/{disbursementXid}/approval', ['as' => 'v2.users.spare-part-disbursements.detail', 'uses' => 'Disbursement\Controllers\SparePartDisbursementController@approval']);
 
     // Plafond
     Route::get('users/profiles/{xid}/plafonds/spare-part', ['as' => 'v2.users.plafonds.spare-part', 'uses' => 'Plafond\Controllers\PlafondController@browsePlafondSparePart']);

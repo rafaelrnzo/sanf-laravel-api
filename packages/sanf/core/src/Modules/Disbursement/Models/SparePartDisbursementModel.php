@@ -23,6 +23,7 @@ use Sanf\Dashboard\Modules\User\Models\CustomerBindingEncryptedModel;
  * @property string $batch_number
  * @property ?int $created_by_id
  * @property ?string $customer_id
+ * @property ?string $customer_id_sanfind
  * @property ?string $customer_name
  * @property ?string $payment_type
  * @property int $invoice_count
@@ -60,6 +61,7 @@ class SparePartDisbursementModel extends Model
         'batch_number',
         'created_by_id',
         'customer_id',
+        'customer_id_sanfind',
         'customer_name',
         'payment_type',
         'invoice_count',

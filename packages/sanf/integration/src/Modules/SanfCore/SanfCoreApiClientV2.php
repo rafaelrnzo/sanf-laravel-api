@@ -76,7 +76,7 @@ class SanfCoreApiClientV2
 
     public function submitSparePartFinancing(SanfCoreSubmitSparePartFinancingPayload $payload)
     {
-        $response = Request::route('spare-part-disbursement.list', $this->client)
+        $response = Request::route('sanf-internal-v2.spare-part-disbursement.list', $this->client)
             ->json($payload->toArray())
             ->send();
 

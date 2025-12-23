@@ -23,13 +23,14 @@ final class FindSparePartDisbursementUseCase
     {
         $data = $this->repository->find([
             'xid' => $disbursementXid,
-            'customer_id' => $profileXid,
+            'customer_id_sanfind' => $profileXid,
         ]);
-        $data->load('validInvoices');
 
         if ($data === null) {
             return null;
         }
+
+        $data->load('validInvoices');
 
         $dataCore = $this->sanfCoreApiClient->getSparePartDisbursementDetail($data->batch_number, $data->customer_id);
 

@@ -43,6 +43,7 @@ final class SparePartDisbursementDetailTransformer extends TransformerAbstract
                 'status_id' => $item->status_id,
                 'status_desc' => SparePartDisbursementStatusEnum::from($item->status_id)->getLabel(),
             ]),
+            'plafond_xid' => $model->plafond_no,
             'created_at' => nullable_unix_timestamp($createdAt),
             'updated_at' => nullable_unix_timestamp($updatedAt),
         ];

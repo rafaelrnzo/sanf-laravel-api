@@ -20,7 +20,7 @@ final class FindSparePartDisbursementInvoiceUseCase
         $data = $this->repository->findInvoice([
             'xid' => $invoiceXid,
             'disbursement_xid' => $disbursementXid,
-            'customer_id' => $profileXid,
+            'customer_id_sanfind' => $profileXid,
         ]);
 
         return $data;
