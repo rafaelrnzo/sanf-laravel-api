@@ -3,6 +3,7 @@
 namespace NbsPhp\Core\Response;
 
 use Exception;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -118,6 +119,11 @@ class JsonResponseMapper implements ResponseMapperInterface
             }
             $error['code'] = $errorMapping['code'] ?? $exception->getCode();
             $error['message'] = $errorMapping['message'] ?? $exception->getMessage();
+        }
+
+        if ($exception instanceof ClientException) {
+            $error['code'] = $errorMapping['code'] ?? $exception->getCode();
+            $error['message'] = 'Maaf, permintaan tidak dapat diproses. Mohon periksa kembali data Anda atau hubungi CS.';
         }
 
         if ($exception instanceof ServerException) {

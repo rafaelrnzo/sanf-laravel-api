@@ -9,7 +9,6 @@ use NbsPhp\ApiWrapper\Api\Processor;
 use NbsPhp\ApiWrapper\Api\Request;
 use NbsPhp\ApiWrapper\Api\Response;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
-use Sanf\Integration\Exceptions\SanfInternalApiException;
 
 class SanfCoreApiProcessorV2 extends Processor
 {
@@ -38,12 +37,19 @@ class SanfCoreApiProcessorV2 extends Processor
         } catch (ClientException $exception) {
             $response = $exception->getResponse();
             $bodyResponse = json_decode((string) $response->getBody(), true);
+            $rawBody = (string) $response->getBody();
+
+            $message = $bodyResponse['message']
+                ?? $bodyResponse['error']['message']
+                ?? trim(strip_tags($rawBody))  // fall back to text extracted from HTML
+                ?? 'Sanf internal API error';
 
             if ($response->getStatusCode() === \Symfony\Component\HttpFoundation\Response::HTTP_NOT_FOUND) {
-                throw new SanfInternalApiDataNotFoundException($bodyResponse['message']);
+                throw new SanfInternalApiDataNotFoundException($message);
             }
 
-            throw new SanfInternalApiException($bodyResponse['message']);
+            report($exception);
+            throw $exception;
         } catch (ServerException $exception) {
             //TODO HANDLE EXCEPTION
             report($exception);
