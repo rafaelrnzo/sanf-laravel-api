@@ -8,9 +8,9 @@ class SanfCoreSubmitSparePartFinancingPayload extends DataTransferObject
 {
     public string $BATCH_ID;
     public string $SUPPLIER_ID;
-    /** @var SanfCoreSubmitSparePartFinancingInvoicePayload[] */
+    /** @var array|SanfCoreSubmitSparePartFinancingInvoicePayload[] */
     public array $INVOICE;
     public SanfCoreSubmitSparePartFinancingBankAccountPayload $BANK_ACCOUNT;
-    /** @var SanfCoreSubmitSparePartFinancingDocumentPayload[] */
+    /** @var array|SanfCoreSubmitSparePartFinancingDocumentPayload[] */
     public array $DOCUMENTS;
 }

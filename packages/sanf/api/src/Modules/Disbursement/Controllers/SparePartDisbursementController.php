@@ -142,7 +142,7 @@ class SparePartDisbursementController extends RestApiController
                     }
                 },
             ],
-            'note' => ['nullable', 'string'],
+            'note' => ['nullable', 'string', 'required_if:action,' . SparePartDisbursementApprovalAction::REJECT_SELECTED],
         ]);
 
         $disbursement = $findUseCase->execute($xid, $disbursementXid);

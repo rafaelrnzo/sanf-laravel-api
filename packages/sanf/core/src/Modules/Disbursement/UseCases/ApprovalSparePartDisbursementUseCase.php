@@ -35,6 +35,7 @@ final class ApprovalSparePartDisbursementUseCase
         $disbursement = $this->repository->find([
             'xid' => $payload->disbursementXid,
             'customer_id_sanfind' => $payload->profileXid,
+            'status_id' => SparePartDisbursementStatusEnum::WAITING_CUSTOMER,
         ]);
 
         if ($disbursement === null) {
@@ -128,7 +129,7 @@ final class ApprovalSparePartDisbursementUseCase
         return new SanfCoreSubmitSparePartFinancingInvoicePayload([
             'CUST_ID' => $invoice->customer_id_sanfind,
             'NO_INVOICE' => $invoice->invoice_number,
-            'TANGGAL_INVOICE' => $invoice->invoice_date,
+            'TANGGAL_INVOICE' => $invoice->invoice_date->format('m-d-Y'),
             'CURRENCY' => config('payment.currency'),
             'TOTAL_INVOICE' => $invoice->invoice_amount,
             'STATUS_INVOICE_ID' => $statusId,
