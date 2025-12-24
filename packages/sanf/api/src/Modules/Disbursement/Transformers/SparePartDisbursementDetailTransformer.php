@@ -38,7 +38,7 @@ final class SparePartDisbursementDetailTransformer extends TransformerAbstract
                 'invoice_xid' => $item->xid,
                 'invoice_no' => $item->invoice_number,
                 'invoice_date' => nullable_unix_timestamp($item->invoice_date),
-                'total_amount' => $item->invoice_amount,
+                'total_amount' => (float) $item->invoice_amount,
                 'currency' => config('payment.currency'),
                 'status_id' => $item->status_id,
                 'status_desc' => SparePartDisbursementStatusEnum::from($item->status_id)->getLabel(),
