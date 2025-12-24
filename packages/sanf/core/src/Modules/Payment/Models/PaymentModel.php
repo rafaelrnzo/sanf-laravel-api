@@ -21,7 +21,7 @@ use Sanf\Core\Traits\SodiumEncryptionTrait;
  * @property string|\Sanf\Core\Modules\Payment\Enums\PaymentStatusEnum $status
  * @property string|\Sanf\Core\Modules\Payment\Enums\PaymentCategoryEnum $category
  * @property PaymentDetailEntity $payment_detail
- * @property \Carbon\Carbon $due_date
+ * @property \Carbon\Carbon $expired_at
  * @property \Carbon\Carbon|null $paid_at
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
@@ -39,6 +39,7 @@ class PaymentModel extends AbstractModel
     protected $fillable = [
         'xid',
         'user_auth_id',
+        'user_profile_xid',
         'disbursement_id',
         'disbursement_xid',
         'amount',
@@ -46,7 +47,7 @@ class PaymentModel extends AbstractModel
         'status',
         'category',
         'payment_detail',
-        'due_date',
+        'expired_at',
         'paid_at',
         'status_log',
         'user_snapshot',
@@ -56,7 +57,7 @@ class PaymentModel extends AbstractModel
     protected $casts = [
         'amount' => 'float',
         'payment_detail' => 'array',
-        'due_date' => 'datetime',
+        'expired_at' => 'datetime',
         'paid_at' => 'datetime',
         'status_log' => 'array',
     ];
@@ -67,6 +68,14 @@ class PaymentModel extends AbstractModel
 
     public function getPaymentDetailAttribute($value)
     {
+        if (empty($value)) {
+            return null;
+        }
+
+        if (is_string($value)) {
+            $value = json_decode($value, true);
+        }
+
         return new PaymentDetailEntity($value);
     }
 
@@ -101,5 +110,10 @@ class PaymentModel extends AbstractModel
     public function midtransTransactions()
     {
         return $this->hasMany(MidtransTransactionModel::class, 'payment_id');
+    }
+
+    public function uncancelledMidtransTransaction()
+    {
+        return $this->hasOne(MidtransTransactionModel::class, 'payment_id')->where('transaction_status', '!=', 'cancel');
     }
 }

@@ -16,12 +16,12 @@ class CreateMidtransTransactionTable extends Migration
         Schema::create('midtrans_transaction', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('midtrans_order_id', 100)->unique();
-            $table->string('midtrans_transaction_id', 100);
+            $table->string('midtrans_transaction_id', 100)->nullable();
+            $table->string('midtrans_snap_token', 100)->nullable();
             $table->unsignedBigInteger('payment_id');
             $table->string('payment_xid', 32)->index();
-            $table->decimal('gross_amount', 20, 2);
-            $table->decimal('admin_fee', 20, 2);
-            $table->string('payment_type', 50);
+            $table->decimal('gross_amount', 20, 2)->nullable();
+            $table->string('payment_type', 50)->nullable();
             $table->string('transaction_status', 50)->nullable();
             $table->timestampTz('transaction_time')->nullable();
             $table->string('fraud_status', 50)->nullable();

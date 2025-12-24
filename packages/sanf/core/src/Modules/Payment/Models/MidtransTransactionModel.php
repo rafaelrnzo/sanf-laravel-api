@@ -9,10 +9,10 @@ use NbsPhp\Core\Models\AbstractModel;
  * @property int $id
  * @property string $midtrans_order_id
  * @property string $midtrans_transaction_id
+ * @property string $midtrans_snap_token
  * @property int $payment_id
  * @property string $payment_xid
  * @property float $gross_amount
- * @property float $admin_fee
  * @property string $payment_type
  * @property string|null $transaction_status
  * @property \Carbon\Carbon|null $transaction_time
@@ -31,10 +31,10 @@ class MidtransTransactionModel extends AbstractModel
     protected $fillable = [
         'midtrans_order_id',
         'midtrans_transaction_id',
+        'midtrans_snap_token',
         'payment_id',
         'payment_xid',
         'gross_amount',
-        'admin_fee',
         'payment_type',
         'transaction_status',
         'transaction_time',
