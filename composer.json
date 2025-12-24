@@ -24,6 +24,7 @@
         "laravel/lumen-framework": "^6.0",
         "laravel/tinker": "^2.6",
         "league/flysystem-aws-s3-v3": "1.0.28",
+        "midtrans/midtrans-php": "*",
         "myclabs/php-enum": "^1.7",
         "pragmarx/health": "^1.0",
         "predis/predis": "^1.1",
