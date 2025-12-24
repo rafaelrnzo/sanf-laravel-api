@@ -13,9 +13,6 @@ final class PaymentDetailTransformer extends TransformerAbstract
     {
         $paymentDetail = $model->payment_detail;
         $midtransTransaction = $model->activeMidtransTransaction;
-        $midtransRaw = $midtransTransaction->raw_response;
-        $virtualAccounts = collect($midtransRaw['va_numbers'] ?? []);
-        $virtualAccount = $virtualAccounts->first();
 
         return [
             'xid' => $model->xid,
@@ -32,12 +29,7 @@ final class PaymentDetailTransformer extends TransformerAbstract
                 'token' => $midtransTransaction->midtrans_snap_token,
                 'redirect_url' => $midtransTransaction->midtrans_snap_redirect_url,
             ],
-            'payment_method' => [
-                'type' => $midtransTransaction->payment_type,
-                'provider' => data_get($virtualAccount, 'bank'),
-                'virtual_account_number' => data_get($virtualAccount, 'va_number'),
-                'provider_logo_url' => 'https://localhost/midtrans-logo/bca.jpg',
-            ],
+            'payment_method' => fractal($model, PaymentMethodTransformer::class),
             'installments' => $model->installments->map(function ($item) {
                 /** @var PaymentInstallmentSnapshotEntity */
                 $snapshot = $item->pivot->installment_snapshot;

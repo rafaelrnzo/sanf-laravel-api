@@ -51,7 +51,7 @@ final class RegeneratePaymentUseCase
             $this->cancelMidtransTransaction($midtransTransaction);
         }
 
-        $this->createSnapMidtrans($payment);
+        $payment->activeMidtransTransaction = $this->createSnapMidtrans($payment);
 
         return $payment;
     }
@@ -96,6 +96,7 @@ final class RegeneratePaymentUseCase
                 'order_id' => $midtransOrderId,
                 'gross_amount' => (int) round($payment->amount),
             ]),
+            'enabled_payments' => config('midtrans.enabled_payments'),
         ]);
 
         $snap = $this->midtransClient->createSnapTransaction($payload);

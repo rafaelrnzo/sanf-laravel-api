@@ -11,6 +11,7 @@ use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
 use Sanf\Api\Modules\Payment\Transformers\PaymentDetailTransformer;
 use Sanf\Api\Modules\Payment\Transformers\PaymentListTransformer;
 use Sanf\Api\Modules\Payment\Transformers\PaymentStatsTransformer;
+use Sanf\Api\Modules\Payment\Transformers\RegeneratePaymentTransformer;
 use Sanf\Core\Modules\Payment\Enums\PaymentStatusEnum;
 use Sanf\Core\Modules\Payment\Payloads\BrowsePaymentPayload;
 use Sanf\Core\Modules\Payment\UseCases\BrowsePaymentUseCase;
@@ -123,6 +124,6 @@ final class PaymentController extends RestApiController
             throw new ResourceNotFoundException();
         }
 
-        return $this->responseOk();
+        return fractal($payment, RegeneratePaymentTransformer::class);
     }
 }

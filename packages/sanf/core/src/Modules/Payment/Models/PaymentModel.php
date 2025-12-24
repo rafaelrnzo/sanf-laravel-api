@@ -28,7 +28,7 @@ use Sanf\Core\Traits\SodiumEncryptionTrait;
  * @property \Carbon\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|InstallmentModel[] $installments
  * @property-read \Illuminate\Database\Eloquent\Collection|MidtransTransactionModel[] $midtransTransactions
- * @property-read ?MidtransTransactionModel $activeMidtransTransaction
+ * @property ?MidtransTransactionModel $activeMidtransTransaction
  * @property PaymentStatusLogItemEntity[] $status_log
  * @property PaymentUserSnapshotEntity $user_snapshot
  */

@@ -277,6 +277,7 @@ final class CreateInstallmentPaymentUseCase
                 'order_id' => $midtransOrderId,
                 'gross_amount' => $installmentPayload->total_payment,
             ]),
+            'enabled_payments' => config('midtrans.enabled_payments'),
         ]);
 
         $snap = $this->midtransClient->createSnapTransaction($payload);
