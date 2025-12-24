@@ -17,6 +17,7 @@ use Sanf\Core\Modules\Payment\UseCases\BrowsePaymentUseCase;
 use Sanf\Core\Modules\Payment\UseCases\CheckPaymentStatusUseCase;
 use Sanf\Core\Modules\Payment\UseCases\FindPaymentUseCase;
 use Sanf\Core\Modules\Payment\UseCases\GetPaymentStatusCountUseCase;
+use Sanf\Core\Modules\Payment\UseCases\RegeneratePaymentUseCase;
 
 final class PaymentController extends RestApiController
 {
@@ -100,5 +101,24 @@ final class PaymentController extends RestApiController
         return $this->responseOk('Success', [
             'status' => $status,
         ]);
+    }
+
+    public function regenerate(
+        string $xid,
+        string $paymentXid,
+        Guard $auth,
+        RegeneratePaymentUseCase $useCase
+    )
+    {
+        $userAuthId = $auth->id();
+        $userProfileXid = $xid;
+
+        $payment = $useCase->execute($paymentXid, $userAuthId, $userProfileXid);
+
+        if (!$payment) {
+            throw new ResourceNotFoundException();
+        }
+
+        return $this->responseOk();
     }
 }

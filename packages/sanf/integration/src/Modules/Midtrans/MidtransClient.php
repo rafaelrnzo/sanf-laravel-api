@@ -46,4 +46,9 @@ class MidtransClient
             ['raw' => (array) $response]
         ));
     }
+
+    public function cancelTransaction(string $orderId): void
+    {
+        Transaction::cancel($orderId);
+    }
 }
