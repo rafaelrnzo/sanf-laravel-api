@@ -10,6 +10,7 @@ use NbsPhp\Core\Models\AbstractModel;
  * @property string $midtrans_order_id
  * @property string $midtrans_transaction_id
  * @property string $midtrans_snap_token
+ * @property string $midtrans_snap_redirect_url
  * @property int $payment_id
  * @property string $payment_xid
  * @property float $gross_amount
@@ -32,6 +33,7 @@ class MidtransTransactionModel extends AbstractModel
         'midtrans_order_id',
         'midtrans_transaction_id',
         'midtrans_snap_token',
+        'midtrans_snap_redirect_url',
         'payment_id',
         'payment_xid',
         'gross_amount',

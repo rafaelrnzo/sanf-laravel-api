@@ -18,6 +18,7 @@ class CreateMidtransTransactionTable extends Migration
             $table->string('midtrans_order_id', 100)->unique();
             $table->string('midtrans_transaction_id', 100)->nullable();
             $table->string('midtrans_snap_token', 100)->nullable();
+            $table->text('midtrans_snap_redirect_url')->nullable();
             $table->unsignedBigInteger('payment_id');
             $table->string('payment_xid', 32)->index();
             $table->decimal('gross_amount', 20, 2)->nullable();
