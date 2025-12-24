@@ -2,6 +2,7 @@
 
 namespace Sanf\Core\Modules\Payment\Repositories;
 
+use Illuminate\Support\Facades\DB;
 use Sanf\Core\Encryptions\SodiumEncryption;
 use Sanf\Core\Modules\Payment\Models\MidtransTransactionModel;
 use Sanf\Core\Modules\Payment\Models\PaymentModel;
@@ -34,6 +35,18 @@ final class PaymentEloquentRepository implements PaymentRepositoryInterface
         $model = $this->model->newQuery()->create($data);
 
         return $model;
+    }
+
+    public function countByStatus(array $filters)
+    {
+        return $this->model->newQuery()
+            ->select([
+                'status',
+                DB::raw('COUNT(*) as total'),
+            ])
+            ->where($filters)
+            ->groupBy('status')
+            ->get();
     }
 
     public function createInstallments(array $filters, array $installments): void

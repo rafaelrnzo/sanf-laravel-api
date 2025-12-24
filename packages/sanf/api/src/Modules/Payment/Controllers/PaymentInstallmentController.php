@@ -2,31 +2,40 @@
 
 namespace Sanf\Api\Modules\Payment\Controllers;
 
+use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use NbsPhp\Core\Controllers\RestApiController;
-use Sanf\Core\Modules\Payment\Entities\PaymentPreviewInstallmentEntity;
 use Sanf\Core\Modules\Payment\Exceptions\OutstandingPaymentException;
+use Sanf\Core\Modules\Payment\Exceptions\UnexistsInstallmentException;
+use Sanf\Core\Modules\Payment\Payloads\CreateInstallmentPaymentPayload;
 use Sanf\Core\Modules\Payment\Payloads\PaymentInstallmentCalculationPayload;
 use Sanf\Core\Modules\Payment\Payloads\PaymentInstallmentPayload;
 use Sanf\Core\Modules\Payment\UseCases\BuildPaymentInstallmentCalculationUseCase;
+use Sanf\Core\Modules\Payment\UseCases\CreateInstallmentPaymentUseCase;
 use Sanf\Core\Modules\Payment\UseCases\PaymentPreviewUseCase;
-use Sanf\Core\Modules\Payment\UseCases\SubmitPaymentPreviewUseCase;
 use Sanf\Core\Modules\Payment\UseCases\ValidatePaymentInstallmentUseCase;
 
-final class PaymentPreviewController extends RestApiController
+final class PaymentInstallmentController extends RestApiController
 {
     public function create(
         string $xid,
         Request $request,
+        Guard $auth,
         ValidatePaymentInstallmentUseCase $validateUseCase,
-        SubmitPaymentPreviewUseCase $submitUseCase
+        BuildPaymentInstallmentCalculationUseCase $paymentCalculationUseCase,
+        CreateInstallmentPaymentUseCase $createPaymentUseCase,
+        PaymentPreviewUseCase $paymentPreviewUseCase
     )
     {
+        $profileXid = $xid;
+
         $formData = $this->validate($request, [
             'installments' => ['required', 'array', 'min:1'],
             'installments.*.contract_no' => ['required'],
             'installments.*.due_date' => ['required', 'integer'],
+            'custom_amount' => ['nullable', 'integer'],
+            'custom_penalty_amount' => ['nullable', 'integer'],
         ]);
 
         $installments = array_map(fn ($item) => new PaymentInstallmentPayload($item), $formData['installments']);
@@ -48,22 +57,20 @@ final class PaymentPreviewController extends RestApiController
             throw $e;
         }
 
-        $submitUseCase->execute($xid, $response->validInstallments);
+        if (!empty($response->unexistsInstallments)) {
+            $e = new UnexistsInstallmentException();
+            $e->setData([
+                'installments' => array_map(
+                    fn (PaymentInstallmentPayload $item) => [
+                        'contract_no' => $item->contract_no,
+                        'due_date' => $item->due_date,
+                    ],
+                    $response->unexistsInstallments
+                ),
+            ]);
 
-        return $this->responseOk();
-    }
-
-    public function show(
-        string $xid,
-        Request $request,
-        PaymentPreviewUseCase $previewUseCase,
-        BuildPaymentInstallmentCalculationUseCase $calculationUseCase
-    )
-    {
-        $formData = $this->validate($request, [
-            'custom_amount' => ['nullable', 'integer'],
-            'custom_penalty_amount' => ['nullable', 'integer'],
-        ]);
+            throw $e;
+        }
 
         $customAmount = null;
         $customPenaltyAmount = null;
@@ -76,23 +83,28 @@ final class PaymentPreviewController extends RestApiController
             $customPenaltyAmount = (float) $formData['custom_penalty_amount'];
         }
 
-        $paymentPreview = $previewUseCase->execute($xid);
-        $installments = array_map(
-            fn (PaymentPreviewInstallmentEntity $item) => new PaymentInstallmentPayload([
-                'contract_no' => $item->contract_no,
-                'due_date' => Carbon::make($item->due_date)->timestamp,
-            ]),
-            optional($paymentPreview)->installments ?? []
-        );
-
-        $response = $calculationUseCase->execute(new PaymentInstallmentCalculationPayload([
-            'profileXid' => $xid,
+        $calculationPayload = new PaymentInstallmentCalculationPayload([
+            'profileXid' => $profileXid,
             'customAmount' => $customAmount,
             'customPenaltyAmount' => $customPenaltyAmount,
             'installments' => $installments,
-            'preferCache' => true,
+        ]);
+
+        $calclulationResponse = $paymentCalculationUseCase->execute($calculationPayload);
+
+        $createPaymentPayload = new CreateInstallmentPaymentPayload(array_merge($calclulationResponse->toArray(), [
+            'userAuthId' => $auth->id(),
+            'userProfileXid' => $profileXid,
         ]));
 
-        return $this->responseOk('Success', $response->toArray());
+        $payment = DB::transaction(function () use ($createPaymentUseCase, $createPaymentPayload, $paymentPreviewUseCase, $profileXid) {
+            $response = $createPaymentUseCase->execute($createPaymentPayload);
+
+            $paymentPreviewUseCase->clear($profileXid);
+
+            return $response;
+        });
+
+        return $this->responseOk('Success', $payment);
     }
 }

@@ -21,4 +21,14 @@ final class PaymentPreviewEloquentRepository implements PaymentPreviewRepository
     {
         return $this->model->newQuery()->where($filters)->first();
     }
+
+    public function delete(array $filters): bool
+    {
+        /**
+         * @var ?PaymentPreviewModel
+         */
+        $model = $this->model->newQuery()->where($filters)->first();
+
+        return optional($model)->delete();
+    }
 }

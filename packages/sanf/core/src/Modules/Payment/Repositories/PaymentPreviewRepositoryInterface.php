@@ -9,4 +9,6 @@ interface PaymentPreviewRepositoryInterface
     public function updateOrCreate(array $attributes, array $data);
 
     public function find(array $filters): ?PaymentPreviewModel;
+
+    public function delete(array $filters): bool;
 }

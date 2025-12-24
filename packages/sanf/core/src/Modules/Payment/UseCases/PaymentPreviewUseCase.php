@@ -16,7 +16,7 @@ final class PaymentPreviewUseCase
         $this->repository = $repository;
     }
 
-    public function execute(string $profileXid): ?PaymentPreviewModel
+    public function find(string $profileXid): ?PaymentPreviewModel
     {
         $filters = [
             'user_profile_xid' => $profileXid,
@@ -25,5 +25,15 @@ final class PaymentPreviewUseCase
 
         return $this->repository->find($filters);
 
+    }
+
+    public function clear(string $profileXid): bool
+    {
+        $filters = [
+            'user_profile_xid' => $profileXid,
+            'platform' => PaymentPreviewPlatformEnum::MOBILE,
+        ];
+
+        return $this->repository->delete($filters);
     }
 }
