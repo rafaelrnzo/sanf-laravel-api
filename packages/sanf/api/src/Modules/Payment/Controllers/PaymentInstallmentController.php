@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use NbsPhp\Core\Controllers\RestApiController;
+use Sanf\Api\Modules\Payment\Transformers\CreateInstallmentPaymentTransformer;
 use Sanf\Core\Modules\Payment\Exceptions\OutstandingPaymentException;
 use Sanf\Core\Modules\Payment\Exceptions\UnexistsInstallmentException;
 use Sanf\Core\Modules\Payment\Payloads\CreateInstallmentPaymentPayload;
@@ -105,6 +106,6 @@ final class PaymentInstallmentController extends RestApiController
             return $response;
         });
 
-        return $this->responseOk('Success', $payment);
+        return fractal($payment, CreateInstallmentPaymentTransformer::class);
     }
 }

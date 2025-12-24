@@ -16,7 +16,7 @@ interface PaymentRepositoryInterface
 
     public function create(array $data): PaymentModel;
 
-    public function countByStatus(array $filters);
+    public function countByStatus(array $filters): Collection;
 
     public function createInstallments(array $filters, array $installments): void;
 

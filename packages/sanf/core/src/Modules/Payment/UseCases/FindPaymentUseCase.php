@@ -23,7 +23,7 @@ final class FindPaymentUseCase
             'user_profile_xid' => $userProfileXid,
         ]);
 
-        optional($data)->load(['installments']);
+        optional($data)->load(['installments', 'activeMidtransTransaction']);
 
         return $data;
     }

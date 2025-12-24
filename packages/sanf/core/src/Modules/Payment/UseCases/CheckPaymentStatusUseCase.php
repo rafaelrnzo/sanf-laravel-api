@@ -43,9 +43,9 @@ final class CheckPaymentStatusUseCase
             return null;
         }
 
-        $data->load(['uncancelledMidtransTransaction', 'installments']);
+        $data->load(['activeMidtransTransaction', 'installments']);
 
-        $midtransTransaction = $data->uncancelledMidtransTransaction;
+        $midtransTransaction = $data->activeMidtransTransaction;
 
         if (optional($midtransTransaction)->midtrans_order_id) {
             $statusResponse = $this->midtransClient->getTransactionStatus($midtransTransaction->midtrans_order_id);

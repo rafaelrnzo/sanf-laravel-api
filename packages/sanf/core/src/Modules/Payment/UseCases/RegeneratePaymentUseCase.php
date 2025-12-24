@@ -39,9 +39,9 @@ final class RegeneratePaymentUseCase
             return null;
         }
 
-        $payment->load(['uncancelledMidtransTransaction']);
+        $payment->load(['activeMidtransTransaction']);
 
-        $midtransTransaction = $payment->uncancelledMidtransTransaction;
+        $midtransTransaction = $payment->activeMidtransTransaction;
 
         if (!$this->isPendingPayment($payment) || !$this->isCancelableMidtransTransaction($midtransTransaction)) {
             throw new PaymentCannotBeCancelledException();
@@ -103,6 +103,7 @@ final class RegeneratePaymentUseCase
         return $this->repository->createMidtransTransaction([
             'midtrans_order_id' => $midtransOrderId,
             'midtrans_snap_token' => $snap->token,
+            'midtrans_snap_redirect_url' => $snap->redirect_url,
             'payment_id' => $payment->id,
             'payment_xid' => $payment->xid,
             'gross_amount' => $payment->amount,

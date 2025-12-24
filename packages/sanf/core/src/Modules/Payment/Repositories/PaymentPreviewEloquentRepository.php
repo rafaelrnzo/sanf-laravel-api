@@ -29,6 +29,6 @@ final class PaymentPreviewEloquentRepository implements PaymentPreviewRepository
          */
         $model = $this->model->newQuery()->where($filters)->first();
 
-        return optional($model)->delete();
+        return (bool) optional($model)->delete();
     }
 }

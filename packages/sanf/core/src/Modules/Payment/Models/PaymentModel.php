@@ -28,7 +28,7 @@ use Sanf\Core\Traits\SodiumEncryptionTrait;
  * @property \Carbon\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|InstallmentModel[] $installments
  * @property-read \Illuminate\Database\Eloquent\Collection|MidtransTransactionModel[] $midtransTransactions
- * @property-read ?MidtransTransactionModel $uncancelledMidtransTransaction
+ * @property-read ?MidtransTransactionModel $activeMidtransTransaction
  * @property PaymentStatusLogItemEntity[] $status_log
  * @property PaymentUserSnapshotEntity $user_snapshot
  */
@@ -116,7 +116,7 @@ class PaymentModel extends AbstractModel
         return $this->hasMany(MidtransTransactionModel::class, 'payment_id');
     }
 
-    public function uncancelledMidtransTransaction()
+    public function activeMidtransTransaction()
     {
         $cancelStatuses = [
             'cancel',

@@ -7,15 +7,12 @@ use Sanf\Core\Modules\Payment\Entities\PaymentInstallmentOutstandingSnapshotEnti
 use Sanf\Core\Modules\Payment\Entities\PaymentInstallmentSnapshotEntity;
 use Sanf\Core\Modules\Payment\Models\PaymentModel;
 
-final class PaymentDetailTransformer extends TransformerAbstract
+final class CreateInstallmentPaymentTransformer extends TransformerAbstract
 {
     public function transform(PaymentModel $model)
     {
         $paymentDetail = $model->payment_detail;
         $midtransTransaction = $model->activeMidtransTransaction;
-        $midtransRaw = $midtransTransaction->raw_response;
-        $virtualAccounts = collect($midtransRaw['va_numbers'] ?? []);
-        $virtualAccount = $virtualAccounts->first();
 
         return [
             'xid' => $model->xid,
@@ -31,12 +28,6 @@ final class PaymentDetailTransformer extends TransformerAbstract
             'snap_midtrans' => [
                 'token' => $midtransTransaction->midtrans_snap_token,
                 'redirect_url' => $midtransTransaction->midtrans_snap_redirect_url,
-            ],
-            'payment_method' => [
-                'type' => $midtransTransaction->payment_type,
-                'provider' => data_get($virtualAccount, 'bank'),
-                'virtual_account_number' => data_get($virtualAccount, 'va_number'),
-                'provider_logo_url' => 'https://localhost/midtrans-logo/bca.jpg',
             ],
             'installments' => $model->installments->map(function ($item) {
                 /** @var PaymentInstallmentSnapshotEntity */

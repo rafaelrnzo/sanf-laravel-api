@@ -96,7 +96,7 @@ final class PaymentEloquentRepository implements PaymentRepositoryInterface
         return $model;
     }
 
-    public function countByStatus(array $filters)
+    public function countByStatus(array $filters): Collection
     {
         return $this->model->newQuery()
             ->select([

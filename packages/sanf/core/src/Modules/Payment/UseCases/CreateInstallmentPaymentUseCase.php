@@ -22,7 +22,6 @@ use Sanf\Core\Modules\Payment\Exceptions\PaymentNoInstallmentException;
 use Sanf\Core\Modules\Payment\Models\PaymentModel;
 use Sanf\Core\Modules\Payment\Payloads\CreateInstallmentPaymentPayload;
 use Sanf\Core\Modules\Payment\Repositories\PaymentRepositoryInterface;
-use Sanf\Core\Modules\Payment\Responses\CreateInstallmentPaymentResponse;
 use Sanf\Core\Modules\Payment\Responses\PaymentCalculationInstallmentResponse;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Integration\Modules\Midtrans\MidtransClient;
@@ -51,7 +50,7 @@ final class CreateInstallmentPaymentUseCase
         $this->midtransClient = $midtransClient;
     }
 
-    public function execute(CreateInstallmentPaymentPayload $payload): CreateInstallmentPaymentResponse
+    public function execute(CreateInstallmentPaymentPayload $payload): PaymentModel
     {
         if (count($payload->installments) === 0) {
             throw new PaymentNoInstallmentException();
@@ -138,24 +137,9 @@ final class CreateInstallmentPaymentUseCase
 
         $this->createSnapMidtrans($payload, $payment);
 
-        $payment->load('installments', 'uncancelledMidtransTransaction');
+        $payment->load('installments', 'activeMidtransTransaction');
 
-        return new CreateInstallmentPaymentResponse([
-            'xid' => $payment->xid,
-            'total_payment' => $payment->amount,
-            'subtotal_all_installment' => $payment->payment_detail->subtotal_all_installment,
-            'admin_fee' => $payment->payment_detail->admin_fee,
-            'discount' => $payment->payment_detail->discount,
-            'custom_amount' => $payment->payment_detail->custom_amount,
-            'custom_penalty_amount' => $payment->payment_detail->custom_penalty_amount,
-            'currency' => $payment->currency,
-            'type' => $payment->category,
-            'status' => $payment->status,
-            'installments' => [],
-            'due_date' => unix_timestamp($payment->expired_at),
-            'created_at' => nullable_unix_timestamp($payment->created_at),
-            'updated_at' => nullable_unix_timestamp($payment->updated_at),
-        ]);
+        return $payment;
     }
 
     private function validateWaitingPaymentInstallment(Collection $existingInstallments, array $contractNums, array $dueDates)
@@ -300,6 +284,7 @@ final class CreateInstallmentPaymentUseCase
         $this->paymentRepository->createMidtransTransaction([
             'midtrans_order_id' => $midtransOrderId,
             'midtrans_snap_token' => $snap->token,
+            'midtrans_snap_redirect_url' => $snap->redirect_url,
             'payment_id' => $payment->id,
             'payment_xid' => $payment->xid,
             'gross_amount' => $installmentPayload->total_payment,

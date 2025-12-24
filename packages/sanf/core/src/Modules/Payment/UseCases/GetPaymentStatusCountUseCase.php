@@ -2,6 +2,7 @@
 
 namespace Sanf\Core\Modules\Payment\UseCases;
 
+use Sanf\Core\Modules\Payment\Enums\PaymentStatusEnum;
 use Sanf\Core\Modules\Payment\Repositories\PaymentRepositoryInterface;
 use Sanf\Core\Modules\Payment\Responses\PaymentStatusCountResponse;
 
@@ -24,6 +25,17 @@ final class GetPaymentStatusCountUseCase
 
         $paymentStatuses = $this->repository->countByStatus($filters);
 
-        return $paymentStatuses->map(fn ($item) => new PaymentStatusCountResponse($item->toArray()));
+        $result = [];
+
+        foreach (PaymentStatusEnum::values() as $status) {
+            $paymentStatus = $paymentStatuses->find('status', $status->getValue());
+
+            $result[] = new PaymentStatusCountResponse([
+                'status' => $status->getValue(),
+                'total' => optional($paymentStatus)->total ?? 0,
+            ]);
+        }
+
+        return $result;
     }
 }

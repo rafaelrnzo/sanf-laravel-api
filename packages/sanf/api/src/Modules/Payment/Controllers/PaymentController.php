@@ -98,6 +98,10 @@ final class PaymentController extends RestApiController
 
         $status = $useCase->execute($paymentXid, $userAuthId, $userProfileXid);
 
+        if ($status === null) {
+            throw new ResourceNotFoundException();
+        }
+
         return $this->responseOk('Success', [
             'status' => $status,
         ]);
