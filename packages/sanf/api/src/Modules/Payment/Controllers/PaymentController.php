@@ -6,12 +6,15 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use NbsPhp\Core\Controllers\RestApiController;
+use NbsPhp\Core\Exceptions\ResourceNotFoundException;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
+use Sanf\Api\Modules\Payment\Transformers\PaymentDetailTransformer;
 use Sanf\Api\Modules\Payment\Transformers\PaymentListTransformer;
 use Sanf\Api\Modules\Payment\Transformers\PaymentStatsTransformer;
 use Sanf\Core\Modules\Payment\Enums\PaymentStatusEnum;
 use Sanf\Core\Modules\Payment\Payloads\BrowsePaymentPayload;
 use Sanf\Core\Modules\Payment\UseCases\BrowsePaymentUseCase;
+use Sanf\Core\Modules\Payment\UseCases\FindPaymentUseCase;
 use Sanf\Core\Modules\Payment\UseCases\GetPaymentStatusCountUseCase;
 
 final class PaymentController extends RestApiController
@@ -60,5 +63,24 @@ final class PaymentController extends RestApiController
         return fractal($response->data)
             ->transformWith(PaymentListTransformer::class)
             ->paginateWith(new LazyPaginatorAdapter($response->paginate));
+    }
+
+    public function detail(
+        string $xid,
+        string $paymentXid,
+        Guard $auth,
+        FindPaymentUseCase $useCase
+    )
+    {
+        $userAuthId = $auth->id();
+        $userProfileXid = $xid;
+
+        $response = $useCase->execute($paymentXid, $userAuthId, $userProfileXid);
+
+        if ($response === null) {
+            throw new ResourceNotFoundException();
+        }
+
+        return fractal($response, PaymentDetailTransformer::class);
     }
 }
