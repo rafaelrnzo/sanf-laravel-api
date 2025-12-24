@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\SyncMidtransLogoCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Laravel\Lumen\Console\Kernel as ConsoleKernel;
 use Sanf\External\Modules\Setting\Commands\MaintenanceDownCommand;
@@ -17,6 +18,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         MaintenanceDownCommand::class,
         MaintenanceUpCommand::class,
+        SyncMidtransLogoCommand::class,
     ];
 
     /**
