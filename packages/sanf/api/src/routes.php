@@ -325,4 +325,5 @@ Route::group(['prefix' => 'v2', 'middleware' => ['auth', InjectUserIdFromPathMid
     Route::get('users/profiles/{xid}/payments/{paymentXid}', ['as' => 'v2.users.payments.detail', 'uses' => 'Payment\Controllers\PaymentController@detail']);
     Route::post('users/profiles/{xid}/payments/{paymentXid}/status-check', ['as' => 'v2.users.payments.status-check', 'uses' => 'Payment\Controllers\PaymentController@checkStatus']);
     Route::post('users/profiles/{xid}/payments/{paymentXid}/regenerate', ['as' => 'v2.users.payments.regenerate', 'uses' => 'Payment\Controllers\PaymentController@regenerate']);
+    Route::post('users/profiles/{xid}/payments/{paymentXid}/cancel', ['as' => 'v2.users.payments.cancel', 'uses' => 'Payment\Controllers\PaymentController@cancel']);
 });

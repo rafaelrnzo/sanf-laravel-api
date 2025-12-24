@@ -67,7 +67,7 @@ final class RegeneratePaymentUseCase
 
     private function cancelMidtransTransaction(MidtransTransactionModel $transaction): void
     {
-        if ($transaction->midtrans_order_id) {
+        if ($transaction->midtrans_transaction_id) {
             $this->midtransClient->cancelTransaction($transaction->midtrans_order_id);
         }
 
@@ -114,11 +114,11 @@ final class RegeneratePaymentUseCase
     private function isCancelableMidtransTransaction(?MidtransTransactionModel $transaction): bool
     {
         if ($transaction === null) {
-            return false;
+            return true;
         }
 
         if ($transaction->transaction_status === null) {
-            return false;
+            return true;
         }
 
         $normalizedStatus = strtolower($transaction->transaction_status);

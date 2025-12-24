@@ -9,12 +9,18 @@ final class PaymentListTransformer extends TransformerAbstract
 {
     public function transform(PaymentModel $model)
     {
+        $midtransTransaction = $model->activeMidtransTransaction;
+
         return [
             'xid' => $model->xid,
             'total_amount' => (float) $model->amount,
             'category' => $model->category,
             'status' => $model->status,
             'payment_method' => fractal($model, PaymentMethodTransformer::class),
+            'snap_midtrans' => [
+                'token' => optional($midtransTransaction)->midtrans_snap_token,
+                'redirect_url' => optional($midtransTransaction)->midtrans_snap_redirect_url,
+            ],
             'currency' => $model->currency,
             'contract_nums' => $model->installments->pluck('contract_no')->toArray(),
             'due_date' => nullable_unix_timestamp($model->expired_at),

@@ -4,6 +4,7 @@ namespace Sanf\Api\Modules\Payment\Controllers;
 
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Exceptions\ResourceNotFoundException;
@@ -15,6 +16,7 @@ use Sanf\Api\Modules\Payment\Transformers\RegeneratePaymentTransformer;
 use Sanf\Core\Modules\Payment\Enums\PaymentStatusEnum;
 use Sanf\Core\Modules\Payment\Payloads\BrowsePaymentPayload;
 use Sanf\Core\Modules\Payment\UseCases\BrowsePaymentUseCase;
+use Sanf\Core\Modules\Payment\UseCases\CancelPaymentUseCase;
 use Sanf\Core\Modules\Payment\UseCases\CheckPaymentStatusUseCase;
 use Sanf\Core\Modules\Payment\UseCases\FindPaymentUseCase;
 use Sanf\Core\Modules\Payment\UseCases\GetPaymentStatusCountUseCase;
@@ -97,7 +99,7 @@ final class PaymentController extends RestApiController
         $userAuthId = $auth->id();
         $userProfileXid = $xid;
 
-        $status = $useCase->execute($paymentXid, $userAuthId, $userProfileXid);
+        $status = DB::transaction(fn () => $useCase->execute($paymentXid, $userAuthId, $userProfileXid));
 
         if ($status === null) {
             throw new ResourceNotFoundException();
@@ -118,12 +120,31 @@ final class PaymentController extends RestApiController
         $userAuthId = $auth->id();
         $userProfileXid = $xid;
 
-        $payment = $useCase->execute($paymentXid, $userAuthId, $userProfileXid);
+        $payment = DB::transaction(fn () => $useCase->execute($paymentXid, $userAuthId, $userProfileXid));
 
         if (!$payment) {
             throw new ResourceNotFoundException();
         }
 
         return fractal($payment, RegeneratePaymentTransformer::class);
+    }
+
+    public function cancel(
+        string $xid,
+        string $paymentXid,
+        Guard $auth,
+        CancelPaymentUseCase $useCase
+    )
+    {
+        $userAuthId = $auth->id();
+        $userProfileXid = $xid;
+
+        $payment = DB::transaction(fn () => $useCase->execute($paymentXid, $userAuthId, $userProfileXid));
+
+        if ($payment === null) {
+            throw new ResourceNotFoundException();
+        }
+
+        return $this->responseOk();
     }
 }

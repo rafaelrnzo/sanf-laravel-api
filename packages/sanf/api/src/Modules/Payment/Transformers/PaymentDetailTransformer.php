@@ -26,8 +26,8 @@ final class PaymentDetailTransformer extends TransformerAbstract
             'category' => $model->category,
             'status' => $model->status,
             'snap_midtrans' => [
-                'token' => $midtransTransaction->midtrans_snap_token,
-                'redirect_url' => $midtransTransaction->midtrans_snap_redirect_url,
+                'token' => optional($midtransTransaction)->midtrans_snap_token,
+                'redirect_url' => optional($midtransTransaction)->midtrans_snap_redirect_url,
             ],
             'payment_method' => fractal($model, PaymentMethodTransformer::class),
             'installments' => $model->installments->map(function ($item) {

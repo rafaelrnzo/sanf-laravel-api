@@ -32,7 +32,7 @@ final class PaymentEloquentRepository implements PaymentRepositoryInterface
             ->where('user_auth_id', '=', $userAuthId)
             ->where('user_profile_xid', '=', $userProfileXid)
             ->when($status, function ($query, $value) {
-                return $query->where('status_id', $value);
+                return $query->where('status', $value);
             })
             ->when($contractNo, function ($query, $value) {
                 $query->whereHas('installments', fn ($q) => $q->where('contract_no', $value));
@@ -63,7 +63,7 @@ final class PaymentEloquentRepository implements PaymentRepositoryInterface
         }
 
         return $this->listQuery($params)
-            ->with(['installments'])
+            ->with(['installments', 'activeMidtransTransaction'])
             ->when($skip, function ($query, $skip) {
                 return $query->skip($skip);
             })
