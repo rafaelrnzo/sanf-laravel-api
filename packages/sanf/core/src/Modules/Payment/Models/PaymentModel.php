@@ -21,12 +21,14 @@ use Sanf\Core\Traits\SodiumEncryptionTrait;
  * @property string|\Sanf\Core\Modules\Payment\Enums\PaymentStatusEnum $status
  * @property string|\Sanf\Core\Modules\Payment\Enums\PaymentCategoryEnum $category
  * @property PaymentDetailEntity $payment_detail
+ * @property int $version
  * @property \Carbon\Carbon $expired_at
  * @property \Carbon\Carbon|null $paid_at
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|InstallmentModel[] $installments
  * @property-read \Illuminate\Database\Eloquent\Collection|MidtransTransactionModel[] $midtransTransactions
+ * @property-read ?MidtransTransactionModel $uncancelledMidtransTransaction
  * @property PaymentStatusLogItemEntity[] $status_log
  * @property PaymentUserSnapshotEntity $user_snapshot
  */
@@ -51,6 +53,7 @@ class PaymentModel extends AbstractModel
         'paid_at',
         'status_log',
         'user_snapshot',
+        'version',
         'nonce',
     ];
 
@@ -60,6 +63,7 @@ class PaymentModel extends AbstractModel
         'expired_at' => 'datetime',
         'paid_at' => 'datetime',
         'status_log' => 'array',
+        'version' => 'integer',
     ];
 
     protected $hidden = [

@@ -40,6 +40,7 @@ class MidtransTransactionModel extends AbstractModel
         'transaction_time',
         'fraud_status',
         'raw_response',
+        'version',
     ];
 
     protected $casts = [
@@ -47,6 +48,7 @@ class MidtransTransactionModel extends AbstractModel
         'admin_fee' => 'float',
         'transaction_time' => 'datetime',
         'raw_response' => 'array',
+        'version' => 'int',
     ];
 
     public function payment()

@@ -26,6 +26,7 @@ class CreateMidtransTransactionTable extends Migration
             $table->timestampTz('transaction_time')->nullable();
             $table->string('fraud_status', 50)->nullable();
             $table->jsonb('raw_response')->nullable();
+            $table->unsignedBigInteger('version')->default(1);
             $table->timestamps();
             $table->softDeletes();
 

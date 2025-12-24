@@ -27,6 +27,7 @@ class CreatePaymentTable extends Migration
             $table->timestamp('paid_at')->nullable();
             $table->jsonb('status_log')->nullable();
             $table->binary('user_snapshot')->comment('JSON snapshot');
+            $table->unsignedBigInteger('version')->default(1);
             $table->timestamps();
             $table->softDeletes();
             $table->binary('nonce');
