@@ -2,11 +2,16 @@
 
 namespace Sanf\Core\Modules\Payment\Repositories;
 
+use Illuminate\Support\Collection;
 use Sanf\Core\Modules\Payment\Models\MidtransTransactionModel;
 use Sanf\Core\Modules\Payment\Models\PaymentModel;
 
 interface PaymentRepositoryInterface
 {
+    public function list(object $params): Collection;
+
+    public function listCount(object $params): int;
+
     public function find(array $filters): ?PaymentModel;
 
     public function create(array $data): PaymentModel;
