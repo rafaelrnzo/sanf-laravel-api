@@ -323,4 +323,5 @@ Route::group(['prefix' => 'v2', 'middleware' => ['auth', InjectUserIdFromPathMid
     Route::get('users/profiles/{xid}/payments/stats', ['as' => 'v2.users.payments.stats', 'uses' => 'Payment\Controllers\PaymentController@stats']);
     Route::get('users/profiles/{xid}/payments', ['as' => 'v2.users.payments.list', 'uses' => 'Payment\Controllers\PaymentController@list']);
     Route::get('users/profiles/{xid}/payments/{paymentXid}', ['as' => 'v2.users.payments.detail', 'uses' => 'Payment\Controllers\PaymentController@detail']);
+    Route::post('users/profiles/{xid}/payments/{paymentXid}/status-check', ['as' => 'v2.users.payments.status-check', 'uses' => 'Payment\Controllers\PaymentController@checkStatus']);
 });

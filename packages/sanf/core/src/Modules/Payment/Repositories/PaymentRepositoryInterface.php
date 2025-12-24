@@ -21,4 +21,8 @@ interface PaymentRepositoryInterface
     public function createInstallments(array $filters, array $installments): void;
 
     public function createMidtransTransaction(array $data): MidtransTransactionModel;
+
+    public function updateMidtransTransaction(array $filters, array $data): bool;
+
+    public function updatePayment(array $filters, array $data): bool;
 }

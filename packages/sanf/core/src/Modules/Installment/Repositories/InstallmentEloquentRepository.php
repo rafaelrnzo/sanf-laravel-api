@@ -45,6 +45,10 @@ class InstallmentEloquentRepository implements InstallmentRepositoryInterface
     {
         $model = $this->installmentModel->newQuery()->where($filters)->first();
 
-        return $model->update($data);
+        if ($model === null) {
+            return false;
+        }
+
+        return (bool) $model->update($data);
     }
 }

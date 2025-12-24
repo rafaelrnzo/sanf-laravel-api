@@ -129,4 +129,26 @@ final class PaymentEloquentRepository implements PaymentRepositoryInterface
 
         return $model;
     }
+
+    public function updateMidtransTransaction(array $filters, array $data): bool
+    {
+        $model = $this->midtransTransactionModel->newQuery()->where($filters)->first();
+
+        if ($model === null) {
+            return false;
+        }
+
+        return (bool) $model->update($data);
+    }
+
+    public function updatePayment(array $filters, array $data): bool
+    {
+        $model = $this->model->newQuery()->where($filters)->first();
+
+        if ($model === null) {
+            return false;
+        }
+
+        return (bool) $model->update($data);
+    }
 }

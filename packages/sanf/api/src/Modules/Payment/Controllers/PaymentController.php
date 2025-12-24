@@ -14,6 +14,7 @@ use Sanf\Api\Modules\Payment\Transformers\PaymentStatsTransformer;
 use Sanf\Core\Modules\Payment\Enums\PaymentStatusEnum;
 use Sanf\Core\Modules\Payment\Payloads\BrowsePaymentPayload;
 use Sanf\Core\Modules\Payment\UseCases\BrowsePaymentUseCase;
+use Sanf\Core\Modules\Payment\UseCases\CheckPaymentStatusUseCase;
 use Sanf\Core\Modules\Payment\UseCases\FindPaymentUseCase;
 use Sanf\Core\Modules\Payment\UseCases\GetPaymentStatusCountUseCase;
 
@@ -82,5 +83,22 @@ final class PaymentController extends RestApiController
         }
 
         return fractal($response, PaymentDetailTransformer::class);
+    }
+
+    public function checkStatus(
+        string $xid,
+        string $paymentXid,
+        Guard $auth,
+        CheckPaymentStatusUseCase $useCase
+    )
+    {
+        $userAuthId = $auth->id();
+        $userProfileXid = $xid;
+
+        $status = $useCase->execute($paymentXid, $userAuthId, $userProfileXid);
+
+        return $this->responseOk('Success', [
+            'status' => $status,
+        ]);
     }
 }

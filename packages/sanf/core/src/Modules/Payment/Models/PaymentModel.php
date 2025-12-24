@@ -118,6 +118,15 @@ class PaymentModel extends AbstractModel
 
     public function uncancelledMidtransTransaction()
     {
-        return $this->hasOne(MidtransTransactionModel::class, 'payment_id')->where('transaction_status', '!=', 'cancel');
+        $cancelStatuses = [
+            'cancel',
+            'canceled',
+            'cancelled',
+        ];
+
+        return $this->hasOne(MidtransTransactionModel::class, 'payment_id')
+            ->where(function ($query) use ($cancelStatuses) {
+                $query->whereNull('transaction_status')->orWhereNotIn('transaction_status', $cancelStatuses);
+            });
     }
 }
