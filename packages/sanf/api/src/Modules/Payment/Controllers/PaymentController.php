@@ -2,13 +2,15 @@
 
 namespace Sanf\Api\Modules\Payment\Controllers;
 
+use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use NbsPhp\Core\Controllers\RestApiController;
 use Sanf\Core\Modules\Payment\Exceptions\OutstandingPaymentException;
 use Sanf\Core\Modules\Payment\Exceptions\UnexistsInstallmentException;
+use Sanf\Core\Modules\Payment\Payloads\CreateInstallmentPaymentPayload;
 use Sanf\Core\Modules\Payment\Payloads\PaymentInstallmentCalculationPayload;
 use Sanf\Core\Modules\Payment\Payloads\PaymentInstallmentPayload;
-use Sanf\Core\Modules\Payment\Responses\CreateInstallmentPaymentPayload;
 use Sanf\Core\Modules\Payment\UseCases\BuildPaymentInstallmentCalculationUseCase;
 use Sanf\Core\Modules\Payment\UseCases\CreateInstallmentPaymentUseCase;
 use Sanf\Core\Modules\Payment\UseCases\ValidatePaymentInstallmentUseCase;
@@ -18,6 +20,7 @@ final class PaymentController extends RestApiController
     public function create(
         string $xid,
         Request $request,
+        Guard $auth,
         ValidatePaymentInstallmentUseCase $validateUseCase,
         BuildPaymentInstallmentCalculationUseCase $paymentCalculationUseCase,
         CreateInstallmentPaymentUseCase $createPaymentUseCase
@@ -27,8 +30,8 @@ final class PaymentController extends RestApiController
             'installments' => ['required', 'array', 'min:1'],
             'installments.*.contract_no' => ['required'],
             'installments.*.due_date' => ['required', 'integer'],
-            'custom_amount' => ['nullable', 'numeric'],
-            'custom_penalty_amount' => ['nullable', 'numeric'],
+            'custom_amount' => ['nullable', 'integer'],
+            'custom_penalty_amount' => ['nullable', 'integer'],
         ]);
 
         $installments = array_map(fn ($item) => new PaymentInstallmentPayload($item), $formData['installments']);
@@ -85,10 +88,15 @@ final class PaymentController extends RestApiController
 
         $calclulationResponse = $paymentCalculationUseCase->execute($calculationPayload);
 
-        $createPaymentPayload = new CreateInstallmentPaymentPayload($calclulationResponse->toArray());
-        $payment = $createPaymentUseCase->execute($createPaymentPayload);
+        $createPaymentPayload = new CreateInstallmentPaymentPayload(array_merge($calclulationResponse->toArray(), [
+            'userAuthId' => $auth->id(),
+            'userProfileXid' => $xid,
+        ]));
 
-        // TODO: map the result
+        $payment = DB::transaction(function () use ($createPaymentUseCase, $createPaymentPayload) {
+            return $createPaymentUseCase->execute($createPaymentPayload);
+        });
+
         return $this->responseOk('Success', $payment);
     }
 }

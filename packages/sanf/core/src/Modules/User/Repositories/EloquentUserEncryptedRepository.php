@@ -30,6 +30,11 @@ class EloquentUserEncryptedRepository extends AbstractEloquentRepository impleme
         return $this->stripEloquentModel($records);
     }
 
+    public function find(array $filters)
+    {
+        return $this->model->newQuery()->where($filters)->first();
+    }
+
     public function findById($id)
     {
         return $this->model->newQuery()->find($id);

@@ -1,26 +1,26 @@
 <?php
 
-namespace Sanf\Core\Modules\Payment\Responses;
+namespace Sanf\Core\Modules\Payment\Entities;
 
 use Sanf\Core\Traits\CastsNumericDtoProperties;
 use Spatie\DataTransferObject\DataTransferObject;
 
-class PaymentCalculationInstallmentResponse extends DataTransferObject
+final class PaymentInstallmentSnapshotEntity extends DataTransferObject
 {
     use CastsNumericDtoProperties;
 
     public string $contract_no;
-    public int $due_date;
+    public string $due_date;
     public int $total_amount;
     public int $subtotal_installment;
     public int $principal_loan;
     public int $interest_amount;
     public int $penalty_fee;
-    public string $financing_type_id; // "01"|"02"|"03",
-    public string $financing_type_desc; // "Harian"|"Bulanan"|"DP",
+    public string $financing_type_id;
+    public string $financing_type_desc;
 
     /**
-     * @var array|PaymentCalculationOutstandingInstallmentResponse[]
+     * @var array|PaymentInstallmentOutstandingSnapshotEntity[]
      */
     public $outstanding_installments;
 }

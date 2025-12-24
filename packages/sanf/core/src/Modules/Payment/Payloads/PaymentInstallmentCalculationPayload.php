@@ -7,8 +7,8 @@ use Spatie\DataTransferObject\DataTransferObject;
 class PaymentInstallmentCalculationPayload extends DataTransferObject
 {
     public string $profileXid;
-    public ?float $customAmount;
-    public ?float $customPenaltyAmount;
+    public ?int $customAmount;
+    public ?int $customPenaltyAmount;
     /**
      * @var array|PaymentInstallmentPayload[]
      */

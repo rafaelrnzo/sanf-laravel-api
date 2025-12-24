@@ -3,14 +3,20 @@
 namespace Sanf\Core\Modules\Payment\Repositories;
 
 use Sanf\Core\Encryptions\SodiumEncryption;
+use Sanf\Core\Modules\Payment\Models\MidtransTransactionModel;
 use Sanf\Core\Modules\Payment\Models\PaymentModel;
 
 final class PaymentEloquentRepository implements PaymentRepositoryInterface
 {
     protected PaymentModel $model;
+    protected MidtransTransactionModel $midtransTransactionModel;
 
-    public function __construct(PaymentModel $model) {
+    public function __construct(
+        PaymentModel $model,
+        MidtransTransactionModel $midtransTransactionModel
+    ) {
         $this->model = $model;
+        $this->midtransTransactionModel = $midtransTransactionModel;
     }
 
     public function find(array $filters): ?PaymentModel
@@ -40,5 +46,15 @@ final class PaymentEloquentRepository implements PaymentRepositoryInterface
         if ($model) {
             $model->installments()->attach($installments);
         }
+    }
+
+    public function createMidtransTransaction(array $data): MidtransTransactionModel
+    {
+        /**
+         * @var MidtransTransactionModel
+         */
+        $model = $this->midtransTransactionModel->newQuery()->create($data);
+
+        return $model;
     }
 }

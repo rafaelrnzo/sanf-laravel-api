@@ -6,6 +6,8 @@ interface UserRepositoryInterface
 {
     public function query($specification);
 
+    public function find(array $filters);
+
     public function findById($id);
 
     public function findByEmail($email);

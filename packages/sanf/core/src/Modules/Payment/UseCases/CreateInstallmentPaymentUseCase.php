@@ -6,10 +6,13 @@ use Carbon\CarbonImmutable;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use NbsPhp\Core\Exceptions\ConcurrentModificationException;
+use NbsPhp\Core\Exceptions\UserNotFoundException;
 use Sanf\Core\Modules\Installment\Enums\InstallmentStatusEnum;
 use Sanf\Core\Modules\Installment\Models\InstallmentModel;
 use Sanf\Core\Modules\Installment\Repositories\InstallmentRepositoryInterface;
 use Sanf\Core\Modules\Payment\Entities\PaymentDetailEntity;
+use Sanf\Core\Modules\Payment\Entities\PaymentInstallmentOutstandingSnapshotEntity;
+use Sanf\Core\Modules\Payment\Entities\PaymentInstallmentSnapshotEntity;
 use Sanf\Core\Modules\Payment\Entities\PaymentStatusLogItemEntity;
 use Sanf\Core\Modules\Payment\Entities\PaymentUserSnapshotEntity;
 use Sanf\Core\Modules\Payment\Enums\PaymentCategoryEnum;
@@ -17,9 +20,14 @@ use Sanf\Core\Modules\Payment\Enums\PaymentStatusEnum;
 use Sanf\Core\Modules\Payment\Exceptions\InstallmentWaitingPaymentException;
 use Sanf\Core\Modules\Payment\Exceptions\PaymentNoInstallmentException;
 use Sanf\Core\Modules\Payment\Models\PaymentModel;
+use Sanf\Core\Modules\Payment\Payloads\CreateInstallmentPaymentPayload;
 use Sanf\Core\Modules\Payment\Repositories\PaymentRepositoryInterface;
-use Sanf\Core\Modules\Payment\Responses\CreateInstallmentPaymentPayload;
+use Sanf\Core\Modules\Payment\Responses\CreateInstallmentPaymentResponse;
 use Sanf\Core\Modules\Payment\Responses\PaymentCalculationInstallmentResponse;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
+use Sanf\Integration\Modules\Midtrans\MidtransClient;
+use Sanf\Integration\Modules\Midtrans\Payloads\CreateSnapTransactionPayload;
+use Sanf\Integration\Modules\Midtrans\Payloads\SnapTransactionDetailsPayload;
 use Sanf\Integration\Modules\SanfCore\Enums\InstallmentPaymentTypeEnum;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClientV2;
 
@@ -27,17 +35,23 @@ final class CreateInstallmentPaymentUseCase
 {
     protected PaymentRepositoryInterface $paymentRepository;
     protected InstallmentRepositoryInterface $installmentRepository;
+    protected MidtransClient $midtransClient;
+    protected UserRepositoryInterface $userRepository;
 
     public function __construct(
         PaymentRepositoryInterface $paymentRepository,
-        InstallmentRepositoryInterface $installmentRepository
+        InstallmentRepositoryInterface $installmentRepository,
+        UserRepositoryInterface $userRepository,
+        MidtransClient $midtransClient
     )
     {
         $this->paymentRepository = $paymentRepository;
         $this->installmentRepository = $installmentRepository;
+        $this->userRepository = $userRepository;
+        $this->midtransClient = $midtransClient;
     }
 
-    public function execute(CreateInstallmentPaymentPayload $payload): PaymentModel
+    public function execute(CreateInstallmentPaymentPayload $payload): CreateInstallmentPaymentResponse
     {
         if (count($payload->installments) === 0) {
             throw new PaymentNoInstallmentException();
@@ -47,7 +61,7 @@ final class CreateInstallmentPaymentUseCase
 
         $installmentCollection = collect($payload->installments);
         $contractNums = $installmentCollection->pluck('contract_no')->toArray();
-        $dueDates = $installmentCollection->pluck('due_date')->map(fn ($item) => $this->normalizeDueDate($item))->toArray();
+        $dueDates = $installmentCollection->pluck('due_date')->map(fn ($item) => $this->installmentDueDateDB($item))->toArray();
 
         $existingInstallments = $this->installmentRepository->listByContracts($contractNums, $dueDates);
 
@@ -70,7 +84,7 @@ final class CreateInstallmentPaymentUseCase
 
         // TODO: how to get PaymentCategoryEnum::FINAL_PAYMENT category (oustanding plafond == total installment amount)
         if (count($payload->installments) === 1) {
-            $installment = $payload->installments[0];
+            $installment = (object) $payload->installments[0];
 
             switch ($installment->financing_type_id) {
                 case InstallmentPaymentTypeEnum::HARIAN:
@@ -84,12 +98,21 @@ final class CreateInstallmentPaymentUseCase
 
         $status = PaymentStatusEnum::PENDING;
 
+        $user = $this->userRepository->find([
+            'id' => $payload->userAuthId,
+            'xid' => $payload->userProfileXid,
+        ]);
+
+        if (!$user) {
+            throw new UserNotFoundException();
+        }
+
         $userSnapshot = new PaymentUserSnapshotEntity([
-            'id' => null,
-            'username' => null,
-            'full_name' => null,
-            'phone_number' => null,
-            'xid' => null,
+            'id' => $user->id,
+            'username' => $user->username,
+            'full_name' => $user->full_name,
+            'phone_number' => $user->phone_number,
+            'xid' => $user->xid,
         ]);
 
         $payment = $this->paymentRepository->create([
@@ -113,23 +136,49 @@ final class CreateInstallmentPaymentUseCase
 
         $this->savePaymentInstallments($payment->id, $savedInstallments);
 
-        // create midtrans payment
-        // save midtrans payment data
+        $this->createSnapMidtrans($payload, $payment);
 
-        $payment->load('installments');
+        $payment->load('installments', 'uncancelledMidtransTransaction');
 
-        return $payment;
+        return new CreateInstallmentPaymentResponse([
+            'xid' => $payment->xid,
+            'total_payment' => $payment->amount,
+            'subtotal_all_installment' => $payment->payment_detail->subtotal_all_installment,
+            'admin_fee' => $payment->payment_detail->admin_fee,
+            'discount' => $payment->payment_detail->discount,
+            'custom_amount' => $payment->payment_detail->custom_amount,
+            'custom_penalty_amount' => $payment->payment_detail->custom_penalty_amount,
+            'currency' => $payment->currency,
+            'type' => $payment->category,
+            'status' => $payment->status,
+            'installments' => [],
+            'due_date' => unix_timestamp($payment->expired_at),
+            'created_at' => nullable_unix_timestamp($payment->created_at),
+            'updated_at' => nullable_unix_timestamp($payment->updated_at),
+        ]);
     }
 
     private function validateWaitingPaymentInstallment(Collection $existingInstallments, array $contractNums, array $dueDates)
     {
-        $waitingPaymentExist = $existingInstallments->whereIn('contract_no', $contractNums)
-            ->whereIn('due_date', $dueDates)
-            ->where('status', InstallmentStatusEnum::WAITING_PAYMENT)
-            ->first();
+        $waitingPaymentExist = $existingInstallments->map(function ($installment) {
+                $installment->due_date_iso = $installment->due_date->toIso8601String();
 
-        if ($waitingPaymentExist) {
-            throw new InstallmentWaitingPaymentException();
+                return $installment;
+            })
+            ->whereIn('contract_no', $contractNums)
+            ->whereIn('due_date_iso', $dueDates)
+            ->where('status', InstallmentStatusEnum::WAITING_PAYMENT);
+
+        if (!$waitingPaymentExist->isEmpty()) {
+            $e = new InstallmentWaitingPaymentException();
+            $e->setData([
+                'installments' => $waitingPaymentExist->map(fn ($item) => [
+                    'contract_no' => $item->contract_no,
+                    'due_date' => $item->due_date->timestamp,
+                ]),
+            ]);
+
+            throw $e;
         }
     }
 
@@ -163,6 +212,7 @@ final class CreateInstallmentPaymentUseCase
         $result = [];
 
         foreach ($installments as $installment) {
+            $installment = (object) $installment;
             $key = $this->installmentGroupKey($installment->contract_no, $installment->due_date);
 
             /**
@@ -194,7 +244,7 @@ final class CreateInstallmentPaymentUseCase
             $newInstallment = $this->installmentRepository->create([
                 'xid' => nano_id(),
                 'contract_no' => $installment->contract_no,
-                'due_date' => Carbon::createFromTimestamp($installment->due_date)->toIso8601String(),
+                'due_date' => $this->installmentDueDateDB($installment->due_date),
                 'amount' => $installment->total_amount,
                 'status' => InstallmentStatusEnum::WAITING_PAYMENT,
             ]);
@@ -205,17 +255,54 @@ final class CreateInstallmentPaymentUseCase
         return $result;
     }
 
+    private function installmentDueDateDB(int $dueDate): string
+    {
+        return Carbon::createFromTimestamp($dueDate)->toIso8601String();
+    }
+
     /**
      * @param array<int, PaymentCalculationInstallmentResponse> $savedInstallments
      * @return void
      */
     private function savePaymentInstallments(int $paymentId, array $savedInstallments)
     {
-        $mapInstallments = array_map(fn ($item) => ['installment_snapshot' => $item], $savedInstallments);
+        $mapInstallments = array_map(function ($item) {
+            $item->due_date = Carbon::createFromTimestamp($item->due_date)->toIso8601String();
+            $item->outstanding_installments = array_map(function ($outstanding) {
+                $outstanding->due_date = Carbon::createFromTimestamp($outstanding->due_date)->toIso8601String();
+
+                return new PaymentInstallmentOutstandingSnapshotEntity((array) $outstanding);
+            }, $item->outstanding_installments ?? []);
+
+            return ['installment_snapshot' => new PaymentInstallmentSnapshotEntity((array) $item)];
+        }, $savedInstallments);
 
         $this->paymentRepository->createInstallments(
             ['id' => $paymentId],
             $mapInstallments
         );
+    }
+
+    private function createSnapMidtrans(CreateInstallmentPaymentPayload $installmentPayload, PaymentModel $payment)
+    {
+        $midtransOrderId = nano_id();
+
+        // TODO: add item_details, customer_details, expiry
+        $payload = new CreateSnapTransactionPayload([
+            'transaction_details' => new SnapTransactionDetailsPayload([
+                'order_id' => $midtransOrderId,
+                'gross_amount' => $installmentPayload->total_payment,
+            ]),
+        ]);
+
+        $snap = $this->midtransClient->createSnapTransaction($payload);
+
+        $this->paymentRepository->createMidtransTransaction([
+            'midtrans_order_id' => $midtransOrderId,
+            'midtrans_snap_token' => $snap->token,
+            'payment_id' => $payment->id,
+            'payment_xid' => $payment->xid,
+            'gross_amount' => $installmentPayload->total_payment,
+        ]);
     }
 }

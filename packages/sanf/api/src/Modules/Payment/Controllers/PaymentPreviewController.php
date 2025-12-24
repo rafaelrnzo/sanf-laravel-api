@@ -61,8 +61,8 @@ final class PaymentPreviewController extends RestApiController
     )
     {
         $formData = $this->validate($request, [
-            'custom_amount' => ['nullable', 'numeric'],
-            'custom_penalty_amount' => ['nullable', 'numeric'],
+            'custom_amount' => ['nullable', 'integer'],
+            'custom_penalty_amount' => ['nullable', 'integer'],
         ]);
 
         $customAmount = null;

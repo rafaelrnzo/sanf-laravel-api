@@ -1,7 +1,8 @@
 <?php
 
-namespace Sanf\Core\Modules\Payment\Responses;
+namespace Sanf\Core\Modules\Payment\Payloads;
 
+use Sanf\Core\Modules\Payment\Responses\PaymentCalculationInstallmentResponse;
 use Sanf\Core\Traits\CastsNumericDtoProperties;
 use Spatie\DataTransferObject\DataTransferObject;
 
@@ -11,12 +12,12 @@ class CreateInstallmentPaymentPayload extends DataTransferObject
 
     public int $userAuthId;
     public string $userProfileXid;
-    public float $total_payment;
-    public float $subtotal_all_installment;
-    public float $discount;
-    public float $admin_fee;
-    public ?float $custom_amount;
-    public ?float $custom_penalty_amount;
+    public int $total_payment;
+    public int $subtotal_all_installment;
+    public int $discount;
+    public int $admin_fee;
+    public ?int $custom_amount;
+    public ?int $custom_penalty_amount;
     public string $currency;
 
     /**
