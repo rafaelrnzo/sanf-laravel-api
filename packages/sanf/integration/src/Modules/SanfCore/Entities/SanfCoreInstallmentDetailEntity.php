@@ -10,7 +10,7 @@ class SanfCoreInstallmentDetailEntity extends FlexibleDataTransferObject
 
     public SanfCoreInstallmentDetailBillEntity $tagihan;
 
-    /** @var SanfCoreInstallmentDetailOverdueEntity[]|null */
+    /** @var array|SanfCoreInstallmentDetailOverdueEntity[]|null */
     public ?array $overdue;
 
     public ?SanfCoreInstallmentDetailEStatementEntity $e_statement;

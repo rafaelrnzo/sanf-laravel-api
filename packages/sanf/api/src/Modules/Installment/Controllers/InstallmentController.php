@@ -6,10 +6,13 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
+use Sanf\Api\Modules\Installment\Transformers\InstallmentDetailTransformer;
 use Sanf\Api\Modules\Installment\Transformers\InstallmentListTransformer;
 use Sanf\Core\Modules\Installment\Payloads\BrowseInstallmentPayload;
+use Sanf\Core\Modules\Installment\Payloads\FindInstallmentPayload;
 use Sanf\Core\Modules\Installment\Services\SummaryInstallmentService;
 use Sanf\Core\Modules\Installment\UseCases\BrowseInstallmentUseCase;
+use Sanf\Core\Modules\Installment\UseCases\FindInstallmentUseCase;
 
 final class InstallmentController extends RestApiController
 {
@@ -46,5 +49,23 @@ final class InstallmentController extends RestApiController
         return fractal($result->data)
             ->transformWith(InstallmentListTransformer::class)
             ->paginateWith(new LazyPaginatorAdapter($result->paginate));
+    }
+
+    public function detail(Request $request, Guard $auth, string $xid, string $contractNo, string $dueDate, FindInstallmentUseCase $useCase)
+    {
+        $dto = new FindInstallmentPayload([
+            'contractNo' => $contractNo,
+            'dueDate' => $dueDate,
+            'userId' => $auth->id(),
+            'profileXid' => $xid,
+        ]);
+
+        $result = $useCase->execute($dto);
+
+        $fractal = fractal($result, InstallmentDetailTransformer::class);
+
+        $payload = $fractal->toArray();
+
+        return $this->responseOk('OK', $payload['data'] ?? $payload);
     }
 }
