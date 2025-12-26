@@ -35,6 +35,7 @@ final class MidtransPaymentMethodResolver
         // General VA
         if (!empty($midtransRaw['va_numbers']) && is_array($midtransRaw['va_numbers'])) {
             $virtualAccount = Arr::first($midtransRaw['va_numbers']);
+            $virtualAccount = self::convertToArray($virtualAccount);
 
             $result->provider = $virtualAccount['bank'] ?? null;
             $result->virtual_account_number = $virtualAccount['va_number'] ?? null;
@@ -67,5 +68,25 @@ final class MidtransPaymentMethodResolver
     public static function emptyResult(): MidtransPaymentMethod
     {
         return MidtransPaymentMethod::empty();
+    }
+
+    /**
+     * @param mixed $virtualAccount Midtrans VA entry that can be array|object|null
+     */
+    private static function convertToArray($virtualAccount): array
+    {
+        if (is_array($virtualAccount)) {
+            return $virtualAccount;
+        }
+
+        if (is_object($virtualAccount)) {
+            if (method_exists($virtualAccount, 'toArray')) {
+                return (array) $virtualAccount->toArray();
+            }
+
+            return (array) $virtualAccount;
+        }
+
+        return [];
     }
 }
