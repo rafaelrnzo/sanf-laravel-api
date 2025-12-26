@@ -64,7 +64,7 @@ final class CheckPaymentStatusUseCase
 
                 $this->updatePaymentStatus($data, $statusResponse);
 
-                $data->status = $this->mapMidtransStatusToPaymentStatus($statusResponse->transaction_status);
+                $data->status = $this->mapMidtransStatusToPaymentStatus($statusResponse->transaction_status, $statusResponse->fraud_status);
 
                 $this->updateInstallmentsStatus($data);
 
@@ -81,7 +81,7 @@ final class CheckPaymentStatusUseCase
         PaymentModel $payment,
         MidtransTransactionStatusResponse $statusResponse
     ): void {
-        $paymentStatus = $this->mapMidtransStatusToPaymentStatus($statusResponse->transaction_status);
+        $paymentStatus = $this->mapMidtransStatusToPaymentStatus($statusResponse->transaction_status, $statusResponse->fraud_status);
 
         if ($paymentStatus === null || $paymentStatus === $payment->status) {
             return;
@@ -212,7 +212,7 @@ final class CheckPaymentStatusUseCase
         return (float) $grossAmount;
     }
 
-    private function mapMidtransStatusToPaymentStatus(?string $midtransStatus): ?string
+    private function mapMidtransStatusToPaymentStatus(?string $midtransStatus, ?string $fraudStatus): ?string
     {
         if ($midtransStatus === null) {
             return null;
@@ -221,8 +221,11 @@ final class CheckPaymentStatusUseCase
         $normalized = strtolower($midtransStatus);
 
         switch ($normalized) {
-            case 'settlement':
             case 'capture':
+                return $fraudStatus === 'accept'
+                    ? PaymentStatusEnum::SUCCESS
+                    : PaymentStatusEnum::PENDING;
+            case 'settlement':
             case 'success':
                 return PaymentStatusEnum::SUCCESS;
             case 'pending':
