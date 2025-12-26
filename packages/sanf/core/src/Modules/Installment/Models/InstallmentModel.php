@@ -8,6 +8,8 @@ use Sanf\Core\Modules\Payment\Models\PaymentModel;
 /**
  * @property int $id
  * @property string $xid
+ * @property int $user_auth_id
+ * @property string $user_profile_xid
  * @property string $contract_no
  * @property \Carbon\Carbon $due_date
  * @property float $amount
@@ -23,6 +25,8 @@ class InstallmentModel extends AbstractModel
 
     protected $fillable = [
         'xid',
+        'user_auth_id',
+        'user_profile_xid',
         'contract_no',
         'due_date',
         'amount',

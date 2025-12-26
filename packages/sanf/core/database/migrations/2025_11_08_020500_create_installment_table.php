@@ -16,6 +16,8 @@ class CreateInstallmentTable extends Migration
         Schema::create('installment', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('xid', 32)->unique();
+            $table->unsignedBigInteger('user_auth_id')->index();
+            $table->string('user_profile_xid', 100)->index();
             $table->string('contract_no', 100)->index();
             $table->timestampTz('due_date')->index();
             $table->decimal('amount', 20, 2);
