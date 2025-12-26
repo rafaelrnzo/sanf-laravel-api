@@ -18,6 +18,8 @@ class PaymentCalculationInstallmentResponse extends DataTransferObject
     public int $penalty_fee;
     public string $financing_type_id; // "01"|"02"|"03",
     public string $financing_type_desc; // "Harian"|"Bulanan"|"DP",
+    public ?int $sequence_no;
+    public ?int $sequence_total;
 
     /**
      * @var array|PaymentCalculationOutstandingInstallmentResponse[]

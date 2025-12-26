@@ -10,6 +10,7 @@ use Sanf\Core\Modules\Payment\Models\PaymentModel;
 use Sanf\Core\Modules\Payment\Repositories\PaymentRepositoryInterface;
 use Sanf\Integration\Modules\Midtrans\MidtransClient;
 use Sanf\Integration\Modules\Midtrans\Payloads\CreateSnapTransactionPayload;
+use Sanf\Integration\Modules\Midtrans\Payloads\SnapCallbacksPayload;
 use Sanf\Integration\Modules\Midtrans\Payloads\SnapTransactionDetailsPayload;
 
 final class RegeneratePaymentUseCase
@@ -99,6 +100,10 @@ final class RegeneratePaymentUseCase
                 'gross_amount' => (int) round($payment->amount),
             ]),
             'enabled_payments' => config('midtrans.enabled_payments'),
+            'callbacks' => new SnapCallbacksPayload([
+                'finish' => route('v2.payments.static-success'),
+                'error' => route('v2.payments.static-failed'),
+            ]),
         ]);
 
         $snap = $this->midtransClient->createSnapTransaction($payload);

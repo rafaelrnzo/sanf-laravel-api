@@ -4,10 +4,13 @@ namespace Sanf\Core\Modules\Payment\UseCases;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
+use Sanf\Core\Modules\Installment\Exceptions\InstallmentNotFoundException;
+use Sanf\Core\Modules\Installment\Exceptions\PaidInstallmentException;
 use Sanf\Core\Modules\Payment\Payloads\PaymentInstallmentCalculationPayload;
 use Sanf\Core\Modules\Payment\Responses\PaymentCalculationInstallmentResponse;
 use Sanf\Core\Modules\Payment\Responses\PaymentCalculationOutstandingInstallmentResponse;
 use Sanf\Core\Modules\Payment\Responses\PaymentInstallmentCalculationResponse;
+use Sanf\Integration\Modules\SanfCore\Entities\SanfCoreInstallmentDetailEntity;
 use Sanf\Integration\Modules\SanfCore\Entities\SanfCoreInstallmentDetailOverdueEntity;
 use Sanf\Integration\Modules\SanfCore\Enums\InstallmentPaymentStatusEnum;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClientV2;
@@ -35,17 +38,31 @@ final class BuildPaymentInstallmentCalculationUseCase
             $dueDate = Carbon::createFromTimestamp($instalment->due_date)->format('Y-m-d');
 
             if ($payload->preferCache) {
+                /**
+                 * @var SanfCoreInstallmentDetailEntity|null
+                 */
                 $installmentDetail = Cache::remember(
                     "CORE::TAGIHAN_DETAIL:{$payload->profileXid},{$instalment->contract_no},{$dueDate}",
                     Carbon::now()->addMinute(),
                     fn () => $this->sanfCoreApiClient->getInstallmentDetail($instalment->contract_no, $dueDate)
                 );
             } else {
+                /**
+                 * @var SanfCoreInstallmentDetailEntity|null
+                 */
                 $installmentDetail = $this->sanfCoreApiClient->getInstallmentDetail($instalment->contract_no, $dueDate);
             }
 
-            if ($installmentDetail === null || $installmentDetail->tagihan->status_pembayaran_id == InstallmentPaymentStatusEnum::LUNAS) {
-                continue;
+            if ($installmentDetail === null) {
+                $e = new InstallmentNotFoundException();
+                $e->setData(['installment' => $instalment->toArray()]);
+                throw $e;
+            }
+
+            if ($installmentDetail->tagihan->status_pembayaran_id == InstallmentPaymentStatusEnum::LUNAS) {
+                $e = new PaidInstallmentException();
+                $e->setData(['installment' => $instalment->toArray()]);
+                throw $e;
             }
 
             // total amount without discount
@@ -76,6 +93,8 @@ final class BuildPaymentInstallmentCalculationUseCase
                 'penalty_fee' => $installmentDetail->tagihan->denda,
                 'financing_type_id' => $installmentDetail->kontrak->tipe_pembayaran_id,
                 'financing_type_desc' => $installmentDetail->kontrak->tipe_pembayaran_desc,
+                'sequence_no' => $installmentDetail->kontrak->schedule_no,
+                'sequence_total' => $installmentDetail->kontrak->schedule_total,
                 'outstanding_installments' => array_map(
                     fn (SanfCoreInstallmentDetailOverdueEntity $item) => new PaymentCalculationOutstandingInstallmentResponse([
                         'due_date' => Carbon::parse($item->due_date, $coreTimeZone)->endOfDay()->timestamp,

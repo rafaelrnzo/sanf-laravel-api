@@ -11,7 +11,6 @@ return [
             'unit' => env('MIDTRANS_EXPIRY_UNIT', 'minutes'),
             'duration' => (int) env('MIDTRANS_EXPIRY_DURATION', 30),
         ],
-        'finish_redirect_url' => env('MIDTRANS_FINISH_REDIRECT_URL'),
     ],
     'enabled_payments' => ['bank_transfer'],
 

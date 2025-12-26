@@ -147,4 +147,22 @@ final class PaymentController extends RestApiController
 
         return $this->responseOk();
     }
+
+    /**
+     * Static page for SNAP Midtrans redirect when payment success
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function staticSuccess()
+    {
+        return $this->responseOk('Payment Success');
+    }
+
+    /**
+     * Static page for SNAP Midtrans redirect when payment failed
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function staticFailed()
+    {
+        return $this->responseOk('Payment Failed');
+    }
 }

@@ -23,9 +23,11 @@ use Sanf\Core\Modules\Payment\Models\PaymentModel;
 use Sanf\Core\Modules\Payment\Payloads\CreateInstallmentPaymentPayload;
 use Sanf\Core\Modules\Payment\Repositories\PaymentRepositoryInterface;
 use Sanf\Core\Modules\Payment\Responses\PaymentCalculationInstallmentResponse;
+use Sanf\Core\Modules\Payment\Responses\PaymentCalculationOutstandingInstallmentResponse;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Integration\Modules\Midtrans\MidtransClient;
 use Sanf\Integration\Modules\Midtrans\Payloads\CreateSnapTransactionPayload;
+use Sanf\Integration\Modules\Midtrans\Payloads\SnapCallbacksPayload;
 use Sanf\Integration\Modules\Midtrans\Payloads\SnapTransactionDetailsPayload;
 use Sanf\Integration\Modules\SanfCore\Enums\InstallmentPaymentTypeEnum;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClientV2;
@@ -252,15 +254,17 @@ final class CreateInstallmentPaymentUseCase
      */
     private function savePaymentInstallments(int $paymentId, array $savedInstallments)
     {
-        $mapInstallments = array_map(function ($item) {
-            $item->due_date = Carbon::createFromTimestamp($item->due_date)->toIso8601String();
-            $item->outstanding_installments = array_map(function ($outstanding) {
-                $outstanding->due_date = Carbon::createFromTimestamp($outstanding->due_date)->toIso8601String();
+        $mapInstallments = array_map(function (PaymentCalculationInstallmentResponse $item) {
+            $newItem = $item->toArray();
+            $newItem['due_date'] = Carbon::createFromTimestamp($item->due_date)->toIso8601String();
+            $newItem['outstanding_installments'] = array_map(function (PaymentCalculationOutstandingInstallmentResponse $outstanding) {
+                $newOutstanding = $outstanding->toArray();
+                $newOutstanding['due_date'] = Carbon::createFromTimestamp($outstanding->due_date)->toIso8601String();
 
-                return new PaymentInstallmentOutstandingSnapshotEntity((array) $outstanding);
+                return new PaymentInstallmentOutstandingSnapshotEntity($newOutstanding);
             }, $item->outstanding_installments ?? []);
 
-            return ['installment_snapshot' => new PaymentInstallmentSnapshotEntity((array) $item)];
+            return ['installment_snapshot' => new PaymentInstallmentSnapshotEntity($newItem)];
         }, $savedInstallments);
 
         $this->paymentRepository->createInstallments(
@@ -280,6 +284,10 @@ final class CreateInstallmentPaymentUseCase
                 'gross_amount' => $installmentPayload->total_payment,
             ]),
             'enabled_payments' => config('midtrans.enabled_payments'),
+            'callbacks' => new SnapCallbacksPayload([
+                'finish' => route('v2.payments.static-success'),
+                'error' => route('v2.payments.static-failed'),
+            ]),
         ]);
 
         $snap = $this->midtransClient->createSnapTransaction($payload);
