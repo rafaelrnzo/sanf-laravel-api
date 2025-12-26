@@ -9,7 +9,7 @@ final class RegeneratePaymentTransformer extends TransformerAbstract
 {
     public function transform(PaymentModel $model)
     {
-        $midtransTransaction = $model->activeMidtransTransaction;
+        $midtransTransaction = $model->midtransTransaction;
 
         return [
             'snap_midtrans' => [

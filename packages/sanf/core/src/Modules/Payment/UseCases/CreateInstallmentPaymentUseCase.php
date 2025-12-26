@@ -137,7 +137,7 @@ final class CreateInstallmentPaymentUseCase
 
         $this->createSnapMidtrans($payload, $payment);
 
-        $payment->load('installments', 'activeMidtransTransaction');
+        $payment->load('installments', 'midtransTransaction');
 
         return $payment;
     }

@@ -12,7 +12,7 @@ final class PaymentDetailTransformer extends TransformerAbstract
     public function transform(PaymentModel $model)
     {
         $paymentDetail = $model->payment_detail;
-        $midtransTransaction = $model->activeMidtransTransaction;
+        $midtransTransaction = $model->midtransTransaction;
 
         return [
             'xid' => $model->xid,

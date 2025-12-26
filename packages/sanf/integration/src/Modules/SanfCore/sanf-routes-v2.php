@@ -19,4 +19,5 @@ Route::group(config('sanf-api-v2.url'), [SanfCoreApiProcessorV2::class], functio
     Route::get('sanf-internal-v2.installment.summary', '/api/tagihan/summary');
     Route::get('sanf-internal-v2.installment.list', '/api/tagihan/list');
     Route::get('sanf-internal-v2.installment.detail', '/api/tagihan/detail/{no_kontrak}/{jatuh_tempo}');
+    Route::post('sanf-internal-v2.installment.pay', '/api/tagihan/callback');
 });

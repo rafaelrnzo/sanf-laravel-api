@@ -42,9 +42,9 @@ final class CancelPaymentUseCase
             return null;
         }
 
-        $data->load(['activeMidtransTransaction', 'installments']);
+        $data->load(['midtransTransaction', 'installments']);
 
-        $midtransTransaction = $data->activeMidtransTransaction;
+        $midtransTransaction = $data->midtransTransaction;
 
         if (!$this->isPendingPayment($data) || !$this->isCancelableMidtransTransaction($midtransTransaction)) {
             throw new PaymentCannotBeCancelledException();

@@ -63,7 +63,7 @@ final class PaymentEloquentRepository implements PaymentRepositoryInterface
         }
 
         return $this->listQuery($params)
-            ->with(['installments', 'activeMidtransTransaction'])
+            ->with(['installments', 'midtransTransaction'])
             ->when($skip, function ($query, $skip) {
                 return $query->skip($skip);
             })
@@ -139,6 +139,17 @@ final class PaymentEloquentRepository implements PaymentRepositoryInterface
         }
 
         return (bool) $model->update($data);
+    }
+
+    public function deleteMidtransTransaction(array $filters): bool
+    {
+        $model = $this->midtransTransactionModel->newQuery()->where($filters)->first();
+
+        if ($model === null) {
+            return false;
+        }
+
+        return (bool) $model->delete();
     }
 
     public function updatePayment(array $filters, array $data): bool

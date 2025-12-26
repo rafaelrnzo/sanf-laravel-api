@@ -39,9 +39,9 @@ final class RegeneratePaymentUseCase
             return null;
         }
 
-        $payment->load(['activeMidtransTransaction']);
+        $payment->load(['midtransTransaction']);
 
-        $midtransTransaction = $payment->activeMidtransTransaction;
+        $midtransTransaction = $payment->midtransTransaction;
 
         if (!$this->isPendingPayment($payment) || !$this->isCancelableMidtransTransaction($midtransTransaction)) {
             throw new PaymentCannotBeCancelledException();
@@ -51,7 +51,7 @@ final class RegeneratePaymentUseCase
             $this->cancelMidtransTransaction($midtransTransaction);
         }
 
-        $payment->activeMidtransTransaction = $this->createSnapMidtrans($payment);
+        $payment->midtransTransaction = $this->createSnapMidtrans($payment);
 
         return $payment;
     }
@@ -85,6 +85,8 @@ final class RegeneratePaymentUseCase
         if (!$updated) {
             throw new ConcurrentModificationException();
         }
+
+        $this->repository->deleteMidtransTransaction(['id' => $transaction->id]);
     }
 
     private function createSnapMidtrans(PaymentModel $payment): MidtransTransactionModel

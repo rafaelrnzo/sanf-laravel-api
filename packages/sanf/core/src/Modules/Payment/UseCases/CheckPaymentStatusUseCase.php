@@ -4,29 +4,38 @@ namespace Sanf\Core\Modules\Payment\UseCases;
 
 use Carbon\Carbon;
 use NbsPhp\Core\Exceptions\ConcurrentModificationException;
+use Sanf\Api\Modules\Payment\Support\MidtransPaymentMethodResolver;
 use Sanf\Core\Modules\Installment\Enums\InstallmentStatusEnum;
+use Sanf\Core\Modules\Installment\Models\InstallmentModel;
 use Sanf\Core\Modules\Installment\Repositories\InstallmentRepositoryInterface;
+use Sanf\Core\Modules\Payment\Entities\PaymentInstallmentSnapshotEntity;
 use Sanf\Core\Modules\Payment\Enums\PaymentStatusEnum;
 use Sanf\Core\Modules\Payment\Models\MidtransTransactionModel;
 use Sanf\Core\Modules\Payment\Models\PaymentModel;
 use Sanf\Core\Modules\Payment\Repositories\PaymentRepositoryInterface;
 use Sanf\Integration\Modules\Midtrans\MidtransClient;
 use Sanf\Integration\Modules\Midtrans\Responses\MidtransTransactionStatusResponse;
+use Sanf\Integration\Modules\SanfCore\Payloads\SanfCoreInstallmentPaymentItem;
+use Sanf\Integration\Modules\SanfCore\Payloads\SanfCorePayInstallmentPayload;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClientV2;
 
 final class CheckPaymentStatusUseCase
 {
     protected PaymentRepositoryInterface $repository;
     protected MidtransClient $midtransClient;
     protected InstallmentRepositoryInterface $installmentRepository;
+    protected SanfCoreApiClientV2 $sanfCoreApiClient;
 
     public function __construct(
         PaymentRepositoryInterface $repository,
         MidtransClient $midtransClient,
-        InstallmentRepositoryInterface $installmentRepository
+        InstallmentRepositoryInterface $installmentRepository,
+        SanfCoreApiClientV2 $sanfCoreApiClient
     ) {
         $this->repository = $repository;
         $this->midtransClient = $midtransClient;
         $this->installmentRepository = $installmentRepository;
+        $this->sanfCoreApiClient = $sanfCoreApiClient;
     }
 
     public function execute(string $xid, int $userAuthId, string $userProfileXid): ?string
@@ -43,9 +52,9 @@ final class CheckPaymentStatusUseCase
             return null;
         }
 
-        $data->load(['activeMidtransTransaction', 'installments']);
+        $data->load(['midtransTransaction', 'installments']);
 
-        $midtransTransaction = $data->activeMidtransTransaction;
+        $midtransTransaction = $data->midtransTransaction;
 
         if (optional($midtransTransaction)->midtrans_order_id) {
             $statusResponse = $this->midtransClient->getTransactionStatus($midtransTransaction->midtrans_order_id);
@@ -58,6 +67,10 @@ final class CheckPaymentStatusUseCase
                 $data->status = $this->mapMidtransStatusToPaymentStatus($statusResponse->transaction_status);
 
                 $this->updateInstallmentsStatus($data);
+
+                if ($data->status === PaymentStatusEnum::SUCCESS) {
+                    $this->sanfCorePayInstallment($data, $midtransTransaction, $statusResponse);
+                }
             }
         }
 
@@ -248,5 +261,36 @@ final class CheckPaymentStatusUseCase
         }
 
         return null;
+    }
+
+    private function sanfCorePayInstallment($payment, $midtransTransaction, $midtransTransactionStatus)
+    {
+        $paymentMethod = MidtransPaymentMethodResolver::resolve($midtransTransactionStatus->raw);
+
+        $payInstallmentPayload = new SanfCorePayInstallmentPayload([
+            'id_transaksi' => $midtransTransaction->midtrans_order_id,
+            'status_pembayaran' => 'PAID',
+            'tgl_pembayaran' => Carbon::make($midtransTransactionStatus->transaction_time)->format('Y-m-d H:i:s'),
+            'metode_bayar' => 'VA', // only virtual account for now
+            'bank' => $paymentMethod->provider,
+            'nomor_va' => $paymentMethod->virtual_account_number,
+            'total_bayar' => $payment->amount,
+            'detail_pembayaran' => $payment->installments->map(function (InstallmentModel $installment) use ($payment) {
+                /** @var PaymentInstallmentSnapshotEntity */
+                $installmentSnapshot = $installment->pivot->installment_snapshot;
+
+                return new SanfCoreInstallmentPaymentItem([
+                    'no_kontrak' => $installmentSnapshot->contract_no,
+                    'cust_id' => $payment->user_profile_xid,
+                    'due_date' => Carbon::make($installmentSnapshot->due_date)->shiftTimezone(SanfCoreApiClientV2::DEFAULT_TIMEZONE)->format('Y-m-d'),
+                    'schedule_no' => null,
+                    'amount_tagihan' => $installmentSnapshot->principal_loan,
+                    'amount_pinalty' => $installmentSnapshot->penalty_fee,
+                    'total_pembayaran' => $installmentSnapshot->total_amount,
+                ]);
+            })->toArray(),
+        ]);
+
+        $this->sanfCoreApiClient->payInstallment($payInstallmentPayload);
     }
 }

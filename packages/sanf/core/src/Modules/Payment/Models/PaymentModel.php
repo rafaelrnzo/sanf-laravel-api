@@ -27,7 +27,7 @@ use Sanf\Core\Traits\SodiumEncryptionTrait;
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|InstallmentModel[] $installments
- * @property-read \Illuminate\Database\Eloquent\Collection|MidtransTransactionModel[] $midtransTransactions
+ * @property ?MidtransTransactionModel $midtransTransaction
  * @property ?MidtransTransactionModel $activeMidtransTransaction
  * @property PaymentStatusLogItemEntity[] $status_log
  * @property PaymentUserSnapshotEntity $user_snapshot
@@ -111,9 +111,9 @@ class PaymentModel extends AbstractModel
         ->withTimestamps();
     }
 
-    public function midtransTransactions()
+    public function midtransTransaction()
     {
-        return $this->hasMany(MidtransTransactionModel::class, 'payment_id');
+        return $this->hasOne(MidtransTransactionModel::class, 'payment_id');
     }
 
     public function activeMidtransTransaction()
