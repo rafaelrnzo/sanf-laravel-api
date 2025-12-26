@@ -32,10 +32,14 @@ class BrowseInstallmentUseCase
 
     public function execute(BrowseInstallmentPayload $dto)
     {
-        // $user = $this->userRepository->findById($dto->userId);
-        // if (!$user) {
-        //     throw new UserNotFoundException();
-        // }
+        $user = $this->userRepository->find([
+            'id' => $dto->userId,
+            'xid' => $dto->profileXid,
+        ]);
+
+        if (!$user) {
+            throw new UserNotFoundException();
+        }
 
         $page = intdiv($dto->skip, $dto->limit) + 1;
         $perPage = $dto->limit;

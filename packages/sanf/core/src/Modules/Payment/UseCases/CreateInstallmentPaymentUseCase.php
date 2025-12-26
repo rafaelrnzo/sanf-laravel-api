@@ -62,7 +62,7 @@ final class CreateInstallmentPaymentUseCase
         $contractNums = $installmentCollection->pluck('contract_no')->toArray();
         $dueDates = $installmentCollection->pluck('due_date')->map(fn ($item) => $this->installmentDueDateDB($item))->toArray();
 
-        $existingInstallments = $this->installmentRepository->listByContracts($contractNums, $dueDates);
+        $existingInstallments = $this->installmentRepository->listByContracts($contractNums, $dueDates, $payload->userProfileXid);
 
         $this->validateWaitingPaymentInstallment($existingInstallments, $contractNums, $dueDates);
 
@@ -131,7 +131,7 @@ final class CreateInstallmentPaymentUseCase
             'user_snapshot' => $userSnapshot->toArray(),
         ]);
 
-        $savedInstallments = $this->saveInstallments($payload->installments, $existingInstallmentGroup);
+        $savedInstallments = $this->saveInstallments($payload->installments, $existingInstallmentGroup, $payload->userAuthId, $payload->userProfileXid);
 
         $this->savePaymentInstallments($payment->id, $savedInstallments);
 
@@ -191,7 +191,7 @@ final class CreateInstallmentPaymentUseCase
      * @param PaymentCalculationInstallmentResponse[] $installments
      * @return array<int, PaymentCalculationInstallmentResponse>
      */
-    private function saveInstallments(array $installments, Collection $existingInstallmentGroup): array
+    private function saveInstallments(array $installments, Collection $existingInstallmentGroup, int $userAuthId, string $userProfileXid): array
     {
         $result = [];
 
@@ -227,6 +227,8 @@ final class CreateInstallmentPaymentUseCase
 
             $newInstallment = $this->installmentRepository->create([
                 'xid' => nano_id(),
+                'user_auth_id' => $userAuthId,
+                'user_profile_xid' => $userProfileXid,
                 'contract_no' => $installment->contract_no,
                 'due_date' => $this->installmentDueDateDB($installment->due_date),
                 'amount' => $installment->total_amount,

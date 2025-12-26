@@ -24,20 +24,22 @@ class InstallmentEloquentRepository implements InstallmentRepositoryInterface
         return $model;
     }
 
-    public function listByContracts(array $contractNums, array $dueDates): Collection
+    public function listByContracts(array $contractNums, array $dueDates, string $userProfileXid): Collection
     {
         return $this->installmentModel->newQuery()
             ->whereIn('contract_no', $contractNums)
             ->whereIn('due_date', $dueDates)
+            ->where('user_profile_xid', $userProfileXid)
             ->get();
     }
 
-    public function existsByContractsStatus(array $contractNums, array $dueDates, string $status): bool
+    public function existsByContractsStatus(array $contractNums, array $dueDates, string $status, string $userProfileXid): bool
     {
         return $this->installmentModel->newQuery()
             ->whereIn('contract_no', $contractNums)
             ->whereIn('due_date', $dueDates)
             ->where('status', $status)
+            ->where('user_profile_xid', $userProfileXid)
             ->exists();
     }
 

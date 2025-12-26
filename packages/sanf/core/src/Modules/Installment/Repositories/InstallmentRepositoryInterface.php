@@ -9,9 +9,9 @@ interface InstallmentRepositoryInterface
 {
     public function create(array $data): InstallmentModel;
 
-    public function listByContracts(array $contractNums, array $dueDates): Collection;
+    public function listByContracts(array $contractNums, array $dueDates, string $userProfileXid): Collection;
 
-    public function existsByContractsStatus(array $contractNums, array $dueDates, string $status): bool;
+    public function existsByContractsStatus(array $contractNums, array $dueDates, string $status, string $userProfileXid): bool;
 
     public function update(array $filters, array $data): bool;
 
