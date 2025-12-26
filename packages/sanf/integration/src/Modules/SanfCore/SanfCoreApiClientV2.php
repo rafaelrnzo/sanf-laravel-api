@@ -145,13 +145,15 @@ class SanfCoreApiClientV2
     public function getInstallmentList(
         $page,
         $per_page,
-        $type = 'current_month'
+        $type = 'current_month',
+        $sort_by = null
     ) {
         $response = Request::route('sanf-internal-v2.installment.list', $this->client)
             ->queryParams([
                 'page' => $page,
                 'per_page' => $per_page,
                 'type' => $type, // current_month | next_month
+                'sort_by' => $sort_by,
             ])
             ->send();
 

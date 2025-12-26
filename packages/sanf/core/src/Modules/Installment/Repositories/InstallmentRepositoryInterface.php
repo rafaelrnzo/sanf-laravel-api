@@ -14,4 +14,6 @@ interface InstallmentRepositoryInterface
     public function existsByContractsStatus(array $contractNums, array $dueDates, string $status): bool;
 
     public function update(array $filters, array $data): bool;
+
+    public function findByContractsAndDueDates(array $contractDueDates, string $userProfileXid): Collection;
 }
