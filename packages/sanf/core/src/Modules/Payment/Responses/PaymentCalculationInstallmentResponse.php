@@ -22,7 +22,7 @@ class PaymentCalculationInstallmentResponse extends DataTransferObject
     public ?int $sequence_total;
 
     /**
-     * @var array|PaymentCalculationOutstandingInstallmentResponse[]
+     * @var \Sanf\Core\Modules\Payment\Responses\PaymentCalculationOutstandingInstallmentResponse[]
      */
     public $outstanding_installments;
 }

@@ -24,10 +24,14 @@ use Sanf\Core\Modules\Payment\Payloads\CreateInstallmentPaymentPayload;
 use Sanf\Core\Modules\Payment\Repositories\PaymentRepositoryInterface;
 use Sanf\Core\Modules\Payment\Responses\PaymentCalculationInstallmentResponse;
 use Sanf\Core\Modules\Payment\Responses\PaymentCalculationOutstandingInstallmentResponse;
+use Sanf\Core\Modules\User\AuthEncryptedModel;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Integration\Modules\Midtrans\MidtransClient;
 use Sanf\Integration\Modules\Midtrans\Payloads\CreateSnapTransactionPayload;
 use Sanf\Integration\Modules\Midtrans\Payloads\SnapCallbacksPayload;
+use Sanf\Integration\Modules\Midtrans\Payloads\SnapCustomerDetailsPayload;
+use Sanf\Integration\Modules\Midtrans\Payloads\SnapExpiryPayload;
+use Sanf\Integration\Modules\Midtrans\Payloads\SnapItemDetailPayload;
 use Sanf\Integration\Modules\Midtrans\Payloads\SnapTransactionDetailsPayload;
 use Sanf\Integration\Modules\SanfCore\Enums\InstallmentPaymentTypeEnum;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClientV2;
@@ -137,7 +141,7 @@ final class CreateInstallmentPaymentUseCase
 
         $this->savePaymentInstallments($payment->id, $savedInstallments);
 
-        $this->createSnapMidtrans($payload, $payment);
+        $this->createSnapMidtrans($payload, $payment, $user, $savedInstallments);
 
         $payment->load('installments', 'midtransTransaction');
 
@@ -273,11 +277,17 @@ final class CreateInstallmentPaymentUseCase
         );
     }
 
-    private function createSnapMidtrans(CreateInstallmentPaymentPayload $installmentPayload, PaymentModel $payment)
+    /**
+     * @param CreateInstallmentPaymentPayload $installmentPayload
+     * @param PaymentModel $payment
+     * @param AuthEncryptedModel $user
+     * @param array<int, PaymentCalculationInstallmentResponse> $savedInstallments
+     * @return void
+     */
+    private function createSnapMidtrans(CreateInstallmentPaymentPayload $installmentPayload, PaymentModel $payment, AuthEncryptedModel $user, array $savedInstallments)
     {
         $midtransOrderId = nano_id();
 
-        // TODO: add item_details, customer_details, expiry
         $payload = new CreateSnapTransactionPayload([
             'transaction_details' => new SnapTransactionDetailsPayload([
                 'order_id' => $midtransOrderId,
@@ -288,6 +298,22 @@ final class CreateInstallmentPaymentUseCase
                 'finish' => route('v2.payments.static-success'),
                 'error' => route('v2.payments.static-failed'),
             ]),
+            'customer_details' => new SnapCustomerDetailsPayload([
+                'first_name' => $user->full_name,
+                'email' => $user->username,
+                'phone' => $user->phone_number,
+            ]),
+            'item_details' => array_map(fn (PaymentCalculationInstallmentResponse $item) => new SnapItemDetailPayload([
+                'price' => $item->total_amount,
+                'quantity' => 1,
+                'name' => sprintf(
+                    'Installment %s (%s)',
+                    $item->contract_no,
+                    $this->normalizeDueDate($item->due_date)
+                ),
+                'category' => 'Installment',
+            ]), array_values($savedInstallments)),
+            'expiry' => $this->snapExpiry($payment),
         ]);
 
         $snap = $this->midtransClient->createSnapTransaction($payload);
@@ -299,6 +325,25 @@ final class CreateInstallmentPaymentUseCase
             'payment_id' => $payment->id,
             'payment_xid' => $payment->xid,
             'gross_amount' => $installmentPayload->total_payment,
+        ]);
+    }
+
+    private function snapExpiry(PaymentModel $payment): SnapExpiryPayload
+    {
+        $startTime = Carbon::now();
+        $duration = (int) config('midtrans.snap.expiry.duration', 30);
+        $unit = config('midtrans.snap.expiry.unit', 'minutes');
+
+        if ($payment->expired_at) {
+            $diffInMinutes = max($startTime->diffInMinutes(Carbon::make($payment->expired_at), false), 1);
+            $duration = $diffInMinutes;
+            $unit = 'minutes';
+        }
+
+        return new SnapExpiryPayload([
+            'start_time' => $startTime->format('Y-m-d H:i:s O'),
+            'unit' => $unit,
+            'duration' => $duration,
         ]);
     }
 }

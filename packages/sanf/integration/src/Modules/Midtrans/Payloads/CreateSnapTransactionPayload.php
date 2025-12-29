@@ -8,7 +8,7 @@ class CreateSnapTransactionPayload extends FlexibleDataTransferObject
 {
     public SnapTransactionDetailsPayload $transaction_details;
     /**
-     * @var array|SnapItemDetailPayload[]|null
+     * @var \Sanf\Integration\Modules\Midtrans\Payloads\SnapItemDetailPayload[]|null
      */
     public ?array $item_details;
     public ?SnapCustomerDetailsPayload $customer_details;
