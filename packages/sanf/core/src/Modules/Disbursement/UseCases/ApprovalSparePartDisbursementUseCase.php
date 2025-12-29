@@ -11,6 +11,7 @@ use Sanf\Core\Modules\Disbursement\Models\SparePartDisbursementDocumentModel;
 use Sanf\Core\Modules\Disbursement\Models\SparePartDisbursementInvoiceModel;
 use Sanf\Core\Modules\Disbursement\Payloads\ApprovalSparePartDisbursementPayload;
 use Sanf\Core\Modules\Disbursement\Repositories\SparePartDisbursementRepositoryInterface;
+use Sanf\Integration\Modules\SanfCore\Enums\SubmitSparePartFinancingTypeEnum;
 use Sanf\Integration\Modules\SanfCore\Payloads\SanfCoreSubmitSparePartFinancingBankAccountPayload;
 use Sanf\Integration\Modules\SanfCore\Payloads\SanfCoreSubmitSparePartFinancingDocumentPayload;
 use Sanf\Integration\Modules\SanfCore\Payloads\SanfCoreSubmitSparePartFinancingInvoicePayload;
@@ -112,6 +113,7 @@ final class ApprovalSparePartDisbursementUseCase
                     'ACCOUNT_NUMBER' => $disbursementBatch->bank_account_number,
                 ]),
                 'DOCUMENTS' => $documents->map(fn ($item) => $this->mappingDocument($item))->toArray(),
+                'SUBMIT_TYPE' => SubmitSparePartFinancingTypeEnum::MOBILE,
             ])
         );
     }

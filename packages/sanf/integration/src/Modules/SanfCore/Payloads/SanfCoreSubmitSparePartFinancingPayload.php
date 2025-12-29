@@ -13,4 +13,5 @@ class SanfCoreSubmitSparePartFinancingPayload extends DataTransferObject
     public SanfCoreSubmitSparePartFinancingBankAccountPayload $BANK_ACCOUNT;
     /** @var array|SanfCoreSubmitSparePartFinancingDocumentPayload[] */
     public array $DOCUMENTS;
+    public string $SUBMIT_TYPE;
 }
