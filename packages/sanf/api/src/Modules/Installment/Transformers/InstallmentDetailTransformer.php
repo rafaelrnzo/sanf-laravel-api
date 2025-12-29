@@ -4,6 +4,7 @@ namespace Sanf\Api\Modules\Installment\Transformers;
 
 use League\Fractal\TransformerAbstract;
 use Sanf\Core\Modules\Installment\Responses\FindInstallmentResponse;
+use Sanf\Core\Modules\Installment\Responses\InstallmentOutstandingResponse;
 
 final class InstallmentDetailTransformer extends TransformerAbstract
 {
@@ -13,15 +14,23 @@ final class InstallmentDetailTransformer extends TransformerAbstract
     public function transform($installment): array
     {
         return [
-            'total_amount' => $installment->totalAmount,
             'due_date' => $installment->dueDate,
-            'penalty_fee' => $installment->penaltyFee,
+            'total_amount' => $installment->totalAmount,
+            'subtotal_installment' => $installment->subtotalInstallment,
             'principal_loan' => $installment->principalLoan,
             'interest_amount' => $installment->interestAmount,
-            'down_payment' => $installment->downPayment,
-            'paid_down_payment' => $installment->paidDownPayment,
-            'paid_amount' => $installment->paidAmount,
+            'penalty_fee' => $installment->penaltyFee,
             'status' => $installment->status,
+            'payment_xid' => $installment->paymentXid,
+            'sequence_no' => $installment->sequenceNo,
+            'sequence_total' => $installment->sequenceTotal,
+            'outstanding_installments' => array_map(fn (InstallmentOutstandingResponse $item) => [
+                'due_date' => $item->dueDate,
+                'total' => $item->total,
+                'principal_loan' => $item->pricipalLoan,
+                'interest_amount' => $item->interestAmount,
+                'penalty_fee' => $item->penaltyFee,
+            ], $installment->outstandingInstallments),
             'contract' => [
                 'contract_no' => $installment->contract->contractNo,
                 'contract_date' => $installment->contract->contractDate,
@@ -33,13 +42,16 @@ final class InstallmentDetailTransformer extends TransformerAbstract
                 'financing_method_id' => $installment->contract->financingMethodId,
                 'financing_method_desc' => $installment->contract->financingMethodDesc,
                 'financing_amount' => $installment->contract->financingAmount,
+                'down_payment' => $installment->contract->downPayment,
+                'paid_amount' => $installment->contract->paidAmount,
+                'outstanding_amount' => $installment->contract->outstandingAmount,
                 'tenor_value' => $installment->contract->tenorValue,
                 'tenor_unit' => $installment->contract->tenorUnit,
                 'status_id' => $installment->contract->statusId,
                 'status_desc' => $installment->contract->statusDesc,
                 'due_date' => $installment->contract->dueDate,
                 'completed_date' => $installment->contract->completedDate,
-                'interest_rate' => $installment->contract->interestRate,
+                'daily_interest_rate' => $installment->contract->interestRate,
                 'plafond_type' => $installment->contract->plafondType,
             ],
             'e_statement_file' => $installment->eStatementFile ? [

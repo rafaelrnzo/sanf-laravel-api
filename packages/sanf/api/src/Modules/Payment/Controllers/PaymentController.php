@@ -149,7 +149,7 @@ final class PaymentController extends RestApiController
     }
 
     /**
-     * Static page for SNAP Midtrans redirect when payment success
+     * Static page for SNAP Midtrans redirect when payment success.
      * @return \Illuminate\Http\JsonResponse
      */
     public function staticSuccess()
@@ -158,7 +158,7 @@ final class PaymentController extends RestApiController
     }
 
     /**
-     * Static page for SNAP Midtrans redirect when payment failed
+     * Static page for SNAP Midtrans redirect when payment failed.
      * @return \Illuminate\Http\JsonResponse
      */
     public function staticFailed()

@@ -59,4 +59,13 @@ class InstallmentContractResponse extends CamelCaseDataTransferObject
 
     /** @var mixed */
     public $plafondType;
+
+    /** @var mixed */
+    public $downPayment;
+
+    /** @var mixed */
+    public $paidAmount;
+
+    /** @var mixed */
+    public $outstandingAmount;
 }

@@ -84,6 +84,15 @@ final class PaymentEloquentRepository implements PaymentRepositoryInterface
         return $this->model->newQuery()->where($filters)->first();
     }
 
+    public function findLatestInsallmentPayment(int $installmentId, array $filters = []): ?PaymentModel
+    {
+        return $this->model->newQuery()
+            ->where($filters)
+            ->whereHas('installments', fn ($q) => $q->whereId($installmentId))
+            ->orderByDesc('created_at')
+            ->first();
+    }
+
     public function create(array $data): PaymentModel
     {
         $data = SodiumEncryption::encryptor()->encryptMultipleData($data, [], ['user_snapshot']);

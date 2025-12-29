@@ -14,6 +14,8 @@ interface PaymentRepositoryInterface
 
     public function find(array $filters): ?PaymentModel;
 
+    public function findLatestInsallmentPayment(int $installmentId, array $filters = []): ?PaymentModel;
+
     public function create(array $data): PaymentModel;
 
     public function countByStatus(array $filters): Collection;

@@ -2,7 +2,6 @@
 
 namespace Sanf\Core\Modules\Payment\Payloads;
 
-use Sanf\Core\Modules\Payment\Responses\PaymentCalculationInstallmentResponse;
 use Sanf\Core\Traits\CastsNumericDtoProperties;
 use Spatie\DataTransferObject\DataTransferObject;
 

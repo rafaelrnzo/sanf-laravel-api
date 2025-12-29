@@ -10,6 +10,9 @@ class FindInstallmentResponse extends CamelCaseDataTransferObject
     public $totalAmount;
 
     /** @var mixed */
+    public $subtotalInstallment;
+
+    /** @var mixed */
     public $dueDate;
 
     /** @var mixed */
@@ -22,20 +25,23 @@ class FindInstallmentResponse extends CamelCaseDataTransferObject
     public $interestAmount;
 
     /** @var mixed */
-    public $downPayment;
-
-    /** @var mixed */
-    public $paidDownPayment;
-
-    /** @var mixed */
-    public $paidAmount;
-
-    /** @var mixed */
     public $status;
 
-    /** @var InstallmentContractResponse|mixed */
+    /** @var mixed */
+    public $sequenceNo;
+
+    /** @var mixed */
+    public $sequenceTotal;
+
+    /** @var mixed */
+    public $paymentXid;
+
+    /** @var \Sanf\Core\Modules\Installment\Responses\InstallmentContractResponse */
     public $contract;
 
-    /** @var InstallmentEStatementReponse|mixed */
+    /** @var \Sanf\Core\Modules\Installment\Responses\InstallmentEStatementReponse|null */
     public $eStatementFile;
+
+    /** @var array|\Sanf\Core\Modules\Installment\Responses\InstallmentOutstandingResponse[] */
+    public $outstandingInstallments;
 }

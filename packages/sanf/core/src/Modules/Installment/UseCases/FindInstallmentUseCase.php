@@ -8,13 +8,20 @@ use Illuminate\Support\Collection;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Installment\Enums\InstallmentStatusEnum;
+use Sanf\Core\Modules\Installment\Models\InstallmentModel;
 use Sanf\Core\Modules\Installment\Payloads\FindInstallmentPayload;
 use Sanf\Core\Modules\Installment\Repositories\InstallmentRepositoryInterface;
 use Sanf\Core\Modules\Installment\Responses\FindInstallmentResponse;
 use Sanf\Core\Modules\Installment\Responses\InstallmentContractResponse;
 use Sanf\Core\Modules\Installment\Responses\InstallmentEStatementReponse;
+use Sanf\Core\Modules\Installment\Responses\InstallmentOutstandingResponse;
+use Sanf\Core\Modules\Payment\Models\PaymentModel;
+use Sanf\Core\Modules\Payment\Repositories\PaymentRepositoryInterface;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
+use Sanf\Integration\Modules\SanfCore\Entities\SanfCoreInstallmentDetailBillEntity;
+use Sanf\Integration\Modules\SanfCore\Entities\SanfCoreInstallmentDetailContractEntity;
+use Sanf\Integration\Modules\SanfCore\Entities\SanfCoreInstallmentDetailOverdueEntity;
 use Sanf\Integration\Modules\SanfCore\Enums\InstallmentPaymentStatusEnum;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClientV2;
 
@@ -23,15 +30,19 @@ class FindInstallmentUseCase implements ApplicationServiceInterface
     protected SanfCoreApiClientV2 $apiClient;
     protected UserRepositoryInterface $userRepository;
     protected InstallmentRepositoryInterface $installmentRepository;
+    protected PaymentRepositoryInterface $paymentRepository;
+    private ?InstallmentModel $installment = null;
 
     public function __construct(
         SanfCoreApiClientV2 $apiClient,
         UserRepositoryInterface $userRepository,
-        InstallmentRepositoryInterface $installmentRepository
+        InstallmentRepositoryInterface $installmentRepository,
+        PaymentRepositoryInterface $paymentRepository
     ) {
         $this->apiClient = $apiClient;
         $this->userRepository = $userRepository;
         $this->installmentRepository = $installmentRepository;
+        $this->paymentRepository = $paymentRepository;
     }
 
     /**
@@ -56,8 +67,21 @@ class FindInstallmentUseCase implements ApplicationServiceInterface
             throw new SanfInternalApiDataNotFoundException('Installment detail data not found');
         }
 
+        /**
+         * @var SanfCoreInstallmentDetailContractEntity
+         */
         $kontrak = (object) ($payload->kontrak ?? []);
+
+        /**
+         * @var SanfCoreInstallmentDetailBillEntity
+         */
         $tagihan = (object) ($payload->tagihan ?? []);
+
+        /**
+         * @var SanfCoreInstallmentDetailOverdueEntity[]
+         */
+        $overdue = $payload->overdue ?? [];
+
         $status = $this->resolveInstallmentStatus($dto->contractNo, $dto->dueDate, $dto->profileXid, $response->tagihan->status_pembayaran_id);
 
         $contractDto = new InstallmentContractResponse([
@@ -78,21 +102,39 @@ class FindInstallmentUseCase implements ApplicationServiceInterface
             'dueDate' => $this->parseDate($kontrak->jatuh_tempo ?? null),
             'completedDate' => $this->parseDate($kontrak->tgl_selesai ?? null),
             'interestRate' => (float) ($kontrak->bunga_harian ?? 0),
-            'plafondType' => $kontrak->jenis_pembiayaan_desc ?? '',
+            'plafondType' => 'SPARE_PART_FINANCING', // hardcoded for now
+            'downPayment' => (float) ($kontrak->dp_amount ?? 0),
+            'paidAmount' => (float) ($kontrak->ar_paid ?? 0),
+            'outstandingAmount' => (float) ($kontrak->ar_outs ?? 0),
         ]);
 
+        $outstandingInstallments = array_map(fn (SanfCoreInstallmentDetailOverdueEntity $item) => new InstallmentOutstandingResponse([
+            'dueDate' => $this->parseDate($item->due_date),
+            'total' => $item->total_overdue,
+            'pricipalLoan' => $item->pokok_hutang,
+            'interestAmount' => $item->bunga,
+            'penaltyFee' => $item->denda,
+        ]), $overdue);
+
+        $installment = $this->getInstallment($dto->contractNo, $dto->dueDate, $dto->profileXid);
+        $latestPayment = $this->findLatestPayment(optional($installment)->id);
+
+        $allOutstandingAmounts = array_sum(array_pluck($overdue, 'total_overdue'));
+
         return new FindInstallmentResponse([
-            'totalAmount' => (float) ($tagihan->total_tagihan ?? 0),
+            'totalAmount' => (float) (($tagihan->total_tagihan ?? 0) + $allOutstandingAmounts),
+            'subtotalInstallment' => (float) ($tagihan->total_tagihan ?? 0),
             'dueDate' => $this->parseDate($tagihan->jatuh_tempo ?? null),
             'penaltyFee' => (float) ($tagihan->denda ?? 0),
             'principalLoan' => (float) ($tagihan->pokok_hutang ?? 0),
             'interestAmount' => (float) ($tagihan->bunga ?? 0),
-            'downPayment' => (float) ($kontrak->dp_amount ?? 0),
-            'paidDownPayment' => (float) ($kontrak->dp_amount ?? 0),
-            'paidAmount' => (float) ($kontrak->ar_paid ?? 0),
+            'sequenceNo' => (int) ($kontrak->schedule_no ?? 0),
+            'sequenceTotal' => (int) ($kontrak->schedule_total ?? 0),
             'status' => $status,
+            'paymentXid' => optional($latestPayment)->xid,
             'contract' => $contractDto,
             'eStatementFile' => $this->buildEStatementDto($payload->e_statement ?? null),
+            'outstandingInstallments' => $outstandingInstallments,
         ]);
     }
 
@@ -113,13 +155,9 @@ class FindInstallmentUseCase implements ApplicationServiceInterface
         }
     }
 
-    private function resolveInstallmentStatus(?string $contractNo, $dueDate, $userProfileXid, $coreStatus): string
+    private function findInstallment(?string $contractNo, $dueDate, $userProfileXid): ?InstallmentModel
     {
         $dueDateString = $this->normalizeDueDate($dueDate);
-        if (!$contractNo || !$dueDateString) {
-            return InstallmentStatusEnum::ACTIVE;
-        }
-
         $records = $this->installmentRepository->findByContractsAndDueDates([
             [
                 'contract_no' => $contractNo,
@@ -131,7 +169,24 @@ class FindInstallmentUseCase implements ApplicationServiceInterface
             $records = Collection::make($records ?? []);
         }
 
-        $record = $records->first();
+        return $records->first();
+    }
+
+    private function getInstallment(?string $contractNo, $dueDate, $userProfileXid)
+    {
+        return $this->installment
+            ?? $this->installment = $this->findInstallment($contractNo, $dueDate, $userProfileXid);
+    }
+
+    private function resolveInstallmentStatus(?string $contractNo, $dueDate, $userProfileXid, $coreStatus): string
+    {
+        $dueDateString = $this->normalizeDueDate($dueDate);
+        if (!$contractNo || !$dueDateString) {
+            return InstallmentStatusEnum::ACTIVE;
+        }
+
+        $record = $this->getInstallment($contractNo, $dueDate, $userProfileXid);
+
         if (!$record) {
             return InstallmentStatusEnum::ACTIVE;
         }
@@ -192,5 +247,10 @@ class FindInstallmentUseCase implements ApplicationServiceInterface
             'fileType' => $fileType,
             'url' => $fullUrl,
         ]);
+    }
+
+    private function findLatestPayment(?int $installmentId): ?PaymentModel
+    {
+        return $installmentId ? $this->paymentRepository->findLatestInsallmentPayment($installmentId) : null;
     }
 }
