@@ -28,7 +28,7 @@ final class GetPaymentStatusCountUseCase
         $result = [];
 
         foreach (PaymentStatusEnum::values() as $status) {
-            $paymentStatus = $paymentStatuses->find('status', $status->getValue());
+            $paymentStatus = $paymentStatuses->firstWhere('status', $status->getValue());
 
             $result[] = new PaymentStatusCountResponse([
                 'status' => $status->getValue(),
