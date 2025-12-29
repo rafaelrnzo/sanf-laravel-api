@@ -14,6 +14,7 @@ use Sanf\Core\Traits\SodiumEncryptionTrait;
  * @property int $id
  * @property string $xid
  * @property int $user_auth_id
+ * @property string $user_profile_xid
  * @property int $disbursement_id
  * @property string $disbursement_xid
  * @property float $amount

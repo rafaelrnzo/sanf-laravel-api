@@ -20,7 +20,7 @@ class CreateInstallmentPaymentPayload extends DataTransferObject
     public string $currency;
 
     /**
-     * @var array|PaymentCalculationInstallmentResponse[]
+     * @var \Sanf\Core\Modules\Payment\Responses\PaymentCalculationInstallmentResponse[]
      */
     public array $installments;
 }

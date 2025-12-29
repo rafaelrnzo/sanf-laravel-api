@@ -332,3 +332,5 @@ Route::group(['prefix' => 'v2', 'middleware' => ['auth', InjectUserIdFromPathMid
 
 Route::get('v2/payments/success', ['as' => 'v2.payments.static-success', 'uses' => 'Payment\Controllers\PaymentController@staticSuccess']);
 Route::get('v2/payments/failed', ['as' => 'v2.payments.static-failed', 'uses' => 'Payment\Controllers\PaymentController@staticFailed']);
+
+Route::post('webhook/midtrans/status', ['as' => 'webhook.midtrans.status', 'uses' => 'Payment\Controllers\MidtransWebhookController@postHandle']);

@@ -70,6 +70,8 @@ use Sanf\Core\Modules\Invoice\Specifications\EloquentInvoiceCollectionSubmission
 use Sanf\Core\Modules\Invoice\Specifications\InvoiceCollectionSubmissionSpecificationFactoryInterface;
 use Sanf\Core\Modules\Location\EloquentLocationEncryptedRepository;
 use Sanf\Core\Modules\Location\LocationRepositoryInterface;
+use Sanf\Core\Modules\Log\Repositories\WebhookLogEloquentRepository;
+use Sanf\Core\Modules\Log\Repositories\WebhookLogRepositoryInterface;
 use Sanf\Core\Modules\News\EloquentNewsRepository;
 use Sanf\Core\Modules\News\NewsRepositoryInterface;
 use Sanf\Core\Modules\Payment\Repositories\PaymentEloquentRepository;
@@ -261,6 +263,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(PaymentPreviewRepositoryInterface::class, PaymentPreviewEloquentRepository::class);
         $this->app->bind(PaymentRepositoryInterface::class, PaymentEloquentRepository::class);
         $this->app->bind(InstallmentRepositoryInterface::class, InstallmentEloquentRepository::class);
+        $this->app->bind(WebhookLogRepositoryInterface::class, WebhookLogEloquentRepository::class);
 
         //SPECIFICATION FACTORY
         $this->app->bind(ProjectSpecificationFactoryInterface::class, EloquentProjectSpecificationFactory::class);

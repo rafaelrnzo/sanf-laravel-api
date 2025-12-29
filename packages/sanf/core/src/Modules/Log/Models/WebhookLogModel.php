@@ -16,6 +16,7 @@ use NbsPhp\Core\Models\AbstractModel;
 class WebhookLogModel extends AbstractModel
 {
     protected $table = 'webhook_log';
+    public $timestamps = false;
 
     protected $fillable = [
         'xid',
@@ -28,7 +29,7 @@ class WebhookLogModel extends AbstractModel
 
     protected $casts = [
         'payload' => 'array',
-        'received_at' => 'datetime',
-        'processed_at' => 'datetime',
+        'received_at' => 'timestamp',
+        'processed_at' => 'timestamp',
     ];
 }
