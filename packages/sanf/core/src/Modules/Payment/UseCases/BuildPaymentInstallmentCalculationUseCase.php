@@ -35,7 +35,7 @@ final class BuildPaymentInstallmentCalculationUseCase
         $totalPenaltyFee = 0;
 
         foreach ($payload->installments as $instalment) {
-            $dueDate = Carbon::createFromTimestamp($instalment->due_date)->format('Y-m-d');
+            $dueDate = Carbon::createFromTimestamp($instalment->due_date, $coreTimeZone)->format('Y-m-d');
 
             if ($payload->preferCache) {
                 /**
