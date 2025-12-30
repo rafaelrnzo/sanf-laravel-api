@@ -2,9 +2,11 @@
 
 namespace Sanf\Core\Modules\Payment\Repositories;
 
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Sanf\Core\Encryptions\SodiumEncryption;
+use Sanf\Core\Modules\Payment\Enums\PaymentStatusEnum;
 use Sanf\Core\Modules\Payment\Models\MidtransTransactionModel;
 use Sanf\Core\Modules\Payment\Models\PaymentModel;
 
@@ -89,6 +91,22 @@ final class PaymentEloquentRepository implements PaymentRepositoryInterface
         return $this->model->newQuery()
             ->where($filters)
             ->whereHas('installments', fn ($q) => $q->whereId($installmentId))
+            ->orderByDesc('created_at')
+            ->first();
+    }
+
+    public function findActivePendingPaymentByContract(
+        int $userAuthId,
+        string $userProfileXid,
+        string $contractNo
+    ): ?PaymentModel
+    {
+        return $this->model->newQuery()
+            ->where('user_auth_id', $userAuthId)
+            ->where('user_profile_xid', $userProfileXid)
+            ->where('status', PaymentStatusEnum::PENDING)
+            ->where('expired_at', '>', Carbon::now())
+            ->whereHas('installments', fn ($q) => $q->where('contract_no', $contractNo))
             ->orderByDesc('created_at')
             ->first();
     }

@@ -118,7 +118,7 @@ class FindInstallmentUseCase implements ApplicationServiceInterface
         ]), $overdue);
 
         $installment = $this->getInstallment($dto->contractNo, $dto->dueDate, $dto->profileXid);
-        $latestPayment = $this->findLatestPayment(optional($installment)->id);
+        $activePayment = $this->findActivePayment($dto->userId, $dto->profileXid, $dto->contractNo);
 
         $allOutstandingAmounts = array_sum(array_pluck($overdue, 'total_overdue'));
 
@@ -132,7 +132,7 @@ class FindInstallmentUseCase implements ApplicationServiceInterface
             'sequenceNo' => (int) ($kontrak->schedule_no ?? 0),
             'sequenceTotal' => (int) ($kontrak->schedule_total ?? 0),
             'status' => $status,
-            'paymentXid' => optional($latestPayment)->xid,
+            'paymentXid' => optional($activePayment)->xid,
             'contract' => $contractDto,
             'eStatementFile' => $this->buildEStatementDto($payload->e_statement ?? null),
             'outstandingInstallments' => $outstandingInstallments,
@@ -248,6 +248,19 @@ class FindInstallmentUseCase implements ApplicationServiceInterface
             'fileType' => $fileType,
             'url' => $fullUrl,
         ]);
+    }
+
+    private function findActivePayment(?int $userAuthId, ?string $userProfileXid, ?string $contractNo): ?PaymentModel
+    {
+        if (!$userAuthId || !$userProfileXid || !$contractNo) {
+            return null;
+        }
+
+        return $this->paymentRepository->findActivePendingPaymentByContract(
+            $userAuthId,
+            $userProfileXid,
+            $contractNo
+        );
     }
 
     private function findLatestPayment(?int $installmentId): ?PaymentModel

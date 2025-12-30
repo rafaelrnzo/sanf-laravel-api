@@ -16,6 +16,12 @@ interface PaymentRepositoryInterface
 
     public function findLatestInsallmentPayment(int $installmentId, array $filters = []): ?PaymentModel;
 
+    public function findActivePendingPaymentByContract(
+        int $userAuthId,
+        string $userProfileXid,
+        string $contractNo
+    ): ?PaymentModel;
+
     public function findByMidtransOrder(string $midtransOrderId, array $filters = []): ?PaymentModel;
 
     public function create(array $data): PaymentModel;
