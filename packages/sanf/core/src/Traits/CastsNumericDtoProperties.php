@@ -38,6 +38,16 @@ trait CastsNumericDtoProperties
 
             $value = $parameters[$field];
 
+            if (is_string($value)) {
+                $normalized = trim($value);
+                if ($normalized !== '' && substr($normalized, -1) === '%') {
+                    $normalized = rtrim($normalized, "% \t\n\r\0\x0B");
+                    if ($normalized !== '') {
+                        $value = $normalized;
+                    }
+                }
+            }
+
             if (!is_scalar($value) || !is_numeric($value)) {
                 continue;
             }
