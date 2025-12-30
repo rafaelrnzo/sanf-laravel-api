@@ -2,11 +2,9 @@
 
 namespace Sanf\Api\Modules\Installment\Transformers;
 
-use Illuminate\Support\Carbon;
 use League\Fractal\TransformerAbstract;
 use Sanf\Core\Modules\Installment\Responses\FindInstallmentResponse;
 use Sanf\Core\Modules\Installment\Responses\InstallmentOutstandingResponse;
-use Sanf\Integration\Modules\SanfCore\SanfCoreApiClientV2;
 
 final class InstallmentDetailTransformer extends TransformerAbstract
 {
@@ -16,7 +14,7 @@ final class InstallmentDetailTransformer extends TransformerAbstract
     public function transform($installment): array
     {
         return [
-            'due_date' => Carbon::parse($installment->dueDate, SanfCoreApiClientV2::DEFAULT_TIMEZONE)->timestamp,
+            'due_date' => $installment->dueDate,
             'total_amount' => $installment->totalAmount,
             'subtotal_installment' => $installment->subtotalInstallment,
             'principal_loan' => $installment->principalLoan,

@@ -146,10 +146,10 @@ class FindInstallmentUseCase implements ApplicationServiceInterface
         }
 
         try {
-            return Carbon::parse($date)->timestamp;
+            return Carbon::parse($date, SanfCoreApiClientV2::DEFAULT_TIMEZONE)->timestamp;
         } catch (\Throwable $exception) {
             try {
-                return Carbon::createFromFormat('d-m-Y', $date)->timestamp;
+                return Carbon::createFromFormat('d-m-Y', $date, SanfCoreApiClientV2::DEFAULT_TIMEZONE)->timestamp;
             } catch (\Throwable $exception) {
                 return strtotime($date) ?: null;
             }
