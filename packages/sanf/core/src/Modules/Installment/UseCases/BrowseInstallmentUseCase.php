@@ -248,10 +248,10 @@ class BrowseInstallmentUseCase
         }
 
         try {
-            return Carbon::parse($dueDate, $timezone)->startOfDay()->timestamp;
+            return Carbon::parse($dueDate, $timezone)->timestamp;
         } catch (\Throwable $exception) {
             try {
-                return Carbon::createFromFormat('d-m-Y', $dueDate, $timezone)->startOfDay()->timestamp;
+                return Carbon::createFromFormat('d-m-Y', $dueDate, $timezone)->timestamp;
             } catch (\Throwable $exception) {
                 return null;
             }
