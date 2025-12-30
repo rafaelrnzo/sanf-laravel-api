@@ -10,7 +10,7 @@ class InstallmentItemResponse extends CamelCaseDataTransferObject
     public ?string $financingTypeId;
     public ?string $financingTypeDescription;
     public ?float $totalAmount;
-    public ?string $dueDate;
+    public ?int $dueDate;
     public ?string $status;
     public ?string $paymentXid;
     public ?int $sequenceNumber;

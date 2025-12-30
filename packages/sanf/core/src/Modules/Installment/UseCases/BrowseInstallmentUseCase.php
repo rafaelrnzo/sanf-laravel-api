@@ -45,6 +45,7 @@ class BrowseInstallmentUseCase
         $perPage = $dto->limit;
         $periodType = $this->normalizePeriodType($dto->periodType ?? 'current_month');
         $sortBy = $this->normalizeSortBy($dto->sortBy ?? 'due_date_latest');
+        $coreTimeZone = SanfCoreApiClientV2::DEFAULT_TIMEZONE;
 
         $response = $this->apiClient->getInstallmentList($page, $perPage, $periodType, $sortBy);
 
@@ -55,7 +56,7 @@ class BrowseInstallmentUseCase
             $items = [];
         }
 
-        $data = array_values(array_filter(array_map(function (SanfCoreInstallmentEntity $item) use ($installmentLookup) {
+        $data = array_values(array_filter(array_map(function (SanfCoreInstallmentEntity $item) use ($installmentLookup, $coreTimeZone) {
             $contractNo = $item->no_kontrak ?? $item->NO_KONTRAK ?? null;
             $dueDateRaw = $item->jatuh_tempo ?? $item->JATUH_TEMPO ?? null;
             $lookupKey = $this->buildLookupKey($contractNo, $dueDateRaw);
@@ -71,6 +72,8 @@ class BrowseInstallmentUseCase
                 return null;
             }
 
+            $dueDateTimestamp = $this->parseDueDateTimestamp($dueDateRaw, $coreTimeZone);
+
             return new InstallmentItemResponse([
                 'contract_no' => $contractNo,
                 'financing_type_id' => $item->tipe_pembayaran_id ?? $item->TIPE_PEMBAYARAN_ID ?? null,
@@ -78,7 +81,7 @@ class BrowseInstallmentUseCase
                 'total_amount' => isset($item->total_tagihan)
                     ? (float) $item->total_tagihan
                     : (isset($item->TOTAL_TAGIHAN) ? (float) $item->TOTAL_TAGIHAN : null),
-                'due_date' => $dueDateRaw,
+                'due_date' => $dueDateTimestamp,
                 'status' => $status,
                 'payment_xid' => $paymentXid,
                 'sequence_number' => $sequenceNumber,
@@ -232,6 +235,23 @@ class BrowseInstallmentUseCase
         } catch (\Throwable $exception) {
             try {
                 return Carbon::createFromFormat('d-m-Y', $dueDate)->toDateString();
+            } catch (\Throwable $exception) {
+                return null;
+            }
+        }
+    }
+
+    private function parseDueDateTimestamp($dueDate, string $timezone): ?int
+    {
+        if (!$dueDate) {
+            return null;
+        }
+
+        try {
+            return Carbon::parse($dueDate, $timezone)->startOfDay()->timestamp;
+        } catch (\Throwable $exception) {
+            try {
+                return Carbon::createFromFormat('d-m-Y', $dueDate, $timezone)->startOfDay()->timestamp;
             } catch (\Throwable $exception) {
                 return null;
             }

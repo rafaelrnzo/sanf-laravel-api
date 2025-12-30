@@ -85,7 +85,7 @@ final class BuildPaymentInstallmentCalculationUseCase
 
             $installmentsResult[] = new PaymentCalculationInstallmentResponse([
                 'contract_no' => $installmentDetail->kontrak->no_kontrak,
-                'due_date' => Carbon::parse($installmentDetail->tagihan->jatuh_tempo, $coreTimeZone)->endOfDay()->timestamp,
+                'due_date' => Carbon::parse($installmentDetail->tagihan->jatuh_tempo, $coreTimeZone)->startOfDay()->timestamp,
                 'total_amount' => $totalAmount,
                 'subtotal_installment' => $installmentDetail->tagihan->total_tagihan,
                 'principal_loan' => $installmentDetail->tagihan->pokok_hutang,
@@ -97,7 +97,7 @@ final class BuildPaymentInstallmentCalculationUseCase
                 'sequence_total' => $installmentDetail->kontrak->schedule_total,
                 'outstanding_installments' => array_map(
                     fn (SanfCoreInstallmentDetailOverdueEntity $item) => new PaymentCalculationOutstandingInstallmentResponse([
-                        'due_date' => Carbon::parse($item->due_date, $coreTimeZone)->endOfDay()->timestamp,
+                        'due_date' => Carbon::parse($item->due_date, $coreTimeZone)->startOfDay()->timestamp,
                         'total' => $item->total_overdue,
                         'principal_loan' => $item->pokok_hutang,
                         'interest_amount' => $item->bunga,
