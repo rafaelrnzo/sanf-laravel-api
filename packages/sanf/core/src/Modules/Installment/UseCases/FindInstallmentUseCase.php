@@ -15,6 +15,7 @@ use Sanf\Core\Modules\Installment\Responses\FindInstallmentResponse;
 use Sanf\Core\Modules\Installment\Responses\InstallmentContractResponse;
 use Sanf\Core\Modules\Installment\Responses\InstallmentEStatementReponse;
 use Sanf\Core\Modules\Installment\Responses\InstallmentOutstandingResponse;
+use Sanf\Core\Modules\Payment\Enums\PaymentStatusEnum;
 use Sanf\Core\Modules\Payment\Models\PaymentModel;
 use Sanf\Core\Modules\Payment\Repositories\PaymentRepositoryInterface;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
@@ -251,6 +252,10 @@ class FindInstallmentUseCase implements ApplicationServiceInterface
 
     private function findLatestPayment(?int $installmentId): ?PaymentModel
     {
-        return $installmentId ? $this->paymentRepository->findLatestInsallmentPayment($installmentId) : null;
+        return $installmentId
+            ? $this->paymentRepository->findLatestInsallmentPayment($installmentId, [
+                'status' => PaymentStatusEnum::PENDING,
+            ])
+            : null;
     }
 }

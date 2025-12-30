@@ -4,6 +4,7 @@ namespace Sanf\Core\Modules\Installment\Repositories;
 
 use Illuminate\Support\Collection;
 use Sanf\Core\Modules\Installment\Models\InstallmentModel;
+use Sanf\Core\Modules\Payment\Enums\PaymentStatusEnum;
 
 class InstallmentEloquentRepository implements InstallmentRepositoryInterface
 {
@@ -64,7 +65,9 @@ class InstallmentEloquentRepository implements InstallmentRepositoryInterface
 
         return $this->installmentModel->newQuery()
             ->select(['id', 'contract_no', 'due_date', 'status'])
-            ->with(['payments' => fn ($q) => $q->orderByDesc('created_at')])
+            ->with(['payments' => fn ($q) => $q
+                ->where('status', PaymentStatusEnum::PENDING)
+                ->orderByDesc('created_at'), ])
             ->where('user_profile_xid', $userProfileXid)
             ->where(function ($query) use ($uniquePairs) {
                 foreach ($uniquePairs as $index => $pair) {

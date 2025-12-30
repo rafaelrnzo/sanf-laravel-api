@@ -21,7 +21,7 @@ final class ValidatePaymentInstallmentUseCase
 
     /**
      * @param PaymentInstallmentPayload[] $installments
-     * @return array<int, array{contract_no: string, due_date: int|string}> invalid installments
+     * @return ValidatePaymentInstallmentResponse
      */
     public function execute(array $installments): ValidatePaymentInstallmentResponse
     {
