@@ -4,6 +4,7 @@ namespace Sanf\Api\Modules\Payment\Controllers;
 
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use NbsPhp\Core\Controllers\RestApiController;
@@ -14,12 +15,14 @@ use Sanf\Api\Modules\Payment\Transformers\PaymentListTransformer;
 use Sanf\Api\Modules\Payment\Transformers\PaymentStatsTransformer;
 use Sanf\Api\Modules\Payment\Transformers\RegeneratePaymentTransformer;
 use Sanf\Core\Modules\Payment\Enums\PaymentStatusEnum;
+use Sanf\Core\Modules\Payment\Models\PaymentModel;
 use Sanf\Core\Modules\Payment\Payloads\BrowsePaymentPayload;
 use Sanf\Core\Modules\Payment\UseCases\BrowsePaymentUseCase;
 use Sanf\Core\Modules\Payment\UseCases\CancelPaymentUseCase;
 use Sanf\Core\Modules\Payment\UseCases\CheckPaymentStatusUseCase;
 use Sanf\Core\Modules\Payment\UseCases\FindPaymentUseCase;
 use Sanf\Core\Modules\Payment\UseCases\GetPaymentStatusCountUseCase;
+use Sanf\Core\Modules\Payment\UseCases\PaymentUseCase;
 use Sanf\Core\Modules\Payment\UseCases\RegeneratePaymentUseCase;
 
 final class PaymentController extends RestApiController
@@ -86,7 +89,42 @@ final class PaymentController extends RestApiController
             throw new ResourceNotFoundException();
         }
 
+        if ($latestStatus = $this->latestPaymentStatus($response, $userAuthId, $userProfileXid)) {
+            $response->status = $latestStatus;
+        }
+
         return fractal($response, PaymentDetailTransformer::class);
+    }
+
+    private function latestPaymentStatus(
+        PaymentModel $payment,
+        string $userAuthId,
+        string $userProfileXid
+    ): ?string
+    {
+        $checkStatusUseCase = app(CheckPaymentStatusUseCase::class);
+        $paymentXid = $payment->xid;
+        $intervalMinutes = config('payment.status_check_interval');
+
+        if (
+            $payment->last_checked_status_at
+            && $payment->last_checked_status_at->diffInMinutes(Carbon::now()) < $intervalMinutes
+        ) {
+            return null;
+        }
+
+        try {
+            $status = DB::transaction(fn () => $checkStatusUseCase->execute($paymentXid, $userAuthId, $userProfileXid));
+
+            $paymentUseCase = app(PaymentUseCase::class);
+            $paymentUseCase->refreshLastStatusCheck($paymentXid);
+
+            return $status;
+        } catch (\Throwable $th) {
+            report($th);
+
+            return null;
+        }
     }
 
     public function checkStatus(
