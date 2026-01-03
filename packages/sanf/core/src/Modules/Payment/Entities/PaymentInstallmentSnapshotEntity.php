@@ -22,7 +22,7 @@ final class PaymentInstallmentSnapshotEntity extends DataTransferObject
     public ?int $sequence_total;
 
     /**
-     * @var array|PaymentInstallmentOutstandingSnapshotEntity[]
+     * @var \Sanf\Core\Modules\Payment\Entities\PaymentInstallmentOutstandingSnapshotEntity[]
      */
     public $outstanding_installments;
 }
