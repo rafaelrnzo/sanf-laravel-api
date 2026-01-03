@@ -27,6 +27,7 @@ use Sanf\Core\Traits\SodiumEncryptionTrait;
  * @property \Carbon\Carbon|null $paid_at
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
+ * @property \Carbon\Carbon|null $last_checked_status_at
  * @property-read \Illuminate\Database\Eloquent\Collection|InstallmentModel[] $installments
  * @property ?MidtransTransactionModel $midtransTransaction
  * @property ?MidtransTransactionModel $activeMidtransTransaction
@@ -56,6 +57,7 @@ class PaymentModel extends AbstractModel
         'user_snapshot',
         'version',
         'nonce',
+        'last_checked_status_at',
     ];
 
     protected $casts = [
@@ -65,6 +67,7 @@ class PaymentModel extends AbstractModel
         'paid_at' => 'datetime',
         'status_log' => 'array',
         'version' => 'integer',
+        'last_checked_status_at' => 'datetime',
     ];
 
     protected $hidden = [
