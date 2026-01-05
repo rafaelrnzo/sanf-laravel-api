@@ -14,4 +14,6 @@ class SanfCorePlafondSparePartEntity extends FlexibleDataTransferObject
     public ?string $exp_date;
     public ?string $nama_supplier;
     public ?string $tipe_supplier;
+    public ?string $p_total;
+    public ?string $p_invoice_ongoing;
 }
