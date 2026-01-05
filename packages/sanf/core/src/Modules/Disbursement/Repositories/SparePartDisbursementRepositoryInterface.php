@@ -21,6 +21,13 @@ interface SparePartDisbursementRepositoryInterface
 
     public function update(array $filters, array $data): bool;
 
+    /**
+     * @param array $select
+     * @param array $filters
+     * @return Collection<SparePartDisbursementModel>
+     */
+    public function get(array $select = ['*'], array $filters = [], array $relations = []): Collection;
+
     public function listInvoice(array $filters): Collection;
 
     public function findInvoice(array $filters): ?SparePartDisbursementInvoiceModel;
@@ -29,7 +36,11 @@ interface SparePartDisbursementRepositoryInterface
 
     public function approveInvoicesWithExclusion(array $filters, array $excludeInvoiceXids): int;
 
+    public function updateInvoice(array $filters, array $data): bool;
+
     public function findBatch(array $filters): ?SparePartDisbursementBatchModel;
 
     public function listUploadedDocument(array $filters): Collection;
+
+    public function updateBatch(array $filters, array $data): bool;
 }

@@ -105,6 +105,20 @@ class SparePartDisbursementEloquentRepository extends AbstractEloquentRepository
         return $model->update($data);
     }
 
+    /**
+     * @param array $select
+     * @param array $filters
+     * @return Collection<SparePartDisbursementModel>
+     */
+    public function get(array $select = ['*'], array $filters = [], array $relations = []): Collection
+    {
+        return $this->disbursementModel->newQuery()
+            ->with($relations)
+            ->select($select)
+            ->where($filters)
+            ->get();
+    }
+
     public function findInvoice(array $filters): ?SparePartDisbursementInvoiceModel
     {
         return $this->invoiceModel->newQuery()->where($filters)->first();
@@ -137,6 +151,13 @@ class SparePartDisbursementEloquentRepository extends AbstractEloquentRepository
             ]);
     }
 
+    public function updateInvoice(array $filters, array $data): bool
+    {
+        $model = $this->invoiceModel->newQuery()->where($filters)->first();
+
+        return $model->update($data);
+    }
+
     public function findBatch(array $filters): ?SparePartDisbursementBatchModel
     {
         return $this->disbursementBatchModel->newQuery()->where($filters)->first();
@@ -148,5 +169,12 @@ class SparePartDisbursementEloquentRepository extends AbstractEloquentRepository
             ->where($filters)
             ->whereNotNull('doc_file')
             ->get();
+    }
+
+    public function updateBatch(array $filters, array $data): bool
+    {
+        $model = $this->disbursementBatchModel->newQuery()->where($filters)->first();
+
+        return $model->update($data);
     }
 }

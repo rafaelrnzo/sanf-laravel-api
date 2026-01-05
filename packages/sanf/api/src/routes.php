@@ -334,3 +334,10 @@ Route::get('v2/payments/success', ['as' => 'v2.payments.static-success', 'uses' 
 Route::get('v2/payments/failed', ['as' => 'v2.payments.static-failed', 'uses' => 'Payment\Controllers\PaymentController@staticFailed']);
 
 Route::post('webhook/midtrans/status', ['as' => 'webhook.midtrans.status', 'uses' => 'Payment\Controllers\MidtransWebhookController@postHandle']);
+
+Route::group(['middleware' => ['basic-auth-config:core-h2h-user-provider']], function () {
+    Route::post('webhook/sparepart_financing/invoice/validation', [
+        'as' => 'webhook.sparepart_financing.invoice-validation',
+        'uses' => 'Disbursement\Controllers\SparePartDisbursementWebhookController@invoiceValidation',
+    ]);
+});
