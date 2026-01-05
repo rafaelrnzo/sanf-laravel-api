@@ -12,10 +12,10 @@ final class PaymentMethodTransformer extends TransformerAbstract
     {
         $midtransTransaction = $model->midtransTransaction;
 
-        if (!$midtransTransaction) {
-            return MidtransPaymentMethodResolver::emptyResult()->toArray();
+        if (optional($midtransTransaction)->midtrans_transaction_id && optional($midtransTransaction)->raw_response) {
+            return MidtransPaymentMethodResolver::resolve($midtransTransaction->raw_response)->toArray();
         }
 
-        return MidtransPaymentMethodResolver::resolve($midtransTransaction->raw_response)->toArray();
+        return MidtransPaymentMethodResolver::emptyResult()->toArray();
     }
 }
