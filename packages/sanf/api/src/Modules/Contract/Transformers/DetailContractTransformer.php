@@ -4,6 +4,7 @@ namespace Sanf\Api\Modules\Contract\Transformers;
 
 use Carbon\Carbon;
 use League\Fractal\TransformerAbstract;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClientV2;
 
 class DetailContractTransformer extends TransformerAbstract
 {
@@ -29,6 +30,8 @@ class DetailContractTransformer extends TransformerAbstract
             'installment_count' => (int) $item->installment_count,
             'financing' => fractal($item->financing, DetailFinancingTransformer::class),
             'total_financing_unit' => (int) $item->total_financing_unit,
+            'payment_xid' => $item->payment_xid,
+            'installment_due_date' => $item->due_at ? Carbon::parse($item->due_at, SanfCoreApiClientV2::DEFAULT_TIMEZONE)->timestamp : null,
         ];
     }
 }

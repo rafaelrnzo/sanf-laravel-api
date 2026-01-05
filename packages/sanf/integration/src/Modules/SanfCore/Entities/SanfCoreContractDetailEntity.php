@@ -32,6 +32,9 @@ class SanfCoreContractDetailEntity extends FlexibleDataTransferObject
     public ?string $BUNGA;
     public ?float $DP;
     public ?string $TOTAL_TAGIHAN;
+    public ?string $TIPE_PEMBAYARAN_ID;
+    public ?string $TIPE_PEMBAYARAN_DESC;
+    public ?string $CONTRACT_TYPE_CODE;
 
     public static function fromLowercaseKeys(array $params): self
     {

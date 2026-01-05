@@ -9,6 +9,7 @@ use Sanf\Core\Encryptions\SodiumEncryption;
 use Sanf\Core\Modules\Payment\Enums\PaymentStatusEnum;
 use Sanf\Core\Modules\Payment\Models\MidtransTransactionModel;
 use Sanf\Core\Modules\Payment\Models\PaymentModel;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClientV2;
 
 final class PaymentEloquentRepository implements PaymentRepositoryInterface
 {
@@ -107,6 +108,24 @@ final class PaymentEloquentRepository implements PaymentRepositoryInterface
             ->where('status', PaymentStatusEnum::PENDING)
             ->where('expired_at', '>', Carbon::now())
             ->whereHas('installments', fn ($q) => $q->where('contract_no', $contractNo))
+            ->orderByDesc('created_at')
+            ->first();
+    }
+
+    public function findByInstallmentDetail(string $contractNo, string $dueDate, array $filters = []): ?PaymentModel
+    {
+        $targetTimezone = SanfCoreApiClientV2::DEFAULT_TIMEZONE;
+
+        $dueDateObject = Carbon::parse($dueDate, $targetTimezone);
+        $startOfDay = $dueDateObject->copy()->startOfDay()->setTimezone($targetTimezone);
+        $endOfDay = $dueDateObject->copy()->endOfDay()->setTimezone($targetTimezone);
+
+        return $this->model->newQuery()
+            ->where($filters)
+            ->whereHas('installments', function ($q) use ($contractNo, $startOfDay, $endOfDay) {
+                $q->where('contract_no', $contractNo)
+                    ->whereBetween('due_date', [$startOfDay, $endOfDay]);
+            })
             ->orderByDesc('created_at')
             ->first();
     }

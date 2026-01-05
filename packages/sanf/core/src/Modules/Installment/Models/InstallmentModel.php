@@ -11,7 +11,7 @@ use Sanf\Core\Modules\Payment\Models\PaymentModel;
  * @property int $user_auth_id
  * @property string $user_profile_xid
  * @property string $contract_no
- * @property \Carbon\Carbon $due_date
+ * @property \Carbon\Carbon $due_date default timezone offset GMT+07
  * @property float $amount
  * @property int $version
  * @property string|\Sanf\Core\Modules\Installment\Enums\InstallmentStatusEnum $status

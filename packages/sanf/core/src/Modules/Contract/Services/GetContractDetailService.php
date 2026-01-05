@@ -6,6 +6,8 @@ use GuzzleHttp\Exception\GuzzleException;
 use NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
+use Sanf\Core\Modules\Payment\Models\PaymentModel;
+use Sanf\Core\Modules\Payment\Repositories\PaymentRepositoryInterface;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Core\Modules\User\Services\UserService;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
@@ -15,16 +17,19 @@ class GetContractDetailService extends UserService implements ApplicationService
 {
     protected SanfCoreApiClient $internalApiClient;
     protected SanfCoreApiClientV2 $internalApiClientV2;
+    protected PaymentRepositoryInterface $paymentRepository;
 
     public function __construct(
         UserRepositoryInterface $userRepository,
         SanfCoreApiClient $internalApiClient,
-        SanfCoreApiClientV2 $internalApiClientV2
+        SanfCoreApiClientV2 $internalApiClientV2,
+        PaymentRepositoryInterface $paymentRepository
     )
     {
         parent::__construct($userRepository);
         $this->internalApiClient = $internalApiClient;
         $this->internalApiClientV2 = $internalApiClientV2;
+        $this->paymentRepository = $paymentRepository;
     }
 
     /**
@@ -42,6 +47,13 @@ class GetContractDetailService extends UserService implements ApplicationService
         }
 
         $data = $this->internalApiClientV2->getContractDetail($dto->contract_no);
+
+        $payment = $this->findPayment(
+            $data->NO_KONTRAK,
+            $data->DT_DUE,
+            $dto->user_id,
+            $dto->profile_xid
+        );
 
         return (object) [
             'contract_at' => $data->TGL_KONTRAK ?? null,
@@ -77,8 +89,37 @@ class GetContractDetailService extends UserService implements ApplicationService
                     'name' => $data->CARA_PEMBIAYAAN ?? null,
                 ],
                 'total_tenor' => $data->TENOR ?? 0,
+                'type' => (object) [
+                    'id' => $data->TIPE_PEMBAYARAN_ID,
+                    'name' => $data->TIPE_PEMBAYARAN_DESC,
+                ],
+                'plafond_type' => $this->mapPalfondType($data->CONTRACT_TYPE_CODE),
             ],
             'total_financing_unit' => $data->TOT_UNIT ?? 0,
+            'payment_xid' => optional($payment)->xid,
         ];
+    }
+
+    private function findPayment(string $contractNo, string $dueDate, int $userAuthId, string $userProfileXid): ?PaymentModel
+    {
+        return $this->paymentRepository->findByInstallmentDetail(
+            $contractNo,
+            $dueDate,
+            [
+                'user_auth_id' => $userAuthId,
+                'user_profile_xid' => $userProfileXid,
+            ]
+        );
+    }
+
+    private function mapPalfondType(string $plafondType)
+    {
+        $status = [
+            'SPAREPART' => 'SPARE_PART_FINANCING',
+            'FACTORING' => 'FACTORING_FINANCING',
+            'GENERAL' => 'GENERAL_FINANCING',
+        ];
+
+        return $status[$plafondType] ?? $status['GENERAL'];
     }
 }

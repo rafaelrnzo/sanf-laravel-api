@@ -285,7 +285,7 @@ final class CheckPaymentStatusUseCase
                 return new SanfCoreInstallmentPaymentItem([
                     'no_kontrak' => $installmentSnapshot->contract_no,
                     'cust_id' => $payment->user_profile_xid,
-                    'due_date' => Carbon::make($installmentSnapshot->due_date)->shiftTimezone(SanfCoreApiClientV2::DEFAULT_TIMEZONE)->format('Y-m-d'),
+                    'due_date' => Carbon::make($installmentSnapshot->due_date)->setTimezone(SanfCoreApiClientV2::DEFAULT_TIMEZONE)->format('Y-m-d'),
                     'schedule_no' => $installmentSnapshot->sequence_no,
                     'amount_tagihan' => $installmentSnapshot->principal_loan,
                     'amount_pinalty' => $installmentSnapshot->penalty_fee,

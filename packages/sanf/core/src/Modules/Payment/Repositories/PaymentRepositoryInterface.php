@@ -22,6 +22,8 @@ interface PaymentRepositoryInterface
         string $contractNo
     ): ?PaymentModel;
 
+    public function findByInstallmentDetail(string $contractNo, string $dueDate, array $filters = []): ?PaymentModel;
+
     public function findByMidtransOrder(string $midtransOrderId, array $filters = []): ?PaymentModel;
 
     public function create(array $data): PaymentModel;

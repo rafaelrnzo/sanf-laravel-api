@@ -16,6 +16,11 @@ class DetailFinancingTransformer extends TransformerAbstract
             'facility' => fractal($item->facility, FinancingFacilityTransformer::class),
             'method' => fractal($item->method, FinancingMethodTransformer::class),
             'total_tenor' => (int) $item->total_tenor,
+            'type' => [
+                'id' => $item->type->id,
+                'name' => $item->type->name,
+            ],
+            'plafond_type' => $item->plafond_type,
         ];
     }
 }
