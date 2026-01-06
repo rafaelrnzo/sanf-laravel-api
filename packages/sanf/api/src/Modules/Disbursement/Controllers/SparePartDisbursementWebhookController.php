@@ -3,6 +3,7 @@
 namespace Sanf\Api\Modules\Disbursement\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use NbsPhp\Core\Controllers\RestApiController;
 use Sanf\Core\Constants\ConnectionDB;
@@ -11,12 +12,16 @@ use Sanf\Core\Modules\Disbursement\Payloads\StatusFromCoreSparePartDisbursementP
 use Sanf\Core\Modules\Disbursement\Payloads\ValidateSparePartDisbursementPayload;
 use Sanf\Core\Modules\Disbursement\UseCases\StatusSparePartDisbursementUseCase;
 use Sanf\Core\Modules\Disbursement\UseCases\ValidateSparePartDisbursementUseCase;
+use Sanf\Core\Modules\Log\Enums\WebhookLogKeyEnum;
+use Sanf\Core\Modules\Log\Payloads\CreateWebhookLogPayload;
+use Sanf\Core\Modules\Log\UseCases\WebhookLogUseCase;
 
 class SparePartDisbursementWebhookController extends RestApiController
 {
     public function invoiceValidation(
         Request $request,
-        ValidateSparePartDisbursementUseCase $useCase
+        ValidateSparePartDisbursementUseCase $useCase,
+        WebhookLogUseCase $webhookLogUseCase
     ) {
         $formData = $this->validate($request, [
             'batch_id' => ['required', 'string'],
@@ -41,14 +46,29 @@ class SparePartDisbursementWebhookController extends RestApiController
             'customers.*.invoices.*.message' => ['nullable', 'string'],
         ]);
 
-        try {
-            DB::connection(ConnectionDB::PG_SQL_CMS)->transaction(function () use ($formData, $useCase) {
-                $payload = new ValidateSparePartDisbursementPayload($formData);
+        $receveivedAt = (string) Carbon::now();
 
-                $useCase->execute($payload);
-            });
+        $payload = new ValidateSparePartDisbursementPayload($formData);
+
+        try {
+            DB::connection(ConnectionDB::PG_SQL_CMS)->transaction(
+                fn () => $useCase->execute($payload)
+            );
         } catch (SparePartDisbrusementValidated $e) {
             return $this->responseOk('Disbursement batch already validated');
+        }
+
+        try {
+            $webhookLogUseCase->create(new CreateWebhookLogPayload([
+                'xid' => nano_id(),
+                'key' => WebhookLogKeyEnum::SPARE_PART_DISBURSEMENT_VALIDATION,
+                'reference_id' => str_limit($payload->batch_id, 255),
+                'payload' => $request->all(),
+                'received_at' => $receveivedAt,
+                'processed_at' => (string) Carbon::now(),
+            ]));
+        } catch (\Throwable $th) {
+            report($th);
         }
 
         return $this->responseOk();
@@ -56,7 +76,8 @@ class SparePartDisbursementWebhookController extends RestApiController
 
     public function updateStatus(
         Request $request,
-        StatusSparePartDisbursementUseCase $useCase
+        StatusSparePartDisbursementUseCase $useCase,
+        WebhookLogUseCase $webhookLogUseCase
     ) {
         $formData = $this->validate($request, [
             'batch_id' => ['required', 'string'],
@@ -66,11 +87,26 @@ class SparePartDisbursementWebhookController extends RestApiController
             'status_batch_desc' => ['required', 'string'],
         ]);
 
-        DB::connection(ConnectionDB::PG_SQL_CMS)->transaction(function () use ($formData, $useCase) {
-            $payload = new StatusFromCoreSparePartDisbursementPayload($formData);
+        $receveivedAt = (string) Carbon::now();
 
-            $useCase->updateFromCore($payload);
-        });
+        $payload = new StatusFromCoreSparePartDisbursementPayload($formData);
+
+        DB::connection(ConnectionDB::PG_SQL_CMS)->transaction(
+            fn () => $useCase->updateFromCore($payload)
+        );
+
+        try {
+            $webhookLogUseCase->create(new CreateWebhookLogPayload([
+                'xid' => nano_id(),
+                'key' => WebhookLogKeyEnum::SPARE_PART_DISBURSEMENT_STATUS,
+                'reference_id' => str_limit("{$payload->batch_id}|{$payload->cust_id}|{$payload->cust_id_sanfind}", 255),
+                'payload' => $request->all(),
+                'received_at' => $receveivedAt,
+                'processed_at' => (string) Carbon::now(),
+            ]));
+        } catch (\Throwable $th) {
+            report($th);
+        }
 
         return $this->responseOk();
     }

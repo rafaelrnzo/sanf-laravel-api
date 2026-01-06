@@ -7,6 +7,6 @@ use MyCLabs\Enum\Enum;
 class WebhookLogKeyEnum extends Enum
 {
     public const MIDTRANS_STATUS = 'midtrans.status';
-    public const SPARE_PART_DISBURSEMENT_VALIDATION = 'spare_part_disbursement.validation';
-    public const SPARE_PART_DISBURSEMENT_STATUS = 'spare_part_disbursement.status';
+    public const SPARE_PART_DISBURSEMENT_VALIDATION = 'sp_disbursement.validation';
+    public const SPARE_PART_DISBURSEMENT_STATUS = 'sp_disbursement.status';
 }
