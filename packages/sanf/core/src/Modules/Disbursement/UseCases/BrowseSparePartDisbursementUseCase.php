@@ -7,6 +7,7 @@ use Sanf\Core\Modules\Disbursement\Enums\SparePartDisbursementStatusEnum;
 use Sanf\Core\Modules\Disbursement\Models\SparePartDisbursementModel;
 use Sanf\Core\Modules\Disbursement\Payloads\BrowseSparePartDisbursementPayload;
 use Sanf\Core\Modules\Disbursement\Repositories\SparePartDisbursementRepositoryInterface;
+use Sanf\Core\Modules\Disbursement\Supports\SparePartDisbursementStatusResolver;
 use Sanf\Integration\Modules\SanfCore\Entities\SanfCoreSparePartDisbursementEntity;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClientV2;
 
@@ -55,7 +56,7 @@ final class BrowseSparePartDisbursementUseCase
              * @var SparePartDisbursementModel $item
              */
             if ($core = $dataCore->get($item->batch_number)) {
-                $item->status_id = $core->status_batch_id;
+                $item->status_id = SparePartDisbursementStatusResolver::mapFromCore($core->status_batch_id);
             }
 
             return $item;

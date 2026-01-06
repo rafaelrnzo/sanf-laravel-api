@@ -4,6 +4,7 @@ namespace Sanf\Core\Modules\Disbursement\UseCases;
 
 use Sanf\Core\Modules\Disbursement\Models\SparePartDisbursementModel;
 use Sanf\Core\Modules\Disbursement\Repositories\SparePartDisbursementRepositoryInterface;
+use Sanf\Core\Modules\Disbursement\Supports\SparePartDisbursementStatusResolver;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClientV2;
 
 final class FindSparePartDisbursementUseCase
@@ -35,7 +36,7 @@ final class FindSparePartDisbursementUseCase
         $dataCore = $this->sanfCoreApiClient->getSparePartDisbursementDetail($data->batch_number, $data->customer_id);
 
         if ($dataCore) {
-            $data->status_id = $dataCore->status_batch_id;
+            $data->status_id = SparePartDisbursementStatusResolver::mapFromCore($dataCore->status_batch_id);
         }
 
         return $data;

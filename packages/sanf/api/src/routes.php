@@ -340,4 +340,9 @@ Route::group(['middleware' => ['basic-auth-config:core-h2h-user-provider']], fun
         'as' => 'webhook.sparepart_financing.invoice-validation',
         'uses' => 'Disbursement\Controllers\SparePartDisbursementWebhookController@invoiceValidation',
     ]);
+
+    Route::post('webhook/sparepart_financing/invoice/status', [
+        'as' => 'webhook.sparepart_financing.update-status',
+        'uses' => 'Disbursement\Controllers\SparePartDisbursementWebhookController@updateStatus',
+    ]);
 });

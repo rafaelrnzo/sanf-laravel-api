@@ -7,7 +7,9 @@ use Illuminate\Support\Facades\DB;
 use NbsPhp\Core\Controllers\RestApiController;
 use Sanf\Core\Constants\ConnectionDB;
 use Sanf\Core\Modules\Disbursement\Exceptions\SparePartDisbrusementValidated;
+use Sanf\Core\Modules\Disbursement\Payloads\StatusFromCoreSparePartDisbursementPayload;
 use Sanf\Core\Modules\Disbursement\Payloads\ValidateSparePartDisbursementPayload;
+use Sanf\Core\Modules\Disbursement\UseCases\StatusSparePartDisbursementUseCase;
 use Sanf\Core\Modules\Disbursement\UseCases\ValidateSparePartDisbursementUseCase;
 
 class SparePartDisbursementWebhookController extends RestApiController
@@ -48,6 +50,27 @@ class SparePartDisbursementWebhookController extends RestApiController
         } catch (SparePartDisbrusementValidated $e) {
             return $this->responseOk('Disbursement batch already validated');
         }
+
+        return $this->responseOk();
+    }
+
+    public function updateStatus(
+        Request $request,
+        StatusSparePartDisbursementUseCase $useCase
+    ) {
+        $formData = $this->validate($request, [
+            'batch_id' => ['required', 'string'],
+            'cust_id' => ['required'],
+            'cust_id_sanfind' => ['required', 'string'],
+            'status_batch_id' => ['required', 'string'],
+            'status_batch_desc' => ['required', 'string'],
+        ]);
+
+        DB::connection(ConnectionDB::PG_SQL_CMS)->transaction(function () use ($formData, $useCase) {
+            $payload = new StatusFromCoreSparePartDisbursementPayload($formData);
+
+            $useCase->updateFromCore($payload);
+        });
 
         return $this->responseOk();
     }
