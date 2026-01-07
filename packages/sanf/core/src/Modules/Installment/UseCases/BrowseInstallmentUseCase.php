@@ -263,7 +263,7 @@ class BrowseInstallmentUseCase
         return sprintf('%s|%s', $contractNo, $dueDateString);
     }
 
-    private function mapStatus(string $coreStatus, ?string $dbStatus)
+    private function mapStatus(int $coreStatus, ?string $dbStatus)
     {
         if ($dbStatus === InstallmentStatusEnum::WAITING_PAYMENT) {
             return $dbStatus;
@@ -271,6 +271,10 @@ class BrowseInstallmentUseCase
 
         if ($coreStatus === InstallmentPaymentStatusEnum::LUNAS) {
             return InstallmentStatusEnum::PAID;
+        }
+
+        if ($coreStatus === InstallmentPaymentStatusEnum::MENUNGGU_KONFIRMASI) {
+            return InstallmentStatusEnum::IN_PROGRESS;
         }
 
         return InstallmentStatusEnum::ACTIVE;

@@ -16,8 +16,8 @@ class SanfCoreInstallmentEntity extends FlexibleDataTransferObject
     public ?string $jatuh_tempo; // 2025-12-21
     public ?string $supplier_id;
     public ?string $nama_supplier;
-    public ?int $status_pembayaran_id; // 0 | 1
-    public ?string $status_pembayaran_desc; // Lunas | Belum Lunas
-    public ?int $schedule_no; // Lunas | Belum Lunas
-    public ?int $schedule_total; // Lunas | Belum Lunas
+    public ?int $status_pembayaran_id; // 0 | 1 | 2
+    public ?string $status_pembayaran_desc; // Lunas | Belum Lunas | Menunggu Konfirmasi
+    public ?int $schedule_no;
+    public ?int $schedule_total;
 }
