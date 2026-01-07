@@ -2,10 +2,13 @@
 
 namespace Sanf\Integration\Modules\SanfCore\Entities;
 
+use Sanf\Core\Traits\CastsNumericDtoProperties;
 use Spatie\DataTransferObject\FlexibleDataTransferObject;
 
 class SanfCoreSparePartDisbursementEntity extends FlexibleDataTransferObject
 {
+    use CastsNumericDtoProperties;
+
     public string $rn;
     public string $batch_id;
     public string $cust_id;

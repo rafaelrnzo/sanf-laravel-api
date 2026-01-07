@@ -45,6 +45,7 @@ class SanfCoreApiClientV2
             ->queryParams([
                 'page' => $page,
                 'per_page' => $per_page,
+                'request_type' => 'mobile',
             ])
             ->send();
 
@@ -67,6 +68,7 @@ class SanfCoreApiClientV2
                 ->pathParams([
                     'batchId' => $batchId,
                     'customerId' => $customerId,
+                    'request_type' => 'mobile',
                 ])
                 ->send();
 
