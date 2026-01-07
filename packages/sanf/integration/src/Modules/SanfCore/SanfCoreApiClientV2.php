@@ -68,6 +68,8 @@ class SanfCoreApiClientV2
                 ->pathParams([
                     'batchId' => $batchId,
                     'customerId' => $customerId,
+                ])
+                ->queryParams([
                     'request_type' => 'mobile',
                 ])
                 ->send();
