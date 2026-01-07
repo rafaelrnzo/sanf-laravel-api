@@ -10,16 +10,16 @@ class SanfCoreInstallmentDetailContractEntity extends FlexibleDataTransferObject
     use CastsNumericDtoProperties;
 
     public string $no_kontrak;
-    public string $status_kontrak_id;
-    public string $status_kontrak_desc;
+    public ?string $status_kontrak_id;
+    public ?string $status_kontrak_desc;
     public string $tanggal_kontrak;
-    public string $nama_supplier;
-    public string $tipe_pembayaran_id;
-    public string $tipe_pembayaran_desc;
-    public string $jenis_pembiayaan_id;
-    public string $jenis_pembiayaan_desc;
-    public string $cara_pembiayaan_id;
-    public string $cara_pembiayaan_desc;
+    public ?string $nama_supplier;
+    public ?string $tipe_pembayaran_id;
+    public ?string $tipe_pembayaran_desc;
+    public ?string $jenis_pembiayaan_id;
+    public ?string $jenis_pembiayaan_desc;
+    public ?string $cara_pembiayaan_id;
+    public ?string $cara_pembiayaan_desc;
     public string $tenor;
     public string $tipe_tenor;
     public string $jatuh_tempo; // 'Y-m-d' format ": "2025-12-21",
