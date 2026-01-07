@@ -1,6 +1,7 @@
 <?php
 
 use Carbon\Carbon;
+use Hidehalo\Nanoid\Client;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\File;
 use Illuminate\Http\UploadedFile;
@@ -16,6 +17,21 @@ if (!function_exists('nano_id')) {
     function nano_id()
     {
         return app()->make('nanoid')->generateId();
+    }
+}
+
+if (!function_exists('nano_id_alphanumeric')) {
+    /**
+     * @return string
+     *
+     * @throws BindingResolutionException
+     */
+    function nano_id_alphanumeric($size = 10)
+    {
+        /** @var Client $client */
+        $client = app()->make('nanoid');
+
+        return $client->formattedId('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', $size);
     }
 }
 

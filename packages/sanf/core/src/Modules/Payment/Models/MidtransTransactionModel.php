@@ -21,6 +21,7 @@ use NbsPhp\Core\Models\AbstractModel;
  * @property array|null $raw_response
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
+ * @property int $version
  * @property-read PaymentModel $payment
  */
 class MidtransTransactionModel extends AbstractModel

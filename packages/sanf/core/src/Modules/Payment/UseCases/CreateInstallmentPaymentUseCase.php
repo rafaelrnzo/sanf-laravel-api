@@ -121,7 +121,7 @@ final class CreateInstallmentPaymentUseCase
         ]);
 
         $payment = $this->paymentRepository->create([
-            'xid' => nano_id(),
+            'xid' => nano_id_alphanumeric(),
             'user_auth_id' => $payload->userAuthId,
             'user_profile_xid' => $payload->userProfileXid,
             'amount' => $payload->total_payment,
@@ -232,7 +232,7 @@ final class CreateInstallmentPaymentUseCase
             }
 
             $newInstallment = $this->installmentRepository->create([
-                'xid' => nano_id(),
+                'xid' => nano_id_alphanumeric(),
                 'user_auth_id' => $userAuthId,
                 'user_profile_xid' => $userProfileXid,
                 'contract_no' => $installment->contract_no,
@@ -286,7 +286,7 @@ final class CreateInstallmentPaymentUseCase
      */
     private function createSnapMidtrans(CreateInstallmentPaymentPayload $installmentPayload, PaymentModel $payment, AuthEncryptedModel $user, array $savedInstallments)
     {
-        $midtransOrderId = nano_id();
+        $midtransOrderId = nano_id_alphanumeric();
 
         $payload = new CreateSnapTransactionPayload([
             'transaction_details' => new SnapTransactionDetailsPayload([

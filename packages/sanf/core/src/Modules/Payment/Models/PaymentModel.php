@@ -89,6 +89,10 @@ class PaymentModel extends AbstractModel
 
     public function getStatusLogAttribute($value)
     {
+        if (is_string($value)) {
+            $value = json_decode($value, true);
+        }
+
         return array_map(
             fn ($item) => new PaymentStatusLogItemEntity($item),
             $value ?? []

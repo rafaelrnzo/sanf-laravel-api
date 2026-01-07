@@ -9,6 +9,8 @@ use NbsPhp\Core\Controllers\RestApiController;
 use Sanf\Api\Modules\Payment\Transformers\CreateInstallmentPaymentTransformer;
 use Sanf\Core\Modules\Payment\Exceptions\OutstandingPaymentException;
 use Sanf\Core\Modules\Payment\Exceptions\UnexistsInstallmentException;
+use Sanf\Core\Modules\Payment\Jobs\PaymentExpireJob;
+use Sanf\Core\Modules\Payment\Models\PaymentModel;
 use Sanf\Core\Modules\Payment\Payloads\CreateInstallmentPaymentPayload;
 use Sanf\Core\Modules\Payment\Payloads\PaymentInstallmentCalculationPayload;
 use Sanf\Core\Modules\Payment\Payloads\PaymentInstallmentPayload;
@@ -91,13 +93,16 @@ final class PaymentInstallmentController extends RestApiController
             'installments' => $installments,
         ]);
 
-        $calclulationResponse = $paymentCalculationUseCase->execute($calculationPayload);
+        $calculationResponse = $paymentCalculationUseCase->execute($calculationPayload);
 
-        $createPaymentPayload = new CreateInstallmentPaymentPayload(array_merge($calclulationResponse->toArray(), [
+        $createPaymentPayload = new CreateInstallmentPaymentPayload(array_merge($calculationResponse->toArray(), [
             'userAuthId' => $auth->id(),
             'userProfileXid' => $profileXid,
         ]));
 
+        /**
+         * @var PaymentModel
+         */
         $payment = DB::transaction(function () use ($createPaymentUseCase, $createPaymentPayload, $paymentPreviewUseCase, $profileXid) {
             $response = $createPaymentUseCase->execute($createPaymentPayload);
 
@@ -105,6 +110,8 @@ final class PaymentInstallmentController extends RestApiController
 
             return $response;
         });
+
+        dispatch((new PaymentExpireJob($payment))->delay($payment->expired_at));
 
         return fractal($payment, CreateInstallmentPaymentTransformer::class);
     }

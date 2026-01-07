@@ -90,6 +90,7 @@ final class CheckPaymentStatusUseCase
         $payload = [
             'status' => $paymentStatus,
             'version' => $payment->version + 1,
+
         ];
 
         if ($paymentStatus === PaymentStatusEnum::SUCCESS) {

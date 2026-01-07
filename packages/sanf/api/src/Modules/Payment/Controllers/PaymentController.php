@@ -8,6 +8,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use NbsPhp\Core\Controllers\RestApiController;
+use NbsPhp\Core\Exceptions\ConcurrentModificationException;
 use NbsPhp\Core\Exceptions\ResourceNotFoundException;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
 use Sanf\Api\Modules\Payment\Transformers\PaymentDetailTransformer;
@@ -15,6 +16,8 @@ use Sanf\Api\Modules\Payment\Transformers\PaymentListTransformer;
 use Sanf\Api\Modules\Payment\Transformers\PaymentStatsTransformer;
 use Sanf\Api\Modules\Payment\Transformers\RegeneratePaymentTransformer;
 use Sanf\Core\Modules\Payment\Enums\PaymentStatusEnum;
+use Sanf\Core\Modules\Payment\Exceptions\PaymentNotExpiredException;
+use Sanf\Core\Modules\Payment\Exceptions\PaymentSettledException;
 use Sanf\Core\Modules\Payment\Models\PaymentModel;
 use Sanf\Core\Modules\Payment\Payloads\BrowsePaymentPayload;
 use Sanf\Core\Modules\Payment\UseCases\BrowsePaymentUseCase;
@@ -22,6 +25,7 @@ use Sanf\Core\Modules\Payment\UseCases\CancelPaymentUseCase;
 use Sanf\Core\Modules\Payment\UseCases\CheckPaymentStatusUseCase;
 use Sanf\Core\Modules\Payment\UseCases\FindPaymentUseCase;
 use Sanf\Core\Modules\Payment\UseCases\GetPaymentStatusCountUseCase;
+use Sanf\Core\Modules\Payment\UseCases\MakePaymentExpireUseCase;
 use Sanf\Core\Modules\Payment\UseCases\PaymentUseCase;
 use Sanf\Core\Modules\Payment\UseCases\RegeneratePaymentUseCase;
 
@@ -131,11 +135,25 @@ final class PaymentController extends RestApiController
         string $xid,
         string $paymentXid,
         Guard $auth,
-        CheckPaymentStatusUseCase $useCase
+        CheckPaymentStatusUseCase $useCase,
+        MakePaymentExpireUseCase $paymentExpired
     )
     {
         $userAuthId = $auth->id();
         $userProfileXid = $xid;
+
+        try {
+            $paymentExpired->execute($paymentXid);
+        } catch (
+            ResourceNotFoundException |
+            PaymentSettledException |
+            PaymentNotExpiredException |
+            ConcurrentModificationException $th
+        ) {
+            // no action
+        } catch (\Throwable $th) {
+            report($th);
+        }
 
         $status = DB::transaction(fn () => $useCase->execute($paymentXid, $userAuthId, $userProfileXid));
 

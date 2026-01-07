@@ -60,7 +60,7 @@ class SparePartDisbursementWebhookController extends RestApiController
 
         try {
             $webhookLogUseCase->create(new CreateWebhookLogPayload([
-                'xid' => nano_id(),
+                'xid' => nano_id_alphanumeric(10),
                 'key' => WebhookLogKeyEnum::SPARE_PART_DISBURSEMENT_VALIDATION,
                 'reference_id' => str_limit($payload->batch_id, 255),
                 'payload' => $request->all(),
@@ -97,7 +97,7 @@ class SparePartDisbursementWebhookController extends RestApiController
 
         try {
             $webhookLogUseCase->create(new CreateWebhookLogPayload([
-                'xid' => nano_id(),
+                'xid' => nano_id_alphanumeric(10),
                 'key' => WebhookLogKeyEnum::SPARE_PART_DISBURSEMENT_STATUS,
                 'reference_id' => str_limit("{$payload->batch_id}|{$payload->cust_id}|{$payload->cust_id_sanfind}", 255),
                 'payload' => $request->all(),

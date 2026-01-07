@@ -112,7 +112,7 @@ final class RegeneratePaymentUseCase
 
     private function createSnapMidtrans(PaymentModel $payment, AuthEncryptedModel $user): MidtransTransactionModel
     {
-        $midtransOrderId = nano_id();
+        $midtransOrderId = nano_id_alphanumeric();
 
         $payment->loadMissing('installments');
 

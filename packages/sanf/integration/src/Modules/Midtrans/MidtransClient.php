@@ -47,8 +47,13 @@ class MidtransClient
         ));
     }
 
-    public function cancelTransaction(string $orderId): void
+    public function cancelTransaction(string $orderId)
     {
-        Transaction::cancel($orderId);
+        return Transaction::cancel($orderId);
+    }
+
+    public function expireTransaction(string $orderId)
+    {
+        return Transaction::expire($orderId);
     }
 }
