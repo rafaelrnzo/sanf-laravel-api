@@ -10,8 +10,8 @@ class SanfCoreInstallmentDetailOverdueEntity extends FlexibleDataTransferObject
     use CastsNumericDtoProperties;
 
     public string $due_date; // 'Y-m-d' format
-    public int $pokok_hutang;
-    public int $bunga;
-    public int $denda;
-    public int $total_overdue;
+    public float $pokok_hutang;
+    public float $bunga;
+    public float $denda;
+    public float $total_overdue;
 }
