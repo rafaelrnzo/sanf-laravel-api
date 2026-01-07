@@ -100,6 +100,8 @@ class GetContractDetailService extends UserService implements ApplicationService
             ],
             'total_financing_unit' => $data->TOT_UNIT ?? 0,
             'payment_xid' => optional($payment)->xid,
+            'supplier_id' => $data->ID_SUPPLIER,
+            'supplier_name' => $data->NAMA_SUPPLIER,
         ];
     }
 

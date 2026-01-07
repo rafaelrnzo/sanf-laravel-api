@@ -32,6 +32,8 @@ class DetailContractTransformer extends TransformerAbstract
             'total_financing_unit' => (int) $item->total_financing_unit,
             'payment_xid' => $item->payment_xid,
             'installment_due_date' => $item->due_at ? Carbon::parse($item->due_at, SanfCoreApiClientV2::DEFAULT_TIMEZONE)->timestamp : null,
+            'supplier_id' => $item->supplier_id,
+            'supplier_name' => $item->supplier_name,
         ];
     }
 }
