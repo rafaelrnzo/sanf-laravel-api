@@ -48,12 +48,15 @@ class GetContractDetailService extends UserService implements ApplicationService
 
         $data = $this->internalApiClientV2->getContractDetail($dto->contract_no);
 
-        $payment = $this->findPayment(
-            $data->NO_KONTRAK,
-            $data->DT_DUE,
-            $dto->user_id,
-            $dto->profile_xid
-        );
+        $payment = null;
+        if ($data->NO_KONTRAK && $data->DT_DUE) {
+            $payment = $this->findPayment(
+                $data->NO_KONTRAK,
+                $data->DT_DUE,
+                $dto->user_id,
+                $dto->profile_xid
+            );
+        }
 
         return (object) [
             'contract_at' => $data->TGL_KONTRAK ?? null,
