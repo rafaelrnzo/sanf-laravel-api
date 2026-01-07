@@ -10,8 +10,8 @@ class InstallmentOutstandingResponse extends CamelCaseDataTransferObject
     use CastsNumericDtoProperties;
 
     public int $dueDate;
-    public float $total;
-    public float $pricipalLoan;
-    public float $interestAmount;
-    public float $penaltyFee;
+    public int $total;
+    public int $principalLoan;
+    public int $interestAmount;
+    public int $penaltyFee;
 }

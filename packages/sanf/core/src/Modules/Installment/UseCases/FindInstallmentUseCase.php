@@ -111,10 +111,10 @@ class FindInstallmentUseCase implements ApplicationServiceInterface
 
         $outstandingInstallments = array_map(fn (SanfCoreInstallmentDetailOverdueEntity $item) => new InstallmentOutstandingResponse([
             'dueDate' => $this->parseDate($item->due_date),
-            'total' => $item->total_overdue,
-            'pricipalLoan' => $item->pokok_hutang,
-            'interestAmount' => $item->bunga,
-            'penaltyFee' => $item->denda,
+            'total' => (int) ceil($item->total_overdue),
+            'principalLoan' => (int) ceil($item->pokok_hutang),
+            'interestAmount' => (int) ceil($item->bunga),
+            'penaltyFee' => (int) ceil($item->denda),
         ]), $overdue);
 
         $installment = $this->getInstallment($dto->contractNo, $dto->dueDate, $dto->profileXid);

@@ -27,7 +27,7 @@ final class InstallmentDetailTransformer extends TransformerAbstract
             'outstanding_installments' => array_map(fn (InstallmentOutstandingResponse $item) => [
                 'due_date' => $item->dueDate,
                 'total' => $item->total,
-                'principal_loan' => $item->pricipalLoan,
+                'principal_loan' => $item->principalLoan,
                 'interest_amount' => $item->interestAmount,
                 'penalty_fee' => $item->penaltyFee,
             ], $installment->outstandingInstallments),

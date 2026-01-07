@@ -7,6 +7,7 @@ use Illuminate\Support\Carbon;
 use NbsPhp\Core\Controllers\RestApiController;
 use Sanf\Core\Modules\Payment\Entities\PaymentPreviewInstallmentEntity;
 use Sanf\Core\Modules\Payment\Exceptions\OutstandingPaymentException;
+use Sanf\Core\Modules\Payment\Exceptions\PaymentNoInstallmentException;
 use Sanf\Core\Modules\Payment\Payloads\PaymentInstallmentCalculationPayload;
 use Sanf\Core\Modules\Payment\Payloads\PaymentInstallmentPayload;
 use Sanf\Core\Modules\Payment\UseCases\BuildPaymentInstallmentCalculationUseCase;
@@ -46,6 +47,10 @@ final class PaymentInstallmentPreviewController extends RestApiController
             ]);
 
             throw $e;
+        }
+
+        if (empty($response->validInstallments)) {
+            throw new PaymentNoInstallmentException();
         }
 
         $submitUseCase->execute($xid, $response->validInstallments);

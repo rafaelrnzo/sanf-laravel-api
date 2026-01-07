@@ -68,29 +68,29 @@ final class BuildPaymentInstallmentCalculationUseCase
             // total amount without discount
             $totalAmount = array_reduce(
                 $installmentDetail->overdue ?? [],
-                fn ($carry, SanfCoreInstallmentDetailOverdueEntity $item) => $carry + $item->total_overdue,
-                $installmentDetail->tagihan->total_tagihan + $installmentDetail->tagihan->diskon
+                fn ($carry, SanfCoreInstallmentDetailOverdueEntity $item) => $carry + $this->roundUpCurrency($item->total_overdue),
+                $this->roundUpCurrency($installmentDetail->tagihan->total_tagihan) + $this->roundUpCurrency($installmentDetail->tagihan->diskon)
             );
 
             $subtotalAllInstallments += $totalAmount;
-            $totalDiscount += $installmentDetail->tagihan->diskon;
+            $totalDiscount += $this->roundUpCurrency($installmentDetail->tagihan->diskon);
             // get last admin fee
-            $adminFee = $installmentDetail->tagihan->admin_fee;
+            $adminFee = $this->roundUpCurrency($installmentDetail->tagihan->admin_fee);
 
             $totalPenaltyFee = array_reduce(
                 $installmentDetail->overdue ?? [],
-                fn ($carry, SanfCoreInstallmentDetailOverdueEntity $item) => $carry + $item->denda,
-                $installmentDetail->tagihan->denda
+                fn ($carry, SanfCoreInstallmentDetailOverdueEntity $item) => $carry + $this->roundUpCurrency($item->denda),
+                $this->roundUpCurrency($installmentDetail->tagihan->denda)
             );
 
             $installmentsResult[] = new PaymentCalculationInstallmentResponse([
                 'contract_no' => $installmentDetail->kontrak->no_kontrak,
                 'due_date' => Carbon::parse($installmentDetail->tagihan->jatuh_tempo, $coreTimeZone)->timestamp,
-                'total_amount' => $totalAmount,
-                'subtotal_installment' => $installmentDetail->tagihan->total_tagihan,
-                'principal_loan' => $installmentDetail->tagihan->pokok_hutang,
-                'interest_amount' => $installmentDetail->tagihan->bunga,
-                'penalty_fee' => $installmentDetail->tagihan->denda,
+                'total_amount' => $this->roundUpCurrency($totalAmount),
+                'subtotal_installment' => $this->roundUpCurrency($installmentDetail->tagihan->total_tagihan),
+                'principal_loan' => $this->roundUpCurrency($installmentDetail->tagihan->pokok_hutang),
+                'interest_amount' => $this->roundUpCurrency($installmentDetail->tagihan->bunga),
+                'penalty_fee' => $this->roundUpCurrency($installmentDetail->tagihan->denda),
                 'financing_type_id' => $installmentDetail->kontrak->tipe_pembayaran_id,
                 'financing_type_desc' => $installmentDetail->kontrak->tipe_pembayaran_desc,
                 'sequence_no' => $installmentDetail->kontrak->schedule_no,
@@ -98,10 +98,10 @@ final class BuildPaymentInstallmentCalculationUseCase
                 'outstanding_installments' => array_map(
                     fn (SanfCoreInstallmentDetailOverdueEntity $item) => new PaymentCalculationOutstandingInstallmentResponse([
                         'due_date' => Carbon::parse($item->due_date, $coreTimeZone)->timestamp,
-                        'total' => $item->total_overdue,
-                        'principal_loan' => $item->pokok_hutang,
-                        'interest_amount' => $item->bunga,
-                        'penalty_fee' => $item->denda,
+                        'total' => $this->roundUpCurrency($item->total_overdue),
+                        'principal_loan' => $this->roundUpCurrency($item->pokok_hutang),
+                        'interest_amount' => $this->roundUpCurrency($item->bunga),
+                        'penalty_fee' => $this->roundUpCurrency($item->denda),
                     ]),
                     $installmentDetail->overdue ?? []
                 ),
@@ -127,14 +127,19 @@ final class BuildPaymentInstallmentCalculationUseCase
         $totalPayment = ($customSubtotalInstallment ?: $subtotalAllInstallments) - $totalDiscount + $adminFee;
 
         return new PaymentInstallmentCalculationResponse([
-            'total_payment' => $totalPayment,
-            'subtotal_all_installment' => $subtotalAllInstallments,
-            'discount' => $totalDiscount,
-            'admin_fee' => $adminFee,
-            'custom_amount' => $customAmount,
-            'custom_penalty_amount' => $customPenaltyAmount,
+            'total_payment' => $this->roundUpCurrency($totalPayment),
+            'subtotal_all_installment' => $this->roundUpCurrency($subtotalAllInstallments),
+            'discount' => $this->roundUpCurrency($totalDiscount),
+            'admin_fee' => $this->roundUpCurrency($adminFee),
+            'custom_amount' => $this->roundUpCurrency($customAmount),
+            'custom_penalty_amount' => $this->roundUpCurrency($customPenaltyAmount),
             'currency' => config('payment.currency'),
             'installments' => $installmentsResult,
         ]);
+    }
+
+    private function roundUpCurrency($value): ?int
+    {
+        return $value !== null ? (int) ceil((float) $value) : null;
     }
 }
