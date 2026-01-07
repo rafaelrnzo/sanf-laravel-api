@@ -33,7 +33,7 @@ final class FindSparePartDisbursementUseCase
 
         $data->load('validInvoices');
 
-        $dataCore = $this->sanfCoreApiClient->getSparePartDisbursementDetail($data->batch_number, $data->customer_id);
+        $dataCore = $this->sanfCoreApiClient->getSparePartDisbursementDetail($data->batch_number, $profileXid);
 
         if ($dataCore) {
             $data->status_id = SparePartDisbursementStatusResolver::mapFromCore($dataCore->status_batch_id);
