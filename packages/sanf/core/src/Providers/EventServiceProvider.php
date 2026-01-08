@@ -41,7 +41,11 @@ use Sanf\Core\Modules\Invoice\Events\InvoiceCollectionSubmissionAddedEvent;
 use Sanf\Core\Modules\Invoice\Listeners\SendEmailNewInvoiceCollectionSubmissionListener;
 use Sanf\Core\Modules\Notification\Events\NotifiedUserByExternalEvent;
 use Sanf\Core\Modules\Notification\Listeners\SendPushNotificationByExternalListener;
+use Sanf\Core\Modules\Payment\Events\PaymentCompletedEvent;
+use Sanf\Core\Modules\Payment\Events\PaymentCreatedEvent;
 use Sanf\Core\Modules\Payment\Events\PaymentExpiredEvent;
+use Sanf\Core\Modules\Payment\Listeners\SendNotificationPaymentCompletedListener;
+use Sanf\Core\Modules\Payment\Listeners\SendNotificationPaymentCreatedListener;
 use Sanf\Core\Modules\Payment\Listeners\SendNotificationPaymentExpiredListener;
 use Sanf\Core\Modules\PdcHold\Events\PdcHoldMultiContractSubmittedEvent;
 use Sanf\Core\Modules\PdcHold\Events\PdcHoldMultiGiroSubmittedEvent;
@@ -189,6 +193,12 @@ class EventServiceProvider extends ServiceProvider
         ],
         PaymentExpiredEvent::class => [
             SendNotificationPaymentExpiredListener::class,
+        ],
+        PaymentCreatedEvent::class => [
+            SendNotificationPaymentCreatedListener::class,
+        ],
+        PaymentCompletedEvent::class => [
+            SendNotificationPaymentCompletedListener::class,
         ],
     ];
 }

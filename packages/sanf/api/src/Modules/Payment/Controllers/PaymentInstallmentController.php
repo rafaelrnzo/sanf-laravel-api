@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use NbsPhp\Core\Controllers\RestApiController;
 use Sanf\Api\Modules\Payment\Transformers\CreateInstallmentPaymentTransformer;
+use Sanf\Core\Modules\Payment\Events\PaymentCreatedEvent;
 use Sanf\Core\Modules\Payment\Exceptions\OutstandingPaymentException;
 use Sanf\Core\Modules\Payment\Exceptions\UnexistsInstallmentException;
 use Sanf\Core\Modules\Payment\Jobs\PaymentExpireJob;
@@ -110,6 +111,8 @@ final class PaymentInstallmentController extends RestApiController
 
             return $response;
         });
+
+        event(new PaymentCreatedEvent($payment));
 
         dispatch((new PaymentExpireJob($payment))->delay($payment->expired_at));
 

@@ -257,10 +257,10 @@ final class CheckPaymentStatusUseCase
         $normalized = strtoupper((string) $paymentStatus);
 
         if ($normalized === PaymentStatusEnum::SUCCESS) {
-            return InstallmentStatusEnum::PAID;
+            return InstallmentStatusEnum::IN_PROGRESS;
         }
 
-        if (in_array($normalized, [PaymentStatusEnum::CANCELLED, PaymentStatusEnum::EXPIRED, PaymentStatusEnum::FAILED])) {
+        if ($normalized !== PaymentStatusEnum::PENDING) {
             return InstallmentStatusEnum::ACTIVE;
         }
 

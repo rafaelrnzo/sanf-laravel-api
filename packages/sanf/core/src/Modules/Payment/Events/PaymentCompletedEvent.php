@@ -5,7 +5,7 @@ namespace Sanf\Core\Modules\Payment\Events;
 use NbsPhp\Core\Event;
 use Sanf\Core\Modules\Payment\Models\PaymentModel;
 
-class PaymentExpiredEvent extends Event
+class PaymentCompletedEvent extends Event
 {
     public $payment;
 

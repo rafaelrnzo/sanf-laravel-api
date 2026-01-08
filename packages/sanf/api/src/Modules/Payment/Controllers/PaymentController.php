@@ -16,6 +16,7 @@ use Sanf\Api\Modules\Payment\Transformers\PaymentListTransformer;
 use Sanf\Api\Modules\Payment\Transformers\PaymentStatsTransformer;
 use Sanf\Api\Modules\Payment\Transformers\RegeneratePaymentTransformer;
 use Sanf\Core\Modules\Payment\Enums\PaymentStatusEnum;
+use Sanf\Core\Modules\Payment\Events\PaymentCompletedEvent;
 use Sanf\Core\Modules\Payment\Exceptions\PaymentNotExpiredException;
 use Sanf\Core\Modules\Payment\Exceptions\PaymentSettledException;
 use Sanf\Core\Modules\Payment\Models\PaymentModel;
@@ -136,11 +137,18 @@ final class PaymentController extends RestApiController
         string $paymentXid,
         Guard $auth,
         CheckPaymentStatusUseCase $useCase,
-        MakePaymentExpireUseCase $paymentExpired
+        MakePaymentExpireUseCase $paymentExpired,
+        PaymentUseCase $paymentUseCase
     )
     {
         $userAuthId = $auth->id();
         $userProfileXid = $xid;
+
+        $payment = $paymentUseCase->findByXid($paymentXid);
+
+        if ($payment === null) {
+            throw new ResourceNotFoundException('Payment not found');
+        }
 
         try {
             $paymentExpired->execute($paymentXid);
@@ -155,14 +163,14 @@ final class PaymentController extends RestApiController
             report($th);
         }
 
-        $status = DB::transaction(fn () => $useCase->execute($paymentXid, $userAuthId, $userProfileXid));
+        $newStatus = DB::transaction(fn () => $useCase->execute($paymentXid, $userAuthId, $userProfileXid));
 
-        if ($status === null) {
-            throw new ResourceNotFoundException();
+        if ($payment->status === PaymentStatusEnum::PENDING && $newStatus === PaymentStatusEnum::SUCCESS) {
+            event(new PaymentCompletedEvent($payment));
         }
 
         return $this->responseOk('Success', [
-            'status' => PaymentStatusEnum::from($status)->remapShownStatus(),
+            'status' => PaymentStatusEnum::from($newStatus)->remapShownStatus(),
         ]);
     }
 

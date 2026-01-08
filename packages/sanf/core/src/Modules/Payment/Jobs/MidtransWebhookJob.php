@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\DB;
 use Sanf\Core\Modules\Log\Enums\WebhookLogKeyEnum;
 use Sanf\Core\Modules\Log\Payloads\CreateWebhookLogPayload;
 use Sanf\Core\Modules\Log\UseCases\WebhookLogUseCase;
+use Sanf\Core\Modules\Payment\Enums\PaymentStatusEnum;
+use Sanf\Core\Modules\Payment\Events\PaymentCompletedEvent;
 use Sanf\Core\Modules\Payment\Exceptions\MidtransInvalidSignatureException;
 use Sanf\Core\Modules\Payment\Payloads\MidtransWebhookPayload;
 use Sanf\Core\Modules\Payment\UseCases\CheckPaymentStatusUseCase;
@@ -44,11 +46,15 @@ class MidtransWebhookJob implements ShouldQueue
         // TODO: fill midtrans transaction id if empty, to handle Danamon VA & BSI VA can only use transaction id for status check
 
         DB::transaction(function () use ($checkPaymentStatusUseCase, $payment) {
-            $checkPaymentStatusUseCase->execute(
+            $newStatus = $checkPaymentStatusUseCase->execute(
                 $payment->xid,
                 $payment->user_auth_id,
                 $payment->user_profile_xid,
             );
+
+            if ($payment->status === PaymentStatusEnum::PENDING && $newStatus === PaymentStatusEnum::SUCCESS) {
+                event(new PaymentCompletedEvent($payment));
+            }
         });
 
         $webhookLogUseCase->create(new CreateWebhookLogPayload([
