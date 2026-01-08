@@ -5,6 +5,7 @@ namespace Sanf\Api\Modules\Payment\Transformers;
 use League\Fractal\TransformerAbstract;
 use Sanf\Core\Modules\Payment\Entities\PaymentInstallmentOutstandingSnapshotEntity;
 use Sanf\Core\Modules\Payment\Entities\PaymentInstallmentSnapshotEntity;
+use Sanf\Core\Modules\Payment\Enums\PaymentStatusEnum;
 use Sanf\Core\Modules\Payment\Models\PaymentModel;
 
 final class PaymentDetailTransformer extends TransformerAbstract
@@ -24,7 +25,7 @@ final class PaymentDetailTransformer extends TransformerAbstract
             'custom_penalty_amount' => $paymentDetail->custom_penalty_amount !== null ? (float) $paymentDetail->custom_penalty_amount : null,
             'currency' => $model->currency,
             'category' => $model->category,
-            'status' => $model->status,
+            'status' => PaymentStatusEnum::from($model->status)->remapShownStatus(),
             'snap_midtrans' => [
                 'token' => optional($midtransTransaction)->midtrans_snap_token,
                 'redirect_url' => optional($midtransTransaction)->midtrans_snap_redirect_url,

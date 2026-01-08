@@ -23,4 +23,14 @@ class PaymentStatusEnum extends Enum
      * @var string
      */
     public const PAID_LATE = 'PAID_LATE';
+
+    public function remapShownStatus()
+    {
+        $mapStatus = [
+            static::EXPIRE_IN_PROGRESS => static::EXPIRED,
+            static::PAID_LATE => static::EXPIRED,
+        ];
+
+        return $mapStatus[$this->value] ?? $this->value;
+    }
 }

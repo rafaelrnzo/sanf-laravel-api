@@ -29,13 +29,19 @@ final class GetPaymentStatusCountUseCase
 
         foreach (PaymentStatusEnum::values() as $status) {
             $paymentStatus = $paymentStatuses->firstWhere('status', $status->getValue());
+            $shownStatus = $status->remapShownStatus();
 
-            $result[] = new PaymentStatusCountResponse([
-                'status' => $status->getValue(),
-                'total' => optional($paymentStatus)->total ?? 0,
+            $total = optional($paymentStatus)->total ?? 0;
+            if (isset($result[$shownStatus])) {
+                $total += $result[$shownStatus]->total;
+            }
+
+            $result[$shownStatus] = new PaymentStatusCountResponse([
+                'status' => $shownStatus,
+                'total' => $total,
             ]);
         }
 
-        return $result;
+        return array_values($result);
     }
 }

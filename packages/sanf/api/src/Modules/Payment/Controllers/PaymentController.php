@@ -162,7 +162,7 @@ final class PaymentController extends RestApiController
         }
 
         return $this->responseOk('Success', [
-            'status' => $status,
+            'status' => PaymentStatusEnum::from($status)->remapShownStatus(),
         ]);
     }
 

@@ -6,6 +6,7 @@ use Illuminate\Support\Carbon;
 use League\Fractal\TransformerAbstract;
 use Sanf\Core\Modules\Payment\Entities\PaymentInstallmentOutstandingSnapshotEntity;
 use Sanf\Core\Modules\Payment\Entities\PaymentInstallmentSnapshotEntity;
+use Sanf\Core\Modules\Payment\Enums\PaymentStatusEnum;
 use Sanf\Core\Modules\Payment\Models\PaymentModel;
 
 final class PaymentListTransformer extends TransformerAbstract
@@ -19,7 +20,7 @@ final class PaymentListTransformer extends TransformerAbstract
             'xid' => $model->xid,
             'total_amount' => (float) $model->amount,
             'category' => $model->category,
-            'status' => $model->status,
+            'status' => PaymentStatusEnum::from($model->status)->remapShownStatus(),
             'payment_method' => fractal($model, PaymentMethodTransformer::class),
             'snap_midtrans' => [
                 'token' => optional($midtransTransaction)->midtrans_snap_token,
