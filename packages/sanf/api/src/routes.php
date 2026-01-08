@@ -345,4 +345,6 @@ Route::group(['middleware' => ['basic-auth-config:core-h2h-user-provider']], fun
         'as' => 'webhook.sparepart_financing.update-status',
         'uses' => 'Disbursement\Controllers\SparePartDisbursementWebhookController@updateStatus',
     ]);
+
+    Route::post('v2/payment-event/created', ['as' => 'v2.payment-event.created', 'uses' => 'Payment\Controllers\PaymentEventController@created']);
 });

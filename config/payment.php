@@ -6,7 +6,7 @@ return [
     /*
      * Expire in minutes
      */
-    'expire_in' => 1440,
+    'expire_in' => env('PAYMENT_EXPIRE_IN', 1440),
 
     /*
      * Interval in minutes
