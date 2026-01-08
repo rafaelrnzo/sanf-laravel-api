@@ -5,9 +5,9 @@ namespace Sanf\Core\Modules\Payment\UseCases;
 use Illuminate\Support\Carbon;
 use NbsPhp\Core\Exceptions\ConcurrentModificationException;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
-use Sanf\Core\Modules\Payment\Entities\PaymentInstallmentSnapshotEntity;
 use Sanf\Core\Modules\Payment\Enums\PaymentStatusEnum;
 use Sanf\Core\Modules\Payment\Exceptions\PaymentCannotBeCancelledException;
+use Sanf\Core\Modules\Payment\Exceptions\UnableChangePaymentMethodException;
 use Sanf\Core\Modules\Payment\Models\MidtransTransactionModel;
 use Sanf\Core\Modules\Payment\Models\PaymentModel;
 use Sanf\Core\Modules\Payment\Repositories\PaymentRepositoryInterface;
@@ -15,10 +15,7 @@ use Sanf\Core\Modules\User\AuthEncryptedModel;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Integration\Modules\Midtrans\MidtransClient;
 use Sanf\Integration\Modules\Midtrans\Payloads\CreateSnapTransactionPayload;
-use Sanf\Integration\Modules\Midtrans\Payloads\SnapCallbacksPayload;
-use Sanf\Integration\Modules\Midtrans\Payloads\SnapCustomerDetailsPayload;
 use Sanf\Integration\Modules\Midtrans\Payloads\SnapExpiryPayload;
-use Sanf\Integration\Modules\Midtrans\Payloads\SnapItemDetailPayload;
 use Sanf\Integration\Modules\Midtrans\Payloads\SnapTransactionDetailsPayload;
 
 final class RegeneratePaymentUseCase
@@ -115,39 +112,23 @@ final class RegeneratePaymentUseCase
         $midtransOrderId = nano_id_alphanumeric();
 
         $payment->loadMissing('installments');
+        $oldTransaction = $payment->midtransTransaction;
+        $oldPayload = $oldTransaction->raw_payload;
 
-        $payload = new CreateSnapTransactionPayload([
-            'transaction_details' => new SnapTransactionDetailsPayload([
-                'order_id' => $midtransOrderId,
-                'gross_amount' => (int) round($payment->amount),
-            ]),
-            'enabled_payments' => config('midtrans.enabled_payments'),
-            'callbacks' => new SnapCallbacksPayload([
-                'finish' => route('v2.payments.static-success'),
-                'error' => route('v2.payments.static-failed'),
-            ]),
-            'customer_details' => new SnapCustomerDetailsPayload([
-                'first_name' => $user->full_name,
-                'email' => $user->username,
-                'phone' => $user->phone_number,
-            ]),
-            'item_details' => $payment->installments->map(function ($item) {
-                /** @var PaymentInstallmentSnapshotEntity */
-                $snapshot = $item->pivot->installment_snapshot;
+        if (empty($oldPayload)) {
+            throw new UnableChangePaymentMethodException('Unable to change payment method, cancel this payment and recreate.');
+        }
 
-                return new SnapItemDetailPayload([
-                    'price' => $snapshot->total_amount,
-                    'quantity' => 1,
-                    'name' => sprintf(
-                        'Installment %s (%s)',
-                        $snapshot->contract_no,
-                        Carbon::make($snapshot->due_date)->format('Y-m-d')
-                    ),
-                    'category' => 'Installment',
-                ]);
-            })->toArray(),
-            'expiry' => $this->snapExpiry($payment),
-        ]);
+        $payload = new CreateSnapTransactionPayload(array_merge(
+            $oldPayload->toArray(),
+            [
+                'transaction_details' => new SnapTransactionDetailsPayload([
+                    'order_id' => $midtransOrderId,
+                    'gross_amount' => $oldPayload->transaction_details->gross_amount,
+                ]),
+                'expiry' => $this->snapExpiry($payment),
+            ]
+        ));
 
         $snap = $this->midtransClient->createSnapTransaction($payload);
 
@@ -158,6 +139,7 @@ final class RegeneratePaymentUseCase
             'payment_id' => $payment->id,
             'payment_xid' => $payment->xid,
             'gross_amount' => $payment->amount,
+            'raw_payload' => $payload->toArray(),
         ]);
     }
 

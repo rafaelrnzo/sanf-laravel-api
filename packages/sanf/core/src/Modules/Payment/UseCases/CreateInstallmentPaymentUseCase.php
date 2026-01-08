@@ -17,6 +17,7 @@ use Sanf\Core\Modules\Payment\Entities\PaymentStatusLogItemEntity;
 use Sanf\Core\Modules\Payment\Entities\PaymentUserSnapshotEntity;
 use Sanf\Core\Modules\Payment\Enums\PaymentCategoryEnum;
 use Sanf\Core\Modules\Payment\Enums\PaymentStatusEnum;
+use Sanf\Core\Modules\Payment\Exceptions\CustomPaymentUnavailableException;
 use Sanf\Core\Modules\Payment\Exceptions\InstallmentWaitingPaymentException;
 use Sanf\Core\Modules\Payment\Exceptions\PaymentNoInstallmentException;
 use Sanf\Core\Modules\Payment\Models\PaymentModel;
@@ -48,8 +49,7 @@ final class CreateInstallmentPaymentUseCase
         InstallmentRepositoryInterface $installmentRepository,
         UserRepositoryInterface $userRepository,
         MidtransClient $midtransClient
-    )
-    {
+    ) {
         $this->paymentRepository = $paymentRepository;
         $this->installmentRepository = $installmentRepository;
         $this->userRepository = $userRepository;
@@ -130,10 +130,12 @@ final class CreateInstallmentPaymentUseCase
             'category' => $paymentCategory,
             'payment_detail' => $paymentDetail->toArray(),
             'expired_at' => Carbon::now()->addMinutes(config('payment.expire_in')),
-            'status_log' => [new PaymentStatusLogItemEntity([
-                'status' => $status,
-                'updated_at' => Carbon::now()->toIso8601String(),
-            ])],
+            'status_log' => [
+                    new PaymentStatusLogItemEntity([
+                        'status' => $status,
+                        'updated_at' => Carbon::now()->toIso8601String(),
+                    ]),
+                ],
             'user_snapshot' => $userSnapshot->toArray(),
         ]);
 
@@ -151,10 +153,10 @@ final class CreateInstallmentPaymentUseCase
     private function validateWaitingPaymentInstallment(Collection $existingInstallments, array $contractNums, array $dueDates)
     {
         $waitingPaymentExist = $existingInstallments->map(function ($installment) {
-                $installment->due_date_iso = $installment->due_date->toIso8601String();
+            $installment->due_date_iso = $installment->due_date->toIso8601String();
 
-                return $installment;
-            })
+            return $installment;
+        })
             ->whereIn('contract_no', $contractNums)
             ->whereIn('due_date_iso', $dueDates)
             ->where('status', InstallmentStatusEnum::WAITING_PAYMENT);
@@ -287,6 +289,29 @@ final class CreateInstallmentPaymentUseCase
     private function createSnapMidtrans(CreateInstallmentPaymentPayload $installmentPayload, PaymentModel $payment, AuthEncryptedModel $user, array $savedInstallments)
     {
         $midtransOrderId = nano_id_alphanumeric();
+        $customAmount = ($installmentPayload->custom_amount ?? 0) + ($installmentPayload->custom_penalty_amount ?? 0);
+
+        if ($customAmount && count($savedInstallments) > 1) {
+            throw new CustomPaymentUnavailableException();
+        }
+
+        $itemDetails = array_map(fn (PaymentCalculationInstallmentResponse $item) => new SnapItemDetailPayload([
+            'price' => $customAmount ?: $item->total_amount,
+            'quantity' => 1,
+            'name' => sprintf(
+                'Installment %s (%s)',
+                $item->contract_no,
+                $this->normalizeDueDate($item->due_date)
+            ),
+            'category' => 'Installment',
+        ]), array_values($savedInstallments));
+
+        $itemDetails[] = new SnapItemDetailPayload([
+            'price' => $installmentPayload->admin_fee,
+            'quantity' => 1,
+            'name' => 'Admin Fee',
+            'category' => 'Admin Fee',
+        ]);
 
         $payload = new CreateSnapTransactionPayload([
             'transaction_details' => new SnapTransactionDetailsPayload([
@@ -303,16 +328,7 @@ final class CreateInstallmentPaymentUseCase
                 'email' => $user->username,
                 'phone' => $user->phone_number,
             ]),
-            'item_details' => array_map(fn (PaymentCalculationInstallmentResponse $item) => new SnapItemDetailPayload([
-                'price' => $item->total_amount,
-                'quantity' => 1,
-                'name' => sprintf(
-                    'Installment %s (%s)',
-                    $item->contract_no,
-                    $this->normalizeDueDate($item->due_date)
-                ),
-                'category' => 'Installment',
-            ]), array_values($savedInstallments)),
+            'item_details' => $itemDetails,
             'expiry' => $this->snapExpiry($payment),
         ]);
 
@@ -325,6 +341,7 @@ final class CreateInstallmentPaymentUseCase
             'payment_id' => $payment->id,
             'payment_xid' => $payment->xid,
             'gross_amount' => $installmentPayload->total_payment,
+            'raw_payload' => $payload->toArray(),
         ]);
     }
 

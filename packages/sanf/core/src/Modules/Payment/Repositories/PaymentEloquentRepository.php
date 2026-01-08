@@ -182,6 +182,13 @@ final class PaymentEloquentRepository implements PaymentRepositoryInterface
 
     public function createMidtransTransaction(array $data): MidtransTransactionModel
     {
+        $encryptor = SodiumEncryption::encryptor();
+
+        if (isset($data['raw_payload'])) {
+            $data['raw_payload'] = $encryptor->encryptForJson($data['raw_payload']);
+            $data['nonce'] = $encryptor->nonce()->getNonceHex();
+        }
+
         /**
          * @var MidtransTransactionModel
          */
@@ -196,6 +203,12 @@ final class PaymentEloquentRepository implements PaymentRepositoryInterface
 
         if ($model === null) {
             return false;
+        }
+
+        $encryptor = $model->encryptor();
+
+        if (isset($data['raw_payload'])) {
+            $data['raw_payload'] = $encryptor->encryptForJson($data['raw_payload']);
         }
 
         return (bool) $model->update($data);

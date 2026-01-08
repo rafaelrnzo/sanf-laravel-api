@@ -6,6 +6,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Sanf\Core\Modules\Installment\Exceptions\InstallmentNotFoundException;
 use Sanf\Core\Modules\Installment\Exceptions\PaidInstallmentException;
+use Sanf\Core\Modules\Payment\Exceptions\CustomPaymentUnavailableException;
 use Sanf\Core\Modules\Payment\Payloads\PaymentInstallmentCalculationPayload;
 use Sanf\Core\Modules\Payment\Responses\PaymentCalculationInstallmentResponse;
 use Sanf\Core\Modules\Payment\Responses\PaymentCalculationOutstandingInstallmentResponse;
@@ -111,6 +112,10 @@ final class BuildPaymentInstallmentCalculationUseCase
         $customSubtotalInstallment = 0;
         $customAmount = $payload->customAmount;
         $customPenaltyAmount = $payload->customPenaltyAmount;
+
+        if (($customAmount > 0 || $customPenaltyAmount > 0) && count($installmentsResult) > 1) {
+            throw new CustomPaymentUnavailableException();
+        }
 
         if (count($installmentsResult) === 1) {
             if (!empty($customPenaltyAmount)) {
