@@ -4,6 +4,8 @@ namespace Sanf\Core\Modules\Payment\Models;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 use NbsPhp\Core\Models\AbstractModel;
+use Sanf\Core\Traits\SodiumEncryptionTrait;
+use Sanf\Integration\Modules\Midtrans\Payloads\CreateSnapTransactionPayload;
 
 /**
  * @property int $id
@@ -22,11 +24,12 @@ use NbsPhp\Core\Models\AbstractModel;
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property int $version
+ * @property CreateSnapTransactionPayload|null $raw_payload
  * @property-read PaymentModel $payment
  */
 class MidtransTransactionModel extends AbstractModel
 {
-    use SoftDeletes;
+    use SoftDeletes, SodiumEncryptionTrait;
 
     protected $table = 'midtrans_transaction';
 
@@ -44,6 +47,8 @@ class MidtransTransactionModel extends AbstractModel
         'fraud_status',
         'raw_response',
         'version',
+        'raw_payload',
+        'nonce',
     ];
 
     protected $casts = [
@@ -57,5 +62,12 @@ class MidtransTransactionModel extends AbstractModel
     public function payment()
     {
         return $this->belongsTo(PaymentModel::class, 'payment_id');
+    }
+
+    public function getRawPayloadAttribute($value)
+    {
+        $payload = json_decode((string) $this->decryptor()->decrypt($value), true);
+
+        return $payload ? new CreateSnapTransactionPayload($payload) : null;
     }
 }
