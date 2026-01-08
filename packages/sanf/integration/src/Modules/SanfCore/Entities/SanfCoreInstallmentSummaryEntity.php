@@ -2,17 +2,14 @@
 
 namespace Sanf\Integration\Modules\SanfCore\Entities;
 
+use Sanf\Core\Traits\CastsNumericDtoProperties;
 use Spatie\DataTransferObject\FlexibleDataTransferObject;
 
 class SanfCoreInstallmentSummaryEntity extends FlexibleDataTransferObject
 {
-    /**
-     * @var float|int
-     */
-    public $jumlah_tagihan;
+    use CastsNumericDtoProperties;
 
-    /**
-     * @var float|int
-     */
-    public $total_tagihan;
+    public int $jumlah_tagihan;
+
+    public float $total_tagihan;
 }
