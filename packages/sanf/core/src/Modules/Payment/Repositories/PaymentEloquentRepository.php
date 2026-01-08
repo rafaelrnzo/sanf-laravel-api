@@ -51,6 +51,7 @@ final class PaymentEloquentRepository implements PaymentRepositoryInterface
         $sortBy = $params->sortBy;
         $skip = $params->skip;
         $limit = $params->limit;
+        $contractNo = $params->contractNo;
 
         switch ($sortBy) {
             case 'earliest':
@@ -66,7 +67,12 @@ final class PaymentEloquentRepository implements PaymentRepositoryInterface
         }
 
         return $this->listQuery($params)
-            ->with(['installments', 'midtransTransaction'])
+            ->with([
+                'midtransTransaction',
+                'installments' => function ($query) use ($contractNo) {
+                    $query->when($contractNo, fn ($q) => $q->where('contract_no', $contractNo));
+                },
+            ])
             ->when($skip, function ($query, $skip) {
                 return $query->skip($skip);
             })
