@@ -85,6 +85,8 @@ class FindInstallmentUseCase implements ApplicationServiceInterface
 
         $status = $this->resolveInstallmentStatus($dto->contractNo, $dto->dueDate, $dto->profileXid, $response->tagihan->status_pembayaran_id);
 
+        $interestRate = $this->normalizeInterestRate($kontrak->bunga_harian ?? null);
+
         $contractDto = new InstallmentContractResponse([
             'contractNo' => $kontrak->no_kontrak ?? '',
             'contractDate' => $this->parseDate($kontrak->tanggal_kontrak ?? null),
@@ -102,7 +104,7 @@ class FindInstallmentUseCase implements ApplicationServiceInterface
             'statusDesc' => $kontrak->status_kontrak_desc ?? '',
             'dueDate' => $this->parseDate($kontrak->jatuh_tempo ?? null),
             'completedDate' => $this->parseDate($kontrak->tgl_selesai ?? null),
-            'interestRate' => (float) ($kontrak->bunga_harian ?? 0),
+            'interestRate' => $interestRate,
             'plafondType' => 'SPARE_PART_FINANCING', // hardcoded for now
             'downPayment' => (float) ($kontrak->dp_amount ?? 0),
             'paidAmount' => (float) ($kontrak->ar_paid ?? 0),
@@ -270,5 +272,28 @@ class FindInstallmentUseCase implements ApplicationServiceInterface
                 'status' => PaymentStatusEnum::PENDING,
             ])
             : null;
+    }
+
+    private function normalizeInterestRate($rate): float
+    {
+        if ($rate === null) {
+            return 0.0;
+        }
+
+        $normalizedRate = trim((string) $rate);
+        $containsPercent = strpos($normalizedRate, '%') !== false;
+        $normalizedRate = str_replace(['%', ','], ['', '.'], $normalizedRate);
+
+        if (!is_numeric($normalizedRate)) {
+            return 0.0;
+        }
+
+        $numericRate = (float) $normalizedRate;
+
+        if ($containsPercent || $numericRate > 1) {
+            return $numericRate / 100;
+        }
+
+        return $numericRate;
     }
 }
