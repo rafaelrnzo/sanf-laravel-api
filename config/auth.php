@@ -173,6 +173,10 @@ return [
 //            'driver' => 'eloquent-api-user-provider',
 //            'model' => \NbsPhp\Core\Models\ApiAuthModel::class,
 //        ],
+        'cron-user-provider' => [
+            'client_id' => env('CRON_CLIENT_ID'),
+            'client_secret' => env('CRON_CLIENT_SECRET'),
+        ],
     ],
 
     /*

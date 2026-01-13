@@ -93,4 +93,10 @@ class MidtransWebhookJob implements ShouldQueue
             throw new MidtransInvalidSignatureException();
         }
     }
+
+    public function backoff()
+    {
+        // waits 60s, then 120s, then 240s, etc.
+        return 60 * (2 ** ($this->attempts() - 1));
+    }
 }

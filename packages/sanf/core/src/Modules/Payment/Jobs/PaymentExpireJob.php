@@ -2,18 +2,13 @@
 
 namespace Sanf\Core\Modules\Payment\Jobs;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
+use App\Jobs\Job;
 use Sanf\Core\Modules\Payment\Events\PaymentExpiredEvent;
 use Sanf\Core\Modules\Payment\Models\PaymentModel;
 use Sanf\Core\Modules\Payment\UseCases\MakePaymentExpireUseCase;
 
-class PaymentExpireJob implements ShouldQueue
+class PaymentExpireJob extends Job
 {
-    use InteractsWithQueue;
-    use Queueable;
-
     protected PaymentModel $payment;
 
     public function __construct(PaymentModel $payment)
@@ -27,5 +22,11 @@ class PaymentExpireJob implements ShouldQueue
         $useCase->execute($this->payment->xid);
 
         event(new PaymentExpiredEvent($this->payment));
+    }
+
+    public function backoff()
+    {
+        // waits 60s, then 120s, then 240s, etc.
+        return 60 * (2 ** ($this->attempts() - 1));
     }
 }

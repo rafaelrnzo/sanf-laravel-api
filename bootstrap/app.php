@@ -149,6 +149,7 @@ $app->register(Sanf\Api\Providers\ApiServiceProvider::class);
 $app->register(Sanf\Web\Providers\WebServiceProvider::class);
 $app->register(Sanf\Dashboard\Providers\DashboardServiceProvider::class);
 $app->register(\Sanf\External\ExternalServiceProvider::class);
+$app->register(Sanf\Cron\Providers\CronServiceProvider::class);
 $app->register(\Laravel\Tinker\TinkerServiceProvider::class);
 
 /*

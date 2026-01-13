@@ -235,4 +235,16 @@ final class PaymentEloquentRepository implements PaymentRepositoryInterface
 
         return (bool) $model->update($data);
     }
+
+    /**
+     * @return Collection<PaymentModel>
+     */
+    public function getByStatuses(array $statuses, array $select = ['*'], array $filters = []): Collection
+    {
+        return $this->model->newQuery()
+            ->select($select)
+            ->whereIn('status', $statuses)
+            ->where($filters)
+            ->get();
+    }
 }

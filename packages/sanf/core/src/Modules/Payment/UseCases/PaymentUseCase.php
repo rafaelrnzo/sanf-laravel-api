@@ -3,6 +3,8 @@
 namespace Sanf\Core\Modules\Payment\UseCases;
 
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
+use Sanf\Core\Modules\Payment\Enums\PaymentStatusEnum;
 use Sanf\Core\Modules\Payment\Models\PaymentModel;
 use Sanf\Core\Modules\Payment\Repositories\PaymentRepositoryInterface;
 
@@ -27,5 +29,22 @@ final class PaymentUseCase
     public function findByXid(string $xid): ?PaymentModel
     {
         return $this->repository->find(['xid' => $xid]);
+    }
+
+    /**
+     * @return Collection<PaymentModel>
+     */
+    public function getPendingExpiredList(): Collection
+    {
+        $statuses = [
+            PaymentStatusEnum::PENDING,
+            PaymentStatusEnum::EXPIRE_IN_PROGRESS,
+        ];
+
+        $filters = [
+            ['expired_at', '<=', Carbon::now()],
+        ];
+
+        return $this->repository->getByStatuses($statuses, ['*'], $filters);
     }
 }

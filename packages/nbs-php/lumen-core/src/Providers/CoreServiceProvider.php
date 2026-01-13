@@ -104,6 +104,7 @@ class CoreServiceProvider extends ServiceProvider
             'horizonBasicAuth' => \NbsPhp\Core\Middleware\HorizonBasicAuthMiddleware::class,
             'http-logger' => \NbsPhp\Core\Middleware\HttpLoggerMiddleware::class,
             'callback' => \NbsPhp\Core\Middleware\CallbackMiddleware::class,
+            'throttle' => \NbsPhp\Core\Middleware\ThrottleRequestsMiddleware::class,
         ]);
     }
 

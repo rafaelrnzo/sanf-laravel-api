@@ -24,7 +24,6 @@ final class PaymentPreviewUseCase
         ];
 
         return $this->repository->find($filters);
-
     }
 
     public function clear(string $profileXid): bool

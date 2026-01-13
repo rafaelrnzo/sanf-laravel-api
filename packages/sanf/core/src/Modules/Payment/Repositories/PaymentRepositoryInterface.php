@@ -39,4 +39,9 @@ interface PaymentRepositoryInterface
     public function deleteMidtransTransaction(array $filters): bool;
 
     public function updatePayment(array $filters, array $data): bool;
+
+    /**
+     * @return Collection<PaymentModel>
+     */
+    public function getByStatuses(array $statuses, array $select = ['*'], array $filters = []): Collection;
 }
