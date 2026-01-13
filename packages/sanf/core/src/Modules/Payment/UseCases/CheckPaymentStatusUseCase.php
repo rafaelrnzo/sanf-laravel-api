@@ -89,8 +89,8 @@ final class CheckPaymentStatusUseCase
 
         $payload = [
             'status' => $paymentStatus,
+            'core_installment_submitted' => true,
             'version' => $payment->version + 1,
-
         ];
 
         if ($paymentStatus === PaymentStatusEnum::SUCCESS) {
@@ -270,6 +270,7 @@ final class CheckPaymentStatusUseCase
     private function sanfCorePayInstallment($payment, $midtransTransaction, $midtransTransactionStatus)
     {
         $paymentMethod = MidtransPaymentMethodResolver::resolve($midtransTransactionStatus->raw);
+        $paymentDetail = $payment->payment_detail;
 
         $payInstallmentPayload = new SanfCorePayInstallmentPayload([
             'id_transaksi' => $midtransTransaction->midtrans_order_id,
@@ -279,6 +280,9 @@ final class CheckPaymentStatusUseCase
             'bank' => $paymentMethod->provider,
             'nomor_va' => $paymentMethod->virtual_account_number,
             'total_bayar' => $payment->amount,
+            'admin_fee' => $paymentDetail->admin_fee,
+            'nominal_kustom' => $paymentDetail->custom_amount,
+            'nominal_kustom_denda' => $paymentDetail->custom_penalty_amount,
             'detail_pembayaran' => $payment->installments->map(function (InstallmentModel $installment) use ($payment) {
                 /** @var PaymentInstallmentSnapshotEntity */
                 $installmentSnapshot = $installment->pivot->installment_snapshot;

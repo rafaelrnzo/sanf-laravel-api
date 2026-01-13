@@ -1,3 +1,4 @@
 # do daily/weekly/monthly maintenance
 # min   hour    day     month   weekday command
 */15    *       *       *       *       /usr/local/bin/app-cron payment-expire 2>&1
+*/15    *       *       *       *       /usr/local/bin/app-cron payment-resubmit-pending-installment 2>&1

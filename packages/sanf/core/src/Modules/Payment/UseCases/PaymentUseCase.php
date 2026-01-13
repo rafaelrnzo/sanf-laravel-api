@@ -47,4 +47,20 @@ final class PaymentUseCase
 
         return $this->repository->getByStatuses($statuses, ['*'], $filters);
     }
+
+    /**
+     * @return Collection<PaymentModel>
+     */
+    public function getPendingSubmitInstallmentList(array $select = ['*']): Collection
+    {
+        $statuses = [
+            PaymentStatusEnum::SUCCESS,
+        ];
+
+        $filters = [
+            'core_installment_submitted' => false,
+        ];
+
+        return $this->repository->getByStatuses($statuses, $select, $filters);
+    }
 }

@@ -15,7 +15,12 @@ class SanfCorePayInstallmentPayload extends DataTransferObject
     public string $metode_bayar;
     public string $bank;
     public string $nomor_va;
+    public ?string $biller_code;
+    public ?string $bill_key;
     public int $total_bayar;
+    public ?int $admin_fee;
+    public ?int $nominal_kustom;
+    public ?int $nominal_kustom_denda;
     /**
      * @var array|SanfCoreInstallmentPaymentItem[]
      */
