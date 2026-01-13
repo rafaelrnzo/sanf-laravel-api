@@ -20,6 +20,7 @@ development:deploy:
       restart
       deployments/api
       deployments/api-worker
+      deployments/api-cron
   allow_failure: false
   environment:
     name: development

@@ -106,3 +106,25 @@ worker:dev:build:
     # - m.large
     - m.medium
 
+cron:dev:build:
+  stage: build
+  image: nbsdev/docker-builder:20
+  before_script:
+    - docker rmi $(docker images -f "dangling=true" -q) || true
+  script:
+    - echo ${CI_REGISTRY_PASSWORD} | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
+    - docker build -f ./deployments/development/app/cron/Dockerfile --pull -t ${CI_REGISTRY_IMAGE}/cron:latest .
+    - docker push ${CI_REGISTRY_IMAGE}/cron:latest
+    - docker rmi ${CI_REGISTRY_IMAGE}/cron:latest
+  after_script:
+    - docker rmi $(docker images -f "dangling=true" -q) || true
+  environment:
+    name: development
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "develop"
+      changes:
+        - "deployments/development/app/cron/*"
+  tags:
+    - m.medium
+
