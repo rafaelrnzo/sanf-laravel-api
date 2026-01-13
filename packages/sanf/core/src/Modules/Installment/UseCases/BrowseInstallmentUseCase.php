@@ -265,7 +265,7 @@ class BrowseInstallmentUseCase
 
     private function mapStatus(int $coreStatus, ?string $dbStatus)
     {
-        if ($dbStatus === InstallmentStatusEnum::WAITING_PAYMENT) {
+        if ($dbStatus === InstallmentStatusEnum::WAITING_PAYMENT || $dbStatus === InstallmentStatusEnum::IN_PROGRESS) {
             return $dbStatus;
         }
 

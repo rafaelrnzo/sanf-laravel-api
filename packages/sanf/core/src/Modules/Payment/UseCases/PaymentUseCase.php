@@ -31,6 +31,15 @@ final class PaymentUseCase
         return $this->repository->find(['xid' => $xid]);
     }
 
+    public function findByXidAndUser(string $xid, int $userAuthId, string $userProfileXid): ?PaymentModel
+    {
+        return $this->repository->find([
+            'xid' => $xid,
+            'user_auth_id' => $userAuthId,
+            'user_profile_xid' => $userProfileXid,
+        ]);
+    }
+
     /**
      * @return Collection<PaymentModel>
      */

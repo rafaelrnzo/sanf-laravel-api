@@ -144,7 +144,7 @@ final class PaymentController extends RestApiController
         $userAuthId = $auth->id();
         $userProfileXid = $xid;
 
-        $payment = $paymentUseCase->findByXid($paymentXid);
+        $payment = $paymentUseCase->findByXidAndUser($paymentXid, $userAuthId, $userProfileXid);
 
         if ($payment === null) {
             throw new ResourceNotFoundException('Payment not found');

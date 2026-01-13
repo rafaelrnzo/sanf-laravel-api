@@ -38,6 +38,8 @@ interface PaymentRepositoryInterface
 
     public function deleteMidtransTransaction(array $filters): bool;
 
+    public function findMidtransTransaction(array $filters): ?MidtransTransactionModel;
+
     public function updatePayment(array $filters, array $data): bool;
 
     /**

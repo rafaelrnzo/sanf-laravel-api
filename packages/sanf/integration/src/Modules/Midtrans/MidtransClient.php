@@ -32,6 +32,8 @@ class MidtransClient
     public function getTransactionStatus(string $orderId): ?MidtransTransactionStatusResponse
     {
         try {
+            MidtransConfig::$curlOptions[CURLOPT_HTTPHEADER][] = 'transaction-source: SNAP_API';
+
             $response = Transaction::status($orderId);
         } catch (\Throwable $th) {
             if ($th->getCode() === Response::HTTP_NOT_FOUND) {
@@ -49,11 +51,15 @@ class MidtransClient
 
     public function cancelTransaction(string $orderId)
     {
+        MidtransConfig::$curlOptions[CURLOPT_HTTPHEADER][] = 'transaction-source: SNAP_API';
+
         return Transaction::cancel($orderId);
     }
 
     public function expireTransaction(string $orderId)
     {
+        MidtransConfig::$curlOptions[CURLOPT_HTTPHEADER][] = 'transaction-source: SNAP_API';
+
         return Transaction::expire($orderId);
     }
 }

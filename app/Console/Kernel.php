@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Console\Commands\CheckMidtransTransactionStatusCommand;
+use App\Console\Commands\CheckPaymentByMidtransTrxCommand;
 use App\Console\Commands\SyncMidtransLogoCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Laravel\Lumen\Console\Kernel as ConsoleKernel;
@@ -21,6 +22,7 @@ class Kernel extends ConsoleKernel
         MaintenanceUpCommand::class,
         CheckMidtransTransactionStatusCommand::class,
         SyncMidtransLogoCommand::class,
+        CheckPaymentByMidtransTrxCommand::class,
     ];
 
     /**

@@ -13,8 +13,9 @@ use Sanf\Core\Modules\Log\UseCases\WebhookLogUseCase;
 use Sanf\Core\Modules\Payment\Enums\PaymentStatusEnum;
 use Sanf\Core\Modules\Payment\Events\PaymentCompletedEvent;
 use Sanf\Core\Modules\Payment\Exceptions\MidtransInvalidSignatureException;
+use Sanf\Core\Modules\Payment\Models\PaymentModel;
 use Sanf\Core\Modules\Payment\Payloads\MidtransWebhookPayload;
-use Sanf\Core\Modules\Payment\UseCases\CheckPaymentStatusUseCase;
+use Sanf\Core\Modules\Payment\UseCases\CheckPaymentByMidtransTransactionUseCase;
 use Sanf\Core\Modules\Payment\UseCases\FindPaymentByMidtransOrderUseCase;
 
 class MidtransWebhookJob implements ShouldQueue
@@ -31,7 +32,7 @@ class MidtransWebhookJob implements ShouldQueue
 
     public function handle(
         FindPaymentByMidtransOrderUseCase $findPaymentUseCase,
-        CheckPaymentStatusUseCase $checkPaymentStatusUseCase,
+        CheckPaymentByMidtransTransactionUseCase $checkPaymentUseCase,
         WebhookLogUseCase $webhookLogUseCase
     )
     {
@@ -43,22 +44,19 @@ class MidtransWebhookJob implements ShouldQueue
             return false;
         }
 
-        // TODO: fill midtrans transaction id if empty, to handle Danamon VA & BSI VA can only use transaction id for status check
-
-        DB::transaction(function () use ($checkPaymentStatusUseCase, $payment) {
-            $newStatus = $checkPaymentStatusUseCase->execute(
-                $payment->xid,
-                $payment->user_auth_id,
-                $payment->user_profile_xid,
-            );
-
-            if ($payment->status === PaymentStatusEnum::PENDING && $newStatus === PaymentStatusEnum::SUCCESS) {
-                event(new PaymentCompletedEvent($payment));
-            }
+        /**
+         * @var PaymentModel
+         */
+        $latestPayment = DB::transaction(function () use ($checkPaymentUseCase) {
+            return $checkPaymentUseCase->execute($this->payload->transaction_id);
         });
 
+        if ($payment->status === PaymentStatusEnum::PENDING && $latestPayment->status === PaymentStatusEnum::SUCCESS) {
+            event(new PaymentCompletedEvent($latestPayment));
+        }
+
         $webhookLogUseCase->create(new CreateWebhookLogPayload([
-            'xid' => nano_id(),
+            'xid' => nano_id_alphanumeric(),
             'key' => WebhookLogKeyEnum::MIDTRANS_STATUS,
             'reference_id' => $this->payload->order_id,
             'payload' => $this->payload->raw_request,
