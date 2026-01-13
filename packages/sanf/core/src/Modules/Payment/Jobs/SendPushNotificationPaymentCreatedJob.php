@@ -10,6 +10,7 @@ use Sanf\Core\Modules\Installment\Models\InstallmentModel;
 use Sanf\Core\Modules\Notification\Dtos\AddPushNotificationUserDashboardRequestDto;
 use Sanf\Core\Modules\Notification\Dtos\AddPushNotificationUserPayloadRequestDto;
 use Sanf\Core\Modules\Notification\Dtos\AddPushNotificationUserRequestDto;
+use Sanf\Core\Modules\Notification\Enums\PushNotificationUserNotifiableTypeEnum;
 use Sanf\Core\Modules\Notification\NotificationTypeEnum;
 use Sanf\Core\Modules\Notification\Services\AddPushNotificationUserService;
 use Sanf\Core\Modules\Payment\Models\PaymentModel;
@@ -65,7 +66,7 @@ class SendPushNotificationPaymentCreatedJob implements ShouldQueue
             ]),
             'dashboardNotification' => new AddPushNotificationUserDashboardRequestDto([
                 'xid' => nano_id_alphanumeric(21),
-                'notifiable_type' => 'customer_id',
+                'notifiable_type' => PushNotificationUserNotifiableTypeEnum::CUSTOMER_ID,
                 'notifiable_id' => $userProfileXid,
                 'body' => $bodyHtml,
                 'url' => $webPartnerUrl,

@@ -1,66 +1,64 @@
 <?php
 
-namespace Sanf\Core\Modules\Payment\Jobs;
+namespace Sanf\Core\Modules\Installment\Jobs;
 
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
-use Sanf\Core\Modules\Installment\Models\InstallmentModel;
+use Sanf\Core\Modules\Installment\Payloads\SendPushNotificationContractPublishedJobPayload;
 use Sanf\Core\Modules\Notification\Dtos\AddPushNotificationUserDashboardRequestDto;
 use Sanf\Core\Modules\Notification\Dtos\AddPushNotificationUserPayloadRequestDto;
 use Sanf\Core\Modules\Notification\Dtos\AddPushNotificationUserRequestDto;
 use Sanf\Core\Modules\Notification\Enums\PushNotificationUserNotifiableTypeEnum;
 use Sanf\Core\Modules\Notification\NotificationTypeEnum;
 use Sanf\Core\Modules\Notification\Services\AddPushNotificationUserService;
-use Sanf\Core\Modules\Payment\Models\PaymentModel;
+use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClientV2;
 
-class SendPushNotificationPaymentCompletedJob implements ShouldQueue
+class SendPushNotificationContractPublishedJob implements ShouldQueue
 {
     use InteractsWithQueue;
     use Queueable;
 
-    protected PaymentModel $payment;
+    protected SendPushNotificationContractPublishedJobPayload $payload;
 
-    public function __construct(PaymentModel $payment)
+    public function __construct(SendPushNotificationContractPublishedJobPayload $payload)
     {
-        $this->payment = $payment;
+        $this->payload = $payload;
     }
 
     public function handle(
-        AddPushNotificationUserService $service
+        AddPushNotificationUserService $service,
+        UserRepositoryInterface $userRepository
     ) {
-        $totalAmount = $this->payment->amount;
-        $userAuthId = $this->payment->user_auth_id;
-        $userProfileXid = $this->payment->user_profile_xid;
+        $totalAmount = $this->payload->total_amount;
+        $userProfileXid = $this->payload->customer_id_sanfind;
         $totalAmountCurrency = format_currency($totalAmount);
+        $contractNo = $this->payload->contract_no;
+        $dueDate = Carbon::parse($this->payload->due_date, SanfCoreApiClientV2::DEFAULT_TIMEZONE)->format('Y-m-d');
 
-        /**
-         * @var InstallmentModel
-         */
-        $installment = $this->payment->installments->first();
+        $user = $userRepository->find([
+            'xid' => $userProfileXid,
+        ]);
 
-        $installmentContractNo = optional($installment)->contract_no;
-        $installmentDueDate = optional($installment)->due_date;
-        $installmentDueDateTimestamp = optional($installmentDueDate)->timestamp;
-
-        $title = __('Pembayaran Berhasil');
-        $subtitle = __('Transaksi');
-        $body = "Terima kasih! Pembayaran {$totalAmountCurrency} atas tagihan Anda telah diterima, silakan cek detail disini.";
-        $bodyHtml = "<span>Terima kasih! Pembayaran <b>{$totalAmountCurrency}</b> atas tagihan Anda telah diterima, silakan cek detail disini.</span>";
+        $title = __('Kontrak Anda Telah Terbit');
+        $subtitle = __("No. Kontrak: {$contractNo}");
+        $body = "Kontrak pembiayaan dengan nilai {$totalAmountCurrency} Anda telah terbit silakan cek detail agar tidak terlambat ketika proses pembayaran tagihan.";
+        $bodyHtml = "<span>Kontrak pembiayaan dengan nilai <b>{$totalAmountCurrency}</b> Anda telah terbit silakan cek detail agar tidak terlambat ketika proses pembayaran tagihan.</span>";
 
         $webPartnerBaseUrl = rtrim(config('web-partner.base_url'), '/');
-        $webPartnerUrl = "{$webPartnerBaseUrl}/sanfind_users/profiles/{$userProfileXid}/plafonds/sparepart/bills";
+        $webPartnerUrl = "{$webPartnerBaseUrl}/sanfind_users/profiles/{$userProfileXid}/plafonds/sparepart/bills/{$contractNo}/{$dueDate}/show";
 
         $dto = new AddPushNotificationUserRequestDto([
-            'user_id' => $userAuthId,
+            'user_id' => $user->id,
             'payload' => new AddPushNotificationUserPayloadRequestDto([
                 'xid' => nano_id_alphanumeric(21),
                 'title' => $title,
                 'subtitle' => $subtitle,
                 'body' => $body,
                 'type' => (string) NotificationTypeEnum::INFO,
-                'screen' => "bill-detail|{$installmentContractNo}|{$installmentDueDateTimestamp}",
+                'screen' => "contract_detail|{$contractNo}",
                 'published_at' => Carbon::now(),
                 'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
                 'link' => $webPartnerUrl,

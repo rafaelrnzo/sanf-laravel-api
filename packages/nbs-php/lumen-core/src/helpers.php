@@ -236,3 +236,12 @@ if (!function_exists('extract_route_name')) {
         return app()->router->getRoutes()[$methodName . $pathInfo]['action']['as'];
     }
 }
+
+if (!function_exists('format_currency')) {
+    function format_currency($amount, $locale = null, $currency = null): string
+    {
+        $formatter = new \NumberFormatter($locale ?? config('core.currency_locale', 'id-ID'), \NumberFormatter::CURRENCY);
+
+        return $formatter->formatCurrency($amount, $currency ?? config('core.currency_code', 'IDR'));
+    }
+}

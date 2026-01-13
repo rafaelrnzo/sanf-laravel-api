@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'v1/external', 'middleware' => ['basic-auth-config:core-h2h-user-provider']], function () {
     Route::post('push-notifications', ['as' => 'push-notifications.add', 'uses' => 'Notification\PushNotificationByExternalController@postAdd']);
+    Route::post('push-notifications/sanfind-user', ['as' => 'push-notifications.add-sanfind-user', 'uses' => 'Notification\PushNotificationByExternalController@postAddSanfindUser']);
     Route::post('frequently-ask-questions/categories', ['as' => 'faq.category.add', 'uses' => 'Setting\Controllers\FrequentlyAskQuestionCategoryByExternalController@postAdd']);
     Route::get('frequently-ask-questions/categories', ['as' => 'faq.category.browse', 'uses' => 'Setting\Controllers\FrequentlyAskQuestionCategoryByExternalController@getBrowse']);
     Route::post('frequently-ask-questions/categories/{xid}/update', ['as' => 'faq.category.update', 'uses' => 'Setting\Controllers\FrequentlyAskQuestionCategoryByExternalController@putUpdate']);
