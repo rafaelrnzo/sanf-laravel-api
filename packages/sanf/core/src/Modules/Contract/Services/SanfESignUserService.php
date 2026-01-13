@@ -7,7 +7,9 @@ use Carbon\CarbonImmutable;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Dto\ResponseESignUserDto;
+use Sanf\Core\Modules\Contract\Enums\ESignRegistrationCompleteEnum;
 use Sanf\Core\Modules\Contract\Enums\ESignRegistrationStatusEnum;
+use Sanf\Core\Modules\Contract\Exceptions\ESignUserExpiredException;
 use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentEncryptedRepository;
 use Sanf\Core\Modules\User\Repositories\RestProfileRepository;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
@@ -40,6 +42,12 @@ class SanfESignUserService implements ApplicationServiceInterface
         }
 
         $eSignSanfUserResponse = $this->sanfCoreClient->getAvailableESignUser($userSanfResponse->getEmail());
+
+        $registrationComplete = data_get($eSignSanfUserResponse, 'data.0.F_REGISTRATION_COMPLETE');
+
+        if ($registrationComplete === ESignRegistrationCompleteEnum::NO) {
+            throw new ESignUserExpiredException();
+        }
 
         $eSignSanfUserMapping = array_map(function ($item) use ($userSanfResponse) {
             return [
