@@ -65,3 +65,30 @@ services:
         max-size: "10m"
         max-file: "5"
 
+  cron:
+    image: ${CI_REGISTRY_IMAGE:-cr.nbs.dev/sanf/core/cron}:local
+    container_name: local-sanf-cron
+    build:
+      context: './'
+      dockerfile: './deployments/local/app/cron/Dockerfile'
+    networks:
+      - local-sanf-net
+    environment:
+      CRON_BASE_URL: ${CRON_BASE_URL}
+      CRON_CLIENT_ID: ${CRON_CLIENT_ID}
+      CRON_CLIENT_SECRET: ${CRON_CLIENT_SECRET}
+    restart: 'no'
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 192M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
