@@ -46,8 +46,9 @@ class BrowseInstallmentUseCase
         $periodType = $this->normalizePeriodType($dto->periodType ?? 'current_month');
         $sortBy = $this->normalizeSortBy($dto->sortBy ?? 'due_date_latest');
         $coreTimeZone = SanfCoreApiClientV2::DEFAULT_TIMEZONE;
+        $status = InstallmentPaymentStatusEnum::BELUM_LUNAS;
 
-        $response = $this->apiClient->getInstallmentList($page, $perPage, $periodType, $sortBy);
+        $response = $this->apiClient->getInstallmentList($page, $perPage, $periodType, $sortBy, $status);
 
         $installmentLookup = $this->buildInstallmentLookup($response->data ?? [], $dto->profileXid);
 

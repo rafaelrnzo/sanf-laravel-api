@@ -150,7 +150,8 @@ class SanfCoreApiClientV2
         $page,
         $per_page,
         $type = 'current_month',
-        $sort_by = null
+        $sort_by = null,
+        $status = null
     ) {
         $response = Request::route('sanf-internal-v2.installment.list', $this->client)
             ->queryParams([
@@ -158,6 +159,7 @@ class SanfCoreApiClientV2
                 'per_page' => $per_page,
                 'type' => $type, // current_month | next_month
                 'sort_by' => $sort_by,
+                'status' => $status,
             ])
             ->send();
 

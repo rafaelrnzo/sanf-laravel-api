@@ -60,7 +60,7 @@ final class BuildPaymentInstallmentCalculationUseCase
                 throw $e;
             }
 
-            if ($installmentDetail->tagihan->status_pembayaran_id == InstallmentPaymentStatusEnum::LUNAS) {
+            if (in_array($installmentDetail->tagihan->status_pembayaran_id, [InstallmentPaymentStatusEnum::LUNAS, InstallmentPaymentStatusEnum::MENUNGGU_KONFIRMASI])) {
                 $e = new PaidInstallmentException();
                 $e->setData(['installment' => $instalment->toArray()]);
                 throw $e;

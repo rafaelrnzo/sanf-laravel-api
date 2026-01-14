@@ -28,8 +28,8 @@ final class ValidatePaymentInstallmentUseCase
         $page = 1;
         $perPage = SanfCoreApiClientV2::DEFAULT_LIMIT;
 
-        $currentMonthList = $this->sanfCoreApiClient->getInstallmentList($page, $perPage, InstallmentListFilterTypeEnum::CURRENT_MONTH);
-        $nextMonthList = $this->sanfCoreApiClient->getInstallmentList($page, $perPage, InstallmentListFilterTypeEnum::NEXT_MONTH);
+        $currentMonthList = $this->sanfCoreApiClient->getInstallmentList($page, $perPage, InstallmentListFilterTypeEnum::CURRENT_MONTH, null, InstallmentPaymentStatusEnum::BELUM_LUNAS);
+        $nextMonthList = $this->sanfCoreApiClient->getInstallmentList($page, $perPage, InstallmentListFilterTypeEnum::NEXT_MONTH, null, InstallmentPaymentStatusEnum::BELUM_LUNAS);
 
         $currentMonthContracts = $this->groupInstallmentsByContract($currentMonthList->data ?? []);
         $nextMonthContracts = $this->groupInstallmentsByContract($nextMonthList->data ?? []);
@@ -110,7 +110,7 @@ final class ValidatePaymentInstallmentUseCase
             $contractNumber = $installment->no_kontrak;
             $dueDate = $installment->jatuh_tempo;
 
-            if (!$contractNumber || !$dueDate || $installment->status_pembayaran_id === InstallmentPaymentStatusEnum::LUNAS) {
+            if (!$contractNumber || !$dueDate || in_array($installment->status_pembayaran_id, [InstallmentPaymentStatusEnum::LUNAS, InstallmentPaymentStatusEnum::MENUNGGU_KONFIRMASI])) {
                 continue;
             }
 

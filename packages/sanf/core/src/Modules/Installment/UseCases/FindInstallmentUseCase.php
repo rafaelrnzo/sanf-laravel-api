@@ -199,12 +199,16 @@ class FindInstallmentUseCase implements ApplicationServiceInterface
 
     private function mapStatus(string $coreStatus, ?string $dbStatus)
     {
-        if ($dbStatus === InstallmentStatusEnum::WAITING_PAYMENT) {
+        if ($dbStatus === InstallmentStatusEnum::WAITING_PAYMENT || $dbStatus === InstallmentStatusEnum::IN_PROGRESS) {
             return $dbStatus;
         }
 
         if ($coreStatus === InstallmentPaymentStatusEnum::LUNAS) {
             return InstallmentStatusEnum::PAID;
+        }
+
+        if ($coreStatus === InstallmentPaymentStatusEnum::MENUNGGU_KONFIRMASI) {
+            return InstallmentStatusEnum::IN_PROGRESS;
         }
 
         return InstallmentStatusEnum::ACTIVE;
