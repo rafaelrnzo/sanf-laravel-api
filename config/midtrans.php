@@ -12,7 +12,17 @@ return [
             'duration' => (int) env('MIDTRANS_EXPIRY_DURATION', 30),
         ],
     ],
-    'enabled_payments' => ['bank_transfer'],
+    'enabled_payments' => [
+        // 'bank_transfer',
+        'echannel',
+        'permata_va',
+        'bca_va',
+        'bni_va',
+        'bri_va',
+        'cimb_va',
+        // 'danamon_va', // cannot use for now
+        // 'bsi_va', // cannot use for now
+    ],
 
     'logo' => [
         'disk' => env('MIDTRANS_LOGO_DISK'),
