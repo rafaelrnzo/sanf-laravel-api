@@ -272,18 +272,22 @@ final class CheckPaymentStatusUseCase
         $paymentMethod = MidtransPaymentMethodResolver::resolve($midtransTransactionStatus->raw);
         $paymentDetail = $payment->payment_detail;
 
+        $mandiriBill = $paymentMethod->biller_code . $paymentMethod->bill_key;
+        $vaNumber = $mandiriBill ?: $paymentMethod->virtual_account_number;
+
+        $customAmount = $paymentDetail->custom_amount ?? 0;
+        $customPenaltyAmount = $paymentDetail->custom_penalty_amount ?? 0;
+        $isPaymentCustomize = $payment->installments->count() === 1 && ($customAmount > 0 || $customPenaltyAmount > 0);
+
         $payInstallmentPayload = new SanfCorePayInstallmentPayload([
             'id_transaksi' => $midtransTransaction->midtrans_order_id,
             'status_pembayaran' => 'PAID',
             'tgl_pembayaran' => Carbon::make($midtransTransactionStatus->transaction_time)->format('Y-m-d H:i:s'),
             'metode_bayar' => 'VA', // only virtual account for now
             'bank' => $paymentMethod->provider,
-            'nomor_va' => $paymentMethod->virtual_account_number,
+            'nomor_va' => $vaNumber,
             'total_bayar' => $payment->amount,
-            'admin_fee' => $paymentDetail->admin_fee,
-            'nominal_kustom' => $paymentDetail->custom_amount,
-            'nominal_kustom_denda' => $paymentDetail->custom_penalty_amount,
-            'detail_pembayaran' => $payment->installments->map(function (InstallmentModel $installment) use ($payment) {
+            'detail_pembayaran' => $payment->installments->map(function (InstallmentModel $installment) use ($payment, $isPaymentCustomize, $customAmount, $customPenaltyAmount) {
                 /** @var PaymentInstallmentSnapshotEntity */
                 $installmentSnapshot = $installment->pivot->installment_snapshot;
 
@@ -292,8 +296,8 @@ final class CheckPaymentStatusUseCase
                     'cust_id' => $payment->user_profile_xid,
                     'due_date' => Carbon::make($installmentSnapshot->due_date)->setTimezone(SanfCoreApiClientV2::DEFAULT_TIMEZONE)->format('Y-m-d'),
                     'schedule_no' => $installmentSnapshot->sequence_no,
-                    'amount_tagihan' => $installmentSnapshot->principal_loan,
-                    'amount_pinalty' => $installmentSnapshot->penalty_fee,
+                    'amount_tagihan' => $isPaymentCustomize ? $customAmount : $installmentSnapshot->principal_loan,
+                    'amount_pinalty' => $isPaymentCustomize ? $customPenaltyAmount : $installmentSnapshot->penalty_fee,
                     'total_pembayaran' => $installmentSnapshot->total_amount,
                 ]);
             })->toArray(),
