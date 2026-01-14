@@ -144,6 +144,14 @@ final class PaymentEloquentRepository implements PaymentRepositoryInterface
             ->first();
     }
 
+    public function findByMidtransTransaction(string $midtransTransactionId, array $filters = []): ?PaymentModel
+    {
+        return $this->model->newQuery()
+            ->where($filters)
+            ->whereHas('midtransTransaction', fn ($q) => $q->where('midtrans_transaction_id', $midtransTransactionId))
+            ->first();
+    }
+
     public function create(array $data): PaymentModel
     {
         $data = SodiumEncryption::encryptor()->encryptMultipleData($data, [], ['user_snapshot']);

@@ -31,6 +31,16 @@ final class PaymentUseCase
         return $this->repository->find(['xid' => $xid]);
     }
 
+    public function findByXidAndMidtransTrx(string $xid, string $midtransTransactionId): ?PaymentModel
+    {
+        return $this->repository->findByMidtransTransaction($midtransTransactionId, ['xid' => $xid]);
+    }
+
+    public function findByXidAndMidtransOrder(string $xid, string $midtransOrderId): ?PaymentModel
+    {
+        return $this->repository->findByMidtransOrder($midtransOrderId, ['xid' => $xid]);
+    }
+
     public function findByXidAndUser(string $xid, int $userAuthId, string $userProfileXid): ?PaymentModel
     {
         return $this->repository->find([

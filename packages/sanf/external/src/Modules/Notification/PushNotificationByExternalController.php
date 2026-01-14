@@ -105,11 +105,11 @@ class PushNotificationByExternalController extends RestApiController
                 break;
             case PostSanfindUserTypeEnum::CONTRACT_PUBLISHED:
                 $payload = new SendPushNotificationContractPublishedJobPayload($input['data']);
-                dispatch_now(new SendPushNotificationContractPublishedJob($payload));
+                dispatch(new SendPushNotificationContractPublishedJob($payload));
                 break;
             case PostSanfindUserTypeEnum::BILL_TO_INSTALLMENT:
                 $payload = new SendPushNotificationBillChangeJobPayload($input['data']);
-                dispatch_now(new SendPushNotificationBillChangeJob($payload));
+                dispatch(new SendPushNotificationBillChangeJob($payload));
                 break;
         }
 

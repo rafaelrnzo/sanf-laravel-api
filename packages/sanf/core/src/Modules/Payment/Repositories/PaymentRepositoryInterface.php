@@ -26,6 +26,8 @@ interface PaymentRepositoryInterface
 
     public function findByMidtransOrder(string $midtransOrderId, array $filters = []): ?PaymentModel;
 
+    public function findByMidtransTransaction(string $midtransTransactionId, array $filters = []): ?PaymentModel;
+
     public function create(array $data): PaymentModel;
 
     public function countByStatus(array $filters): Collection;

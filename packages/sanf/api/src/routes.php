@@ -347,4 +347,5 @@ Route::group(['middleware' => ['basic-auth-config:core-h2h-user-provider']], fun
     ]);
 
     Route::post('v2/payment-event/created', ['as' => 'v2.payment-event.created', 'uses' => 'Payment\Controllers\PaymentEventController@created']);
+    Route::post('v2/payment-event/completed', ['as' => 'v2.payment-event.completed', 'uses' => 'Payment\Controllers\PaymentEventController@completed']);
 });
