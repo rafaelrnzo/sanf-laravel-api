@@ -33,6 +33,7 @@ class SendPushNotificationPaymentExpiredJob implements ShouldQueue
         $totalAmount = $this->payment->amount;
         $userAuthId = $this->payment->user_auth_id;
         $userProfileXid = $this->payment->user_profile_xid;
+        $totalAmountCurrency = format_currency($totalAmount);
 
         /**
          * @var InstallmentModel
@@ -45,8 +46,8 @@ class SendPushNotificationPaymentExpiredJob implements ShouldQueue
 
         $title = __('Pembayaran Dibatalkan');
         $subtitle = __('Transaksi');
-        $body = "Pembayaran tagihan dengan nilai {$totalAmount} dibatalkan otomatis oleh sistem karena melewati batas waktu yg ditentukan.";
-        $bodyHtml = "<span>Pembayaran tagihan dengan nilai <b>{$totalAmount}</b> dibatalkan otomatis oleh sistem karena melewati batas waktu yg ditentukan.</span>";
+        $body = "Pembayaran tagihan dengan nilai {$totalAmountCurrency} dibatalkan otomatis oleh sistem karena melewati batas waktu yg ditentukan.";
+        $bodyHtml = "<span>Pembayaran tagihan dengan nilai <b>{$totalAmountCurrency}</b> dibatalkan otomatis oleh sistem karena melewati batas waktu yg ditentukan.</span>";
 
         $webPartnerBaseUrl = rtrim(config('web-partner.base_url'), '/');
         $webPartnerUrl = "{$webPartnerBaseUrl}/sanfind_users/profiles/{$userProfileXid}/plafonds/sparepart/bills";

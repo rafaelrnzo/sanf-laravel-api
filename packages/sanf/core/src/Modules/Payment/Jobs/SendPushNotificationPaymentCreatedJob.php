@@ -33,6 +33,7 @@ class SendPushNotificationPaymentCreatedJob implements ShouldQueue
         $totalAmount = $this->payment->amount;
         $userAuthId = $this->payment->user_auth_id;
         $userProfileXid = $this->payment->user_profile_xid;
+        $totalAmountCurrency = format_currency($totalAmount);
 
         /**
          * @var InstallmentModel
@@ -45,8 +46,8 @@ class SendPushNotificationPaymentCreatedJob implements ShouldQueue
 
         $title = __('Selesaikan Pembayaran');
         $subtitle = __('Transaksi');
-        $body = "Anda memiliki pembayaran sebesar {$totalAmount} yang perlu diselesaikan. Segera lakukan pembayaran sebelum batas waktu berakhir.";
-        $bodyHtml = "<span>Anda memiliki pembayaran sebesar <b>{$totalAmount}</b> yang perlu diselesaikan. Segera lakukan pembayaran sebelum batas waktu berakhir.</span>";
+        $body = "Anda memiliki pembayaran sebesar {$totalAmountCurrency} yang perlu diselesaikan. Segera lakukan pembayaran sebelum batas waktu berakhir.";
+        $bodyHtml = "<span>Anda memiliki pembayaran sebesar <b>{$totalAmountCurrency}</b> yang perlu diselesaikan. Segera lakukan pembayaran sebelum batas waktu berakhir.</span>";
 
         $webPartnerBaseUrl = rtrim(config('web-partner.base_url'), '/');
         $webPartnerUrl = "{$webPartnerBaseUrl}/sanfind_users/profiles/{$userProfileXid}/plafonds/sparepart/bills";
