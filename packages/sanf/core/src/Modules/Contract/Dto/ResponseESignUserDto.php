@@ -28,4 +28,5 @@ class ResponseESignUserDto extends DataTransferObject
     public ?object $selfieFile;
     public ?object $identityFile;
     public int $statusId;
+    public bool $isAccountExpired;
 }

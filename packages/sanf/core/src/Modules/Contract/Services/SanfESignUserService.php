@@ -9,7 +9,6 @@ use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Dto\ResponseESignUserDto;
 use Sanf\Core\Modules\Contract\Enums\ESignRegistrationCompleteEnum;
 use Sanf\Core\Modules\Contract\Enums\ESignRegistrationStatusEnum;
-use Sanf\Core\Modules\Contract\Exceptions\ESignUserExpiredException;
 use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentEncryptedRepository;
 use Sanf\Core\Modules\User\Repositories\RestProfileRepository;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
@@ -45,11 +44,7 @@ class SanfESignUserService implements ApplicationServiceInterface
 
         $registrationComplete = data_get($eSignSanfUserResponse, 'data.0.F_REGISTRATION_COMPLETE');
 
-        if ($registrationComplete === ESignRegistrationCompleteEnum::NO) {
-            throw new ESignUserExpiredException();
-        }
-
-        $eSignSanfUserMapping = array_map(function ($item) use ($userSanfResponse) {
+        $eSignSanfUserMapping = array_map(function ($item) use ($userSanfResponse, $registrationComplete) {
             return [
                 'email' => isset($item['EMAIL']) ? $item['EMAIL'] : $userSanfResponse->getEmail(),
                 'msisdn' => isset($item['MOBILE']) ? $item['MOBILE'] : $userSanfResponse->getPhoneNumber(),
@@ -69,6 +64,7 @@ class SanfESignUserService implements ApplicationServiceInterface
                 'districtName' => isset($item['KECAMATAN']) ? $item['KECAMATAN'] : $userSanfResponse->getDistrictName(),
                 'subdistrictName' => isset($item['KELURAHAN']) ? $item['KELURAHAN'] : $userSanfResponse->getSubdistrictName(),
                 'statusId' => ESignRegistrationStatusEnum::AVAILABLE,
+                'isAccountExpired' => $registrationComplete === ESignRegistrationCompleteEnum::NO,
             ];
         }, $eSignSanfUserResponse['data'])[0];
 

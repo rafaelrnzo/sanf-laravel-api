@@ -54,6 +54,7 @@ class ResponseESignUserTransformer extends TransformerAbstract
             'selfie_url' => ($item->selfieFile) ? file_get_temp_url($item->selfieFile->path) : null,
             'identity_url' => ($item->identityFile) ? file_get_temp_url($item->identityFile->path) : null,
             'status' => $item->statusId,
+            'is_account_expired' => $item->isAccountExpired,
         ];
     }
 }
