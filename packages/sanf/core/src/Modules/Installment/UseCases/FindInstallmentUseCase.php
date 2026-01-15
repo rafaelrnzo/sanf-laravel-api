@@ -120,7 +120,15 @@ class FindInstallmentUseCase implements ApplicationServiceInterface
         ]), $overdue);
 
         $installment = $this->getInstallment($dto->contractNo, $dto->dueDate, $dto->profileXid);
-        $activePayment = $this->findActivePayment($dto->userId, $dto->profileXid, $dto->contractNo);
+        $dueDateString = $this->normalizeDueDate($dto->dueDate);
+        $activePayment = $dueDateString
+            ? $this->paymentRepository->findActivePendingPaymentByContractAndDueDate(
+                $dto->userId,
+                $dto->profileXid,
+                $dto->contractNo,
+                $dueDateString
+            )
+            : null;
 
         $allOutstandingAmounts = array_sum(array_pluck($overdue, 'total_overdue'));
 
@@ -224,6 +232,10 @@ class FindInstallmentUseCase implements ApplicationServiceInterface
             return $dueDate->toDateString();
         }
 
+        if (is_int($dueDate) || (is_string($dueDate) && ctype_digit($dueDate))) {
+            return Carbon::createFromTimestamp((int) $dueDate, SanfCoreApiClientV2::DEFAULT_TIMEZONE)->toDateString();
+        }
+
         try {
             return Carbon::parse($dueDate)->toDateString();
         } catch (\Throwable $exception) {
@@ -254,19 +266,6 @@ class FindInstallmentUseCase implements ApplicationServiceInterface
             'fileType' => $fileType,
             'url' => $fullUrl,
         ]);
-    }
-
-    private function findActivePayment(?int $userAuthId, ?string $userProfileXid, ?string $contractNo): ?PaymentModel
-    {
-        if (!$userAuthId || !$userProfileXid || !$contractNo) {
-            return null;
-        }
-
-        return $this->paymentRepository->findActivePendingPaymentByContract(
-            $userAuthId,
-            $userProfileXid,
-            $contractNo
-        );
     }
 
     private function findLatestPayment(?int $installmentId): ?PaymentModel

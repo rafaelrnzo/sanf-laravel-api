@@ -118,6 +118,34 @@ final class PaymentEloquentRepository implements PaymentRepositoryInterface
             ->first();
     }
 
+    public function findActivePendingPaymentByContractAndDueDate(
+        int $userAuthId,
+        string $userProfileXid,
+        string $contractNo,
+        string $dueDate
+    ): ?PaymentModel {
+        $targetTimezone = SanfCoreApiClientV2::DEFAULT_TIMEZONE;
+
+        $dueDateObject = Carbon::parse($dueDate, $targetTimezone);
+        $startOfDay = $dueDateObject->copy()->startOfDay()->setTimezone($targetTimezone);
+        $endOfDay = $dueDateObject->copy()->endOfDay()->setTimezone($targetTimezone);
+
+        return $this->model->newQuery()
+            ->where('user_auth_id', $userAuthId)
+            ->where('user_profile_xid', $userProfileXid)
+            ->where('status', PaymentStatusEnum::PENDING)
+            ->where(function ($query) {
+                $query->whereNull('expired_at')
+                    ->orWhere('expired_at', '>', Carbon::now());
+            })
+            ->whereHas('installments', function ($query) use ($contractNo, $startOfDay, $endOfDay) {
+                $query->where('contract_no', $contractNo)
+                    ->whereBetween('due_date', [$startOfDay, $endOfDay]);
+            })
+            ->orderByDesc('created_at')
+            ->first();
+    }
+
     public function findByInstallmentDetail(string $contractNo, string $dueDate, array $filters = []): ?PaymentModel
     {
         $targetTimezone = SanfCoreApiClientV2::DEFAULT_TIMEZONE;
@@ -260,4 +288,5 @@ final class PaymentEloquentRepository implements PaymentRepositoryInterface
             ->where($filters)
             ->get();
     }
+
 }
