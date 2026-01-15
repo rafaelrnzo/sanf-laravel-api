@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Sanf\Core\Constants\ConnectionDB;
 use Sanf\Core\Traits\SodiumEncryptionTrait;
+use Sanf\Dashboard\Modules\User\Models\UserAuthEncryptedModel;
 
 /**
  * Spare Part Disbursement Batch.
@@ -31,6 +32,7 @@ use Sanf\Core\Traits\SodiumEncryptionTrait;
  * @property int $version
  * @property-read \Illuminate\Database\Eloquent\Collection|SparePartDisbursementModel[] $disbursements
  * @property-read \Illuminate\Database\Eloquent\Collection|SparePartDisbursementDocumentModel[] $documents
+ * @property-read UserAuthEncryptedModel $createdBy
  */
 class SparePartDisbursementBatchModel extends Model
 {
@@ -94,5 +96,10 @@ class SparePartDisbursementBatchModel extends Model
     public function getBankOwnerAttribute()
     {
         return $this->decryptor()->decrypt($this->attributes['bank_owner']);
+    }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(UserAuthEncryptedModel::class, 'created_by_id');
     }
 }

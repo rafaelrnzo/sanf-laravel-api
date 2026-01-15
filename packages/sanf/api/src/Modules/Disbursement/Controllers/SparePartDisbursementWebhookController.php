@@ -7,6 +7,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use NbsPhp\Core\Controllers\RestApiController;
 use Sanf\Core\Constants\ConnectionDB;
+use Sanf\Core\Modules\Disbursement\Events\SparePartDisbursementValidationCompletedEvent;
 use Sanf\Core\Modules\Disbursement\Exceptions\SparePartDisbrusementValidated;
 use Sanf\Core\Modules\Disbursement\Payloads\StatusFromCoreSparePartDisbursementPayload;
 use Sanf\Core\Modules\Disbursement\Payloads\ValidateSparePartDisbursementPayload;
@@ -15,6 +16,7 @@ use Sanf\Core\Modules\Disbursement\UseCases\ValidateSparePartDisbursementUseCase
 use Sanf\Core\Modules\Log\Enums\WebhookLogKeyEnum;
 use Sanf\Core\Modules\Log\Payloads\CreateWebhookLogPayload;
 use Sanf\Core\Modules\Log\UseCases\WebhookLogUseCase;
+use Sanf\Dashboard\Modules\User\Models\CustomerBindingEncryptedModel;
 
 class SparePartDisbursementWebhookController extends RestApiController
 {
@@ -46,12 +48,14 @@ class SparePartDisbursementWebhookController extends RestApiController
             'customers.*.invoices.*.message' => ['nullable', 'string'],
         ]);
 
-        $receveivedAt = (string) Carbon::now();
+        $receivedAt = (string) Carbon::now();
 
         $payload = new ValidateSparePartDisbursementPayload($formData);
 
+        $batch = null;
+
         try {
-            DB::connection(ConnectionDB::PG_SQL_CMS)->transaction(
+            $batch = DB::connection(ConnectionDB::PG_SQL_CMS)->transaction(
                 fn () => $useCase->execute($payload)
             );
         } catch (SparePartDisbrusementValidated $e) {
@@ -64,9 +68,20 @@ class SparePartDisbursementWebhookController extends RestApiController
                 'key' => WebhookLogKeyEnum::SPARE_PART_DISBURSEMENT_VALIDATION,
                 'reference_id' => str_limit($payload->batch_id, 255),
                 'payload' => $request->all(),
-                'received_at' => $receveivedAt,
+                'received_at' => $receivedAt,
                 'processed_at' => (string) Carbon::now(),
             ]));
+
+            if ($batch) {
+                $batch->loadMissing(['createdBy.bindingAccount']);
+
+                /**
+                 * @var CustomerBindingEncryptedModel
+                 */
+                $bindingAccount = $batch->createdBy->bindingAccount;
+
+                event(new SparePartDisbursementValidationCompletedEvent($bindingAccount->BowheerId, $batch->batch_number));
+            }
         } catch (\Throwable $th) {
             report($th);
         }
@@ -87,7 +102,7 @@ class SparePartDisbursementWebhookController extends RestApiController
             'status_batch_desc' => ['required', 'string'],
         ]);
 
-        $receveivedAt = (string) Carbon::now();
+        $receivedAt = (string) Carbon::now();
 
         $payload = new StatusFromCoreSparePartDisbursementPayload($formData);
 
@@ -101,7 +116,7 @@ class SparePartDisbursementWebhookController extends RestApiController
                 'key' => WebhookLogKeyEnum::SPARE_PART_DISBURSEMENT_STATUS,
                 'reference_id' => str_limit("{$payload->batch_id}|{$payload->cust_id}|{$payload->cust_id_sanfind}", 255),
                 'payload' => $request->all(),
-                'received_at' => $receveivedAt,
+                'received_at' => $receivedAt,
                 'processed_at' => (string) Carbon::now(),
             ]));
         } catch (\Throwable $th) {

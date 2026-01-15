@@ -6,6 +6,7 @@ use Illuminate\Support\Collection;
 use NbsPhp\Core\Exceptions\ResourceNotFoundException;
 use Sanf\Core\Modules\Disbursement\Enums\SparePartDisbursementStatusEnum;
 use Sanf\Core\Modules\Disbursement\Exceptions\SparePartDisbrusementValidated;
+use Sanf\Core\Modules\Disbursement\Models\SparePartDisbursementBatchModel;
 use Sanf\Core\Modules\Disbursement\Payloads\ValidateSparePartDisbursementPayload;
 use Sanf\Core\Modules\Disbursement\Repositories\SparePartDisbursementRepositoryInterface;
 
@@ -18,10 +19,10 @@ final class ValidateSparePartDisbursementUseCase
         $this->repository = $repository;
     }
 
-    public function execute(ValidateSparePartDisbursementPayload $payload)
+    public function execute(ValidateSparePartDisbursementPayload $payload): ?SparePartDisbursementBatchModel
     {
         if ($payload->validation_complete === false) {
-            return;
+            return null;
         }
 
         $batch = $this->repository->findBatch(['batch_number' => $payload->batch_id]);
@@ -78,13 +79,17 @@ final class ValidateSparePartDisbursementUseCase
                 ]);
             }
 
+            $disbursementStatus = ($validCount > 0)
+                ? SparePartDisbursementStatusEnum::DRAFT
+                : SparePartDisbursementStatusEnum::REJECTED;
+
             $this->repository->update([
                 ['id', '=', $disbursement->id],
             ], [
                 'valid_invoice_count' => $validCount,
                 'total_valid_invoice_amount' => $validAmount,
                 'payment_type' => $customerPayload->tipe_pembayaran_id,
-                'status_id' => SparePartDisbursementStatusEnum::DRAFT,
+                'status_id' => $disbursementStatus,
                 'plafond_no' => $customerPayload->no_plafond,
                 'customer_id_sanfind' => $customerPayload->cust_id_sanfind,
                 'validation_status_code' => $customerPayload->status_code,
@@ -102,6 +107,8 @@ final class ValidateSparePartDisbursementUseCase
             'total_valid_invoice_amount' => $batchValidAmount,
             'is_validated' => true,
         ]);
+
+        return $batch->fresh();
     }
 
     private function validateCustomers(Collection $disbursements, ValidateSparePartDisbursementPayload $payload)

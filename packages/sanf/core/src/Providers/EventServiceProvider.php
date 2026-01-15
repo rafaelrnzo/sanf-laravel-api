@@ -33,6 +33,8 @@ use Sanf\Core\Modules\Contract\Listeners\SendNotificationESignDocumentSignComple
 use Sanf\Core\Modules\Contract\Listeners\UpdateAdInsUserStatusByCallbackListener;
 use Sanf\Core\Modules\Contract\Listeners\UpdateAdInsUserStatusListener;
 use Sanf\Core\Modules\Contract\Listeners\UpdateESignDocumentStatusByCallbackListener;
+use Sanf\Core\Modules\Disbursement\Events\SparePartDisbursementValidationCompletedEvent;
+use Sanf\Core\Modules\Disbursement\Listeners\SendNotificationSparePartDisbursementValidatedListener;
 use Sanf\Core\Modules\Financing\Events\FinancingApplicationCreatedEvent;
 use Sanf\Core\Modules\Financing\Listeners\SendEmailNewFinancingApplicationListener;
 use Sanf\Core\Modules\Insurance\Events\InsuranceClaimSubmissionAddedEvent;
@@ -199,6 +201,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         PaymentCompletedEvent::class => [
             SendNotificationPaymentCompletedListener::class,
+        ],
+        SparePartDisbursementValidationCompletedEvent::class => [
+            SendNotificationSparePartDisbursementValidatedListener::class,
         ],
     ];
 }

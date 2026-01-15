@@ -8,7 +8,7 @@ class AddPushNotificationUserPayloadRequestDto extends DataTransferObject
 {
     public string $xid;
     public string $title;
-    public ?string $subtitle;
+    public string $subtitle;
     public string $body;
     public string $type;
     public ?string $screen;
