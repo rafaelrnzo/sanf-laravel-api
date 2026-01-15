@@ -2,10 +2,13 @@
 
 namespace Sanf\Integration\Modules\SanfCore\Payloads;
 
+use Sanf\Core\Traits\CastsNumericDtoProperties;
 use Spatie\DataTransferObject\DataTransferObject;
 
 class SanfCoreInstallmentPaymentItem extends DataTransferObject
 {
+    use CastsNumericDtoProperties;
+
     public string $no_kontrak;
     public string $cust_id;
     public string $due_date;

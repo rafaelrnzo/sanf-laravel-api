@@ -4,7 +4,6 @@ namespace Sanf\Core\Modules\Installment\UseCases;
 
 use Carbon\Carbon;
 use Carbon\CarbonInterface;
-use Illuminate\Support\Collection;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Installment\Enums\InstallmentStatusEnum;
@@ -119,7 +118,6 @@ class FindInstallmentUseCase implements ApplicationServiceInterface
             'penaltyFee' => (int) ceil($item->denda),
         ]), $overdue);
 
-        $installment = $this->getInstallment($dto->contractNo, $dto->dueDate, $dto->profileXid);
         $dueDateString = $this->normalizeDueDate($dto->dueDate);
         $activePayment = $dueDateString
             ? $this->paymentRepository->findActivePendingPaymentByContractAndDueDate(
@@ -169,18 +167,8 @@ class FindInstallmentUseCase implements ApplicationServiceInterface
     private function findInstallment(?string $contractNo, $dueDate, $userProfileXid): ?InstallmentModel
     {
         $dueDateString = $this->normalizeDueDate($dueDate);
-        $records = $this->installmentRepository->findByContractsAndDueDates([
-            [
-                'contract_no' => $contractNo,
-                'due_date' => $dueDateString,
-            ],
-        ], $userProfileXid);
 
-        if (!$records instanceof Collection) {
-            $records = Collection::make($records ?? []);
-        }
-
-        return $records->first();
+        return $this->installmentRepository->findByContract($contractNo, $dueDateString, $userProfileXid);
     }
 
     private function getInstallment(?string $contractNo, $dueDate, $userProfileXid)
@@ -193,19 +181,19 @@ class FindInstallmentUseCase implements ApplicationServiceInterface
     {
         $dueDateString = $this->normalizeDueDate($dueDate);
         if (!$contractNo || !$dueDateString) {
-            return InstallmentStatusEnum::ACTIVE;
+            return $this->mapStatus($coreStatus);
         }
 
         $record = $this->getInstallment($contractNo, $dueDate, $userProfileXid);
 
         if (!$record) {
-            return InstallmentStatusEnum::ACTIVE;
+            return $this->mapStatus($coreStatus);
         }
 
         return $this->mapStatus($coreStatus, $record->status);
     }
 
-    private function mapStatus(string $coreStatus, ?string $dbStatus)
+    private function mapStatus(string $coreStatus, ?string $dbStatus = null)
     {
         if ($dbStatus === InstallmentStatusEnum::WAITING_PAYMENT || $dbStatus === InstallmentStatusEnum::IN_PROGRESS) {
             return $dbStatus;

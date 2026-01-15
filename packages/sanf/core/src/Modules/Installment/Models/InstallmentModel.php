@@ -2,6 +2,7 @@
 
 namespace Sanf\Core\Modules\Installment\Models;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
 use NbsPhp\Core\Models\AbstractModel;
 use Sanf\Core\Modules\Payment\Models\PaymentModel;
 
@@ -21,6 +22,8 @@ use Sanf\Core\Modules\Payment\Models\PaymentModel;
  */
 class InstallmentModel extends AbstractModel
 {
+    use SoftDeletes;
+
     protected $table = 'installment';
 
     protected $fillable = [

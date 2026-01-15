@@ -140,7 +140,7 @@ final class PaymentEloquentRepository implements PaymentRepositoryInterface
             })
             ->whereHas('installments', function ($query) use ($contractNo, $startOfDay, $endOfDay) {
                 $query->where('contract_no', $contractNo)
-                    ->whereBetween('due_date', [$startOfDay, $endOfDay]);
+                    ->whereBetween('due_date', [$startOfDay->toIso8601String(), $endOfDay->toIso8601String()]);
             })
             ->orderByDesc('created_at')
             ->first();
@@ -158,7 +158,7 @@ final class PaymentEloquentRepository implements PaymentRepositoryInterface
             ->where($filters)
             ->whereHas('installments', function ($q) use ($contractNo, $startOfDay, $endOfDay) {
                 $q->where('contract_no', $contractNo)
-                    ->whereBetween('due_date', [$startOfDay, $endOfDay]);
+                    ->whereBetween('due_date', [$startOfDay->toIso8601String(), $endOfDay->toIso8601String()]);
             })
             ->orderByDesc('created_at')
             ->first();
@@ -288,5 +288,4 @@ final class PaymentEloquentRepository implements PaymentRepositoryInterface
             ->where($filters)
             ->get();
     }
-
 }

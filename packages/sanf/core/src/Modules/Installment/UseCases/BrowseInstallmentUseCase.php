@@ -223,16 +223,14 @@ class BrowseInstallmentUseCase
 
     private function normalizeDueDate($dueDate): ?string
     {
+        $targetTimezone = SanfCoreApiClientV2::DEFAULT_TIMEZONE;
+
         if (!$dueDate) {
             return null;
         }
 
-        if ($dueDate instanceof Carbon) {
-            return $dueDate->toDateString();
-        }
-
         try {
-            return Carbon::parse($dueDate)->toDateString();
+            return Carbon::parse($dueDate, $targetTimezone)->setTimezone($targetTimezone)->toDateString();
         } catch (\Throwable $exception) {
             try {
                 return Carbon::createFromFormat('d-m-Y', $dueDate)->toDateString();

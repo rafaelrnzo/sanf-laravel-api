@@ -15,5 +15,7 @@ interface InstallmentRepositoryInterface
 
     public function update(array $filters, array $data): bool;
 
+    public function findByContract(string $contractNo, string $dueDate, string $userProfileXid): ?InstallmentModel;
+
     public function findByContractsAndDueDates(array $contractDueDates, string $userProfileXid): Collection;
 }

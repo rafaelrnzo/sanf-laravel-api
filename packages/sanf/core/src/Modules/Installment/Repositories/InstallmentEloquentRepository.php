@@ -2,9 +2,11 @@
 
 namespace Sanf\Core\Modules\Installment\Repositories;
 
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Sanf\Core\Modules\Installment\Models\InstallmentModel;
 use Sanf\Core\Modules\Payment\Enums\PaymentStatusEnum;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClientV2;
 
 class InstallmentEloquentRepository implements InstallmentRepositoryInterface
 {
@@ -55,6 +57,21 @@ class InstallmentEloquentRepository implements InstallmentRepositoryInterface
         return (bool) $model->update($data);
     }
 
+    public function findByContract(string $contractNo, string $dueDate, string $userProfileXid): ?InstallmentModel
+    {
+        $targetTimezone = SanfCoreApiClientV2::DEFAULT_TIMEZONE;
+
+        $dueDateObject = Carbon::parse($dueDate, $targetTimezone);
+        $startOfDay = $dueDateObject->copy()->startOfDay()->setTimezone($targetTimezone);
+        $endOfDay = $dueDateObject->copy()->endOfDay()->setTimezone($targetTimezone);
+
+        return $this->installmentModel->newQuery()
+            ->where('user_profile_xid', $userProfileXid)
+            ->where('contract_no', $contractNo)
+            ->whereBetween('due_date', [$startOfDay->toIso8601String(), $endOfDay->toIso8601String()])
+            ->first();
+    }
+
     public function findByContractsAndDueDates(array $contractDueDates, string $userProfileXid): Collection
     {
         if (empty($contractDueDates)) {
@@ -65,16 +82,18 @@ class InstallmentEloquentRepository implements InstallmentRepositoryInterface
 
         return $this->installmentModel->newQuery()
             ->select(['id', 'contract_no', 'due_date', 'status'])
-            ->with(['payments' => fn ($q) => $q
-                ->where('status', PaymentStatusEnum::PENDING)
-                ->orderByDesc('created_at'), ])
+            ->with([
+                    'payments' => fn ($q) => $q
+                        ->where('status', PaymentStatusEnum::PENDING)
+                        ->orderByDesc('created_at'),
+                ])
             ->where('user_profile_xid', $userProfileXid)
             ->where(function ($query) use ($uniquePairs) {
                 foreach ($uniquePairs as $index => $pair) {
                     $method = $index === 0 ? 'where' : 'orWhere';
                     $query->{$method}(function ($subQuery) use ($pair) {
                         $subQuery->where('contract_no', $pair['contract_no'])
-                            ->whereDate('due_date', $pair['due_date']);
+                            ->whereBetween('due_date', [$pair['due_date_start'], $pair['due_date_end']]);
                     });
                 }
             })
@@ -84,12 +103,22 @@ class InstallmentEloquentRepository implements InstallmentRepositoryInterface
     private function deduplicatePairs(array $pairs): array
     {
         $map = [];
+        $targetTimezone = SanfCoreApiClientV2::DEFAULT_TIMEZONE;
+
         foreach ($pairs as $pair) {
             if (empty($pair['contract_no']) || empty($pair['due_date'])) {
                 continue;
             }
 
             $key = sprintf('%s|%s', $pair['contract_no'], $pair['due_date']);
+
+            $dueDateObject = Carbon::parse($pair['due_date'], $targetTimezone);
+            $startOfDay = $dueDateObject->copy()->startOfDay()->setTimezone($targetTimezone);
+            $endOfDay = $dueDateObject->copy()->endOfDay()->setTimezone($targetTimezone);
+
+            $pair['due_date_start'] = $startOfDay->toIso8601String();
+            $pair['due_date_end'] = $endOfDay->toIso8601String();
+
             $map[$key] = $pair;
         }
 
