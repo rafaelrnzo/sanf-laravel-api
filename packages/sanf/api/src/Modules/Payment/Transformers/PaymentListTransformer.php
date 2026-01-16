@@ -47,7 +47,7 @@ final class PaymentListTransformer extends TransformerAbstract
 
             $dueDates = array_merge(
                 $dueDates,
-                array_map(fn (PaymentInstallmentOutstandingSnapshotEntity $item) => $item->due_date, $snapshot->outstanding_installments ?? [])
+                array_map(fn (PaymentInstallmentOutstandingSnapshotEntity $item) => ($item->due_date ?? $item->jatuh_tempo), $snapshot->outstanding_installments ?? [])
             );
         }
 

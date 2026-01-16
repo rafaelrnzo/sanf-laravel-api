@@ -44,11 +44,11 @@ final class CreateInstallmentPaymentTransformer extends TransformerAbstract
                     'financing_type_id' => $snapshot->financing_type_id,
                     'financing_type_desc' => $snapshot->financing_type_desc,
                     'outstanding_installments' => array_map(fn (PaymentInstallmentOutstandingSnapshotEntity $outstanding) => [
-                        'due_date' => unix_timestamp($outstanding->due_date),
-                        'total' => (float) $outstanding->total,
-                        'principal_loan' => (float) $outstanding->principal_loan,
-                        'interest_amount' => (float) $outstanding->interest_amount,
-                        'penalty_fee' => (float) $outstanding->penalty_fee,
+                        'due_date' => unix_timestamp($outstanding->due_date ?? $outstanding->jatuh_tempo),
+                        'total' => (float) ($outstanding->total ?? $outstanding->total_overdue),
+                        'principal_loan' => (float) ($outstanding->principal_loan ?? $outstanding->pokok_hutang),
+                        'interest_amount' => (float) ($outstanding->interest_amount ?? $outstanding->bunga),
+                        'penalty_fee' => (float) ($outstanding->penalty_fee ?? $outstanding->denda),
                     ], $snapshot->outstanding_installments),
                 ];
             }),
