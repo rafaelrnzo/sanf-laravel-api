@@ -6,7 +6,7 @@ use Spatie\DataTransferObject\FlexibleDataTransferObject;
 
 class MidtransWebhookPayload extends FlexibleDataTransferObject
 {
-    public string $received_at;
+    public ?string $received_at;
     public ?string $transaction_status;
     public ?string $transaction_id;
     public ?string $transaction_time;

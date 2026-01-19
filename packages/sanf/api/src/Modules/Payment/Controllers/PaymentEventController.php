@@ -6,12 +6,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Exceptions\ResourceNotFoundException;
+use Sanf\Api\Modules\Payment\Support\MidtransHelper;
 use Sanf\Core\Modules\Payment\Enums\PaymentStatusEnum;
 use Sanf\Core\Modules\Payment\Events\PaymentCompletedEvent;
 use Sanf\Core\Modules\Payment\Exceptions\PaymentSettledException;
 use Sanf\Core\Modules\Payment\Jobs\PaymentExpireJob;
 use Sanf\Core\Modules\Payment\Models\PaymentModel;
+use Sanf\Core\Modules\Payment\Payloads\MidtransWebhookPayload;
 use Sanf\Core\Modules\Payment\UseCases\CheckPaymentByMidtransTransactionUseCase;
+use Sanf\Core\Modules\Payment\UseCases\HandleMidtransCallbackUseCase;
 use Sanf\Core\Modules\Payment\UseCases\PaymentUseCase;
 
 class PaymentEventController extends RestApiController
@@ -42,17 +45,39 @@ class PaymentEventController extends RestApiController
     public function completed(
         Request $request,
         CheckPaymentByMidtransTransactionUseCase $checkPaymentUseCase,
-        PaymentUseCase $paymentUseCase
+        PaymentUseCase $paymentUseCase,
+        HandleMidtransCallbackUseCase $midtransCallbackUseCase
     ) {
         $formData = $this->validate($request, [
-            'payment_xid' => 'required',
-            'midtrans_order_id' => 'required',
-            'midtrans_transaction_id' => 'required',
+            'payment_xid' => ['required', 'string'],
+            'midtrans_transaction.order_id' => ['required', 'string'],
+            'midtrans_transaction.status_code' => ['required', 'string'],
+            'midtrans_transaction.transaction_id' => ['nullable', 'string'],
+            'midtrans_transaction.transaction_status' => ['nullable', 'string'],
+            'midtrans_transaction.transaction_time' => ['nullable', 'string'],
+            'midtrans_transaction.fraud_status' => ['nullable', 'string'],
+            'midtrans_transaction.gross_amount' => ['required', 'string'],
+            'midtrans_transaction.signature_key' => ['required', 'string'],
+            'midtrans_transaction.payment_type' => ['nullable', 'string'],
+            'midtrans_transaction.settlement_time' => ['nullable', 'string'],
         ]);
 
+        $payload = new MidtransWebhookPayload(array_merge(
+            $formData['midtrans_transaction'],
+            [
+                'raw_request' => $request->input('midtrans_transaction'),
+            ]
+        ));
+
+        MidtransHelper::validateSignature(
+            $payload->signature_key,
+            $payload->order_id,
+            $payload->status_code,
+            $payload->gross_amount
+        );
+
         $paymentXid = $formData['payment_xid'];
-        $midtransOrderId = $formData['midtrans_order_id'];
-        $midtransTransactionId = $formData['midtrans_transaction_id'];
+        $midtransOrderId = $payload->order_id;
 
         $payment = $paymentUseCase->findByXidAndMidtransOrder($paymentXid, $midtransOrderId);
 
@@ -64,8 +89,8 @@ class PaymentEventController extends RestApiController
             /**
              * @var PaymentModel
              */
-            $latestPayment = DB::transaction(function () use ($checkPaymentUseCase, $midtransTransactionId) {
-                return $checkPaymentUseCase->execute($midtransTransactionId);
+            $latestPayment = DB::transaction(function () use ($midtransCallbackUseCase, $payload) {
+                return $midtransCallbackUseCase->execute($payload);
             });
 
             if ($payment->status === PaymentStatusEnum::PENDING && $latestPayment->status === PaymentStatusEnum::SUCCESS) {
