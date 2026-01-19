@@ -60,15 +60,19 @@ class PaymentEventController extends RestApiController
             throw new ResourceNotFoundException('Payment not found');
         }
 
-        /**
-         * @var PaymentModel
-         */
-        $latestPayment = DB::transaction(function () use ($checkPaymentUseCase, $midtransTransactionId) {
-            return $checkPaymentUseCase->execute($midtransTransactionId);
-        });
+        try {
+            /**
+             * @var PaymentModel
+             */
+            $latestPayment = DB::transaction(function () use ($checkPaymentUseCase, $midtransTransactionId) {
+                return $checkPaymentUseCase->execute($midtransTransactionId);
+            });
 
-        if ($payment->status === PaymentStatusEnum::PENDING && $latestPayment->status === PaymentStatusEnum::SUCCESS) {
-            event(new PaymentCompletedEvent($latestPayment));
+            if ($payment->status === PaymentStatusEnum::PENDING && $latestPayment->status === PaymentStatusEnum::SUCCESS) {
+                event(new PaymentCompletedEvent($latestPayment));
+            }
+        } catch (PaymentSettledException $e) {
+            // nothing todo
         }
 
         return $this->responseOk();
