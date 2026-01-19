@@ -21,6 +21,10 @@ class DetailFinancingTransformer extends TransformerAbstract
                 'name' => $item->type->name,
             ],
             'plafond_type' => $item->plafond_type,
+            'status' => [
+                'id' => $item->status->id,
+                'name' => $item->status->name,
+            ],
         ];
     }
 }

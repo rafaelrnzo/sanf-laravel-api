@@ -4,6 +4,7 @@ namespace Sanf\Core\Modules\Contract\Services;
 
 use GuzzleHttp\Exception\GuzzleException;
 use NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException;
+use NbsPhp\Core\Exceptions\ResourceNotFoundException;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Payment\Models\PaymentModel;
@@ -48,8 +49,12 @@ class GetContractDetailService extends UserService implements ApplicationService
 
         $data = $this->internalApiClientV2->getContractDetail($dto->contract_no);
 
+        if (!$data) {
+            throw new ResourceNotFoundException('Contract not found');
+        }
+
         $payment = null;
-        if ($data->NO_KONTRAK && $data->DT_DUE) {
+        if (optional($data)->NO_KONTRAK && optional($data)->DT_DUE) {
             $payment = $this->findPayment(
                 $data->NO_KONTRAK,
                 $data->DT_DUE,
@@ -93,15 +98,19 @@ class GetContractDetailService extends UserService implements ApplicationService
                 ],
                 'total_tenor' => $data->TENOR ?? 0,
                 'type' => (object) [
-                    'id' => $data->TIPE_PEMBAYARAN_ID,
-                    'name' => $data->TIPE_PEMBAYARAN_DESC,
+                    'id' => $data->TIPE_PEMBAYARAN_ID ?? null,
+                    'name' => $data->TIPE_PEMBAYARAN_DESC ?? null,
                 ],
-                'plafond_type' => $this->mapPalfondType($data->CONTRACT_TYPE_CODE),
+                'plafond_type' => $this->mapPalfondType($data->CONTRACT_TYPE_CODE ?? null),
+                'status' => (object) [
+                    'id' => $data->STATUS_PEMBAYARAN_ID ?? null,
+                    'name' => $data->STATUS_PEMBAYARAN_DESC ?? null,
+                ],
             ],
             'total_financing_unit' => $data->TOT_UNIT ?? 0,
             'payment_xid' => optional($payment)->xid,
-            'supplier_id' => $data->ID_SUPPLIER,
-            'supplier_name' => $data->NAMA_SUPPLIER,
+            'supplier_id' => $data->ID_SUPPLIER ?? null,
+            'supplier_name' => $data->NAMA_SUPPLIER ?? null,
         ];
     }
 
@@ -117,7 +126,7 @@ class GetContractDetailService extends UserService implements ApplicationService
         );
     }
 
-    private function mapPalfondType(string $plafondType)
+    private function mapPalfondType(?string $plafondType)
     {
         $status = [
             'SPAREPART' => 'SPARE_PART_FINANCING',
