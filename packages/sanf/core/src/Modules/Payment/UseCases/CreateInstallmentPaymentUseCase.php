@@ -104,10 +104,7 @@ final class CreateInstallmentPaymentUseCase
 
         $status = PaymentStatusEnum::PENDING;
 
-        $user = $this->userRepository->find([
-            'id' => $payload->userAuthId,
-            'xid' => $payload->userProfileXid,
-        ]);
+        $user = $this->userRepository->findById($payload->userAuthId);
 
         if (!$user) {
             throw new UserNotFoundException();

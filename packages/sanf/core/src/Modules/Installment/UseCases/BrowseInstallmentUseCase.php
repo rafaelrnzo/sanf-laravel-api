@@ -32,10 +32,7 @@ class BrowseInstallmentUseCase
 
     public function execute(BrowseInstallmentPayload $dto)
     {
-        $user = $this->userRepository->find([
-            'id' => $dto->userId,
-            'xid' => $dto->profileXid,
-        ]);
+        $user = $this->userRepository->findById($dto->userId);
 
         if (!$user) {
             throw new UserNotFoundException();

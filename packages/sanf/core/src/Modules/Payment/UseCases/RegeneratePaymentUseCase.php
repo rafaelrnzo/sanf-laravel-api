@@ -36,10 +36,7 @@ final class RegeneratePaymentUseCase
 
     public function execute(string $xid, int $userAuthId, string $userProfileXid): ?PaymentModel
     {
-        $user = $this->userRepository->find([
-            'id' => $userAuthId,
-            'xid' => $userProfileXid,
-        ]);
+        $user = $this->userRepository->findById($userAuthId);
 
         if (!$user) {
             throw new UserNotFoundException();
