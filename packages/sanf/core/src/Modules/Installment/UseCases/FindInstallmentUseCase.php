@@ -55,12 +55,8 @@ class FindInstallmentUseCase implements ApplicationServiceInterface
             throw new UserNotFoundException();
         }
 
-        try {
-            $dueDate = Carbon::createFromTimestamp($dto->dueDate, SanfCoreApiClientV2::DEFAULT_TIMEZONE)->format('Y-m-d');
-            $response = $this->apiClient->getInstallmentDetail($dto->contractNo, $dueDate);
-        } catch (SanfInternalApiDataNotFoundException $exception) {
-            throw $exception;
-        }
+        $dueDate = Carbon::createFromTimestamp($dto->dueDate, SanfCoreApiClientV2::DEFAULT_TIMEZONE)->format('Y-m-d');
+        $response = $this->apiClient->getInstallmentDetail($dto->contractNo, $dueDate);
 
         $payload = $response ?? null;
         if (!$payload) {

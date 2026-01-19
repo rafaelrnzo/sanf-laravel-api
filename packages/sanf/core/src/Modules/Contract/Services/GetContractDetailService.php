@@ -7,10 +7,13 @@ use NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException;
 use NbsPhp\Core\Exceptions\ResourceNotFoundException;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
+use Sanf\Core\Modules\Installment\Enums\InstallmentStatusEnum;
+use Sanf\Core\Modules\Installment\Repositories\InstallmentRepositoryInterface;
 use Sanf\Core\Modules\Payment\Models\PaymentModel;
 use Sanf\Core\Modules\Payment\Repositories\PaymentRepositoryInterface;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Core\Modules\User\Services\UserService;
+use Sanf\Integration\Modules\SanfCore\Enums\InstallmentPaymentStatusEnum;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClientV2;
 
@@ -19,18 +22,21 @@ class GetContractDetailService extends UserService implements ApplicationService
     protected SanfCoreApiClient $internalApiClient;
     protected SanfCoreApiClientV2 $internalApiClientV2;
     protected PaymentRepositoryInterface $paymentRepository;
+    protected InstallmentRepositoryInterface $installmentRepository;
 
     public function __construct(
         UserRepositoryInterface $userRepository,
         SanfCoreApiClient $internalApiClient,
         SanfCoreApiClientV2 $internalApiClientV2,
-        PaymentRepositoryInterface $paymentRepository
+        PaymentRepositoryInterface $paymentRepository,
+        InstallmentRepositoryInterface $installmentRepository
     )
     {
         parent::__construct($userRepository);
         $this->internalApiClient = $internalApiClient;
         $this->internalApiClientV2 = $internalApiClientV2;
         $this->paymentRepository = $paymentRepository;
+        $this->installmentRepository = $installmentRepository;
     }
 
     /**
@@ -62,6 +68,8 @@ class GetContractDetailService extends UserService implements ApplicationService
                 $dto->profile_xid
             );
         }
+
+        $installment = $this->installmentRepository->findByContract($data->NO_KONTRAK, $data->DT_DUE, $dto->profile_xid);
 
         return (object) [
             'contract_at' => $data->TGL_KONTRAK ?? null,
@@ -102,10 +110,7 @@ class GetContractDetailService extends UserService implements ApplicationService
                     'name' => $data->TIPE_PEMBAYARAN_DESC ?? null,
                 ],
                 'plafond_type' => $this->mapPalfondType($data->CONTRACT_TYPE_CODE ?? null),
-                'status' => (object) [
-                    'id' => $data->STATUS_PEMBAYARAN_ID ?? null,
-                    'name' => $data->STATUS_PEMBAYARAN_DESC ?? null,
-                ],
+                'status' => $data->STATUS_PEMBAYARAN_ID ? $this->mapInstallmentStatus($data->STATUS_PEMBAYARAN_ID, optional($installment)->status) : null,
             ],
             'total_financing_unit' => $data->TOT_UNIT ?? 0,
             'payment_xid' => optional($payment)->xid,
@@ -135,5 +140,22 @@ class GetContractDetailService extends UserService implements ApplicationService
         ];
 
         return $status[$plafondType] ?? $status['GENERAL'];
+    }
+
+    private function mapInstallmentStatus(string $coreStatus, ?string $dbStatus = null): ?string
+    {
+        if ($dbStatus === InstallmentStatusEnum::WAITING_PAYMENT || $dbStatus === InstallmentStatusEnum::IN_PROGRESS) {
+            return $dbStatus;
+        }
+
+        if ($coreStatus === InstallmentPaymentStatusEnum::LUNAS) {
+            return InstallmentStatusEnum::PAID;
+        }
+
+        if ($coreStatus === InstallmentPaymentStatusEnum::MENUNGGU_KONFIRMASI) {
+            return InstallmentStatusEnum::IN_PROGRESS;
+        }
+
+        return InstallmentStatusEnum::ACTIVE;
     }
 }
