@@ -7,6 +7,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use NbsPhp\Core\Exceptions\ConcurrentModificationException;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
+use Sanf\Api\Modules\Payment\Support\MidtransHelper;
 use Sanf\Core\Modules\Installment\Enums\InstallmentStatusEnum;
 use Sanf\Core\Modules\Installment\Models\InstallmentModel;
 use Sanf\Core\Modules\Installment\Repositories\InstallmentRepositoryInterface;
@@ -318,7 +319,7 @@ final class CreateInstallmentPaymentUseCase
                 'order_id' => $midtransOrderId,
                 'gross_amount' => $installmentPayload->total_payment,
             ]),
-            'enabled_payments' => config('midtrans.enabled_payments'),
+            'enabled_payments' => MidtransHelper::getEnabledPaymentOptions(),
             'callbacks' => new SnapCallbacksPayload([
                 'finish' => route('v2.payments.static-success'),
                 'error' => route('v2.payments.static-failed'),

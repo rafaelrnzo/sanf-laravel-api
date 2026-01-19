@@ -12,17 +12,16 @@ return [
             'duration' => (int) env('MIDTRANS_EXPIRY_DURATION', 30),
         ],
     ],
-    'enabled_payments' => [
-        // 'bank_transfer',
-        'echannel',
-        'permata_va',
-        'bca_va',
-        'bni_va',
-        'bri_va',
-        'cimb_va',
-        // 'danamon_va', // cannot use for now
-        // 'bsi_va', // cannot use for now
-    ],
+
+    /*
+     * separated by comma
+     *
+     * NOTES:
+     * for all virtual account payment can use alias 'bank_transfer'
+     * 'danamon_va' & 'bsi_va' cannot be used for now, because there is a problem with transaction status api, cannot find transaction by order id
+     *
+     */
+    'enabled_payments' => env('MIDTRANS_ENABLED_PAYMENTS', 'echannel,permata_va,bca_va,bni_va,bri_va,cimb_va'),
 
     'logo' => [
         'disk' => env('MIDTRANS_LOGO_DISK'),
