@@ -119,7 +119,7 @@ final class HandleMidtransCallbackUseCase
         return $statusLog;
     }
 
-    private function handlePaymentExpireInProgress(PaymentModel $payment, MidtransWebhookPayload $payload)
+    private function handlePaymentExpireInProgress(PaymentModel $payment, MidtransWebhookPayload $payload): array
     {
         $newPaymentStatus = null;
 
@@ -181,7 +181,7 @@ final class HandleMidtransCallbackUseCase
         }
     }
 
-    private function handlePaymentPending(PaymentModel $payment, MidtransWebhookPayload $payload)
+    private function handlePaymentPending(PaymentModel $payment, MidtransWebhookPayload $payload): array
     {
         $paymentUpdatePayload = [];
 
@@ -250,6 +250,8 @@ final class HandleMidtransCallbackUseCase
 
             return $paymentUpdatePayload;
         }
+
+        return $paymentUpdatePayload;
     }
 
     private function updateInstallmentsStatus(PaymentModel $payment, string $status): void
