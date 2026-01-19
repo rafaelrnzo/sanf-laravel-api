@@ -17,11 +17,12 @@ return [
      * separated by comma
      *
      * NOTES:
-     * for all virtual account payment can use alias 'bank_transfer'
-     * 'danamon_va' & 'bsi_va' cannot be used for now, because there is a problem with transaction status api, cannot find transaction by order id
+     * - for all virtual account payment can use alias 'bank_transfer'
+     * - 'danamon_va' & 'bsi_va' cannot be used to get transaction status by midtrans api, because cannot find transaction by order id
      *
+     * e.g. 'bni_va,bri_va,cimb_va'
      */
-    'enabled_payments' => env('MIDTRANS_ENABLED_PAYMENTS', 'echannel,permata_va,bca_va,bni_va,bri_va,cimb_va'),
+    'enabled_payments' => env('MIDTRANS_ENABLED_PAYMENTS', 'bank_transfer'),
 
     'logo' => [
         'disk' => env('MIDTRANS_LOGO_DISK'),
