@@ -35,7 +35,7 @@ final class PaymentInstallmentOutstandingSnapshotEntity extends DataTransferObje
 
     /** @deprecated */
     public ?string $status_pembayaran_id;
-    
+
     /** @deprecated */
     public ?string $status_pembayaran_desc;
 }
