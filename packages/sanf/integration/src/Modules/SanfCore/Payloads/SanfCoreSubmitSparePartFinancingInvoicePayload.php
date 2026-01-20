@@ -8,7 +8,7 @@ class SanfCoreSubmitSparePartFinancingInvoicePayload extends DataTransferObject
 {
     public string $CUST_ID;
     public string $NO_INVOICE;
-    public string $TANGGAL_INVOICE; // 'm-d-Y' format
+    public string $TANGGAL_INVOICE; // 'Y-m-d' format
     public string $CURRENCY;
     public string $TOTAL_INVOICE;
     public string $STATUS_INVOICE_ID; // 01 | 02
