@@ -2,6 +2,7 @@
 
 namespace Sanf\Core\Modules\Contract\Models;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Crypt;
 use NbsPhp\Core\Models\AbstractModel;
 use Sanf\Core\Constants\ConnectionDB;
@@ -9,7 +10,7 @@ use Sanf\Core\Traits\SodiumEncryptionTrait;
 
 class UserAdInsEncryptedModel extends AbstractModel
 {
-    use SodiumEncryptionTrait;
+    use SodiumEncryptionTrait, SoftDeletes;
 
     protected $connection = ConnectionDB::PG_SODIUM;
 
@@ -44,6 +45,11 @@ class UserAdInsEncryptedModel extends AbstractModel
         'created_at',
         'updated_at',
         'nonce',
+        'certificate_expired_at',
+    ];
+
+    protected $casts = [
+        'certificate_expired_at' => 'datetime',
     ];
 
     public function getPasswordDecryptAttribute()
