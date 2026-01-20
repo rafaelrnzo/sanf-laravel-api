@@ -189,7 +189,7 @@ class FindInstallmentUseCase implements ApplicationServiceInterface
         return $this->mapStatus($coreStatus, $record->status);
     }
 
-    private function mapStatus(string $coreStatus, ?string $dbStatus = null)
+    private function mapStatus(int $coreStatus, ?string $dbStatus = null)
     {
         if ($dbStatus === InstallmentStatusEnum::WAITING_PAYMENT || $dbStatus === InstallmentStatusEnum::IN_PROGRESS) {
             return $dbStatus;

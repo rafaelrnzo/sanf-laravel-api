@@ -142,7 +142,7 @@ class GetContractDetailService extends UserService implements ApplicationService
         return $status[$plafondType] ?? $status['GENERAL'];
     }
 
-    private function mapInstallmentStatus(string $coreStatus, ?string $dbStatus = null): ?string
+    private function mapInstallmentStatus(int $coreStatus, ?string $dbStatus = null): ?string
     {
         if ($dbStatus === InstallmentStatusEnum::WAITING_PAYMENT || $dbStatus === InstallmentStatusEnum::IN_PROGRESS) {
             return $dbStatus;
