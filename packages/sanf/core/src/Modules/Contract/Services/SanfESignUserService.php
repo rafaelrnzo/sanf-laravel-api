@@ -93,28 +93,46 @@ class SanfESignUserService implements ApplicationServiceInterface
             $eSignSanfUserMapping['identityFile'] = $adInsUser->identity_file;
             $eSignSanfUserMapping['statusId'] = $adInsUser->status_id;
 
+            if ($adInsUser->certificate_expired_at) {
+                $eSignSanfUserMapping['isAccountExpired'] = $eSignSanfUserMapping['isAccountExpired'] || Carbon::parse($adInsUser->certificate_expired_at)->lessThanOrEqualTo(Carbon::now());
+            }
+
             $dto = (object) [
                 'email' => $adInsUser->email,
                 'msisdn' => $adInsUser->msisdn,
                 'identityNo' => $adInsUser->identity_no,
             ];
 
-            if ($adInsUser->status_id !== ESignRegistrationStatusEnum::COMPLETE) {
+            $eSignUserUpdateData = [];
+
+            if ($adInsUser->status_id !== ESignRegistrationStatusEnum::COMPLETE || $adInsUser->certificate_expired_at === null) {
                 $registerStatus = $this->adInsRegisterCheckService->execute($dto);
 
                 $vendor = 'Vida';
                 foreach ($registerStatus->status as $status) {
-                    if ($status->vendor == $vendor && $status->registrationStatus == $this->adInsRegisterCheckService::ACTIVE) {
+                    if ($status->vendor != $vendor) {
+                        continue;
+                    }
+
+                    if ($status->registrationStatus == $this->adInsRegisterCheckService::ACTIVE) {
                         $eSignSanfUserMapping['statusId'] = ESignRegistrationStatusEnum::COMPLETE;
+                    }
+
+                    if ($adInsUser->certificate_expired_at === null) {
+                        $certificateExpiredAt = Carbon::parse($status->expiredDate, 'Asia/Jakarta')->startOfDay()->utc();
+                        $eSignUserUpdateData['certificate_expired_at'] = $certificateExpiredAt;
+                        $eSignSanfUserMapping['isAccountExpired'] = $eSignSanfUserMapping['isAccountExpired'] || $certificateExpiredAt->lessThanOrEqualTo(Carbon::now());
                     }
                 }
             }
 
             if ($adInsUser->status_id !== ESignRegistrationStatusEnum::COMPLETE && $eSignSanfUserMapping['statusId'] === ESignRegistrationStatusEnum::COMPLETE) {
-                $this->eSignDocumentRepository->updateUser($adInsUser->id, [
-                    'status_id' => ESignRegistrationStatusEnum::COMPLETE,
-                    'updated_at' => CarbonImmutable::now(),
-                ]);
+                $eSignUserUpdateData['status_id'] = ESignRegistrationStatusEnum::COMPLETE;
+            }
+
+            if (!empty($eSignUserUpdateData)) {
+                $eSignUserUpdateData['updated_at'] = CarbonImmutable::now();
+                $this->eSignDocumentRepository->updateUser($adInsUser->id, $eSignUserUpdateData);
             }
         }
 

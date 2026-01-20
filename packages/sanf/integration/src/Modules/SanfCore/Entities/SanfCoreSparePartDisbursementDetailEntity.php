@@ -17,6 +17,6 @@ class SanfCoreSparePartDisbursementDetailEntity extends FlexibleDataTransferObje
     public array $invoices;
     public SanfCoreSparePartDisbursementBankEntity $bank;
 
-    /** @var SanfCoreSparePartDisbursementDocumentEntity[] */
+    /** @var \Sanf\Integration\Modules\SanfCore\Entities\SanfCoreSparePartDisbursementDocumentEntity[] */
     public array $documents;
 }

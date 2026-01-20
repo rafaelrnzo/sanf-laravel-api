@@ -15,6 +15,9 @@ class AdInsESignRegisterCheckService implements ApplicationServiceInterface
     public const INACTIVE = 1;
     public const ACTIVE = 2;
 
+    public const CERTIFICATE_STATUS_ACTIVE = '1';
+    public const CERTIFICATE_STATUS_EXPIRED = '0';
+
     private AdInsESignApiClient $adInsClient;
 
     public function __construct(AdInsESignApiClient $adInsClient)

@@ -10,6 +10,7 @@ use Sanf\Core\Modules\Contract\Dto\ESignRegisterFormDto;
 use Sanf\Core\Modules\Contract\Enums\ESignRegistrationStatusEnum;
 use Sanf\Core\Modules\Contract\Events\AdInsRegisterActivationEvent;
 use Sanf\Core\Modules\Contract\Exceptions\ESignUserUniqueException;
+use Sanf\Core\Modules\Contract\Models\UserAdInsEncryptedModel;
 use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentEncryptedRepository;
 
 class ESignRegisterAdInsService implements ApplicationServiceInterface
@@ -18,13 +19,16 @@ class ESignRegisterAdInsService implements ApplicationServiceInterface
 
     protected AdInsESignRegisterService $adInsRegisterService;
     protected EloquentESignDocumentEncryptedRepository $eSignRepository;
+    protected AdInsESignRegisterCheckService $adInsRegisterCheckService;
 
     public function __construct(
         AdInsESignRegisterService $adInsRegisterService,
-        EloquentESignDocumentEncryptedRepository $eSignRepository
+        EloquentESignDocumentEncryptedRepository $eSignRepository,
+        AdInsESignRegisterCheckService $adInsRegisterCheckService
     ) {
         $this->adInsRegisterService = $adInsRegisterService;
         $this->eSignRepository = $eSignRepository;
+        $this->adInsRegisterCheckService = $adInsRegisterCheckService;
     }
 
     /**
@@ -32,8 +36,9 @@ class ESignRegisterAdInsService implements ApplicationServiceInterface
      */
     public function execute($dto = null)
     {
-        $userAdInsRecord = $this->eSignRepository->findUserBySanfIdAndIdentityNo($dto->sanfId, $dto->identityNo);
-        if ($userAdInsRecord) {
+        $userAdInsExisting = $this->eSignRepository->findUserBySanfIdAndIdentityNo($dto->sanfId, $dto->identityNo);
+
+        if ($userAdInsExisting && !$this->isCertificateExpired($userAdInsExisting)) {
             throw new ESignUserUniqueException();
         }
 
@@ -73,6 +78,10 @@ class ESignRegisterAdInsService implements ApplicationServiceInterface
         $dto->password = Crypt::decryptString($encryptedPassword);
 
         $this->adInsRegisterService->execute($dto);
+
+        if ($userAdInsExisting) {
+            $this->eSignRepository->deleteUser($userAdInsExisting->id);
+        }
 
         event(new AdInsRegisterActivationEvent($dto));
 
@@ -126,5 +135,35 @@ class ESignRegisterAdInsService implements ApplicationServiceInterface
         $base64 = base64_encode($image);
 
         return 'data:' . $mimeType . ';base64,' . $base64;
+    }
+
+    /**
+     * @param UserAdInsEncryptedModel $userAdIns
+     * @return bool
+     */
+    private function isCertificateExpired($userAdIns): bool
+    {
+        $registerCheck = $this->registerCheck($userAdIns);
+
+        return $registerCheck->certificateActiveStatus === AdInsESignRegisterCheckService::CERTIFICATE_STATUS_EXPIRED;
+    }
+
+    /**
+     * @param UserAdInsEncryptedModel $userAdIns
+     */
+    private function registerCheck($userAdIns)
+    {
+        $dto = (object) [
+            'email' => $userAdIns->email,
+            'msisdn' => $userAdIns->msisdn,
+            'identityNo' => $userAdIns->identity_no,
+        ];
+
+        $response = $this->adInsRegisterCheckService->execute($dto);
+
+        $data = collect($response->status);
+        $vendor = 'Vida';
+
+        return $data->where('vendor', $vendor)->first();
     }
 }

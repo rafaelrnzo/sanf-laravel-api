@@ -149,6 +149,13 @@ class EloquentESignDocumentEncryptedRepository extends AbstractEloquentRepositor
         return $this->stripEloquentModel($model->fresh());
     }
 
+    public function deleteUser(int $id)
+    {
+        $model = $this->userAdInsModel->newQuery()->find($id);
+
+        return optional($model)->delete();
+    }
+
     public function findDocumentById(int $id)
     {
         return $this->eSignDocumentModel->newQuery()->find($id);
