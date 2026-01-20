@@ -16,6 +16,7 @@ class SparePartDisbursementStatusEnum extends Enum
     public const WAITING_PAYMENT = 41;
     public const PAYMENT_COMPLETED = 50;
     public const REJECTED = 60;
+    public const CUSTOMER_REJECTED = 61;
     public const APPROVED = 70;
     public const CANCELED = 80;
 
@@ -39,7 +40,7 @@ class SparePartDisbursementStatusEnum extends Enum
             self::WAITING_PAYMENT,
             self::PAYMENT_COMPLETED,
             self::APPROVED,
-            self::REJECTED,
+            self::CUSTOMER_REJECTED,
         ];
     }
 

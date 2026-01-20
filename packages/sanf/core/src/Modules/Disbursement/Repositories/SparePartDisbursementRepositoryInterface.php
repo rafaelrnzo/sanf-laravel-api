@@ -30,6 +30,8 @@ interface SparePartDisbursementRepositoryInterface
 
     public function listInvoice(array $filters): Collection;
 
+    public function listInvoiceReadySubmit(array $filters): Collection;
+
     public function findInvoice(array $filters): ?SparePartDisbursementInvoiceModel;
 
     public function rejectInvoices(array $filters, array $invoiceXids): int;

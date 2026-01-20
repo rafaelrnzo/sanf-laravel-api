@@ -129,13 +129,24 @@ class SparePartDisbursementEloquentRepository extends AbstractEloquentRepository
         return $this->invoiceModel->newQuery()->where($filters)->get();
     }
 
+    public function listInvoiceReadySubmit(array $filters): Collection
+    {
+        return $this->invoiceModel->newQuery()
+            ->where($filters)
+            ->whereIn('status_id', [
+                SparePartDisbursementStatusEnum::APPROVED,
+                SparePartDisbursementStatusEnum::CUSTOMER_REJECTED,
+            ])
+            ->get();
+    }
+
     public function rejectInvoices(array $filters, array $invoiceXids): int
     {
         return $this->invoiceModel->newQuery()
             ->where($filters)
             ->whereIn('xid', $invoiceXids)
             ->update([
-                'status_id' => SparePartDisbursementStatusEnum::REJECTED,
+                'status_id' => SparePartDisbursementStatusEnum::CUSTOMER_REJECTED,
                 'updated_at' => Carbon::now(),
             ]);
     }
@@ -145,6 +156,7 @@ class SparePartDisbursementEloquentRepository extends AbstractEloquentRepository
         return $this->invoiceModel->newQuery()
             ->where($filters)
             ->whereNotIn('xid', $excludeInvoiceXids)
+            ->where('status_id', '!=', SparePartDisbursementStatusEnum::REJECTED) // exclude rejected by core
             ->update([
                 'status_id' => SparePartDisbursementStatusEnum::APPROVED,
                 'updated_at' => Carbon::now(),

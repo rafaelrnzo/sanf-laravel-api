@@ -88,9 +88,9 @@ final class ApprovalSparePartDisbursementUseCase
             ]
         );
 
-        $invoices = $this->repository->listInvoice([
-            'disbursement_xid' => $payload->disbursementXid,
-            'customer_id_sanfind' => $payload->profileXid,
+        $invoices = $this->repository->listInvoiceReadySubmit([
+            ['disbursement_xid', '=', $payload->disbursementXid],
+            ['customer_id_sanfind', '=', $payload->profileXid],
         ]);
 
         $disbursementBatch = $this->repository->findBatch([
