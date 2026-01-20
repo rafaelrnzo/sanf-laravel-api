@@ -12,4 +12,5 @@ class BrowseInstallmentPayload extends CamelCaseDataTransferObject
     public ?int $limit;
     public ?string $sortBy;
     public ?string $periodType;
+    public ?string $contractNo;
 }

@@ -45,7 +45,14 @@ class BrowseInstallmentUseCase
         $coreTimeZone = SanfCoreApiClientV2::DEFAULT_TIMEZONE;
         $status = InstallmentPaymentStatusEnum::BELUM_LUNAS;
 
-        $response = $this->apiClient->getInstallmentList($page, $perPage, $periodType, $sortBy, $status);
+        $response = $this->apiClient->getInstallmentList(
+            $page,
+            $perPage,
+            $periodType,
+            $sortBy,
+            $status,
+            $dto->contractNo
+        );
 
         $installmentLookup = $this->buildInstallmentLookup($response->data ?? [], $dto->profileXid);
 

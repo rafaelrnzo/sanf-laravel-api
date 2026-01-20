@@ -33,6 +33,7 @@ final class InstallmentController extends RestApiController
             'limit' => ['nullable', 'integer', 'min:1'],
             'sort_by' => ['nullable', 'string', 'in:due_date_latest,due_date_oldest'],
             'period_type' => ['nullable', 'string', 'in:current_month,next_month'],
+            'contract_no' => ['nullable', 'string'],
         ]);
 
         $dto = new BrowseInstallmentPayload([
@@ -42,6 +43,7 @@ final class InstallmentController extends RestApiController
             'limit' => $input['limit'] ?? 10,
             'sortBy' => $input['sort_by'] ?? 'due_date_latest',
             'periodType' => $input['period_type'] ?? 'current_month',
+            'contractNo' => $input['contract_no'] ?? null,
         ]);
 
         $result = $useCase->execute($dto);
