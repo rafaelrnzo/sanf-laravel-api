@@ -52,7 +52,9 @@ class ResponseESignUserTransformer extends TransformerAbstract
                 'postcode' => $item->postcode,
             ],
             'selfie_url' => ($item->selfieFile) ? file_get_temp_url($item->selfieFile->path) : null,
+            'selfie_filename' => optional($item->selfieFile)->file_name,
             'identity_url' => ($item->identityFile) ? file_get_temp_url($item->identityFile->path) : null,
+            'identity_filename' => optional($item->identityFile)->file_name,
             'status' => $item->statusId,
             'is_account_expired' => $item->isAccountExpired,
         ];
