@@ -118,7 +118,7 @@ class SanfESignUserService implements ApplicationServiceInterface
                         $eSignSanfUserMapping['statusId'] = ESignRegistrationStatusEnum::COMPLETE;
                     }
 
-                    if ($adInsUser->certificate_expired_at === null) {
+                    if ($adInsUser->certificate_expired_at === null && $status->expiredDate) {
                         $certificateExpiredAt = Carbon::parse($status->expiredDate, 'Asia/Jakarta')->startOfDay()->utc();
                         $eSignUserUpdateData['certificate_expired_at'] = $certificateExpiredAt;
                         $eSignSanfUserMapping['isAccountExpired'] = $eSignSanfUserMapping['isAccountExpired'] || $certificateExpiredAt->lessThanOrEqualTo(Carbon::now());
