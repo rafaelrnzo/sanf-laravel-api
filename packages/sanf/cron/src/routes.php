@@ -13,3 +13,9 @@ Route::post('cron/payment-resubmit-pending-installment', [
     'uses' => 'Payment\Controllers\CronPaymentController@resubmitPendingInstallment',
     'middleware' => 'throttle:1,1',
 ]);
+
+Route::post('cron/payment-almost-expired', [
+    'as' => 'cron.payment.almost-expired',
+    'uses' => 'Payment\Controllers\CronPaymentController@paymentAlmostExpiredCheck',
+    'middleware' => 'throttle:5,30',
+]);

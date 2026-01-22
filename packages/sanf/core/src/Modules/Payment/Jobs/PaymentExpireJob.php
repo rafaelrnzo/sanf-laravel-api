@@ -3,6 +3,7 @@
 namespace Sanf\Core\Modules\Payment\Jobs;
 
 use App\Jobs\Job;
+use Illuminate\Support\Facades\DB;
 use Sanf\Core\Modules\Payment\Events\PaymentExpiredEvent;
 use Sanf\Core\Modules\Payment\Models\PaymentModel;
 use Sanf\Core\Modules\Payment\UseCases\MakePaymentExpireUseCase;
@@ -19,7 +20,7 @@ class PaymentExpireJob extends Job
     public function handle(
         MakePaymentExpireUseCase $useCase
     ) {
-        $useCase->execute($this->payment->xid);
+        DB::transaction(fn () => $useCase->execute($this->payment->xid));
 
         event(new PaymentExpiredEvent($this->payment));
     }

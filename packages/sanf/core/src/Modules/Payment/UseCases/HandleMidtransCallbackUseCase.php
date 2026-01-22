@@ -148,7 +148,7 @@ final class HandleMidtransCallbackUseCase
 
         $paidAt = null;
         if ($newPaymentStatus === PaymentStatusEnum::PAID_LATE && $payload->settlement_time) {
-            $paidAt = Carbon::parse($payload->settlement_time, MidtransClient::TIMEZONE);
+            $paidAt = Carbon::parse($payload->settlement_time, MidtransClient::TIMEZONE)->utc();
         }
 
         $paymentUpdatePayload = [
@@ -213,7 +213,7 @@ final class HandleMidtransCallbackUseCase
 
             $paymentUpdatePayload = [
                 'status' => $newPaymentStatus,
-                'paid_at' => $payload->settlement_time ? Carbon::parse($payload->settlement_time, MidtransClient::TIMEZONE) : null,
+                'paid_at' => $payload->settlement_time ? Carbon::parse($payload->settlement_time, MidtransClient::TIMEZONE)->utc() : null,
                 'status_log' => $this->appendStatusLog($payment->status_log, $newPaymentStatus),
                 'core_installment_submitted' => true,
             ];

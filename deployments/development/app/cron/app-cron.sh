@@ -20,6 +20,7 @@ CRON_BASIC_AUTH=$(printf '%s:%s' "$CRON_CLIENT_ID" "$CRON_CLIENT_SECRET" | base6
 
 # Execute job
 curl --location "${CRON_BASE_URL}/cron/${JOB_NAME}" \
+--header 'Accept: application/json' \
 --header 'Content-Type: application/json' \
 --header "Authorization: Basic ${CRON_BASIC_AUTH}" \
 --data '{

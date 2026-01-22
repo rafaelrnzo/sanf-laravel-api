@@ -8,7 +8,6 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use NbsPhp\Core\Controllers\RestApiController;
-use NbsPhp\Core\Exceptions\ConcurrentModificationException;
 use NbsPhp\Core\Exceptions\ResourceNotFoundException;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
 use Sanf\Api\Modules\Payment\Transformers\PaymentDetailTransformer;
@@ -17,8 +16,7 @@ use Sanf\Api\Modules\Payment\Transformers\PaymentStatsTransformer;
 use Sanf\Api\Modules\Payment\Transformers\RegeneratePaymentTransformer;
 use Sanf\Core\Modules\Payment\Enums\PaymentStatusEnum;
 use Sanf\Core\Modules\Payment\Events\PaymentCompletedEvent;
-use Sanf\Core\Modules\Payment\Exceptions\PaymentNotExpiredException;
-use Sanf\Core\Modules\Payment\Exceptions\PaymentSettledException;
+use Sanf\Core\Modules\Payment\Events\PaymentExpiredEvent;
 use Sanf\Core\Modules\Payment\Models\PaymentModel;
 use Sanf\Core\Modules\Payment\Payloads\BrowsePaymentPayload;
 use Sanf\Core\Modules\Payment\UseCases\BrowsePaymentUseCase;
@@ -150,23 +148,14 @@ final class PaymentController extends RestApiController
             throw new ResourceNotFoundException('Payment not found');
         }
 
-        try {
-            $paymentExpired->execute($paymentXid);
-        } catch (
-            ResourceNotFoundException |
-            PaymentSettledException |
-            PaymentNotExpiredException |
-            ConcurrentModificationException $th
-        ) {
-            // no action
-        } catch (\Throwable $th) {
-            report($th);
-        }
-
         $newStatus = DB::transaction(fn () => $useCase->execute($paymentXid, $userAuthId, $userProfileXid));
 
         if ($payment->status === PaymentStatusEnum::PENDING && $newStatus === PaymentStatusEnum::SUCCESS) {
             event(new PaymentCompletedEvent($payment));
+        }
+
+        if ($payment->status === PaymentStatusEnum::PENDING && $newStatus === PaymentStatusEnum::EXPIRED) {
+            event(new PaymentExpiredEvent($payment));
         }
 
         return $this->responseOk('Success', [

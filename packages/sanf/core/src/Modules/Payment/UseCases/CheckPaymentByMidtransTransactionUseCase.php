@@ -157,7 +157,7 @@ final class CheckPaymentByMidtransTransactionUseCase
 
         $paidAt = null;
         if ($newPaymentStatus === PaymentStatusEnum::PAID_LATE) {
-            $paidAt = Carbon::parse($midtransClientTrx->transaction_time, MidtransClient::TIMEZONE);
+            $paidAt = Carbon::parse($midtransClientTrx->settlement_time, MidtransClient::TIMEZONE)->utc();
         }
 
         $paymentUpdatePayload = [

@@ -3,6 +3,7 @@
 namespace Sanf\Cron\Modules\Payment\Controllers;
 
 use NbsPhp\Core\Controllers\RestApiController;
+use Sanf\Core\Modules\Payment\Jobs\PaymentAlmostExpiredJob;
 use Sanf\Core\Modules\Payment\Jobs\PaymentExpireJob;
 use Sanf\Core\Modules\Payment\Jobs\ResubmitPendingInstallmentPaymentJob;
 use Sanf\Core\Modules\Payment\UseCases\PaymentUseCase;
@@ -28,6 +29,17 @@ class CronPaymentController extends RestApiController
 
         foreach ($payments as $payment) {
             dispatch(new ResubmitPendingInstallmentPaymentJob($payment->xid));
+        }
+
+        return $this->responseOk();
+    }
+
+    public function paymentAlmostExpiredCheck(PaymentUseCase $paymentUseCase)
+    {
+        $payments = $paymentUseCase->getAlmostExpiredList();
+
+        foreach ($payments as $payment) {
+            dispatch(new PaymentAlmostExpiredJob($payment));
         }
 
         return $this->responseOk();

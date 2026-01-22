@@ -9,6 +9,7 @@ use Sanf\Core\Modules\Installment\Enums\InstallmentStatusEnum;
 use Sanf\Core\Modules\Installment\Models\InstallmentModel;
 use Sanf\Core\Modules\Installment\Repositories\InstallmentRepositoryInterface;
 use Sanf\Core\Modules\Payment\Entities\PaymentInstallmentSnapshotEntity;
+use Sanf\Core\Modules\Payment\Entities\PaymentStatusLogItemEntity;
 use Sanf\Core\Modules\Payment\Enums\PaymentStatusEnum;
 use Sanf\Core\Modules\Payment\Models\MidtransTransactionModel;
 use Sanf\Core\Modules\Payment\Models\PaymentModel;
@@ -52,26 +53,53 @@ final class CheckPaymentStatusUseCase
             return null;
         }
 
+        if ($data->status !== PaymentStatusEnum::PENDING) {
+            return $data->status;
+        }
+
         $data->load(['midtransTransaction', 'installments']);
 
         $midtransTransaction = $data->midtransTransaction;
 
-        if (optional($midtransTransaction)->midtrans_order_id) {
-            $statusResponse = $this->midtransClient->getTransactionStatus($midtransTransaction->midtrans_order_id);
+        $midtransTransactionId = $midtransTransaction->midtrans_transaction_id ?: $midtransTransaction->midtrans_order_id;
 
-            if ($statusResponse && $this->shouldUpdateMidtransTransaction($midtransTransaction, $statusResponse)) {
-                $this->updateMidtransTransaction($midtransTransaction, $statusResponse);
+        $statusResponse = $this->midtransClient->getTransactionStatus($midtransTransactionId);
 
-                $this->updatePaymentStatus($data, $statusResponse);
+        if ($statusResponse === null && $this->isPaymentExpired($data->expired_at)) {
+            $this->updatePaymentAsExpired($data);
 
-                $data->status = $this->mapMidtransStatusToPaymentStatus($statusResponse->transaction_status, $statusResponse->fraud_status);
+            $this->updateInstallmentsStatus($data, InstallmentStatusEnum::ACTIVE);
 
-                $this->updateInstallmentsStatus($data);
+            return PaymentStatusEnum::EXPIRED;
+        }
 
-                if ($data->status === PaymentStatusEnum::SUCCESS) {
+        if ($statusResponse && $this->shouldUpdateMidtransTransaction($midtransTransaction, $statusResponse)) {
+            $this->updateMidtransTransaction($midtransTransaction, $statusResponse);
+
+            $newStatus = $this->mapMidtransStatusToPaymentStatus(
+                $statusResponse->transaction_status,
+                $statusResponse->fraud_status,
+                $data->expired_at
+            );
+
+            $targetInstallmentStatus = $this->mapPaymentStatusToInstallmentStatus($newStatus ?? $data->status);
+
+            $this->updateInstallmentsStatus($data, $targetInstallmentStatus);
+
+            $installmentSubmitted = false;
+            if ($newStatus === PaymentStatusEnum::SUCCESS) {
+                try {
                     $this->sanfCorePayInstallment($data, $midtransTransaction, $statusResponse);
+
+                    $installmentSubmitted = true;
+                } catch (\Throwable $th) {
+                    report($th);
                 }
             }
+
+            $this->updatePaymentStatus($data, $statusResponse, $installmentSubmitted);
+
+            $data->status = $newStatus;
         }
 
         return $data->status;
@@ -79,9 +107,14 @@ final class CheckPaymentStatusUseCase
 
     private function updatePaymentStatus(
         PaymentModel $payment,
-        MidtransTransactionStatusResponse $statusResponse
+        MidtransTransactionStatusResponse $statusResponse,
+        bool $installmentSubmitted
     ): void {
-        $paymentStatus = $this->mapMidtransStatusToPaymentStatus($statusResponse->transaction_status, $statusResponse->fraud_status);
+        $paymentStatus = $this->mapMidtransStatusToPaymentStatus(
+            $statusResponse->transaction_status,
+            $statusResponse->fraud_status,
+            $payment->expired_at
+        );
 
         if ($paymentStatus === null || $paymentStatus === $payment->status) {
             return;
@@ -89,12 +122,16 @@ final class CheckPaymentStatusUseCase
 
         $payload = [
             'status' => $paymentStatus,
-            'core_installment_submitted' => true,
+            'status_log' => $this->appendStatusLog($payment->status_log, $paymentStatus),
             'version' => $payment->version + 1,
         ];
 
+        if ($paymentStatus === PaymentStatusEnum::SUCCESS || $paymentStatus === PaymentStatusEnum::PAID_LATE) {
+            $payload['paid_at'] = Carbon::parse($statusResponse->settlement_time, MidtransClient::TIMEZONE)->utc();
+        }
+
         if ($paymentStatus === PaymentStatusEnum::SUCCESS) {
-            $payload['paid_at'] = $this->determinePaidAt($statusResponse->transaction_time);
+            $payload['core_installment_submitted'] = $installmentSubmitted;
         }
 
         $updated = $this->repository->updatePayment(
@@ -110,10 +147,31 @@ final class CheckPaymentStatusUseCase
         }
     }
 
-    private function updateInstallmentsStatus(PaymentModel $payment): void
+    private function updatePaymentAsExpired(PaymentModel $payment)
     {
-        $targetStatus = $this->mapPaymentStatusToInstallmentStatus($payment->status);
+        $paymentStatus = PaymentStatusEnum::EXPIRED;
 
+        $payload = [
+            'status' => $paymentStatus,
+            'status_log' => $this->appendStatusLog($payment->status_log, $paymentStatus),
+            'version' => $payment->version + 1,
+        ];
+
+        $updated = $this->repository->updatePayment(
+            [
+                'id' => $payment->id,
+                'version' => $payment->version,
+            ],
+            $payload
+        );
+
+        if (!$updated) {
+            throw new ConcurrentModificationException();
+        }
+    }
+
+    private function updateInstallmentsStatus(PaymentModel $payment, ?string $targetStatus): void
+    {
         if ($targetStatus === null) {
             return;
         }
@@ -146,15 +204,11 @@ final class CheckPaymentStatusUseCase
         MidtransTransactionModel $transaction,
         MidtransTransactionStatusResponse $statusResponse
     ): bool {
-        if ($transaction->midtrans_transaction_id === null && $statusResponse->transaction_id !== null) {
-            return true;
+        if (!$statusResponse->transaction_status) {
+            return false;
         }
 
-        if ($statusResponse->transaction_status !== null && $transaction->transaction_status !== $statusResponse->transaction_status) {
-            return true;
-        }
-
-        return false;
+        return $transaction->transaction_status != $statusResponse->transaction_status;
     }
 
     private function updateMidtransTransaction(
@@ -195,15 +249,6 @@ final class CheckPaymentStatusUseCase
         return Carbon::parse($transactionTime, MidtransClient::TIMEZONE);
     }
 
-    private function determinePaidAt(?string $transactionTime): Carbon
-    {
-        if ($transactionTime === null) {
-            return Carbon::now();
-        }
-
-        return Carbon::parse($transactionTime);
-    }
-
     private function parseGrossAmount(?string $grossAmount): ?float
     {
         if ($grossAmount === null) {
@@ -213,7 +258,7 @@ final class CheckPaymentStatusUseCase
         return (float) $grossAmount;
     }
 
-    private function mapMidtransStatusToPaymentStatus(?string $midtransStatus, ?string $fraudStatus): ?string
+    private function mapMidtransStatusToPaymentStatus(?string $midtransStatus, ?string $fraudStatus, ?string $paymentExpiredAt): ?string
     {
         if ($midtransStatus === null) {
             return null;
@@ -221,14 +266,16 @@ final class CheckPaymentStatusUseCase
 
         $normalized = strtolower($midtransStatus);
 
+        $paymentSuccess = $this->isPaymentExpired($paymentExpiredAt) ? PaymentStatusEnum::PAID_LATE : PaymentStatusEnum::SUCCESS;
+
         switch ($normalized) {
             case 'capture':
                 return $fraudStatus === 'accept'
-                    ? PaymentStatusEnum::SUCCESS
+                    ? $paymentSuccess
                     : PaymentStatusEnum::PENDING;
             case 'settlement':
             case 'success':
-                return PaymentStatusEnum::SUCCESS;
+                return $paymentSuccess;
             case 'pending':
                 return PaymentStatusEnum::PENDING;
             case 'deny':
@@ -304,5 +351,21 @@ final class CheckPaymentStatusUseCase
         ]);
 
         $this->sanfCoreApiClient->payInstallment($payInstallmentPayload);
+    }
+
+    private function appendStatusLog(?array $statusLog, string $paymentStatus)
+    {
+        $statusLog ??= [];
+        $statusLog[] = (new PaymentStatusLogItemEntity([
+            'status' => $paymentStatus,
+            'updated_at' => Carbon::now()->toIso8601String(),
+        ]))->toArray();
+
+        return $statusLog;
+    }
+
+    private function isPaymentExpired(string $expiredAt)
+    {
+        return Carbon::now()->greaterThanOrEqualTo($expiredAt);
     }
 }

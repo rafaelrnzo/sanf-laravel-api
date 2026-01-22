@@ -82,4 +82,18 @@ final class PaymentUseCase
 
         return $this->repository->getByStatuses($statuses, $select, $filters);
     }
+
+    public function getAlmostExpiredList()
+    {
+        $statuses = [
+            PaymentStatusEnum::PENDING,
+        ];
+
+        $filters = [
+            ['expired_at', '>', Carbon::now()],
+            ['expired_at', '<=', Carbon::now()->addHour()],
+        ];
+
+        return $this->repository->getByStatuses($statuses, ['*'], $filters);
+    }
 }
