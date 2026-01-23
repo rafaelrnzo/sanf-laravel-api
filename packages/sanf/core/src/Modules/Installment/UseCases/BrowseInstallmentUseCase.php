@@ -38,68 +38,63 @@ class BrowseInstallmentUseCase
             throw new UserNotFoundException();
         }
 
-        $page = intdiv($dto->skip, $dto->limit) + 1;
-        $perPage = $dto->limit;
         $periodType = $this->normalizePeriodType($dto->periodType ?? 'current_month');
         $sortBy = $this->normalizeSortBy($dto->sortBy ?? 'due_date_latest');
         $coreTimeZone = SanfCoreApiClientV2::DEFAULT_TIMEZONE;
         $status = InstallmentPaymentStatusEnum::BELUM_LUNAS;
 
-        $response = $this->apiClient->getInstallmentList(
-            $page,
-            $perPage,
-            $periodType,
-            $sortBy,
-            $status,
-            $dto->contractNo
-        );
+        $items = $this->getAllInstallmentItems($periodType, $sortBy, $status, $dto->contractNo);
 
-        $installmentLookup = $this->buildInstallmentLookup($response->data ?? [], $dto->profileXid);
+        $installmentLookup = $this->buildInstallmentLookup($items, $dto->profileXid);
 
-        $items = $response->data ?? [];
-        if (!is_array($items)) {
-            $items = [];
+        $dataCollection = Collection::make($items)
+            ->map(function (SanfCoreInstallmentEntity $item) use ($installmentLookup, $coreTimeZone) {
+                $contractNo = $item->no_kontrak ?? $item->NO_KONTRAK ?? null;
+                $dueDateRaw = $item->jatuh_tempo ?? $item->JATUH_TEMPO ?? null;
+                $lookupKey = $this->buildLookupKey($contractNo, $dueDateRaw);
+                $lookup = $lookupKey && isset($installmentLookup[$lookupKey])
+                    ? $installmentLookup[$lookupKey]
+                    : null;
+                $status = $this->mapStatus($item->status_pembayaran_id, $lookup['status'] ?? null);
+                $paymentXid = $lookup['payment_xid'] ?? null;
+                $sequenceNumber = $item->schedule_no;
+                $sequenceTotal = $item->schedule_total;
+
+                if ($contractNo === null && $dueDateRaw === null) {
+                    return null;
+                }
+
+                $dueDateTimestamp = $this->parseDueDateTimestamp($dueDateRaw, $coreTimeZone);
+
+                return new InstallmentItemResponse([
+                    'contract_no' => $contractNo,
+                    'financing_type_id' => $item->tipe_pembayaran_id ?? $item->TIPE_PEMBAYARAN_ID ?? null,
+                    'financing_type_description' => $item->tipe_pembayaran_desc ?? $item->TIPE_PEMBAYARAN_DESC ?? null,
+                    'total_amount' => isset($item->total_tagihan)
+                        ? (float) $item->total_tagihan
+                        : (isset($item->TOTAL_TAGIHAN) ? (float) $item->TOTAL_TAGIHAN : null),
+                    'due_date' => $dueDateTimestamp,
+                    'status' => $status,
+                    'payment_xid' => $paymentXid,
+                    'sequence_number' => $sequenceNumber,
+                    'sequence_total' => $sequenceTotal,
+                ]);
+            })
+            ->values();
+
+        if ($dto->dueDateAfter !== null) {
+            $dataCollection = $dataCollection
+                ->filter(fn (InstallmentItemResponse $item) => $item->dueDate > $dto->dueDateAfter)
+                ->values();
         }
 
-        $data = array_values(array_filter(array_map(function (SanfCoreInstallmentEntity $item) use ($installmentLookup, $coreTimeZone) {
-            $contractNo = $item->no_kontrak ?? $item->NO_KONTRAK ?? null;
-            $dueDateRaw = $item->jatuh_tempo ?? $item->JATUH_TEMPO ?? null;
-            $lookupKey = $this->buildLookupKey($contractNo, $dueDateRaw);
-            $lookup = $lookupKey && isset($installmentLookup[$lookupKey])
-                ? $installmentLookup[$lookupKey]
-                : null;
-            $status = $this->mapStatus($item->status_pembayaran_id, $lookup['status'] ?? null);
-            $paymentXid = $lookup['payment_xid'] ?? null;
-            $sequenceNumber = $item->schedule_no;
-            $sequenceTotal = $item->schedule_total;
-
-            if ($contractNo === null && $dueDateRaw === null) {
-                return null;
-            }
-
-            $dueDateTimestamp = $this->parseDueDateTimestamp($dueDateRaw, $coreTimeZone);
-
-            return new InstallmentItemResponse([
-                'contract_no' => $contractNo,
-                'financing_type_id' => $item->tipe_pembayaran_id ?? $item->TIPE_PEMBAYARAN_ID ?? null,
-                'financing_type_description' => $item->tipe_pembayaran_desc ?? $item->TIPE_PEMBAYARAN_DESC ?? null,
-                'total_amount' => isset($item->total_tagihan)
-                    ? (float) $item->total_tagihan
-                    : (isset($item->TOTAL_TAGIHAN) ? (float) $item->TOTAL_TAGIHAN : null),
-                'due_date' => $dueDateTimestamp,
-                'status' => $status,
-                'payment_xid' => $paymentXid,
-                'sequence_number' => $sequenceNumber,
-                'sequence_total' => $sequenceTotal,
-            ]);
-        }, $items)));
-
-        $total = count($data);
-        $data = array_slice($data, $dto->skip ?? 0, $dto->limit ?? $total);
-        $data = array_values($data);
+        $total = $dataCollection->count();
+        $skip = (int) ($dto->skip ?? 0);
+        $limit = $dto->limit !== null ? (int) $dto->limit : null;
+        $data = $dataCollection->slice($skip, $limit)->values()->all();
 
         $paginate = (object) [
-            'total' => (int) ($response->total ?? $response->count ?? $total),
+            'total' => (int) $total,
             'count' => count($data),
             'skip' => (int) $dto->skip,
             'limit' => (int) $dto->limit,
@@ -237,7 +232,7 @@ class BrowseInstallmentUseCase
             return Carbon::parse($dueDate, $targetTimezone)->setTimezone($targetTimezone)->toDateString();
         } catch (\Throwable $exception) {
             try {
-                return Carbon::createFromFormat('d-m-Y', $dueDate)->toDateString();
+                return Carbon::createFromFormat('Y-m-d', $dueDate)->toDateString();
             } catch (\Throwable $exception) {
                 return null;
             }
@@ -251,10 +246,10 @@ class BrowseInstallmentUseCase
         }
 
         try {
-            return Carbon::parse($dueDate, $timezone)->timestamp;
+            return Carbon::parse($dueDate, $timezone)->endOfDay()->timestamp;
         } catch (\Throwable $exception) {
             try {
-                return Carbon::createFromFormat('d-m-Y', $dueDate, $timezone)->timestamp;
+                return Carbon::createFromFormat('Y-m-d', $dueDate, $timezone)->endOfDay()->timestamp;
             } catch (\Throwable $exception) {
                 return null;
             }
@@ -281,5 +276,22 @@ class BrowseInstallmentUseCase
         }
 
         return InstallmentStatusEnum::ACTIVE;
+    }
+
+    /**
+     * @return SanfCoreInstallmentEntity[]
+     */
+    private function getAllInstallmentItems(
+        string $periodType,
+        string $sortBy,
+        ?int $status,
+        ?string $contractNo
+    ): array {
+        $page = 1;
+        $perPage = SanfCoreApiClientV2::DEFAULT_LIMIT;
+
+        $response = $this->apiClient->getInstallmentList($page, $perPage, $periodType, $sortBy, $status, $contractNo);
+
+        return $response->data ?? [];
     }
 }

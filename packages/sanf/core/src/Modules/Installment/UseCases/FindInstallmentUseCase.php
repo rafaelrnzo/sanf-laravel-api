@@ -97,7 +97,7 @@ class FindInstallmentUseCase implements ApplicationServiceInterface
             'tenorUnit' => $kontrak->tipe_tenor ?? '',
             'statusId' => $kontrak->status_kontrak_id ?? '',
             'statusDesc' => $kontrak->status_kontrak_desc ?? '',
-            'dueDate' => $this->parseDate($kontrak->jatuh_tempo ?? null),
+            'dueDate' => $this->parseDateEndOfDay($kontrak->jatuh_tempo ?? null),
             'completedDate' => $this->parseDate($kontrak->tgl_selesai ?? null),
             'interestRate' => $interestRate,
             'plafondType' => 'SPARE_PART_FINANCING', // hardcoded for now
@@ -107,7 +107,7 @@ class FindInstallmentUseCase implements ApplicationServiceInterface
         ]);
 
         $outstandingInstallments = array_map(fn (SanfCoreInstallmentDetailOverdueEntity $item) => new InstallmentOutstandingResponse([
-            'dueDate' => $this->parseDate($item->due_date),
+            'dueDate' => $this->parseDateEndOfDay($item->due_date),
             'total' => (int) ceil($item->total_overdue),
             'principalLoan' => (int) ceil($item->pokok_hutang),
             'interestAmount' => (int) ceil($item->bunga),
@@ -129,7 +129,7 @@ class FindInstallmentUseCase implements ApplicationServiceInterface
         return new FindInstallmentResponse([
             'totalAmount' => (float) (($tagihan->total_tagihan ?? 0) + $allOutstandingAmounts),
             'subtotalInstallment' => (float) ($tagihan->total_tagihan ?? 0),
-            'dueDate' => $this->parseDate($tagihan->jatuh_tempo ?? null),
+            'dueDate' => $this->parseDateEndOfDay($tagihan->jatuh_tempo ?? null),
             'penaltyFee' => (float) ($tagihan->denda ?? 0),
             'principalLoan' => (float) ($tagihan->pokok_hutang ?? 0),
             'interestAmount' => (float) ($tagihan->bunga ?? 0),
@@ -153,7 +153,24 @@ class FindInstallmentUseCase implements ApplicationServiceInterface
             return Carbon::parse($date, SanfCoreApiClientV2::DEFAULT_TIMEZONE)->timestamp;
         } catch (\Throwable $exception) {
             try {
-                return Carbon::createFromFormat('d-m-Y', $date, SanfCoreApiClientV2::DEFAULT_TIMEZONE)->timestamp;
+                return Carbon::createFromFormat('Y-m-d', $date, SanfCoreApiClientV2::DEFAULT_TIMEZONE)->timestamp;
+            } catch (\Throwable $exception) {
+                return strtotime($date) ?: null;
+            }
+        }
+    }
+
+    private function parseDateEndOfDay(?string $date): ?int
+    {
+        if (!$date) {
+            return null;
+        }
+
+        try {
+            return Carbon::parse($date, SanfCoreApiClientV2::DEFAULT_TIMEZONE)->endOfDay()->timestamp;
+        } catch (\Throwable $exception) {
+            try {
+                return Carbon::createFromFormat('Y-m-d', $date, SanfCoreApiClientV2::DEFAULT_TIMEZONE)->endOfDay()->timestamp;
             } catch (\Throwable $exception) {
                 return strtotime($date) ?: null;
             }
