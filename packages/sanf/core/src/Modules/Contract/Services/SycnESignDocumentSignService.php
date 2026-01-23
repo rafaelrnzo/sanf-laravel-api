@@ -15,6 +15,7 @@ final class SycnESignDocumentSignService implements ApplicationServiceInterface
     protected UserRepositoryInterface $userRepository;
     protected ESignRepositoryInterface $eSignRepository;
     protected SanfCoreApiClient $client;
+    protected array $users;
 
     public function __construct(
         ESignRepositoryInterface $eSignRepository,
@@ -45,14 +46,16 @@ final class SycnESignDocumentSignService implements ApplicationServiceInterface
                     'email' => $data->email,
                     'status_id' => ESignContractStatusEnum::ASSIGNEE,
                 ]);
+            } elseif ($assigneeDocument->reference_no !== $data->referenceNo) {
+                $this->eSignRepository->updateDocumentAssignee($assigneeDocument->id, [
+                    'reference_no' => $data->referenceNo,
+                ]);
             }
 
             $document = $this->eSignRepository->findDocumentByDocId($data->documentId);
             if (!$document) {
-                $user = $this->userRepository->findById($data->userId);
-                if (!$user) {
-                    throw new UserNotFoundException();
-                }
+                $user = $this->getUser($data->userId);
+
                 $this->eSignRepository->createDocument([
                     'xid' => nano_id(),
                     'document_id' => $data->documentId,
@@ -69,9 +72,38 @@ final class SycnESignDocumentSignService implements ApplicationServiceInterface
                         'personal_xid' => $user->personal_xid,
                     ],
                 ]);
+            } elseif ($document->reference_no !== $data->referenceNo) {
+                $user = $this->getUser($data->userId);
+
+                $this->eSignRepository->updateDocument($document->id, [
+                    'reference_no' => $data->referenceNo,
+                    'version' => $document->version + 1,
+                    'modified_by' => [
+                        'user_id' => $user->id,
+                        'username' => $user->username,
+                        'full_name' => $user->full_name,
+                        'xid' => $user->xid,
+                        'personal_xid' => $user->personal_xid,
+                    ],
+                ]);
             }
         }
 
         return true;
+    }
+
+    private function getUser($userId)
+    {
+        if (isset($this->users[$userId])) {
+            return $this->users[$userId];
+        }
+
+        $user = $this->userRepository->findById($userId);
+
+        if (!$user) {
+            throw new UserNotFoundException();
+        }
+
+        return $this->users[$userId] = $user;
     }
 }

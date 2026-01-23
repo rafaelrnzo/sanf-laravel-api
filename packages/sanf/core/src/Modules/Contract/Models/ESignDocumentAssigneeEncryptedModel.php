@@ -15,8 +15,14 @@ class ESignDocumentAssigneeEncryptedModel extends AbstractModel
     protected $table = 'esign_document_assignee_encrypted';
 
     protected $fillable = [
+        'xid',
+        'user_id',
+        'email',
+        'document_id',
         'document_sign_url',
+        'reference_no',
         'status_id',
+        'created_at',
         'updated_at',
         'nonce',
     ];

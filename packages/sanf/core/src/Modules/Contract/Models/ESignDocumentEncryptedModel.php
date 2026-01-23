@@ -15,11 +15,16 @@ class ESignDocumentEncryptedModel extends AbstractModel
     protected $table = 'esign_document_encrypted';
 
     protected $fillable = [
+        'xid',
+        'document_id',
         'document_name',
         'document_file',
+        'reference_no',
         'status_id',
         'version',
+        'created_at',
         'updated_at',
+        'expired_at',
         'modified_by',
         'nonce',
     ];
