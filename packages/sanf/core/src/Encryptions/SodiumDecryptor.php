@@ -31,11 +31,18 @@ class SodiumDecryptor
         // supply a maxlength, and offset to handle return empty string
         $nonceBinary = stream_get_contents($this->nonce, -1, 0);
 
-        return sodium_crypto_secretbox_open(
+        $result = sodium_crypto_secretbox_open(
             $encryptedBinary,
             $nonceBinary,
             $this->key
         );
+
+        // return null when failed to decrypt
+        if ($result === false) {
+            return null;
+        }
+
+        return $result;
     }
 
     public function decryptFromHex($encryptedHex)
@@ -50,10 +57,17 @@ class SodiumDecryptor
         // supply a maxlength, and offset to handle return empty string
         $nonceBinary = stream_get_contents($this->nonce, -1, 0);
 
-        return sodium_crypto_secretbox_open(
+        $result = sodium_crypto_secretbox_open(
             $encryptedBinary,
             $nonceBinary,
             $this->key
         );
+
+        // return null when failed to decrypt
+        if ($result === false) {
+            return null;
+        }
+
+        return $result;
     }
 }
