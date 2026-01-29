@@ -23,6 +23,8 @@ class SanfCoreApiProcessorV2 extends Processor
 
         $request->headers([
             'X-Request-ID' => app('request')->header('X-Request-ID'),
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
             'Authorization' => 'Basic ' . $encodedAuth,
         ]);
 
