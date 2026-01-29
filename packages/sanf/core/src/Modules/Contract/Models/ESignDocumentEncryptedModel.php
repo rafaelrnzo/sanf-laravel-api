@@ -27,6 +27,7 @@ class ESignDocumentEncryptedModel extends AbstractModel
         'expired_at',
         'modified_by',
         'nonce',
+        'category_id',
     ];
 
     protected $hidden = [
