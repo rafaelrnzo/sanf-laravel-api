@@ -75,6 +75,7 @@ class EloquentPaginateDocumentAssigneeByUserIdSpecification
                 'status_id',
                 'reference_no',
                 'nonce',
+                'category_id',
             ])
                 ->where('status_id', '!=', ESignContractStatusEnum::FAILED)
                 ->when($this->statusId, function ($query) {

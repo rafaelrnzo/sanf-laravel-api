@@ -9,13 +9,15 @@ use Sanf\Core\Modules\Contract\Enums\ESignContractStatusEnum;
 use Sanf\Core\Modules\Contract\Repositories\ESignRepositoryInterface;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
+use Sanf\Integration\Modules\SanfCore\SanfCoreApiClientV2;
 
 final class SycnESignDocumentSignService implements ApplicationServiceInterface
 {
     protected UserRepositoryInterface $userRepository;
     protected ESignRepositoryInterface $eSignRepository;
     protected SanfCoreApiClient $client;
-    protected array $users;
+    protected SanfCoreApiClientV2 $clientV2;
+    private array $users = [];
 
     public function __construct(
         ESignRepositoryInterface $eSignRepository,
@@ -72,11 +74,15 @@ final class SycnESignDocumentSignService implements ApplicationServiceInterface
                         'personal_xid' => $user->personal_xid,
                     ],
                 ]);
-            } elseif ($document->reference_no !== $data->referenceNo) {
+            } elseif (
+                $document->reference_no !== $data->referenceNo
+                || $document->category_id != $data->categoryId
+            ) {
                 $user = $this->getUser($data->userId);
 
                 $this->eSignRepository->updateDocument($document->id, [
                     'reference_no' => $data->referenceNo,
+                    'category_id' => $data->categoryId,
                     'version' => $document->version + 1,
                     'modified_by' => [
                         'user_id' => $user->id,

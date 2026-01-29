@@ -84,6 +84,7 @@ Route::group(config('sanf-api.url'), [SanfCoreApiProcessor::class], function () 
     Route::get('e-sign.document.browse', '/esign/list');
     Route::post('e-sign.document.update-status', '/esign/fincall');
     Route::post('e-sign.document.update-file', '/esign/download');
+    Route::get('e-sign.category.list', '/esign/kategori');
 
     Route::get('financing-applications.browse', '/Pengajuan/StatusPengajuan');
 

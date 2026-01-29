@@ -12,6 +12,7 @@ use Sanf\Core\Modules\Contract\Repositories\ESignRepositoryInterface;
 use Sanf\Core\Modules\Contract\Specifications\ESignDocumentSpecificationFactoryInterface;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
+use Sanf\Integration\Modules\SanfCore\Entities\SanfCoreESignDocumentCategoryEntity;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 final class BrowseESignDocumentService implements ApplicationServiceInterface
@@ -20,6 +21,7 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
     protected ESignRepositoryInterface $eSignRepository;
     protected ESignDocumentSpecificationFactoryInterface $eSignDocumentSpecificationFactory;
     protected SanfCoreApiClient $client;
+    private array $categories = [];
 
     public function __construct(
         UserRepositoryInterface $userRepository,
@@ -90,8 +92,8 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
                     'statusId' => $item->assignee_status_id,
                     'expiredAt' => Carbon::make($item->e_sign_document->expired_at),
                     'createdAt' => Carbon::make($item->created_at),
-                    'categoryId' => null,
-                    'categoryDesc' => null,
+                    'categoryId' => $item->e_sign_document->category_id,
+                    'categoryDesc' => $this->getCategoryName($item->e_sign_document->category_id),
                     'userId' => $dto->user_id,
                     'email' => $user->username,
                 ];
@@ -152,8 +154,8 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
                     'statusId' => ($item->e_sign_document->status_id === ESignContractStatusEnum::ON_PROGRESS && $item->assignee_status_id === ESignContractStatusEnum::DONE) ? ESignContractStatusEnum::ON_PROGRESS : $item->assignee_status_id,
                     'expiredAt' => Carbon::make($item->e_sign_document->expired_at),
                     'createdAt' => Carbon::make($item->created_at),
-                    'categoryId' => null,
-                    'categoryDesc' => null,
+                    'categoryId' => $item->e_sign_document->category_id,
+                    'categoryDesc' => $this->getCategoryName($item->e_sign_document->category_id),
                     'userId' => $dto->user_id,
                     'email' => $user->username,
                 ];
@@ -191,5 +193,25 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
                 'sort_by' => $dto->sortBy ?? '',
             ],
         ];
+    }
+
+    private function getCategoryName(?string $id)
+    {
+        if ($id === null) {
+            return null;
+        }
+
+        if (empty($this->categories)) {
+            $response = $this->client->getESignDocumentCategoryList();
+
+            /**
+             * @var SanfCoreESignDocumentCategoryEntity[]
+             */
+            $data = $response['data'];
+
+            $this->categories = array_pluck($data, 'DOC_DESC', 'DOC_ID');
+        }
+
+        return $this->categories[$id] ?? null;
     }
 }

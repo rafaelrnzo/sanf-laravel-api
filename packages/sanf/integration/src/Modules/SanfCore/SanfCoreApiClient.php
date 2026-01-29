@@ -9,6 +9,7 @@ use NbsPhp\ApiWrapper\Api\Request;
 use Sanf\Core\Modules\Plafond\Dtos\PlafondDisbursementCoreFormRequest;
 use Sanf\Core\Modules\Plafond\Enums\PlafondTypeEnum;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
+use Sanf\Integration\Modules\SanfCore\Entities\SanfCoreESignDocumentCategoryEntity;
 
 class SanfCoreApiClient
 {
@@ -1514,6 +1515,24 @@ class SanfCoreApiClient
             ])->send();
 
         return $response->json();
+    }
+
+    public function getESignDocumentCategoryList(string $documentId = null)
+    {
+        $response = Request::route('e-sign.category.list', $this->client)
+            ->queryParams([
+                'doc_id' => $documentId,
+            ])
+            ->send();
+
+        $jsonResponse = $response->json();
+
+        $jsonResponse['data'] = array_map(
+            fn ($item) => new SanfCoreESignDocumentCategoryEntity($item),
+            $jsonResponse['data'] ?? []
+        );
+
+        return $jsonResponse;
     }
 
     public function browseFinancingApplication(string $email, string $profileId)
