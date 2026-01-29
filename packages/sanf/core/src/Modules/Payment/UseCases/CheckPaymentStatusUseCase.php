@@ -350,6 +350,8 @@ final class CheckPaymentStatusUseCase
             })->toArray(),
         ]);
 
+        $this->sanfCoreApiClient->setUser($payment->user_profile_xid);
+
         $this->sanfCoreApiClient->payInstallment($payInstallmentPayload);
     }
 

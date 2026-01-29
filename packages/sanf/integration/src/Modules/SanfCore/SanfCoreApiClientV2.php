@@ -26,9 +26,32 @@ class SanfCoreApiClientV2
 
     protected $client;
 
+    private ?string $userId = null;
+
     public function __construct()
     {
         $this->client = app(Client::class);
+    }
+
+    public function setUser(string $userId)
+    {
+        $this->userId = $userId;
+
+        return $this;
+    }
+
+    private function customAuth(): ?string
+    {
+        if (empty($this->userId)) {
+            return null;
+        }
+
+        $clientId = config('sanf-api-v2.client_id');
+        $clientSecret = config('sanf-api-v2.client_secret');
+
+        $plainAuth = implode(';', [$clientId, $clientSecret, $this->userId]);
+
+        return 'Basic ' . base64_encode($plainAuth);
     }
 
     // Spare Part Disbursement / Spare Part Financing ============
@@ -200,9 +223,14 @@ class SanfCoreApiClientV2
 
     public function payInstallment(SanfCorePayInstallmentPayload $payload)
     {
-        $response = Request::route('sanf-internal-v2.installment.pay', $this->client)
-            ->json($payload->toArray())
-            ->send();
+        $request = Request::route('sanf-internal-v2.installment.pay', $this->client)
+            ->json($payload->toArray());
+
+        if ($customAuth = $this->customAuth()) {
+            $request->headers(['Authorization' => $customAuth]);
+        }
+
+        $response = $request->send();
 
         return $response->json();
     }

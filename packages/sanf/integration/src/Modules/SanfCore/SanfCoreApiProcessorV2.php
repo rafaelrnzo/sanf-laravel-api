@@ -14,19 +14,20 @@ class SanfCoreApiProcessorV2 extends Processor
 {
     public static function handle(Request $request, callable $next): Response
     {
-        $clientId = config('sanf-api-v2.client_id');
-        $clientSecret = config('sanf-api-v2.client_secret');
-        $userId = app('request')->attributes->get('internal_sanf_user_id') ?? app('request')->input('internal_sanf_user_id');
-
-        $plainAuth = implode(';', [$clientId, $clientSecret, $userId]);
-        $encodedAuth = base64_encode($plainAuth);
-
-        $request->headers([
+        $headers = [
             'X-Request-ID' => app('request')->header('X-Request-ID'),
             'Accept' => 'application/json',
             'Content-Type' => 'application/json',
-            'Authorization' => 'Basic ' . $encodedAuth,
-        ]);
+            'Authorization' => 'Basic ' . self::basicAuthKey(),
+        ];
+
+        foreach ($headers as $key => $value) {
+            if ($header = data_get($request->getOptions(), "headers.{$key}")) {
+                $headers[$key] = $header;
+            }
+        }
+
+        $request->headers($headers);
 
         $verifyOnProduction = config('app.env') === 'production';
         $request->options([
@@ -64,5 +65,16 @@ class SanfCoreApiProcessorV2 extends Processor
         }
 
         return $response;
+    }
+
+    private static function basicAuthKey(): string
+    {
+        $clientId = config('sanf-api-v2.client_id');
+        $clientSecret = config('sanf-api-v2.client_secret');
+        $userId = app('request')->attributes->get('internal_sanf_user_id') ?? app('request')->input('internal_sanf_user_id');
+
+        $plainAuth = implode(';', [$clientId, $clientSecret, $userId]);
+
+        return base64_encode($plainAuth);
     }
 }
