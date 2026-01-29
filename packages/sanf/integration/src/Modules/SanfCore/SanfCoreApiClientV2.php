@@ -28,11 +28,7 @@ class SanfCoreApiClientV2
 
     public function __construct()
     {
-        $verifyOnProduction = config('app.env') === 'production';
-
-        $this->client = new Client([
-            'verify' => $verifyOnProduction,
-        ]);
+        $this->client = app(Client::class);
     }
 
     // Spare Part Disbursement / Spare Part Financing ============

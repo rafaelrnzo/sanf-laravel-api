@@ -28,6 +28,11 @@ class SanfCoreApiProcessorV2 extends Processor
             'Authorization' => 'Basic ' . $encodedAuth,
         ]);
 
+        $verifyOnProduction = config('app.env') === 'production';
+        $request->options([
+            'verify' => $verifyOnProduction,
+        ]);
+
         try {
             $response = $next($request);
             $result = $response->json();
