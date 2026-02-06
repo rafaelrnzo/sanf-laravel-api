@@ -39,6 +39,14 @@ final class CheckPaymentStatusUseCase
         $this->sanfCoreApiClient = $sanfCoreApiClient;
     }
 
+    /**
+     * Update payment status based on midtrans status if the payment not settled yet.
+     * @param string $xid
+     * @param int $userAuthId
+     * @param string $userProfileXid
+     * @return PaymentStatusEnum|string|null
+     * @throws ConcurrentModificationException
+     */
     public function execute(string $xid, int $userAuthId, string $userProfileXid): ?string
     {
         $filters = [

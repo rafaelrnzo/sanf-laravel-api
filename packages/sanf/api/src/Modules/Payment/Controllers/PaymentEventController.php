@@ -36,7 +36,6 @@ class PaymentEventController extends RestApiController
             throw new PaymentSettledException();
         }
 
-        // TODO: handle can only dispatch job once
         dispatch((new PaymentExpireJob($payment))->delay($payment->expired_at));
 
         return $this->responseOk();
