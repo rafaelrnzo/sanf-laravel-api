@@ -62,6 +62,7 @@ final class SycnESignDocumentSignService implements ApplicationServiceInterface
                     'xid' => nano_id(),
                     'document_id' => $data->documentId,
                     'reference_no' => $data->referenceNo,
+                    'category_id' => $data->categoryId,
                     'document_name' => $data->documentName ?? null,
                     'expired_at' => $data->expiredAt ?? null,
                     'status_id' => ESignContractStatusEnum::SUBMITTED,
