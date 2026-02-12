@@ -37,6 +37,12 @@ class CustomerBindingEncryptedModel extends AbstractModel
         'updatedAt',
         'nonce',
         'partnerProfile',
+        'CustomerId',
+        'createdById',
+        'createdBy',
+        'modifiedBy',
+        'version',
+        'metadata',
     ];
 
     protected $hidden = [

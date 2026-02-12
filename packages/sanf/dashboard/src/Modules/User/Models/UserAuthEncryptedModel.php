@@ -30,6 +30,21 @@ class UserAuthEncryptedModel extends AbstractModel
         'createdAt',
         'updatedAt',
         'nonce',
+        'activatedAt',
+        'lastLoginAt',
+        'deletedAt',
+        'fullName',
+        'avatarFile',
+        'createdBy',
+        'modifiedBy',
+        'version',
+        'metadata',
+        'forgotPasswordAt',
+        'resendTokenAt',
+        'suspendedAt',
+        'remember_token',
+        'api_user_auth_id',
+        'passwordHistory',
     ];
 
     protected $hidden = [

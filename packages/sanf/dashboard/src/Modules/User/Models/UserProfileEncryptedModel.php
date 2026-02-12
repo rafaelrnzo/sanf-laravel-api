@@ -29,6 +29,12 @@ class UserProfileEncryptedModel extends AbstractModel
         'createdAt',
         'updatedAt',
         'nonce',
+        'phoneNumber',
+        'createdById',
+        'createdBy',
+        'modifiedBy',
+        'version',
+        'metadata',
     ];
 
     protected $hidden = [
