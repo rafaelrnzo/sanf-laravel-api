@@ -47,7 +47,7 @@ class PlafondDisbursementSubmittedMailable extends Mailable
         $sanfName = ($sanfCompanyConfig['company_prefix'] ?? 'PT') . ' ' . ($sanfCompanyConfig['company_name'] ?? 'Surya Artha Nusantara Finance');
         $sanfInitial = $sanfCompanyConfig['company_initials'] ?? 'SANF';
 
-        $mailable = $this->subject('Pengajuan Percepatan Pembayaran')
+        $mailable = $this->subject('Verifikasi Invoice Financing Supplier')
             ->view('core::mail.html.plafond-disbursement-submitted', [
                 'tableHeaders' => $tableHeaders,
                 'tableData' => $tableData,
