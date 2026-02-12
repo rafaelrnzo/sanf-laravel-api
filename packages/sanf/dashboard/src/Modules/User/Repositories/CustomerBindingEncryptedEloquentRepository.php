@@ -27,4 +27,19 @@ class CustomerBindingEncryptedEloquentRepository extends AbstractEloquentReposit
 
         return $this->stripEloquentModel($bindingModel);
     }
+
+    public function findByBowheerIdOrEmail(string $id, string $email)
+    {
+        $sodiumQuery = SodiumEncryption::query();
+
+        $bindingModel = $this->bindingModel
+            ->newQuery()
+            ->where(function ($query) use ($id, $sodiumQuery, $email) {
+                $query->where('BowheerId', '=', $id)
+                    ->orWhere($sodiumQuery->selectRaw('"BowheerEmail"'), '=', $email);
+            })
+            ->first();
+
+        return $this->stripEloquentModel($bindingModel);
+    }
 }

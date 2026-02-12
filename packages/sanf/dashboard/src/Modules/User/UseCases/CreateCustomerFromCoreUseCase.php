@@ -30,9 +30,9 @@ final class CreateCustomerFromCoreUseCase implements ApplicationServiceInterface
 
     public function execute($dto = null)
     {
-        $accountBinding = $this->accountBindingDashboardRepository->findByBowheerIdAndEmail($dto->id, $dto->email);
+        $accountBinding = $this->accountBindingDashboardRepository->findByBowheerIdOrEmail($dto->id, $dto->email);
         if ($accountBinding) {
-            throw new AccountExistException('Bowheer ID and Email was exist');
+            throw new AccountExistException('Bowheer ID or Email was exist');
         }
 
         $entityId = config('web-partner.user.entity.customer_id');
