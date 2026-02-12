@@ -60,9 +60,9 @@ return [
 
     'input_validations' => [
         'password' => [
-            'rule' => $passwordValidationRule = ['required', 'min:8', 'regex:/^(?=.*\d)(?=.*[a-zA-Z])/'],
+            'rule' => $passwordValidationRule = ['required', 'min:8', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/'],
             'messages' => $passwordValidationMessage = [
-                'regex' => 'Password must be alphanumeric',
+                'regex' => 'Password must be uppercase,lowercase & numeric',
             ],
         ],
 
