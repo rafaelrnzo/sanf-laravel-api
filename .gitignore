@@ -13,3 +13,5 @@ xdebug/
 
 supervisord*
 .cache/
+
+docker-compose.prod.yml
