@@ -2,13 +2,11 @@
 
 namespace Sanf\Core\Modules\Contract\Repositories;
 
-use Illuminate\Support\Collection;
-
-interface ESignRepositoryInterface
+interface ESignOldRepositoryInterface
 {
     public function findUserById(int $id);
 
-    public function findUserBySanfId(string $id);
+    // public function findUserBySanfId(string $id);
 
     public function findUserByEmail(string $email);
 
@@ -20,7 +18,7 @@ interface ESignRepositoryInterface
 
     public function findDocumentByDocId(string $documentId);
 
-    public function findDocumentByRefNo(string $refNo);
+    // public function findDocumentByRefNo(string $refNo);
 
     public function createDocument(array $data);
 
@@ -37,6 +35,4 @@ interface ESignRepositoryInterface
     public function createDocumentAssignee(array $data);
 
     public function updateDocumentAssignee(int $id, array $data);
-
-    public function countDocumentAssigneeStatusByUser(int $userId, string $now): Collection;
 }

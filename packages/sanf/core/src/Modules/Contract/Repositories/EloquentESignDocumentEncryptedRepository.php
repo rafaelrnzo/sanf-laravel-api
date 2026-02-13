@@ -2,8 +2,11 @@
 
 namespace Sanf\Core\Modules\Contract\Repositories;
 
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use NbsPhp\Core\Repositories\AbstractEloquentRepository;
 use Sanf\Core\Encryptions\SodiumEncryption;
+use Sanf\Core\Modules\Contract\Enums\ESignContractStatusEnum;
 use Sanf\Core\Modules\Contract\Models\ESignDocumentAssigneeEncryptedModel;
 use Sanf\Core\Modules\Contract\Models\ESignDocumentEncryptedModel;
 use Sanf\Core\Modules\Contract\Models\ESignOTPEncryptedModel;
@@ -320,5 +323,59 @@ class EloquentESignDocumentEncryptedRepository extends AbstractEloquentRepositor
         $model->update($data);
 
         return $this->stripEloquentModel($model->fresh());
+    }
+
+    public function countDocumentAssigneeStatusByUser(int $userId, string $now): Collection
+    {
+        $sodiumQuery = SodiumEncryption::query();
+
+        $assigneeTable = $this->eSignDocumentAssigneeModel->getTable();
+        $documentTable = $this->eSignDocumentModel->getTable();
+
+        $statusOnProgress = ESignContractStatusEnum::ON_PROGRESS;
+        $statusDone = ESignContractStatusEnum::DONE;
+
+        return $this->eSignDocumentAssigneeModel->newQuery()
+            ->select([
+                DB::raw("CASE WHEN {$assigneeTable}.status_id = {$statusDone} AND {$documentTable}.status_id = {$statusOnProgress} THEN {$statusOnProgress} ELSE {$assigneeTable}.status_id END as status_id"),
+                DB::raw('COUNT(*) as total'),
+            ])
+            ->join($documentTable, "{$documentTable}.document_id", '=', "{$assigneeTable}.document_id")
+            ->where("{$assigneeTable}.user_id", $userId)
+            ->whereNotNull("{$assigneeTable}.document_id")
+            ->whereRaw("TRIM({$assigneeTable}.document_id) <> ''")
+            ->whereNotNull("{$documentTable}.reference_no")
+            ->whereRaw("TRIM({$sodiumQuery->selectRawNullable("{$documentTable}.reference_no", "{$documentTable}.nonce")}) <> ''")
+            ->where(function ($query) use ($documentTable, $assigneeTable) {
+                $query
+                    ->whereColumn("{$documentTable}.status_id", "{$assigneeTable}.status_id")
+                    ->orWhere(function ($query) use ($documentTable, $assigneeTable) {
+                        $query
+                            ->where("{$documentTable}.status_id", ESignContractStatusEnum::ON_PROGRESS)
+                            ->where("{$assigneeTable}.status_id", ESignContractStatusEnum::DONE);
+                    })
+                    ->orWhere(function ($query) use ($documentTable, $assigneeTable) {
+                        $query
+                            ->where("{$documentTable}.status_id", ESignContractStatusEnum::ON_PROGRESS)
+                            ->where("{$assigneeTable}.status_id", ESignContractStatusEnum::FAILED);
+                    });
+            })
+            ->where(function ($query) use ($now, $documentTable, $assigneeTable) {
+                $query
+                    ->where("{$documentTable}.status_id", '=', ESignContractStatusEnum::DONE)
+                    ->orWhere("{$documentTable}.status_id", '=', ESignContractStatusEnum::FAILED)
+                    ->orWhere(function ($query) use ($now, $documentTable, $assigneeTable) {
+                        $query
+                            ->where("{$documentTable}.status_id", '=', ESignContractStatusEnum::ON_PROGRESS)
+                            ->where("{$assigneeTable}.status_id", '=', ESignContractStatusEnum::FAILED);
+                    })
+                    ->orWhere(function ($query) use ($now, $documentTable, $assigneeTable) {
+                        $query
+                            ->whereNotIn("{$documentTable}.status_id", [ESignContractStatusEnum::DONE, ESignContractStatusEnum::FAILED])
+                            ->where("{$documentTable}.expired_at", '>', $now);
+                    });
+            })
+            ->groupBy(DB::raw("CASE WHEN {$assigneeTable}.status_id = {$statusDone} AND {$documentTable}.status_id = {$statusOnProgress} THEN {$statusOnProgress} ELSE {$assigneeTable}.status_id END"))
+            ->get();
     }
 }

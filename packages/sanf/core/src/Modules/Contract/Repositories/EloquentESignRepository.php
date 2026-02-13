@@ -7,7 +7,7 @@ use Sanf\Core\Modules\Contract\Models\ESignDocumentAssigneeModel;
 use Sanf\Core\Modules\Contract\Models\ESignDocumentModel;
 use Sanf\Core\Modules\Contract\Models\UserTekenAjaModel;
 
-class EloquentESignRepository extends AbstractEloquentRepository implements ESignRepositoryInterface
+class EloquentESignRepository extends AbstractEloquentRepository implements ESignOldRepositoryInterface
 {
     protected UserTekenAjaModel $userTekenAjaModel;
     protected ESignDocumentModel $eSignDocumentModel;

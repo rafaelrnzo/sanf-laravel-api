@@ -20,6 +20,7 @@ class BrowseESignDocumentTransformer extends TransformerAbstract
             'status_id' => $item->statusId,
             'expired_at' => ($item->expiredAt) ? unix_timestamp($item->expiredAt) : null,
             'created_at' => ($item->createdAt) ? unix_timestamp($item->createdAt) : null,
+            'check_status_available_at' => $item->checkStatusAvailableAt ?? null,
         ];
     }
 }

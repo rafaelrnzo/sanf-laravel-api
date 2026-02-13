@@ -245,6 +245,8 @@ Route::group(['prefix' => 'v2', 'middleware' => 'auth'], function () {
     Route::post('users/profiles/{xid}/contracts/esign-register', ['as' => 'v2.users.contracts.esign-register', 'uses' => 'Contract\Controllers\ESignDocumentV2Controller@registration']);
     Route::get('users/profiles/{xid}/contracts/esign-user', ['as' => 'v2.users.contracts.esign-user', 'uses' => 'Contract\Controllers\ESignDocumentV2Controller@getUser']);
     Route::post('users/profiles/{xid}/contracts/esign-files/{document_id}/signed', ['as' => 'v2.users.contracts.esign-files.signed', 'uses' => 'Contract\Controllers\ESignDocumentV2Controller@signing']);
+    Route::post('users/profiles/{xid}/contracts/esign-files/{document_id}/status', ['as' => 'v2.users.contracts.esign-files.status-check', 'uses' => 'Contract\Controllers\ESignDocumentV2Controller@checkStatus']);
+    Route::get('users/profiles/{xid}/contracts/esign-files/stats', ['as' => 'v2.users.contracts.esign-files.stats', 'uses' => 'Contract\Controllers\ESignDocumentV2Controller@getStats']);
 
     // CR 2025
     Route::get('users/profiles/{xid}/financing-units-invoice-collection', ['as' => 'v2.users.invoice-collection-financing-units.browse', 'uses' => 'Invoice\Controllers\FinancingUnitByUserV2Controller@getBrowse']);

@@ -5,10 +5,16 @@ namespace Sanf\Api\Modules\Contract\Controllers;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use NbsPhp\Core\Controllers\RestApiController;
+use NbsPhp\Core\Services\TransactionalApplicationService;
 use Sanf\Api\Modules\Contract\Transformers\ResponseESignUserTransformer;
+use Sanf\Core\Database\IlluminateSodiumSession;
 use Sanf\Core\Database\MultipleTransactionalSessionInterface;
 use Sanf\Core\Modules\Contract\Dto\RequestESignDocumentSignDto;
 use Sanf\Core\Modules\Contract\Dto\RequestESignRegisterFormDto;
+use Sanf\Core\Modules\Contract\Dtos\CountESignDocumentAssigneeStatusRequestDto;
+use Sanf\Core\Modules\Contract\Dtos\ESignDocumentCheckStatusRequestDto;
+use Sanf\Core\Modules\Contract\Services\CountESignDocumentAssigneeStatusService;
+use Sanf\Core\Modules\Contract\Services\ESignDocumentCheckStatusService;
 use Sanf\Core\Modules\Contract\Services\ESignDocumentSignAdInsService;
 use Sanf\Core\Modules\Contract\Services\ESignRegisterAdInsService;
 use Sanf\Core\Modules\Contract\Services\SanfESignUserService;
@@ -144,5 +150,43 @@ class ESignDocumentV2Controller extends RestApiController
         $transactionalService->execute($dto);
 
         return $this->responseOk();
+    }
+
+    public function getStats(
+        Guard $auth,
+        CountESignDocumentAssigneeStatusService $service,
+        IlluminateSodiumSession $sodiumTransactionalSession,
+        $xid
+    )
+    {
+        $dto = new CountESignDocumentAssigneeStatusRequestDto([
+            'userId' => $auth->id(),
+            'sanfId' => $xid,
+        ]);
+
+        $sodiumTransactionalService = new TransactionalApplicationService($service, $sodiumTransactionalSession);
+        $result = $sodiumTransactionalService->execute($dto);
+
+        return $this->responseOk('Success', $result);
+    }
+
+    public function checkStatus(
+        Guard $auth,
+        $xid,
+        $document_id,
+        ESignDocumentCheckStatusService $eSignDocumentCheckStatusService,
+        MultipleTransactionalSessionInterface $transactionalSession
+    )
+    {
+        $dto = new ESignDocumentCheckStatusRequestDto([
+            'userId' => $auth->id(),
+            'sanfId' => $xid,
+            'documentId' => $document_id,
+        ]);
+
+        $transactionalService = new MultipleTransactionalApplicationService($eSignDocumentCheckStatusService, $transactionalSession);
+        $result = $transactionalService->execute($dto);
+
+        return $this->responseOk('Success', $result->toArray());
     }
 }

@@ -26,6 +26,7 @@ use Sanf\Core\Modules\ContactUs\EloquentAskUsTopicRepository;
 use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentEncryptedRepository;
 use Sanf\Core\Modules\Contract\Repositories\EloquentESignEncryptedRepository;
 use Sanf\Core\Modules\Contract\Repositories\EloquentFinancingUnitLocationSubmissionEncryptedRepository;
+use Sanf\Core\Modules\Contract\Repositories\ESignOldRepositoryInterface;
 use Sanf\Core\Modules\Contract\Repositories\ESignRepositoryInterface;
 use Sanf\Core\Modules\Contract\Repositories\FinancingUnitLocationSubmissionRepositoryInterface;
 use Sanf\Core\Modules\Contract\Specifications\EloquentESignDocumentSpecificationFactory;
@@ -232,7 +233,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(InsuranceClaimSubmissionRepositoryInterface::class, EloquentInsuranceClaimSubmissionEncryptedRepository::class);
         $this->app->bind(SurveyRepositoryInterface::class, EloquentSurveyEncryptedRepository::class);
         $this->app->bind(ProfileRepositoryInterface::class, RestProfileRepository::class);
-        $this->app->bind(ESignRepositoryInterface::class, EloquentESignEncryptedRepository::class);
+        $this->app->bind(ESignOldRepositoryInterface::class, EloquentESignEncryptedRepository::class);
         $this->app->bind(OnBoardingRepositoryInterface::class, EloquentOnBoardingRepository::class);
         $this->app->bind(FrequentlyAskQuestionRepositoryInterface::class, EloquentFrequentlyAskQuestionRepository::class);
         $this->app->bind(StaticContentRepositoryInterface::class, EloquentStaticContentRepository::class);
@@ -318,6 +319,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__ . '/../../config/sanf-mobile.php', 'sanf-mobile');
         $this->mergeConfigFrom(__DIR__ . '/../../config/ocr.php', 'ocr');
         $this->mergeConfigFrom(__DIR__ . '/../../config/scanina-web.php', 'scanina-web');
+        $this->mergeConfigFrom(__DIR__ . '/../../config/e-sign.php', 'e-sign');
     }
 
     /**

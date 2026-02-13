@@ -93,14 +93,7 @@ class ESignDocumentSignCheckService implements ApplicationServiceInterface
 
         $assigneStatus = array_values($assigneFilterByEmail)[0];
 
-        $assigneDocumentStatus = $eSignDocumentAssignment->status_id;
-        if ($assigneStatus->signStatus == self::SIGNED) {
-            $assigneDocumentStatus = ESignContractStatusEnum::DONE;
-        }
-
-        if ($assigneStatus->signStatus == self::FAILED) {
-            $assigneDocumentStatus = ESignContractStatusEnum::FAILED;
-        }
+        $assigneDocumentStatus = $this->assigneeStatusBySignStatus($assigneStatus->signStatus, $eSignDocumentAssignment->status_id);
 
         $this->eSignRepository->updateDocumentAssignee(
             $eSignDocumentAssignment->id,
@@ -159,6 +152,20 @@ class ESignDocumentSignCheckService implements ApplicationServiceInterface
         }
 
         return $statusSigning;
+    }
+
+    public function assigneeStatusBySignStatus($signStatus, $default = null)
+    {
+        switch ($signStatus) {
+            case self::SIGNED:
+                return ESignContractStatusEnum::DONE;
+
+            case self::FAILED:
+                return ESignContractStatusEnum::FAILED;
+
+            default:
+                return $default;
+        }
     }
 
     protected function upload(string $documentBinary, string $documentName)

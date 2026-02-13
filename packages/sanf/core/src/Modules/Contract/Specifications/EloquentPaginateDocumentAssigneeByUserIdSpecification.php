@@ -77,9 +77,15 @@ class EloquentPaginateDocumentAssigneeByUserIdSpecification
                 'nonce',
                 'category_id',
             ])
-                ->where('status_id', '!=', ESignContractStatusEnum::FAILED)
                 ->when($this->statusId, function ($query) {
-                    $query->where('status_id', '=', $this->statusId);
+                    if ($this->statusId == ESignContractStatusEnum::FAILED) {
+                        $query->where(function ($query) {
+                            $query->where('status_id', ESignContractStatusEnum::ON_PROGRESS)
+                                ->orWhere('status_id', ESignContractStatusEnum::FAILED);
+                        });
+                    } else {
+                        $query->where('status_id', '=', $this->statusId);
+                    }
                 })
                 ->when($this->keyword, function ($query) use ($sodiumQuery) {
                     $query->where(function ($query) use ($sodiumQuery) {

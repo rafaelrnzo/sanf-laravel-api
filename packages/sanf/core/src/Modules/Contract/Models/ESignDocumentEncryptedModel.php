@@ -53,4 +53,9 @@ class ESignDocumentEncryptedModel extends AbstractModel
     {
         return $this->decryptor()->decrypt($this->attributes['reference_no']);
     }
+
+    public function eSignDocumentAssignees()
+    {
+        return $this->hasMany(ESignDocumentAssigneeEncryptedModel::class, 'document_id', 'document_id');
+    }
 }

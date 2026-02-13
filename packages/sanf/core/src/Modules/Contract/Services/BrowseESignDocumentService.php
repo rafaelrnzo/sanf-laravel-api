@@ -3,6 +3,7 @@
 namespace Sanf\Core\Modules\Contract\Services;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\Contract\Dto\BrowseESignDocumentDto;
@@ -10,6 +11,7 @@ use Sanf\Core\Modules\Contract\Dtos\BrowseProcessFinancingUnitLocationSubmission
 use Sanf\Core\Modules\Contract\Enums\ESignContractStatusEnum;
 use Sanf\Core\Modules\Contract\Repositories\ESignRepositoryInterface;
 use Sanf\Core\Modules\Contract\Specifications\ESignDocumentSpecificationFactoryInterface;
+use Sanf\Core\Modules\Contract\Support\ESignHelper;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 use Sanf\Integration\Modules\SanfCore\Entities\SanfCoreESignDocumentCategoryEntity;
@@ -111,6 +113,10 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
                 if (in_array($newDocument->documentId, $existingNonSubmitDocumentId) === true) {
                     continue;
                 }
+
+                $cacheKey = ESignHelper::checkSignStatusCacheKey($dto->user_id, $newDocument->documentId);
+                $cachedRetryAt = Cache::get($cacheKey);
+
                 $data[] = (object) [
                     'xid' => null,
                     'documentName' => $newDocument->documentName,
@@ -124,6 +130,7 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
                     'categoryDesc' => $newDocument->categoryDesc,
                     'userId' => $dto->user_id,
                     'email' => $user->username,
+                    'checkStatusAvailableAt' => $cachedRetryAt,
                 ];
                 $total++;
             }
@@ -145,6 +152,9 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
             $data = array_map(function ($item) use ($dto, $user) {
                 $file = is_string($item->e_sign_document->document_file) ? json_decode($item->e_sign_document->document_file) : $item->e_sign_document->document_file;
 
+                $cacheKey = ESignHelper::checkSignStatusCacheKey($dto->user_id, $item->document_id);
+                $cachedRetryAt = Cache::get($cacheKey);
+
                 return (object) [
                     'xid' => $item->xid,
                     'documentName' => $item->e_sign_document->document_name,
@@ -158,6 +168,7 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
                     'categoryDesc' => $this->getCategoryName($item->e_sign_document->category_id),
                     'userId' => $dto->user_id,
                     'email' => $user->username,
+                    'checkStatusAvailableAt' => $cachedRetryAt,
                 ];
             }, $query);
         }
@@ -169,18 +180,13 @@ final class BrowseESignDocumentService implements ApplicationServiceInterface
         }
 
         $data = array_filter($data, function ($item) {
-            if ($item->statusId !== ESignContractStatusEnum::DONE) {
+            if ($item->statusId !== ESignContractStatusEnum::DONE
+                && $item->statusId !== ESignContractStatusEnum::FAILED) {
                 return $item->expiredAt > Carbon::now();
             }
 
-            return $item;
-        });
-
-        $data = array_filter($data, function ($item) {
-            return empty($item->documentId) === false && $item->documentId !== ' ';
-        });
-        $data = array_filter($data, function ($item) {
-            return empty($item->referenceNo) === false && $item->referenceNo !== ' ';
+            return empty($item->documentId) === false && $item->documentId !== ' '
+                && empty($item->referenceNo) === false && $item->referenceNo !== ' ';
         });
 
         return (object) [
