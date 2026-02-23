@@ -9,6 +9,7 @@ use Sanf\Core\Modules\Contract\Dtos\ESignDocumentCheckStatusRequestDto;
 use Sanf\Core\Modules\Contract\Dtos\ESignDocumentCheckStatusResponseDto;
 use Sanf\Core\Modules\Contract\Enums\ESignContractStatusEnum;
 use Sanf\Core\Modules\Contract\Exceptions\ESignDocumentNotFoundException;
+use Sanf\Core\Modules\Contract\Exceptions\ESignDocumentStatusCheckWindowExpiredException;
 use Sanf\Core\Modules\Contract\Repositories\EloquentESignDocumentEncryptedRepository;
 use Sanf\Core\Modules\Contract\Support\ESignHelper;
 
@@ -43,6 +44,8 @@ class ESignDocumentCheckStatusService implements ApplicationServiceInterface
 
         $checked = false;
         $retryAvailableAt = null;
+        $signedAt = null;
+
         $cacheKey = ESignHelper::checkSignStatusCacheKey($dto->userId, $dto->documentId);
         $cachedRetryAt = Cache::get($cacheKey);
         $now = Carbon::now();
@@ -56,6 +59,14 @@ class ESignDocumentCheckStatusService implements ApplicationServiceInterface
                 $statusSigningCollection = collect($statusSignings);
 
                 $assignee = $statusSigningCollection->first(fn ($statusSign) => strtolower($statusSign->email) == $eSignDocumentAssignment->email);
+
+                if ($signDate = ($assignee->signDate ?? null)) {
+                    $signedAt = Carbon::createFromFormat('Y-m-d H:i:s', $signDate, 'Asia/Jakarta')->timestamp;
+                }
+
+                if ($signedAt && ESignHelper::isStatusCheckWindowExpired(Carbon::now()->timestamp, $signedAt)) {
+                    throw new ESignDocumentStatusCheckWindowExpiredException();
+                }
 
                 $currentStatusId = $this->eSignDocumentSignCheckService->assigneeStatusBySignStatus($assignee->signStatus, $currentStatusId);
 
@@ -74,6 +85,7 @@ class ESignDocumentCheckStatusService implements ApplicationServiceInterface
             'current_status_id' => $currentStatusId,
             'checked' => $checked,
             'retry_available_at' => $retryAvailableAt,
+            'signed_at' => $signedAt,
         ]);
     }
 }

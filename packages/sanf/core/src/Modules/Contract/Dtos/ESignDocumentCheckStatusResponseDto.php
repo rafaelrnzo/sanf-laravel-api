@@ -16,4 +16,10 @@ class ESignDocumentCheckStatusResponseDto extends DataTransferObject
      * @var int|null
      */
     public ?int $retry_available_at;
+
+    /**
+     * Timestamp format.
+     * @var int|null
+     */
+    public ?int $signed_at;
 }
