@@ -13,8 +13,8 @@ final class PlafondSparePartTransformer extends TransformerAbstract
     {
         return [
             'xid' => $data->no_plafond,
-            'submit_balance' => (float) $data->p_total,
-            'remaining_balance' => (float) $data->p_sisa,
+            'submit_balance' => $total = (float) $data->p_total,
+            'remaining_balance' => $total - (float) $data->p_sisa,
             'supplier' => [
                 'id' => $data->tipe_supplier,
                 'name' => $data->nama_supplier,
