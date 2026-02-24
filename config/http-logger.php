@@ -14,6 +14,7 @@ return [
             'auth_token',
             'notification_token',
             'token',
+            'x-api-key',
         ],
         /*TODO IMPROVE CENSORING VALUE
         'bad-values' => []

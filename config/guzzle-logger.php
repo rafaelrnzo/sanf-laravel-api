@@ -9,6 +9,7 @@ return [
             'client-id',
             'authorization',
             'password',
+            'x-api-key',
         ],
         /*TODO IMPROVE CENSORING VALUE
         'bad-values' => []
