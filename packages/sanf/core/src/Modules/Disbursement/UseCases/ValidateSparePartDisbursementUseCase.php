@@ -38,7 +38,7 @@ final class ValidateSparePartDisbursementUseCase
         $disbursements = $this->repository->get(
             ['id', 'batch_number', 'customer_id'],
             ['batch_number' => $payload->batch_id],
-            ['invoices:id,disbursement_id,invoice_number,invoice_amount']
+            ['invoices:id,disbursement_id,invoice_number,invoice_amount,detail']
         );
 
         $this->validateCustomers($disbursements, $payload);
