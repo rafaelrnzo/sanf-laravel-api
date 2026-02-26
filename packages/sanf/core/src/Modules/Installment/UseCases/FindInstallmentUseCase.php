@@ -77,8 +77,6 @@ class FindInstallmentUseCase implements ApplicationServiceInterface
          */
         $overdue = $payload->overdue ?? [];
 
-        $status = $this->resolveInstallmentStatus($dto->contractNo, $dto->dueDate, $dto->profileXid, $response->tagihan->status_pembayaran_id);
-
         $interestRate = $this->normalizeInterestRate($kontrak->bunga_harian ?? null);
 
         $contractDto = new InstallmentContractResponse([
@@ -123,6 +121,19 @@ class FindInstallmentUseCase implements ApplicationServiceInterface
             )
             : null;
 
+        $paymentXid = null;
+        if (optional($activePayment)->status === PaymentStatusEnum::PENDING) {
+            $paymentXid = $activePayment->xid;
+        }
+
+        $status = $this->resolveInstallmentStatus(
+            $dto->contractNo,
+            $dto->dueDate,
+            $dto->profileXid,
+            $response->tagihan->status_pembayaran_id,
+            $activePayment
+        );
+
         $allOutstandingAmounts = array_sum(array_pluck($overdue, 'total_overdue'));
 
         return new FindInstallmentResponse([
@@ -135,7 +146,7 @@ class FindInstallmentUseCase implements ApplicationServiceInterface
             'sequenceNo' => (int) ($kontrak->schedule_no ?? 0),
             'sequenceTotal' => (int) ($kontrak->schedule_total ?? 0),
             'status' => $status,
-            'paymentXid' => optional($activePayment)->xid,
+            'paymentXid' => $paymentXid,
             'contract' => $contractDto,
             'eStatementFile' => $this->buildEStatementDto($payload->e_statement ?? null),
             'outstandingInstallments' => $outstandingInstallments,
@@ -189,7 +200,7 @@ class FindInstallmentUseCase implements ApplicationServiceInterface
             ?? $this->installment = $this->findInstallment($contractNo, $dueDate, $userProfileXid);
     }
 
-    private function resolveInstallmentStatus(?string $contractNo, $dueDate, $userProfileXid, $coreStatus): string
+    private function resolveInstallmentStatus(?string $contractNo, $dueDate, $userProfileXid, $coreStatus, $payment): string
     {
         $dueDateString = $this->normalizeDueDate($dueDate);
         if (!$contractNo || !$dueDateString) {
@@ -198,11 +209,7 @@ class FindInstallmentUseCase implements ApplicationServiceInterface
 
         $record = $this->getInstallment($contractNo, $dueDate, $userProfileXid);
 
-        if (!$record) {
-            return InstallmentStatusMapper::map($coreStatus);
-        }
-
-        return InstallmentStatusMapper::map($coreStatus, $record->status);
+        return InstallmentStatusMapper::map($coreStatus, optional($record)->status, $payment);
     }
 
     private function normalizeDueDate($dueDate): ?string

@@ -110,7 +110,7 @@ class GetContractDetailService extends UserService implements ApplicationService
                 ],
                 'plafond_type' => $this->mapPalfondType($data->CONTRACT_TYPE_CODE ?? null),
                 'status' => $data->STATUS_PEMBAYARAN_ID
-                    ? InstallmentStatusMapper::map($data->STATUS_PEMBAYARAN_ID, optional($installment)->status)
+                    ? InstallmentStatusMapper::map($data->STATUS_PEMBAYARAN_ID, optional($installment)->status, $payment)
                     : null,
             ],
             'total_financing_unit' => $data->TOT_UNIT ?? 0,

@@ -10,6 +10,7 @@ use Sanf\Core\Modules\Installment\Payloads\BrowseInstallmentPayload;
 use Sanf\Core\Modules\Installment\Repositories\InstallmentRepositoryInterface;
 use Sanf\Core\Modules\Installment\Responses\InstallmentItemResponse;
 use Sanf\Core\Modules\Installment\Support\InstallmentStatusMapper;
+use Sanf\Core\Modules\Payment\Enums\PaymentStatusEnum;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Integration\Modules\SanfCore\Entities\SanfCoreInstallmentEntity;
 use Sanf\Integration\Modules\SanfCore\Enums\InstallmentPaymentStatusEnum;
@@ -56,7 +57,11 @@ class BrowseInstallmentUseCase
                 $lookup = $lookupKey && isset($installmentLookup[$lookupKey])
                     ? $installmentLookup[$lookupKey]
                     : null;
-                $status = InstallmentStatusMapper::map($item->status_pembayaran_id, $lookup['status'] ?? null);
+                $status = InstallmentStatusMapper::map(
+                    $item->status_pembayaran_id,
+                    $lookup['status'] ?? null,
+                    $lookup['payment'] ?? null
+                );
                 $paymentXid = $lookup['payment_xid'] ?? null;
                 $sequenceNumber = $item->schedule_no;
                 $sequenceTotal = $item->schedule_total;
@@ -154,10 +159,6 @@ class BrowseInstallmentUseCase
 
         $collection = $this->installmentRepository->findByContractsAndDueDates(array_values($contractDueDates), $userProfileXid);
 
-        if (!$collection instanceof Collection) {
-            $collection = Collection::make($collection ?? []);
-        }
-
         $sequenceTotals = [];
         foreach ($collection as $installment) {
             $contractNo = $installment->contract_no ?? null;
@@ -188,21 +189,18 @@ class BrowseInstallmentUseCase
                 continue;
             }
 
-            $payments = $installment->payments ?? null;
+            $payments = $installment->payments;
+            $firstPayment = $payments->first();
+
             $paymentXid = null;
-            if ($payments instanceof Collection) {
-                $firstPayment = $payments->first();
-                $paymentXid = $firstPayment->xid ?? null;
-            } elseif (is_array($payments)) {
-                $firstPayment = reset($payments);
-                if (is_object($firstPayment) && property_exists($firstPayment, 'xid')) {
-                    $paymentXid = $firstPayment->xid;
-                }
+            if (optional($firstPayment)->status === PaymentStatusEnum::PENDING) {
+                $paymentXid = $firstPayment->xid;
             }
 
             $lookup[$key] = [
                 'status' => strtoupper((string) $installment->status) ?: InstallmentStatusEnum::ACTIVE,
                 'payment_xid' => $paymentXid,
+                'payment' => $firstPayment,
                 'sequence_number' => isset($installment->sequence_number) ? (int) $installment->sequence_number : null,
                 'sequence_total' => $sequenceTotals[$installment->contract_no] ?? null,
             ];

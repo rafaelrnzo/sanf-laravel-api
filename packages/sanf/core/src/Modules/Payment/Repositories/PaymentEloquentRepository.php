@@ -133,10 +133,18 @@ final class PaymentEloquentRepository implements PaymentRepositoryInterface
         return $this->model->newQuery()
             ->where('user_auth_id', $userAuthId)
             ->where('user_profile_xid', $userProfileXid)
-            ->where('status', PaymentStatusEnum::PENDING)
             ->where(function ($query) {
-                $query->whereNull('expired_at')
-                    ->orWhere('expired_at', '>', Carbon::now());
+                $query
+                    ->where('status', PaymentStatusEnum::SUCCESS)
+                    ->orWhere(function ($query) {
+                        $query
+                            ->where('status', PaymentStatusEnum::PENDING)
+                            ->where(function ($query) {
+                                $query
+                                    ->whereNull('expired_at')
+                                    ->orWhere('expired_at', '>', Carbon::now());
+                            });
+                    });
             })
             ->whereHas('installments', function ($query) use ($contractNo, $startOfDay, $endOfDay) {
                 $query->where('contract_no', $contractNo)
