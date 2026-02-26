@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use Carbon\CarbonInterface;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
-use Sanf\Core\Modules\Installment\Enums\InstallmentStatusEnum;
 use Sanf\Core\Modules\Installment\Models\InstallmentModel;
 use Sanf\Core\Modules\Installment\Payloads\FindInstallmentPayload;
 use Sanf\Core\Modules\Installment\Repositories\InstallmentRepositoryInterface;
@@ -14,6 +13,7 @@ use Sanf\Core\Modules\Installment\Responses\FindInstallmentResponse;
 use Sanf\Core\Modules\Installment\Responses\InstallmentContractResponse;
 use Sanf\Core\Modules\Installment\Responses\InstallmentEStatementReponse;
 use Sanf\Core\Modules\Installment\Responses\InstallmentOutstandingResponse;
+use Sanf\Core\Modules\Installment\Support\InstallmentStatusMapper;
 use Sanf\Core\Modules\Payment\Enums\PaymentStatusEnum;
 use Sanf\Core\Modules\Payment\Models\PaymentModel;
 use Sanf\Core\Modules\Payment\Repositories\PaymentRepositoryInterface;
@@ -22,7 +22,6 @@ use Sanf\Integration\Exceptions\SanfInternalApiDataNotFoundException;
 use Sanf\Integration\Modules\SanfCore\Entities\SanfCoreInstallmentDetailBillEntity;
 use Sanf\Integration\Modules\SanfCore\Entities\SanfCoreInstallmentDetailContractEntity;
 use Sanf\Integration\Modules\SanfCore\Entities\SanfCoreInstallmentDetailOverdueEntity;
-use Sanf\Integration\Modules\SanfCore\Enums\InstallmentPaymentStatusEnum;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClientV2;
 
 class FindInstallmentUseCase implements ApplicationServiceInterface
@@ -194,33 +193,16 @@ class FindInstallmentUseCase implements ApplicationServiceInterface
     {
         $dueDateString = $this->normalizeDueDate($dueDate);
         if (!$contractNo || !$dueDateString) {
-            return $this->mapStatus($coreStatus);
+            return InstallmentStatusMapper::map($coreStatus);
         }
 
         $record = $this->getInstallment($contractNo, $dueDate, $userProfileXid);
 
         if (!$record) {
-            return $this->mapStatus($coreStatus);
+            return InstallmentStatusMapper::map($coreStatus);
         }
 
-        return $this->mapStatus($coreStatus, $record->status);
-    }
-
-    private function mapStatus(int $coreStatus, ?string $dbStatus = null)
-    {
-        if ($dbStatus === InstallmentStatusEnum::WAITING_PAYMENT || $dbStatus === InstallmentStatusEnum::IN_PROGRESS) {
-            return $dbStatus;
-        }
-
-        if ($coreStatus === InstallmentPaymentStatusEnum::LUNAS) {
-            return InstallmentStatusEnum::PAID;
-        }
-
-        if ($coreStatus === InstallmentPaymentStatusEnum::MENUNGGU_KONFIRMASI) {
-            return InstallmentStatusEnum::IN_PROGRESS;
-        }
-
-        return InstallmentStatusEnum::ACTIVE;
+        return InstallmentStatusMapper::map($coreStatus, $record->status);
     }
 
     private function normalizeDueDate($dueDate): ?string

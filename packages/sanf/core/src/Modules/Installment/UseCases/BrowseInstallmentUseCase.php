@@ -9,6 +9,7 @@ use Sanf\Core\Modules\Installment\Enums\InstallmentStatusEnum;
 use Sanf\Core\Modules\Installment\Payloads\BrowseInstallmentPayload;
 use Sanf\Core\Modules\Installment\Repositories\InstallmentRepositoryInterface;
 use Sanf\Core\Modules\Installment\Responses\InstallmentItemResponse;
+use Sanf\Core\Modules\Installment\Support\InstallmentStatusMapper;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Integration\Modules\SanfCore\Entities\SanfCoreInstallmentEntity;
 use Sanf\Integration\Modules\SanfCore\Enums\InstallmentPaymentStatusEnum;
@@ -55,7 +56,7 @@ class BrowseInstallmentUseCase
                 $lookup = $lookupKey && isset($installmentLookup[$lookupKey])
                     ? $installmentLookup[$lookupKey]
                     : null;
-                $status = $this->mapStatus($item->status_pembayaran_id, $lookup['status'] ?? null);
+                $status = InstallmentStatusMapper::map($item->status_pembayaran_id, $lookup['status'] ?? null);
                 $paymentXid = $lookup['payment_xid'] ?? null;
                 $sequenceNumber = $item->schedule_no;
                 $sequenceTotal = $item->schedule_total;
@@ -259,23 +260,6 @@ class BrowseInstallmentUseCase
     private function buildLookupKeyFromParts(string $contractNo, string $dueDateString): string
     {
         return sprintf('%s|%s', $contractNo, $dueDateString);
-    }
-
-    private function mapStatus(int $coreStatus, ?string $dbStatus)
-    {
-        if ($dbStatus === InstallmentStatusEnum::WAITING_PAYMENT || $dbStatus === InstallmentStatusEnum::IN_PROGRESS) {
-            return $dbStatus;
-        }
-
-        if ($coreStatus === InstallmentPaymentStatusEnum::LUNAS) {
-            return InstallmentStatusEnum::PAID;
-        }
-
-        if ($coreStatus === InstallmentPaymentStatusEnum::MENUNGGU_KONFIRMASI) {
-            return InstallmentStatusEnum::IN_PROGRESS;
-        }
-
-        return InstallmentStatusEnum::ACTIVE;
     }
 
     /**
