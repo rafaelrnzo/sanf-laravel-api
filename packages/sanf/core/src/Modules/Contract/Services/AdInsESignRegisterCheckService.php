@@ -37,7 +37,7 @@ class AdInsESignRegisterCheckService implements ApplicationServiceInterface
             'identityNumber' => $dto->identityNo,
         ]);
 
-        $registerResponse = $this->adInsClient->registerCheckByIdentityNumber($bodyRequest);
+        $registerResponse = $this->adInsClient->registerCheckByEmail($bodyRequest);
         if ($registerResponse->status->code !== $this->adInsClient::SUCCESS_CODE) {
             throw new AdInsErrorResponseException("{$registerResponse->status->message}");
         }

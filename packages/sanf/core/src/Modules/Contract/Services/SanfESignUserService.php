@@ -36,6 +36,7 @@ class SanfESignUserService implements ApplicationServiceInterface
     public function execute($dto = null)
     {
         $userSanfResponse = $this->sanfProfileRepository->findById($dto->profileXid);
+
         if (is_null($userSanfResponse)) {
             throw new UserNotFoundException();
         }
@@ -69,6 +70,7 @@ class SanfESignUserService implements ApplicationServiceInterface
         }, $eSignSanfUserResponse['data'])[0];
 
         $adInsUser = $this->eSignDocumentRepository->findUserBySanfId($dto->profileXid);
+
         if (is_null($adInsUser) === false) {
             $eSignSanfUserMapping['xid'] = $adInsUser->xid;
             $eSignSanfUserMapping['msisdn'] = $adInsUser->msisdn;
@@ -105,24 +107,26 @@ class SanfESignUserService implements ApplicationServiceInterface
 
             $eSignUserUpdateData = [];
 
-            if ($adInsUser->status_id !== ESignRegistrationStatusEnum::COMPLETE || $adInsUser->certificate_expired_at === null) {
-                $registerStatus = $this->adInsRegisterCheckService->execute($dto);
+            $registerStatus = $this->adInsRegisterCheckService->execute($dto);
 
-                $vendor = 'Vida';
-                foreach ($registerStatus->status as $status) {
-                    if ($status->vendor != $vendor) {
-                        continue;
-                    }
+            $vendor = 'Vida';
+            foreach ($registerStatus->status as $status) {
+                if ($status->vendor != $vendor) {
+                    continue;
+                }
 
-                    if ($status->registrationStatus == $this->adInsRegisterCheckService::ACTIVE) {
-                        $eSignSanfUserMapping['statusId'] = ESignRegistrationStatusEnum::COMPLETE;
-                    }
+                if ($status->registrationStatus == $this->adInsRegisterCheckService::ACTIVE) {
+                    $eSignSanfUserMapping['statusId'] = ESignRegistrationStatusEnum::COMPLETE;
+                }
 
-                    if ($adInsUser->certificate_expired_at === null && $status->expiredDate) {
-                        $certificateExpiredAt = Carbon::parse($status->expiredDate, 'Asia/Jakarta')->startOfDay()->utc();
-                        $eSignUserUpdateData['certificate_expired_at'] = $certificateExpiredAt;
-                        $eSignSanfUserMapping['isAccountExpired'] = $eSignSanfUserMapping['isAccountExpired'] || $certificateExpiredAt->lessThanOrEqualTo(Carbon::now());
-                    }
+                $certificateExpiredAt = $status->expiredDate ? Carbon::parse($status->expiredDate, 'Asia/Jakarta')->startOfDay()->utc() : null;
+
+                if (
+                    $certificateExpiredAt
+                    && !$certificateExpiredAt->equalTo(Carbon::make($adInsUser->certificate_expired_at))
+                ) {
+                    $eSignUserUpdateData['certificate_expired_at'] = $certificateExpiredAt;
+                    $eSignSanfUserMapping['isAccountExpired'] = $registrationComplete === ESignRegistrationCompleteEnum::NO || $certificateExpiredAt->lessThanOrEqualTo(Carbon::now());
                 }
             }
 
