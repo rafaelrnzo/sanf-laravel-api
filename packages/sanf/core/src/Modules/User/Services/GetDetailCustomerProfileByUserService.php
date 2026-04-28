@@ -35,6 +35,9 @@ class GetDetailCustomerProfileByUserService implements ApplicationServiceInterfa
             throw new UserNotFoundException();
         }
         $response = $this->internalApiClient->findCustomerById($dto->customerId);
+        if ($response['data'][0]['EMAIL_ADDR'] !== $user->username) {
+            throw new ForbiddenException('Missmatch User Access');
+        }
         $profile = collect($response['data'])
             ->map(function ($item) {
                 return (object) [

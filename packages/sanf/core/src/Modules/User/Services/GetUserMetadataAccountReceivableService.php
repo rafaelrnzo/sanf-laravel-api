@@ -2,6 +2,7 @@
 
 namespace Sanf\Core\Modules\User\Services;
 
+use NbsPhp\Core\Exceptions\ForbiddenException;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
@@ -25,6 +26,12 @@ class GetUserMetadataAccountReceivableService extends UserService implements App
         }
 
         $response = $this->internalApiClient->getMetadataContract($dto->profile_xid);
+        
+        $profile = $this->internalApiClient->findCustomerById($dto->profile_xid);
+        if ($profile['data'][0]['EMAIL_ADDR'] !== $user->username) {
+            throw new ForbiddenException('Missmatch User Access');
+        }
+
         $collect = collect($response->data);
         $totalOutstandingAmount = 0;
         $totalPaidAmount = 0;

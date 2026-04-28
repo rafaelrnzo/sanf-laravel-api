@@ -3,6 +3,7 @@
 namespace Sanf\Core\Modules\User\Services;
 
 use Carbon\Carbon;
+use NbsPhp\Core\Exceptions\ForbiddenException;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\User\Enums\ProfileType;
@@ -31,6 +32,9 @@ class UpdatePersonalProfileService implements ApplicationServiceInterface
             throw new UserNotFoundException();
         }
         $profile = $this->internalApiClient->findCustomerById($dto->customerId);
+        if ($profile['data'][0]['EMAIL_ADDR'] !== $user->username) {
+            throw new ForbiddenException('Missmatch User Access');
+        }
         if ($profile['data'][0]['ID_IDENTITY'] !== ProfileType::PERSONAL) {
             throw new UserNotFoundException('Missmatch Type');
         }
