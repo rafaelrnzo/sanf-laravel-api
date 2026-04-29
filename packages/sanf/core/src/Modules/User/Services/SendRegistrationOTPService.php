@@ -6,8 +6,11 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
+use Sanf\Core\Modules\User\Enums\OTPPurposeEnum;
+use Sanf\Core\Modules\User\Exceptions\OTPPurposeInvalidException;
 use Sanf\Core\Modules\User\Exceptions\OTPRateLimitedException;
 use Sanf\Core\Modules\User\Exceptions\OTPSuspendedException;
+use Sanf\Core\Modules\User\Exceptions\ProfileNotFoundException;
 use Sanf\Core\Modules\User\Notifications\SendRegistrationOTPNotification;
 use Sanf\Core\Modules\User\Repositories\RegistrationOTPRepositoryInterface;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
@@ -18,15 +21,6 @@ class SendRegistrationOTPService implements ApplicationServiceInterface
     protected const MAX_SEND_ATTEMPTS = 3;
     protected const COOLDOWN_MINUTES = 5;
     protected const OTP_EXPIRY_MINUTES = 5;
-
-    public const ALLOWED_PURPOSES = [
-        'login',
-        'change_password',
-        'change_pin',
-        'reset_password',
-        'reset_pin',
-        'registration',
-    ];
 
     protected $otpRepository;
     protected $userRepository;
@@ -42,16 +36,16 @@ class SendRegistrationOTPService implements ApplicationServiceInterface
     public function execute($dto = null)
     {
         $userId = $dto->userId;
-        $purpose = $dto->purpose ?? 'registration';
+        $purpose = $dto->purpose ?? OTPPurposeEnum::REGISTRATION;
 
-        if (!in_array($purpose, self::ALLOWED_PURPOSES)) {
-            throw new \InvalidArgumentException('Invalid OTP purpose');
+        if (!OTPPurposeEnum::isValid($purpose)) {
+            throw new OTPPurposeInvalidException();
         }
 
         $user = $this->userRepository->findById($userId);
 
         if (!$user) {
-            throw new \Exception('User not found');
+            throw new ProfileNotFoundException();
         }
 
         $now = Carbon::now();

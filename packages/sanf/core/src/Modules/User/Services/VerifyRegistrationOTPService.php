@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use NbsPhp\Core\Models\UserStatusModel;
+use Sanf\Core\Modules\User\Enums\OTPPurposeEnum;
+use Sanf\Core\Modules\User\Exceptions\OTPPurposeInvalidException;
 use Sanf\Core\Modules\User\Exceptions\OTPInvalidException;
 use Sanf\Core\Modules\User\Exceptions\OTPSuspendedException;
 use Sanf\Core\Modules\User\Repositories\RegistrationOTPRepositoryInterface;
@@ -16,15 +18,6 @@ class VerifyRegistrationOTPService implements ApplicationServiceInterface
 {
     protected const MAX_VERIFY_ATTEMPTS = 3;
     protected const SUSPEND_HOURS = 24;
-
-    public const ALLOWED_PURPOSES = [
-        'login',
-        'change_password',
-        'change_pin',
-        'reset_password',
-        'reset_pin',
-        'registration',
-    ];
 
     protected $otpRepository;
     protected $userRepository;
@@ -40,11 +33,11 @@ class VerifyRegistrationOTPService implements ApplicationServiceInterface
     public function execute($dto = null)
     {
         $userId = $dto->userId;
-        $purpose = $dto->purpose ?? 'registration';
+        $purpose = $dto->purpose ?? OTPPurposeEnum::REGISTRATION;
         $code = $dto->code;
 
-        if (!in_array($purpose, self::ALLOWED_PURPOSES)) {
-            throw new \InvalidArgumentException('Invalid OTP purpose');
+        if (!OTPPurposeEnum::isValid($purpose)) {
+            throw new OTPPurposeInvalidException();
         }
 
         $now = Carbon::now();
@@ -65,7 +58,7 @@ class VerifyRegistrationOTPService implements ApplicationServiceInterface
                     'updated_at' => $now,
                 ]);
 
-                if ($purpose === 'registration') {
+                if ($purpose === OTPPurposeEnum::REGISTRATION) {
                     $this->userRepository->update($userId, [
                         'email_verified_at' => $now,
                         'status_id' => UserStatusModel::STATUS_ACTIVE,
