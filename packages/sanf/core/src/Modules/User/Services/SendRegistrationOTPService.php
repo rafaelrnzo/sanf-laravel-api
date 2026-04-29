@@ -44,18 +44,15 @@ class SendRegistrationOTPService implements ApplicationServiceInterface
         $otpRecord = $this->otpRepository->findLatestActive($userId, $purpose);
 
         if ($otpRecord) {
-            // Check Suspension
             if ($otpRecord->suspend_end_at && $otpRecord->suspend_end_at > $now) {
                 throw new OTPSuspendedException();
             }
 
-            // Check Cooldown
             if ($otpRecord->cooldown_end_at && $otpRecord->cooldown_end_at > $now) {
                 $diff = $now->diffInMinutes($otpRecord->cooldown_end_at);
                 throw new OTPRateLimitedException($diff + 1);
             }
 
-            // If reached max send attempts, set cooldown
             if ($otpRecord->send_attempt >= self::MAX_SEND_ATTEMPTS) {
                 $cooldownEnd = $now->copy()->addMinutes(self::COOLDOWN_MINUTES);
                 $this->otpRepository->update($otpRecord->id, [
@@ -67,12 +64,10 @@ class SendRegistrationOTPService implements ApplicationServiceInterface
         }
 
         return DB::transaction(function () use ($userId, $purpose, $user, $now, $otpRecord) {
-            // Generate 6-digit OTP
             $otpCode = (string) random_int(100000, 999999);
             $hashedCode = Hash::make($otpCode);
             $expiredAt = $now->copy()->addMinutes(self::OTP_EXPIRY_MINUTES);
 
-            // Invalidate all existing OTPs for this user/purpose
             $this->otpRepository->deleteOthers($userId, $purpose, 0);
 
             $newOtp = $this->otpRepository->create([
@@ -85,7 +80,6 @@ class SendRegistrationOTPService implements ApplicationServiceInterface
                 'is_used' => false,
             ]);
 
-            // Send Email
             Notification::send($user, new SendRegistrationOTPNotification($otpCode));
 
             return $newOtp;
