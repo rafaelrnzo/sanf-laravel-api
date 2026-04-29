@@ -13,6 +13,9 @@ use NbsPhp\Core\Services\VerifyEmailServiceInterface;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
 use Sanf\Core\Modules\User\Services\ActivateUserAndRegisterInternalService;
 use Sanf\Core\Modules\User\Services\VerifyEmailAndRegisterInternalService;
+use Sanf\Core\Modules\User\Services\SendRegistrationOTPService;
+use Sanf\Core\Modules\User\Services\VerifyRegistrationOTPService;
+use Sanf\Core\Modules\User\Dto\OTPRequestDto;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 
 class AuthController extends \NbsPhp\Core\Controllers\AuthController
@@ -98,5 +101,49 @@ class AuthController extends \NbsPhp\Core\Controllers\AuthController
                 $this->transactionalSession,
             )
         );
+    }
+
+    protected function validateSendOTP(Request $request): array
+    {
+        return $this->validate($request, [
+            'purpose' => ['nullable', 'string', 'max:50'],
+        ]);
+    }
+
+    public function sendOTP(Request $request, SendRegistrationOTPService $service)
+    {
+        $input = $this->validateSendOTP($request);
+
+        $dto = new OTPRequestDto([
+            'userId' => $request->user()->id,
+            'purpose' => $input['purpose'] ?? 'registration',
+        ]);
+
+        $service->execute($dto);
+
+        return $this->responseOk('OTP has been sent to your email');
+    }
+
+    protected function validateVerifyOTP(Request $request): array
+    {
+        return $this->validate($request, [
+            'code' => ['required', 'string', 'size:6'],
+            'purpose' => ['nullable', 'string', 'max:50'],
+        ]);
+    }
+
+    public function verifyOTP(Request $request, VerifyRegistrationOTPService $service)
+    {
+        $input = $this->validateVerifyOTP($request);
+
+        $dto = new OTPRequestDto([
+            'userId' => $request->user()->id,
+            'code' => $input['code'],
+            'purpose' => $input['purpose'] ?? 'registration',
+        ]);
+
+        $service->execute($dto);
+
+        return $this->responseOk('OTP verified successfully');
     }
 }
