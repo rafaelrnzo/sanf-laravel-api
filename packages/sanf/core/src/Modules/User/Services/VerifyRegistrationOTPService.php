@@ -17,6 +17,15 @@ class VerifyRegistrationOTPService implements ApplicationServiceInterface
     protected const MAX_VERIFY_ATTEMPTS = 3;
     protected const SUSPEND_HOURS = 24;
 
+    public const ALLOWED_PURPOSES = [
+        'login',
+        'change_password',
+        'change_pin',
+        'reset_password',
+        'reset_pin',
+        'registration',
+    ];
+
     protected $otpRepository;
     protected $userRepository;
 
@@ -34,6 +43,10 @@ class VerifyRegistrationOTPService implements ApplicationServiceInterface
         $purpose = $dto->purpose ?? 'registration';
         $code = $dto->code;
 
+        if (!in_array($purpose, self::ALLOWED_PURPOSES)) {
+            throw new \InvalidArgumentException('Invalid OTP purpose');
+        }
+
         $now = Carbon::now();
         $otpRecord = $this->otpRepository->findLatestActive($userId, $purpose);
 
@@ -45,17 +58,19 @@ class VerifyRegistrationOTPService implements ApplicationServiceInterface
             throw new OTPSuspendedException();
         }
 
-        return DB::transaction(function () use ($userId, $otpRecord, $code, $now) {
+        return DB::transaction(function () use ($userId, $otpRecord, $code, $now, $purpose) {
             if (Hash::check($code, $otpRecord->code)) {
                 $this->otpRepository->update($otpRecord->id, [
                     'is_used' => true,
                     'updated_at' => $now,
                 ]);
 
-                $this->userRepository->update($userId, [
-                    'email_verified_at' => $now,
-                    'status_id' => UserStatusModel::STATUS_ACTIVE,
-                ]);
+                if ($purpose === 'registration') {
+                    $this->userRepository->update($userId, [
+                        'email_verified_at' => $now,
+                        'status_id' => UserStatusModel::STATUS_ACTIVE,
+                    ]);
+                }
 
                 return true;
             }

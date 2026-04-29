@@ -19,6 +19,15 @@ class SendRegistrationOTPService implements ApplicationServiceInterface
     protected const COOLDOWN_MINUTES = 5;
     protected const OTP_EXPIRY_MINUTES = 5;
 
+    public const ALLOWED_PURPOSES = [
+        'login',
+        'change_password',
+        'change_pin',
+        'reset_password',
+        'reset_pin',
+        'registration',
+    ];
+
     protected $otpRepository;
     protected $userRepository;
 
@@ -34,6 +43,11 @@ class SendRegistrationOTPService implements ApplicationServiceInterface
     {
         $userId = $dto->userId;
         $purpose = $dto->purpose ?? 'registration';
+
+        if (!in_array($purpose, self::ALLOWED_PURPOSES)) {
+            throw new \InvalidArgumentException('Invalid OTP purpose');
+        }
+
         $user = $this->userRepository->findById($userId);
 
         if (!$user) {
