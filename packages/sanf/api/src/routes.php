@@ -17,6 +17,10 @@ use Sanf\Api\Middleware\InjectUserIdFromPathMiddleware;
 // ONLY PIC ROUTES
 Route::group(['prefix' => 'v1', 'middleware' => ['auth']], function () {
     Route::get('on-boarding', ['as' => 'on-boarding.browse', 'uses' => 'Setting\OnBoardingController@getBrowse']);
+
+    // OTP
+    Route::post('users/otp/send', ['as' => 'users.otp.send', 'uses' => 'User\Controllers\AuthController@sendOTP']);
+    Route::post('users/otp/verify', ['as' => 'users.otp.verify', 'uses' => 'User\Controllers\AuthController@verifyOTP']);
 });
 
 Route::group(['prefix' => 'v1', 'middleware' => ['auth', 'pic']], function () {
@@ -34,7 +38,7 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth', 'pic']], function () {
     Route::post('users/profiles/{xid}/shareholders', ['as' => 'users.shareholders.create', 'uses' => 'Shareholder\ShareholderController@postCreate']);
 });
 
-Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
+Route::group(['prefix' => 'v1', 'middleware' => ['auth', 'profile_owner']], function () {
 
     Route::post('assets', ['as' => 'assets.upload', 'uses' => 'Asset\AssetFileController@upload']);
 
@@ -236,7 +240,7 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
     Route::post('users/profiles/{xid}/giro-post-dated-cheques', ['as' => 'users.giro-pdc.browse', 'uses' => 'Contract\Controllers\PostDatedChequeByUserController@getPDCV2']);
 });
 
-Route::group(['prefix' => 'v2', 'middleware' => 'auth'], function () {
+Route::group(['prefix' => 'v2', 'middleware' => ['auth', 'profile_owner']], function () {
     //TODO remove after +1 release version
     Route::get('plafond-types', ['as' => 'v2.plafond-types', 'uses' => 'Plafond\Controllers\PlafondController@getBrowseTypes']);
     Route::get('users/profiles/{xid}/contracts', ['as' => 'v2.users.contracts.browse', 'uses' => 'Contract\Controllers\ContractFinancingUnitByUserController@getList']);
@@ -257,7 +261,7 @@ Route::group(['prefix' => 'v2', 'middleware' => 'auth'], function () {
 });
 
 // SCANINA INTEGRATION
-Route::group(['prefix' => 'v1', 'middleware' => ['auth']], function () {
+Route::group(['prefix' => 'v1', 'middleware' => ['auth', 'profile_owner']], function () {
     Route::post('users/profiles/{xid}/scanina-account', ['as' => 'scanina.user.check', 'uses' => \Scanina\Controllers\User\GetUserAccountController::class]);
     Route::post('users/profiles/{xid}/scanina-account/resend', ['as' => 'scanina.user.check', 'uses' => \Scanina\Controllers\User\ResendUserMailVerificationController::class]);
     Route::post('users/profiles/{xid}/scanina-account/register', ['as' => 'scanina.user.register', 'uses' => \Scanina\Controllers\User\RegisterScaninaUserController::class]);
@@ -304,7 +308,7 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth']], function () {
 });
 
 // CR 2 2025
-Route::group(['prefix' => 'v2', 'middleware' => ['auth', InjectUserIdFromPathMiddleware::class]], function () {
+Route::group(['prefix' => 'v2', 'middleware' => ['auth', 'profile_owner', InjectUserIdFromPathMiddleware::class]], function () {
     // Spare Part Disbursement
     Route::get('users/profiles/{xid}/spare-part-disbursements', ['as' => 'v2.users.spare-part-disbursements.list', 'uses' => 'Disbursement\Controllers\SparePartDisbursementController@list']);
     Route::get('users/profiles/{xid}/spare-part-disbursements/pending', ['as' => 'v2.users.spare-part-disbursements.pending-list', 'uses' => 'Disbursement\Controllers\SparePartDisbursementController@pendingList']);
