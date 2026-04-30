@@ -19,8 +19,10 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth']], function () {
     Route::get('on-boarding', ['as' => 'on-boarding.browse', 'uses' => 'Setting\OnBoardingController@getBrowse']);
 
     // OTP
-    Route::post('users/otp/send', ['as' => 'users.otp.send', 'uses' => 'User\Controllers\AuthController@sendOTP']);
-    Route::post('users/otp/verify', ['as' => 'users.otp.verify', 'uses' => 'User\Controllers\AuthController@verifyOTP']);
+    Route::group(['middleware' => 'throttle:5,1'], function () {
+        Route::post('users/otp/send', ['as' => 'users.otp.send', 'uses' => 'User\Controllers\AuthController@sendOTP']);
+        Route::post('users/otp/verify', ['as' => 'users.otp.verify', 'uses' => 'User\Controllers\AuthController@verifyOTP']);
+    });
 });
 
 Route::group(['prefix' => 'v1', 'middleware' => ['auth', 'pic']], function () {
@@ -205,11 +207,13 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth', 'profile_owner']], func
     Route::get('users/survey-assignments', ['as' => 'users.survey-assignments.browse', 'uses' => 'Survey\Controllers\SurveyAssignmentByUserController@browse']);
 
     // PIN
-    Route::post('users/add-pin', ['as' => 'users.pin.add', 'uses' => 'User\Controllers\AuthPinController@postAdd']);
-    Route::post('users/check-pin', ['as' => 'users.pin.check', 'uses' => 'User\Controllers\AuthPinController@postCheck']);
-    Route::post('users/update-pin/update', ['as' => 'users.pin.update', 'uses' => 'User\Controllers\AuthPinController@postUpdate']);
-    Route::post('users/request-forgot-pin', ['as' => 'users.pin.request-forgot', 'uses' => 'User\Controllers\AuthPinController@postRequestForgot']);
-    Route::post('users/reset-pin', ['as' => 'users.pin.reset', 'uses' => 'User\Controllers\AuthPinController@postReset']);
+    Route::group(['middleware' => 'throttle:5,1'], function () {
+        Route::post('users/add-pin', ['as' => 'users.pin.add', 'uses' => 'User\Controllers\AuthPinController@postAdd']);
+        Route::post('users/check-pin', ['as' => 'users.pin.check', 'uses' => 'User\Controllers\AuthPinController@postCheck']);
+        Route::post('users/update-pin/update', ['as' => 'users.pin.update', 'uses' => 'User\Controllers\AuthPinController@postUpdate']);
+        Route::post('users/request-forgot-pin', ['as' => 'users.pin.request-forgot', 'uses' => 'User\Controllers\AuthPinController@postRequestForgot']);
+        Route::post('users/reset-pin', ['as' => 'users.pin.reset', 'uses' => 'User\Controllers\AuthPinController@postReset']);
+    });
 
     Route::post('users/request-deactivation', ['as' => 'users.deactivate', 'uses' => 'User\Controllers\AuthUserControllerByUser@postDeactivate']);
 

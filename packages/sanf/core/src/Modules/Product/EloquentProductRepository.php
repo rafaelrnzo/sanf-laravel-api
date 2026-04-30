@@ -23,8 +23,14 @@ class EloquentProductRepository implements ProductRepositoryInterface
                 'financing_method_id',
                 'image',
             ])
-            ->when($search, function ($query) use ($search) {
-                return $query->whereRaw($search);
+            ->when(!empty($search), function ($query) use ($search) {
+                if (isset($search['id'])) {
+                    $query->where('id', $search['id']);
+                }
+                if (isset($search['title'])) {
+                    $query->where('title', 'ilike', '%' . $search['title'] . '%');
+                }
+                return $query;
             })
             ->limit($limit)
             ->offset($offset)

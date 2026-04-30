@@ -98,6 +98,7 @@ $app->configure('midtrans');
 
 $app->middleware([
     \Illuminate\Session\Middleware\StartSession::class,
+    \Sanf\Core\Middleware\SecurityHeadersMiddleware::class,
 ]);
 
 $app->singleton(Illuminate\Session\SessionManager::class, function () use ($app) {
@@ -121,9 +122,10 @@ $app->singleton('redirectSession', function ($app) {
     return $redirector;
 });
 
-// $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
-// ]);
+$app->routeMiddleware([
+    'auth' => App\Http\Middleware\Authenticate::class,
+    'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+]);
 
 /*
 |--------------------------------------------------------------------------
