@@ -1,4 +1,4 @@
-version: '3.9'
+version: "3.9"
 
 networks:
   sanf-staging-net:
@@ -32,8 +32,8 @@ services:
     image: ${CI_REGISTRY_IMAGE:-cr.nbs.dev/sanf/core/api}:${IMAGE_TAG:-staging}
     container_name: staging-sanf-api
     build:
-      context: './'
-      dockerfile: './deployments/api/Dockerfile'
+      context: "./"
+      dockerfile: "./deployments/api/Dockerfile"
     ports:
       - "${APP_PORT:-8080}:8080"
     networks:
@@ -44,62 +44,10 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.25'
+          cpus: "0.25"
           memory: 192M
         reservations:
-          cpus: '0.25'
-          memory: 128M
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "5"
-
-  worker:
-    image: ${CI_REGISTRY_IMAGE:-cr.nbs.dev/sanf/core/worker}:${IMAGE_TAG:-staging}
-    container_name: staging-sanf-worker
-    build:
-      context: './'
-      dockerfile: './deployments/worker/Dockerfile'
-    networks:
-      - sanf-staging-net
-    env_file:
-      - .env
-    restart: unless-stopped
-    deploy:
-      resources:
-        limits:
-          cpus: '0.25'
-          memory: 192M
-        reservations:
-          cpus: '0.25'
-          memory: 128M
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "5"
-
-  cron:
-    image: ${CI_REGISTRY_IMAGE:-cr.nbs.dev/sanf/core/cron}:${IMAGE_TAG:-staging}
-    container_name: staging-sanf-cron
-    build:
-      context: './'
-      dockerfile: './deployments/local/app/cron/Dockerfile'
-    networks:
-      - sanf-staging-net
-    environment:
-      CRON_BASE_URL: ${CRON_BASE_URL}
-      CRON_CLIENT_ID: ${CRON_CLIENT_ID}
-      CRON_CLIENT_SECRET: ${CRON_CLIENT_SECRET}
-    restart: unless-stopped
-    deploy:
-      resources:
-        limits:
-          cpus: '0.25'
-          memory: 192M
-        reservations:
-          cpus: '0.25'
+          cpus: "0.25"
           memory: 128M
     logging:
       driver: json-file
