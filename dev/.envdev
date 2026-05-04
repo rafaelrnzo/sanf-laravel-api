@@ -1,0 +1,132 @@
+########################################
+# APP
+########################################
+APP_NAME="SANF API"
+APP_ENV=staging
+APP_KEY=base64:CHANGE_THIS_KEY
+APP_DEBUG=false
+APP_URL=0.0.0.0
+APP_PORT=8032
+
+########################################
+# IMPORTANT FIX (ROUTE PREFIX)
+########################################
+SANF_API_PREFIX=api
+
+########################################
+# DATABASE
+########################################
+DB_CONNECTION=pgsql
+DB_HOST=sanfind-dbsodium-xr6axk
+DB_PORT=5432
+DB_DATABASE=sanf_sodium
+DB_USERNAME=sanf_sodium
+DB_PASSWORD=sanf_sodium_secret
+DB_SCHEMA=sanf_sch
+
+# Optional (biar sama kayak dev, aman kalau dipakai)
+DB_ENCRYPTED_HOST=sanfind-dbsodium-xr6axk
+DB_ENCRYPTED_PORT=5432
+DB_ENCRYPTED_DATABASE=sanf_sodium
+DB_ENCRYPTED_USERNAME=postgres
+DB_ENCRYPTED_PASSWORD=
+DB_ENCRYPTED_SCHEMA=sanf_sch
+
+########################################
+# CACHE / SESSION
+########################################
+CACHE_DRIVER=file
+QUEUE_CONNECTION=database
+SESSION_DRIVER=file
+SESSION_LIFETIME=120
+
+########################################
+# REDIS
+########################################
+REDIS_HOST=redis
+REDIS_PORT=6379
+REDIS_PASSWORD=null
+
+########################################
+# LOG
+########################################
+LOG_CHANNEL=daily
+LOG_LEVEL=info
+
+########################################
+# OPCACHE
+########################################
+PHP_OPCACHE_VALIDATE_TIMESTAMPS=0
+PHP_OPCACHE_MEMORY_CONSUMPTION=128
+PHP_OPCACHE_MAX_ACCELERATED_FILES=10000
+
+########################################
+# MAIL
+########################################
+MAIL_MAILER=log
+
+########################################
+# JWT
+########################################
+JWT_SECRET=${APP_KEY}
+JWT_TTL=20160
+JWT_REFRESH_TTL=2628000
+JWT_ISSUER=${APP_NAME}
+
+########################################
+# INTERNAL API (WAJIB dari DEV)
+########################################
+SANF_INTERNAL_URL=https://mobile.sanf.co.id/MobileAPI/index.php
+SANF_INTERNAL_CLIENT_ID=r3v7nm2c9unka1n5dgov6hubcrbu6bo4
+
+SANF_INTERNAL_V2_URL=
+SANF_INTERNAL_V2_CLIENT_ID=
+SANF_INTERNAL_V2_CLIENT_SECRET=
+
+########################################
+# EXTERNAL API
+########################################
+TEKENAJA_INTERNAL_URL=https://apix.sandbox-111094.com
+TEKENAJA_INTERNAL_CLIENT_ID=xtEt4E7jSdQuieq1WioHztSvxqUizwY3
+TEKENAJA_MAX_SUBMIT=3
+
+########################################
+# CORE
+########################################
+CORE_H2H_CLIENT_ID=dev-sanf-core
+CORE_H2H_CLIENT_SECRET=ocRMFXc1khtsGsANQ4CPMHn9DUQhP2V5rQZ1Rf5dr1YuIF6W632UjDzYF8v7
+
+CALLBACK_CLIENT_SECRET=ocRMFXc1khtsGsANQ4CPMHn9DUQhP2V5rQZ1Rf5dr1YuIF6W632UjDzYF8v7
+
+########################################
+# OCR / SCAN
+########################################
+SCANINA_API_URL=https://d-scanina-ecommerce-api.nbsdev.io
+SCANINA_API_CLIENT_ID=ID
+SCANINA_API_SECRET_ID=SECRET
+
+NANONETS_API_URL=https://app.nanonets.com/api/
+NANONETS_API_CLIENT_ID=
+NANONETS_API_SECRET_ID=
+NANONETS_SCAN_UUID=a3c81d89-d7d9-4ee4-b834-f3f6b6e8e7ef
+
+OCR_SCAN_PAGE_LIMIT=5
+
+########################################
+# COMPANY
+########################################
+COMPANY_PREFIX="PT"
+COMPANY_NAME="Surya Artha Nusantara Finance"
+COMPANY_INITIALS="SANF"
+
+########################################
+# SECURITY
+########################################
+ENCRYPTION_KEY=38e5347bbac134fc55592a4a55dd70fb782e2dab7bb0640b71d07f60240b1474
+
+########################################
+# CRON
+########################################
+CRON_BASE_URL=localhost:8085
+CRON_CLIENT_ID=ID
+CRON_CLIENT_SECRET=SECRET
