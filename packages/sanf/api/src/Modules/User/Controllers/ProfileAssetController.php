@@ -21,7 +21,7 @@ final class ProfileAssetController extends RestApiController
         UploadFinancingDocumentService $financingDocumentService
     ) {
         $input = $this->validate($request, [
-            'file' => ['required', 'image', 'mimetypes:image/png,image/jpeg,image/jpg,image/svg', 'max:5000'],
+            'file' => ['required', 'image', 'mimes:jpg,jpeg,png', 'mimetypes:image/png,image/jpeg,image/jpg,image/svg', 'max:5000'],
             'asset_type' => [
                 'required',
                 Rule::in(AssetTypeEnum::ASSET_TYPE),

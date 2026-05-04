@@ -7,8 +7,29 @@ networks:
 volumes:
     local-sanf-net:
         driver: local
+    postgres_data:
 
 services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: local-sanf-postgres
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-sanf_sodium}
+      POSTGRES_USER: ${DB_USERNAME:-sanf_sodium}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-sanf_sodium_secret}
+    networks:
+      - local-sanf-net
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: 'no'
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
   api:
     image: ${CI_REGISTRY_IMAGE:-cr.nbs.dev/sanf/core/api}:local
     container_name: local-sanf-api

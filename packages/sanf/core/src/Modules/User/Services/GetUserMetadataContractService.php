@@ -4,6 +4,7 @@ namespace Sanf\Core\Modules\User\Services;
 
 use GuzzleHttp\Exception\GuzzleException;
 use NbsPhp\ApiWrapper\Api\Exceptions\EndpointNotDefinedException;
+use NbsPhp\Core\Exceptions\ForbiddenException;
 use NbsPhp\Core\Exceptions\UserNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 use Sanf\Core\Modules\User\Repositories\UserRepositoryInterface;
@@ -34,6 +35,12 @@ class GetUserMetadataContractService extends UserService implements ApplicationS
         }
 
         $response = $this->internalApiClient->getMetadataContract($dto->profile_xid);
+        
+        $profile = $this->internalApiClient->findCustomerById($dto->profile_xid);
+        if ($profile['data'][0]['EMAIL_ADDR'] !== $user->username) {
+            throw new ForbiddenException('Missmatch User Access');
+        }
+
         $collect = collect($response->data);
         $totalActive = 0;
         $totalFinish = 0;
