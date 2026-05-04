@@ -36,6 +36,9 @@ RUN composer install \
     --no-interaction \
     --no-progress
 
+RUN apt-get update && apt-get install -y libpq-dev \
+    && docker-php-ext-install pdo pdo_pgsql
+
 RUN mkdir -p storage/logs storage/framework/cache storage/framework/sessions \
         storage/framework/views bootstrap/cache \
     && chown -R www-data:www-data /var/www \
