@@ -5,10 +5,23 @@ LABEL Description="Laravel PHP 7.4"
 ENV WORKDIR=/var/www
 
 RUN apt-get update && apt-get install -y \
-    curl zip unzip git \
-    libpng-dev libonig-dev libxml2-dev libzip-dev \
+    curl \
+    zip \
+    unzip \
+    git \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    libzip-dev \
     && docker-php-ext-install \
-        pdo pdo_mysql mbstring exif pcntl bcmath gd zip \
+        pdo \
+        pdo_mysql \
+        mbstring \
+        exif \
+        pcntl \
+        bcmath \
+        gd \
+        zip \
     && apt-get clean
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
@@ -17,16 +30,11 @@ WORKDIR $WORKDIR
 
 COPY . $WORKDIR
 
-# Copy .envdev as .env
-RUN cp dev/.envdev .env
-
 RUN composer install \
     --no-dev \
     --optimize-autoloader \
     --no-interaction \
     --no-progress
-
-RUN php artisan key:generate
 
 RUN mkdir -p storage/logs storage/framework/cache storage/framework/sessions \
         storage/framework/views bootstrap/cache \
