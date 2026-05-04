@@ -1,12 +1,10 @@
 FROM php:7.4-fpm
 
-LABEL Description="Stable PHP 7.4 + Nginx + Supervisor"
+LABEL Description="Laravel PHP 7.4"
 
 ENV WORKDIR=/var/www
 
 RUN apt-get update && apt-get install -y \
-    nginx \
-    supervisor \
     curl \
     zip \
     unzip \
@@ -28,17 +26,6 @@ RUN apt-get update && apt-get install -y \
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-COPY ./deployments/api/nginx.conf /etc/nginx/nginx.conf
-RUN rm -f /etc/nginx/sites-enabled/default
-
-COPY ./deployments/api/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
-# Configure PHP-FPM to use unix socket
-RUN sed -i 's|listen = 127.0.0.1:9000|listen = /run/php-fpm.sock|' /usr/local/etc/php-fpm.d/www.conf \
-    && sed -i 's|;listen.owner = www-data|listen.owner = www-data|' /usr/local/etc/php-fpm.d/www.conf \
-    && sed -i 's|;listen.group = www-data|listen.group = www-data|' /usr/local/etc/php-fpm.d/www.conf \
-    && sed -i 's|;listen.mode = 0660|listen.mode = 0660|' /usr/local/etc/php-fpm.d/www.conf
-
 WORKDIR $WORKDIR
 
 COPY . $WORKDIR
@@ -56,4 +43,4 @@ RUN mkdir -p storage/logs storage/framework/cache storage/framework/sessions \
 
 EXPOSE 8080
 
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8080"]
