@@ -43,4 +43,4 @@ RUN mkdir -p storage/logs storage/framework/cache storage/framework/sessions \
 
 EXPOSE 8032
 
-CMD ["php", "-S", "0.0.0.0:8032", "-t", "public"]
+CMD ["sh", "-c", "php artisan config:cache && php artisan route:cache && php artisan serve --host=0.0.0.0 --port=8032"]
