@@ -51,7 +51,9 @@ RUN composer install \
     --no-progress
 
 # Laravel permission fix
-RUN chown -R www-data:www-data /var/www \
+RUN mkdir -p storage/logs storage/framework/cache storage/framework/sessions \
+        storage/framework/views bootstrap/cache \
+    && chown -R www-data:www-data /var/www \
     && chmod -R 775 storage bootstrap/cache
 
 # Expose port
