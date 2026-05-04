@@ -41,6 +41,6 @@ RUN mkdir -p storage/logs storage/framework/cache storage/framework/sessions \
     && chown -R www-data:www-data /var/www \
     && chmod -R 775 storage bootstrap/cache
 
-EXPOSE 8080
+EXPOSE 8032
 
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8080"]
+CMD ["php", "-S", "0.0.0.0:8032", "-t", "public"]
