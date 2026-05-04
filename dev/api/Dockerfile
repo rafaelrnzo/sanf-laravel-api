@@ -1,77 +1,85 @@
-FROM alpine:3.18
+FROM alpine:3.16
 
-LABEL Description="PHP-FPM + Nginx optimized"
+LABEL Description="PHP 7.4 + Nginx + Supervisor (Fixed for Laravel / API)"
 
 ENV WORKDIR="/var/www"
 
-# Install packages (PHP 8 lebih aman sekarang)
+# Install PHP 7.4 + extensions
 RUN apk add --no-cache \
-    php82 \
-    php82-fpm \
-    php82-opcache \
-    php82-phar \
-    php82-openssl \
-    php82-gd \
-    php82-ctype \
-    php82-curl \
-    php82-dom \
-    php82-iconv \
-    php82-intl \
-    php82-mbstring \
-    php82-pdo \
-    php82-pdo_mysql \
-    php82-session \
-    php82-simplexml \
-    php82-tokenizer \
-    php82-fileinfo \
-    php82-xml \
-    php82-xmlreader \
-    php82-xmlwriter \
-    php82-zip \
-    php82-zlib \
-    php82-sodium \
-    php82-posix \
-    php82-pcntl \
+    php7 \
+    php7-fpm \
+    php7-opcache \
+    php7-phar \
+    php7-openssl \
+    php7-gd \
+    php7-ctype \
+    php7-curl \
+    php7-dom \
+    php7-iconv \
+    php7-intl \
+    php7-json \
+    php7-mbstring \
+    php7-pdo \
+    php7-pdo_mysql \
+    php7-session \
+    php7-simplexml \
+    php7-tokenizer \
+    php7-fileinfo \
+    php7-xml \
+    php7-xmlreader \
+    php7-xmlwriter \
+    php7-zip \
+    php7-zlib \
+    php7-sodium \
+    php7-posix \
+    php7-pcntl \
     nginx \
     supervisor \
     curl \
     bash
 
-# Symlink biar php gampang dipanggil
-RUN ln -s /usr/bin/php82 /usr/bin/php
+# Biar command "php" langsung jalan
+RUN ln -s /usr/bin/php7 /usr/bin/php
 
 # Configure nginx
 COPY ./deployments/api/nginx.conf /etc/nginx/nginx.conf
 RUN rm -f /etc/nginx/conf.d/default.conf
 
 # Configure PHP-FPM
-COPY ./deployments/api/fpm-pool.conf /etc/php82/php-fpm.d/www.conf
-COPY ./deployments/api/php.ini /etc/php82/conf.d/custom.ini
+COPY ./deployments/api/fpm-pool.conf /etc/php7/php-fpm.d/www.conf
+COPY ./deployments/api/php.ini /etc/php7/conf.d/custom.ini
 
 # Configure supervisord
 COPY ./deployments/api/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-# Install composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# Install Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Setup workdir
+# Setup working directory
 WORKDIR $WORKDIR
 RUN mkdir -p $WORKDIR
 
-# Copy app
+# Copy project
 COPY . $WORKDIR
 
-# Install dependency (RUN as root dulu biar aman)
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+# Install dependencies (tanpa dev)
+RUN composer install \
+    --no-dev \
+    --optimize-autoloader \
+    --no-interaction \
+    --no-progress
 
-# Permission
+# Permission fix (penting buat Laravel / storage)
 RUN chown -R nobody:nobody $WORKDIR \
     /run \
     /var/lib/nginx \
     /var/log/nginx
 
+# Switch user
 USER nobody
 
+# Expose port nginx
 EXPOSE 8080
 
+# Run services
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
