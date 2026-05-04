@@ -59,9 +59,9 @@ LOG_LEVEL=info
 LOG_SLACK_WEBHOOK_URL=
 
 DB_CONNECTION=pgsql
-DB_HOST=sanfind-dbsodium-xr6axk
-DB_PORT=5432
-DB_DATABASE=sanf_sodium
+DB_HOST=72.60.78.94
+DB_PORT=5439
+DB_DATABASE=postgres  
 DB_USERNAME=sanf_sodium
 DB_PASSWORD=sanf_sodium_secret
 DB_SCHEMA=sanf_sch
