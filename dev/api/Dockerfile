@@ -1,13 +1,27 @@
 FROM php:7.4-fpm
 
+LABEL Description="Laravel PHP 7.4"
+
 ENV WORKDIR=/var/www
 
 RUN apt-get update && apt-get install -y \
-    curl zip unzip git \
-    libpng-dev libonig-dev libxml2-dev libzip-dev \
-    libpq-dev \
+    curl \
+    zip \
+    unzip \
+    git \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    libzip-dev \
     && docker-php-ext-install \
-        pdo pdo_pgsql pgsql mbstring exif pcntl bcmath gd zip \
+        pdo \
+        pdo_mysql \
+        mbstring \
+        exif \
+        pcntl \
+        bcmath \
+        gd \
+        zip \
     && apt-get clean
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
@@ -15,8 +29,6 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 WORKDIR $WORKDIR
 
 COPY . $WORKDIR
-
-RUN cp .env.example .env 2>/dev/null || true
 
 RUN composer install \
     --no-dev \
@@ -29,10 +41,6 @@ RUN mkdir -p storage/logs storage/framework/cache storage/framework/sessions \
     && chown -R www-data:www-data /var/www \
     && chmod -R 775 storage bootstrap/cache
 
-RUN php artisan key:generate
-
 EXPOSE 8032
 
-USER www-data
-
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8032"]
+CMD ["php", "-S", "0.0.0.0:8032", "-t", "public"]
