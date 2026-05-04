@@ -4,7 +4,6 @@ LABEL Description="Stable PHP 7.4 + Nginx + Supervisor"
 
 ENV WORKDIR=/var/www
 
-# Install system dependencies
 RUN apt-get update && apt-get install -y \
     nginx \
     supervisor \
@@ -27,37 +26,34 @@ RUN apt-get update && apt-get install -y \
         zip \
     && apt-get clean
 
-# Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Configure Nginx
 COPY ./deployments/api/nginx.conf /etc/nginx/nginx.conf
 RUN rm -f /etc/nginx/sites-enabled/default
 
-# Configure Supervisor
 COPY ./deployments/api/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-# Set working directory
+# Configure PHP-FPM to use unix socket
+RUN sed -i 's|listen = 127.0.0.1:9000|listen = /run/php-fpm.sock|' /usr/local/etc/php-fpm.d/www.conf \
+    && sed -i 's|;listen.owner = www-data|listen.owner = www-data|' /usr/local/etc/php-fpm.d/www.conf \
+    && sed -i 's|;listen.group = www-data|listen.group = www-data|' /usr/local/etc/php-fpm.d/www.conf \
+    && sed -i 's|;listen.mode = 0660|listen.mode = 0660|' /usr/local/etc/php-fpm.d/www.conf
+
 WORKDIR $WORKDIR
 
-# Copy app
 COPY . $WORKDIR
 
-# Install dependencies
 RUN composer install \
     --no-dev \
     --optimize-autoloader \
     --no-interaction \
     --no-progress
 
-# Laravel permission fix
 RUN mkdir -p storage/logs storage/framework/cache storage/framework/sessions \
         storage/framework/views bootstrap/cache \
     && chown -R www-data:www-data /var/www \
     && chmod -R 775 storage bootstrap/cache
 
-# Expose port
 EXPOSE 8080
 
-# Start services
-CMD ["/usr/bin/supervisord"]
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
