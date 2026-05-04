@@ -1,21 +1,63 @@
+# Docker Environment Settings
+
 ########################################
-# APP
+# PHP Environment
 ########################################
+
+# Xdebug
+# xdebug version 3
+## To disable xdebug, set XDEBUG_MODE=off
+# PHP_XDEBUG_MODE=debug,profile
+# PHP_XDEBUG_CLIENT_HOST=host.docker.internal
+# PHP_XDEBUG_CLIENT_PORT=9001
+# PHP_XDEBUG_DISCOVER_CLIENT_HOST=1
+# PHP_XDEBUG_OUTPUT_DIR=/var/www/app/xdebug
+# PHP_XDEBUG_IDEKEY=DOCKER_XDEBUG
+
+# xdebug version 2
+PHP_XDEBUG_REMOTE_ENABLE=on
+PHP_XDEBUG_REMOTE_HOST=host.docker.internal
+PHP_XDEBUG_REMOTE_PORT=9003
+PHP_XDEBUG_REMOTE_CONNECT_BACK=0
+PHP_XDEBUG_PROFILER_ENABLE=1
+PHP_XDEBUG_PROFILER_OUTPUT_DIR=/var/www/app/xdebug
+PHP_XDEBUG_IDEKEY=DOCKER_XDEBUG
+
+# Opcache
+PHP_OPCACHE_VALIDATE_TIMESTAMPS=0
+PHP_OPCACHE_MAX_ACCELERATED_FILES=10000
+PHP_OPCACHE_MEMORY_CONSUMPTION=128
+
+# Backing Services
+PGSQL_SODIUM_PORT=5432
+PGSQL_SODIUM_USERNAME=sanf_sodium
+PGSQL_SODIUM_PASSWORD=sanf_sodium_secret
+
+########################################
+# Application
+########################################
+
 APP_NAME="SANF API"
 APP_ENV=staging
-APP_KEY=base64:CHANGE_THIS_KEY
-APP_DEBUG=false
-APP_URL=0.0.0.0
+APP_KEY=base64:EGzgnsyYn3j5PBBk4zSFwKZOQLdN4KDisdkEmHqrlu3qP78AiVGiAvNohpn868it
+APP_DEBUG=true
+APP_URL=0.0.0.0:8032
 APP_PORT=8032
 
-########################################
-# IMPORTANT FIX (ROUTE PREFIX)
-########################################
-SANF_API_PREFIX=api
+WEB_PARTNER_URL=http://localhost
+WEB_PARTNER_APP="SANFIND Web Partner"
 
-########################################
-# DATABASE
-########################################
+HTTP_LOGGER=false
+GUZZLE_LOGGER=false
+
+AUTH_EMAIL_VERIFY_URL="${APP_URL}/pages/verify-email"
+AUTH_ACTIVATION_URL="${APP_URL}/pages/activation"
+AUTH_RESET_PASS_URL="${APP_URL}/pages/reset-password"
+
+LOG_CHANNEL=daily
+LOG_LEVEL=info
+LOG_SLACK_WEBHOOK_URL=
+
 DB_CONNECTION=pgsql
 DB_HOST=sanfind-dbsodium-xr6axk
 DB_PORT=5432
@@ -24,7 +66,6 @@ DB_USERNAME=sanf_sodium
 DB_PASSWORD=sanf_sodium_secret
 DB_SCHEMA=sanf_sch
 
-# Optional (biar sama kayak dev, aman kalau dipakai)
 DB_ENCRYPTED_HOST=sanfind-dbsodium-xr6axk
 DB_ENCRYPTED_PORT=5432
 DB_ENCRYPTED_DATABASE=sanf_sodium
@@ -32,50 +73,68 @@ DB_ENCRYPTED_USERNAME=postgres
 DB_ENCRYPTED_PASSWORD=
 DB_ENCRYPTED_SCHEMA=sanf_sch
 
-########################################
-# CACHE / SESSION
-########################################
+DASHBOARD_DB_CONNECTION=pgsql
+DASHBOARD_DB_HOST=sanfind-dbsodium-xr6axk
+DASHBOARD_DB_PORT=5432
+DASHBOARD_DB_DATABASE=sanf_sodium
+DASHBOARD_DB_USERNAME=postgres
+DASHBOARD_DB_PASSWORD=
+DASHBOARD_DB_SCHEMA=sanf_sch
+
+DASHBOARD_DB_ENCRYPTED_HOST=sanfind-dbsodium-xr6axk
+DASHBOARD_DB_ENCRYPTED_PORT=5432
+DASHBOARD_DB_ENCRYPTED_DATABASE=sanf_sodium
+DASHBOARD_DB_ENCRYPTED_USERNAME=postgres
+DASHBOARD_DB_ENCRYPTED_PASSWORD=
+DASHBOARD_DB_ENCRYPTED_SCHEMA=sanf_sch
+
 CACHE_DRIVER=file
 QUEUE_CONNECTION=database
 SESSION_DRIVER=file
 SESSION_LIFETIME=120
 
-########################################
-# REDIS
-########################################
 REDIS_HOST=redis
-REDIS_PORT=6379
 REDIS_PASSWORD=null
+REDIS_PORT=6379
 
-########################################
-# LOG
-########################################
-LOG_CHANNEL=daily
-LOG_LEVEL=info
+MAIL_DRIVER=log
+MAIL_HOST=
+MAIL_PORT=
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
 
-########################################
-# OPCACHE
-########################################
-PHP_OPCACHE_VALIDATE_TIMESTAMPS=0
-PHP_OPCACHE_MEMORY_CONSUMPTION=128
-PHP_OPCACHE_MAX_ACCELERATED_FILES=10000
+MAIL_FROM_ADDRESS=
+MAIL_FROM_NAME=
+MAIL_TO_ADMIN=
+MAIL_TO_MARKETING=
+MAIL_TO_SERVICE=
+MAIL_TO_CUSTOMER_SERVICE=
+MAIL_TO_IT_HELPDESK=
 
-########################################
-# MAIL
-########################################
-MAIL_MAILER=log
+FILESYSTEM_DRIVER=minio
+MINIO_URL=
+MINIO_ENDPOINT=
+MINIO_ACCESS_KEY_ID=
+MINIO_SECRET_ACCESS_KEY=
+MINIO_BUCKET=
 
-########################################
-# JWT
-########################################
 JWT_SECRET=${APP_KEY}
 JWT_TTL=20160
 JWT_REFRESH_TTL=2628000
 JWT_ISSUER=${APP_NAME}
 
-########################################
-# INTERNAL API (WAJIB dari DEV)
-########################################
+JWT_GOOGLE_AUDIENCE=
+JWT_APPLE_AUDIENCE=
+
+APP_CLIENT_ID=
+APP_CLIENT_SECRET=
+
+HORIZON_BASIC_AUTH_USERNAME=
+HORIZON_BASIC_AUTH_PASSWORD=
+
+SANF_API_PREFIX=api
+
 SANF_INTERNAL_URL=https://mobile.sanf.co.id/MobileAPI/index.php
 SANF_INTERNAL_CLIENT_ID=r3v7nm2c9unka1n5dgov6hubcrbu6bo4
 
@@ -83,27 +142,21 @@ SANF_INTERNAL_V2_URL=
 SANF_INTERNAL_V2_CLIENT_ID=
 SANF_INTERNAL_V2_CLIENT_SECRET=
 
-########################################
-# EXTERNAL API
-########################################
 TEKENAJA_INTERNAL_URL=https://apix.sandbox-111094.com
 TEKENAJA_INTERNAL_CLIENT_ID=xtEt4E7jSdQuieq1WioHztSvxqUizwY3
 TEKENAJA_MAX_SUBMIT=3
 
-########################################
-# CORE
-########################################
 CORE_H2H_CLIENT_ID=dev-sanf-core
 CORE_H2H_CLIENT_SECRET=ocRMFXc1khtsGsANQ4CPMHn9DUQhP2V5rQZ1Rf5dr1YuIF6W632UjDzYF8v7
 
 CALLBACK_CLIENT_SECRET=ocRMFXc1khtsGsANQ4CPMHn9DUQhP2V5rQZ1Rf5dr1YuIF6W632UjDzYF8v7
 
-########################################
-# OCR / SCAN
-########################################
+#ALLOWED_IPS=127.0.0.1
+
 SCANINA_API_URL=https://d-scanina-ecommerce-api.nbsdev.io
 SCANINA_API_CLIENT_ID=ID
 SCANINA_API_SECRET_ID=SECRET
+SCANINA_MAIL_RECIPIENT=
 
 NANONETS_API_URL=https://app.nanonets.com/api/
 NANONETS_API_CLIENT_ID=
@@ -112,21 +165,43 @@ NANONETS_SCAN_UUID=a3c81d89-d7d9-4ee4-b834-f3f6b6e8e7ef
 
 OCR_SCAN_PAGE_LIMIT=5
 
-########################################
-# COMPANY
-########################################
+SCANINA_FINANCING_FACILITY=
+SCANINA_FINANCING_METHOD=
+
+ADMIN_ID=1
+CUSTOMER_ENTITY_ID=4
+PENDING_STATUS_ID=1
+
+ADINS_HOST=http://localhost
+ADINS_ESIGN_PATH_URL=
+ADINS_ESIGN_KEY=
+ADINS_ESIGN_TENANT_CODE=
+
+FINEKSI_API_URL="https://sandbox-hub.api.fineksi.com/v1/"
+FINEKSI_API_CLIENT_ID="SANFSANDBOX"
+FINEKSI_API_SECRET_ID=
+
+ENCRYPTION_KEY=38e5347bbac134fc55592a4a55dd70fb782e2dab7bb0640b71d07f60240b1474
+
 COMPANY_PREFIX="PT"
 COMPANY_NAME="Surya Artha Nusantara Finance"
 COMPANY_INITIALS="SANF"
+#COMPANY_ADDRESS_LINE_1="18 Office Park lt 23"
+#COMPANY_ADDRESS_LINE_2="Jl. TB Simatupang Kav 18"
+#COMPANY_ADDRESS_LINE_3="Jakarta Selatan"
+#COMPANY_BANK_PROVIDER="MANDIRI"
+#COMPANY_BANK_ACCOUNT_NO="1270004589980"
+#COMPANY_BANK_OWNER="PT Surya Artha Nusantara Finance"
+#COMPANY_BANK_ID="0"
 
-########################################
-# SECURITY
-########################################
-ENCRYPTION_KEY=38e5347bbac134fc55592a4a55dd70fb782e2dab7bb0640b71d07f60240b1474
+PDC_HOLD_XID_LENGTH=10
 
-########################################
-# CRON
-########################################
+MIDTRANS_SERVER_KEY=
+MIDTRANS_CLIENT_KEY=
+MIDTRANS_IS_PRODUCTION=false
+MIDTRANS_EXPIRY_UNIT=minutes
+MIDTRANS_EXPIRY_DURATION=30
+
 CRON_BASE_URL=localhost:8085
 CRON_CLIENT_ID=ID
 CRON_CLIENT_SECRET=SECRET
