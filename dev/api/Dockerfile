@@ -28,7 +28,7 @@ RUN mkdir -p storage/logs storage/framework/cache storage/framework/sessions \
     && chown -R www-data:www-data /var/www \
     && chmod -R 775 storage bootstrap/cache
 
-RUN php artisan key:generate --force
+RUN php artisan key:generate
 
 EXPOSE 8032
 
