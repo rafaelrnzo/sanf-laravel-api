@@ -25,6 +25,16 @@ class EloquentRegistrationOTPRepository implements RegistrationOTPRepositoryInte
             ->first();
     }
 
+    public function findLatestNotUsed(int $userId, string $purpose)
+    {
+        return $this->model->newQuery()
+            ->where('user_id', $userId)
+            ->where('purpose', $purpose)
+            ->where('is_used', false)
+            ->orderBy('created_at', 'desc')
+            ->first();
+    }
+
     public function create(array $data)
     {
         return $this->model->newQuery()->create($data);
