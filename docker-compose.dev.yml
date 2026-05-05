@@ -4,18 +4,28 @@ services:
   api:
     mem_limit: 192M
     mem_reservation: 128M
-    image: cr.nbs.dev/sanf/core/api:latest
+    image: cr.nbs.dev/sanf/core/api:local
     container_name: d-sanfind-api
+    build:
+      context: './'
+      dockerfile: './deployments/local/app/api/Dockerfile'
     ports:
       - ${APP_PORT:-4011}:80
     restart: unless-stopped
     env_file:
       - .env
+    volumes:
+      - '.:/var/www/app:cached'
   worker:
     mem_limit: 192M
     mem_reservation: 128M
-    image: cr.nbs.dev/sanf/core/worker:latest
+    image: cr.nbs.dev/sanf/core/worker:local
     container_name: d-sanfind-worker
+    build:
+      context: './'
+      dockerfile: './deployments/local/app/worker/Dockerfile'
     restart: unless-stopped
     env_file:
       - .env
+    volumes:
+      - '.:/var/www/app:cached'
