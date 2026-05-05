@@ -15,3 +15,11 @@ supervisord*
 .cache/
 
 docker-compose.prod.yml
+
+*.sql
+*.backup
+
+*.postman_collection.json
+
+setup-local.sh
+dev/

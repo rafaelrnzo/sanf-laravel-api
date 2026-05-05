@@ -19,19 +19,16 @@ class ListProductService implements ApplicationServiceInterface
         // prepare filter;
         $filter = [];
         if ($dto->id) {
-            $filter += ['id' => "id = {$dto->id}"];
+            $filter['id'] = $dto->id;
         }
 
         if ($dto->title) {
-            $filter += ['title' => "title like '%{$dto->title}%'"];
+            $filter['title'] = $dto->title;
         }
-
-        // concat with 'and' separator;
-        $search = implode(' and ', $filter);
 
         // sent list data;
         return new ListProductResultDto([
-            'list' => $this->repository->list($dto->limit, $dto->offset, $search),
+            'list' => $this->repository->list($dto->limit, $dto->offset, $filter),
         ]);
     }
 }
