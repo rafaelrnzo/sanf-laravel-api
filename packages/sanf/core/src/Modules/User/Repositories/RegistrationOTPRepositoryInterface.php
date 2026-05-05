@@ -5,6 +5,7 @@ namespace Sanf\Core\Modules\User\Repositories;
 interface RegistrationOTPRepositoryInterface
 {
     public function findLatestActive(int $userId, string $purpose);
+    public function findLatestNotUsed(int $userId, string $purpose);
 
     public function create(array $data);
 

@@ -1,0 +1,56 @@
+version: "3.9"
+
+networks:
+  sanf-staging-net:
+    driver: bridge
+
+volumes:
+  postgres_data:
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: staging-sanf-postgres
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-sanf_sodium}
+      POSTGRES_USER: ${DB_USERNAME:-sanf_sodium}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-sanf_sodium_secret}
+    networks:
+      - sanf-staging-net
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  api:
+    image: ${CI_REGISTRY_IMAGE:-cr.nbs.dev/sanf/core/api}:${IMAGE_TAG:-staging}
+    container_name: staging-sanf-api
+    build:
+      context: "./"
+      dockerfile: "./deployments/api/Dockerfile"
+    ports:
+      - "${APP_PORT:-8080}:8080"
+    networks:
+      - sanf-staging-net
+    env_file:
+      - .env
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "0.25"
+          memory: 192M
+        reservations:
+          cpus: "0.25"
+          memory: 128M
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
