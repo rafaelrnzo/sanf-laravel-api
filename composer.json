@@ -73,6 +73,9 @@
         ]
     },
     "scripts": {
+        "test": [
+            "./vendor/bin/phpunit tests/Units"
+        ],
         "smell": [
             "./vendor/bin/php-cs-fixer fix -vvv --dry-run --show-progress=dots"
         ],

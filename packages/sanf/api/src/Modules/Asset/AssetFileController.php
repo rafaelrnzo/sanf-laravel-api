@@ -46,6 +46,7 @@ class AssetFileController extends RestApiController
             'file' => [
                 'required',
                 'file',
+                'mimes:jpg,jpeg,png,pdf',
                 "mimetypes:{$types[$request->get('asset_type')]}",
                 "max:{$maxSizes[$request->get('asset_type')]}",
             ],

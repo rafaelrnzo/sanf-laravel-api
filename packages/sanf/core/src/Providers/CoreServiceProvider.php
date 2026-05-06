@@ -145,10 +145,12 @@ use Sanf\Core\Modules\Survey\Repositories\EloquentSurveyEncryptedRepository;
 use Sanf\Core\Modules\Survey\Repositories\SurveyRepositoryInterface;
 use Sanf\Core\Modules\Survey\Specifications\EloquentSurveySpecificationFactory;
 use Sanf\Core\Modules\Survey\Specifications\SurveySpecificationFactoryInterface;
+use Sanf\Core\Modules\User\Repositories\EloquentRegistrationOTPRepository;
 use Sanf\Core\Modules\User\Repositories\EloquentUserAuthLogEncryptedRepository;
 use Sanf\Core\Modules\User\Repositories\EloquentUserEncryptedRepository;
 use Sanf\Core\Modules\User\Repositories\EloquentUserOAuthEncryptedRepository;
 use Sanf\Core\Modules\User\Repositories\ProfileRepositoryInterface;
+use Sanf\Core\Modules\User\Repositories\RegistrationOTPRepositoryInterface;
 use Sanf\Core\Modules\User\Repositories\RestProfileRepository;
 use Sanf\Core\Modules\User\Repositories\UserAuthLogRepositoryInterface;
 use Sanf\Core\Modules\User\Repositories\UserOAuthRepositoryInterface;
@@ -195,6 +197,7 @@ class CoreServiceProvider extends ServiceProvider
 
         $this->app->routeMiddleware([
             'pic' => CheckPicMiddleware::class,
+            'profile_owner' => \Sanf\Core\Middleware\ProfileOwnershipGuardMiddleware::class,
         ]);
     }
 
@@ -254,6 +257,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(AuditHttpLogRepositoryInterface::class, EloquentAuditHttpLogEncryptedRepository::class);
         $this->app->bind(ApiRequestRepositoryInterface::class, EloquentApiRequestLogEncryptedRepository::class);
         $this->app->bind(UserOAuthRepositoryInterface::class, EloquentUserOAuthEncryptedRepository::class);
+        $this->app->bind(RegistrationOTPRepositoryInterface::class, EloquentRegistrationOTPRepository::class);
 
         // CR2025
         $this->app->bind(PdcHoldRepositoryInterface::class, PdcHoldEloquentRepository::class);
