@@ -124,7 +124,9 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->register(PasswordResetServiceProvider::class);
         $this->app->register(NotificationServiceProvider::class);
         $this->app->register(AuthServiceProvider::class);
-        class_alias('Yajra\DataTables\DataTables', 'Datatables');
+        if (!class_exists('Datatables')) {
+            class_alias('Yajra\DataTables\DataTables', 'Datatables');
+        }
         $this->app->configure('datatables');
         $this->app->register('Yajra\DataTables\DataTablesServiceProvider');
         $this->app->register(\PragmaRX\Health\ServiceProvider::class);

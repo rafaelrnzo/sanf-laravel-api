@@ -15,3 +15,4 @@ class OTPRequestDto extends AbstractDto
     /** @var string|null */
     public $code;
 }
+
