@@ -22,4 +22,3 @@ docker-compose.prod.yml
 *.postman_collection.json
 
 setup-local.sh
-dev/
