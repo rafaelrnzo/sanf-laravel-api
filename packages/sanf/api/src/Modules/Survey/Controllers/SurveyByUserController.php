@@ -63,6 +63,9 @@ class SurveyByUserController extends RestApiController
                 'items.*.description' => ['required', 'string', 'max:65535'],
                 'items.*.image_files' => ['required', 'array'],
                 'items.*.image_files.*' => ['required', 'string'],
+                'items.*.gps_lat' => ['nullable', 'numeric', 'between:-90,90'],
+                'items.*.gps_lng' => ['nullable', 'numeric', 'between:-180,180'],
+                'items.*.gps_address' => ['nullable', 'string', 'max:65535'],
             ]
         );
 
