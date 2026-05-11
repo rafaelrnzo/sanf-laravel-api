@@ -9,30 +9,17 @@ use League\Fractal\Serializer\ArraySerializer as BaseArraySerializer;
 
 class LazySerializer extends BaseArraySerializer
 {
-    /**
-     * Serialize a collection to a plain array.
-     *
-     * @param string $resourceKey
-     * @param array $data
-     *
-     * @return array
-     */
-    public function collection($resourceKey, array $data)
+    public function collection(?string $resourceKey, array $data): array
     {
         return ['rows' => $data];
     }
 
-    /**
-     * Serialize null resource.
-     *
-     * @return null
-     */
-    public function null()
+    public function null(): ?array
     {
         return null;
     }
 
-    public function meta(array $meta)
+    public function meta(array $meta): array
     {
         if (empty($meta)) {
             return [];
@@ -46,7 +33,7 @@ class LazySerializer extends BaseArraySerializer
         return Request::input('sort_by') ?? 'earliest'; //TODO CONFIG DEFAULT SORT QUERY;
     }
 
-    public function paginator(PaginatorInterface $paginator)
+    public function paginator(PaginatorInterface $paginator): array
     {
         $pagination = [
             'total' => (int) $paginator->getTotal(),
@@ -59,7 +46,7 @@ class LazySerializer extends BaseArraySerializer
         return ['metadata' => $pagination];
     }
 
-    public function cursor(CursorInterface $cursor)
+    public function cursor(CursorInterface $cursor): array
     {
         $cursor = [
             'current' => $cursor->getCurrent(),

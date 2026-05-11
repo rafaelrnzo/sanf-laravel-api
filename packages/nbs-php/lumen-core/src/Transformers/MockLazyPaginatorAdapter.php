@@ -13,33 +13,33 @@ class MockLazyPaginatorAdapter implements PaginatorInterface
         $this->data = collect($data);
     }
 
-    public function getCurrentPage()
+    public function getCurrentPage(): int
     {
         return 0;
     }
 
-    public function getLastPage()
+    public function getLastPage(): int
     {
-        return $this->data->count();
+        return (int) $this->data->count();
     }
 
-    public function getTotal()
+    public function getTotal(): int
     {
-        return $this->data->count();
+        return (int) $this->data->count();
     }
 
-    public function getCount()
+    public function getCount(): int
     {
-        return $this->data->count();
+        return (int) $this->data->count();
     }
 
-    public function getPerPage()
+    public function getPerPage(): int
     {
-        return $this->data->count();
+        return (int) $this->data->count();
     }
 
-    public function getUrl($page)
+    public function getUrl(int $page): string
     {
-        return url()->current();
+        return (string) url()->current();
     }
 }

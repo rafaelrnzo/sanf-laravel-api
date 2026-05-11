@@ -10,5 +10,5 @@ interface ResponseMapperInterface
 
     public function errorResponse(Response $response);
 
-    public function parseException(\Exception $exception);
+    public function parseException(\Throwable $exception);
 }

@@ -17,7 +17,7 @@ class CriticalFlowTest extends TestCase
     public function testApplicationBoots()
     {
         $this->assertNotNull(app());
-        $this->assertEquals('local', env('APP_ENV'));
+        $this->assertEquals('testing', env('APP_ENV'));
     }
 
     public function testAuthAndJwt()

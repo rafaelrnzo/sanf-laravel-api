@@ -34,7 +34,7 @@ class JWTAuthServiceProvider extends ServiceProvider
                 $app['request']
             );
 
-            $app->refresh('request', $guard, 'setRequest');
+            // $app->refresh('request', $guard, 'setRequest');
 
             return $guard;
         });

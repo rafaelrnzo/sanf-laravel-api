@@ -28,11 +28,15 @@ class AuthSeeder extends Seeder
         ]);
         DB::table(config('auth.table_names.user_auth'))->insertOrIgnore([
             'id' => '1',
-            'name' => $faker->name,
+            'full_name' => $faker->name,
             'username' => 'admin@admin.com',
             'password' => bcrypt('admin123'),
             'status_id' => '10',
             'entity_type_id' => '10',
+            'landline_number' => '0123456789',
+            'phone_number' => '08123456789',
+            'password_updated_at' => date('Y-m-d H:i:s'),
+            'nonce' => hex2bin('000000000000000000000000000000000000000000000000'), // 24 bytes of zeros
         ]);
     }
 }

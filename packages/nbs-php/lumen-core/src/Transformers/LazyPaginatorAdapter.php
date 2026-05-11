@@ -13,39 +13,39 @@ class LazyPaginatorAdapter implements PaginatorInterface
         $this->paginator = $paginator;
     }
 
-    public function getCurrentPage()
+    public function getCurrentPage(): int
     {
-        return max((int) ceil($this->paginator->skip / $this->paginator->limit), 1);
+        return (int) max((int) ceil($this->paginator->skip / $this->paginator->limit), 1);
     }
 
-    public function getLastPage()
+    public function getLastPage(): int
     {
-        return max((int) ceil($this->paginator->total / $this->paginator->limit), 1);
+        return (int) max((int) ceil($this->paginator->total / $this->paginator->limit), 1);
     }
 
-    public function getTotal()
+    public function getTotal(): int
     {
-        return $this->paginator->total;
+        return (int) $this->paginator->total;
     }
 
-    public function getCount()
+    public function getCount(): int
     {
-        return $this->paginator->count;
+        return (int) $this->paginator->count;
     }
 
-    public function getSkip()
+    public function getSkip(): int
     {
-        return $this->paginator->skip;
+        return (int) $this->paginator->skip;
     }
 
-    public function getPerPage()
+    public function getPerPage(): int
     {
-        return $this->paginator->limit;
+        return (int) $this->paginator->limit;
     }
 
-    public function getUrl($page)
+    public function getUrl(int $page): string
     {
         //TODO CORRECT IMPLEMENTATION
-        return url()->current();
+        return (string) url()->current();
     }
 }

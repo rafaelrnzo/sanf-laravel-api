@@ -125,13 +125,13 @@ class JWTGuard implements Guard
     public function getTokenForRequest()
     {
         if (!$this->jwt->isHealthy() && $this->request->headers->has('Authorization')) {
-            [$jwt_token] = sscanf($this->request->headers->get('Authorization'), 'Bearer %s');
-
-            if (is_null($jwt_token)) {
-                throw new UnauthorizedException;
+            $header = $this->request->headers->get('Authorization');
+            if (stripos($header, 'Bearer ') === 0) {
+                $jwt_token = trim(substr($header, 7));
+                if ($jwt_token) {
+                    $this->jwt->setToken($jwt_token);
+                }
             }
-
-            $this->jwt->setToken($jwt_token);
         }
 
         return $this->jwt->getToken();
