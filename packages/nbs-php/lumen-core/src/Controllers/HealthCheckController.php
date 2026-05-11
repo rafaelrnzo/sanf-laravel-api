@@ -4,23 +4,23 @@ namespace NbsPhp\Core\Controllers;
 
 use Illuminate\Support\Facades\File;
 use Laravel\Lumen\Routing\Controller;
-use PragmaRX\Health\Service;
+// use PragmaRX\Health\Service;
 
 class HealthCheckController extends Controller
 {
     /**
      * @var Service
      */
-    private $healthService;
+    // private $healthService;
 
     /**
      * Health constructor.
      *
      * @param Service $healthService
      */
-    public function __construct(Service $healthService)
+    public function __construct(/* Service $healthService */)
     {
-        $this->healthService = $healthService;
+        // $this->healthService = $healthService;
     }
 
     /**
@@ -31,27 +31,28 @@ class HealthCheckController extends Controller
      */
     public function check()
     {
-        $this->healthService->setAction('check');
+        // $this->healthService->setAction('check');
+        // return response($this->healthService->health());
 
-        return response($this->healthService->health());
+        return response(['status' => 'ok']);
     }
 
     public function checkSimplified()
     {
-        $results = collect($this->healthService->health())->reduce(function ($current, $resource) {
-            $current[$resource->abbreviation] = $resource->isHealthy();
+        // $results = collect($this->healthService->health())->reduce(function ($current, $resource) {
+        //     $current[$resource->abbreviation] = $resource->isHealthy();
+        //     return $current;
+        // });
+        // $status = 200;
+        // foreach ($results ?? [] as $key => $value) {
+        //     if ($value === false) {
+        //         $status = 500;
+        //         break;
+        //     }
+        // }
+        // return response()->json($results, $status);
 
-            return $current;
-        });
-        $status = 200;
-        foreach ($results ?? [] as $key => $value) {
-            if ($value === false) {
-                $status = 500;
-                break;
-            }
-        }
-
-        return response()->json($results, $status);
+        return response()->json(['status' => true], 200);
     }
 
     /**
@@ -63,9 +64,10 @@ class HealthCheckController extends Controller
      */
     public function getResource($slug)
     {
-        $this->healthService->setAction('resource');
+        // $this->healthService->setAction('resource');
+        // return $this->healthService->resource($slug);
 
-        return $this->healthService->resource($slug);
+        return response(['status' => 'ok']);
     }
 
     /**
@@ -76,7 +78,9 @@ class HealthCheckController extends Controller
      */
     public function allResources()
     {
-        return $this->healthService->getResources();
+        // return $this->healthService->getResources();
+
+        return response(['status' => 'ok']);
     }
 
     /**
@@ -85,11 +89,12 @@ class HealthCheckController extends Controller
      */
     public function string()
     {
-        $this->healthService->setAction('string');
+        // $this->healthService->setAction('string');
+        // return response(
+        //     $this->healthService->string()
+        // );
 
-        return response(
-            $this->healthService->string()
-        );
+        return response('ok');
     }
 
     /**
@@ -98,35 +103,36 @@ class HealthCheckController extends Controller
      */
     public function panel()
     {
-        $this->healthService->setAction('panel');
+        // $this->healthService->setAction('panel');
+        // return response((string) view(config('health.views.panel'))->with('laravel', ['health' => config('health')]));
 
-        return response((string) view(config('health.views.panel'))->with('laravel', ['health' => config('health')]));
+        return response('panel ok');
     }
 
     public function assetAppJs()
     {
-        $file = File::get(config('health.assets.js'));
+        // $file = File::get(config('health.assets.js'));
+        // $response = response()->make($file);
+        // $response->header('Content-Type', 'text/javascript');
+        // return $response;
 
-        $response = response()->make($file);
-
-        $response->header('Content-Type', 'text/javascript');
-
-        return $response;
+        return response()->make('// js ok')->header('Content-Type', 'text/javascript');
     }
 
     public function assetAppCss()
     {
-        $file = File::get(config('health.assets.css'));
+        // $file = File::get(config('health.assets.css'));
+        // $response = response()->make($file);
+        // $response->header('Content-Type', 'text/css');
+        // return $response;
 
-        $response = response()->make($file);
-
-        $response->header('Content-Type', 'text/css');
-
-        return $response;
+        return response()->make('/* css ok */')->header('Content-Type', 'text/css');
     }
 
     public function config()
     {
-        return config('health');
+        // return config('health');
+
+        return [];
     }
 }

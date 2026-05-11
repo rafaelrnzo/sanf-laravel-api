@@ -129,7 +129,7 @@ class CoreServiceProvider extends ServiceProvider
         }
         $this->app->configure('datatables');
         $this->app->register('Yajra\DataTables\DataTablesServiceProvider');
-        $this->app->register(\PragmaRX\Health\ServiceProvider::class);
+        // $this->app->register(\PragmaRX\Health\ServiceProvider::class);
     }
 
     protected function registerSingletons()

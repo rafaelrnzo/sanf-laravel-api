@@ -3,6 +3,7 @@
 namespace NbsPhp\Core\Exceptions;
 
 use Exception;
+use Throwable;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -49,7 +50,7 @@ class Handler extends ExceptionHandler
         $this->mapper = $mapper;
     }
 
-    public function report(Exception $e)
+    public function report(Throwable $e)
     {
         if ($this->shouldntReport($e)) {
             return;
@@ -65,14 +66,14 @@ class Handler extends ExceptionHandler
 
         try {
             $logger = app(LoggerInterface::class);
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw $e; // throw the original exception
         }
 
         $logger->error($e, array_merge($this->context(app('request')), ['exception' => $e]));
     }
 
-    public function render($request, Exception $e)
+    public function render($request, Throwable $e)
     {
         if ($e instanceof HttpResponseException) {
             return $e->getResponse();
@@ -91,10 +92,10 @@ class Handler extends ExceptionHandler
      * Prepare a JSON response for the given exception.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \Exception $e
+     * @param \Throwable $e
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function prepareJsonResponse($request, Exception $e)
+    protected function prepareJsonResponse($request, Throwable $e)
     {
         list($mappedException, $httpStatus) = $this->mapper->parseException($e);
 
