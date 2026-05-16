@@ -51,10 +51,10 @@ class Route
     /**
      * Push Group URL and Processors onto the stack.
      *
-     * @param string $baseUrl
+     * @param string|null $baseUrl
      * @param array $processors
      */
-    protected static function push(string $baseUrl, array $processors)
+    protected static function push(?string $baseUrl, array $processors)
     {
         self::$urlStack[] = $baseUrl;
         self::$processorStack[] = $processors;
