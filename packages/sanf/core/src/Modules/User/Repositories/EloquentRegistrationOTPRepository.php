@@ -48,6 +48,10 @@ class EloquentRegistrationOTPRepository implements RegistrationOTPRepositoryInte
             $this->encryptedFields
         );
 
+        if (isset($data['email'])) {
+            $data['email_index'] = SodiumEncryption::hash($data['email']);
+        }
+
         return $this->model->newQuery()->create($data);
     }
 
@@ -63,6 +67,10 @@ class EloquentRegistrationOTPRepository implements RegistrationOTPRepositoryInte
             $data,
             $this->encryptedFields
         );
+
+        if (isset($data['email'])) {
+            $data['email_index'] = SodiumEncryption::hash($data['email']);
+        }
 
         return $model->update($data);
     }

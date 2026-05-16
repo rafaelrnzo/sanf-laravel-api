@@ -42,41 +42,42 @@ class EloquentUserEncryptedRepository extends AbstractEloquentRepository impleme
 
     public function findByEmail($email)
     {
-        $sodiumQuery = SodiumEncryption::query();
+        $usernameIndex = SodiumEncryption::hash($email);
 
-        return $this->model->newQuery()->where($sodiumQuery->selectRaw('username'), $email)->first();
+        return $this->model->newQuery()->where('username_index', $usernameIndex)->first();
     }
 
     public function existsByEmailAndStatusIds(string $email, array $statusIds): bool
     {
-        $sodiumQuery = SodiumEncryption::query();
+        $usernameIndex = SodiumEncryption::hash($email);
 
         return $this->model->newQuery()
-            ->where($sodiumQuery->selectRaw('username'), $email)
+            ->where('username_index', $usernameIndex)
             ->whereIn('status_id', $statusIds)
             ->exists();
     }
 
     public function findByEmailAndStatusIds(string $email, array $statusIds)
     {
-        $sodiumQuery = SodiumEncryption::query();
+        $usernameIndex = SodiumEncryption::hash($email);
 
         return $this->model->newQuery()
-            ->where($sodiumQuery->selectRaw('username'), $email)
+            ->where('username_index', $usernameIndex)
             ->whereIn('status_id', $statusIds)
             ->first();
     }
 
     public function existsByEmail(string $email): bool
     {
-        $sodiumQuery = SodiumEncryption::query();
+        $usernameIndex = SodiumEncryption::hash($email);
 
         return $this->model->newQuery()
-            ->where($sodiumQuery->selectRaw('username'), $email)
+            ->where('username_index', $usernameIndex)
             ->exists();
     }
 
-    public function create(array $data) {
+    public function create(array $data)
+    {
         $user = $this->model->newQuery()->forceCreate(
             $this->encryptBeforeCreate($data)
         );
@@ -94,6 +95,10 @@ class EloquentUserEncryptedRepository extends AbstractEloquentRepository impleme
             }
 
             $data[$field] = $encryptor->encrypt($data[$field]);
+        }
+
+        if (isset($data['username'])) {
+            $data['username_index'] = SodiumEncryption::hash($data['username']);
         }
 
         $data['nonce'] = $encryptor->nonce()->getNonceHex();
@@ -118,6 +123,10 @@ class EloquentUserEncryptedRepository extends AbstractEloquentRepository impleme
             }
 
             $data[$field] = $user->encryptor()->encrypt($data[$field]);
+        }
+
+        if (isset($data['username'])) {
+            $data['username_index'] = SodiumEncryption::hash($data['username']);
         }
 
         return $data;

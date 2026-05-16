@@ -27,6 +27,7 @@ class RegistrationOTPEncryptedModel extends AbstractModel
         'verify_attempt',
         'is_used',
         'nonce',
+        'email_index',
     ];
 
     protected $casts = [
