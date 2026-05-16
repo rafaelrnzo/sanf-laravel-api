@@ -98,7 +98,7 @@ class JsonResponseMapper implements ResponseMapperInterface
         return $response;
     }
 
-    public function parseException(Exception $exception)
+    public function parseException(\Throwable $exception)
     {
         //TODO RESPONSE MODEL OBJECT
         $error = [
