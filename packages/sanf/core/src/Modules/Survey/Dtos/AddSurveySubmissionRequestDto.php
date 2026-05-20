@@ -18,6 +18,8 @@ class AddSurveySubmissionRequestDto extends CamelCaseDataTransferObject
 
     public ?string $projectName;
 
+    public ?string $projectId;
+
     public ?string $segment;
 
     public array $items;

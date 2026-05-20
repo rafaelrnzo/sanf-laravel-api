@@ -16,6 +16,7 @@ class SurveyModel extends AbstractModel
         'customer_name',
         'pic_name',
         'project_name',
+        'project_id',
         'project_location',
         'segment',
     ];
