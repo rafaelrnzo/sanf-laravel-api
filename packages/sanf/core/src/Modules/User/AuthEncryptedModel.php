@@ -54,10 +54,14 @@ class AuthEncryptedModel extends AuthModel
         'reset_pin_expired_at',
         'deleted_at',
         'nonce',
+        'username_index',
     ];
 
     protected $hidden = [
-        'password', 'remember_token', 'pin', 'nonce',
+        'password',
+        'remember_token',
+        'pin',
+        'nonce',
     ];
 
     public function status()

@@ -2,10 +2,17 @@
 
 namespace Sanf\Core\Modules\User\Models;
 
+use Sanf\Core\Constants\ConnectionDB;
 use NbsPhp\Core\Models\AbstractModel;
+use Sanf\Core\Traits\SodiumEncryptionTrait;
+
 
 class RegistrationOTPEncryptedModel extends AbstractModel
 {
+    use SodiumEncryptionTrait;
+
+    protected $connection = ConnectionDB::PG_SODIUM;
+
     protected $table = 'registration_otp_encrypted';
 
     protected $fillable = [
@@ -19,6 +26,8 @@ class RegistrationOTPEncryptedModel extends AbstractModel
         'send_attempt',
         'verify_attempt',
         'is_used',
+        'nonce',
+        'email_index',
     ];
 
     protected $casts = [
@@ -27,4 +36,13 @@ class RegistrationOTPEncryptedModel extends AbstractModel
         'suspend_end_at' => 'datetime',
         'is_used' => 'boolean',
     ];
+
+    public function getEmailAttribute()
+    {
+        if (is_null($this->attributes['email'])) {
+            return null;
+        }
+        
+        return $this->decryptor()->decrypt($this->attributes['email']);
+    }
 }

@@ -15,6 +15,10 @@ class SurveyItemModel extends AbstractModel
         'description',
         'image_files',
         'image_path',
+        'captured_at',
+        'gps_lat',
+        'gps_lng',
+        'gps_address',
     ];
 
     public function surveyItems()
