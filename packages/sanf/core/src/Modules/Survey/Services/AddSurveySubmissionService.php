@@ -3,6 +3,7 @@
 namespace Sanf\Core\Modules\Survey\Services;
 
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use League\Flysystem\FileNotFoundException;
@@ -65,6 +66,23 @@ class AddSurveySubmissionService implements ApplicationServiceInterface
             $input = $data;
             $input['image_files'] = json_encode($imageFiles);
             $input['image_path'] = implode('|', $imagePaths);
+
+            if (empty($input['gps_address']) && !empty($input['gps_lat']) && !empty($input['gps_lng'])) {
+                $apiKey = config('services.google_maps.api_key');
+                if ($apiKey) {
+                    try {
+                        $response = Http::get("https://maps.googleapis.com/maps/api/geocode/json", [
+                            'latlng' => $input['gps_lat'] . ',' . $input['gps_lng'],
+                            'key' => $apiKey
+                        ]);
+                        if ($response->successful() && $response->json('status') === 'OK') {
+                            $input['gps_address'] = $response->json('results.0.formatted_address');
+                        }
+                    } catch (\Exception $e) {
+                        report($e);
+                    }
+                }
+            }
 
             return $input;
         })->toArray();
