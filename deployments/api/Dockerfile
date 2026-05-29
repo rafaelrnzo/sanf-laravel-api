@@ -1,4 +1,4 @@
-FROM alpine:3.13
+FROM alpine:3.20
 
 LABEL Description="Forked from https://github.com/TrafeX/docker-php-nginx/tree/1.10.0"
 
@@ -6,49 +6,51 @@ ENV WORKDIR="/var/www"
 
 # Install packages
 RUN apk --no-cache add \
-    php7-fpm \
-    php7-opcache \
-    php7-phar \
-    php7-openssl \
-    php7-gd \
-    php7-ctype \
-    php7-curl \
-    php7-dom \
-    php7-iconv \
-    php7-intl \
-    php7-json \
-    php7-mbstring \
-#    php7-pdo_mysql \
-    php7-pdo_pgsql \
-    php7-session \
-    php7-simplexml \
-    php7-tokenizer \
-    php7-fileinfo \
-    php7-xml \
-    php7-xmlreader \
-    php7-xmlwriter \
-    php7-zip \
-    php7-zlib \
-    php7-sodium \
-    php7-posix \
-    php7-pcntl \
+    php83 \
+    php83-fpm \
+    php83-opcache \
+    php83-phar \
+    php83-openssl \
+    php83-gd \
+    php83-ctype \
+    php83-curl \
+    php83-dom \
+    php83-iconv \
+    php83-intl \
+    php83-mbstring \
+#    php83-pdo_mysql \
+    php83-pdo_pgsql \
+    php83-pgsql \
+    php83-session \
+    php83-simplexml \
+    php83-tokenizer \
+    php83-fileinfo \
+    php83-xml \
+    php83-xmlreader \
+    php83-xmlwriter \
+    php83-zip \
+    php83-zlib \
+    php83-sodium \
+    php83-posix \
+    php83-pcntl \
+    php83-bcmath \
     nginx \
     supervisor \
     curl
 
-# Install packages
-RUN apk --no-cache add php php-fpm php-opcache php-openssl php-curl \
-    nginx supervisor curl
+# Symlink php83 binaries to the generic names the rest of the image expects
+RUN ln -sf /usr/bin/php83 /usr/bin/php \
+    && ln -sf /usr/sbin/php-fpm83 /usr/sbin/php-fpm
 
 # Configure nginx
 COPY ./deployments/api/nginx.conf /etc/nginx/nginx.conf
 
 # Remove default server definition
-RUN rm /etc/nginx/conf.d/default.conf
+RUN rm -f /etc/nginx/conf.d/default.conf
 
 # Configure PHP-FPM
-COPY ./deployments/api/fpm-pool.conf /etc/php7/php-fpm.d/www.conf
-COPY ./deployments/api/php.ini /etc/php7/conf.d/custom.ini
+COPY ./deployments/api/fpm-pool.conf /etc/php83/php-fpm.d/www.conf
+COPY ./deployments/api/php.ini /etc/php83/conf.d/custom.ini
 
 # Configure supervisord
 COPY ./deployments/api/supervisord.conf /etc/supervisor/conf.d/supervisord.conf

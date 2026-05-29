@@ -1,6 +1,6 @@
-FROM php:8.1-fpm
+FROM php:8.3-fpm
 
-LABEL Description="Laravel PHP 8.1"
+LABEL Description="Laravel PHP 8.3"
 
 ENV WORKDIR=/var/www
 
