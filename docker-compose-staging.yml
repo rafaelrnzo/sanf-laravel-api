@@ -6,7 +6,6 @@ networks:
 
 volumes:
   postgres_data:
-  mailpit_data:
 
 services:
   postgres:
@@ -43,7 +42,6 @@ services:
       - .env
     depends_on:
       - postgres
-      - mailpit
     restart: unless-stopped
     deploy:
       resources:
@@ -59,16 +57,4 @@ services:
         max-size: "10m"
         max-file: "5"
 
-  mailpit:
-    image: axllent/mailpit:v1.22.3
-    container_name: staging-sanf-mailpit
-    ports:
-      - "8025:8025"
-    networks:
-      - sanf-staging-net
-    volumes:
-      - mailpit_data:/data
-    environment:
-      MP_MAX_MESSAGES: 5000
-      MP_DATABASE: /data/mailpit.db
-    restart: unless-stopped
+
