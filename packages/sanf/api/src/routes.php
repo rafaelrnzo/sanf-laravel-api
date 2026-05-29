@@ -87,6 +87,7 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth', 'profile_owner']], func
     Route::get('astra-products', ['as' => 'astra.product.list', 'uses' => 'Astra\ProductAstraListController@getList']);
 
     Route::get('locations', ['as' => 'locations.list', 'uses' => 'Location\LocationController@getList']);
+    Route::post('users/reverse-geocode', ['as' => 'users.reverse-geocode', 'uses' => 'Location\LocationController@reverseGeocode']);
 
     Route::get('users/metadata-info', ['as' => 'users.metadata-info', 'uses' => 'User\Controllers\UserController@getProjectMetadataInfo']);
     Route::get('users/metadata-financing', ['as' => 'users.metadata-financing', 'uses' => 'User\Controllers\UserController@getFinancingMetadata']);
