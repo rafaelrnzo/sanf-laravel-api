@@ -15,7 +15,6 @@ ENV PHP_XDEBUG_MODE="off" \
     PHP_XDEBUG_OUTPUT_DIR="/var/www/app/xdebug"
 
 ENV BUILD_PACKAGES="libicu-dev libzip-dev libpng-dev libgmp-dev libjpeg62-turbo-dev libfreetype6-dev libonig-dev libpq-dev"
-ENV RUNTIME_PACKAGES="libicu72 libzip5 libpng16-16 libjpeg62-turbo libfreetype6 libpq5"
 
 # $PHPIZE_DEPS (autoconf, gcc, make, ...) is required to build the PECL
 # extensions below; it is purged again at the end of the build.
@@ -26,8 +25,7 @@ RUN apt-get update \
         nginx \
         procps \
         $PHPIZE_DEPS \
-        $BUILD_PACKAGES \
-        $RUNTIME_PACKAGES
+        $BUILD_PACKAGES
 
 RUN docker-php-ext-configure intl \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
@@ -72,7 +70,7 @@ RUN if [ ${INSTALL_DATADOG} = true ]; then \
     && php datadog-setup.php --php-bin=all --enable-profiling \
 ;fi
 
-RUN apt-get remove --purge -y ${PHPIZE_DEPS} ${BUILD_PACKAGES} \
+RUN apt-get remove --purge -y ${PHPIZE_DEPS} \
     && apt-get autoremove -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/cache/apt/archives /var/lib/apt/lists
