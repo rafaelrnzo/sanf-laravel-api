@@ -40,6 +40,8 @@ services:
       - sanf-staging-net
     env_file:
       - .env
+    depends_on:
+      - postgres
     restart: unless-stopped
     deploy:
       resources:
@@ -54,3 +56,5 @@ services:
       options:
         max-size: "10m"
         max-file: "5"
+
+
