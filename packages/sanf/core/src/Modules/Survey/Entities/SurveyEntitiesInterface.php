@@ -18,6 +18,8 @@ interface SurveyEntitiesInterface
 
     public function getProjectName();
 
+    public function getProjectId();
+
     public function getProjectLocation();
 
     public function getItems();
