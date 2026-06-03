@@ -58,7 +58,7 @@ RUN if [ ${INSTALL_DATADOG} = true ]; then \
     && php datadog-setup.php --php-bin=all --enable-profiling \
 ;fi
 
-RUN apt-get remove --purge -y ${PHPIZE_DEPS} ${BUILD_PACKAGES} \
+RUN apt-get remove --purge -y ${PHPIZE_DEPS} \
     && apt-get autoremove -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/cache/apt/archives /var/lib/apt/lists

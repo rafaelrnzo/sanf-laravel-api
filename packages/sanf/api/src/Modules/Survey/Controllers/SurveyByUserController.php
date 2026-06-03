@@ -56,7 +56,7 @@ class SurveyByUserController extends RestApiController
                 'pic_name' => ['nullable', 'string', 'max:255'],
                 'customer_name' => ['nullable', 'string', 'max:255'],
                 'project_name' => ['nullable', 'string', 'max:255'],
-                'project_id' => ['nullable', 'string', 'max:255'],
+                'project_id' => ['required', 'string', 'max:255'],
                 'segment' => ['nullable', 'string', 'max:255'],
                 'items' => ['required', 'array'],
                 'items.*.code' => ['required', 'string', 'max:255'],

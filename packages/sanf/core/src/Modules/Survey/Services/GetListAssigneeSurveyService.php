@@ -76,6 +76,7 @@ class GetListAssigneeSurveyService extends UserService implements ApplicationSer
                     'profile_xid' => $property->HEADER->CUST_ID ?? null,
                     'contract_no' => $property->HEADER->REG_NO ?? null,
                     'project_name' => $property->HEADER->PROJ_NAME ?? null,
+                    'project_id' => $property->HEADER->PROJECT_ID ?? null,
                     'segment' => $property->HEADER->SEGMENT ?? null,
                     'pic_name' => $property->HEADER->PIC_NAME ?? null,
                     'customer_name' => $property->HEADER->CUST_NAME ?? null,
