@@ -14,6 +14,45 @@
 use Illuminate\Support\Facades\Route;
 use Sanf\Api\Middleware\InjectUserIdFromPathMiddleware;
 
+Route::group(['middleware' => ['auth']], function () {
+    Route::get('V2/plafond/{cust_id}', [
+        'as' => 'standby-financing.plafond.header',
+        'uses' => 'StandbyFinancing\Controllers\StandbyFinancingPlafondController@header',
+    ]);
+    Route::get('api/plafond/list_sbf', [
+        'as' => 'standby-financing.plafond.list-sbf',
+        'uses' => 'StandbyFinancing\Controllers\StandbyFinancingPlafondController@listSbf',
+    ]);
+    Route::get('api/plafond/detail_sbf/{no_plafond}', [
+        'as' => 'standby-financing.plafond.detail-sbf',
+        'uses' => 'StandbyFinancing\Controllers\StandbyFinancingPlafondController@detailSbf',
+    ]);
+    Route::post('api/standby_financing/check_invoice', [
+        'as' => 'standby-financing.check-invoice',
+        'uses' => 'StandbyFinancing\Controllers\StandbyFinancingController@checkInvoice',
+    ]);
+    Route::get('api/standby_financing/bank_account', [
+        'as' => 'standby-financing.bank-account',
+        'uses' => 'StandbyFinancing\Controllers\StandbyFinancingController@bankAccount',
+    ]);
+    Route::get('api/standby_financing/document', [
+        'as' => 'standby-financing.document',
+        'uses' => 'StandbyFinancing\Controllers\StandbyFinancingController@document',
+    ]);
+    Route::post('api/standby_financing/store', [
+        'as' => 'standby-financing.store',
+        'uses' => 'StandbyFinancing\Controllers\StandbyFinancingController@store',
+    ]);
+    Route::get('api/standby_financing/list', [
+        'as' => 'standby-financing.list',
+        'uses' => 'StandbyFinancing\Controllers\StandbyFinancingController@list',
+    ]);
+    Route::get('api/standby_financing/detail/{recap_id_b2b}', [
+        'as' => 'standby-financing.detail',
+        'uses' => 'StandbyFinancing\Controllers\StandbyFinancingController@detail',
+    ]);
+});
+
 // ONLY PIC ROUTES
 Route::group(['prefix' => 'v1', 'middleware' => ['auth']], function () {
     Route::get('on-boarding', ['as' => 'on-boarding.browse', 'uses' => 'Setting\OnBoardingController@getBrowse']);

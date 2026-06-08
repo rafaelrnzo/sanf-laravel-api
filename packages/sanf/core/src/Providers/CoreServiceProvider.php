@@ -139,6 +139,8 @@ use Sanf\Core\Modules\Setting\Specifications\FrequentlyAskQuestionSpecificationF
 use Sanf\Core\Modules\Setting\Specifications\OnBoardingSpecificationFactoryInterface;
 use Sanf\Core\Modules\Staff\EloquentStaffRepository;
 use Sanf\Core\Modules\Staff\StaffRepositoryInterface;
+use Sanf\Core\Modules\StandbyFinancing\Repositories\EloquentStandbyFinancingRepository;
+use Sanf\Core\Modules\StandbyFinancing\Repositories\StandbyFinancingRepositoryInterface;
 use Sanf\Core\Modules\Survey\Entities\EloquentSurveyFactoryEntity;
 use Sanf\Core\Modules\Survey\Entities\SurveyEntityFactoryInterface;
 use Sanf\Core\Modules\Survey\Repositories\EloquentSurveyEncryptedRepository;
@@ -269,6 +271,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->app->bind(PaymentRepositoryInterface::class, PaymentEloquentRepository::class);
         $this->app->bind(InstallmentRepositoryInterface::class, InstallmentEloquentRepository::class);
         $this->app->bind(WebhookLogRepositoryInterface::class, WebhookLogEloquentRepository::class);
+        $this->app->bind(StandbyFinancingRepositoryInterface::class, EloquentStandbyFinancingRepository::class);
 
         //SPECIFICATION FACTORY
         $this->app->bind(ProjectSpecificationFactoryInterface::class, EloquentProjectSpecificationFactory::class);
