@@ -4,6 +4,8 @@ namespace Sanf\Core\Modules\StandbyFinancing\Services;
 
 use Carbon\CarbonImmutable;
 use Sanf\Core\Modules\Plafond\Enums\PlafondTypeEnum;
+use Sanf\Core\Modules\StandbyFinancing\Dtos\CheckInvoiceRequestDto;
+use Sanf\Core\Modules\StandbyFinancing\Dtos\SubmitStandbyFinancingRequestDto;
 use Sanf\Core\Modules\StandbyFinancing\Enums\StandbyFinancingDocumentEnum;
 use Sanf\Core\Modules\StandbyFinancing\Enums\StandbyFinancingStateEnum;
 use Sanf\Core\Modules\StandbyFinancing\Exceptions\StandbyFinancingValidationException;
@@ -26,11 +28,11 @@ class SubmitStandbyFinancingService
         $this->repository = $repository;
     }
 
-    public function checkInvoice(string $customerId, array $payload): array
+    public function checkInvoice(string $customerId, CheckInvoiceRequestDto $dto): array
     {
-        $invoiceNo = (string) ($payload['nomor_invoice'] ?? '');
-        $totalInvoice = (float) ($payload['total_invoice'] ?? 0);
-        $noPlafond = (string) ($payload['noplafond'] ?? $payload['no_plafond'] ?? '');
+        $invoiceNo = $dto->nomorInvoice;
+        $totalInvoice = $dto->totalInvoice;
+        $noPlafond = $dto->noplafond;
 
         if (empty($invoiceNo) || empty($noPlafond) || $totalInvoice <= 0) {
             throw new StandbyFinancingValidationException('Invoice payload is invalid.');
@@ -47,20 +49,20 @@ class SubmitStandbyFinancingService
         ];
     }
 
-    public function submit(string $customerId, array $payload, array $actor): StandbyFinancingApplicationModel
+    public function submit(string $customerId, SubmitStandbyFinancingRequestDto $dto, array $actor): StandbyFinancingApplicationModel
     {
-        $noPlafond = (string) ($payload['no_plafond'] ?? $payload['noplafond'] ?? '');
+        $noPlafond = $dto->noPlafond;
         if (empty($noPlafond)) {
             throw new StandbyFinancingValidationException('No plafond is required.');
         }
 
         $plafond = $this->plafondService->validateActiveSbf($customerId, $noPlafond);
-        $supplierPayload = $this->singleSupplier($payload['supplier'] ?? null);
+        $supplierPayload = $this->singleSupplier($dto->supplier);
         $supplier = $this->plafondService->findSupplier($plafond, (string) $supplierPayload['supplier_id']);
         $invoicePayloads = $supplierPayload['invoice_list'] ?? [];
-        $bankAccountPayload = $payload['bank_account'] ?? null;
-        $documentPayloads = $payload['dokuments'] ?? $payload['documents'] ?? [];
-        $tenor = (int) ($payload['tenor'] ?? 0);
+        $bankAccountPayload = $dto->bankAccount;
+        $documentPayloads = $dto->dokuments ?? $dto->documents ?? [];
+        $tenor = $dto->tenor;
         $totalAmount = (float) ($supplierPayload['total_amount'] ?? 0);
         $totalInvoice = (int) ($supplierPayload['total_invoice'] ?? count($invoicePayloads));
 
@@ -83,16 +85,16 @@ class SubmitStandbyFinancingService
             'total_invoice' => $totalInvoice,
             'total_amount' => $totalAmount,
             'currency' => $this->invoiceCurrency($invoicePayloads, $supplier),
-            'period_start' => $payload['period_start'],
-            'period_end' => $payload['period_end'],
+            'period_start' => $dto->periodStart,
+            'period_end' => $dto->periodEnd,
             'tenor' => $tenor,
             'tenor_type' => $supplier['tipe_tenor'],
-            'payment_method' => $payload['payment_method'] ?? 'transfer',
+            'payment_method' => $dto->paymentMethod ?? 'transfer',
             'state' => StandbyFinancingStateEnum::SUBMITTED,
             'state_code' => StandbyFinancingStateEnum::STATE_CODE_SUBMITTED,
-            'source_channel' => $payload['source_channel'] ?? 'mobile-api',
-            'agreement_checkbox' => (bool) ($payload['agreement_checkbox'] ?? false),
-            'request_id' => $payload['request_id'] ?? null,
+            'source_channel' => $dto->sourceChannel ?? 'mobile-api',
+            'agreement_checkbox' => (bool) ($dto->agreementCheckbox ?? false),
+            'request_id' => $dto->requestId ?? null,
             'created_by_user_id' => isset($actor['id']) ? (int) $actor['id'] : null,
             'submitted_at' => $now,
         ], $this->mapInvoices($recapId, $invoicePayloads), [
@@ -174,7 +176,7 @@ class SubmitStandbyFinancingService
             }
         }
 
-        throw new StandbyFinancingValidationException('Required document 002 is missing.');
+        throw new StandbyFinancingValidationException('Required document ' . StandbyFinancingDocumentEnum::VALIDATION . ' is missing.');
     }
 
     private function assertTenor(int $tenor, array $supplier): void

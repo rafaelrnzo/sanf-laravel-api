@@ -4,15 +4,18 @@ namespace Sanf\Api\Modules\StandbyFinancing\Controllers;
 
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use NbsPhp\Core\Controllers\RestApiController;
+use Sanf\Api\Modules\StandbyFinancing\Transformers\StandbyFinancingDetailTransformer;
+use Sanf\Api\Modules\StandbyFinancing\Transformers\StandbyFinancingListItemTransformer;
+use Sanf\Core\Modules\StandbyFinancing\Dtos\CheckInvoiceRequestDto;
+use Sanf\Core\Modules\StandbyFinancing\Dtos\SubmitStandbyFinancingRequestDto;
 use Sanf\Core\Modules\StandbyFinancing\Enums\StandbyFinancingDocumentEnum;
 use Sanf\Core\Modules\StandbyFinancing\Repositories\StandbyFinancingRepositoryInterface;
 use Sanf\Core\Modules\StandbyFinancing\Services\StandbyFinancingBankAccountService;
 use Sanf\Core\Modules\StandbyFinancing\Services\StandbyFinancingCustomerAccessService;
-use Sanf\Core\Modules\StandbyFinancing\Services\StandbyFinancingResponseService;
 use Sanf\Core\Modules\StandbyFinancing\Services\SubmitStandbyFinancingService;
 
-class StandbyFinancingController
+class StandbyFinancingController extends RestApiController
 {
     public function checkInvoice(
         Guard $auth,
@@ -20,18 +23,19 @@ class StandbyFinancingController
         StandbyFinancingCustomerAccessService $accessService,
         SubmitStandbyFinancingService $submitService
     ) {
-        $payload = $this->validated($request->all(), [
+        $validated = $this->validate($request, [
             'nomor_invoice' => ['required', 'string'],
             'total_invoice' => ['required', 'numeric'],
             'noplafond' => ['required', 'string'],
             'cust_id' => ['nullable', 'string'],
         ]);
-        $customerId = $accessService->resolveCustomerId($auth->user(), $payload['cust_id'] ?? $request->query('cust_id'));
+        $customerId = $accessService->resolveCustomerId($auth->user(), $validated['cust_id'] ?? $request->query('cust_id'));
+        $dto = new CheckInvoiceRequestDto($validated);
 
         return response()->json([
             'status' => 'success',
             'message' => 'Invoice valid dan dapat diproses.',
-            'data' => $submitService->checkInvoice($customerId, $payload),
+            'data' => $submitService->checkInvoice($customerId, $dto),
         ]);
     }
 
@@ -65,7 +69,7 @@ class StandbyFinancingController
         StandbyFinancingCustomerAccessService $accessService,
         SubmitStandbyFinancingService $submitService
     ) {
-        $payload = $this->validated($request->all(), [
+        $validated = $this->validate($request, [
             'cust_id' => ['nullable', 'string'],
             'no_plafond' => ['required', 'string'],
             'period_start' => ['required', 'date_format:Y-m-d'],
@@ -73,11 +77,12 @@ class StandbyFinancingController
             'tenor' => ['required', 'integer'],
             'supplier' => ['required', 'array'],
             'bank_account' => ['required', 'array'],
-            'dokuments' => ['nullable', 'array'],
             'documents' => ['nullable', 'array'],
+            'dokuments' => ['nullable', 'array'],
         ]);
-        $customerId = $accessService->resolveCustomerId($auth->user(), $payload['cust_id'] ?? $request->query('cust_id'));
-        $application = $submitService->submit($customerId, $request->all(), $accessService->actor($auth->user()));
+        $customerId = $accessService->resolveCustomerId($auth->user(), $validated['cust_id'] ?? $request->query('cust_id'));
+        $dto = new SubmitStandbyFinancingRequestDto($validated);
+        $application = $submitService->submit($customerId, $dto, $accessService->actor($auth->user()));
 
         return response()->json([
             'status' => 'success',
@@ -93,21 +98,19 @@ class StandbyFinancingController
         Guard $auth,
         Request $request,
         StandbyFinancingCustomerAccessService $accessService,
-        StandbyFinancingRepositoryInterface $repository,
-        StandbyFinancingResponseService $responseService
+        StandbyFinancingRepositoryInterface $repository
     ) {
         $customerId = $accessService->resolveCustomerId($auth->user(), $request->query('cust_id'));
         $page = max(1, (int) $request->query('page', 1));
         $perPage = max(1, (int) $request->query('per_page', $request->query('limit', 10)));
         $items = $repository->browseByCustomer($customerId, $page, $perPage);
         $total = $repository->countByCustomer($customerId);
+        $startRowNumber = (($page - 1) * $perPage) + 1;
 
         return response()->json([
             'status' => 'success',
             'message' => 'List pengajuan standby financing',
-            'data' => array_map(function ($application, $index) use ($responseService, $page, $perPage) {
-                return $responseService->listItem($application, (($page - 1) * $perPage) + $index + 1);
-            }, $items, array_keys($items)),
+            'data' => fractal($items, new StandbyFinancingListItemTransformer($startRowNumber))->toArray()['data'],
             'meta' => [
                 'current_page' => $page,
                 'per_page' => $perPage,
@@ -123,8 +126,7 @@ class StandbyFinancingController
         Request $request,
         string $recap_id_b2b,
         StandbyFinancingCustomerAccessService $accessService,
-        StandbyFinancingRepositoryInterface $repository,
-        StandbyFinancingResponseService $responseService
+        StandbyFinancingRepositoryInterface $repository
     ) {
         $customerId = $accessService->resolveCustomerId($auth->user(), $request->query('cust_id'));
         $application = $repository->findByRecapId($recap_id_b2b, $customerId);
@@ -133,12 +135,7 @@ class StandbyFinancingController
         return response()->json([
             'status' => 'success',
             'message' => 'Detail pengajuan standby financing',
-            'data' => $responseService->detail($application),
+            'data' => fractal($application, new StandbyFinancingDetailTransformer())->toArray()['data'],
         ]);
-    }
-
-    private function validated(array $payload, array $rules): array
-    {
-        return Validator::make($payload, $rules)->validate();
     }
 }

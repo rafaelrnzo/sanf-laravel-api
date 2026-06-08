@@ -3,6 +3,7 @@
 namespace Tests\Units\StandbyFinancing;
 
 use PHPUnit\Framework\TestCase;
+use Sanf\Core\Modules\StandbyFinancing\Dtos\SubmitStandbyFinancingRequestDto;
 use Sanf\Core\Modules\StandbyFinancing\Exceptions\StandbyFinancingValidationException;
 use Sanf\Core\Modules\StandbyFinancing\Models\StandbyFinancingApplicationModel;
 use Sanf\Core\Modules\StandbyFinancing\Repositories\StandbyFinancingRepositoryInterface;
@@ -19,7 +20,8 @@ class SubmitStandbyFinancingServiceTest extends TestCase
         $this->expectException(StandbyFinancingValidationException::class);
         $this->expectExceptionMessage('Invoice already exists');
 
-        $service->submit('8624PROSM', $this->payload(), ['id' => 1, 'name' => 'user@example.test']);
+        $dto = new SubmitStandbyFinancingRequestDto($this->payload());
+        $service->submit('8624PROSM', $dto, ['id' => 1, 'name' => 'user@example.test']);
     }
 
     public function testSubmitRejectsTenorOutsideSupplierRange(): void
@@ -30,7 +32,8 @@ class SubmitStandbyFinancingServiceTest extends TestCase
         $this->expectException(StandbyFinancingValidationException::class);
         $this->expectExceptionMessage('Tenor is outside');
 
-        $service->submit('8624PROSM', $payload, ['id' => 1, 'name' => 'user@example.test']);
+        $dto = new SubmitStandbyFinancingRequestDto($payload);
+        $service->submit('8624PROSM', $dto, ['id' => 1, 'name' => 'user@example.test']);
     }
 
     public function testSubmitRejectsAmountOverRemainingPlafond(): void
@@ -40,18 +43,23 @@ class SubmitStandbyFinancingServiceTest extends TestCase
         $this->expectException(StandbyFinancingValidationException::class);
         $this->expectExceptionMessage('exceeds remaining plafond');
 
-        $service->submit('8624PROSM', $this->payload(), ['id' => 1, 'name' => 'user@example.test']);
+        $dto = new SubmitStandbyFinancingRequestDto($this->payload());
+        $service->submit('8624PROSM', $dto, ['id' => 1, 'name' => 'user@example.test']);
     }
 
     public function testSubmitRejectsMissingRequiredDocument(): void
     {
-        $payload = $this->payload(['dokuments' => [['doc_id' => '999', 'file_name' => 'invoice.pdf']]]);
+        $payload = $this->payload([
+            'dokuments' => [['doc_id' => '999', 'file_name' => 'invoice.pdf']],
+            'documents' => null,
+        ]);
         $service = $this->makeService();
 
         $this->expectException(StandbyFinancingValidationException::class);
         $this->expectExceptionMessage('Required document 002');
 
-        $service->submit('8624PROSM', $payload, ['id' => 1, 'name' => 'user@example.test']);
+        $dto = new SubmitStandbyFinancingRequestDto($payload);
+        $service->submit('8624PROSM', $dto, ['id' => 1, 'name' => 'user@example.test']);
     }
 
     public function testSubmitRejectsMoreThanOneSupplier(): void
@@ -63,13 +71,15 @@ class SubmitStandbyFinancingServiceTest extends TestCase
         $this->expectException(StandbyFinancingValidationException::class);
         $this->expectExceptionMessage('Exactly one supplier');
 
-        $service->submit('8624PROSM', $payload, ['id' => 1, 'name' => 'user@example.test']);
+        $dto = new SubmitStandbyFinancingRequestDto($payload);
+        $service->submit('8624PROSM', $dto, ['id' => 1, 'name' => 'user@example.test']);
     }
 
     public function testSubmitPersistsValidRequest(): void
     {
         $service = $this->makeService(['expectCreate' => true]);
-        $result = $service->submit('8624PROSM', $this->payload(), ['id' => 1, 'name' => 'user@example.test']);
+        $dto = new SubmitStandbyFinancingRequestDto($this->payload());
+        $result = $service->submit('8624PROSM', $dto, ['id' => 1, 'name' => 'user@example.test']);
 
         $this->assertInstanceOf(StandbyFinancingApplicationModel::class, $result);
         $this->assertSame('SF26060001', $result->recap_id_b2b);
@@ -123,7 +133,7 @@ class SubmitStandbyFinancingServiceTest extends TestCase
 
     private function payload(array $overrides = []): array
     {
-        return array_replace_recursive([
+        $base = [
             'no_plafond' => '62505004136',
             'period_start' => '2026-05-03',
             'period_end' => '2026-05-29',
@@ -163,7 +173,9 @@ class SubmitStandbyFinancingServiceTest extends TestCase
                     'file_name' => 'faktur-pajak.pdf',
                 ],
             ],
-        ], $overrides);
+        ];
+
+        return array_replace_recursive($base, $overrides);
     }
 
     private function plafond(array $overrides = []): array

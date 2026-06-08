@@ -1,29 +1,16 @@
 <?php
 
-namespace Sanf\Core\Modules\StandbyFinancing\Services;
+namespace Sanf\Api\Modules\StandbyFinancing\Transformers;
 
 use Carbon\CarbonImmutable;
+use League\Fractal\TransformerAbstract;
 use Sanf\Core\Modules\StandbyFinancing\Models\StandbyFinancingApplicationModel;
 
-class StandbyFinancingResponseService
+final class StandbyFinancingDetailTransformer extends TransformerAbstract
 {
-    public function listItem(StandbyFinancingApplicationModel $application, int $rowNumber): array
+    public function transform(StandbyFinancingApplicationModel $application): array
     {
-        return [
-            'rn' => (string) $rowNumber,
-            'recap_id_b2b' => $application->recap_id_b2b,
-            'period_start' => $this->dateTime($application->period_start),
-            'period_end' => $this->dateTime($application->period_end),
-            'date_recap' => $this->dateTime($application->created_at),
-            'total_invoice' => (string) $application->total_invoice,
-            'total_amount' => $this->amount($application->total_amount),
-            'state_code' => (string) $application->state_code,
-        ];
-    }
-
-    public function detail(StandbyFinancingApplicationModel $application): array
-    {
-        $invoices = $application->invoices->values()->map(function ($invoice, $index) {
+        $invoices = $application->invoices->values()->map(function ($invoice) {
             return [
                 'recap_id' => $invoice->recap_id,
                 'nomor_invoice' => $invoice->invoice_number,

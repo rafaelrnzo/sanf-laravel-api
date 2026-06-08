@@ -4,10 +4,11 @@ namespace Sanf\Api\Modules\StandbyFinancing\Controllers;
 
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
+use NbsPhp\Core\Controllers\RestApiController;
 use Sanf\Core\Modules\StandbyFinancing\Services\StandbyFinancingCustomerAccessService;
 use Sanf\Core\Modules\StandbyFinancing\Services\StandbyFinancingPlafondService;
 
-class StandbyFinancingPlafondController
+class StandbyFinancingPlafondController extends RestApiController
 {
     public function header(
         Guard $auth,

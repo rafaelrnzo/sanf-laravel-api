@@ -11,12 +11,12 @@ final class StandbyFinancingDocumentEnum
         [
             'doc_id' => self::VALIDATION,
             'doc_desc' => 'Validasi',
-            'required' => 'true',
+            'required' => true,
         ],
         [
             'doc_id' => self::OTHER,
             'doc_desc' => 'Other Document',
-            'required' => 'false',
+            'required' => false,
         ],
     ];
 }
