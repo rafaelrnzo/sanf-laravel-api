@@ -18,6 +18,7 @@ class AssetFileController extends RestApiController
         $dto = new AssetUploadRequestDto([
             'file' => $inputs['file'],
             'type' => (int) $inputs['asset_type'],
+            'burn_text' => $inputs['burn_text'] ?? null,
         ]);
 
         // run service;
@@ -53,6 +54,13 @@ class AssetFileController extends RestApiController
             'asset_type' => [
                 'required',
                 "in:{$string}",
+            ],
+            'burn_text' => [
+                'nullable',
+                'array',
+            ],
+            'burn_text.*' => [
+                'string',
             ],
         ];
 
