@@ -227,6 +227,7 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth', 'profile_owner']], func
 
     // OCR
     Route::get('users/profiles/{xid}/permission/ocr', ['as' => 'v1.users.ocr.permission.read', 'uses' => 'Ocr\Controllers\OCRController@getUserPermission']);
+    Route::post('users/profiles/{xid}/ocr/extract', ['as' => 'v1.users.ocr.extract', 'uses' => 'Ocr\Controllers\OcrExtractionController@extract']);
 
     // BANK
     Route::get('users/profiles/{xid}/banks', ['as' => 'v1.users.bank.account.browse', 'uses' => 'Bank\Controllers\BankController@getUserAccount']);
