@@ -21,6 +21,7 @@ class SurveyModel extends AbstractModel
         'project_id',
         'project_location',
         'segment',
+        'survey_date',
     ];
 
     public function surveyItems()
