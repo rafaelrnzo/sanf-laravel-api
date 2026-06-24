@@ -3,7 +3,6 @@
 namespace Sanf\Api\Modules\Location;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\Rule;
 use NbsPhp\Core\Controllers\RestApiController;
 use NbsPhp\Core\Transformers\LazyPaginatorAdapter;
@@ -11,6 +10,7 @@ use Sanf\Api\Modules\Location\Transformers\LocationListTransformer;
 use Sanf\Core\Modules\Location\GetListLocationDto;
 use Sanf\Core\Modules\Location\GetListLocationService;
 use Sanf\Core\Modules\Location\LocationEnum;
+use Sanf\Core\Modules\Location\Services\ReverseGeocodeService;
 
 class LocationController extends RestApiController
 {
@@ -45,7 +45,7 @@ class LocationController extends RestApiController
             ->paginateWith(new LazyPaginatorAdapter($result->paginate));
     }
 
-    public function reverseGeocode(Request $request)
+    public function reverseGeocode(Request $request, ReverseGeocodeService $service)
     {
         $this->validate($request, [
             'Latitude' => ['required', 'numeric', 'between:-90,90'],
@@ -55,26 +55,10 @@ class LocationController extends RestApiController
         $lat = $request->input('Latitude');
         $lng = $request->input('Longitude');
 
-        $apiKey = config('services.google_maps.api_key');
-        if (empty($apiKey)) {
-            return response()->json([
-                'success' => true,
-                'code' => '200',
-                'message' => 'No address found',
-                'data' => [
-                    'address' => null,
-                ],
-            ]);
-        }
-
         try {
-            $response = Http::timeout(5)->get("https://maps.googleapis.com/maps/api/geocode/json", [
-                'latlng' => $lat . ',' . $lng,
-                'key' => $apiKey
-            ]);
-            
-            if ($response->successful() && $response->json('status') === 'OK') {
-                $address = $response->json('results.0.formatted_address');
+            $address = $service->execute((float) $lat, (float) $lng);
+
+            if ($address !== null) {
                 return response()->json([
                     'success' => true,
                     'code' => '200',
@@ -84,7 +68,7 @@ class LocationController extends RestApiController
                     ],
                 ]);
             }
-            
+
             return response()->json([
                 'success' => true,
                 'code' => '200',
@@ -93,9 +77,9 @@ class LocationController extends RestApiController
                     'address' => null,
                 ],
             ]);
-            
         } catch (\Exception $e) {
             report($e);
+
             return response()->json([
                 'success' => true,
                 'code' => '200',
