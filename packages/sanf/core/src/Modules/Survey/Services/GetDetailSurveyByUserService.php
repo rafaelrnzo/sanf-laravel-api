@@ -83,6 +83,7 @@ class GetDetailSurveyByUserService extends UserService implements ApplicationSer
                 'profile_xid' => $surveyData->CUST_ID ?? null,
                 'contract_no' => $surveyData->REG_NO ?? null,
                 'project_name' => $surveyData->PROJ_NAME ?? null,
+                'project_id' => $surveyData->PROJECT_ID ?? null,
                 'segment' => $surveyData->SEGMENT ?? null,
                 'pic_name' => $surveyData->PIC_NAME ?? null,
                 'customer_name' => $surveyData->CUST_NAME ?? null,

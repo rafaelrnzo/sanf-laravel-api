@@ -5,27 +5,47 @@ namespace Sanf\Core\Modules\Asset;
 use Exception;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Intervention\Image\ImageManagerStatic;
 use League\Flysystem\FileNotFoundException;
 use NbsPhp\Core\Services\ApplicationServiceInterface;
 
 class UploadAssetService implements ApplicationServiceInterface
 {
+    private $watermarkTempPath = null;
+    private $isWatermarked = false;
+
     public function execute($dto = null)
     {
         $path = config('image-path.temp');
+        $originalFile = $dto->file;
 
         // process burn image
         if (!empty($dto->burn_text) && in_array($dto->type, [1, 2])) {
             try {
                 $dto->file = $this->burnWatermark($dto->file, $dto->burn_text);
+                $this->isWatermarked = true;
             } catch (Exception $e) {
                 report($e);
             }
         }
 
+        // fall back to the original file if the watermark temp file became unreadable
+        // (e.g. removed from the OS temp dir between burnWatermark() and here)
+        if (!$dto->file->isReadable()) {
+            report(new Exception("Watermarked file unreadable, falling back to original upload: {$dto->file->getPathname()}"));
+            $dto->file = $originalFile;
+            $this->isWatermarked = false;
+        }
+
         // upload file;
-        $filename = file_upload($dto->file, $path, 'public');
+        // note: watermarked files are uploaded by raw content instead of via Storage::putFile(),
+        // because SplFileInfo::getRealPath() on the OS temp dir has been observed to return false
+        // for these freshly written files on this server even though the file exists and is
+        // readable, which crashes putFile()'s internal fopen() call.
+        $filename = $this->isWatermarked
+            ? $this->uploadRawFile($dto->file, $path)
+            : file_upload($dto->file, $path, 'public');
 
         // if image doesnt exist
         $exist = Storage::disk('minio_post')->exists("{$path}{$filename}");
@@ -34,8 +54,8 @@ class UploadAssetService implements ApplicationServiceInterface
         // get url file;
         $url = file_get_temp_url($filename, $path);
 
-        if (isset($tempPath) && file_exists($tempPath)) {
-            @unlink($tempPath);
+        if ($this->watermarkTempPath && file_exists($this->watermarkTempPath)) {
+            @unlink($this->watermarkTempPath);
         }
 
         // return result;
@@ -45,6 +65,28 @@ class UploadAssetService implements ApplicationServiceInterface
             'fileName' => $filename,
             'url' => $url,
         ]);
+    }
+
+    /**
+     * Upload a file by reading its raw bytes (via getPathname()) instead of
+     * Storage::putFile(), which internally relies on SplFileInfo::getRealPath().
+     *
+     * @param UploadedFile $file
+     * @param string $path
+     * @return string
+     */
+    private function uploadRawFile(\Symfony\Component\HttpFoundation\File\UploadedFile $file, string $path): string
+    {
+        $extension = $file->getClientOriginalExtension() ?: 'jpg';
+        $name = Str::random(40) . '.' . $extension;
+
+        Storage::disk('minio_post')->put(
+            $path . $name,
+            file_get_contents($file->getPathname()),
+            'public'
+        );
+
+        return $name;
     }
 
     /**
@@ -141,8 +183,10 @@ class UploadAssetService implements ApplicationServiceInterface
             $yOffset += $lineHeight;
         }
 
-        $tempPath = sys_get_temp_dir() . '/' . uniqid('burned_') . '.' . $file->getClientOriginalExtension();
+        $extension = $file->getClientOriginalExtension() ?: ($file->guessExtension() ?: 'jpg');
+        $tempPath = sys_get_temp_dir() . '/' . uniqid('burned_') . '.' . $extension;
         $image->save($tempPath);
+        $this->watermarkTempPath = $tempPath;
 
         return new UploadedFile(
             $tempPath,
