@@ -25,6 +25,18 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth']], function () {
     });
 });
 
+Route::group(['prefix' => 'api/sbf', 'middleware' => ['auth']], function () {
+    Route::get('plafond/list-sbf', ['as' => 'sbf.plafond.list', 'uses' => 'StandbyFinancing\Controllers\SbfRelayController@plafondList']);
+    Route::get('plafond/detail-sbf/{noPlafond}', ['as' => 'sbf.plafond.detail', 'uses' => 'StandbyFinancing\Controllers\SbfRelayController@plafondDetail']);
+    Route::get('plafond/{custId}', ['as' => 'sbf.plafond', 'uses' => 'StandbyFinancing\Controllers\SbfRelayController@plafond']);
+    Route::get('bank-account', ['as' => 'sbf.bank-account', 'uses' => 'StandbyFinancing\Controllers\SbfRelayController@bankAccount']);
+    Route::get('documents', ['as' => 'sbf.documents', 'uses' => 'StandbyFinancing\Controllers\SbfRelayController@documents']);
+    Route::get('pencairan', ['as' => 'sbf.pencairan.list', 'uses' => 'StandbyFinancing\Controllers\SbfRelayController@pencairan']);
+    Route::get('pencairan/{recapId}', ['as' => 'sbf.pencairan.detail', 'uses' => 'StandbyFinancing\Controllers\SbfRelayController@pencairanDetail']);
+    Route::post('check-invoice', ['as' => 'sbf.check-invoice', 'uses' => 'StandbyFinancing\Controllers\SbfTransactionController@checkInvoice']);
+    Route::post('pengajuan', ['as' => 'sbf.pengajuan', 'uses' => 'StandbyFinancing\Controllers\SbfTransactionController@submitPengajuan']);
+});
+
 Route::group(['prefix' => 'v1', 'middleware' => ['auth', 'pic']], function () {
     Route::post('users/financing-applications/company', ['as' => 'financing-applications.company.create', 'uses' => 'Financing\Controllers\FinancingApplicationByUserController@postAddByCompanyProfile']);
     Route::post('users/survey-submissions', ['as' => 'users.survey-submissions.add', 'uses' => 'Survey\Controllers\SurveyByUserController@add']);
