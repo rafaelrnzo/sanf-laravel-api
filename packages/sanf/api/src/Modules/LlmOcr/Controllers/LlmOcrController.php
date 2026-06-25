@@ -14,47 +14,75 @@ class LlmOcrController extends RestApiController
 {
     public function extract(Request $request, GeminiOcrService $service)
     {
-        $input = $this->validate($request, [
-            'file_content_base64' => ['required', 'string'],
-            'mime_type' => ['required', Rule::in([
-                'application/pdf',
-                'image/png',
-                'image/jpeg',
-            ])],
+        $maxKb = (int) config('llm-ocr.max_file_size', 10240);
+
+        $rules = [
             'document_type' => [
                 'required_without:prompt',
                 'nullable',
                 Rule::in(array_column(DocumentTypeEnum::cases(), 'value')),
             ],
             'prompt' => ['required_without:document_type', 'nullable', 'string'],
-        ]);
+            'multiple' => ['sometimes', 'boolean'],
+        ];
 
-        $fileContent = base64_decode($input['file_content_base64'], true);
-        if ($fileContent === false) {
-            return response()->json([
-                'success' => false,
-                'message' => 'The file content must be valid base64.',
-            ], 422);
+        if ($request->hasFile('file')) {
+            $rules['file'] = [
+                'required',
+                'file',
+                'mimetypes:application/pdf,image/png,image/jpeg',
+                'max:' . $maxKb,
+            ];
+        } else {
+            $rules['file_content_base64'] = ['required', 'string'];
+            $rules['mime_type'] = [
+                'required',
+                Rule::in([
+                    'application/pdf',
+                    'image/png',
+                    'image/jpeg',
+                ])
+            ];
         }
 
-        $maxBytes = (int) config('llm-ocr.max_file_size', 10240) * 1024;
-        if (strlen($fileContent) > $maxBytes) {
-            return response()->json([
-                'success' => false,
-                'message' => 'The file may not be greater than ' . config('llm-ocr.max_file_size', 10240) . ' kilobytes.',
-            ], 422);
+        $input = $this->validate($request, $rules);
+
+        if ($request->hasFile('file')) {
+            $uploaded = $request->file('file');
+            $fileContent = file_get_contents($uploaded->getRealPath());
+            $mimeType = $uploaded->getMimeType();
+        } else {
+            $fileContent = base64_decode($input['file_content_base64'], true);
+            if ($fileContent === false) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'The file content must be valid base64.',
+                ], 422);
+            }
+
+            if (strlen($fileContent) > $maxKb * 1024) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'The file may not be greater than ' . $maxKb . ' kilobytes.',
+                ], 422);
+            }
+
+            $mimeType = $input['mime_type'];
         }
 
         $documentType = isset($input['document_type'])
             ? DocumentTypeEnum::from($input['document_type'])
             : null;
 
+        $multiple = $request->boolean('multiple', true);
+
         try {
             $result = $service->extract(
                 $fileContent,
-                $input['mime_type'],
+                $mimeType,
                 $documentType,
-                $input['prompt'] ?? null
+                $input['prompt'] ?? null,
+                $multiple
             );
         } catch (Throwable $exception) {
             report($exception);

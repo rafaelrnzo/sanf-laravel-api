@@ -13,9 +13,14 @@ class GeminiOcrService
         string $fileContent,
         string $mimeType,
         ?DocumentTypeEnum $documentType = null,
-        ?string $prompt = null
+        ?string $prompt = null,
+        bool $multiple = false
     ): array {
-        $prompt = $prompt ?: optional($documentType)->extractionPrompt();
+        if (! $prompt && $documentType) {
+            $prompt = $multiple
+                ? $documentType->extractionPromptMultiple()
+                : $documentType->extractionPrompt();
+        }
 
         if (! $prompt) {
             throw new RuntimeException('OCR extraction prompt is not configured.');
@@ -81,6 +86,31 @@ class GeminiOcrService
             throw new RuntimeException('Gemini OCR: invalid JSON response.');
         }
 
-        return $parsed;
+        if (! $multiple) {
+            return $parsed;
+        }
+
+        // Multi-document mode: normalise to a list and validate each item.
+        $items = array_is_list($parsed) ? $parsed : [$parsed];
+
+        $required = $documentType ? $documentType->requiredFields() : [];
+
+        foreach ($items as $index => $item) {
+            if (! is_array($item)) {
+                Log::error('Gemini OCR: non-object item in multi-document response', ['raw' => $text]);
+
+                throw new RuntimeException('Gemini OCR: invalid item in multi-document response.');
+            }
+
+            $missing = array_diff($required, array_keys($item));
+            if ($missing) {
+                Log::warning('Gemini OCR: item missing required fields', [
+                    'index' => $index,
+                    'missing' => array_values($missing),
+                ]);
+            }
+        }
+
+        return $items;
     }
 }
