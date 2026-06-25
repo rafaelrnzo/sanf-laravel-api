@@ -358,6 +358,10 @@ Route::get('v2/payments/failed', ['as' => 'v2.payments.static-failed', 'uses' =>
 
 Route::post('webhook/midtrans/status', ['as' => 'webhook.midtrans.status', 'uses' => 'Payment\Controllers\MidtransWebhookController@postHandle']);
 
+Route::group(['prefix' => 'api/ocr', 'middleware' => ['ocr-api-key']], function () {
+    Route::post('extract', ['as' => 'api.ocr.extract', 'uses' => 'LlmOcr\Controllers\LlmOcrController@extract']);
+});
+
 Route::group(['middleware' => ['basic-auth-config:core-h2h-user-provider']], function () {
     Route::post('webhook/sparepart_financing/invoice/validation', [
         'as' => 'webhook.sparepart_financing.invoice-validation',
