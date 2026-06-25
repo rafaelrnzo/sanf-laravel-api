@@ -12,12 +12,15 @@ class SbfRelayController extends RestApiController
 {
     public function plafond(string $custId, SanfApiService $service): JsonResponse
     {
+        $service->setUser($custId);
+
         return $this->relay(fn () => $service->getPlafond($custId), 'plafond');
     }
 
     public function plafondList(Request $request, SanfApiService $service): JsonResponse
     {
         $input = $this->validate($request, ['cust_id' => ['required', 'string', 'max:50']]);
+        $service->setUser($input['cust_id']);
 
         return $this->relay(fn () => $service->getPlafondListSbf($input['cust_id']), 'plafond_list');
     }
@@ -30,6 +33,7 @@ class SbfRelayController extends RestApiController
     public function bankAccount(Request $request, SanfApiService $service): JsonResponse
     {
         $input = $this->validate($request, ['cust_id' => ['required', 'string', 'max:50']]);
+        $service->setUser($input['cust_id']);
 
         return $this->relay(fn () => $service->getBankAccount($input['cust_id']), 'bank_account');
     }
@@ -37,6 +41,7 @@ class SbfRelayController extends RestApiController
     public function documents(Request $request, SanfApiService $service): JsonResponse
     {
         $input = $this->validate($request, ['cust_id' => ['required', 'string', 'max:50']]);
+        $service->setUser($input['cust_id']);
 
         return $this->relay(fn () => $service->getDocumentList($input['cust_id']), 'documents');
     }
@@ -47,6 +52,7 @@ class SbfRelayController extends RestApiController
             'cust_id' => ['required', 'string', 'max:50'],
             'page' => ['nullable', 'integer', 'min:1'],
         ]);
+        $service->setUser($input['cust_id']);
 
         return $this->relay(
             fn () => $service->getListPencairan($input['cust_id'], (int) ($input['page'] ?? 1)),

@@ -9,6 +9,7 @@ class SbfPengajuanModel extends Model
     protected $table = 'sbf_pengajuan';
 
     protected $fillable = [
+        'cust_id',
         'no_plafond',
         'period_start',
         'period_end',

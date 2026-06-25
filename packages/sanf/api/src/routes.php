@@ -25,7 +25,7 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth']], function () {
     });
 });
 
-Route::group(['prefix' => 'api/sbf', 'middleware' => ['auth']], function () {
+Route::group(['prefix' => 'api/sbf', 'middleware' => ['auth', 'profile_owner:custId,cust_id']], function () {
     Route::get('plafond/list-sbf', ['as' => 'sbf.plafond.list', 'uses' => 'StandbyFinancing\Controllers\SbfRelayController@plafondList']);
     Route::get('plafond/detail-sbf/{noPlafond}', ['as' => 'sbf.plafond.detail', 'uses' => 'StandbyFinancing\Controllers\SbfRelayController@plafondDetail']);
     Route::get('plafond/{custId}', ['as' => 'sbf.plafond', 'uses' => 'StandbyFinancing\Controllers\SbfRelayController@plafond']);
