@@ -49,6 +49,7 @@ class SbfTransactionControllerTest extends \TestCase
         ];
 
         $service = Mockery::mock(SanfApiService::class);
+        $service->shouldReceive('setUser')->andReturnSelf();
         $service->shouldReceive('checkInvoice')
             ->once()
             ->with($payload)
@@ -68,6 +69,7 @@ class SbfTransactionControllerTest extends \TestCase
     {
         $payload = $this->pengajuanPayload();
         $service = Mockery::mock(SanfApiService::class);
+        $service->shouldReceive('setUser')->andReturnSelf();
         $service->shouldReceive('submitPengajuan')
             ->once()
             ->with($payload)
@@ -90,6 +92,7 @@ class SbfTransactionControllerTest extends \TestCase
     private function pengajuanPayload(): array
     {
         return [
+            'cust_id' => 'CUST-1',
             'no_plafond' => 'PLF-1',
             'period_start' => '2026-06-24',
             'period_end' => '2026-07-24',

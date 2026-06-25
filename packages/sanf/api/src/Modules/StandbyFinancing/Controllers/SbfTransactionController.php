@@ -22,6 +22,8 @@ class SbfTransactionController extends RestApiController
             'total_invoice' => ['required', 'integer', 'min:1'],
         ]);
 
+        $service->setUser($payload['cust_id']);
+
         $record = SbfInvoiceCheckModel::create($payload + [
             'core_status' => 'pending',
         ]);
@@ -56,6 +58,7 @@ class SbfTransactionController extends RestApiController
     public function submitPengajuan(Request $request, SanfApiService $service): JsonResponse
     {
         $payload = $this->validate($request, [
+            'cust_id' => ['required', 'string', 'max:50'],
             'no_plafond' => ['required', 'string', 'max:50'],
             'period_start' => ['required', 'date', 'before:period_end'],
             'period_end' => ['required', 'date', 'after:period_start'],
@@ -79,11 +82,14 @@ class SbfTransactionController extends RestApiController
             'supporting_dokuments' => ['nullable', 'array'],
         ]);
 
+        $service->setUser($payload['cust_id']);
+
         $totalInvoiceCount = array_sum(array_column($payload['supplier'], 'total_invoice'));
         $totalAmount = array_sum(array_column($payload['supplier'], 'total_amount'));
         $bankAccount = $payload['bank_account'];
 
         $record = SbfPengajuanModel::create([
+            'cust_id' => $payload['cust_id'],
             'no_plafond' => $payload['no_plafond'],
             'period_start' => $payload['period_start'],
             'period_end' => $payload['period_end'],

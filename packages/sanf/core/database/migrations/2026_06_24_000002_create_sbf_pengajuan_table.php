@@ -10,6 +10,7 @@ class CreateSbfPengajuanTable extends Migration
     {
         Schema::create('sbf_pengajuan', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('cust_id', 50);
             $table->string('no_plafond', 50);
             $table->date('period_start');
             $table->date('period_end');
@@ -32,6 +33,7 @@ class CreateSbfPengajuanTable extends Migration
             $table->timestamp('submitted_at')->nullable();
             $table->timestamps();
 
+            $table->index(['cust_id', 'no_plafond']);
             $table->index(['no_plafond', 'local_status']);
         });
     }

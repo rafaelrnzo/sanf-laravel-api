@@ -48,13 +48,13 @@ class GuzzleLoggerServiceProvider extends ServiceProvider
                             $logger->info('GuzzleHttp', [
                                 'request' => [
                                     'uri' => "{$req->getMethod()} {$req->getUri()}",
-                                    'headers' => $req->getHeaders(),
-                                    'body' => $req->getBody()->getContents(),
+                                    'headers' => $this->censor($req->getHeaders()),
+                                    'body' => $this->censorBody($req->getBody()->getContents()),
                                 ],
                                 'response' => [
                                     'status' => $res->getStatusCode(),
-                                    'headers' => $res->getHeaders(),
-                                    'body' => $res->getBody()->getContents(),
+                                    'headers' => $this->censor($res->getHeaders()),
+                                    'body' => $this->censorBody($res->getBody()->getContents()),
                                 ],
                             ]);
 
@@ -65,13 +65,13 @@ class GuzzleLoggerServiceProvider extends ServiceProvider
                             $logger->error('GuzzleHttp', [
                                 'request' => [
                                     'uri' => "{$req->getMethod()} {$req->getUri()}",
-                                    'headers' => $req->getHeaders(),
-                                    'body' => $req->getBody()->getContents(),
+                                    'headers' => $this->censor($req->getHeaders()),
+                                    'body' => $this->censorBody($req->getBody()->getContents()),
                                 ],
                                 'error' => [
                                     'status' => $e->hasResponse() ? $e->getResponse()->getStatusCode() : $e->getCode(),
                                     'message' => $e->getMessage(),
-                                    'body' => $e->hasResponse() ? $e->getResponse()->getBody()->getContents() : null,
+                                    'body' => $e->hasResponse() ? $this->censorBody($e->getResponse()->getBody()->getContents()) : null,
                                 ],
                             ]);
                         }
@@ -110,5 +110,50 @@ class GuzzleLoggerServiceProvider extends ServiceProvider
                 'handler' => $handlerStack,
             ]);
         });
+    }
+
+    /**
+     * Mask sensitive keys (e.g. authorization, password) before they reach the log,
+     * using the same config as the database driver.
+     *
+     * @param mixed $data
+     * @return mixed
+     */
+    protected function censor($data)
+    {
+        if (!is_array($data)) {
+            return $data;
+        }
+
+        $needles = config('guzzle-logger.censor.bad-keys', []);
+        $replacement = config('guzzle-logger.censor.replacement', '**censor**');
+        $flattenArray = array_dot($data);
+
+        foreach ($needles as $needle) {
+            foreach ($flattenArray as $key => $value) {
+                if (in_array($needle, explode('.', strtolower($key)), true)) {
+                    array_set($data, $key, $replacement);
+                }
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * Censor a (possibly JSON) body string. Non-JSON bodies are returned untouched.
+     *
+     * @param string|null $body
+     * @return mixed
+     */
+    protected function censorBody($body)
+    {
+        $decoded = json_decode((string) $body, true);
+
+        if (!is_array($decoded)) {
+            return $body;
+        }
+
+        return $this->censor($decoded);
     }
 }

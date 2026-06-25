@@ -165,6 +165,64 @@ class ProfileOwnershipGuardMiddlewareTest extends PHPUnitTestCase
         $this->assertTrue($nextCalled);
     }
 
+    public function testExtractsCustomerIdFromConfiguredInputField()
+    {
+        $mockProfile = \Mockery::mock(ProfileEntityInterface::class);
+        $mockProfile->shouldReceive('getEmail')->andReturn('user@example.com');
+
+        $this->mockProfileRepository->expects($this->once())
+            ->method('findById')
+            ->with('CUST-1')
+            ->willReturn($mockProfile);
+
+        $mockUser = \Mockery::mock();
+        $mockUser->username = 'user@example.com';
+
+        Auth::shouldReceive('user')->once()->andReturn($mockUser);
+
+        $request = Request::create('/sbf/bank-account', 'GET');
+        $request->merge(['cust_id' => 'CUST-1']);
+
+        $nextCalled = false;
+        $next = function ($req) use (&$nextCalled) {
+            $nextCalled = true;
+            return response('ok');
+        };
+
+        $middleware = new ProfileOwnershipGuardMiddleware($this->mockProfileRepository);
+        $middleware->handle($request, $next, 'custId', 'cust_id');
+
+        $this->assertTrue($nextCalled);
+    }
+
+    public function testThrowsForbiddenWhenConfiguredCustIdNotOwned()
+    {
+        $mockProfile = \Mockery::mock(ProfileEntityInterface::class);
+        $mockProfile->shouldReceive('getEmail')->andReturn('owner@example.com');
+
+        $this->mockProfileRepository->expects($this->once())
+            ->method('findById')
+            ->with('CUST-OTHER')
+            ->willReturn($mockProfile);
+
+        $mockUser = \Mockery::mock();
+        $mockUser->username = 'intruder@example.com';
+
+        Auth::shouldReceive('user')->once()->andReturn($mockUser);
+
+        $request = Request::create('/sbf/bank-account', 'GET');
+        $request->merge(['cust_id' => 'CUST-OTHER']);
+
+        $next = function ($req) {
+            return response('ok');
+        };
+
+        $middleware = new ProfileOwnershipGuardMiddleware($this->mockProfileRepository);
+
+        $this->expectException(\NbsPhp\Core\Exceptions\ForbiddenException::class);
+        $middleware->handle($request, $next, 'custId', 'cust_id');
+    }
+
     public function testRouteParameterTakesPrecedenceOverInputParameter()
     {
         $mockProfile = \Mockery::mock(ProfileEntityInterface::class);

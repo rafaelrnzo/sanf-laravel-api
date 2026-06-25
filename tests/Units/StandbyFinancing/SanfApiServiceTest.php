@@ -7,6 +7,7 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
+use Illuminate\Http\Request as HttpRequest;
 use PHPUnit\Framework\TestCase;
 use Sanf\Integration\Modules\StandbyFinancing\SanfApiService;
 
@@ -17,61 +18,106 @@ class SanfApiServiceTest extends TestCase
         parent::setUp();
 
         config([
-            'services.sanf.base_url_mobile' => 'https://mobile.example.test/MobileAPI/index.php',
-            'services.sanf.base_url_core' => 'https://core.example.test/api',
-            'services.sanf.timeout' => 10,
-            'services.sanf.auth_token' => 'test-token',
-            'services.sanf.paths.check_invoice' => '/standby_financing/check_invoice',
-            'services.sanf.paths.submit_pengajuan' => '/standby_financing/submit',
+            'sanf-api-v2.client_id' => 'cid',
+            'sanf-api-v2.client_secret' => 'csecret',
         ]);
+
+        // The SanfCoreApiProcessorV2 reads the inbound request for the X-Request-ID header.
+        app()->instance('request', HttpRequest::create('/sbf', 'GET'));
     }
 
-    public function testItRelaysPlafondListWithCustomerQuery(): void
+    public function testItRelaysPlafondListWithCustomerQueryAndBasicAuth(): void
     {
         $history = [];
-        $service = $this->service(
-            [new Response(200, [], '{"data":[{"no_plafond":"PLF-1"}]}')],
-            $history
-        );
+        $service = $this->service([new Response(200, [], '{"status":"success","data":[]}')], $history);
 
-        $response = $service->getPlafondListSbf('CUST-1');
+        $service->setUser('8624PROSM')->getPlafondListSbf('8624PROSM');
 
-        $this->assertSame('PLF-1', $response['data'][0]['no_plafond']);
+        $request = $history[0]['request'];
+
+        $this->assertStringContainsString('api/plafond/list_sbf', $request->getUri()->getPath());
+        $this->assertSame('cust_id=8624PROSM', $request->getUri()->getQuery());
         $this->assertSame(
-            'https://core.example.test/api/plafond/list_sbf?cust_id=CUST-1',
-            (string) $history[0]['request']->getUri()
+            'Basic ' . base64_encode('cid;csecret;8624PROSM'),
+            $request->getHeaderLine('Authorization')
         );
-        $this->assertSame('Bearer test-token', $history[0]['request']->getHeaderLine('Authorization'));
     }
 
-    public function testItForwardsPengajuanAsJson(): void
+    public function testItForwardsCheckInvoiceUsingCoreFieldNames(): void
     {
         $history = [];
-        $service = $this->service(
-            [new Response(200, [], '{"message":"ok","data":{"recap_id":"REC-1"}}')],
-            $history
-        );
+        $service = $this->service([new Response(200, [], '{"status":"success"}')], $history);
 
-        $payload = ['no_plafond' => 'PLF-1'];
-        $response = $service->submitPengajuan($payload);
+        $service->setUser('CUST-1')->checkInvoice([
+            'cust_id' => 'CUST-1',
+            'no_plafond' => '62505004136',
+            'nomor_invoice' => '1234567890',
+            'total_invoice' => 500000,
+        ]);
 
-        $this->assertSame('REC-1', $response['data']['recap_id']);
-        $this->assertSame('POST', $history[0]['request']->getMethod());
-        $this->assertSame(
-            'https://core.example.test/api/standby_financing/submit',
-            (string) $history[0]['request']->getUri()
-        );
-        $this->assertSame($payload, json_decode((string) $history[0]['request']->getBody(), true));
+        $request = $history[0]['request'];
+
+        $this->assertStringContainsString('api/standby_financing/check_invoice', $request->getUri()->getPath());
+
+        $body = json_decode((string) $request->getBody(), true);
+
+        $this->assertSame([
+            'nomor_invoice' => '1234567890',
+            'total_invoice' => 500000,
+            'noplafond' => '62505004136',
+        ], $body);
+        $this->assertArrayNotHasKey('cust_id', $body);
+        $this->assertArrayNotHasKey('no_plafond', $body);
     }
 
-    public function testItRejectsInvalidCoreJson(): void
+    public function testItForwardsPengajuanToStoreMappedToCoreContract(): void
     {
-        $service = $this->service([new Response(200, [], '<html>error</html>')]);
+        $history = [];
+        $service = $this->service([new Response(200, [], '{"status":"success","data":{"recap_id":"REC-1"}}')], $history);
 
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('invalid JSON');
+        $service->setUser('CUST-1')->submitPengajuan([
+            'cust_id' => 'CUST-1',
+            'no_plafond' => '62505004136',
+            'period_start' => '2026-05-03',
+            'period_end' => '2026-05-29',
+            'tenor' => 12,
+            'supplier' => [[
+                'supplier_id' => '0000000073',
+                'total_invoice' => 2,
+                'total_amount' => 85000000,
+                'invoice_list' => [[
+                    'nomor_invoice' => 'INV/2026/05/0011',
+                    'tanggal_invoice' => '2026-05-05',
+                    'currency' => 'IDR',
+                    'amount' => 85000000,
+                ]],
+            ]],
+            'bank_account' => [
+                'bank_id' => '0001101',
+                'bank_owner' => 'PT. SUKSES TUNGGAL MANDIRI',
+                'bank_provider' => 'BANK BCA',
+                'bank_account_number' => '883.059.1533',
+            ],
+            'invoice_document' => [['file_path' => 'po.pdf', 'file_name' => 'po.pdf']],
+            'spt_dokuments' => ['file_path' => 'spt.pdf', 'file_name' => 'spt.pdf'],
+            'supporting_dokuments' => [],
+        ]);
 
-        $service->getBankAccount('CUST-1');
+        $request = $history[0]['request'];
+
+        $this->assertSame('POST', $request->getMethod());
+        $this->assertStringContainsString('api/standby_financing/store', $request->getUri()->getPath());
+
+        $body = json_decode((string) $request->getBody(), true);
+
+        $this->assertArrayNotHasKey('cust_id', $body);
+        $this->assertSame([
+            'bank_id' => '0001101',
+            'owner' => 'PT. SUKSES TUNGGAL MANDIRI',
+            'provider' => 'BANK BCA',
+            'account_number' => '883.059.1533',
+            'total_amount' => '85000000',
+        ], $body['bank_account']);
     }
 
     private function service(array $responses, array &$history = []): SanfApiService
