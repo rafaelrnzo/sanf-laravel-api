@@ -6,6 +6,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use NbsPhp\Core\Controllers\RestApiController;
 use Sanf\Core\Modules\StandbyFinancing\Models\SbfInvoiceCheckModel;
 use Sanf\Core\Modules\StandbyFinancing\Models\SbfPengajuanModel;
@@ -53,6 +54,45 @@ class SbfTransactionController extends RestApiController
 
             return $this->coreUnavailable();
         }
+    }
+
+    public function uploadDocument(Request $request): JsonResponse
+    {
+        $this->validate($request, [
+            'cust_id' => ['required', 'string', 'max:50'],
+            'file' => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:10240'],
+        ]);
+
+        $file = $request->file('file');
+
+        $extension = strtolower((string) $file->getClientOriginalExtension());
+        $extension = preg_replace('/[^a-z0-9]/', '', $extension) ?: 'bin';
+        $fileName = bin2hex(random_bytes(16)) . '.' . $extension;
+        $dir = 'uploads/sbf/' . date('Y/m');
+
+        $path = Storage::disk('minio_post')->putFileAs($dir, $file, $fileName);
+
+        if ($path === false) {
+            Log::error('SBF document upload failed', [
+                'cust_id' => $request->input('cust_id'),
+                'origin_name' => $file->getClientOriginalName(),
+            ]);
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Gagal mengunggah dokumen',
+            ], 502);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'xid' => 'SBF-' . uniqid(),
+                'file_name' => $fileName,
+                'path' => $path,
+                'origin_name' => $file->getClientOriginalName(),
+            ],
+        ]);
     }
 
     public function submitPengajuan(Request $request, SanfApiService $service): JsonResponse

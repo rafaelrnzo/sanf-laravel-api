@@ -3,7 +3,10 @@
 namespace Tests\Units\StandbyFinancing;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 use Mockery;
 use Sanf\Api\Modules\StandbyFinancing\Controllers\SbfTransactionController;
 use Sanf\Core\Modules\StandbyFinancing\Models\SbfInvoiceCheckModel;
@@ -87,6 +90,59 @@ class SbfTransactionControllerTest extends \TestCase
         $this->assertSame('error', $record->core_status);
         $this->assertSame(1, $record->total_invoice_count);
         $this->assertSame(1500000, $record->total_amount);
+    }
+
+    public function testUploadDocumentStoresFileToMinioAndReturnsWebCompatibleResponse(): void
+    {
+        Storage::fake('minio_post');
+
+        $file = UploadedFile::fake()->create('invoice-asli.pdf', 120, 'application/pdf');
+
+        $request = Request::create('/sbf/document/upload', 'POST', [
+            'cust_id' => 'CUST-1',
+        ], [], ['file' => $file]);
+
+        $response = (new SbfTransactionController())->uploadDocument($request);
+
+        $this->assertSame(200, $response->getStatusCode());
+
+        $body = $response->getData(true);
+        $data = $body['data'];
+
+        $this->assertSame('success', $body['status']);
+        $this->assertSame('invoice-asli.pdf', $data['origin_name']);
+        $this->assertStringStartsWith('SBF-', $data['xid']);
+        $this->assertStringStartsWith('uploads/sbf/' . date('Y/m') . '/', $data['path']);
+        $this->assertStringEndsWith('.pdf', $data['file_name']);
+        $this->assertStringEndsWith($data['file_name'], $data['path']);
+
+        Storage::disk('minio_post')->assertExists($data['path']);
+    }
+
+    public function testUploadDocumentRejectsMissingFile(): void
+    {
+        Storage::fake('minio_post');
+
+        $request = Request::create('/sbf/document/upload', 'POST', ['cust_id' => 'CUST-1']);
+
+        $this->expectException(ValidationException::class);
+
+        (new SbfTransactionController())->uploadDocument($request);
+    }
+
+    public function testUploadDocumentRejectsUnsupportedExtension(): void
+    {
+        Storage::fake('minio_post');
+
+        $file = UploadedFile::fake()->create('malware.exe', 10, 'application/octet-stream');
+
+        $request = Request::create('/sbf/document/upload', 'POST', [
+            'cust_id' => 'CUST-1',
+        ], [], ['file' => $file]);
+
+        $this->expectException(ValidationException::class);
+
+        (new SbfTransactionController())->uploadDocument($request);
     }
 
     private function pengajuanPayload(): array
