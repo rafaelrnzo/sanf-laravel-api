@@ -74,6 +74,8 @@ class GetListSurveyService extends UserService implements ApplicationServiceInte
                     'branch_id' => $property->BR_ID ?? null,
                     'profile_xid' => $property->CUST_ID ?? null,
                     'contract_no' => $property->REG_NO ?? null,
+                    'project_name' => $property->PROJ_NAME ?? null,
+                    'project_id' => $property->PROJECT_ID ?? null,
                     'segment' => $property->SEGMENT ?? null,
                     'pic_name' => $property->PIC_NAME ?? null,
                     'customer_name' => $property->CUST_NAME ?? null,
