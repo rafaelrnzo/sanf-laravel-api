@@ -30,6 +30,7 @@ class SurveySubmissionEndpointTest extends TestCase
 
                 $this->assertIsArray($dto->items);
                 $this->assertCount(1, $dto->items);
+                $this->assertSame('2026-06-23', $dto->surveyDate);
 
                 $item = $dto->items[0];
 
@@ -49,7 +50,9 @@ class SurveySubmissionEndpointTest extends TestCase
             'pic_name' => 'PIC',
             'customer_name' => 'Customer',
             'project_name' => 'Project',
+            'project_id' => 'PROJECT001',
             'segment' => 'Segment',
+            'survey_date' => '2026-06-23',
             'items' => [
                 [
                     'code' => 'FRONT_VIEW',
@@ -82,6 +85,8 @@ class SurveySubmissionEndpointTest extends TestCase
             'profile_xid' => 'PROFILE123',
             'branch_id' => 'BR001',
             'contract_no' => 'CN001',
+            'project_id' => 'PROJECT001',
+            'survey_date' => '2026-06-23',
             'items' => [
                 [
                     'code' => 'FRONT_VIEW',
@@ -98,5 +103,73 @@ class SurveySubmissionEndpointTest extends TestCase
 
         $this->seeStatusCode(422);
     }
-}
 
+    public function testAddSurveySubmissionAcceptsNullAddressPerPhoto()
+    {
+        $this->withoutMiddleware();
+
+        $service = Mockery::mock(AddSurveySubmissionService::class);
+        $service
+            ->shouldReceive('execute')
+            ->once()
+            ->with(Mockery::on(function (AddSurveySubmissionRequestDto $dto) {
+                $this->assertNull($dto->items[0]['gps_address']);
+                $this->assertSame(-6.123456, $dto->items[0]['gps_lat']);
+                $this->assertSame(106.123456, $dto->items[0]['gps_lng']);
+
+                return true;
+            }));
+
+        $this->app->instance(AddSurveySubmissionService::class, $service);
+
+        $this->post('/v1/users/survey-submissions', [
+            'profile_xid' => 'PROFILE123',
+            'branch_id' => 'BR001',
+            'contract_no' => 'CN001',
+            'project_id' => 'PROJECT001',
+            'survey_date' => '2026-06-23',
+            'items' => [[
+                'code' => 'FRONT_VIEW',
+                'title' => 'Tampak Depan',
+                'description' => 'Desc',
+                'image_files' => ['uploaded-photo-1.jpg'],
+                'captured_at' => '2026-05-20 15:00:00',
+                'gps_lat' => -6.123456,
+                'gps_lng' => 106.123456,
+                'gps_address' => null,
+            ]],
+        ]);
+
+        $this->seeStatusCode(200);
+    }
+
+    public function testAddSurveySubmissionRejectsInvalidSurveyDateFormat()
+    {
+        $this->withoutMiddleware();
+
+        $service = Mockery::mock(AddSurveySubmissionService::class);
+        $service->shouldNotReceive('execute');
+        $this->app->instance(AddSurveySubmissionService::class, $service);
+
+        $payload = [
+            'profile_xid' => 'PROFILE123',
+            'branch_id' => 'BR001',
+            'contract_no' => 'CN001',
+            'project_id' => 'PROJECT001',
+            'survey_date' => '2026-06-23 15:00:00',
+            'items' => [
+                [
+                    'code' => 'FRONT_VIEW',
+                    'title' => 'Tampak Depan',
+                    'description' => 'Desc',
+                    'image_files' => ['uploaded-photo-1.jpg'],
+                    'captured_at' => '2026-05-20 15:00:00',
+                ],
+            ],
+        ];
+
+        $this->post('/v1/users/survey-submissions', $payload);
+
+        $this->seeStatusCode(422);
+    }
+}

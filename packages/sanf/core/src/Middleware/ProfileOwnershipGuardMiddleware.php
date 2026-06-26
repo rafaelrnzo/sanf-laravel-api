@@ -26,16 +26,16 @@ class ProfileOwnershipGuardMiddleware
 
     /**
      * Handle an incoming request.
-     *
      * @param \Illuminate\Http\Request $request
      * @param \Closure $next
+     * @param string ...$fields
      * @return mixed
      * @throws ForbiddenException
      * @throws ProfileNotFoundException
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, ...$fields)
     {
-        $customerId = $this->extractCustomerId($request);
+        $customerId = $this->extractCustomerId($request, $fields);
 
         if (!$customerId) {
             return $next($request);
@@ -60,10 +60,19 @@ class ProfileOwnershipGuardMiddleware
 
     /**
      * @param \Illuminate\Http\Request $request
+     * @param array $fields
      * @return mixed
      */
-    protected function extractCustomerId($request)
+    protected function extractCustomerId($request, array $fields = [])
     {
+        foreach ($fields as $field) {
+            $value = $request->route($field) ?? $request->input($field);
+
+            if ($value) {
+                return $value;
+            }
+        }
+
         return $request->route('xid') ?? $request->input('profile_xid');
     }
 }

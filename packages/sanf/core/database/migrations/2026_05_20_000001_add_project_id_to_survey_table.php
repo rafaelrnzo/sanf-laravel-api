@@ -13,9 +13,11 @@ class AddProjectIdToSurveyTable extends Migration
      */
     public function up()
     {
-        Schema::table('survey', function (Blueprint $table) {
-            $table->string('project_id')->nullable()->after('project_name');
-        });
+        if (!Schema::hasColumn('survey', 'project_id')) {
+            Schema::table('survey', function (Blueprint $table) {
+                $table->string('project_id')->nullable()->after('project_name');
+            });
+        }
     }
 
     /**
@@ -25,9 +27,11 @@ class AddProjectIdToSurveyTable extends Migration
      */
     public function down()
     {
-        Schema::table('survey', function (Blueprint $table) {
-            $table->dropColumn(['project_id']);
-        });
+        if (Schema::hasColumn('survey', 'project_id')) {
+            Schema::table('survey', function (Blueprint $table) {
+                $table->dropColumn(['project_id']);
+            });
+        }
     }
 }
 

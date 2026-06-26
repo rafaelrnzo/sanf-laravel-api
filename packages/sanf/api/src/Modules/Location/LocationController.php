@@ -10,6 +10,7 @@ use Sanf\Api\Modules\Location\Transformers\LocationListTransformer;
 use Sanf\Core\Modules\Location\GetListLocationDto;
 use Sanf\Core\Modules\Location\GetListLocationService;
 use Sanf\Core\Modules\Location\LocationEnum;
+use Sanf\Core\Modules\Location\Services\ReverseGeocodeService;
 
 class LocationController extends RestApiController
 {
@@ -42,5 +43,51 @@ class LocationController extends RestApiController
 
         return fractal($result->data, LocationListTransformer::class)
             ->paginateWith(new LazyPaginatorAdapter($result->paginate));
+    }
+
+    public function reverseGeocode(Request $request, ReverseGeocodeService $service)
+    {
+        $this->validate($request, [
+            'Latitude' => ['required', 'numeric', 'between:-90,90'],
+            'Longitude' => ['required', 'numeric', 'between:-180,180'],
+        ]);
+
+        $lat = $request->input('Latitude');
+        $lng = $request->input('Longitude');
+
+        try {
+            $address = $service->execute((float) $lat, (float) $lng);
+
+            if ($address !== null) {
+                return response()->json([
+                    'success' => true,
+                    'code' => '200',
+                    'message' => 'OK',
+                    'data' => [
+                        'address' => $address,
+                    ],
+                ]);
+            }
+
+            return response()->json([
+                'success' => true,
+                'code' => '200',
+                'message' => 'No address found',
+                'data' => [
+                    'address' => null,
+                ],
+            ]);
+        } catch (\Exception $e) {
+            report($e);
+
+            return response()->json([
+                'success' => true,
+                'code' => '200',
+                'message' => 'No address found',
+                'data' => [
+                    'address' => null,
+                ],
+            ]);
+        }
     }
 }

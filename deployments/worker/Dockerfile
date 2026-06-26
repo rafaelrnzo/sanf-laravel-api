@@ -1,4 +1,4 @@
-FROM php:7.4-alpine
+FROM php:8.3-alpine
 
 ENV WORKDIR="/var/www"
 
@@ -56,7 +56,7 @@ COPY ./deployments/worker/supervisord.d/* /etc/supervisor/conf.d/
 
 ENTRYPOINT ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisord.conf"]
 
-RUN php -v | head -n 1 | grep -q "PHP 7.4"
+RUN php -v | head -n 1 | grep -q "PHP 8.3"
 
 # Clean up
 RUN rm /var/cache/apk/* \

@@ -322,6 +322,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__ . '/../../config/image-path.php', 'image-path');
         $this->mergeConfigFrom(__DIR__ . '/../../config/sanf-mobile.php', 'sanf-mobile');
         $this->mergeConfigFrom(__DIR__ . '/../../config/ocr.php', 'ocr');
+        $this->mergeConfigFrom(__DIR__ . '/../../config/llm-ocr.php', 'llm-ocr');
         $this->mergeConfigFrom(__DIR__ . '/../../config/scanina-web.php', 'scanina-web');
         $this->mergeConfigFrom(__DIR__ . '/../../config/e-sign.php', 'e-sign');
     }

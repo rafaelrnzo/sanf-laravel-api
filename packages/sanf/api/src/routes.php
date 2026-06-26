@@ -25,6 +25,19 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth']], function () {
     });
 });
 
+Route::group(['prefix' => 'api/sbf', 'middleware' => ['auth', 'profile_owner:custId,cust_id']], function () {
+    Route::get('plafond/list-sbf', ['as' => 'sbf.plafond.list', 'uses' => 'StandbyFinancing\Controllers\SbfRelayController@plafondList']);
+    Route::get('plafond/detail-sbf/{noPlafond}', ['as' => 'sbf.plafond.detail', 'uses' => 'StandbyFinancing\Controllers\SbfRelayController@plafondDetail']);
+    Route::get('plafond/{custId}', ['as' => 'sbf.plafond', 'uses' => 'StandbyFinancing\Controllers\SbfRelayController@plafond']);
+    Route::get('bank-account', ['as' => 'sbf.bank-account', 'uses' => 'StandbyFinancing\Controllers\SbfRelayController@bankAccount']);
+    Route::get('documents', ['as' => 'sbf.documents', 'uses' => 'StandbyFinancing\Controllers\SbfRelayController@documents']);
+    Route::get('pencairan', ['as' => 'sbf.pencairan.list', 'uses' => 'StandbyFinancing\Controllers\SbfRelayController@pencairan']);
+    Route::get('pencairan/{recapId}', ['as' => 'sbf.pencairan.detail', 'uses' => 'StandbyFinancing\Controllers\SbfRelayController@pencairanDetail']);
+    Route::post('document/upload', ['as' => 'sbf.document.upload', 'uses' => 'StandbyFinancing\Controllers\SbfTransactionController@uploadDocument']);
+    Route::post('check-invoice', ['as' => 'sbf.check-invoice', 'uses' => 'StandbyFinancing\Controllers\SbfTransactionController@checkInvoice']);
+    Route::post('pengajuan', ['as' => 'sbf.pengajuan', 'uses' => 'StandbyFinancing\Controllers\SbfTransactionController@submitPengajuan']);
+});
+
 Route::group(['prefix' => 'v1', 'middleware' => ['auth', 'pic']], function () {
     Route::post('users/financing-applications/company', ['as' => 'financing-applications.company.create', 'uses' => 'Financing\Controllers\FinancingApplicationByUserController@postAddByCompanyProfile']);
     Route::post('users/survey-submissions', ['as' => 'users.survey-submissions.add', 'uses' => 'Survey\Controllers\SurveyByUserController@add']);
@@ -87,6 +100,7 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth', 'profile_owner']], func
     Route::get('astra-products', ['as' => 'astra.product.list', 'uses' => 'Astra\ProductAstraListController@getList']);
 
     Route::get('locations', ['as' => 'locations.list', 'uses' => 'Location\LocationController@getList']);
+    Route::post('users/reverse-geocode', ['as' => 'users.reverse-geocode', 'uses' => 'Location\LocationController@reverseGeocode']);
 
     Route::get('users/metadata-info', ['as' => 'users.metadata-info', 'uses' => 'User\Controllers\UserController@getProjectMetadataInfo']);
     Route::get('users/metadata-financing', ['as' => 'users.metadata-financing', 'uses' => 'User\Controllers\UserController@getFinancingMetadata']);
@@ -344,6 +358,10 @@ Route::get('v2/payments/success', ['as' => 'v2.payments.static-success', 'uses' 
 Route::get('v2/payments/failed', ['as' => 'v2.payments.static-failed', 'uses' => 'Payment\Controllers\PaymentController@staticFailed']);
 
 Route::post('webhook/midtrans/status', ['as' => 'webhook.midtrans.status', 'uses' => 'Payment\Controllers\MidtransWebhookController@postHandle']);
+
+Route::group(['prefix' => 'api/ocr', 'middleware' => ['ocr-api-key']], function () {
+    Route::post('extract', ['as' => 'api.ocr.extract', 'uses' => 'LlmOcr\Controllers\LlmOcrController@extract']);
+});
 
 Route::group(['middleware' => ['basic-auth-config:core-h2h-user-provider']], function () {
     Route::post('webhook/sparepart_financing/invoice/validation', [
