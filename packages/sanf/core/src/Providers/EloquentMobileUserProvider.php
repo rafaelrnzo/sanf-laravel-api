@@ -33,7 +33,8 @@ class EloquentMobileUserProvider extends EloquentUserProvider
         // Eloquent User "model" that will be utilized by the Guard instances.
         $user = SodiumEncryption::query()->transaction(
             function (SodiumQuery $sodiumQuery) use ($credentials) {
-                $query = $this->newModelQuery();
+                $baseQuery = $this->newModelQuery();
+                $usernameValue = null;
 
                 foreach ($credentials as $key => $value) {
                     if (Str::contains($key, 'password')) {
@@ -41,20 +42,37 @@ class EloquentMobileUserProvider extends EloquentUserProvider
                     }
 
                     if ($key === 'username') {
-                        $query->where($sodiumQuery->selectRaw($key), $value);
+                        $usernameValue = $value;
                         continue;
                     }
 
                     if (is_array($value) || $value instanceof Arrayable) {
-                        $query->whereIn($key, $value);
+                        $baseQuery->whereIn($key, $value);
                     } else {
-                        $query->where($key, $value);
+                        $baseQuery->where($key, $value);
                     }
                 }
 
-                $query->whereIn('entity_type_id', [EntityType::PERSONAL]);
+                $baseQuery->whereIn('entity_type_id', [EntityType::PERSONAL]);
 
-                return $query->first();
+                if ($usernameValue) {
+                    $hashedUsername = SodiumEncryption::hash($usernameValue);
+
+                    $user = (clone $baseQuery)->where('username_index', $hashedUsername)->first();
+
+                    if (!$user) {
+                        $user = (clone $baseQuery)->where($sodiumQuery->selectRaw('username'), $usernameValue)->first();
+
+                        if ($user) {
+                            $user->username_index = $hashedUsername;
+                            $user->save();
+                        }
+                    }
+
+                    return $user;
+                }
+
+                return $baseQuery->first();
             }
         );
 

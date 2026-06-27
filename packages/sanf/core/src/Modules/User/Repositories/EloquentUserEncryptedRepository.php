@@ -89,6 +89,9 @@ class EloquentUserEncryptedRepository extends AbstractEloquentRepository impleme
     {
         $encryptor = SodiumEncryption::encryptor();
 
+        $plainUsername = $data['username'] ?? null;
+
+
         foreach ($this->encryptedFields as $field) {
             if (!isset($data[$field])) {
                 continue;
@@ -97,8 +100,8 @@ class EloquentUserEncryptedRepository extends AbstractEloquentRepository impleme
             $data[$field] = $encryptor->encrypt($data[$field]);
         }
 
-        if (isset($data['username'])) {
-            $data['username_index'] = SodiumEncryption::hash($data['username']);
+        if (!is_null($plainUsername)) {
+            $data['username_index'] = SodiumEncryption::hash($plainUsername);
         }
 
         $data['nonce'] = $encryptor->nonce()->getNonceHex();
@@ -117,6 +120,8 @@ class EloquentUserEncryptedRepository extends AbstractEloquentRepository impleme
     {
         $user = $this->model->newQuery()->find($id);
 
+        $plainUsername = $data['username'] ?? null;
+
         foreach ($this->encryptedFields as $field) {
             if (!isset($data[$field])) {
                 continue;
@@ -125,8 +130,8 @@ class EloquentUserEncryptedRepository extends AbstractEloquentRepository impleme
             $data[$field] = $user->encryptor()->encrypt($data[$field]);
         }
 
-        if (isset($data['username'])) {
-            $data['username_index'] = SodiumEncryption::hash($data['username']);
+        if (!is_null($plainUsername)) {
+            $data['username_index'] = SodiumEncryption::hash($plainUsername);
         }
 
         return $data;

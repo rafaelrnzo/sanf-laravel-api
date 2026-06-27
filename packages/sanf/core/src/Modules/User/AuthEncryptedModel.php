@@ -62,6 +62,7 @@ class AuthEncryptedModel extends AuthModel
         'remember_token',
         'pin',
         'nonce',
+        'username_index',
     ];
 
     public function status()

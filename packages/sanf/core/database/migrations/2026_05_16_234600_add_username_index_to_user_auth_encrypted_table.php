@@ -16,9 +16,11 @@ class AddUsernameIndexToUserAuthEncryptedTable extends Migration
      */
     public function up()
     {
-        Schema::connection($this->connection)->table('user_auth_encrypted', function (Blueprint $table) {
-            $table->binary('username_index')->nullable()->index();
-        });
+        if (!Schema::connection($this->connection)->hasColumn('user_auth_encrypted', 'username_index')) {
+            Schema::connection($this->connection)->table('user_auth_encrypted', function (Blueprint $table) {
+                $table->binary('username_index')->nullable()->index();
+            });
+        }
     }
 
     /**
@@ -28,8 +30,10 @@ class AddUsernameIndexToUserAuthEncryptedTable extends Migration
      */
     public function down()
     {
-        Schema::connection($this->connection)->table('user_auth_encrypted', function (Blueprint $table) {
-            $table->dropColumn('username_index');
-        });
+        if (Schema::connection($this->connection)->hasColumn('user_auth_encrypted', 'username_index')) {
+            Schema::connection($this->connection)->table('user_auth_encrypted', function (Blueprint $table) {
+                $table->dropColumn('username_index');
+            });
+        }
     }
 }
