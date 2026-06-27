@@ -42,7 +42,8 @@ class DatabaseSodiumStore extends DatabaseStore
         $cache = $this->connection->transaction(function () use ($prefixed) {
             $this->sodiumQuery->hideLogStatement();
 
-            return $this->table()->where($this->sodiumQuery->selectRaw('key'), '=', $prefixed)->first();
+            $hashedKey = SodiumEncryption::hash($prefixed);
+            return $this->table()->where('key_hash', '=', $hashedKey)->first();
         });
 
         // If we have a cache record we will check the expiration time against current
@@ -97,8 +98,9 @@ class DatabaseSodiumStore extends DatabaseStore
             $result = $this->connection->transaction(function () use ($prefixedKey, $value, $expiration) {
                 $this->sodiumQuery->hideLogStatement();
 
+                $hashedKey = SodiumEncryption::hash($prefixedKey);
                 return $this->table()
-                    ->where($this->sodiumQuery->selectRaw('key'), $prefixedKey)
+                    ->where('key_hash', $hashedKey)
                     ->update(compact('value', 'expiration'));
             });
 
@@ -120,9 +122,10 @@ class DatabaseSodiumStore extends DatabaseStore
             $this->sodiumQuery->hideLogStatement();
 
             $prefixed = $this->prefix . $key;
+            $hashedKey = SodiumEncryption::hash($prefixed);
 
             $cache = $this->table()
-                        ->where($this->sodiumQuery->selectRaw('key'), $prefixed)
+                        ->where('key_hash', $hashedKey)
                         ->lockForUpdate()
                         ->first();
 
@@ -149,7 +152,7 @@ class DatabaseSodiumStore extends DatabaseStore
             // Here we will update the values in the table. We will also encrypt the value
             // since database cache values are encrypted by default with secure storage
             // that can't be easily read. We will return the new value after storing.
-            $this->table()->where($this->sodiumQuery->selectRaw('key'), $prefixed)->update([
+            $this->table()->where('key_hash', $hashedKey)->update([
                 'value' => $this->serialize($new),
             ]);
 
@@ -168,7 +171,10 @@ class DatabaseSodiumStore extends DatabaseStore
         $this->connection->transaction(function () use ($key) {
             $this->sodiumQuery->hideLogStatement();
 
-            $this->table()->where($this->sodiumQuery->selectRaw('key'), '=', $this->prefix . $key)->delete();
+            $prefixed = $this->prefix . $key;
+            $hashedKey = SodiumEncryption::hash($prefixed);
+            
+            $this->table()->where('key_hash', '=', $hashedKey)->delete();
         });
 
         return true;
