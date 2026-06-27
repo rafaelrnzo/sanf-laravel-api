@@ -42,7 +42,7 @@ class GuzzleAndEloquentPlafondRepository implements PlafondRepositoryInterface
 
             return array_map(function ($item) {
                 $type = $this->plafondTypeModel->find($item['P_CODE']);
-                $item['type'] = $type ? $type->toArray() : ['id' => $item['P_CODE'], 'name' => 'Unknown'];
+                $item['type'] = $type ? $type->toArray() : ['id' => $item['P_CODE'], 'name' => 'Unknown', 'title' => 'Unknown'];
 
                 return $this->factory->make($item);
             }, $response['data']);
@@ -59,7 +59,7 @@ class GuzzleAndEloquentPlafondRepository implements PlafondRepositoryInterface
             return array_map(function ($item) {
                 $item['P_CODE'] = '0' . substr($item['P_CODE'], 1);
                 $type = $this->plafondTypeModel->find($item['P_CODE']);
-                $item['type'] = $type ? $type->toArray() : ['id' => $item['P_CODE'], 'name' => 'Unknown'];
+                $item['type'] = $type ? $type->toArray() : ['id' => $item['P_CODE'], 'name' => 'Unknown', 'title' => 'Unknown'];
 
                 return $this->historyFactory->make($item);
             }, $response['data']);
@@ -110,7 +110,8 @@ class GuzzleAndEloquentPlafondRepository implements PlafondRepositoryInterface
         try {
             $response = $this->client->getCustomerPlafondsByType($profileXid, $typeId);
             $plafond = array_merge($response['data']['header'][0]);
-            $plafond['type'] = $this->plafondTypeModel->find($plafond['P_CODE'])->toArray();
+            $type = $this->plafondTypeModel->find($plafond['P_CODE']);
+            $plafond['type'] = $type ? $type->toArray() : ['id' => $plafond['P_CODE'], 'name' => 'Unknown', 'title' => 'Unknown'];
             $plafond['items'] = $response['data']['items'];
 
             return $this->factory->make($plafond);
