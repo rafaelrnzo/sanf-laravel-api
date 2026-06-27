@@ -33,10 +33,12 @@ class LoginWithEmailAndPasswordService implements ApplicationServiceInterface
 
     public function execute($dto = null)
     {
-        if (!$token = Auth::attempt([
-            'username' => $dto->username,
-            'password' => $dto->password,
-        ])) {
+        if (
+            !$token = Auth::attempt([
+                'username' => $dto->username,
+                'password' => $dto->password,
+            ])
+        ) {
             throw new InvalidCredentialException();
         }
 
@@ -86,8 +88,8 @@ class LoginWithEmailAndPasswordService implements ApplicationServiceInterface
             'device_platform_id' => $device->devicePlatformId,
             'notification_channel_id' => $device->notificationChannelId ?? null,
             'notification_token' => $device->notificationToken ?? null,
-            'device_metadata' => $metadata->metadata ?? null,
-            'device_user_agent' => $metadata->userAgent ?? null,
+            'device_metadata' => is_array($device->metadata ?? null) ? json_encode($device->metadata) : ($device->metadata ?? null),
+            'device_user_agent' => is_array($device->metadata ?? null) ? ($device->metadata['user_agent'] ?? null) : null,
             'signature' => $signature,
             'expired_at' => $accessTokenExpiredAt,
         ]);
