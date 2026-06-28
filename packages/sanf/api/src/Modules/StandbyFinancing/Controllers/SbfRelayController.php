@@ -25,8 +25,11 @@ class SbfRelayController extends RestApiController
         return $this->relay(fn () => $service->getPlafondListSbf($input['cust_id']), 'plafond_list');
     }
 
-    public function plafondDetail(string $noPlafond, SanfApiService $service): JsonResponse
+    public function plafondDetail(string $noPlafond, Request $request, SanfApiService $service): JsonResponse
     {
+        $input = $this->validate($request, ['cust_id' => ['required', 'string', 'max:50']]);
+        $service->setUser($input['cust_id']);
+
         return $this->relay(fn () => $service->getPlafondDetailSbf($noPlafond), 'plafond_detail');
     }
 
@@ -60,8 +63,11 @@ class SbfRelayController extends RestApiController
         );
     }
 
-    public function pencairanDetail(string $recapId, SanfApiService $service): JsonResponse
+    public function pencairanDetail(string $recapId, Request $request, SanfApiService $service): JsonResponse
     {
+        $input = $this->validate($request, ['cust_id' => ['required', 'string', 'max:50']]);
+        $service->setUser($input['cust_id']);
+
         return $this->relay(fn () => $service->getDetailPencairan($recapId), 'pencairan_detail');
     }
 
