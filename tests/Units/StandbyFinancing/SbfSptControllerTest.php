@@ -10,6 +10,7 @@ use Mockery;
 use Sanf\Api\Modules\StandbyFinancing\Controllers\SbfTransactionController;
 use Sanf\Api\Modules\StandbyFinancing\Services\SbfSptGeneratorService;
 use Sanf\Core\Modules\LlmOcr\Services\GeminiOcrService;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class SbfSptControllerTest extends \TestCase
 {
@@ -27,10 +28,15 @@ class SbfSptControllerTest extends \TestCase
             new SbfSptGeneratorService()
         );
 
+        $this->assertInstanceOf(StreamedResponse::class, $response);
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('application/pdf', $response->headers->get('Content-Type'));
-        $this->assertStringContainsString('inline;', (string) $response->headers->get('Content-Disposition'));
-        $this->assertStringStartsWith('%PDF-', $response->getContent());
+        $this->assertStringContainsString('inline', (string) $response->headers->get('Content-Disposition'));
+
+        ob_start();
+        $response->sendContent();
+        $body = ob_get_clean();
+        $this->assertStringStartsWith('%PDF-', $body);
     }
 
     public function testSptGenerateUploadsToMinioAndReturnsWebCompatibleReference(): void
@@ -205,13 +211,15 @@ class SbfSptControllerTest extends \TestCase
                 'bank_provider' => 'Bank Central Asia',
                 'bank_account_number' => '1234567890',
             ],
-            'supplier' => [[
-                'total_amount' => 150000000,
-                'invoice_list' => [
-                    ['nomor_invoice' => 'INV-001', 'tanggal_invoice' => '2026-06-01', 'amount' => 100000000],
-                    ['nomor_invoice' => 'INV-002', 'tanggal_invoice' => '2026-06-10', 'amount' => 50000000],
-                ],
-            ]],
+            'supplier' => [
+                [
+                    'total_amount' => 150000000,
+                    'invoice_list' => [
+                        ['nomor_invoice' => 'INV-001', 'tanggal_invoice' => '2026-06-01', 'amount' => 100000000],
+                        ['nomor_invoice' => 'INV-002', 'tanggal_invoice' => '2026-06-10', 'amount' => 50000000],
+                    ],
+                ]
+            ],
         ];
     }
 }

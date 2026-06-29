@@ -103,10 +103,14 @@ class SbfTransactionController extends RestApiController
 
         $pdf = $generator->render($payload);
 
-        return response($pdf, 200, [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="' . $generator->fileName($payload) . '"',
-        ]);
+        return $this->streamDownload(
+            function () use ($pdf) {
+                echo $pdf;
+            },
+            $generator->fileName($payload),
+            [],
+            'inline'
+        );
     }
 
     public function sptGenerate(Request $request, SbfSptGeneratorService $generator): JsonResponse
