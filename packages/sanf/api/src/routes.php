@@ -34,6 +34,9 @@ Route::group(['prefix' => 'api/sbf', 'middleware' => ['auth', 'profile_owner:cus
     Route::get('pencairan', ['as' => 'sbf.pencairan.list', 'uses' => 'StandbyFinancing\Controllers\SbfRelayController@pencairan']);
     Route::get('pencairan/{recapId}', ['as' => 'sbf.pencairan.detail', 'uses' => 'StandbyFinancing\Controllers\SbfRelayController@pencairanDetail']);
     Route::post('document/upload', ['as' => 'sbf.document.upload', 'uses' => 'StandbyFinancing\Controllers\SbfTransactionController@uploadDocument']);
+    Route::post('spt/preview', ['as' => 'sbf.spt.preview', 'uses' => 'StandbyFinancing\Controllers\SbfTransactionController@sptPreview']);
+    Route::post('spt/generate', ['as' => 'sbf.spt.generate', 'uses' => 'StandbyFinancing\Controllers\SbfTransactionController@sptGenerate']);
+    Route::post('spt/ocr-scan', ['as' => 'sbf.spt.ocr-scan', 'uses' => 'StandbyFinancing\Controllers\SbfTransactionController@sptOcrScan']);
     Route::post('check-invoice', ['as' => 'sbf.check-invoice', 'uses' => 'StandbyFinancing\Controllers\SbfTransactionController@checkInvoice']);
     Route::post('pengajuan', ['as' => 'sbf.pengajuan', 'uses' => 'StandbyFinancing\Controllers\SbfTransactionController@submitPengajuan']);
 });
