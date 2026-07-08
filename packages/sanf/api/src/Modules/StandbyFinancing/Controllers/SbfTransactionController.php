@@ -18,6 +18,10 @@ class SbfTransactionController extends RestApiController
 {
     public function checkInvoice(Request $request, SanfApiService $service): JsonResponse
     {
+        if ($request->has('noplafond') && !$request->has('no_plafond')) {
+            $request->merge(['no_plafond' => $request->input('noplafond')]);
+        }
+
         $payload = $this->validate($request, [
             'cust_id' => ['required', 'string', 'max:50'],
             'no_plafond' => ['required', 'string', 'max:50'],
