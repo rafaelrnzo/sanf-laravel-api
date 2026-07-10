@@ -87,6 +87,7 @@ $app->alias('mail.manager', Illuminate\Contracts\Mail\Factory::class);
 $app->configure('tinker');
 $app->configure('payment');
 $app->configure('midtrans');
+$app->configure('core-webhook');
 /*
 |--------------------------------------------------------------------------
 | Register Middleware

@@ -6,6 +6,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use NbsPhp\Core\Controllers\RestApiController;
+use Sanf\Core\Modules\StandbyFinancing\Models\SbfPengajuanModel;
 use Sanf\Integration\Modules\StandbyFinancing\SanfApiService;
 
 class SbfRelayController extends RestApiController
@@ -57,10 +58,11 @@ class SbfRelayController extends RestApiController
         ]);
         $service->setUser($input['cust_id']);
 
-        return $this->relay(
-            fn () => $service->getListPencairan($input['cust_id'], (int) ($input['page'] ?? 1)),
-            'pencairan'
-        );
+        $response = $service->getListPencairan($input['cust_id'], (int) ($input['page'] ?? 1));
+
+        $this->backfillPencairan($input['cust_id'], $response['data'] ?? []);
+
+        return response()->json($response);
     }
 
     public function pencairanDetail(string $recapId, Request $request, SanfApiService $service): JsonResponse
@@ -69,6 +71,34 @@ class SbfRelayController extends RestApiController
         $service->setUser($input['cust_id']);
 
         return $this->relay(fn () => $service->getDetailPencairan($recapId), 'pencairan_detail');
+    }
+
+    private function backfillPencairan(string $custId, array $items): void
+    {
+        foreach ($items as $item) {
+            $recapId = $item['recap_id_b2b'] ?? null;
+
+            if (empty($recapId)) {
+                continue;
+            }
+
+            try {
+                SbfPengajuanModel::updateOrCreate(
+                    ['core_recap_id' => $recapId],
+                    [
+                        'cust_id' => $custId,
+                        'period_start' => $item['period_start'] ?? null,
+                        'period_end' => $item['period_end'] ?? null,
+                        'total_invoice_count' => $item['total_invoice'] ?? 0,
+                        'total_amount' => $item['total_amount'] ?? 0,
+                        'core_status' => $item['status_code'] ?? null,
+                        'core_message' => $item['status_desc'] ?? null,
+                    ]
+                );
+            } catch (\Throwable $th) {
+                report($th);
+            }
+        }
     }
 
     private function relay(callable $callback, string $operation): JsonResponse

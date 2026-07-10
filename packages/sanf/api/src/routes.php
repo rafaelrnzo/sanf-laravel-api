@@ -362,11 +362,17 @@ Route::get('v2/payments/failed', ['as' => 'v2.payments.static-failed', 'uses' =>
 
 Route::post('webhook/midtrans/status', ['as' => 'webhook.midtrans.status', 'uses' => 'Payment\Controllers\MidtransWebhookController@postHandle']);
 
+Route::post('webhooks/core-api/standby-financing/status', [
+    'as' => 'webhook.sbf.status',
+    'middleware' => ['verify-core-webhook-signature', 'throttle:60,1'],
+    'uses' => 'StandbyFinancing\Controllers\SbfWebhookController@handleStatus',
+]);
+
 Route::group(['prefix' => 'api/ocr', 'middleware' => ['ocr-api-key']], function () {
     Route::post('extract', ['as' => 'api.ocr.extract', 'uses' => 'LlmOcr\Controllers\LlmOcrController@extract']);
 });
 
-// Mobile-facing OCR: same /api/ocr prefix, authenticated with the user JWT instead of the X-API-Key.
+// Same /api/ocr prefix, authenticated with the user JWT instead of the X-API-Key.
 Route::group(['prefix' => 'api/ocr', 'middleware' => ['auth']], function () {
     Route::post('scan', ['as' => 'api.ocr.scan', 'uses' => 'LlmOcr\Controllers\LlmOcrController@extract']);
 });

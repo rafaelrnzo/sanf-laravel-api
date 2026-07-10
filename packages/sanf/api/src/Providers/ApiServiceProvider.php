@@ -39,6 +39,7 @@ class ApiServiceProvider extends ServiceProvider
         $this->app->routeMiddleware([
             'inject-user-id' => \Sanf\Api\Middleware\InjectUserIdFromPathMiddleware::class,
             'ocr-api-key' => \Sanf\Api\Middleware\OcrApiKeyMiddleware::class,
+            'verify-core-webhook-signature' => \Sanf\Api\Middleware\VerifyCoreWebhookSignature::class,
         ]);
    }
 
