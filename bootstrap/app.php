@@ -101,6 +101,7 @@ $app->configure('midtrans');
 $app->middleware([
     \Illuminate\Session\Middleware\StartSession::class,
     \Sanf\Core\Middleware\SecurityHeadersMiddleware::class,
+    \App\Http\Middleware\BasicAuthRelayMiddleware::class,
 ]);
 
 $app->singleton(Illuminate\Session\SessionManager::class, function () use ($app) {

@@ -34,6 +34,9 @@ Route::group(['prefix' => 'api/sbf', 'middleware' => ['auth', 'profile_owner:cus
     Route::get('pencairan', ['as' => 'sbf.pencairan.list', 'uses' => 'StandbyFinancing\Controllers\SbfRelayController@pencairan']);
     Route::get('pencairan/{recapId}', ['as' => 'sbf.pencairan.detail', 'uses' => 'StandbyFinancing\Controllers\SbfRelayController@pencairanDetail']);
     Route::post('document/upload', ['as' => 'sbf.document.upload', 'uses' => 'StandbyFinancing\Controllers\SbfTransactionController@uploadDocument']);
+    Route::post('spt/preview', ['as' => 'sbf.spt.preview', 'uses' => 'StandbyFinancing\Controllers\SbfTransactionController@sptPreview']);
+    Route::post('spt/generate', ['as' => 'sbf.spt.generate', 'uses' => 'StandbyFinancing\Controllers\SbfTransactionController@sptGenerate']);
+    Route::post('spt/ocr-scan', ['as' => 'sbf.spt.ocr-scan', 'uses' => 'StandbyFinancing\Controllers\SbfTransactionController@sptOcrScan']);
     Route::post('check-invoice', ['as' => 'sbf.check-invoice', 'uses' => 'StandbyFinancing\Controllers\SbfTransactionController@checkInvoice']);
     Route::post('pengajuan', ['as' => 'sbf.pengajuan', 'uses' => 'StandbyFinancing\Controllers\SbfTransactionController@submitPengajuan']);
 });
@@ -361,6 +364,11 @@ Route::post('webhook/midtrans/status', ['as' => 'webhook.midtrans.status', 'uses
 
 Route::group(['prefix' => 'api/ocr', 'middleware' => ['ocr-api-key']], function () {
     Route::post('extract', ['as' => 'api.ocr.extract', 'uses' => 'LlmOcr\Controllers\LlmOcrController@extract']);
+});
+
+// Mobile-facing OCR: same /api/ocr prefix, authenticated with the user JWT instead of the X-API-Key.
+Route::group(['prefix' => 'api/ocr', 'middleware' => ['auth']], function () {
+    Route::post('scan', ['as' => 'api.ocr.scan', 'uses' => 'LlmOcr\Controllers\LlmOcrController@extract']);
 });
 
 Route::group(['middleware' => ['basic-auth-config:core-h2h-user-provider']], function () {
