@@ -12,6 +12,7 @@ use Sanf\Api\Modules\StandbyFinancing\Services\SbfSptGeneratorService;
 use Sanf\Core\Modules\LlmOcr\Services\GeminiOcrService;
 use Sanf\Core\Modules\StandbyFinancing\Models\SbfInvoiceCheckModel;
 use Sanf\Core\Modules\StandbyFinancing\Models\SbfPengajuanModel;
+use Sanf\Core\Modules\StandbyFinancing\Services\SbfPengajuanBankAccountSyncer;
 use Sanf\Integration\Modules\StandbyFinancing\SanfApiService;
 
 class SbfTransactionController extends RestApiController
@@ -266,6 +267,8 @@ PROMPT;
 
     public function submitPengajuan(Request $request, SanfApiService $service): JsonResponse
     {
+        $this->normalizeBankAccountInput($request);
+
         $payload = $this->validate($request, [
             'cust_id' => ['required', 'string', 'max:50'],
             'no_plafond' => ['required', 'string', 'max:50'],
@@ -281,11 +284,12 @@ PROMPT;
             'supplier.*.invoice_list.*.tanggal_invoice' => ['required', 'date'],
             'supplier.*.invoice_list.*.currency' => ['required', 'in:IDR'],
             'supplier.*.invoice_list.*.amount' => ['required', 'integer', 'min:1'],
-            'bank_account' => ['required', 'array'],
-            'bank_account.bank_id' => ['required', 'string', 'max:20'],
-            'bank_account.bank_owner' => ['required', 'string', 'max:100'],
-            'bank_account.bank_provider' => ['required', 'string', 'max:100'],
-            'bank_account.bank_account_number' => ['required', 'string', 'max:50'],
+            'bank_account' => ['nullable', 'array'],
+            'bank_accounts' => ['required', 'array', 'min:1'],
+            'bank_accounts.*.bank_id' => ['required', 'string', 'max:20'],
+            'bank_accounts.*.bank_owner' => ['required', 'string', 'max:100'],
+            'bank_accounts.*.bank_provider' => ['required', 'string', 'max:100'],
+            'bank_accounts.*.bank_account_number' => ['required', 'string', 'max:50'],
             'invoice_document' => ['required', 'array', 'min:1'],
             'spt_dokuments' => ['required', 'array'],
             'supporting_dokuments' => ['nullable', 'array'],
@@ -295,7 +299,12 @@ PROMPT;
 
         $totalInvoiceCount = array_sum(array_column($payload['supplier'], 'total_invoice'));
         $totalAmount = array_sum(array_column($payload['supplier'], 'total_amount'));
-        $bankAccount = $payload['bank_account'];
+        $bankAccountSyncer = app(SbfPengajuanBankAccountSyncer::class);
+        $bankAccounts = $bankAccountSyncer->normalizePayload($payload);
+        $bankAccount = $bankAccounts[0];
+        $corePayload = $payload;
+        $corePayload['bank_account'] = $bankAccount;
+        unset($corePayload['bank_accounts']);
 
         $record = SbfPengajuanModel::create([
             'cust_id' => $payload['cust_id'],
@@ -317,8 +326,10 @@ PROMPT;
             'core_status' => 'pending',
         ]);
 
+        $bankAccountSyncer->sync($record, $bankAccounts, 'submission');
+
         try {
-            $coreResponse = $service->submitPengajuan($payload);
+            $coreResponse = $service->submitPengajuan($corePayload);
             $record->update([
                 'local_status' => 'submitted',
                 'core_recap_id' => $this->recapId($coreResponse),
@@ -345,6 +356,22 @@ PROMPT;
             ]);
 
             return $this->coreUnavailable();
+        }
+    }
+
+    private function normalizeBankAccountInput(Request $request): void
+    {
+        $bankAccount = $request->input('bank_account');
+        $bankAccounts = $request->input('bank_accounts');
+
+        if (empty($bankAccounts) && is_array($bankAccount)) {
+            $request->merge(['bank_accounts' => [$bankAccount]]);
+
+            return;
+        }
+
+        if (empty($bankAccount) && is_array($bankAccounts) && isset($bankAccounts[0]) && is_array($bankAccounts[0])) {
+            $request->merge(['bank_account' => $bankAccounts[0]]);
         }
     }
 

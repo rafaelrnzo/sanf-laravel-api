@@ -7,9 +7,17 @@ use Sanf\Core\Modules\Log\Enums\WebhookLogKeyEnum;
 use Sanf\Core\Modules\Log\Models\WebhookLogModel;
 use Sanf\Core\Modules\StandbyFinancing\Jobs\SendSbfStatusChangedEmailJob;
 use Sanf\Core\Modules\StandbyFinancing\Models\SbfPengajuanModel;
+use Sanf\Core\Modules\StandbyFinancing\Services\SbfPengajuanBankAccountSyncer;
 
 class ProcessSbfStatusWebhookUseCase
 {
+    private SbfPengajuanBankAccountSyncer $bankAccountSyncer;
+
+    public function __construct(?SbfPengajuanBankAccountSyncer $bankAccountSyncer = null)
+    {
+        $this->bankAccountSyncer = $bankAccountSyncer ?? new SbfPengajuanBankAccountSyncer();
+    }
+
     public function handle(array $payload): string
     {
         $eventId = $payload['event_id'];
@@ -35,11 +43,10 @@ class ProcessSbfStatusWebhookUseCase
         $statusCode = $data['status'] ?? null;
 
         if ($pengajuan) {
-            $pengajuan->update([
-                'core_status' => $statusCode,
-                'core_message' => $this->statusMessage($statusCode),
-                'core_response' => $payload,
-            ]);
+            $bankAccounts = $this->bankAccountSyncer->normalizeWebhookData($data);
+            $pengajuan->update($this->submissionAttributes($payload, $data, $bankAccounts));
+
+            $this->bankAccountSyncer->sync($pengajuan, $bankAccounts, 'webhook');
         }
 
         $webhookLog->update(['processed_at' => (string) Carbon::now()]);
@@ -55,6 +62,64 @@ class ProcessSbfStatusWebhookUseCase
         ]));
 
         return 'processed';
+    }
+
+    private function submissionAttributes(
+        array $payload,
+        array $data,
+        array $bankAccounts
+    ): array
+    {
+        $detail = $data['detail'] ?? [];
+        $attributes = [
+            'local_status' => 'submitted',
+            'core_status' => $data['status'] ?? null,
+            'core_message' => $this->statusMessage($data['status'] ?? null),
+            'core_response' => $payload,
+        ];
+
+        if (is_array($detail) && !empty($detail)) {
+            $attributes = array_merge($attributes, $this->detailAttributes($detail));
+        }
+
+        if ($bankAccount = $this->bankAccountSyncer->first($bankAccounts)) {
+            $attributes = array_merge($attributes, [
+                'bank_id' => $bankAccount['bank_id'],
+                'bank_owner' => $bankAccount['bank_owner'],
+                'bank_provider' => $bankAccount['bank_provider'],
+                'bank_account_number' => $bankAccount['bank_account_number'],
+            ]);
+        }
+
+        return $attributes;
+    }
+
+    private function detailAttributes(array $detail): array
+    {
+        $attributes = [];
+        $map = [
+            'no_plafond' => ['no_plafond', 'noplafond'],
+            'period_start' => ['period_start'],
+            'period_end' => ['period_end'],
+            'tenor' => ['tenor'],
+            'total_invoice_count' => ['total_invoice_count', 'total_invoice'],
+            'total_amount' => ['total_amount'],
+            'supplier_payload' => ['supplier', 'suppliers'],
+            'invoice_document' => ['invoice_document'],
+            'spt_dokument' => ['spt_dokuments', 'spt_dokument'],
+            'supporting_dokuments' => ['supporting_dokuments'],
+        ];
+
+        foreach ($map as $attribute => $keys) {
+            foreach ($keys as $key) {
+                if (array_key_exists($key, $detail) && $detail[$key] !== null) {
+                    $attributes[$attribute] = $detail[$key];
+                    break;
+                }
+            }
+        }
+
+        return $attributes;
     }
 
     private function statusMessage(?string $code): string

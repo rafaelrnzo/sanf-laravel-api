@@ -20,7 +20,7 @@ class SbfSubmitPengajuanPayload extends DataTransferObject
 
     public static function fromValidated(array $payload): self
     {
-        $bank = $payload['bank_account'] ?? [];
+        $bank = $payload['bank_account'] ?? ($payload['bank_accounts'][0] ?? []);
         $totalAmount = array_sum(array_column($payload['supplier'] ?? [], 'total_amount'));
 
         return new self([

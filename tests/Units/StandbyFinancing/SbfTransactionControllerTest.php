@@ -10,6 +10,7 @@ use Illuminate\Validation\ValidationException;
 use Mockery;
 use Sanf\Api\Modules\StandbyFinancing\Controllers\SbfTransactionController;
 use Sanf\Core\Modules\StandbyFinancing\Models\SbfInvoiceCheckModel;
+use Sanf\Core\Modules\StandbyFinancing\Models\SbfPengajuanBankAccountModel;
 use Sanf\Core\Modules\StandbyFinancing\Models\SbfPengajuanModel;
 use Sanf\Integration\Modules\StandbyFinancing\SanfApiService;
 
@@ -29,9 +30,11 @@ class SbfTransactionControllerTest extends \TestCase
 
         require_once base_path('packages/sanf/core/database/migrations/2026_06_24_000001_create_sbf_invoice_checks_table.php');
         require_once base_path('packages/sanf/core/database/migrations/2026_06_24_000002_create_sbf_pengajuan_table.php');
+        require_once base_path('packages/sanf/core/database/migrations/2026_07_14_000001_create_sbf_pengajuan_bank_accounts_table.php');
 
         (new \CreateSbfInvoiceChecksTable())->up();
         (new \CreateSbfPengajuanTable())->up();
+        (new \CreateSbfPengajuanBankAccountsTable())->up();
     }
 
     protected function tearDown(): void
@@ -90,6 +93,55 @@ class SbfTransactionControllerTest extends \TestCase
         $this->assertSame('error', $record->core_status);
         $this->assertSame(1, $record->total_invoice_count);
         $this->assertSame(1500000, $record->total_amount);
+        $this->assertSame(1, SbfPengajuanBankAccountModel::where('pengajuan_id', $record->id)->count());
+    }
+
+    public function testPengajuanStoresMultipleBankAccountsWhileForwardingCoreCompatiblePayload(): void
+    {
+        $payload = $this->pengajuanPayload();
+        unset($payload['bank_account']);
+        $payload['bank_accounts'] = [
+            [
+                'bank_id' => '1',
+                'bank_owner' => 'PT Supplier',
+                'bank_provider' => 'Bank Example',
+                'bank_account_number' => '1234567890',
+            ],
+            [
+                'bank_id' => '2',
+                'bank_owner' => 'PT Supplier Dua',
+                'bank_provider' => 'Bank Example Dua',
+                'bank_account_number' => '9876543210',
+            ],
+        ];
+
+        $service = Mockery::mock(SanfApiService::class);
+        $service->shouldReceive('setUser')->andReturnSelf();
+        $service->shouldReceive('submitPengajuan')
+            ->once()
+            ->with(Mockery::on(function (array $corePayload) {
+                return !isset($corePayload['bank_accounts'])
+                    && $corePayload['bank_account']['bank_id'] === '1'
+                    && $corePayload['bank_account']['bank_account_number'] === '1234567890';
+            }))
+            ->andReturn(['status' => 'success', 'data' => ['recap_id_b2b' => 'REC-1']]);
+
+        $response = (new SbfTransactionController())->submitPengajuan(
+            Request::create('/sbf/pengajuan', 'POST', $payload),
+            $service
+        );
+
+        $record = SbfPengajuanModel::first();
+        $bankAccounts = SbfPengajuanBankAccountModel::where('pengajuan_id', $record->id)
+            ->orderBy('bank_id')
+            ->get();
+
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('submitted', $record->local_status);
+        $this->assertSame('REC-1', $record->core_recap_id);
+        $this->assertCount(2, $bankAccounts);
+        $this->assertSame('1', $bankAccounts[0]->bank_id);
+        $this->assertSame('2', $bankAccounts[1]->bank_id);
     }
 
     public function testUploadDocumentStoresFileToMinioAndReturnsWebCompatibleResponse(): void

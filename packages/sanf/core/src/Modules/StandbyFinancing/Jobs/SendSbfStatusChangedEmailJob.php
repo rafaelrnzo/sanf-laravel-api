@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Sanf\Core\Mail\MailLayout2Columns;
 use Sanf\Core\Modules\StandbyFinancing\Models\SbfPengajuanModel;
+use Sanf\Core\Modules\StandbyFinancing\Services\SbfPengajuanBankAccountSyncer;
 use Sanf\Integration\Modules\SanfCore\SanfCoreApiClient;
 use Sanf\Integration\Modules\StandbyFinancing\SanfApiService;
 
@@ -108,7 +109,10 @@ class SendSbfStatusChangedEmailJob implements ShouldQueue
             $pengajuan = SbfPengajuanModel::where('core_recap_id', $recapId)->first();
 
             if ($pengajuan && !empty($detail)) {
-                $bank = $detail['bank_account'] ?? $detail['bank'] ?? [];
+                $bankAccountSyncer = app(SbfPengajuanBankAccountSyncer::class);
+                $bankAccounts = $bankAccountSyncer->normalizeWebhookData($detail);
+                $bankAccountSyncer->sync($pengajuan, $bankAccounts, 'core-detail');
+                $bank = $bankAccountSyncer->first($bankAccounts) ?? [];
 
                 $pengajuan->update([
                     'period_start' => $detail['period_start'] ?? $pengajuan->period_start,
@@ -116,9 +120,10 @@ class SendSbfStatusChangedEmailJob implements ShouldQueue
                     'tenor' => $detail['tenor'] ?? $pengajuan->tenor,
                     'total_invoice_count' => $detail['total_invoice'] ?? $pengajuan->total_invoice_count,
                     'total_amount' => $detail['total_amount'] ?? $pengajuan->total_amount,
-                    'bank_provider' => $bank['provider'] ?? $pengajuan->bank_provider,
-                    'bank_owner' => $bank['owner'] ?? $pengajuan->bank_owner,
-                    'bank_account_number' => $bank['account_number'] ?? ($bank['account_no'] ?? $pengajuan->bank_account_number),
+                    'bank_id' => $bank['bank_id'] ?? $pengajuan->bank_id,
+                    'bank_provider' => $bank['bank_provider'] ?? $pengajuan->bank_provider,
+                    'bank_owner' => $bank['bank_owner'] ?? $pengajuan->bank_owner,
+                    'bank_account_number' => $bank['bank_account_number'] ?? $pengajuan->bank_account_number,
                     'supplier_payload' => $detail['supplier'] ?? ($detail['suppliers'] ?? $pengajuan->supplier_payload),
                     'invoice_document' => $detail['invoice_document'] ?? $pengajuan->invoice_document,
                     'spt_dokument' => $detail['spt_dokuments'] ?? $pengajuan->spt_dokument,

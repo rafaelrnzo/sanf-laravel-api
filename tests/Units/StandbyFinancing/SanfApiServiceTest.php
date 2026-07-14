@@ -120,6 +120,59 @@ class SanfApiServiceTest extends TestCase
         ], $body['bank_account']);
     }
 
+    public function testItForwardsFirstBankAccountWhenPayloadUsesBankAccountsList(): void
+    {
+        $history = [];
+        $service = $this->service([new Response(200, [], '{"status":"success","data":{"recap_id":"REC-1"}}')], $history);
+
+        $service->setUser('CUST-1')->submitPengajuan([
+            'cust_id' => 'CUST-1',
+            'no_plafond' => '62505004136',
+            'period_start' => '2026-05-03',
+            'period_end' => '2026-05-29',
+            'tenor' => 12,
+            'supplier' => [[
+                'supplier_id' => '0000000073',
+                'total_invoice' => 2,
+                'total_amount' => 85000000,
+                'invoice_list' => [[
+                    'nomor_invoice' => 'INV/2026/05/0011',
+                    'tanggal_invoice' => '2026-05-05',
+                    'currency' => 'IDR',
+                    'amount' => 85000000,
+                ]],
+            ]],
+            'bank_accounts' => [
+                [
+                    'bank_id' => '0001101',
+                    'bank_owner' => 'PT. SUKSES TUNGGAL MANDIRI',
+                    'bank_provider' => 'BANK BCA',
+                    'bank_account_number' => '883.059.1533',
+                ],
+                [
+                    'bank_id' => '0002202',
+                    'bank_owner' => 'PT. SUKSES TUNGGAL MANDIRI 2',
+                    'bank_provider' => 'BANK MANDIRI',
+                    'bank_account_number' => '9988776655',
+                ],
+            ],
+            'invoice_document' => [['file_path' => 'po.pdf', 'file_name' => 'po.pdf']],
+            'spt_dokuments' => ['file_path' => 'spt.pdf', 'file_name' => 'spt.pdf'],
+            'supporting_dokuments' => [],
+        ]);
+
+        $body = json_decode((string) $history[0]['request']->getBody(), true);
+
+        $this->assertSame([
+            'bank_id' => '0001101',
+            'owner' => 'PT. SUKSES TUNGGAL MANDIRI',
+            'provider' => 'BANK BCA',
+            'account_number' => '883.059.1533',
+            'total_amount' => '85000000',
+        ], $body['bank_account']);
+        $this->assertArrayNotHasKey('bank_accounts', $body);
+    }
+
     private function service(array $responses, array &$history = []): SanfApiService
     {
         $stack = HandlerStack::create(new MockHandler($responses));

@@ -12,6 +12,7 @@ use Sanf\Api\Middleware\VerifyCoreWebhookSignature;
 use Sanf\Api\Modules\StandbyFinancing\Controllers\SbfWebhookController;
 use Sanf\Core\Modules\Log\Models\WebhookLogModel;
 use Sanf\Core\Modules\StandbyFinancing\Jobs\SendSbfStatusChangedEmailJob;
+use Sanf\Core\Modules\StandbyFinancing\Models\SbfPengajuanBankAccountModel;
 use Sanf\Core\Modules\StandbyFinancing\Models\SbfPengajuanModel;
 use Sanf\Core\Modules\StandbyFinancing\UseCases\ProcessSbfStatusWebhookUseCase;
 
@@ -30,9 +31,11 @@ class SbfWebhookControllerTest extends \TestCase
         DB::setDefaultConnection('sqlite');
 
         require_once base_path('packages/sanf/core/database/migrations/2026_06_24_000002_create_sbf_pengajuan_table.php');
+        require_once base_path('packages/sanf/core/database/migrations/2026_07_14_000001_create_sbf_pengajuan_bank_accounts_table.php');
         require_once base_path('packages/sanf/core/database/migrations/2025_11_08_020900_create_webhook_log_table.php');
 
         (new \CreateSbfPengajuanTable())->up();
+        (new \CreateSbfPengajuanBankAccountsTable())->up();
         (new \CreateWebhookLogTable())->up();
     }
 
@@ -208,6 +211,99 @@ class SbfWebhookControllerTest extends \TestCase
         $useCase->handle($payload);
 
         Queue::assertPushed(SendSbfStatusChangedEmailJob::class, 1);
+    }
+
+    public function testUseCaseUpdatesLocalStatusAndSyncsBankAccounts(): void
+    {
+        $this->seedPengajuan();
+
+        $payload = $this->validPayload();
+        $payload['data']['detail'] = [
+            'bank_account' => [
+                'bank_id' => 'BANK-1',
+                'bank_owner' => 'PT Example',
+                'bank_provider' => 'Bank Example',
+                'account_number' => '1234567890',
+            ],
+        ];
+
+        $useCase = new ProcessSbfStatusWebhookUseCase();
+        $result = $useCase->handle($payload);
+
+        $this->assertSame('processed', $result);
+
+        $pengajuan = SbfPengajuanModel::where('core_recap_id', 'REC-1')->first();
+        $this->assertSame('submitted', $pengajuan->local_status);
+        $this->assertSame('C', $pengajuan->core_status);
+
+        $bankAccounts = SbfPengajuanBankAccountModel::where('pengajuan_id', $pengajuan->id)->get();
+        $this->assertCount(1, $bankAccounts);
+        $this->assertSame('BANK-1', $bankAccounts->first()->bank_id);
+        $this->assertSame('1234567890', $bankAccounts->first()->bank_account_number);
+    }
+
+    public function testUseCaseDoesNotCreateDuplicateBankAccountsOnRepeatedWebhook(): void
+    {
+        $this->seedPengajuan();
+
+        $payload = $this->validPayload();
+        $payload['data']['detail'] = [
+            'bank_account' => [
+                'bank_id' => 'BANK-1',
+                'bank_owner' => 'PT Example',
+                'bank_provider' => 'Bank Example',
+                'account_number' => '1234567890',
+            ],
+        ];
+
+        $useCase = new ProcessSbfStatusWebhookUseCase();
+        $useCase->handle($payload);
+        $useCase->handle($payload);
+
+        $pengajuan = SbfPengajuanModel::where('core_recap_id', 'REC-1')->first();
+        $bankAccounts = SbfPengajuanBankAccountModel::where('pengajuan_id', $pengajuan->id)->get();
+
+        $this->assertCount(1, $bankAccounts);
+    }
+
+    public function testUseCaseSyncsMultipleBankAccountsWithoutDuplicatesAcrossEvents(): void
+    {
+        $this->seedPengajuan();
+
+        $payload = $this->validPayload();
+        $payload['event_id'] = 'evt_REC1_C_bank_1';
+        $payload['data']['detail'] = [
+            'bank_accounts' => [
+                [
+                    'bank_id' => 'BANK-1',
+                    'bank_owner' => 'PT Example',
+                    'bank_provider' => 'Bank Example',
+                    'account_number' => '1234567890',
+                ],
+                [
+                    'bank_id' => 'BANK-2',
+                    'bank_owner' => 'PT Example Dua',
+                    'bank_provider' => 'Bank Example Dua',
+                    'account_number' => '9876543210',
+                ],
+            ],
+        ];
+
+        $useCase = new ProcessSbfStatusWebhookUseCase();
+        $this->assertSame('processed', $useCase->handle($payload));
+
+        $payload['event_id'] = 'evt_REC1_C_bank_2';
+        $payload['data']['detail']['bank_accounts'][0]['bank_owner'] = 'PT Example Updated';
+        $this->assertSame('processed', $useCase->handle($payload));
+
+        $pengajuan = SbfPengajuanModel::where('core_recap_id', 'REC-1')->first();
+        $bankAccounts = SbfPengajuanBankAccountModel::where('pengajuan_id', $pengajuan->id)
+            ->orderBy('bank_id')
+            ->get();
+
+        $this->assertCount(2, $bankAccounts);
+        $this->assertSame('PT Example Updated', $bankAccounts[0]->bank_owner);
+        $this->assertSame('BANK-2', $bankAccounts[1]->bank_id);
     }
 
     public function testUseCaseCreatesWebhookLogForIdempotency(): void

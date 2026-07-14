@@ -45,4 +45,9 @@ class SbfPengajuanModel extends Model
         'core_response' => 'array',
         'submitted_at' => 'datetime',
     ];
+
+    public function bankAccounts()
+    {
+        return $this->hasMany(SbfPengajuanBankAccountModel::class, 'pengajuan_id');
+    }
 }
