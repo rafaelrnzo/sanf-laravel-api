@@ -2,6 +2,9 @@
 
 namespace Tests\Units\StandbyFinancing;
 
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Psr7\Request as PsrRequest;
+use GuzzleHttp\Psr7\Response as PsrResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -69,6 +72,47 @@ class SbfTransactionControllerTest extends \TestCase
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('success', SbfInvoiceCheckModel::first()->core_status);
         $this->assertSame('Eligible', SbfInvoiceCheckModel::first()->core_message);
+    }
+
+    public function testCheckInvoiceReturnsOriginalCoreMessage(): void
+    {
+        $payload = [
+            'cust_id' => 'CUST-1',
+            'no_plafond' => 'PLF-1',
+            'nomor_invoice' => 'INV-1',
+            'total_invoice' => 1500000,
+        ];
+
+        $coreResponse = new PsrResponse(422, ['Content-Type' => 'application/json'], json_encode([
+            'status' => 'error',
+            'message' => 'Invoice sudah pernah diupload sebelumnya.',
+            'errors' => null,
+        ]));
+
+        $service = Mockery::mock(SanfApiService::class);
+        $service->shouldReceive('setUser')->andReturnSelf();
+        $service->shouldReceive('checkInvoice')
+            ->once()
+            ->with($payload)
+            ->andThrow(new ClientException(
+                'Core rejected invoice',
+                new PsrRequest('POST', '/api/standby_financing/check_invoice'),
+                $coreResponse
+            ));
+
+        $response = (new SbfTransactionController())->checkInvoice(
+            Request::create('/sbf/check-invoice', 'POST', $payload),
+            $service
+        );
+
+        $body = $response->getData(true);
+
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertFalse($body['success']);
+        $this->assertSame('error', $body['status']);
+        $this->assertSame('422', $body['code']);
+        $this->assertSame('Invoice sudah pernah diupload sebelumnya.', $body['message']);
+        $this->assertSame('Invoice sudah pernah diupload sebelumnya.', SbfInvoiceCheckModel::first()->core_message);
     }
 
     public function testFailedPengajuanRemainsAvailableForRetry(): void

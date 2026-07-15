@@ -2,6 +2,7 @@
 
 namespace Sanf\Api\Modules\StandbyFinancing\Controllers;
 
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -49,15 +50,22 @@ class SbfTransactionController extends RestApiController
                 'data' => $coreResponse,
             ]);
         } catch (\Throwable $exception) {
+            $coreError = $this->coreErrorPayload($exception);
+
             $record->update([
                 'core_status' => 'error',
-                'core_message' => $exception->getMessage(),
+                'core_message' => $coreError['message'] ?? $exception->getMessage(),
             ]);
 
             Log::error('SBF invoice check failed', [
                 'record_id' => $record->id,
                 'message' => $exception->getMessage(),
+                'core_message' => $coreError['message'] ?? null,
             ]);
+
+            if ($coreError !== null) {
+                return response()->json($coreError);
+            }
 
             return $this->coreUnavailable();
         }
@@ -391,5 +399,27 @@ PROMPT;
             'status' => 'error',
             'message' => 'Gagal menghubungi core system',
         ], 502);
+    }
+
+    private function coreErrorPayload(\Throwable $exception): ?array
+    {
+        if (!$exception instanceof RequestException || !$exception->hasResponse()) {
+            return null;
+        }
+
+        $body = (string) $exception->getResponse()->getBody();
+        $payload = json_decode($body, true);
+
+        if (!is_array($payload) || empty($payload['message'])) {
+            return null;
+        }
+
+        return [
+            'success' => false,
+            'status' => (string) ($payload['status'] ?? 'error'),
+            'code' => (string) $exception->getResponse()->getStatusCode(),
+            'message' => (string) $payload['message'],
+            'errors' => $payload['errors'] ?? null,
+        ];
     }
 }
