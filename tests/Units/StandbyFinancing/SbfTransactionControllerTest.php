@@ -140,6 +140,44 @@ class SbfTransactionControllerTest extends \TestCase
         $this->assertSame(1, SbfPengajuanBankAccountModel::where('pengajuan_id', $record->id)->count());
     }
 
+    public function testSubmitPengajuanReturnsOriginalCoreMessage(): void
+    {
+        $payload = $this->pengajuanPayload();
+        $coreResponse = new PsrResponse(422, ['Content-Type' => 'application/json'], json_encode([
+            'status' => 'error',
+            'message' => 'Pengajuan untuk periode ini sudah pernah disubmit.',
+            'errors' => null,
+        ]));
+
+        $service = Mockery::mock(SanfApiService::class);
+        $service->shouldReceive('setUser')->andReturnSelf();
+        $service->shouldReceive('submitPengajuan')
+            ->once()
+            ->with($payload)
+            ->andThrow(new ClientException(
+                'Core rejected pengajuan',
+                new PsrRequest('POST', '/api/standby_financing/store'),
+                $coreResponse
+            ));
+
+        $response = (new SbfTransactionController())->submitPengajuan(
+            Request::create('/sbf/pengajuan', 'POST', $payload),
+            $service
+        );
+
+        $body = $response->getData(true);
+        $record = SbfPengajuanModel::first();
+
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertFalse($body['success']);
+        $this->assertSame('error', $body['status']);
+        $this->assertSame('422', $body['code']);
+        $this->assertSame('Pengajuan untuk periode ini sudah pernah disubmit.', $body['message']);
+        $this->assertSame('failed', $record->local_status);
+        $this->assertSame('error', $record->core_status);
+        $this->assertSame('Pengajuan untuk periode ini sudah pernah disubmit.', $record->core_message);
+    }
+
     public function testPengajuanStoresMultipleBankAccountsWhileForwardingCoreCompatiblePayload(): void
     {
         $payload = $this->pengajuanPayload();

@@ -352,16 +352,24 @@ PROMPT;
                 'data' => $coreResponse,
             ]);
         } catch (\Throwable $exception) {
+            $coreError = $this->coreErrorPayload($exception);
+            $coreMessage = $coreError['message'] ?? $exception->getMessage();
+
             $record->update([
                 'local_status' => 'failed',
                 'core_status' => 'error',
-                'core_message' => $exception->getMessage(),
+                'core_message' => $coreMessage,
             ]);
 
             Log::error('SBF pengajuan failed', [
                 'record_id' => $record->id,
                 'message' => $exception->getMessage(),
+                'core_message' => $coreError['message'] ?? null,
             ]);
+
+            if ($coreError !== null) {
+                return response()->json($coreError);
+            }
 
             return $this->coreUnavailable();
         }

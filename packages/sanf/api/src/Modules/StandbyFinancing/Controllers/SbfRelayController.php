@@ -70,7 +70,12 @@ class SbfRelayController extends RestApiController
         $input = $this->validate($request, ['cust_id' => ['required', 'string', 'max:50']]);
         $service->setUser($input['cust_id']);
 
-        return $this->relay(fn () => $service->getDetailPencairan($recapId), 'pencairan_detail');
+        return $this->relay(function () use ($service, $recapId) {
+            return $this->mergeLocalDocuments(
+                $service->getDetailPencairan($recapId),
+                $recapId
+            );
+        }, 'pencairan_detail');
     }
 
     private function backfillPencairan(string $custId, array $items): void
@@ -116,5 +121,31 @@ class SbfRelayController extends RestApiController
                 'message' => 'Gagal menghubungi core system',
             ], 502);
         }
+    }
+
+    private function mergeLocalDocuments(array $response, string $recapId): array
+    {
+        $record = SbfPengajuanModel::where('core_recap_id', $recapId)->first();
+        if (!$record) {
+            return $response;
+        }
+
+        $data = $response['data'] ?? null;
+        if (!is_array($data)) {
+            return $response;
+        }
+
+        if (!empty($record->invoice_document)) {
+            $data['invoice_document'] = $record->invoice_document;
+        }
+        if (!empty($record->spt_dokument)) {
+            $data['spt_dokuments'] = $record->spt_dokument;
+        }
+        if (!empty($record->supporting_dokuments)) {
+            $data['supporting_dokuments'] = $record->supporting_dokuments;
+        }
+        $response['data'] = $data;
+
+        return $response;
     }
 }
