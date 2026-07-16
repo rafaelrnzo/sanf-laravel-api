@@ -364,7 +364,7 @@ Route::post('webhook/midtrans/status', ['as' => 'webhook.midtrans.status', 'uses
 
 Route::post('webhooks/core-api/standby-financing/status', [
     'as' => 'webhook.sbf.status',
-    'middleware' => ['verify-core-webhook-signature', 'throttle:60,1'],
+    'middleware' => ['basic-auth-config:core-h2h-user-provider', 'throttle:60,1'],
     'uses' => 'StandbyFinancing\Controllers\SbfWebhookController@handleStatus',
 ]);
 

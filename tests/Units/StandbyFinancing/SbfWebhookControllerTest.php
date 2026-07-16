@@ -3,12 +3,13 @@
 namespace Tests\Units\StandbyFinancing;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Contracts\Auth\Factory as AuthFactory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Validation\ValidationException;
 use Mockery;
-use Sanf\Api\Middleware\VerifyCoreWebhookSignature;
+use NbsPhp\Core\Exceptions\InvalidCredentialException;
+use NbsPhp\Core\Middleware\BasicAuthConfigMiddleware;
 use Sanf\Api\Modules\StandbyFinancing\Controllers\SbfWebhookController;
 use Sanf\Core\Modules\Log\Models\WebhookLogModel;
 use Sanf\Core\Modules\StandbyFinancing\Jobs\SendSbfStatusChangedEmailJob;
@@ -385,101 +386,52 @@ class SbfWebhookControllerTest extends \TestCase
         (new SbfWebhookController())->handleStatus($request, $useCase);
     }
 
-    public function testMiddlewareRejectsRequestWithoutSecret(): void
+    public function testMiddlewareAcceptsCoreH2hBasicAuth(): void
     {
-        config(['core-webhook.secret' => '']);
-
-        $request = Request::create('/webhooks/core-api/standby-financing/status', 'POST');
-        $nextCalled = false;
-
-        $middleware = new VerifyCoreWebhookSignature();
-        $response = $middleware->handle($request, function () use (&$nextCalled) {
-            $nextCalled = true;
-        });
-
-        $this->assertFalse($nextCalled);
-        $this->assertSame(Response::HTTP_INTERNAL_SERVER_ERROR, $response->getStatusCode());
-    }
-
-    public function testMiddlewareRejectsMissingSignatureHeader(): void
-    {
-        config(['core-webhook.secret' => 'test-secret']);
-
-        $request = Request::create('/webhooks/core-api/standby-financing/status', 'POST');
-        $nextCalled = false;
-
-        $middleware = new VerifyCoreWebhookSignature();
-        $response = $middleware->handle($request, function () use (&$nextCalled) {
-            $nextCalled = true;
-        });
-
-        $this->assertFalse($nextCalled);
-        $this->assertSame(Response::HTTP_UNAUTHORIZED, $response->getStatusCode());
-    }
-
-    public function testMiddlewareRejectsInvalidSignature(): void
-    {
-        config(['core-webhook.secret' => 'test-secret']);
-
-        $body = json_encode($this->validPayload());
+        config([
+            'auth.providers.core-h2h-user-provider.client_id' => 'core-client',
+            'auth.providers.core-h2h-user-provider.client_secret' => 'core-secret',
+        ]);
 
         $request = Request::create('/webhooks/core-api/standby-financing/status', 'POST', [], [], [], [
-            'HTTP_X-Signature' => 'sha256=invalidhash',
-        ], $body);
+            'PHP_AUTH_USER' => 'core-client',
+            'PHP_AUTH_PW' => 'core-secret',
+        ]);
 
         $nextCalled = false;
 
-        $middleware = new VerifyCoreWebhookSignature();
-        $response = $middleware->handle($request, function () use (&$nextCalled) {
-            $nextCalled = true;
-        });
-
-        $this->assertFalse($nextCalled);
-        $this->assertSame(Response::HTTP_UNAUTHORIZED, $response->getStatusCode());
-    }
-
-    public function testMiddlewareAcceptsValidSignature(): void
-    {
-        $secret = 'test-secret';
-        config(['core-webhook.secret' => $secret]);
-
-        $body = json_encode($this->validPayload());
-        $signature = 'sha256=' . hash_hmac('sha256', $body, $secret);
-
-        $request = Request::create('/webhooks/core-api/standby-financing/status', 'POST', [], [], [], [
-            'HTTP_X-Signature' => $signature,
-        ], $body);
-
-        $nextCalled = false;
-
-        $middleware = new VerifyCoreWebhookSignature();
+        $middleware = new BasicAuthConfigMiddleware(Mockery::mock(AuthFactory::class));
         $middleware->handle($request, function () use (&$nextCalled) {
             $nextCalled = true;
-        });
+        }, 'core-h2h-user-provider');
 
         $this->assertTrue($nextCalled);
     }
 
-    public function testMiddlewareAcceptsSignatureWithoutPrefix(): void
+    public function testMiddlewareRejectsInvalidCoreH2hBasicAuth(): void
     {
-        $secret = 'test-secret';
-        config(['core-webhook.secret' => $secret]);
-
-        $body = json_encode($this->validPayload());
-        $signature = hash_hmac('sha256', $body, $secret);
+        config([
+            'auth.providers.core-h2h-user-provider.client_id' => 'core-client',
+            'auth.providers.core-h2h-user-provider.client_secret' => 'core-secret',
+        ]);
 
         $request = Request::create('/webhooks/core-api/standby-financing/status', 'POST', [], [], [], [
-            'HTTP_X-Signature' => $signature,
-        ], $body);
+            'PHP_AUTH_USER' => 'core-client',
+            'PHP_AUTH_PW' => 'wrong-secret',
+        ]);
 
         $nextCalled = false;
+        $middleware = new BasicAuthConfigMiddleware(Mockery::mock(AuthFactory::class));
 
-        $middleware = new VerifyCoreWebhookSignature();
-        $middleware->handle($request, function () use (&$nextCalled) {
-            $nextCalled = true;
-        });
+        try {
+            $middleware->handle($request, function () use (&$nextCalled) {
+                $nextCalled = true;
+            }, 'core-h2h-user-provider');
 
-        $this->assertTrue($nextCalled);
+            $this->fail('Expected invalid core H2H credentials to be rejected.');
+        } catch (InvalidCredentialException $exception) {
+            $this->assertFalse($nextCalled);
+        }
     }
 
     private function getJobProtectedProperty($job, string $property): mixed
