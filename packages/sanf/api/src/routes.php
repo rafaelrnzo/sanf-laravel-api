@@ -38,6 +38,7 @@ Route::group(['prefix' => 'api/sbf', 'middleware' => ['auth', 'profile_owner:cus
     Route::post('spt/generate', ['as' => 'sbf.spt.generate', 'uses' => 'StandbyFinancing\Controllers\SbfTransactionController@sptGenerate']);
     Route::post('spt/ocr-scan', ['as' => 'sbf.spt.ocr-scan', 'uses' => 'StandbyFinancing\Controllers\SbfTransactionController@sptOcrScan']);
     Route::post('check-invoice', ['as' => 'sbf.check-invoice', 'uses' => 'StandbyFinancing\Controllers\SbfTransactionController@checkInvoice']);
+    Route::post('check-period', ['as' => 'sbf.check-period', 'uses' => 'StandbyFinancing\Controllers\SbfTransactionController@checkPeriod']);
     Route::post('pengajuan', ['as' => 'sbf.pengajuan', 'uses' => 'StandbyFinancing\Controllers\SbfTransactionController@submitPengajuan']);
 });
 

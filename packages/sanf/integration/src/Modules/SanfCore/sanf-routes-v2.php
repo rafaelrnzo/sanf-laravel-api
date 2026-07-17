@@ -27,6 +27,7 @@ Route::group(config('sanf-api-v2.url'), [SanfCoreApiProcessorV2::class], functio
     Route::get('sanf-internal-v2.sbf.bank-account', '/api/standby_financing/bank_account');
     Route::get('sanf-internal-v2.sbf.documents', '/api/standby_financing/document');
     Route::post('sanf-internal-v2.sbf.check-invoice', '/api/standby_financing/check_invoice');
+    Route::post('sanf-internal-v2.sbf.check-period', '/api/standby_financing/check_period');
     Route::post('sanf-internal-v2.sbf.submit', '/api/standby_financing/store');
     Route::get('sanf-internal-v2.sbf.pencairan.list', '/api/standby_financing/list');
     Route::get('sanf-internal-v2.sbf.pencairan.detail', '/api/standby_financing/detail/{recapId}');

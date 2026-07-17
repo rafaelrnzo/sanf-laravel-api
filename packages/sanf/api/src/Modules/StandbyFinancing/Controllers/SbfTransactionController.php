@@ -71,6 +71,40 @@ class SbfTransactionController extends RestApiController
         }
     }
 
+    public function checkPeriod(Request $request, SanfApiService $service): JsonResponse
+    {
+        $payload = $this->validate($request, [
+            'cust_id' => ['required', 'string', 'max:50'],
+            'period_end' => ['required', 'date'],
+        ]);
+
+        $service->setUser($payload['cust_id']);
+
+        try {
+            $coreResponse = $service->checkPeriod($payload);
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $coreResponse,
+            ]);
+        } catch (\Throwable $exception) {
+            $coreError = $this->coreErrorPayload($exception);
+
+            Log::error('SBF period check failed', [
+                'cust_id' => $payload['cust_id'],
+                'period_end' => $payload['period_end'],
+                'message' => $exception->getMessage(),
+                'core_message' => $coreError['message'] ?? null,
+            ]);
+
+            if ($coreError !== null) {
+                return response()->json($coreError);
+            }
+
+            return $this->coreUnavailable();
+        }
+    }
+
     public function uploadDocument(Request $request): JsonResponse
     {
         $this->validate($request, [

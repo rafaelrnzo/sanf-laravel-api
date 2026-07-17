@@ -70,6 +70,31 @@ class SanfApiServiceTest extends TestCase
         $this->assertArrayNotHasKey('no_plafond', $body);
     }
 
+    public function testItForwardsCheckPeriodToCoreContract(): void
+    {
+        $history = [];
+        $service = $this->service([new Response(200, [], '{"status":"success"}')], $history);
+
+        $service->setUser('1020000341')->checkPeriod([
+            'cust_id' => '1020000341',
+            'period_end' => '2026-07-22',
+        ]);
+
+        $request = $history[0]['request'];
+
+        $this->assertSame('POST', $request->getMethod());
+        $this->assertStringContainsString('api/standby_financing/check_period', $request->getUri()->getPath());
+        $this->assertSame(
+            'Basic ' . base64_encode('cid;csecret;1020000341'),
+            $request->getHeaderLine('Authorization')
+        );
+
+        $this->assertSame([
+            'cust_id' => '1020000341',
+            'period_end' => '2026-07-22',
+        ], json_decode((string) $request->getBody(), true));
+    }
+
     public function testItForwardsPengajuanToStoreMappedToCoreContract(): void
     {
         $history = [];

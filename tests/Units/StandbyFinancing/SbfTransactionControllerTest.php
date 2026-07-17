@@ -115,6 +115,73 @@ class SbfTransactionControllerTest extends \TestCase
         $this->assertSame('Invoice sudah pernah diupload sebelumnya.', SbfInvoiceCheckModel::first()->core_message);
     }
 
+    public function testCheckPeriodForwardsValidatedPayload(): void
+    {
+        $payload = [
+            'cust_id' => '1020000341',
+            'period_end' => '2026-07-22',
+        ];
+
+        $service = Mockery::mock(SanfApiService::class);
+        $service->shouldReceive('setUser')->once()->with('1020000341')->andReturnSelf();
+        $service->shouldReceive('checkPeriod')
+            ->once()
+            ->with($payload)
+            ->andReturn([
+                'status' => 'success',
+                'message' => 'Periode valid dan dapat diproses.',
+                'data' => $payload,
+            ]);
+
+        $response = (new SbfTransactionController())->checkPeriod(
+            Request::create('/sbf/check-period', 'POST', $payload),
+            $service
+        );
+
+        $body = $response->getData(true);
+
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('success', $body['status']);
+        $this->assertSame('Periode valid dan dapat diproses.', $body['data']['message']);
+    }
+
+    public function testCheckPeriodReturnsOriginalCoreMessage(): void
+    {
+        $payload = [
+            'cust_id' => '1020000341',
+            'period_end' => '2026-07-22',
+        ];
+
+        $coreResponse = new PsrResponse(422, ['Content-Type' => 'application/json'], json_encode([
+            'status' => 'error',
+            'message' => 'Periode ini sudah pernah disubmit untuk customer tersebut.',
+        ]));
+
+        $service = Mockery::mock(SanfApiService::class);
+        $service->shouldReceive('setUser')->once()->with('1020000341')->andReturnSelf();
+        $service->shouldReceive('checkPeriod')
+            ->once()
+            ->with($payload)
+            ->andThrow(new ClientException(
+                'Core rejected period',
+                new PsrRequest('POST', '/api/standby_financing/check_period'),
+                $coreResponse
+            ));
+
+        $response = (new SbfTransactionController())->checkPeriod(
+            Request::create('/sbf/check-period', 'POST', $payload),
+            $service
+        );
+
+        $body = $response->getData(true);
+
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertFalse($body['success']);
+        $this->assertSame('error', $body['status']);
+        $this->assertSame('422', $body['code']);
+        $this->assertSame('Periode ini sudah pernah disubmit untuk customer tersebut.', $body['message']);
+    }
+
     public function testFailedPengajuanRemainsAvailableForRetry(): void
     {
         $payload = $this->pengajuanPayload();

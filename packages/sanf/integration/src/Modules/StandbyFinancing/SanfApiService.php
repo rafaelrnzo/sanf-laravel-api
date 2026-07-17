@@ -90,6 +90,17 @@ class SanfApiService
         );
     }
 
+    public function checkPeriod(array $payload): array
+    {
+        return $this->send(
+            Request::route('sanf-internal-v2.sbf.check-period', $this->client)
+                ->json([
+                    'cust_id' => (string) ($payload['cust_id'] ?? ''),
+                    'period_end' => (string) ($payload['period_end'] ?? ''),
+                ])
+        );
+    }
+
     public function submitPengajuan(array $payload): array
     {
         return $this->send(
