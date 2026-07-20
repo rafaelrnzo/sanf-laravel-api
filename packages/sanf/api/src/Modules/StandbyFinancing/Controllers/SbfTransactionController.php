@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use NbsPhp\Core\Controllers\RestApiController;
 use Sanf\Api\Modules\StandbyFinancing\Services\SbfSptGeneratorService;
 use Sanf\Core\Modules\LlmOcr\Services\GeminiOcrService;
+use Sanf\Core\Modules\StandbyFinancing\Jobs\SendSbfSubmittedEmailJob;
 use Sanf\Core\Modules\StandbyFinancing\Models\SbfInvoiceCheckModel;
 use Sanf\Core\Modules\StandbyFinancing\Models\SbfPengajuanModel;
 use Sanf\Core\Modules\StandbyFinancing\Services\SbfPengajuanBankAccountSyncer;
@@ -372,13 +373,24 @@ PROMPT;
 
         try {
             $coreResponse = $service->submitPengajuan($corePayload);
+            $recapId = $this->recapId($coreResponse);
             $record->update([
                 'local_status' => 'submitted',
-                'core_recap_id' => $this->recapId($coreResponse),
+                'core_recap_id' => $recapId,
                 'core_status' => 'success',
                 'core_message' => data_get($coreResponse, 'message'),
                 'core_response' => $coreResponse,
                 'submitted_at' => Carbon::now(),
+            ]);
+
+            $this->dispatchSubmittedEmails([
+                'cust_id' => $payload['cust_id'],
+                'client_xid' => $payload['cust_id'],
+                'recap_id_b2b' => $recapId,
+                'date_recap' => Carbon::now()->format('Y-m-d'),
+                'period_start' => $payload['period_start'],
+                'total_invoice_count' => $totalInvoiceCount,
+                'total_amount' => $totalAmount,
             ]);
 
             return response()->json([
@@ -427,12 +439,31 @@ PROMPT;
 
     private function recapId(array $response): ?string
     {
-        $recapId = data_get($response, 'data.recap_id_b2b')
+        $recapId = data_get($response, 'data.data.recap_id_b2b')
+            ?? data_get($response, 'data.data.recap_id')
+            ?? data_get($response, 'data.recap_id_b2b')
             ?? data_get($response, 'data.recap_id')
             ?? data_get($response, 'recap_id_b2b')
             ?? data_get($response, 'recap_id');
 
         return $recapId === null ? null : (string) $recapId;
+    }
+
+    private function dispatchSubmittedEmails(array $data): void
+    {
+        dispatch(new SendSbfSubmittedEmailJob($data));
+
+        $adminRecipients = $this->adminEmailRecipients();
+        if (!empty($adminRecipients)) {
+            dispatch(new SendSbfSubmittedEmailJob($data, $adminRecipients));
+        }
+    }
+
+    private function adminEmailRecipients(): array
+    {
+        $configured = (string) config('sanf-mobile.mail_to_admin', '');
+
+        return array_values(array_filter(array_map('trim', explode(',', $configured))));
     }
 
     private function coreUnavailable(): JsonResponse

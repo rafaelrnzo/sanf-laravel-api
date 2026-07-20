@@ -75,9 +75,9 @@ class SendSbfStatusChangedEmailJob implements ShouldQueue
 
         $mailable = (new MailLayout2Columns())
             ->subject('Update Status Pengajuan Standby Financing')
-            ->leftLogo(asset('assets/png/sanf-logo-blue.png'))
-            ->rightLogo(asset('assets/png/sanf-tagline.png'))
-            ->banner(asset('assets/png/email-verification.png'))
+            ->leftLogo($this->publicAsset('assets/png/sanf-logo-blue.png'))
+            ->rightLogo($this->publicAsset('assets/png/sanf-tagline.png'))
+            ->banner($this->publicAsset('assets/png/email-verification.png'))
             ->greeting("Halo {$name}!")
             ->line("<blockquote style=\"margin: 0 0;font-size: 16px; line-height: 150%;\">{$statusMessage}</blockquote>")
             ->writeContent($content)
@@ -94,6 +94,13 @@ class SendSbfStatusChangedEmailJob implements ShouldQueue
             );
 
         return Mail::to($email)->send($mailable);
+    }
+
+    private function publicAsset(string $path): string
+    {
+        $baseUrl = rtrim((string) (config('app.asset_url') ?: config('app.url')), '/');
+
+        return $baseUrl . '/' . ltrim($path, '/');
     }
 
     private function syncFromCore(?string $recapId, ?string $custId): array

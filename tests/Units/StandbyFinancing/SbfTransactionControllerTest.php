@@ -8,10 +8,12 @@ use GuzzleHttp\Psr7\Response as PsrResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Mockery;
 use Sanf\Api\Modules\StandbyFinancing\Controllers\SbfTransactionController;
+use Sanf\Core\Modules\StandbyFinancing\Jobs\SendSbfSubmittedEmailJob;
 use Sanf\Core\Modules\StandbyFinancing\Models\SbfInvoiceCheckModel;
 use Sanf\Core\Modules\StandbyFinancing\Models\SbfPengajuanBankAccountModel;
 use Sanf\Core\Modules\StandbyFinancing\Models\SbfPengajuanModel;
@@ -293,6 +295,85 @@ class SbfTransactionControllerTest extends \TestCase
         $this->assertSame('2', $bankAccounts[1]->bank_id);
     }
 
+    public function testSubmitPengajuanDispatchesSubmittedEmailForCustomerAndAdmin(): void
+    {
+        Queue::fake();
+
+        config(['sanf-mobile.mail_to_admin' => 'admin-1@sanf.co.id, admin-2@sanf.co.id']);
+
+        $payload = $this->pengajuanPayload();
+        $service = Mockery::mock(SanfApiService::class);
+        $service->shouldReceive('setUser')->andReturnSelf();
+        $service->shouldReceive('submitPengajuan')
+            ->once()
+            ->with($payload)
+            ->andReturn(['status' => 'success', 'data' => ['recap_id_b2b' => 'REC-1']]);
+
+        $response = (new SbfTransactionController())->submitPengajuan(
+            Request::create('/sbf/pengajuan', 'POST', $payload),
+            $service
+        );
+
+        $this->assertSame(200, $response->getStatusCode());
+
+        Queue::assertPushed(SendSbfSubmittedEmailJob::class, 2);
+        Queue::assertPushed(SendSbfSubmittedEmailJob::class, function ($job) {
+            $recipients = $this->getJobProtectedProperty($job, 'recipients');
+            $data = $this->getJobProtectedProperty($job, 'data');
+
+            return $recipients === null
+                && $data['cust_id'] === 'CUST-1'
+                && $data['recap_id_b2b'] === 'REC-1'
+                && $data['total_invoice_count'] === 1
+                && $data['total_amount'] === 1500000;
+        });
+        Queue::assertPushed(SendSbfSubmittedEmailJob::class, function ($job) {
+            $recipients = $this->getJobProtectedProperty($job, 'recipients');
+            $data = $this->getJobProtectedProperty($job, 'data');
+
+            return $recipients === ['admin-1@sanf.co.id', 'admin-2@sanf.co.id']
+                && $data['cust_id'] === 'CUST-1'
+                && $data['recap_id_b2b'] === 'REC-1';
+        });
+    }
+
+    public function testSubmitPengajuanUsesNestedCoreRecapIdForSubmittedEmail(): void
+    {
+        Queue::fake();
+
+        config(['sanf-mobile.mail_to_admin' => '']);
+
+        $payload = $this->pengajuanPayload();
+        $service = Mockery::mock(SanfApiService::class);
+        $service->shouldReceive('setUser')->andReturnSelf();
+        $service->shouldReceive('submitPengajuan')
+            ->once()
+            ->with($payload)
+            ->andReturn([
+                'status' => 'success',
+                'data' => [
+                    'status' => 'success',
+                    'message' => 'Pengajuan standby financing berhasil disimpan',
+                    'data' => ['recap_id_b2b' => 'SF26070013'],
+                ],
+            ]);
+
+        $response = (new SbfTransactionController())->submitPengajuan(
+            Request::create('/sbf/pengajuan', 'POST', $payload),
+            $service
+        );
+
+        $record = SbfPengajuanModel::first();
+
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('SF26070013', $record->core_recap_id);
+        Queue::assertPushed(SendSbfSubmittedEmailJob::class, function ($job) {
+            $data = $this->getJobProtectedProperty($job, 'data');
+
+            return $data['recap_id_b2b'] === 'SF26070013';
+        });
+    }
+
     public function testUploadDocumentStoresFileToMinioAndReturnsWebCompatibleResponse(): void
     {
         Storage::fake('minio_post');
@@ -375,5 +456,14 @@ class SbfTransactionControllerTest extends \TestCase
             'spt_dokuments' => ['file_path' => 'spt/spt.pdf'],
             'supporting_dokuments' => [],
         ];
+    }
+
+    private function getJobProtectedProperty(object $job, string $property)
+    {
+        $reflection = new \ReflectionClass($job);
+        $propertyReflection = $reflection->getProperty($property);
+        $propertyReflection->setAccessible(true);
+
+        return $propertyReflection->getValue($job);
     }
 }
